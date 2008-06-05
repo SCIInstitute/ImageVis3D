@@ -338,6 +338,14 @@
 				RelativePath=".\1DTrans.png"
 				>
 			</File>
+			<File
+				RelativePath=".\trans2d_1.png"
+				>
+			</File>
+			<File
+				RelativePath=".\trans2d_2.png"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
