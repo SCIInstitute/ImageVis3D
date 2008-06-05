@@ -200,11 +200,15 @@
 				Filter="ui"
 				>
 				<File
-					RelativePath=".\1DTrans.ui"
+					RelativePath=".\ImageVis3D.ui"
 					>
 				</File>
 				<File
-					RelativePath=".\ImageVis3D.ui"
+					RelativePath=".\TransDialog1D.ui"
+					>
+				</File>
+				<File
+					RelativePath=".\TransDialog2D.ui"
 					>
 				</File>
 			</Filter>
@@ -212,53 +216,29 @@
 				Name="Automaticaly Generated Files"
 				>
 				<File
-					RelativePath=".\moc_1DTrans.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\moc_ImageVis3D.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\ui_1DTrans.h"
+					RelativePath=".\moc_TransDialog1D.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\ui_ImageVis3D.h"
 					>
 				</File>
+				<File
+					RelativePath=".\ui_TransDialog1D.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui_TransDialog2D.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Implemented Files"
 				>
-				<File
-					RelativePath=".\1DTrans.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\1DTrans.h"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-				</File>
 				<File
 					RelativePath=".\ImageVis3D.cpp"
 					>
@@ -272,7 +252,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -282,10 +262,46 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\TransDialog1D.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TransDialog1D.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\TransDialog2D.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TransDialog2D.h"
+					>
 				</File>
 			</Filter>
 		</Filter>

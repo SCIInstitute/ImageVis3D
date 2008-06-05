@@ -1,4 +1,4 @@
-#include "1DTrans.h"
+#include "TransDialog1D.h"
 
 TransDialog1D::TransDialog1D(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QDialog(parent, flags)
 {
