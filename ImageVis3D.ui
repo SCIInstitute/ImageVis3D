@@ -84,7 +84,7 @@
     <addaction name="actionGo_Fullscreen" />
     <addaction name="separator" />
     <addaction name="action2_x_2_View" />
-    <addaction name="action1_x_3_Viw" />
+    <addaction name="action1_x_3_View" />
     <addaction name="actionSinge_View" />
     <addaction name="separator" />
     <addaction name="actionDirect_Volume_Rendering" />
@@ -1649,7 +1649,7 @@
     <string>2 x 2 View</string>
    </property>
   </action>
-  <action name="action1_x_3_Viw" >
+  <action name="action1_x_3_View" >
    <property name="text" >
     <string>1 x 3 View</string>
    </property>
@@ -1837,11 +1837,6 @@
   <action name="actionIsosurface" >
    <property name="text" >
     <string>Isosurface</string>
-   </property>
-  </action>
-  <action name="actionPoly_line" >
-   <property name="text" >
-    <string>Poly-line</string>
    </property>
   </action>
   <action name="actionPaint_brush" >
@@ -2283,10 +2278,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action1_x_3_Viw</sender>
+   <sender>action1_x_3_View</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>HideVisualizationWindows()</slot>
+   <slot>ToggleRenderWindowView1x3()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>-1</x>
@@ -2302,7 +2297,7 @@
    <sender>action2_x_2_View</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>HideVisualizationWindows()</slot>
+   <slot>ToggleRenderWindowView2x2()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>-1</x>
@@ -2318,7 +2313,7 @@
    <sender>actionSinge_View</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>HideVisualizationWindows()</slot>
+   <slot>ToggleRenderWindowViewSingle()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>-1</x>
@@ -2370,5 +2365,8 @@
   <slot>HideAllFilters()</slot>
   <slot>HideVisualizationWindows()</slot>
   <slot>AddNewRenderWindow()</slot>
+  <slot>ToggleRenderWindowView1x3()</slot>
+  <slot>ToggleRenderWindowView2x2()</slot>
+  <slot>ToggleRenderWindowViewSingle()</slot>
  </slots>
 </ui>

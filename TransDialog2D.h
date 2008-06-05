@@ -11,9 +11,6 @@ class TransDialog2D : public QDialog, protected Ui_TransDialog2D
 		TransDialog2D(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 		virtual ~TransDialog2D();
 
-	private :
-		void LoadMockupImage();
-
 };
 
 #endif // TRANSDIALOG2D_H

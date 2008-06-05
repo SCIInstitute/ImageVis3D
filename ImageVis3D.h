@@ -22,11 +22,16 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void HideVisualizationWindows();
 		void AddNewRenderWindow();
 
+		void ToggleRenderWindowView1x3();
+		void ToggleRenderWindowView2x2();
+		void ToggleRenderWindowViewSingle();
+
 	private :
 		TransDialog1D m_TransDialog1D;
 		TransDialog2D m_TransDialog2D;
 
 		RenderWindow* CreateNewRenderWindow();
+		RenderWindow* GetActiveRenderWindow();
 
 };
 

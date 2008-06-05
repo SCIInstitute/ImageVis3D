@@ -15,10 +15,6 @@ class TransDialog1D : public QDialog, protected Ui_TransDialog1D
 		void SetUserMode();
 		void SetIntensityMode();
 		void SetLuminanceMode();
-
-	private :
-		void LoadMockupImage();
-
 };
 
 #endif // TRANSDIALOG1D_H

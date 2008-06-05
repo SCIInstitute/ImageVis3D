@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>585</width>
-    <height>356</height>
+    <width>464</width>
+    <height>353</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -115,18 +115,15 @@
     </widget>
    </item>
    <item rowspan="3" row="0" column="1" >
-    <widget class="QGraphicsView" name="graphicsView_Histogram" >
-     <property name="minimumSize" >
-      <size>
-       <width>309</width>
-       <height>307</height>
-      </size>
+    <widget class="QLabel" name="label" >
+     <property name="text" >
+      <string/>
      </property>
-     <property name="locale" >
-      <locale country="UnitedStates" language="English" />
+     <property name="pixmap" >
+      <pixmap>trans1d.png</pixmap>
      </property>
-     <property name="renderHints" >
-      <set>QPainter::Antialiasing|QPainter::TextAntialiasing</set>
+     <property name="scaledContents" >
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -234,7 +231,6 @@
   <tabstop>radioButton_User</tabstop>
   <tabstop>radioButton_Luminance</tabstop>
   <tabstop>radioButton_Intensity</tabstop>
-  <tabstop>graphicsView_Histogram</tabstop>
   <tabstop>verticalSlider_ScaleHistogram</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
