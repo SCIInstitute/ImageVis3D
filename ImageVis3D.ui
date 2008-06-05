@@ -57,7 +57,7 @@
     </property>
     <widget class="QMenu" name="menuLast_Used_Projects" >
      <property name="title" >
-      <string>Last Used Projects</string>
+      <string>Most Recently Used</string>
      </property>
      <addaction name="actionHand_dat" />
      <addaction name="actionLeg_nrrd" />
@@ -65,15 +65,10 @@
      <addaction name="separator" />
      <addaction name="actionClear_List" />
     </widget>
-    <addaction name="actionCreate_New_Project" />
-    <addaction name="actionOpen_Existing_Project" />
-    <addaction name="menuLast_Used_Projects" />
+    <addaction name="actionLoadDataset" />
     <addaction name="actionSave_Current_Project" />
-    <addaction name="actionClose_Project" />
     <addaction name="separator" />
-    <addaction name="actionLoad_Dataset" />
-    <addaction name="actionSave_Dataset" />
-    <addaction name="actionClose_Dataset" />
+    <addaction name="menuLast_Used_Projects" />
     <addaction name="separator" />
     <addaction name="actionQuit" />
    </widget>
@@ -82,14 +77,25 @@
      <string>&amp;View</string>
     </property>
     <addaction name="actionGo_Fullscreen" />
+    <addaction name="actionCascade" />
+    <addaction name="actionTile" />
+    <addaction name="actionNext" />
+    <addaction name="actionPrevious" />
     <addaction name="separator" />
     <addaction name="action2_x_2_View" />
     <addaction name="action1_x_3_View" />
     <addaction name="actionSinge_View" />
     <addaction name="separator" />
+    <addaction name="actionCloneCurrentView" />
+    <addaction name="separator" />
+    <addaction name="actionSlice_Rendering" />
     <addaction name="actionDirect_Volume_Rendering" />
     <addaction name="actionIsosurface_Rendering" />
+    <addaction name="separator" />
     <addaction name="actionStereo_Projection" />
+    <addaction name="separator" />
+    <addaction name="actionHide_Toolbar" />
+    <addaction name="actionShow_Toolbar" />
    </widget>
    <widget class="QMenu" name="menu_Tools" >
     <property name="title" >
@@ -138,6 +144,7 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout" />
+    <addaction name="separator" />
     <addaction name="actionOpen_Online_Help" />
    </widget>
    <widget class="QMenu" name="menuSelection" >
@@ -176,8 +183,8 @@
     <addaction name="actionToggle_between_1D_and_2D" />
    </widget>
    <addaction name="menu_File" />
-   <addaction name="menuSelection" />
    <addaction name="menu_View" />
+   <addaction name="menuSelection" />
    <addaction name="menu_Tools" />
    <addaction name="menu_Filters" />
    <addaction name="menuRecording" />
@@ -1604,9 +1611,9 @@
     </layout>
    </widget>
   </widget>
-  <action name="actionCreate_New_Project" >
+  <action name="actionLoadDataset" >
    <property name="text" >
-    <string>Create New Project</string>
+    <string>Load Dataset</string>
    </property>
   </action>
   <action name="actionOpen_Existing_Project" >
@@ -1616,15 +1623,21 @@
   </action>
   <action name="actionSave_Current_Project" >
    <property name="text" >
-    <string>Save Current Project</string>
+    <string>Save Dataset</string>
    </property>
   </action>
   <action name="actionLoad_Dataset" >
+   <property name="enabled" >
+    <bool>true</bool>
+   </property>
    <property name="text" >
     <string>Load Dataset</string>
    </property>
   </action>
   <action name="actionSave_Dataset" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="text" >
     <string>Save Dataset</string>
    </property>
@@ -1635,13 +1648,16 @@
    </property>
   </action>
   <action name="actionClose_Dataset" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="text" >
     <string>Close Dataset</string>
    </property>
   </action>
   <action name="actionClose_Project" >
    <property name="text" >
-    <string>Close Project</string>
+    <string>Close View</string>
    </property>
   </action>
   <action name="action2_x_2_View" >
@@ -1660,11 +1676,17 @@
    </property>
   </action>
   <action name="actionDirect_Volume_Rendering" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
    <property name="text" >
     <string>Direct Volume Rendering</string>
    </property>
   </action>
   <action name="actionIsosurface_Rendering" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
    <property name="text" >
     <string>Isosurface Rendering</string>
    </property>
@@ -1711,7 +1733,7 @@
   </action>
   <action name="actionStastistcs" >
    <property name="text" >
-    <string>Stastistcs</string>
+    <string>Stastistcs on Selection</string>
    </property>
   </action>
   <action name="actionUndo" >
@@ -1830,6 +1852,9 @@
    </property>
   </action>
   <action name="actionStereo_Projection" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
    <property name="text" >
     <string>Stereo Projection</string>
    </property>
@@ -1887,6 +1912,52 @@
   <action name="actionClear_List" >
    <property name="text" >
     <string>Clear List</string>
+   </property>
+  </action>
+  <action name="actionCloneCurrentView" >
+   <property name="text" >
+    <string>Clone View</string>
+   </property>
+  </action>
+  <action name="actionSlice_Rendering" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Slice Rendering</string>
+   </property>
+  </action>
+  <action name="actionCascade" >
+   <property name="text" >
+    <string>Cascade</string>
+   </property>
+  </action>
+  <action name="actionTile" >
+   <property name="text" >
+    <string>Tile</string>
+   </property>
+  </action>
+  <action name="actionNext" >
+   <property name="text" >
+    <string>Next View</string>
+   </property>
+  </action>
+  <action name="actionPrevious" >
+   <property name="text" >
+    <string>Previous View</string>
+   </property>
+  </action>
+  <action name="actionHide_Toolbar" >
+   <property name="text" >
+    <string>Hide Toolbar</string>
+   </property>
+  </action>
+  <action name="actionShow_Toolbar" >
+   <property name="text" >
+    <string>Show Toolbar</string>
    </property>
   </action>
  </widget>
@@ -2326,10 +2397,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionCreate_New_Project</sender>
+   <sender>actionLoadDataset</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>AddNewRenderWindow()</slot>
+   <slot>LoadDataset()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>-1</x>
@@ -2357,6 +2428,86 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionCloneCurrentView</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>CloneCurrentView()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>564</x>
+     <y>492</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCascade</sender>
+   <signal>triggered()</signal>
+   <receiver>mdiArea</receiver>
+   <slot>cascadeSubWindows()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>413</x>
+     <y>493</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTile</sender>
+   <signal>triggered()</signal>
+   <receiver>mdiArea</receiver>
+   <slot>tileSubWindows()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>413</x>
+     <y>493</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionNext</sender>
+   <signal>triggered()</signal>
+   <receiver>mdiArea</receiver>
+   <slot>activateNextSubWindow()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>413</x>
+     <y>493</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionPrevious</sender>
+   <signal>triggered()</signal>
+   <receiver>mdiArea</receiver>
+   <slot>activatePreviousSubWindow()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>413</x>
+     <y>493</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>Show1DTransferFunction()</slot>
@@ -2364,9 +2515,10 @@
   <slot>HideAllTools()</slot>
   <slot>HideAllFilters()</slot>
   <slot>HideVisualizationWindows()</slot>
-  <slot>AddNewRenderWindow()</slot>
+  <slot>LoadDataset()</slot>
   <slot>ToggleRenderWindowView1x3()</slot>
   <slot>ToggleRenderWindowView2x2()</slot>
   <slot>ToggleRenderWindowViewSingle()</slot>
+  <slot>CloneCurrentView()</slot>
  </slots>
 </ui>

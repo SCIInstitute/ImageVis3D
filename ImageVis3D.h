@@ -19,8 +19,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void Show2DTransferFunction();
 		void HideAllTools();
 		void HideAllFilters();
-		void HideVisualizationWindows();
-		void AddNewRenderWindow();
+		void LoadDataset();
+		void CloneCurrentView();
 
 		void ToggleRenderWindowView1x3();
 		void ToggleRenderWindowView2x2();

@@ -1,12 +1,13 @@
 #include "ImageVis3D.h"
+
 #include <QTGui/QMdiSubWindow>
+#include <QTGui/QFileDialog>
 
 MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QMainWindow(parent, flags)
 {
 	setupUi(this);
 	HideAllTools();
 	HideAllFilters();
-	HideVisualizationWindows();
 }
 
 MainWindow::~MainWindow()
@@ -29,14 +30,6 @@ void MainWindow::HideAllFilters()
 	Histogram_filter_widget->hide();
 }
 
-void MainWindow::HideVisualizationWindows()
-{
-/*	widget_2By2->hide();
-	widget_3By1->hide();
-	widget_Single->hide();*/
-}
-
-
 void MainWindow::Show1DTransferFunction() {
 	m_TransDialog1D.show();
 }
@@ -45,10 +38,17 @@ void MainWindow::Show2DTransferFunction() {
 	m_TransDialog2D.show();
 }
 
+void MainWindow::CloneCurrentView() {
+	 RenderWindow *renderWin = CreateNewRenderWindow();
+	 renderWin->show();
+}
 
-void MainWindow::AddNewRenderWindow() {
-     RenderWindow *renderWin = CreateNewRenderWindow();
-     renderWin->show();
+void MainWindow::LoadDataset() {
+     QString fileName = QFileDialog::getOpenFileName(this);
+     if (!fileName.isEmpty()) {
+		 RenderWindow *renderWin = CreateNewRenderWindow();
+		 renderWin->show();
+     }
 }
 
  RenderWindow* MainWindow::CreateNewRenderWindow()
