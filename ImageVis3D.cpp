@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 *
 	setupUi(this);
 	HideAllTools();
 	HideAllFilters();
+	HideVisualizationWindows();
 }
 
 MainWindow::~MainWindow()
@@ -26,6 +27,13 @@ void MainWindow::HideAllFilters()
 	Gaussian_filter_widget->hide();
 	Median_filter_widget->hide();
 	Histogram_filter_widget->hide();
+}
+
+void MainWindow::HideVisualizationWindows()
+{
+	widget_2By2->hide();
+	widget_3By1->hide();
+	widget_Single->hide();
 }
 
 

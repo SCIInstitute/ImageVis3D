@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void Show2DTransferFunction();
 		void HideAllTools();
 		void HideAllFilters();
+		void HideVisualizationWindows();
 
 	private :
 		TransDialog1D m_TransDialog1D;
