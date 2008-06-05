@@ -375,10 +375,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\1DTrans.png"
-				>
-			</File>
-			<File
 				RelativePath=".\RenderWin1.png"
 				>
 			</File>
@@ -387,7 +383,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RenderWin4x4.png"
+				RelativePath=".\RenderWin2x2.png"
+				>
+			</File>
+			<File
+				RelativePath=".\trans1d.png"
 				>
 			</File>
 			<File

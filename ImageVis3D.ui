@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>961</width>
-    <height>832</height>
+    <width>1129</width>
+    <height>986</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -31,208 +31,43 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>21</y>
-     <width>659</width>
-     <height>792</height>
+     <y>22</y>
+     <width>827</width>
+     <height>943</height>
     </rect>
    </property>
-   <widget class="QWidget" native="1" name="widget_2By2" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>1435</width>
-      <height>875</height>
-     </rect>
-    </property>
-    <property name="minimumSize" >
-     <size>
-      <width>1435</width>
-      <height>875</height>
-     </size>
-    </property>
-    <widget class="QWidget" name="layoutWidget" >
-     <property name="geometry" >
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>1131</width>
-       <height>831</height>
-      </rect>
-     </property>
-     <layout class="QGridLayout" name="Grid_2By2" >
-      <property name="spacing" >
-       <number>0</number>
-      </property>
-      <item row="0" column="0" >
-       <widget class="QGraphicsView" name="graphicsView_5" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" >
-       <widget class="QGraphicsView" name="graphicsView_6" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" >
-       <widget class="QGraphicsView" name="graphicsView_2" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" >
-       <widget class="QGraphicsView" name="graphicsView_3" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
-   <widget class="QWidget" native="1" name="widget_Single" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>1435</width>
-      <height>875</height>
-     </rect>
-    </property>
-    <property name="minimumSize" >
-     <size>
-      <width>1435</width>
-      <height>875</height>
-     </size>
-    </property>
-    <widget class="QGraphicsView" name="graphicsView_9" >
-     <property name="geometry" >
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>1435</width>
-       <height>875</height>
-      </rect>
-     </property>
-     <property name="minimumSize" >
-      <size>
-       <width>531</width>
-       <height>431</height>
-      </size>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" native="1" name="widget_3By1" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>1435</width>
-      <height>875</height>
-     </rect>
-    </property>
-    <property name="sizePolicy" >
-     <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="minimumSize" >
-     <size>
-      <width>1435</width>
-      <height>875</height>
-     </size>
-    </property>
-    <widget class="QWidget" name="layoutWidget" >
-     <property name="geometry" >
-      <rect>
-       <x>0</x>
-       <y>1</y>
-       <width>1131</width>
-       <height>841</height>
-      </rect>
-     </property>
-     <layout class="QGridLayout" name="Grid_3By1" >
-      <property name="spacing" >
-       <number>0</number>
-      </property>
-      <item row="0" column="0" colspan="3" >
-       <widget class="QGraphicsView" name="graphicsView_8" >
-        <property name="minimumSize" >
-         <size>
-          <width>571</width>
-          <height>261</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" >
-       <widget class="QGraphicsView" name="graphicsView" >
-        <property name="minimumSize" >
-         <size>
-          <width>191</width>
-          <height>171</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" >
-       <widget class="QGraphicsView" name="graphicsView_4" >
-        <property name="minimumSize" >
-         <size>
-          <width>191</width>
-          <height>171</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2" >
-       <widget class="QGraphicsView" name="graphicsView_7" >
-        <property name="minimumSize" >
-         <size>
-          <width>191</width>
-          <height>171</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
+   <layout class="QHBoxLayout" name="horizontalLayout_2" >
+    <item>
+     <widget class="QMdiArea" name="mdiArea" />
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar" >
    <property name="geometry" >
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>961</width>
-     <height>21</height>
+     <width>1129</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File" >
     <property name="title" >
      <string>&amp;File</string>
     </property>
+    <widget class="QMenu" name="menuLast_Used_Projects" >
+     <property name="title" >
+      <string>Last Used Projects</string>
+     </property>
+     <addaction name="actionHand_dat" />
+     <addaction name="actionLeg_nrrd" />
+     <addaction name="actionFoot_dicom" />
+     <addaction name="separator" />
+     <addaction name="actionClear_List" />
+    </widget>
     <addaction name="actionCreate_New_Project" />
     <addaction name="actionOpen_Existing_Project" />
-    <addaction name="actionLast_Used_Projects" />
+    <addaction name="menuLast_Used_Projects" />
     <addaction name="actionSave_Current_Project" />
     <addaction name="actionClose_Project" />
     <addaction name="separator" />
@@ -353,19 +188,19 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>813</y>
-     <width>961</width>
-     <height>19</height>
+     <y>965</y>
+     <width>1129</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
   <widget class="QDockWidget" name="dockWidget" >
    <property name="geometry" >
     <rect>
-     <x>663</x>
-     <y>21</y>
+     <x>831</x>
+     <y>22</y>
      <width>298</width>
-     <height>792</height>
+     <height>943</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -392,7 +227,7 @@
       <x>0</x>
       <y>22</y>
       <width>298</width>
-      <height>770</height>
+      <height>921</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout" >
@@ -416,7 +251,7 @@
           <x>0</x>
           <y>0</y>
           <width>274</width>
-          <height>725</height>
+          <height>876</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -448,7 +283,7 @@
           <x>0</x>
           <y>0</y>
           <width>274</width>
-          <height>725</height>
+          <height>876</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1246,7 +1081,7 @@
           <x>0</x>
           <y>0</y>
           <width>274</width>
-          <height>725</height>
+          <height>876</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1596,7 +1431,7 @@
           <x>0</x>
           <y>0</y>
           <width>274</width>
-          <height>725</height>
+          <height>876</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1769,11 +1604,6 @@
     </layout>
    </widget>
   </widget>
-  <action name="actionWerwer" >
-   <property name="text" >
-    <string>werwer</string>
-   </property>
-  </action>
   <action name="actionCreate_New_Project" >
    <property name="text" >
     <string>Create New Project</string>
@@ -1782,11 +1612,6 @@
   <action name="actionOpen_Existing_Project" >
    <property name="text" >
     <string>Open Existing Project</string>
-   </property>
-  </action>
-  <action name="actionLast_Used_Projects" >
-   <property name="text" >
-    <string>Last Used Projects</string>
    </property>
   </action>
   <action name="actionSave_Current_Project" >
@@ -1897,11 +1722,6 @@
   <action name="actionRedo" >
    <property name="text" >
     <string>Redo</string>
-   </property>
-  </action>
-  <action name="actionGenerate_Movie" >
-   <property name="text" >
-    <string>Generate Movie</string>
    </property>
   </action>
   <action name="actionREcord_Image" >
@@ -2052,6 +1872,26 @@
   <action name="actionHistogram" >
    <property name="text" >
     <string>Histogram</string>
+   </property>
+  </action>
+  <action name="actionHand_dat" >
+   <property name="text" >
+    <string>Hand.dat</string>
+   </property>
+  </action>
+  <action name="actionLeg_nrrd" >
+   <property name="text" >
+    <string>Leg.nrrd</string>
+   </property>
+  </action>
+  <action name="actionFoot_dicom" >
+   <property name="text" >
+    <string>foot.dicom</string>
+   </property>
+  </action>
+  <action name="actionClear_List" >
+   <property name="text" >
+    <string>Clear List</string>
    </property>
   </action>
  </widget>
@@ -2459,22 +2299,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>action1_x_3_Viw</sender>
-   <signal>triggered()</signal>
-   <receiver>widget_3By1</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>717</x>
-     <y>458</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>action2_x_2_View</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
@@ -2487,22 +2311,6 @@
     <hint type="destinationlabel" >
      <x>480</x>
      <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action2_x_2_View</sender>
-   <signal>triggered()</signal>
-   <receiver>widget_2By2</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>717</x>
-     <y>458</y>
     </hint>
    </hints>
   </connection>
@@ -2523,18 +2331,34 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionSinge_View</sender>
+   <sender>actionCreate_New_Project</sender>
    <signal>triggered()</signal>
-   <receiver>widget_Single</receiver>
-   <slot>show()</slot>
+   <receiver>MainWindow</receiver>
+   <slot>AddNewRenderWindow()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>-1</x>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>717</x>
-     <y>458</y>
+     <x>564</x>
+     <y>492</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionClose_Project</sender>
+   <signal>triggered()</signal>
+   <receiver>mdiArea</receiver>
+   <slot>closeActiveSubWindow()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>413</x>
+     <y>493</y>
     </hint>
    </hints>
   </connection>
@@ -2545,5 +2369,6 @@
   <slot>HideAllTools()</slot>
   <slot>HideAllFilters()</slot>
   <slot>HideVisualizationWindows()</slot>
+  <slot>AddNewRenderWindow()</slot>
  </slots>
 </ui>

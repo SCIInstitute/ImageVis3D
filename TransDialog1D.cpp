@@ -15,7 +15,7 @@ void TransDialog1D::LoadMockupImage()
 	QGraphicsScene * scene = new QGraphicsScene;
 	QPixmap lPixmap;
 
-	lPixmap.load("1DTrans.png");
+	lPixmap.load("trans1d.png");
 	scene->addPixmap(lPixmap);
 	graphicsView_Histogram->setScene(scene);
 }

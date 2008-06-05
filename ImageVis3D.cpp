@@ -1,6 +1,5 @@
 #include "ImageVis3D.h"
 
-
 MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QMainWindow(parent, flags)
 {
 	setupUi(this);
@@ -31,9 +30,9 @@ void MainWindow::HideAllFilters()
 
 void MainWindow::HideVisualizationWindows()
 {
-	widget_2By2->hide();
+/*	widget_2By2->hide();
 	widget_3By1->hide();
-	widget_Single->hide();
+	widget_Single->hide();*/
 }
 
 
@@ -44,3 +43,20 @@ void MainWindow::Show1DTransferFunction() {
 void MainWindow::Show2DTransferFunction() {
 	m_TransDialog2D.show();
 }
+
+
+void MainWindow::AddNewRenderWindow() {
+     RenderWindow *renderWin = CreateNewRenderWindow();
+     renderWin->show();
+}
+
+ RenderWindow *MainWindow::CreateNewRenderWindow()
+ {
+     RenderWindow *renderWin = new RenderWindow;
+     mdiArea->addSubWindow(renderWin);
+
+//     connect(child, SIGNAL(copyAvailable(bool)),  cutAct, SLOT(setEnabled(bool)));
+//     connect(child, SIGNAL(copyAvailable(bool)),  copyAct, SLOT(setEnabled(bool)));
+
+     return renderWin;
+ }
