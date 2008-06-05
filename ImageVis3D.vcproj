@@ -224,6 +224,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\moc_TransDialog2D.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ui_ImageVis3D.h"
 					>
 				</File>

@@ -413,8 +413,8 @@
        <widget class="QWidget" name="history_tab" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>274</width>
           <height>722</height>
          </rect>
@@ -1039,18 +1039,6 @@
            <string>Start</string>
           </property>
          </widget>
-         <zorder>label_15</zorder>
-         <zorder>spinBox_5</zorder>
-         <zorder>spinBox_6</zorder>
-         <zorder>label_16</zorder>
-         <zorder>spinBox_7</zorder>
-         <zorder>label_17</zorder>
-         <zorder>label_18</zorder>
-         <zorder>comboBox_2</zorder>
-         <zorder>label_10</zorder>
-         <zorder>resample_close_Button</zorder>
-         <zorder>toolButton_14</zorder>
-         <zorder>crop_tool_widget</zorder>
         </widget>
         <widget class="QWidget" native="1" name="crop_tool_widget" >
          <property name="geometry" >
@@ -1255,8 +1243,8 @@
        <widget class="QWidget" name="Filter_tab" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>274</width>
           <height>722</height>
          </rect>
@@ -1605,8 +1593,8 @@
        <widget class="QWidget" name="Recorder_tab" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>274</width>
           <height>722</height>
          </rect>
@@ -2470,8 +2458,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action2D_Transfer_Function_Editor</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Show2DTransferFunction()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>480</x>
+     <y>415</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>Show1DTransferFunction()</slot>
+  <slot>Show2DTransferFunction()</slot>
  </slots>
 </ui>

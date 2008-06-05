@@ -32,3 +32,7 @@ void MainWindow::hide_filters()
 void MainWindow::Show1DTransferFunction() {
 	m_TransDialog1D.show();
 }
+
+void MainWindow::Show2DTransferFunction() {
+	m_TransDialog2D.show();
+}

@@ -9,3 +9,7 @@ TransDialog2D::TransDialog2D(QWidget* parent /* = 0 */, Qt::WindowFlags flags /*
 TransDialog2D::~TransDialog2D() {
 
 }
+
+void TransDialog2D::LoadMockupImage() {
+	// TODO
+}
