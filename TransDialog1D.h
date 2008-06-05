@@ -1,7 +1,7 @@
-#ifndef _1DTRANS_H
-#define _1DTRANS_H
+#ifndef TRANSDIALOG1D_H
+#define TRANSDIALOG1D_H
 
-#include "ui_1DTrans.h"
+#include "ui_TransDialog1D.h"
 
 
 class TransDialog1D : public QDialog, protected Ui_TransDialog1D
@@ -21,4 +21,4 @@ class TransDialog1D : public QDialog, protected Ui_TransDialog1D
 
 };
 
-#endif // _1DTRANS_H
+#endif // TRANSDIALOG1D_H

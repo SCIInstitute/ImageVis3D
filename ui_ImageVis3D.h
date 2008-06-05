@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'ImageVis3D.ui'
 **
-** Created: Thu 5. Jun 09:54:32 2008
+** Created: Thu 5. Jun 10:02:41 2008
 **      by: Qt User Interface Compiler version 4.4.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!

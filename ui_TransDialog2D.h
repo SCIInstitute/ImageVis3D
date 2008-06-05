@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'TransDialog2D.ui'
 **
-** Created: Thu 5. Jun 09:54:32 2008
+** Created: Thu 5. Jun 10:02:41 2008
 **      by: Qt User Interface Compiler version 4.4.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -19,39 +19,39 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Dialog
+class Ui_TransDialog2D
 {
 public:
     QDialogButtonBox *buttonBox;
 
-    void setupUi(QDialog *Dialog)
+    void setupUi(QDialog *TransDialog2D)
     {
-    if (Dialog->objectName().isEmpty())
-        Dialog->setObjectName(QString::fromUtf8("Dialog"));
-    Dialog->resize(561, 465);
-    buttonBox = new QDialogButtonBox(Dialog);
+    if (TransDialog2D->objectName().isEmpty())
+        TransDialog2D->setObjectName(QString::fromUtf8("TransDialog2D"));
+    TransDialog2D->resize(561, 465);
+    buttonBox = new QDialogButtonBox(TransDialog2D);
     buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
     buttonBox->setGeometry(QRect(210, 420, 341, 32));
     buttonBox->setOrientation(Qt::Horizontal);
     buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
 
-    retranslateUi(Dialog);
-    QObject::connect(buttonBox, SIGNAL(accepted()), Dialog, SLOT(accept()));
-    QObject::connect(buttonBox, SIGNAL(rejected()), Dialog, SLOT(reject()));
+    retranslateUi(TransDialog2D);
+    QObject::connect(buttonBox, SIGNAL(accepted()), TransDialog2D, SLOT(accept()));
+    QObject::connect(buttonBox, SIGNAL(rejected()), TransDialog2D, SLOT(reject()));
 
-    QMetaObject::connectSlotsByName(Dialog);
+    QMetaObject::connectSlotsByName(TransDialog2D);
     } // setupUi
 
-    void retranslateUi(QDialog *Dialog)
+    void retranslateUi(QDialog *TransDialog2D)
     {
-    Dialog->setWindowTitle(QApplication::translate("Dialog", "Dialog", 0, QApplication::UnicodeUTF8));
-    Q_UNUSED(Dialog);
+    TransDialog2D->setWindowTitle(QApplication::translate("TransDialog2D", "Dialog", 0, QApplication::UnicodeUTF8));
+    Q_UNUSED(TransDialog2D);
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Dialog: public Ui_Dialog {};
+    class TransDialog2D: public Ui_TransDialog2D {};
 } // namespace Ui
 
 QT_END_NAMESPACE

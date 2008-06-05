@@ -2,7 +2,8 @@
 #define IMAGEVIS3D_H
 
 #include "ui_ImageVis3D.h"
-#include "1DTrans.h"
+#include "TransDialog1D.h"
+#include "TransDialog2D.h"
 
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow
@@ -14,9 +15,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 	
 	protected slots:
 		void Show1DTransferFunction();
+		void Show2DTransferFunction();
 
 	private :
 		TransDialog1D m_TransDialog1D;
+		TransDialog2D m_TransDialog2D;
 
 		void hide_tools();
 		void hide_filters();
