@@ -7,12 +7,11 @@ TransDialog2D::TransDialog2D(QWidget* parent /* = 0 */, Qt::WindowFlags flags /*
 }
 
 TransDialog2D::~TransDialog2D() {
-
 }
 
 void TransDialog2D::LoadMockupImage() {
-	QGraphicsScene * scene1 = new QGraphicsScene;
-	QGraphicsScene * scene2 = new QGraphicsScene;
+	QGraphicsScene *scene1 = new QGraphicsScene;
+	QGraphicsScene *scene2 = new QGraphicsScene;
 	QPixmap lPixmap1;
 	QPixmap lPixmap2;
 
@@ -23,4 +22,5 @@ void TransDialog2D::LoadMockupImage() {
 	lPixmap2.load("trans2d_2.png");
 	scene2->addPixmap(lPixmap2);
 	graphicsView_ColorPicker->setScene(scene2);
+
 }
