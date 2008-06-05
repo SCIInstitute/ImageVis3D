@@ -15,7 +15,7 @@ void RenderWindow::LoadMockupImage()
 	QGraphicsScene * scene = new QGraphicsScene;
 	QPixmap lPixmap;
 
-	lPixmap.load("1DTrans.png");
+	lPixmap.load("RenderWin1.png");
 	scene->addPixmap(lPixmap);
 	graphicsView->setScene(scene);
 }

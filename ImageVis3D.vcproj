@@ -379,6 +379,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RenderWin1.png"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderWin1x3.png"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderWin4x4.png"
+				>
+			</File>
+			<File
 				RelativePath=".\trans2d_1.png"
 				>
 			</File>
