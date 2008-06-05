@@ -11,6 +11,11 @@ class TransDialog1D : public QDialog, protected Ui_TransDialog1D
 		TransDialog1D(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 		virtual ~TransDialog1D();
 
+	protected slots :
+		void SetUserMode();
+		void SetIntensityMode();
+		void SetLuminanceMode();
+
 	private :
 		void LoadMockupImage();
 

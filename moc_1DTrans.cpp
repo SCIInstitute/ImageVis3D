@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file '1DTrans.h'
 **
-** Created: Wed 4. Jun 16:50:34 2008
+** Created: Thu 5. Jun 09:49:05 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.4.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,15 +23,21 @@ static const uint qt_meta_data_TransDialog1D[] = {
        1,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       3,   10, // methods
        0,    0, // properties
        0,    0, // enums/sets
+
+ // slots: signature, parameters, type, tag, flags
+      15,   14,   14,   14, 0x09,
+      29,   14,   14,   14, 0x09,
+      48,   14,   14,   14, 0x09,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_TransDialog1D[] = {
-    "TransDialog1D\0"
+    "TransDialog1D\0\0SetUserMode()\0"
+    "SetIntensityMode()\0SetLuminanceMode()\0"
 };
 
 const QMetaObject TransDialog1D::staticMetaObject = {
@@ -59,6 +65,14 @@ int TransDialog1D::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QDialog::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: SetUserMode(); break;
+        case 1: SetIntensityMode(); break;
+        case 2: SetLuminanceMode(); break;
+        }
+        _id -= 3;
+    }
     return _id;
 }
 QT_END_MOC_NAMESPACE

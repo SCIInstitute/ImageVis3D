@@ -35,7 +35,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout" >
    <item row="0" column="0" >
-    <widget class="QGroupBox" name="groupBox" >
+    <widget class="QGroupBox" name="groupBox_Components" >
      <property name="minimumSize" >
       <size>
        <width>131</width>
@@ -60,7 +60,7 @@
      <property name="checkable" >
       <bool>false</bool>
      </property>
-     <widget class="QCheckBox" name="checkBox_3" >
+     <widget class="QCheckBox" name="checkBox_Red" >
       <property name="geometry" >
        <rect>
         <x>10</x>
@@ -73,7 +73,7 @@
        <string>Red</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox_4" >
+     <widget class="QCheckBox" name="checkBox_Green" >
       <property name="geometry" >
        <rect>
         <x>10</x>
@@ -86,7 +86,7 @@
        <string>Green</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox_5" >
+     <widget class="QCheckBox" name="checkBox_Blue" >
       <property name="geometry" >
        <rect>
         <x>10</x>
@@ -99,7 +99,7 @@
        <string>Blue</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox_6" >
+     <widget class="QCheckBox" name="checkBox_Alpha" >
       <property name="geometry" >
        <rect>
         <x>10</x>
@@ -115,7 +115,7 @@
     </widget>
    </item>
    <item rowspan="3" row="0" column="1" >
-    <widget class="QGraphicsView" name="graphicsView" >
+    <widget class="QGraphicsView" name="graphicsView_Histogram" >
      <property name="minimumSize" >
       <size>
        <width>309</width>
@@ -131,14 +131,14 @@
     </widget>
    </item>
    <item rowspan="3" row="0" column="2" >
-    <widget class="QSlider" name="verticalSlider" >
+    <widget class="QSlider" name="verticalSlider_ScaleHistogram" >
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
     </widget>
    </item>
    <item row="1" column="0" >
-    <widget class="QGroupBox" name="groupBox_2" >
+    <widget class="QGroupBox" name="groupBox_Groups" >
      <property name="minimumSize" >
       <size>
        <width>131</width>
@@ -154,7 +154,7 @@
      <property name="title" >
       <string>Groups</string>
      </property>
-     <widget class="QRadioButton" name="radioButton" >
+     <widget class="QRadioButton" name="radioButton_User" >
       <property name="geometry" >
        <rect>
         <x>10</x>
@@ -170,7 +170,7 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QRadioButton" name="radioButton_2" >
+     <widget class="QRadioButton" name="radioButton_Luminance" >
       <property name="geometry" >
        <rect>
         <x>10</x>
@@ -183,7 +183,7 @@
        <string>Luminance</string>
       </property>
      </widget>
-     <widget class="QRadioButton" name="radioButton_3" >
+     <widget class="QRadioButton" name="radioButton_Intensity" >
       <property name="geometry" >
        <rect>
         <x>10</x>
@@ -227,15 +227,15 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>checkBox_3</tabstop>
-  <tabstop>checkBox_4</tabstop>
-  <tabstop>checkBox_5</tabstop>
-  <tabstop>checkBox_6</tabstop>
-  <tabstop>radioButton</tabstop>
-  <tabstop>radioButton_2</tabstop>
-  <tabstop>radioButton_3</tabstop>
-  <tabstop>graphicsView</tabstop>
-  <tabstop>verticalSlider</tabstop>
+  <tabstop>checkBox_Red</tabstop>
+  <tabstop>checkBox_Green</tabstop>
+  <tabstop>checkBox_Blue</tabstop>
+  <tabstop>checkBox_Alpha</tabstop>
+  <tabstop>radioButton_User</tabstop>
+  <tabstop>radioButton_Luminance</tabstop>
+  <tabstop>radioButton_Intensity</tabstop>
+  <tabstop>graphicsView_Histogram</tabstop>
+  <tabstop>verticalSlider_ScaleHistogram</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
@@ -272,8 +272,106 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>checkBox_Red</sender>
+   <signal>clicked()</signal>
+   <receiver>TransDialog1D</receiver>
+   <slot>SetUserMode()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>54</x>
+     <y>37</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>292</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_Green</sender>
+   <signal>clicked()</signal>
+   <receiver>TransDialog1D</receiver>
+   <slot>SetUserMode()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>54</x>
+     <y>67</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>292</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_Blue</sender>
+   <signal>clicked()</signal>
+   <receiver>TransDialog1D</receiver>
+   <slot>SetUserMode()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>54</x>
+     <y>97</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>292</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_Alpha</sender>
+   <signal>clicked()</signal>
+   <receiver>TransDialog1D</receiver>
+   <slot>SetUserMode()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>54</x>
+     <y>127</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>292</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_Intensity</sender>
+   <signal>clicked()</signal>
+   <receiver>TransDialog1D</receiver>
+   <slot>SetIntensityMode()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>60</x>
+     <y>244</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>292</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_Luminance</sender>
+   <signal>clicked()</signal>
+   <receiver>TransDialog1D</receiver>
+   <slot>SetLuminanceMode()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>60</x>
+     <y>214</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>292</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>LoadImage()</slot>
+  <slot>SetUserMode()</slot>
+  <slot>SetLuminanceMode()</slot>
+  <slot>SetIntensityMode()</slot>
  </slots>
 </ui>

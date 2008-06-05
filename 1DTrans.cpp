@@ -17,6 +17,23 @@ void TransDialog1D::LoadMockupImage()
 
 	lPixmap.load("1DTrans.png");
 	scene->addPixmap(lPixmap);
-	graphicsView->setScene(scene);
+	graphicsView_Histogram->setScene(scene);
 }
 
+void TransDialog1D::SetUserMode() {
+	radioButton_User->setChecked(true);
+}
+
+void TransDialog1D::SetIntensityMode() {
+	checkBox_Red->setChecked(true);
+	checkBox_Green->setChecked(true);
+	checkBox_Blue->setChecked(true);
+	checkBox_Alpha->setChecked(true);
+}
+
+void TransDialog1D::SetLuminanceMode() {
+	checkBox_Red->setChecked(true);
+	checkBox_Green->setChecked(true);
+	checkBox_Blue->setChecked(true);
+	checkBox_Alpha->setChecked(false);
+}
