@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'ImageVis3D.ui'
 **
-** Created: Thu 5. Jun 10:07:06 2008
+** Created: Thu 5. Jun 10:27:47 2008
 **      by: Qt User Interface Compiler version 4.4.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -497,7 +497,7 @@ public:
     tab_widget->setTabShape(QTabWidget::Rounded);
     history_tab = new QWidget();
     history_tab->setObjectName(QString::fromUtf8("history_tab"));
-    history_tab->setGeometry(QRect(8, 28, 274, 722));
+    history_tab->setGeometry(QRect(0, 0, 274, 722));
     gridLayout = new QGridLayout(history_tab);
     gridLayout->setSpacing(6);
     gridLayout->setMargin(0);
@@ -717,7 +717,7 @@ public:
     tab_widget->addTab(tools_tab, QString());
     Filter_tab = new QWidget();
     Filter_tab->setObjectName(QString::fromUtf8("Filter_tab"));
-    Filter_tab->setGeometry(QRect(8, 28, 274, 722));
+    Filter_tab->setGeometry(QRect(0, 0, 274, 722));
     Gaussian_filter_widget = new QWidget(Filter_tab);
     Gaussian_filter_widget->setObjectName(QString::fromUtf8("Gaussian_filter_widget"));
     Gaussian_filter_widget->setGeometry(QRect(0, 0, 271, 531));
@@ -806,7 +806,7 @@ public:
     tab_widget->addTab(Filter_tab, QString());
     Recorder_tab = new QWidget();
     Recorder_tab->setObjectName(QString::fromUtf8("Recorder_tab"));
-    Recorder_tab->setGeometry(QRect(8, 28, 274, 722));
+    Recorder_tab->setGeometry(QRect(0, 0, 274, 722));
     verticalLayout_2 = new QVBoxLayout(Recorder_tab);
     verticalLayout_2->setSpacing(6);
     verticalLayout_2->setMargin(0);

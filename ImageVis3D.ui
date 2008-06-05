@@ -413,8 +413,8 @@
        <widget class="QWidget" name="history_tab" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>0</x>
+          <y>0</y>
           <width>274</width>
           <height>722</height>
          </rect>
@@ -1243,8 +1243,8 @@
        <widget class="QWidget" name="Filter_tab" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>0</x>
+          <y>0</y>
           <width>274</width>
           <height>722</height>
          </rect>
@@ -1593,8 +1593,8 @@
        <widget class="QWidget" name="Recorder_tab" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>0</x>
+          <y>0</y>
           <width>274</width>
           <height>722</height>
          </rect>
@@ -2478,5 +2478,7 @@
  <slots>
   <slot>Show1DTransferFunction()</slot>
   <slot>Show2DTransferFunction()</slot>
+  <slot>HideAllTools()</slot>
+  <slot>HideAllFilters()</slot>
  </slots>
 </ui>

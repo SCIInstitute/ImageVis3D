@@ -4,8 +4,8 @@
 MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QMainWindow(parent, flags)
 {
 	setupUi(this);
-	hide_tools();
-	hide_filters();
+	HideAllTools();
+	HideAllFilters();
 }
 
 MainWindow::~MainWindow()
@@ -13,7 +13,7 @@ MainWindow::~MainWindow()
 
 }
 
-void MainWindow::hide_tools()
+void MainWindow::HideAllTools()
 {
 	polyline_tool_widget->hide();
 	paintbrush_tool_widget->hide();
@@ -21,7 +21,7 @@ void MainWindow::hide_tools()
 	crop_tool_widget->hide();
 }
 
-void MainWindow::hide_filters()
+void MainWindow::HideAllFilters()
 {
 	Gaussian_filter_widget->hide();
 	Median_filter_widget->hide();

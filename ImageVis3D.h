@@ -16,13 +16,12 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 	protected slots:
 		void Show1DTransferFunction();
 		void Show2DTransferFunction();
+		void HideAllTools();
+		void HideAllFilters();
 
 	private :
 		TransDialog1D m_TransDialog1D;
 		TransDialog2D m_TransDialog2D;
-
-		void hide_tools();
-		void hide_filters();
 
 };
 
