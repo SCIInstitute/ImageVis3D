@@ -17,8 +17,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 	protected slots:
 		void Show1DTransferFunction();
 		void Show2DTransferFunction();
-		void HideAllTools();
-		void HideAllFilters();
 		void LoadDataset();
 		void CloneCurrentView();
 

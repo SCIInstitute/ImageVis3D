@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1129</width>
-    <height>986</height>
+    <width>1026</width>
+    <height>714</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -21,19 +21,22 @@
   <property name="windowTitle" >
    <string>MainWindow</string>
   </property>
+  <property name="toolButtonStyle" >
+   <enum>Qt::ToolButtonIconOnly</enum>
+  </property>
   <property name="dockNestingEnabled" >
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <property name="dockOptions" >
-   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::VerticalTabs</set>
   </property>
   <widget class="QWidget" name="centralwidget" >
    <property name="geometry" >
     <rect>
-     <x>0</x>
+     <x>278</x>
      <y>22</y>
-     <width>827</width>
-     <height>943</height>
+     <width>526</width>
+     <height>671</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2" >
@@ -47,7 +50,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1129</width>
+     <width>1026</width>
      <height>22</height>
     </rect>
    </property>
@@ -195,8 +198,8 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>965</y>
-     <width>1129</width>
+     <y>693</y>
+     <width>1026</width>
      <height>21</height>
     </rect>
    </property>
@@ -204,10 +207,10 @@
   <widget class="QDockWidget" name="dockWidget" >
    <property name="geometry" >
     <rect>
-     <x>831</x>
+     <x>0</x>
      <y>22</y>
-     <width>298</width>
-     <height>943</height>
+     <width>274</width>
+     <height>309</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -219,1393 +222,1265 @@
    <property name="floating" >
     <bool>false</bool>
    </property>
+   <property name="features" >
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
    <property name="allowedAreas" >
-    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+    <set>Qt::AllDockWidgetAreas</set>
    </property>
    <property name="windowTitle" >
     <string>Tools</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>2</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents" >
     <property name="geometry" >
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>298</width>
-      <height>921</height>
+      <width>274</width>
+      <height>287</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout" >
      <item>
-      <widget class="QTabWidget" name="tab_widget" >
+      <widget class="QTabWidget" name="tabWidget_2" >
        <property name="minimumSize" >
         <size>
-         <width>280</width>
-         <height>734</height>
+         <width>100</width>
+         <height>0</height>
         </size>
        </property>
-       <property name="tabShape" >
-        <enum>QTabWidget::Rounded</enum>
+       <property name="tabPosition" >
+        <enum>QTabWidget::North</enum>
        </property>
        <property name="currentIndex" >
-        <number>1</number>
+        <number>3</number>
        </property>
-       <widget class="QWidget" name="history_tab" >
+       <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>274</width>
-          <height>876</height>
+          <x>8</x>
+          <y>28</y>
+          <width>197</width>
+          <height>242</height>
          </rect>
         </property>
         <attribute name="title" >
-         <string>History</string>
+         <string>Polyl-Line</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout" >
-         <item row="0" column="0" colspan="2" >
-          <widget class="QListWidget" name="listWidget" />
-         </item>
-         <item row="1" column="0" >
-          <widget class="QPushButton" name="pushButton_3" >
+        <layout class="QVBoxLayout" name="verticalLayout_5" >
+         <item>
+          <widget class="QCheckBox" name="checkBox" >
+           <property name="layoutDirection" >
+            <enum>Qt::LeftToRight</enum>
+           </property>
            <property name="text" >
-            <string>Undo</string>
+            <string>Stipple</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_3" >
+           <property name="layoutDirection" >
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text" >
+            <string>Silhouette</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Clear Poly-line</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton_2" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Fill</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton_3" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>80</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Erase</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton_4" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>80</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Crop</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_6" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_4" >
+        <property name="geometry" >
+         <rect>
+          <x>8</x>
+          <y>28</y>
+          <width>197</width>
+          <height>242</height>
+         </rect>
+        </property>
+        <attribute name="title" >
+         <string>Paint Brush</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6" >
+         <item>
+          <widget class="QFrame" name="frame" >
+           <property name="frameShape" >
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow" >
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_4" >
+            <item>
+             <widget class="QLabel" name="label_9" >
+              <property name="text" >
+               <string>Brush Radius</string>
+              </property>
+              <property name="buddy" >
+               <cstring>spinBox</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinBox" >
+              <property name="minimum" >
+               <number>1</number>
+              </property>
+              <property name="value" >
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_2" >
+           <property name="layoutDirection" >
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text" >
+            <string>Brush Erase</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton_6" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>60</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Flood Erase</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton_5" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>60</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Flood Fill</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_7" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_5" >
+        <property name="geometry" >
+         <rect>
+          <x>215</x>
+          <y>235</y>
+          <width>1424</width>
+          <height>823</height>
+         </rect>
+        </property>
+        <attribute name="title" >
+         <string>Resample</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_7" >
+         <item row="0" column="0" >
+          <widget class="QLabel" name="label_15" >
+           <property name="text" >
+            <string>X:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>spinBox_5</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1" >
+          <widget class="QSpinBox" name="spinBox_7" >
+           <property name="minimum" >
+            <number>1</number>
+           </property>
+           <property name="maximum" >
+            <number>512</number>
+           </property>
+           <property name="value" >
+            <number>128</number>
            </property>
           </widget>
          </item>
          <item row="1" column="1" >
-          <widget class="QPushButton" name="pushButton_4" >
+          <widget class="QSpinBox" name="spinBox_6" >
+           <property name="minimum" >
+            <number>1</number>
+           </property>
+           <property name="maximum" >
+            <number>512</number>
+           </property>
+           <property name="value" >
+            <number>128</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" >
+          <widget class="QSpinBox" name="spinBox_5" >
+           <property name="minimum" >
+            <number>1</number>
+           </property>
+           <property name="maximum" >
+            <number>512</number>
+           </property>
+           <property name="value" >
+            <number>128</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="label_16" >
            <property name="text" >
-            <string>Redo</string>
+            <string>Y:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>spinBox_6</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" >
+          <widget class="QLabel" name="label_18" >
+           <property name="text" >
+            <string>Filter:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>comboBox_2</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1" >
+          <widget class="QComboBox" name="comboBox_2" >
+           <item>
+            <property name="text" >
+             <string>Box</string>
+            </property>
+           </item>
+           <item>
+            <property name="text" >
+             <string>Tent</string>
+            </property>
+           </item>
+           <item>
+            <property name="text" >
+             <string>Cubic</string>
+            </property>
+           </item>
+           <item>
+            <property name="text" >
+             <string>Quadric</string>
+            </property>
+           </item>
+           <item>
+            <property name="text" >
+             <string>Gaussian</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="2" column="0" >
+          <widget class="QLabel" name="label_17" >
+           <property name="text" >
+            <string>Z:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>spinBox_7</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1" >
+          <spacer name="verticalSpacer_8" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>142</width>
+             <height>88</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="4" column="1" >
+          <widget class="QToolButton" name="toolButton_14" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Execute</string>
            </property>
           </widget>
          </item>
         </layout>
+        <zorder>label_15</zorder>
+        <zorder>spinBox_7</zorder>
+        <zorder>spinBox_6</zorder>
+        <zorder>spinBox_5</zorder>
+        <zorder>label_16</zorder>
+        <zorder>label_18</zorder>
+        <zorder>comboBox_2</zorder>
+        <zorder>label_17</zorder>
+        <zorder>toolButton_14</zorder>
        </widget>
-       <widget class="QWidget" name="tools_tab" >
+       <widget class="QWidget" name="tab_6" >
         <property name="geometry" >
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>274</width>
-          <height>876</height>
+          <width>250</width>
+          <height>242</height>
          </rect>
         </property>
         <attribute name="title" >
-         <string>Tools</string>
+         <string>Crop</string>
         </attribute>
-        <widget class="QWidget" native="1" name="polyline_tool_widget" >
-         <property name="enabled" >
-          <bool>true</bool>
-         </property>
-         <property name="geometry" >
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>271</width>
-           <height>531</height>
-          </rect>
-         </property>
-         <property name="minimumSize" >
-          <size>
-           <width>271</width>
-           <height>531</height>
-          </size>
-         </property>
-         <widget class="QLabel" name="label_7" >
-          <property name="geometry" >
-           <rect>
-            <x>90</x>
-            <y>10</y>
-            <width>71</width>
-            <height>16</height>
-           </rect>
-          </property>
-          <property name="font" >
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
+        <layout class="QVBoxLayout" name="verticalLayout_7" >
+         <item>
+          <widget class="QFrame" name="frame_2" >
+           <property name="frameShape" >
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow" >
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_6" >
+            <item row="0" column="0" >
+             <widget class="QLabel" name="label_28" >
+              <property name="text" >
+               <string>Min X:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" >
+             <widget class="QLCDNumber" name="lcdNumber_5" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Minimum" hsizetype="Expanding" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="segmentStyle" >
+               <enum>QLCDNumber::Filled</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" >
+             <widget class="QLabel" name="label_29" >
+              <property name="text" >
+               <string>Min Y:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" >
+             <widget class="QLCDNumber" name="lcdNumber_6" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Minimum" hsizetype="Expanding" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="segmentStyle" >
+               <enum>QLCDNumber::Filled</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" >
+             <widget class="QLabel" name="label_30" >
+              <property name="text" >
+               <string>Min Z:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1" >
+             <widget class="QLCDNumber" name="lcdNumber_7" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Minimum" hsizetype="Expanding" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="segmentStyle" >
+               <enum>QLCDNumber::Filled</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" >
+             <widget class="QLabel" name="label_31" >
+              <property name="text" >
+               <string>Max X:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1" >
+             <widget class="QLCDNumber" name="lcdNumber_8" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Minimum" hsizetype="Expanding" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="segmentStyle" >
+               <enum>QLCDNumber::Filled</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" >
+             <widget class="QLabel" name="label_32" >
+              <property name="text" >
+               <string>Max Y:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1" >
+             <widget class="QLCDNumber" name="lcdNumber_9" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Minimum" hsizetype="Expanding" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="segmentStyle" >
+               <enum>QLCDNumber::Filled</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0" >
+             <widget class="QLabel" name="label_33" >
+              <property name="text" >
+               <string>Max Z:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1" >
+             <widget class="QLCDNumber" name="lcdNumber_10" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Minimum" hsizetype="Expanding" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="segmentStyle" >
+               <enum>QLCDNumber::Filled</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton_29" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Execute</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_9" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>61</width>
+             <height>66</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_3" >
+   <property name="geometry" >
+    <rect>
+     <x>808</x>
+     <y>22</y>
+     <width>218</width>
+     <height>438</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Recorder</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>218</width>
+      <height>416</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout" >
+     <item>
+      <widget class="QGroupBox" name="groupBox" >
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>16777215</width>
+         <height>51</height>
+        </size>
+       </property>
+       <property name="title" >
+        <string>Image</string>
+       </property>
+       <property name="flat" >
+        <bool>false</bool>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_3" >
+        <item>
+         <widget class="QPushButton" name="pushButton_5" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>23</height>
+           </size>
           </property>
           <property name="text" >
-           <string>Polyl-Line</string>
+           <string>Single </string>
           </property>
          </widget>
-         <widget class="QCheckBox" name="checkBox" >
-          <property name="geometry" >
-           <rect>
-            <x>20</x>
-            <y>30</y>
-            <width>91</width>
-            <height>18</height>
-           </rect>
-          </property>
-          <property name="layoutDirection" >
-           <enum>Qt::RightToLeft</enum>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_6" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>23</height>
+           </size>
           </property>
           <property name="text" >
-           <string>Stipple</string>
+           <string>Sequence</string>
           </property>
          </widget>
-         <widget class="QToolButton" name="toolButton" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>80</y>
-            <width>161</width>
-            <height>20</height>
-           </rect>
-          </property>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_2" >
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="title" >
+        <string>Movie</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3" >
+        <item>
+         <widget class="QPushButton" name="pushButton_7" >
           <property name="text" >
-           <string>Clear Poly-line</string>
+           <string>Start</string>
           </property>
          </widget>
-         <widget class="QToolButton" name="toolButton_2" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>110</y>
-            <width>161</width>
-            <height>20</height>
-           </rect>
-          </property>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_9" >
           <property name="text" >
-           <string>Fill</string>
+           <string>Pause</string>
           </property>
          </widget>
-         <widget class="QToolButton" name="toolButton_3" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>140</y>
-            <width>161</width>
-            <height>20</height>
-           </rect>
-          </property>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_8" >
           <property name="text" >
-           <string>Erase</string>
+           <string>Stop</string>
           </property>
          </widget>
-         <widget class="QToolButton" name="toolButton_4" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>170</y>
-            <width>161</width>
-            <height>20</height>
-           </rect>
-          </property>
+        </item>
+        <item>
+         <widget class="QLabel" name="label" >
           <property name="text" >
-           <string>Crop</string>
+           <string>Camera Path</string>
           </property>
          </widget>
-         <widget class="QCheckBox" name="checkBox_3" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>50</y>
-            <width>72</width>
-            <height>18</height>
-           </rect>
-          </property>
-          <property name="layoutDirection" >
-           <enum>Qt::RightToLeft</enum>
-          </property>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_10" >
           <property name="text" >
-           <string>Silhouette</string>
+           <string>Play</string>
           </property>
          </widget>
-         <widget class="QToolButton" name="polyline_close_Button" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>200</y>
-            <width>161</width>
-            <height>20</height>
-           </rect>
-          </property>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_11" >
           <property name="text" >
-           <string>Close</string>
+           <string>Add new View</string>
           </property>
          </widget>
-        </widget>
-        <widget class="QWidget" native="1" name="Cursor_information_widget" >
-         <property name="geometry" >
-          <rect>
-           <x>0</x>
-           <y>530</y>
-           <width>281</width>
-           <height>181</height>
-          </rect>
-         </property>
-         <property name="minimumSize" >
-          <size>
-           <width>281</width>
-           <height>181</height>
-          </size>
-         </property>
-         <widget class="QLabel" name="label_2" >
-          <property name="geometry" >
-           <rect>
-            <x>91</x>
-            <y>9</y>
-            <width>121</width>
-            <height>28</height>
-           </rect>
-          </property>
-          <property name="font" >
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_12" >
           <property name="text" >
-           <string>Cursor Information</string>
+           <string>Delete Last View</string>
           </property>
          </widget>
-         <widget class="QLCDNumber" name="lcdNumber" >
-          <property name="geometry" >
-           <rect>
-            <x>144</x>
-            <y>43</y>
-            <width>81</width>
-            <height>28</height>
-           </rect>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_13" >
+          <property name="text" >
+           <string>Clear All Views</string>
           </property>
          </widget>
-         <widget class="QLCDNumber" name="lcdNumber_2" >
-          <property name="geometry" >
-           <rect>
-            <x>144</x>
-            <y>77</y>
-            <width>81</width>
-            <height>27</height>
-           </rect>
+        </item>
+        <item>
+         <spacer name="verticalSpacer" >
+          <property name="orientation" >
+           <enum>Qt::Vertical</enum>
           </property>
-         </widget>
-         <widget class="QLCDNumber" name="lcdNumber_3" >
-          <property name="geometry" >
-           <rect>
-            <x>144</x>
-            <y>110</y>
-            <width>81</width>
-            <height>28</height>
-           </rect>
+          <property name="sizeHint" stdset="0" >
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
           </property>
-         </widget>
-         <widget class="QLCDNumber" name="lcdNumber_4" >
-          <property name="geometry" >
-           <rect>
-            <x>144</x>
-            <y>144</y>
-            <width>81</width>
-            <height>28</height>
-           </rect>
-          </property>
-         </widget>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_4" >
+   <property name="geometry" >
+    <rect>
+     <x>808</x>
+     <y>464</y>
+     <width>218</width>
+     <height>229</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Filters</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>218</width>
+      <height>207</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_4" >
+     <item>
+      <widget class="QTabWidget" name="tabWidget" >
+       <property name="currentIndex" >
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tab" >
+        <property name="geometry" >
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>194</width>
+          <height>133</height>
+         </rect>
+        </property>
+        <attribute name="title" >
+         <string>Histogram</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_4" >
+         <item row="0" column="0" >
+          <widget class="QLabel" name="label_19" >
+           <property name="text" >
+            <string>Ignore Bins:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>spinBox_8</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" >
+          <widget class="QSpinBox" name="spinBox_8" >
+           <property name="minimum" >
+            <number>1</number>
+           </property>
+           <property name="maximum" >
+            <number>512</number>
+           </property>
+           <property name="value" >
+            <number>128</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="label_20" >
+           <property name="text" >
+            <string>Alpha:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>spinBox_9</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" >
+          <widget class="QSpinBox" name="spinBox_9" >
+           <property name="minimum" >
+            <number>1</number>
+           </property>
+           <property name="maximum" >
+            <number>512</number>
+           </property>
+           <property name="value" >
+            <number>128</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1" >
+          <spacer name="verticalSpacer_4" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="2" >
+          <spacer name="horizontalSpacer_4" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_2" >
+        <property name="geometry" >
+         <rect>
+          <x>8</x>
+          <y>28</y>
+          <width>254</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <attribute name="title" >
+         <string>Median</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_3" >
+         <item row="0" column="0" >
+          <widget class="QLabel" name="label_26" >
+           <property name="text" >
+            <string>Radius:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>spinBox_12</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" >
+          <widget class="QSpinBox" name="spinBox_12" >
+           <property name="minimum" >
+            <number>1</number>
+           </property>
+           <property name="value" >
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <spacer name="verticalSpacer_3" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="2" >
+          <spacer name="horizontalSpacer_3" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="Seite" >
+        <property name="geometry" >
+         <rect>
+          <x>261</x>
+          <y>281</y>
+          <width>1424</width>
+          <height>823</height>
+         </rect>
+        </property>
+        <attribute name="title" >
+         <string>Gaussian</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_5" >
+         <item row="0" column="0" >
+          <widget class="QLabel" name="label_22" >
+           <property name="text" >
+            <string>Variance:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>spinBox_10</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" >
+          <widget class="QSpinBox" name="spinBox_10" >
+           <property name="minimum" >
+            <number>1</number>
+           </property>
+           <property name="value" >
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="label_24" >
+           <property name="text" >
+            <string>Kernel:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>spinBox_11</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" >
+          <widget class="QSpinBox" name="spinBox_11" >
+           <property name="minimum" >
+            <number>1</number>
+           </property>
+           <property name="maximum" >
+            <number>200</number>
+           </property>
+           <property name="value" >
+            <number>20</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" >
+          <spacer name="verticalSpacer_5" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="2" >
+          <spacer name="horizontalSpacer_2" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="toolButton_27" >
+       <property name="minimumSize" >
+        <size>
+         <width>60</width>
+         <height>23</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>Start</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_5" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>335</y>
+     <width>274</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <property name="minimumSize" >
+    <size>
+     <width>0</width>
+     <height>211</height>
+    </size>
+   </property>
+   <property name="windowTitle" >
+    <string>Information</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_8" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>274</width>
+      <height>189</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2" >
+     <item>
+      <widget class="QGroupBox" name="groupBox_3" >
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>163</height>
+        </size>
+       </property>
+       <property name="title" >
+        <string>Cursor</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout" >
+        <item row="0" column="0" >
          <widget class="QLabel" name="label_3" >
-          <property name="geometry" >
-           <rect>
-            <x>57</x>
-            <y>43</y>
-            <width>81</width>
-            <height>28</height>
-           </rect>
-          </property>
           <property name="text" >
            <string>Value:</string>
           </property>
          </widget>
-         <widget class="QLabel" name="label_4" >
-          <property name="geometry" >
-           <rect>
-            <x>57</x>
-            <y>77</y>
+        </item>
+        <item row="0" column="1" >
+         <widget class="QLCDNumber" name="lcdNumber" >
+          <property name="minimumSize" >
+           <size>
             <width>81</width>
-            <height>27</height>
-           </rect>
+            <height>28</height>
+           </size>
           </property>
+          <property name="segmentStyle" >
+           <enum>QLCDNumber::Filled</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" >
+         <widget class="QLabel" name="label_4" >
           <property name="text" >
            <string>Position X:</string>
           </property>
          </widget>
-         <widget class="QLabel" name="label_6" >
-          <property name="geometry" >
-           <rect>
-            <x>57</x>
-            <y>110</y>
+        </item>
+        <item row="1" column="1" >
+         <widget class="QLCDNumber" name="lcdNumber_2" >
+          <property name="minimumSize" >
+           <size>
             <width>81</width>
-            <height>28</height>
-           </rect>
+            <height>27</height>
+           </size>
           </property>
+          <property name="segmentStyle" >
+           <enum>QLCDNumber::Filled</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" >
+         <widget class="QLabel" name="label_6" >
           <property name="text" >
            <string>Position Y:</string>
           </property>
          </widget>
-         <widget class="QLabel" name="label_5" >
-          <property name="geometry" >
-           <rect>
-            <x>57</x>
-            <y>144</y>
+        </item>
+        <item row="2" column="1" >
+         <widget class="QLCDNumber" name="lcdNumber_3" >
+          <property name="minimumSize" >
+           <size>
             <width>81</width>
             <height>28</height>
-           </rect>
+           </size>
           </property>
+          <property name="segmentStyle" >
+           <enum>QLCDNumber::Filled</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" >
+         <widget class="QLabel" name="label_5" >
           <property name="text" >
            <string>Position Z:</string>
           </property>
          </widget>
-        </widget>
-        <widget class="QWidget" native="1" name="paintbrush_tool_widget" >
-         <property name="geometry" >
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>271</width>
-           <height>531</height>
-          </rect>
-         </property>
-         <property name="minimumSize" >
-          <size>
-           <width>271</width>
-           <height>531</height>
-          </size>
-         </property>
-         <widget class="QLabel" name="label_8" >
-          <property name="geometry" >
-           <rect>
-            <x>90</x>
-            <y>10</y>
-            <width>71</width>
-            <height>16</height>
-           </rect>
-          </property>
-          <property name="font" >
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text" >
-           <string>Paint Brush</string>
-          </property>
-         </widget>
-         <widget class="QCheckBox" name="checkBox_2" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>70</y>
+        </item>
+        <item row="3" column="1" >
+         <widget class="QLCDNumber" name="lcdNumber_4" >
+          <property name="minimumSize" >
+           <size>
             <width>81</width>
+            <height>28</height>
+           </size>
+          </property>
+          <property name="segmentStyle" >
+           <enum>QLCDNumber::Filled</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2" >
+         <spacer name="horizontalSpacer" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0" >
+           <size>
+            <width>40</width>
             <height>20</height>
-           </rect>
-          </property>
-          <property name="layoutDirection" >
-           <enum>Qt::RightToLeft</enum>
-          </property>
-          <property name="text" >
-           <string>Brush Erase</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="toolButton_5" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>100</y>
-            <width>161</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Flood Fill</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="toolButton_6" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>130</y>
-            <width>161</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Flood Erase</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="Paintbrush_close_Button" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>160</y>
-            <width>161</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Close</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_9" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>40</y>
-            <width>71</width>
-            <height>16</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Brush Radius</string>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="spinBox" >
-          <property name="geometry" >
-           <rect>
-            <x>140</x>
-            <y>40</y>
-            <width>51</width>
-            <height>22</height>
-           </rect>
-          </property>
-          <property name="minimum" >
-           <number>1</number>
-          </property>
-          <property name="value" >
-           <number>5</number>
-          </property>
-         </widget>
-        </widget>
-        <widget class="QWidget" native="1" name="resample_tool_widget" >
-         <property name="geometry" >
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>271</width>
-           <height>531</height>
-          </rect>
-         </property>
-         <property name="minimumSize" >
-          <size>
-           <width>271</width>
-           <height>531</height>
-          </size>
-         </property>
-         <widget class="QLabel" name="label_15" >
-          <property name="geometry" >
-           <rect>
-            <x>58</x>
-            <y>30</y>
-            <width>16</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>X:</string>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="spinBox_5" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>30</y>
-            <width>91</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="minimum" >
-           <number>1</number>
-          </property>
-          <property name="maximum" >
-           <number>512</number>
-          </property>
-          <property name="value" >
-           <number>128</number>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="spinBox_6" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>56</y>
-            <width>91</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="minimum" >
-           <number>1</number>
-          </property>
-          <property name="maximum" >
-           <number>512</number>
-          </property>
-          <property name="value" >
-           <number>128</number>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_16" >
-          <property name="geometry" >
-           <rect>
-            <x>58</x>
-            <y>56</y>
-            <width>16</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Y:</string>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="spinBox_7" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>82</y>
-            <width>91</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="minimum" >
-           <number>1</number>
-          </property>
-          <property name="maximum" >
-           <number>512</number>
-          </property>
-          <property name="value" >
-           <number>128</number>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_17" >
-          <property name="geometry" >
-           <rect>
-            <x>58</x>
-            <y>82</y>
-            <width>16</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Z:</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_18" >
-          <property name="geometry" >
-           <rect>
-            <x>58</x>
-            <y>108</y>
-            <width>28</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Filter:</string>
-          </property>
-         </widget>
-         <widget class="QComboBox" name="comboBox_2" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>108</y>
-            <width>91</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <item>
-           <property name="text" >
-            <string>Box</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>Tent</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>Cubic</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>Quadric</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>Gaussian</string>
-           </property>
-          </item>
-         </widget>
-         <widget class="QLabel" name="label_10" >
-          <property name="geometry" >
-           <rect>
-            <x>90</x>
-            <y>10</y>
-            <width>56</width>
-            <height>16</height>
-           </rect>
-          </property>
-          <property name="font" >
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text" >
-           <string>Resample</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="resample_close_Button" >
-          <property name="geometry" >
-           <rect>
-            <x>140</x>
-            <y>130</y>
-            <width>91</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Close</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="toolButton_14" >
-          <property name="geometry" >
-           <rect>
-            <x>40</x>
-            <y>130</y>
-            <width>91</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Start</string>
-          </property>
-         </widget>
-        </widget>
-        <widget class="QWidget" native="1" name="crop_tool_widget" >
-         <property name="geometry" >
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>271</width>
-           <height>531</height>
-          </rect>
-         </property>
-         <property name="minimumSize" >
-          <size>
-           <width>271</width>
-           <height>531</height>
-          </size>
-         </property>
-         <widget class="QToolButton" name="crop_close_Button" >
-          <property name="geometry" >
-           <rect>
-            <x>150</x>
-            <y>230</y>
-            <width>71</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Close</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="toolButton_29" >
-          <property name="geometry" >
-           <rect>
-            <x>60</x>
-            <y>230</y>
-            <width>71</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Crop</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_28" >
-          <property name="geometry" >
-           <rect>
-            <x>77</x>
-            <y>40</y>
-            <width>29</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Min X:</string>
-          </property>
-         </widget>
-         <widget class="QLCDNumber" name="lcdNumber_5" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>40</y>
-            <width>71</width>
-            <height>23</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_27" >
-          <property name="geometry" >
-           <rect>
-            <x>110</x>
-            <y>10</y>
-            <width>31</width>
-            <height>16</height>
-           </rect>
-          </property>
-          <property name="font" >
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text" >
-           <string>Crop</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_29" >
-          <property name="geometry" >
-           <rect>
-            <x>77</x>
-            <y>70</y>
-            <width>29</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Min Y:</string>
-          </property>
-         </widget>
-         <widget class="QLCDNumber" name="lcdNumber_6" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>70</y>
-            <width>71</width>
-            <height>23</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_30" >
-          <property name="geometry" >
-           <rect>
-            <x>77</x>
-            <y>100</y>
-            <width>29</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Min Z:</string>
-          </property>
-         </widget>
-         <widget class="QLCDNumber" name="lcdNumber_7" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>100</y>
-            <width>71</width>
-            <height>23</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLCDNumber" name="lcdNumber_8" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>130</y>
-            <width>71</width>
-            <height>23</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_31" >
-          <property name="geometry" >
-           <rect>
-            <x>77</x>
-            <y>130</y>
-            <width>29</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Max X:</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_32" >
-          <property name="geometry" >
-           <rect>
-            <x>77</x>
-            <y>160</y>
-            <width>29</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Max Y:</string>
-          </property>
-         </widget>
-         <widget class="QLCDNumber" name="lcdNumber_9" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>160</y>
-            <width>71</width>
-            <height>23</height>
-           </rect>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_33" >
-          <property name="geometry" >
-           <rect>
-            <x>77</x>
-            <y>190</y>
-            <width>29</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Max Z:</string>
-          </property>
-         </widget>
-         <widget class="QLCDNumber" name="lcdNumber_10" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>190</y>
-            <width>71</width>
-            <height>23</height>
-           </rect>
-          </property>
-         </widget>
-        </widget>
-       </widget>
-       <widget class="QWidget" name="Filter_tab" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>274</width>
-          <height>876</height>
-         </rect>
-        </property>
-        <attribute name="title" >
-         <string>Filters</string>
-        </attribute>
-        <widget class="QWidget" native="1" name="Gaussian_filter_widget" >
-         <property name="geometry" >
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>271</width>
-           <height>531</height>
-          </rect>
-         </property>
-         <property name="minimumSize" >
-          <size>
-           <width>271</width>
-           <height>531</height>
-          </size>
-         </property>
-         <widget class="QLabel" name="label_21" >
-          <property name="geometry" >
-           <rect>
-            <x>100</x>
-            <y>10</y>
-            <width>61</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="font" >
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text" >
-           <string>Gaussian</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="guassian_close_Button" >
-          <property name="geometry" >
-           <rect>
-            <x>138</x>
-            <y>90</y>
-            <width>81</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Close</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="toolButton_25" >
-          <property name="geometry" >
-           <rect>
-            <x>20</x>
-            <y>90</y>
-            <width>81</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Start</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_22" >
-          <property name="geometry" >
-           <rect>
-            <x>20</x>
-            <y>40</y>
-            <width>44</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Variance:</string>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="spinBox_10" >
-          <property name="geometry" >
-           <rect>
-            <x>91</x>
-            <y>35</y>
-            <width>101</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="minimum" >
-           <number>1</number>
-          </property>
-          <property name="value" >
-           <number>1</number>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="spinBox_11" >
-          <property name="geometry" >
-           <rect>
-            <x>91</x>
-            <y>55</y>
-            <width>101</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="minimum" >
-           <number>1</number>
-          </property>
-          <property name="maximum" >
-           <number>200</number>
-          </property>
-          <property name="value" >
-           <number>20</number>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_24" >
-          <property name="geometry" >
-           <rect>
-            <x>30</x>
-            <y>60</y>
-            <width>34</width>
-            <height>16</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Kernel:</string>
-          </property>
-         </widget>
-        </widget>
-        <widget class="QWidget" native="1" name="Median_filter_widget" >
-         <property name="geometry" >
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>271</width>
-           <height>531</height>
-          </rect>
-         </property>
-         <property name="minimumSize" >
-          <size>
-           <width>271</width>
-           <height>531</height>
-          </size>
-         </property>
-         <widget class="QLabel" name="label_25" >
-          <property name="geometry" >
-           <rect>
-            <x>100</x>
-            <y>10</y>
-            <width>61</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="font" >
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text" >
-           <string>Median</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="median_close_Button" >
-          <property name="geometry" >
-           <rect>
-            <x>140</x>
-            <y>70</y>
-            <width>81</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Close</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="toolButton_27" >
-          <property name="geometry" >
-           <rect>
-            <x>20</x>
-            <y>70</y>
-            <width>81</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Start</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_26" >
-          <property name="geometry" >
-           <rect>
-            <x>20</x>
-            <y>40</y>
-            <width>44</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Radius:</string>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="spinBox_12" >
-          <property name="geometry" >
-           <rect>
-            <x>91</x>
-            <y>35</y>
-            <width>101</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="minimum" >
-           <number>1</number>
-          </property>
-          <property name="value" >
-           <number>1</number>
-          </property>
-         </widget>
-        </widget>
-        <widget class="QWidget" native="1" name="Histogram_filter_widget" >
-         <property name="geometry" >
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>271</width>
-           <height>531</height>
-          </rect>
-         </property>
-         <property name="minimumSize" >
-          <size>
-           <width>271</width>
-           <height>531</height>
-          </size>
-         </property>
-         <widget class="QLabel" name="label_19" >
-          <property name="geometry" >
-           <rect>
-            <x>30</x>
-            <y>30</y>
-            <width>58</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Ignore Bins:</string>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="spinBox_8" >
-          <property name="geometry" >
-           <rect>
-            <x>95</x>
-            <y>30</y>
-            <width>101</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="minimum" >
-           <number>1</number>
-          </property>
-          <property name="maximum" >
-           <number>512</number>
-          </property>
-          <property name="value" >
-           <number>128</number>
-          </property>
-         </widget>
-         <widget class="QSpinBox" name="spinBox_9" >
-          <property name="geometry" >
-           <rect>
-            <x>95</x>
-            <y>56</y>
-            <width>101</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="minimum" >
-           <number>1</number>
-          </property>
-          <property name="maximum" >
-           <number>512</number>
-          </property>
-          <property name="value" >
-           <number>128</number>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_20" >
-          <property name="geometry" >
-           <rect>
-            <x>30</x>
-            <y>56</y>
-            <width>31</width>
-            <height>17</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Alpha:</string>
-          </property>
-         </widget>
-         <widget class="QLabel" name="label_23" >
-          <property name="geometry" >
-           <rect>
-            <x>90</x>
-            <y>10</y>
-            <width>59</width>
-            <height>16</height>
-           </rect>
-          </property>
-          <property name="font" >
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text" >
-           <string>Histogram</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="toolButton_12" >
-          <property name="geometry" >
-           <rect>
-            <x>9</x>
-            <y>91</y>
-            <width>91</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Start</string>
-          </property>
-         </widget>
-         <widget class="QToolButton" name="histogram_close_Button" >
-          <property name="geometry" >
-           <rect>
-            <x>120</x>
-            <y>90</y>
-            <width>91</width>
-            <height>20</height>
-           </rect>
-          </property>
-          <property name="text" >
-           <string>Close</string>
-          </property>
-         </widget>
-        </widget>
-       </widget>
-       <widget class="QWidget" name="Recorder_tab" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>274</width>
-          <height>876</height>
-         </rect>
-        </property>
-        <attribute name="title" >
-         <string>Recorder</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_2" >
-         <item>
-          <widget class="QGroupBox" name="groupBox" >
-           <property name="minimumSize" >
-            <size>
-             <width>0</width>
-             <height>51</height>
-            </size>
-           </property>
-           <property name="maximumSize" >
-            <size>
-             <width>16777215</width>
-             <height>51</height>
-            </size>
-           </property>
-           <property name="title" >
-            <string>Image</string>
-           </property>
-           <property name="flat" >
-            <bool>false</bool>
-           </property>
-           <widget class="QPushButton" name="pushButton_5" >
-            <property name="geometry" >
-             <rect>
-              <x>10</x>
-              <y>20</y>
-              <width>75</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text" >
-             <string>Single </string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="pushButton_6" >
-            <property name="geometry" >
-             <rect>
-              <x>100</x>
-              <y>20</y>
-              <width>75</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text" >
-             <string>Sequence</string>
-            </property>
-           </widget>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="groupBox_2" >
-           <property name="title" >
-            <string>Movie</string>
-           </property>
-           <widget class="QPushButton" name="pushButton_7" >
-            <property name="geometry" >
-             <rect>
-              <x>10</x>
-              <y>20</y>
-              <width>181</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text" >
-             <string>Start</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="pushButton_8" >
-            <property name="geometry" >
-             <rect>
-              <x>10</x>
-              <y>80</y>
-              <width>181</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text" >
-             <string>Stop</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="pushButton_9" >
-            <property name="geometry" >
-             <rect>
-              <x>10</x>
-              <y>50</y>
-              <width>181</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text" >
-             <string>Pause</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="pushButton_10" >
-            <property name="geometry" >
-             <rect>
-              <x>10</x>
-              <y>130</y>
-              <width>181</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text" >
-             <string>Play</string>
-            </property>
-           </widget>
-           <widget class="QLabel" name="label" >
-            <property name="geometry" >
-             <rect>
-              <x>10</x>
-              <y>110</y>
-              <width>61</width>
-              <height>16</height>
-             </rect>
-            </property>
-            <property name="text" >
-             <string>Camera Path</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="pushButton_11" >
-            <property name="geometry" >
-             <rect>
-              <x>10</x>
-              <y>170</y>
-              <width>181</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text" >
-             <string>Add new View</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="pushButton_12" >
-            <property name="geometry" >
-             <rect>
-              <x>10</x>
-              <y>200</y>
-              <width>181</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text" >
-             <string>Delete Last View</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="pushButton_13" >
-            <property name="geometry" >
-             <rect>
-              <x>10</x>
-              <y>240</y>
-              <width>181</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text" >
-             <string>Clear All Views</string>
-            </property>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>146</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>550</y>
+     <width>274</width>
+     <height>143</height>
+    </rect>
+   </property>
+   <property name="minimumSize" >
+    <size>
+     <width>174</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="windowTitle" >
+    <string>History</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>274</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2" >
+     <item row="0" column="0" colspan="2" >
+      <widget class="QListWidget" name="listWidget" />
+     </item>
+     <item row="1" column="0" >
+      <widget class="QPushButton" name="pushButton_3" >
+       <property name="text" >
+        <string>Undo</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" >
+      <widget class="QPushButton" name="pushButton_4" >
+       <property name="text" >
+        <string>Redo</string>
+       </property>
       </widget>
      </item>
     </layout>
@@ -1616,28 +1491,7 @@
     <string>Load Dataset</string>
    </property>
   </action>
-  <action name="actionOpen_Existing_Project" >
-   <property name="text" >
-    <string>Open Existing Project</string>
-   </property>
-  </action>
   <action name="actionSave_Current_Project" >
-   <property name="text" >
-    <string>Save Dataset</string>
-   </property>
-  </action>
-  <action name="actionLoad_Dataset" >
-   <property name="enabled" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Load Dataset</string>
-   </property>
-  </action>
-  <action name="actionSave_Dataset" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
    <property name="text" >
     <string>Save Dataset</string>
    </property>
@@ -1645,19 +1499,6 @@
   <action name="actionQuit" >
    <property name="text" >
     <string>Quit</string>
-   </property>
-  </action>
-  <action name="actionClose_Dataset" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
-   <property name="text" >
-    <string>Close Dataset</string>
-   </property>
-  </action>
-  <action name="actionClose_Project" >
-   <property name="text" >
-    <string>Close View</string>
    </property>
   </action>
   <action name="action2_x_2_View" >
@@ -1696,11 +1537,6 @@
     <string>Crop</string>
    </property>
   </action>
-  <action name="actionMask" >
-   <property name="text" >
-    <string>Mask</string>
-   </property>
-  </action>
   <action name="actionBox" >
    <property name="text" >
     <string>Box Select</string>
@@ -1724,11 +1560,6 @@
   <action name="actionInvert_Selection" >
    <property name="text" >
     <string>Invert Selection</string>
-   </property>
-  </action>
-  <action name="actionHistorgram" >
-   <property name="text" >
-    <string>Historgram</string>
    </property>
   </action>
   <action name="actionStastistcs" >
@@ -1809,11 +1640,6 @@
   <action name="actionXor" >
    <property name="text" >
     <string>xor</string>
-   </property>
-  </action>
-  <action name="actionLoad_Transfer_Function" >
-   <property name="text" >
-    <string>Load Transfer Function</string>
    </property>
   </action>
   <action name="actionAbout" >
@@ -1965,118 +1791,6 @@
  <resources/>
  <connections>
   <connection>
-   <sender>median_close_Button</sender>
-   <signal>clicked()</signal>
-   <receiver>Median_filter_widget</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1141</x>
-     <y>154</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>1096</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>Paintbrush_close_Button</sender>
-   <signal>clicked()</signal>
-   <receiver>paintbrush_tool_widget</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1081</x>
-     <y>244</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>1096</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>polyline_close_Button</sender>
-   <signal>clicked()</signal>
-   <receiver>polyline_tool_widget</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1081</x>
-     <y>284</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>1096</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>crop_close_Button</sender>
-   <signal>clicked()</signal>
-   <receiver>crop_tool_widget</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1146</x>
-     <y>314</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>1096</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>guassian_close_Button</sender>
-   <signal>clicked()</signal>
-   <receiver>Gaussian_filter_widget</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1139</x>
-     <y>174</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>1096</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>histogram_close_Button</sender>
-   <signal>clicked()</signal>
-   <receiver>Histogram_filter_widget</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1126</x>
-     <y>174</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>1096</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>resample_close_Button</sender>
-   <signal>clicked()</signal>
-   <receiver>resample_tool_widget</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1146</x>
-     <y>214</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>1096</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionQuit</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
@@ -2121,230 +1835,6 @@
     <hint type="destinationlabel" >
      <x>480</x>
      <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionCrop</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>HideAllTools()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>480</x>
-     <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionCrop</sender>
-   <signal>triggered()</signal>
-   <receiver>crop_tool_widget</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>809</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionPaint_brush</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>HideAllTools()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>480</x>
-     <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionPaint_brush</sender>
-   <signal>triggered()</signal>
-   <receiver>paintbrush_tool_widget</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>809</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionPoly_Line</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>HideAllTools()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>480</x>
-     <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionPoly_Line</sender>
-   <signal>triggered()</signal>
-   <receiver>polyline_tool_widget</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>809</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionResample</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>HideAllTools()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>480</x>
-     <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionResample</sender>
-   <signal>triggered()</signal>
-   <receiver>resample_tool_widget</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>809</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionGaussian</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>HideAllFilters()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>480</x>
-     <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionGaussian</sender>
-   <signal>triggered()</signal>
-   <receiver>Gaussian_filter_widget</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>809</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionHistogram</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>HideAllFilters()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>480</x>
-     <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionHistogram</sender>
-   <signal>triggered()</signal>
-   <receiver>Histogram_filter_widget</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>809</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionMedian</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>HideAllFilters()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>480</x>
-     <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionMedian</sender>
-   <signal>triggered()</signal>
-   <receiver>Median_filter_widget</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>809</x>
-     <y>340</y>
     </hint>
    </hints>
   </connection>
@@ -2413,22 +1903,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionClose_Project</sender>
-   <signal>triggered()</signal>
-   <receiver>mdiArea</receiver>
-   <slot>closeActiveSubWindow()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>413</x>
-     <y>493</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionCloneCurrentView</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
@@ -2455,8 +1929,8 @@
      <y>-1</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>413</x>
-     <y>493</y>
+     <x>366</x>
+     <y>502</y>
     </hint>
    </hints>
   </connection>
@@ -2471,8 +1945,8 @@
      <y>-1</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>413</x>
-     <y>493</y>
+     <x>366</x>
+     <y>502</y>
     </hint>
    </hints>
   </connection>
@@ -2487,8 +1961,8 @@
      <y>-1</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>413</x>
-     <y>493</y>
+     <x>366</x>
+     <y>502</y>
     </hint>
    </hints>
   </connection>
@@ -2503,8 +1977,8 @@
      <y>-1</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>413</x>
-     <y>493</y>
+     <x>366</x>
+     <y>502</y>
     </hint>
    </hints>
   </connection>
