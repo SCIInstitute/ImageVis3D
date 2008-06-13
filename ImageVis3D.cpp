@@ -1,7 +1,7 @@
 #include "ImageVis3D.h"
 
-#include <QTGui/QMdiSubWindow>
-#include <QTGui/QFileDialog>
+#include <QtGui/QMdiSubWindow>
+#include <QtGui/QFileDialog>
 
 MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QMainWindow(parent, flags)
 {
