@@ -296,7 +296,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -306,7 +306,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -395,7 +395,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\trans2d_2.png"
+				RelativePath=".\trans2d_a.png"
+				>
+			</File>
+			<File
+				RelativePath=".\trans2d_b.png"
+				>
+			</File>
+			<File
+				RelativePath=".\trans2d_c.png"
 				>
 			</File>
 		</Filter>
