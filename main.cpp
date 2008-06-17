@@ -1,4 +1,4 @@
-#include <Qt/qapplication.h>
+#include <QtGui/QApplication>
 #include "ImageVis3D.h"
 
 int main(int argc, char* argv[])
