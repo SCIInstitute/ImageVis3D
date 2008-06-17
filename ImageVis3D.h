@@ -2,9 +2,8 @@
 #define IMAGEVIS3D_H
 
 #include "ui_ImageVis3D.h"
-#include "TransDialog1D.h"
-#include "TransDialog2D.h"
 #include "RenderWindow.h"
+#include "QDockWidgetStateList.h"
 
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow
@@ -15,22 +14,29 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		virtual ~MainWindow();
 	
 	protected slots:
-		void Show1DTransferFunction();
-		void Show2DTransferFunction();
 		void LoadDataset();
+		void LoadDirectory();
 		void CloneCurrentView();
 
 		void ToggleRenderWindowView1x3();
 		void ToggleRenderWindowView2x2();
 		void ToggleRenderWindowViewSingle();
 
-	private :
-		TransDialog1D m_TransDialog1D;
-		TransDialog2D m_TransDialog2D;
+		void Transfer1DCBClicked();
+		void Transfer1DRadioClicked();
 
+		void LoadWorkspace();
+		void SaveWorkspace();
+		void ApplyWorkspace();
+
+	private :
 		RenderWindow* CreateNewRenderWindow();
 		RenderWindow* GetActiveRenderWindow();
 
+		QDockWidgetStateList m_Workspace;
+		void LoadWorkspace(QString strFilename);
+		void SaveWorkspace(QString strFilename);
+		
 };
 
 #endif 

@@ -182,7 +182,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\main.cpp"
+				RelativePath=".\QDockWidgetState.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\QDockWidgetStateList.cpp"
 				>
 			</File>
 		</Filter>
@@ -191,6 +195,14 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\QDockWidgetState.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QDockWidgetStateList.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Forms"
@@ -207,14 +219,6 @@
 					RelativePath=".\RenderWindow.ui"
 					>
 				</File>
-				<File
-					RelativePath=".\TransDialog1D.ui"
-					>
-				</File>
-				<File
-					RelativePath=".\TransDialog2D.ui"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Automaticaly Generated Files"
@@ -228,27 +232,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\moc_TransDialog1D.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\moc_TransDialog2D.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\ui_ImageVis3D.h"
 					>
 				</File>
 				<File
 					RelativePath=".\ui_RenderWindow.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ui_TransDialog1D.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ui_TransDialog2D.h"
 					>
 				</File>
 			</Filter>
@@ -311,62 +299,6 @@
 						/>
 					</FileConfiguration>
 				</File>
-				<File
-					RelativePath=".\TransDialog1D.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\TransDialog1D.h"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\TransDialog2D.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\TransDialog2D.h"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -391,10 +323,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\trans2d_1.png"
-				>
-			</File>
-			<File
 				RelativePath=".\trans2d_a.png"
 				>
 			</File>
@@ -407,6 +335,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\main.cpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

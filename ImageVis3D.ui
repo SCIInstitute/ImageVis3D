@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1192</width>
-    <height>1043</height>
+    <height>1051</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -63,12 +63,13 @@
       <string>Most Recently Used</string>
      </property>
      <addaction name="actionHand_dat" />
-     <addaction name="actionLeg_nrrd" />
-     <addaction name="actionFoot_dicom" />
+     <addaction name="actionLeg_nnrd" />
+     <addaction name="actionHead_dicom" />
      <addaction name="separator" />
      <addaction name="actionClear_List" />
     </widget>
     <addaction name="actionLoadDataset" />
+    <addaction name="actionLoad_Dataset_from_Directory" />
     <addaction name="actionSave_Current_Project" />
     <addaction name="separator" />
     <addaction name="menuLast_Used_Projects" />
@@ -102,45 +103,21 @@
    </widget>
    <widget class="QMenu" name="menu_Tools" >
     <property name="title" >
-     <string>&amp;Tools</string>
+     <string>Workspace</string>
     </property>
-    <widget class="QMenu" name="menuBitwise_Operations" >
-     <property name="title" >
-      <string>Bitwise Operations</string>
-     </property>
-     <addaction name="actionAnd" />
-     <addaction name="actionOr" />
-     <addaction name="actionNot" />
-     <addaction name="actionXor" />
-    </widget>
-    <widget class="QMenu" name="menuMasking" >
-     <property name="title" >
-      <string>Masking</string>
-     </property>
-     <addaction name="actionIsosurface" />
-     <addaction name="actionGeneric" />
-    </widget>
-    <addaction name="actionCrop" />
-    <addaction name="menuBitwise_Operations" />
-    <addaction name="menuMasking" />
-    <addaction name="actionPaint_brush" />
+    <addaction name="actionTools" />
+    <addaction name="actionFilters" />
+    <addaction name="separator" />
+    <addaction name="actionHistory" />
     <addaction name="actionInformation" />
-    <addaction name="actionInvert" />
-    <addaction name="actionResample" />
-   </widget>
-   <widget class="QMenu" name="menu_Filters" >
-    <property name="title" >
-     <string>&amp;Filters</string>
-    </property>
-    <addaction name="actionMedian" />
+    <addaction name="actionRecorder" />
     <addaction name="separator" />
-    <addaction name="actionGaussian" />
-    <addaction name="actionEdge_Detection" />
+    <addaction name="action1D_Transfer_Function_Editor" />
+    <addaction name="action2D_Transfer_Function_Editor" />
     <addaction name="separator" />
-    <addaction name="actionDesign_Convolution" />
-    <addaction name="actionLoad_Convolution" />
-    <addaction name="actionSave_Convolution" />
-    <addaction name="actionHistogram" />
+    <addaction name="actionLoad_Workspace" />
+    <addaction name="actionSave_Workspace" />
+    <addaction name="actionReset_Workspace" />
    </widget>
    <widget class="QMenu" name="menu_Help" >
     <property name="title" >
@@ -166,45 +143,23 @@
     <addaction name="actionUndo" />
     <addaction name="actionRedo" />
    </widget>
-   <widget class="QMenu" name="menuRecording" >
-    <property name="title" >
-     <string>Recording</string>
-    </property>
-    <addaction name="actionREcord_Image" />
-    <addaction name="actionRecord_Movie" />
-   </widget>
-   <widget class="QMenu" name="menuTransfer_Functions" >
-    <property name="title" >
-     <string>Transfer Functions</string>
-    </property>
-    <addaction name="actionLoad" />
-    <addaction name="actionSave" />
-    <addaction name="separator" />
-    <addaction name="action1D_Transfer_Function_Editor" />
-    <addaction name="action2D_Transfer_Function_Editor" />
-    <addaction name="separator" />
-    <addaction name="actionToggle_between_1D_and_2D" />
-   </widget>
    <addaction name="menu_File" />
    <addaction name="menu_View" />
    <addaction name="menuSelection" />
    <addaction name="menu_Tools" />
-   <addaction name="menu_Filters" />
-   <addaction name="menuRecording" />
    <addaction name="menu_Help" />
-   <addaction name="menuTransfer_Functions" />
   </widget>
   <widget class="QStatusBar" name="statusbar" >
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1022</y>
+     <y>1030</y>
      <width>1192</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
-  <widget class="QDockWidget" name="dockWidget" >
+  <widget class="QDockWidget" name="dockWidget_Tools" >
    <property name="geometry" >
     <rect>
      <x>0</x>
@@ -829,7 +784,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_3" >
+  <widget class="QDockWidget" name="dockWidget_Recorder" >
    <property name="geometry" >
     <rect>
      <x>974</x>
@@ -991,7 +946,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_4" >
+  <widget class="QDockWidget" name="dockWidget_Filters" >
    <property name="geometry" >
     <rect>
      <x>974</x>
@@ -1017,7 +972,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4" >
      <item>
-      <widget class="QTabWidget" name="tabWidget" >
+      <widget class="QTabWidget" name="tabWidged_Filters" >
        <property name="sizePolicy" >
         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
          <horstretch>0</horstretch>
@@ -1289,7 +1244,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_5" >
+  <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="geometry" >
     <rect>
      <x>0</x>
@@ -1444,7 +1399,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_2" >
+  <widget class="QDockWidget" name="dockWidget_History" >
    <property name="geometry" >
     <rect>
      <x>0</x>
@@ -1479,14 +1434,14 @@
       <widget class="QListWidget" name="listWidget" />
      </item>
      <item row="1" column="0" >
-      <widget class="QPushButton" name="pushButton_3" >
+      <widget class="QPushButton" name="pushButton_Undo" >
        <property name="text" >
         <string>Undo</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1" >
-      <widget class="QPushButton" name="pushButton_4" >
+      <widget class="QPushButton" name="pushButton_Redo" >
        <property name="text" >
         <string>Redo</string>
        </property>
@@ -1495,13 +1450,13 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_6" >
+  <widget class="QDockWidget" name="dockWidget_2DTrans" >
    <property name="geometry" >
     <rect>
      <x>0</x>
      <y>696</y>
      <width>748</width>
-     <height>326</height>
+     <height>334</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1525,7 +1480,7 @@
       <x>0</x>
       <y>22</y>
       <width>748</width>
-      <height>304</height>
+      <height>312</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_9" >
@@ -1680,6 +1635,20 @@
           </property>
          </spacer>
         </item>
+        <item row="3" column="0" >
+         <widget class="QPushButton" name="pushButton_17" >
+          <property name="text" >
+           <string>Load</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1" >
+         <widget class="QPushButton" name="pushButton_18" >
+          <property name="text" >
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
@@ -1737,13 +1706,13 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_7" >
+  <widget class="QDockWidget" name="dockWidget_1DTrans" >
    <property name="geometry" >
     <rect>
      <x>752</x>
      <y>696</y>
      <width>440</width>
-     <height>326</height>
+     <height>334</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1764,7 +1733,7 @@
       <x>0</x>
       <y>22</y>
       <width>440</width>
-      <height>304</height>
+      <height>312</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_10" >
@@ -1814,7 +1783,7 @@
        </layout>
       </widget>
      </item>
-     <item rowspan="3" row="0" column="1" >
+     <item rowspan="5" row="0" column="1" >
       <widget class="QLabel" name="label_11" >
        <property name="sizePolicy" >
         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
@@ -1836,7 +1805,7 @@
        </property>
       </widget>
      </item>
-     <item rowspan="3" row="0" column="2" >
+     <item rowspan="5" row="0" column="2" >
       <widget class="QSlider" name="verticalSlider" >
        <property name="toolTip" >
         <string>Scales the histogram</string>
@@ -1882,25 +1851,39 @@
        </layout>
       </widget>
      </item>
-     <item row="2" column="0" >
+     <item row="4" column="0" >
       <spacer name="verticalSpacer_11" >
        <property name="orientation" >
         <enum>Qt::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0" >
         <size>
-         <width>20</width>
-         <height>47</height>
+         <width>104</width>
+         <height>12</height>
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="2" column="0" >
+      <widget class="QPushButton" name="pushButton_15" >
+       <property name="text" >
+        <string>Load</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" >
+      <widget class="QPushButton" name="pushButton_16" >
+       <property name="text" >
+        <string>Save</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
   </widget>
   <action name="actionLoadDataset" >
    <property name="text" >
-    <string>Load Dataset</string>
+    <string>Load Dataset Frome File</string>
    </property>
   </action>
   <action name="actionSave_Current_Project" >
@@ -1944,11 +1927,6 @@
     <string>Isosurface Rendering</string>
    </property>
   </action>
-  <action name="actionCrop" >
-   <property name="text" >
-    <string>Crop</string>
-   </property>
-  </action>
   <action name="actionBox" >
    <property name="text" >
     <string>Box Select</string>
@@ -1989,11 +1967,6 @@
     <string>Redo</string>
    </property>
   </action>
-  <action name="actionREcord_Image" >
-   <property name="text" >
-    <string>Record Image</string>
-   </property>
-  </action>
   <action name="actionGo_Fullscreen" >
    <property name="text" >
     <string>Go Fullscreen</string>
@@ -2002,36 +1975,6 @@
   <action name="actionRecord_Movie" >
    <property name="text" >
     <string>Record Movie</string>
-   </property>
-  </action>
-  <action name="actionMedian" >
-   <property name="text" >
-    <string>Median</string>
-   </property>
-  </action>
-  <action name="actionGaussian" >
-   <property name="text" >
-    <string>Gaussian</string>
-   </property>
-  </action>
-  <action name="actionEdge_Detection" >
-   <property name="text" >
-    <string>Edge Detection</string>
-   </property>
-  </action>
-  <action name="actionDesign_Convolution" >
-   <property name="text" >
-    <string>Design Convolution</string>
-   </property>
-  </action>
-  <action name="actionLoad_Convolution" >
-   <property name="text" >
-    <string>Load Convolution</string>
-   </property>
-  </action>
-  <action name="actionSave_Convolution" >
-   <property name="text" >
-    <string>Save Convolution</string>
    </property>
   </action>
   <action name="actionAnd" >
@@ -2074,21 +2017,6 @@
     <string>Save Current</string>
    </property>
   </action>
-  <action name="action1D_Transfer_Function_Editor" >
-   <property name="text" >
-    <string>1D Transfer Function Editor</string>
-   </property>
-  </action>
-  <action name="action2D_Transfer_Function_Editor" >
-   <property name="text" >
-    <string>2D Transfer Function Editor</string>
-   </property>
-  </action>
-  <action name="actionToggle_between_1D_and_2D" >
-   <property name="text" >
-    <string>Toggle between 1D and 2D</string>
-   </property>
-  </action>
   <action name="actionStereo_Projection" >
    <property name="checkable" >
     <bool>true</bool>
@@ -2102,49 +2030,14 @@
     <string>Isosurface</string>
    </property>
   </action>
-  <action name="actionPaint_brush" >
-   <property name="text" >
-    <string>paint brush</string>
-   </property>
-  </action>
-  <action name="actionInformation" >
-   <property name="text" >
-    <string>Information</string>
-   </property>
-  </action>
-  <action name="actionInvert" >
-   <property name="text" >
-    <string>Invert</string>
-   </property>
-  </action>
   <action name="actionGeneric" >
    <property name="text" >
     <string>Generic</string>
    </property>
   </action>
-  <action name="actionResample" >
-   <property name="text" >
-    <string>Resample</string>
-   </property>
-  </action>
-  <action name="actionHistogram" >
-   <property name="text" >
-    <string>Histogram</string>
-   </property>
-  </action>
   <action name="actionHand_dat" >
    <property name="text" >
     <string>Hand.dat</string>
-   </property>
-  </action>
-  <action name="actionLeg_nrrd" >
-   <property name="text" >
-    <string>Leg.nrrd</string>
-   </property>
-  </action>
-  <action name="actionFoot_dicom" >
-   <property name="text" >
-    <string>foot.dicom</string>
    </property>
   </action>
   <action name="actionClear_List" >
@@ -2196,6 +2089,95 @@
   <action name="actionShow_Toolbar" >
    <property name="text" >
     <string>Show Toolbar</string>
+   </property>
+  </action>
+  <action name="actionTools" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Tools</string>
+   </property>
+  </action>
+  <action name="actionHistory" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>History</string>
+   </property>
+  </action>
+  <action name="actionInformation" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Information</string>
+   </property>
+  </action>
+  <action name="actionRecorder" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Movie / Image Recorder</string>
+   </property>
+  </action>
+  <action name="actionFilters" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Filters</string>
+   </property>
+  </action>
+  <action name="action2D_Transfer_Function_Editor" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>2D Transfer Function Editor</string>
+   </property>
+  </action>
+  <action name="action1D_Transfer_Function_Editor" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>1D Transfer Function Editor</string>
+   </property>
+  </action>
+  <action name="actionLoad_Workspace" >
+   <property name="text" >
+    <string>Load Workspace</string>
+   </property>
+  </action>
+  <action name="actionSave_Workspace" >
+   <property name="text" >
+    <string>Save Workspace</string>
+   </property>
+  </action>
+  <action name="actionLeg_nnrd" >
+   <property name="text" >
+    <string>Leg.nnrd</string>
+   </property>
+  </action>
+  <action name="actionHead_dicom" >
+   <property name="text" >
+    <string>head.dicom</string>
+   </property>
+  </action>
+  <action name="actionReset_Workspace" >
+   <property name="text" >
+    <string>Reset Workspace</string>
+   </property>
+  </action>
+  <action name="actionLoad_Dataset_from_Directory" >
+   <property name="text" >
+    <string>Load Dataset from Directory</string>
    </property>
   </action>
  </widget>
@@ -2380,7 +2362,7 @@
   </connection>
   <connection>
    <sender>checkBox_Alpha</sender>
-   <signal>toggled(bool)</signal>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>Transfer1DCBClicked()</slot>
    <hints>
@@ -2396,7 +2378,7 @@
   </connection>
   <connection>
    <sender>checkBox_Blue</sender>
-   <signal>toggled(bool)</signal>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>Transfer1DCBClicked()</slot>
    <hints>
@@ -2412,7 +2394,7 @@
   </connection>
   <connection>
    <sender>checkBox_Green</sender>
-   <signal>toggled(bool)</signal>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>Transfer1DCBClicked()</slot>
    <hints>
@@ -2428,7 +2410,7 @@
   </connection>
   <connection>
    <sender>checkBox_Red</sender>
-   <signal>toggled(bool)</signal>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>Transfer1DCBClicked()</slot>
    <hints>
@@ -2444,7 +2426,7 @@
   </connection>
   <connection>
    <sender>radioButton_Intensity</sender>
-   <signal>toggled(bool)</signal>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>Transfer1DRadioClicked()</slot>
    <hints>
@@ -2460,7 +2442,7 @@
   </connection>
   <connection>
    <sender>radioButton_Luminance</sender>
-   <signal>toggled(bool)</signal>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>Transfer1DRadioClicked()</slot>
    <hints>
@@ -2476,7 +2458,7 @@
   </connection>
   <connection>
    <sender>radioButton_User</sender>
-   <signal>toggled(bool)</signal>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>Transfer1DRadioClicked()</slot>
    <hints>
@@ -2490,6 +2472,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionLoad_Workspace</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>LoadWorkspace()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>595</x>
+     <y>525</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave_Workspace</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SaveWorkspace()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>595</x>
+     <y>525</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionReset_Workspace</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ApplyWorkspace()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>595</x>
+     <y>525</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -2500,5 +2530,9 @@
   <slot>CloneCurrentView()</slot>
   <slot>Transfer1DCBClicked()</slot>
   <slot>Transfer1DRadioClicked()</slot>
+  <slot>LoadWorkspace()</slot>
+  <slot>SaveWorkspace()</slot>
+  <slot>ApplyWorkspace()</slot>
+  <slot>LoadDirectory()</slot>
  </slots>
 </ui>
