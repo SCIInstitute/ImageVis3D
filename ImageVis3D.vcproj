@@ -299,6 +299,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\dummyVolume.dat"
+				>
+			</File>
+			<File
 				RelativePath=".\RenderWin1.png"
 				>
 			</File>

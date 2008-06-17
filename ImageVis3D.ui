@@ -19,7 +19,7 @@
    <bool>false</bool>
   </property>
   <property name="windowTitle" >
-   <string>MainWindow</string>
+   <string>ImageVis3 Mockup</string>
   </property>
   <property name="toolButtonStyle" >
    <enum>Qt::ToolButtonIconOnly</enum>
@@ -331,8 +331,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>250</width>
           <height>242</height>
          </rect>
@@ -439,8 +439,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>250</width>
           <height>242</height>
          </rect>
@@ -594,8 +594,8 @@
        <widget class="QWidget" name="tab_6" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>250</width>
           <height>242</height>
          </rect>
@@ -1081,8 +1081,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>194</width>
           <height>160</height>
          </rect>
@@ -1142,8 +1142,8 @@
        <widget class="QWidget" name="Seite" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>194</width>
           <height>160</height>
          </rect>
