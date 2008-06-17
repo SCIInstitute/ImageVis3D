@@ -13,13 +13,62 @@ MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 *
 {
 	setupUi(this);
 
-	LoadWorkspace("DefaultWorkspace.wsp");
+	menu_Workspace->addAction(dockWidget_Tools->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_Filters->toggleViewAction());
+	menu_Workspace->addSeparator();
+	menu_Workspace->addAction(dockWidget_History->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_Recorder->toggleViewAction());
+	menu_Workspace->addSeparator();
+	menu_Workspace->addAction(dockWidget_1DTrans->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_2DTrans->toggleViewAction());
+
+
+	LoadWorkspace("Default.wsp");
+	LoadGeometry("Default.geo");
 }
 
 MainWindow::~MainWindow()
 {
 
 }
+
+// ******************************************
+// Geometry
+// ******************************************
+
+void MainWindow::LoadGeometry() {
+	QString fileName = QFileDialog::getOpenFileName(this, "Load Geometry", ".", "Geometry Files (*.geo)");
+	if (!fileName.isEmpty()) {
+		LoadGeometry(fileName);
+	}
+}
+
+void MainWindow::SaveGeometry() {
+	QString fileName = QFileDialog::getSaveFileName(this, "Save Current Geometry", ".", "Geometry Files (*.geo)");
+	if (!fileName.isEmpty()) {
+		SaveGeometry(fileName);
+	}
+}
+
+void MainWindow::LoadGeometry(QString strFilename) {
+	QSettings settings( strFilename, QSettings::IniFormat ); 
+
+	settings.beginGroup("Geometry");
+	restoreGeometry( settings.value("MainWinGeometry").toByteArray() ); 
+	settings.endGroup();
+
+	m_strCurrentWorkspaceFilename = strFilename;
+}
+
+void MainWindow::SaveGeometry(QString strFilename) {
+	QSettings settings( strFilename, QSettings::IniFormat ); 
+
+	settings.beginGroup("Geometry");
+	settings.setValue("MainWinGeometry", this->saveGeometry() ); 
+	settings.endGroup(); 	
+}
+
 
 // ******************************************
 // Workspace
@@ -59,7 +108,7 @@ void MainWindow::SaveWorkspace(QString strFilename) {
 
 
 void MainWindow::ApplyWorkspace() {
-	if (m_strCurrentWorkspaceFilename != "")
+	if (!m_strCurrentWorkspaceFilename.isEmpty())
 		LoadWorkspace(m_strCurrentWorkspaceFilename);
 }
 

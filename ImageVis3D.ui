@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1192</width>
-    <height>1051</height>
+    <height>1161</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -36,7 +36,7 @@
      <x>278</x>
      <y>22</y>
      <width>692</width>
-     <height>670</height>
+     <height>747</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2" >
@@ -98,26 +98,17 @@
     <addaction name="separator" />
     <addaction name="actionStereo_Projection" />
     <addaction name="separator" />
-    <addaction name="actionHide_Toolbar" />
-    <addaction name="actionShow_Toolbar" />
+    <addaction name="actionLoad_Window_Geometry" />
+    <addaction name="actionSave_Window_Geometry" />
    </widget>
-   <widget class="QMenu" name="menu_Tools" >
+   <widget class="QMenu" name="menu_Workspace" >
     <property name="title" >
      <string>Workspace</string>
     </property>
-    <addaction name="actionTools" />
-    <addaction name="actionFilters" />
-    <addaction name="separator" />
-    <addaction name="actionHistory" />
-    <addaction name="actionInformation" />
-    <addaction name="actionRecorder" />
-    <addaction name="separator" />
-    <addaction name="action1D_Transfer_Function_Editor" />
-    <addaction name="action2D_Transfer_Function_Editor" />
-    <addaction name="separator" />
     <addaction name="actionLoad_Workspace" />
     <addaction name="actionSave_Workspace" />
     <addaction name="actionReset_Workspace" />
+    <addaction name="separator" />
    </widget>
    <widget class="QMenu" name="menu_Help" >
     <property name="title" >
@@ -146,14 +137,14 @@
    <addaction name="menu_File" />
    <addaction name="menu_View" />
    <addaction name="menuSelection" />
-   <addaction name="menu_Tools" />
+   <addaction name="menu_Workspace" />
    <addaction name="menu_Help" />
   </widget>
   <widget class="QStatusBar" name="statusbar" >
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1030</y>
+     <y>1140</y>
      <width>1192</width>
      <height>21</height>
     </rect>
@@ -211,7 +202,7 @@
         <enum>QTabWidget::North</enum>
        </property>
        <property name="currentIndex" >
-        <number>3</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
@@ -790,7 +781,7 @@
      <x>974</x>
      <y>22</y>
      <width>218</width>
-     <height>437</height>
+     <height>487</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -805,7 +796,7 @@
       <x>0</x>
       <y>22</y>
       <width>218</width>
-      <height>415</height>
+      <height>465</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -950,10 +941,16 @@
    <property name="geometry" >
     <rect>
      <x>974</x>
-     <y>463</y>
+     <y>513</y>
      <width>218</width>
-     <height>229</height>
+     <height>256</height>
     </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
    <property name="windowTitle" >
     <string>Filters</string>
@@ -967,7 +964,7 @@
       <x>0</x>
       <y>22</y>
       <width>218</width>
-      <height>207</height>
+      <height>234</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4" >
@@ -987,7 +984,7 @@
        </property>
        <property name="maximumSize" >
         <size>
-         <width>200</width>
+         <width>16777215</width>
          <height>16777215</height>
         </size>
        </property>
@@ -1000,7 +997,7 @@
           <x>0</x>
           <y>0</y>
           <width>194</width>
-          <height>133</height>
+          <height>160</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1087,7 +1084,7 @@
           <x>0</x>
           <y>0</y>
           <width>194</width>
-          <height>133</height>
+          <height>160</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1148,7 +1145,7 @@
           <x>0</x>
           <y>0</y>
           <width>194</width>
-          <height>133</height>
+          <height>160</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1250,7 +1247,7 @@
      <x>0</x>
      <y>335</y>
      <width>274</width>
-     <height>211</height>
+     <height>248</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1271,7 +1268,7 @@
       <x>0</x>
       <y>22</y>
       <width>274</width>
-      <height>189</height>
+      <height>226</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1403,10 +1400,16 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>550</y>
+     <y>587</y>
      <width>274</width>
-     <height>142</height>
+     <height>182</height>
     </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
    <property name="minimumSize" >
     <size>
@@ -1426,7 +1429,7 @@
       <x>0</x>
       <y>22</y>
       <width>274</width>
-      <height>120</height>
+      <height>160</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2" >
@@ -1450,13 +1453,188 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_2DTrans" >
+  <widget class="QDockWidget" name="dockWidget_1DTrans" >
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>696</y>
+     <y>773</y>
+     <width>440</width>
+     <height>367</height>
+    </rect>
+   </property>
+   <property name="minimumSize" >
+    <size>
+     <width>400</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="windowTitle" >
+    <string>1D Transferfunction Editor</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_6" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>440</width>
+      <height>345</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_10" >
+     <item row="0" column="0" >
+      <widget class="QGroupBox" name="groupBox_6" >
+       <property name="title" >
+        <string>Color Components</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_8" >
+        <item>
+         <widget class="QCheckBox" name="checkBox_Red" >
+          <property name="text" >
+           <string>Red</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_Green" >
+          <property name="text" >
+           <string>Green</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_Blue" >
+          <property name="text" >
+           <string>Blue</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_Alpha" >
+          <property name="text" >
+           <string>Alpha</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item rowspan="5" row="0" column="1" >
+      <widget class="QLabel" name="label_11" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip" >
+        <string>This pane displays the four color components against the value in the data. In the background a histogram of the datavalues is shown. The 1D color component functions can be changed by clicking and drawing in this pane. The Histogram can be scaled with the slider to the right.</string>
+       </property>
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="pixmap" >
+        <pixmap>trans1d.png</pixmap>
+       </property>
+       <property name="scaledContents" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item rowspan="5" row="0" column="2" >
+      <widget class="QSlider" name="verticalSlider" >
+       <property name="toolTip" >
+        <string>Scales the histogram</string>
+       </property>
+       <property name="value" >
+        <number>60</number>
+       </property>
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" >
+      <widget class="QGroupBox" name="groupBox_7" >
+       <property name="title" >
+        <string>Groups</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_9" >
+        <item>
+         <widget class="QRadioButton" name="radioButton_User" >
+          <property name="text" >
+           <string>User</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_Luminance" >
+          <property name="text" >
+           <string>Luminance</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_Intensity" >
+          <property name="text" >
+           <string>Intensity</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="4" column="0" >
+      <spacer name="verticalSpacer_11" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>104</width>
+         <height>12</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="0" >
+      <widget class="QPushButton" name="pushButton_15" >
+       <property name="text" >
+        <string>Load</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" >
+      <widget class="QPushButton" name="pushButton_16" >
+       <property name="text" >
+        <string>Save</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2DTrans" >
+   <property name="geometry" >
+    <rect>
+     <x>444</x>
+     <y>773</y>
      <width>748</width>
-     <height>334</height>
+     <height>367</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1480,7 +1658,7 @@
       <x>0</x>
       <y>22</y>
       <width>748</width>
-      <height>312</height>
+      <height>345</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_9" >
@@ -1706,181 +1884,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_1DTrans" >
-   <property name="geometry" >
-    <rect>
-     <x>752</x>
-     <y>696</y>
-     <width>440</width>
-     <height>334</height>
-    </rect>
-   </property>
-   <property name="minimumSize" >
-    <size>
-     <width>400</width>
-     <height>0</height>
-    </size>
-   </property>
-   <property name="windowTitle" >
-    <string>1D Transferfunction Editor</string>
-   </property>
-   <attribute name="dockWidgetArea" >
-    <number>8</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_6" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>440</width>
-      <height>312</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_10" >
-     <item row="0" column="0" >
-      <widget class="QGroupBox" name="groupBox_6" >
-       <property name="title" >
-        <string>Color Components</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_8" >
-        <item>
-         <widget class="QCheckBox" name="checkBox_Red" >
-          <property name="text" >
-           <string>Red</string>
-          </property>
-          <property name="checked" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBox_Green" >
-          <property name="text" >
-           <string>Green</string>
-          </property>
-          <property name="checked" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBox_Blue" >
-          <property name="text" >
-           <string>Blue</string>
-          </property>
-          <property name="checked" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBox_Alpha" >
-          <property name="text" >
-           <string>Alpha</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item rowspan="5" row="0" column="1" >
-      <widget class="QLabel" name="label_11" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip" >
-        <string>This pane displays the four color components against the value in the data. In the background a histogram of the datavalues is shown. The 1D color component functions can be changed by clicking and drawing in this pane. The Histogram can be scaled with the slider to the right.</string>
-       </property>
-       <property name="text" >
-        <string/>
-       </property>
-       <property name="pixmap" >
-        <pixmap>trans1d.png</pixmap>
-       </property>
-       <property name="scaledContents" >
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item rowspan="5" row="0" column="2" >
-      <widget class="QSlider" name="verticalSlider" >
-       <property name="toolTip" >
-        <string>Scales the histogram</string>
-       </property>
-       <property name="value" >
-        <number>60</number>
-       </property>
-       <property name="orientation" >
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" >
-      <widget class="QGroupBox" name="groupBox_7" >
-       <property name="title" >
-        <string>Groups</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_9" >
-        <item>
-         <widget class="QRadioButton" name="radioButton_User" >
-          <property name="text" >
-           <string>User</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_Luminance" >
-          <property name="text" >
-           <string>Luminance</string>
-          </property>
-          <property name="checked" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_Intensity" >
-          <property name="text" >
-           <string>Intensity</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="4" column="0" >
-      <spacer name="verticalSpacer_11" >
-       <property name="orientation" >
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0" >
-        <size>
-         <width>104</width>
-         <height>12</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="2" column="0" >
-      <widget class="QPushButton" name="pushButton_15" >
-       <property name="text" >
-        <string>Load</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0" >
-      <widget class="QPushButton" name="pushButton_16" >
-       <property name="text" >
-        <string>Save</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <action name="actionLoadDataset" >
    <property name="text" >
     <string>Load Dataset Frome File</string>
@@ -1972,31 +1975,6 @@
     <string>Go Fullscreen</string>
    </property>
   </action>
-  <action name="actionRecord_Movie" >
-   <property name="text" >
-    <string>Record Movie</string>
-   </property>
-  </action>
-  <action name="actionAnd" >
-   <property name="text" >
-    <string>and</string>
-   </property>
-  </action>
-  <action name="actionOr" >
-   <property name="text" >
-    <string>or</string>
-   </property>
-  </action>
-  <action name="actionNot" >
-   <property name="text" >
-    <string>not</string>
-   </property>
-  </action>
-  <action name="actionXor" >
-   <property name="text" >
-    <string>xor</string>
-   </property>
-  </action>
   <action name="actionAbout" >
    <property name="text" >
     <string>About</string>
@@ -2007,32 +1985,12 @@
     <string>Open Online Help</string>
    </property>
   </action>
-  <action name="actionLoad" >
-   <property name="text" >
-    <string>Load</string>
-   </property>
-  </action>
-  <action name="actionSave" >
-   <property name="text" >
-    <string>Save Current</string>
-   </property>
-  </action>
   <action name="actionStereo_Projection" >
    <property name="checkable" >
     <bool>true</bool>
    </property>
    <property name="text" >
     <string>Stereo Projection</string>
-   </property>
-  </action>
-  <action name="actionIsosurface" >
-   <property name="text" >
-    <string>Isosurface</string>
-   </property>
-  </action>
-  <action name="actionGeneric" >
-   <property name="text" >
-    <string>Generic</string>
    </property>
   </action>
   <action name="actionHand_dat" >
@@ -2079,16 +2037,6 @@
   <action name="actionPrevious" >
    <property name="text" >
     <string>Previous View</string>
-   </property>
-  </action>
-  <action name="actionHide_Toolbar" >
-   <property name="text" >
-    <string>Hide Toolbar</string>
-   </property>
-  </action>
-  <action name="actionShow_Toolbar" >
-   <property name="text" >
-    <string>Show Toolbar</string>
    </property>
   </action>
   <action name="actionTools" >
@@ -2178,6 +2126,16 @@
   <action name="actionLoad_Dataset_from_Directory" >
    <property name="text" >
     <string>Load Dataset from Directory</string>
+   </property>
+  </action>
+  <action name="actionLoad_Window_Geometry" >
+   <property name="text" >
+    <string>Load Window Geometry</string>
+   </property>
+  </action>
+  <action name="actionSave_Window_Geometry" >
+   <property name="text" >
+    <string>Save Window Geometry</string>
    </property>
   </action>
  </widget>
@@ -2520,6 +2478,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionLoad_Window_Geometry</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>LoadGeometry()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>595</x>
+     <y>580</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave_Window_Geometry</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SaveGeometry()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>595</x>
+     <y>580</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -2534,5 +2524,7 @@
   <slot>SaveWorkspace()</slot>
   <slot>ApplyWorkspace()</slot>
   <slot>LoadDirectory()</slot>
+  <slot>LoadGeometry()</slot>
+  <slot>SaveGeometry()</slot>
  </slots>
 </ui>

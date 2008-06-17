@@ -28,6 +28,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void SaveWorkspace();
 		void ApplyWorkspace();
 
+		void LoadGeometry();
+		void SaveGeometry();
+
 	private :
 		QString m_strCurrentWorkspaceFilename;
 
@@ -36,6 +39,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
 		void LoadWorkspace(QString strFilename);
 		void SaveWorkspace(QString strFilename);
+
+		void LoadGeometry(QString strFilename);
+		void SaveGeometry(QString strFilename);
 		
 };
 

@@ -291,6 +291,14 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\Default.geo"
+				>
+			</File>
+			<File
+				RelativePath=".\Default.wsp"
+				>
+			</File>
+			<File
 				RelativePath=".\RenderWin1.png"
 				>
 			</File>
