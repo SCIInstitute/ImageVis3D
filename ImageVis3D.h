@@ -3,7 +3,6 @@
 
 #include "ui_ImageVis3D.h"
 #include "RenderWindow.h"
-#include "QDockWidgetStateList.h"
 
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow
@@ -30,10 +29,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void ApplyWorkspace();
 
 	private :
+		QString m_strCurrentWorkspaceFilename;
+
 		RenderWindow* CreateNewRenderWindow();
 		RenderWindow* GetActiveRenderWindow();
 
-		QDockWidgetStateList m_Workspace;
 		void LoadWorkspace(QString strFilename);
 		void SaveWorkspace(QString strFilename);
 		

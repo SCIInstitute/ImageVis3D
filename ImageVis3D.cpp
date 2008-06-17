@@ -2,8 +2,14 @@
 
 #include <QtGui/QMdiSubWindow>
 #include <QtGui/QFileDialog>
+#include <QtCore/QSettings>
 
-MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QMainWindow(parent, flags)
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QMainWindow(parent, flags), m_strCurrentWorkspaceFilename("")
 {
 	setupUi(this);
 
@@ -33,32 +39,28 @@ void MainWindow::SaveWorkspace() {
 	}
 }
 
-
 void MainWindow::LoadWorkspace(QString strFilename) {
+	QSettings settings( strFilename, QSettings::IniFormat ); 
 
-	QDockWidgetStateList stateList;
+	settings.beginGroup("Geometry");
+	restoreState( settings.value("DockGeometry").toByteArray() ); 
+	settings.endGroup();
 
-	stateList.Add(QDockWidgetState(dockWidget_Tools, actionTools, Qt::LeftDockWidgetArea));
-	stateList.Add(QDockWidgetState(dockWidget_Filters,actionFilters, Qt::LeftDockWidgetArea));
-	stateList.Add(QDockWidgetState(dockWidget_History, actionHistory, Qt::LeftDockWidgetArea));
-	stateList.Add(QDockWidgetState(dockWidget_Information, actionInformation, Qt::LeftDockWidgetArea));
-	stateList.Add(QDockWidgetState(dockWidget_Recorder,actionRecorder, Qt::LeftDockWidgetArea));
-	stateList.Add(QDockWidgetState(dockWidget_1DTrans,action1D_Transfer_Function_Editor, Qt::BottomDockWidgetArea));
-	stateList.Add(QDockWidgetState(dockWidget_2DTrans,action2D_Transfer_Function_Editor, Qt::BottomDockWidgetArea));
-
-	if (stateList.LoadFromFile(strFilename)) {
-		m_Workspace = stateList;
-		ApplyWorkspace();
-	}
+	m_strCurrentWorkspaceFilename = strFilename;
 }
 
 void MainWindow::SaveWorkspace(QString strFilename) {
-	
+	QSettings settings( strFilename, QSettings::IniFormat ); 
+
+	settings.beginGroup("Geometry");
+	settings.setValue("DockGeometry", this->saveState() ); 
+	settings.endGroup(); 	
 }
 
 
 void MainWindow::ApplyWorkspace() {
-	m_Workspace.Apply();
+	if (m_strCurrentWorkspaceFilename != "")
+		LoadWorkspace(m_strCurrentWorkspaceFilename);
 }
 
 
