@@ -13,16 +13,7 @@ MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 *
 {
 	setupUi(this);
 
-	menu_Workspace->addAction(dockWidget_Tools->toggleViewAction());
-	menu_Workspace->addAction(dockWidget_Filters->toggleViewAction());
-	menu_Workspace->addSeparator();
-	menu_Workspace->addAction(dockWidget_History->toggleViewAction());
-	menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
-	menu_Workspace->addAction(dockWidget_Recorder->toggleViewAction());
-	menu_Workspace->addSeparator();
-	menu_Workspace->addAction(dockWidget_1DTrans->toggleViewAction());
-	menu_Workspace->addAction(dockWidget_2DTrans->toggleViewAction());
-
+	SetupWorkspaceMenu();
 
 	LoadWorkspace("Default.wsp");
 	LoadGeometry("Default.geo");
@@ -73,6 +64,18 @@ void MainWindow::SaveGeometry(QString strFilename) {
 // ******************************************
 // Workspace
 // ******************************************
+
+void MainWindow::SetupWorkspaceMenu() {
+	menu_Workspace->addAction(dockWidget_Tools->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_Filters->toggleViewAction());
+	menu_Workspace->addSeparator();
+	menu_Workspace->addAction(dockWidget_History->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_Recorder->toggleViewAction());
+	menu_Workspace->addSeparator();
+	menu_Workspace->addAction(dockWidget_1DTrans->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_2DTrans->toggleViewAction());
+}
 
 void MainWindow::LoadWorkspace() {
 	QString fileName = QFileDialog::getOpenFileName(this, "Load Workspace", ".", "Workspace Files (*.wsp)");

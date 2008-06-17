@@ -37,6 +37,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		RenderWindow* CreateNewRenderWindow();
 		RenderWindow* GetActiveRenderWindow();
 
+		void SetupWorkspaceMenu();
 		void LoadWorkspace(QString strFilename);
 		void SaveWorkspace(QString strFilename);
 
