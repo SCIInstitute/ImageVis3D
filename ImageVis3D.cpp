@@ -15,8 +15,8 @@ MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 *
 
 	SetupWorkspaceMenu();
 
-	LoadWorkspace("Default.wsp");
 	LoadGeometry("Default.geo");
+	LoadWorkspace("Default.wsp");
 }
 
 MainWindow::~MainWindow()
