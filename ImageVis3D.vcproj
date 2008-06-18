@@ -66,7 +66,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="qtmaind.lib QtGuid4.lib QtCored4.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib QtOpenGLd4.lib qtmaind.lib QtGuid4.lib QtCored4.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"

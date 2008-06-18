@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1190</width>
-    <height>1005</height>
+    <width>1203</width>
+    <height>1049</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -35,7 +35,7 @@
     <rect>
      <x>196</x>
      <y>22</y>
-     <width>796</width>
+     <width>809</width>
      <height>624</height>
     </rect>
    </property>
@@ -50,7 +50,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1190</width>
+     <width>1203</width>
      <height>22</height>
     </rect>
    </property>
@@ -144,8 +144,8 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>984</y>
-     <width>1190</width>
+     <y>1028</y>
+     <width>1203</width>
      <height>21</height>
     </rect>
    </property>
@@ -844,10 +844,10 @@
   <widget class="QDockWidget" name="dockWidget_Recorder" >
    <property name="geometry" >
     <rect>
-     <x>996</x>
+     <x>1009</x>
      <y>22</y>
      <width>194</width>
-     <height>388</height>
+     <height>409</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -862,7 +862,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>366</height>
+      <height>387</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1382,16 +1382,16 @@
   <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="geometry" >
     <rect>
-     <x>996</x>
-     <y>414</y>
+     <x>1009</x>
+     <y>435</y>
      <width>194</width>
-     <height>232</height>
+     <height>211</height>
     </rect>
    </property>
    <property name="minimumSize" >
     <size>
      <width>0</width>
-     <height>211</height>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle" >
@@ -1406,7 +1406,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>210</height>
+      <height>189</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1426,7 +1426,7 @@
          <widget class="QLabel" name="label_3" >
           <property name="maximumSize" >
            <size>
-            <width>60</width>
+            <width>70</width>
             <height>16777215</height>
            </size>
           </property>
@@ -1452,7 +1452,7 @@
          <widget class="QLabel" name="label_4" >
           <property name="maximumSize" >
            <size>
-            <width>60</width>
+            <width>70</width>
             <height>16777215</height>
            </size>
           </property>
@@ -1478,7 +1478,7 @@
          <widget class="QLabel" name="label_6" >
           <property name="maximumSize" >
            <size>
-            <width>60</width>
+            <width>70</width>
             <height>16777215</height>
            </size>
           </property>
@@ -1504,7 +1504,7 @@
          <widget class="QLabel" name="label_5" >
           <property name="maximumSize" >
            <size>
-            <width>60</width>
+            <width>70</width>
             <height>16777215</height>
            </size>
           </property>
@@ -1619,8 +1619,8 @@
     <rect>
      <x>0</x>
      <y>650</y>
-     <width>440</width>
-     <height>334</height>
+     <width>435</width>
+     <height>378</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1640,168 +1640,28 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>440</width>
-      <height>312</height>
+      <width>435</width>
+      <height>356</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_10" >
-     <item row="0" column="0" >
-      <widget class="QGroupBox" name="groupBox_6" >
-       <property name="title" >
-        <string>Color Components</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_8" >
-        <item>
-         <widget class="QCheckBox" name="checkBox_Red" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Red</string>
-          </property>
-          <property name="checked" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBox_Green" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Green</string>
-          </property>
-          <property name="checked" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBox_Blue" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Blue</string>
-          </property>
-          <property name="checked" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBox_Alpha" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Alpha</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item rowspan="5" row="0" column="1" >
-      <widget class="QLabel" name="label_11" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip" >
-        <string>This pane displays the four color components against the value in the data. In the background a histogram of the datavalues is shown. The 1D color component functions can be changed by clicking and drawing in this pane. The Histogram can be scaled with the slider to the right.</string>
+    <layout class="QVBoxLayout" name="verticalLayout_12" >
+     <item>
+      <widget class="QCheckBox" name="checkBox_Use1DTrans" >
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>18</height>
+        </size>
        </property>
        <property name="text" >
-        <string/>
+        <string>Use 1D Transfer Function</string>
        </property>
-       <property name="pixmap" >
-        <pixmap>trans1d.png</pixmap>
-       </property>
-       <property name="scaledContents" >
+       <property name="checked" >
         <bool>true</bool>
        </property>
       </widget>
      </item>
-     <item rowspan="5" row="0" column="2" >
-      <widget class="QSlider" name="verticalSlider" >
-       <property name="toolTip" >
-        <string>Scales the histogram</string>
-       </property>
-       <property name="value" >
-        <number>60</number>
-       </property>
-       <property name="orientation" >
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" >
-      <widget class="QGroupBox" name="groupBox_7" >
-       <property name="title" >
-        <string>Groups</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_9" >
-        <item>
-         <widget class="QRadioButton" name="radioButton_User" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>User</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_Luminance" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Luminance</string>
-          </property>
-          <property name="checked" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_Intensity" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Intensity</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="4" column="0" >
+     <item>
       <spacer name="verticalSpacer_11" >
        <property name="orientation" >
         <enum>Qt::Vertical</enum>
@@ -1814,30 +1674,185 @@
        </property>
       </spacer>
      </item>
-     <item row="2" column="0" >
-      <widget class="QPushButton" name="pushButton_15" >
-       <property name="minimumSize" >
-        <size>
-         <width>0</width>
-         <height>23</height>
-        </size>
+     <item>
+      <widget class="QFrame" name="frame_9" >
+       <property name="frameShape" >
+        <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="text" >
-        <string>Load</string>
+       <property name="frameShadow" >
+        <enum>QFrame::Raised</enum>
        </property>
-      </widget>
-     </item>
-     <item row="3" column="0" >
-      <widget class="QPushButton" name="pushButton_16" >
-       <property name="minimumSize" >
-        <size>
-         <width>0</width>
-         <height>23</height>
-        </size>
-       </property>
-       <property name="text" >
-        <string>Save</string>
-       </property>
+       <layout class="QGridLayout" name="gridLayout_9" >
+        <item row="0" column="0" >
+         <widget class="QGroupBox" name="groupBox_6" >
+          <property name="title" >
+           <string>Color Components</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_8" >
+           <item>
+            <widget class="QCheckBox" name="checkBox_Red" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Red</string>
+             </property>
+             <property name="checked" >
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_Green" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Green</string>
+             </property>
+             <property name="checked" >
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_Blue" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Blue</string>
+             </property>
+             <property name="checked" >
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_Alpha" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Alpha</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item rowspan="4" row="0" column="1" >
+         <widget class="QLabel" name="label_11" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip" >
+           <string>This pane displays the four color components against the value in the data. In the background a histogram of the datavalues is shown. The 1D color component functions can be changed by clicking and drawing in this pane. The Histogram can be scaled with the slider to the right.</string>
+          </property>
+          <property name="text" >
+           <string/>
+          </property>
+          <property name="pixmap" >
+           <pixmap>trans1d.png</pixmap>
+          </property>
+          <property name="scaledContents" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" >
+         <widget class="QGroupBox" name="groupBox_7" >
+          <property name="title" >
+           <string>Groups</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_9" >
+           <item>
+            <widget class="QRadioButton" name="radioButton_User" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>User</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_Luminance" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Luminance</string>
+             </property>
+             <property name="checked" >
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_Intensity" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>18</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Intensity</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="0" >
+         <widget class="QPushButton" name="pushButton_15" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>Load</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" >
+         <widget class="QPushButton" name="pushButton_16" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -1846,10 +1861,10 @@
   <widget class="QDockWidget" name="dockWidget_2DTrans" >
    <property name="geometry" >
     <rect>
-     <x>444</x>
+     <x>439</x>
      <y>650</y>
-     <width>746</width>
-     <height>334</height>
+     <width>764</width>
+     <height>378</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1872,37 +1887,12 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>746</width>
-      <height>312</height>
+      <width>764</width>
+      <height>356</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_9" >
-     <item row="0" column="0" >
-      <widget class="QLabel" name="label_10" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize" >
-        <size>
-         <width>358</width>
-         <height>88</height>
-        </size>
-       </property>
-       <property name="text" >
-        <string/>
-       </property>
-       <property name="pixmap" >
-        <pixmap>trans2d_a.png</pixmap>
-       </property>
-       <property name="scaledContents" >
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item rowspan="2" row="0" column="1" >
+    <layout class="QHBoxLayout" name="horizontalLayout_11" >
+     <item>
       <widget class="QFrame" name="frame_4" >
        <property name="frameShape" >
         <enum>QFrame::NoFrame</enum>
@@ -1911,7 +1901,7 @@
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QGridLayout" name="gridLayout_8" >
-        <item row="1" column="0" >
+        <item row="2" column="0" >
          <widget class="QGroupBox" name="groupBox_5" >
           <property name="title" >
            <string>Color</string>
@@ -1939,7 +1929,7 @@
           </layout>
          </widget>
         </item>
-        <item row="1" column="1" >
+        <item row="2" column="1" >
          <widget class="QGroupBox" name="groupBox_4" >
           <property name="title" >
            <string>Preview</string>
@@ -1967,7 +1957,7 @@
           </layout>
          </widget>
         </item>
-        <item row="2" column="0" colspan="2" >
+        <item row="3" column="0" colspan="2" >
          <widget class="QFrame" name="frame_3" >
           <property name="frameShape" >
            <enum>QFrame::NoFrame</enum>
@@ -2021,20 +2011,7 @@
           </layout>
          </widget>
         </item>
-        <item row="0" column="0" >
-         <spacer name="verticalSpacer_10" >
-          <property name="orientation" >
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0" >
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="3" column="0" >
+        <item row="4" column="0" >
          <widget class="QPushButton" name="pushButton_17" >
           <property name="minimumSize" >
            <size>
@@ -2047,7 +2024,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1" >
+        <item row="4" column="1" >
          <widget class="QPushButton" name="pushButton_18" >
           <property name="minimumSize" >
            <size>
@@ -2060,10 +2037,36 @@
           </property>
          </widget>
         </item>
+        <item row="1" column="0" >
+         <spacer name="verticalSpacer_10" >
+          <property name="orientation" >
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0" >
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0" >
+         <widget class="QCheckBox" name="checkBox_Use2DTrans" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>Use 2D Transfer Function</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
-     <item row="1" column="0" >
+     <item>
       <widget class="QFrame" name="frame_5" >
        <property name="frameShape" >
         <enum>QFrame::NoFrame</enum>
@@ -2071,44 +2074,81 @@
        <property name="frameShadow" >
         <enum>QFrame::Raised</enum>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_8" >
+       <layout class="QVBoxLayout" name="verticalLayout_11" >
         <item>
-         <widget class="QPushButton" name="pushButton" >
+         <widget class="QLabel" name="label_10" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize" >
            <size>
-            <width>0</width>
-            <height>23</height>
+            <width>358</width>
+            <height>88</height>
            </size>
           </property>
           <property name="text" >
-           <string>New Triangle</string>
+           <string/>
+          </property>
+          <property name="pixmap" >
+           <pixmap>trans2d_a.png</pixmap>
+          </property>
+          <property name="scaledContents" >
+           <bool>true</bool>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
+         <widget class="QFrame" name="frame_8" >
+          <property name="frameShape" >
+           <enum>QFrame::NoFrame</enum>
           </property>
-          <property name="text" >
-           <string>New Rectangle</string>
+          <property name="frameShadow" >
+           <enum>QFrame::Raised</enum>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_14" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Remove Current Element</string>
-          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_10" >
+           <item>
+            <widget class="QPushButton" name="pushButton_25" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>New Triangle</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_26" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>New Rectangle</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_27" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Remove Current Element</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -2272,65 +2312,6 @@
     <string>Previous View</string>
    </property>
   </action>
-  <action name="actionTools" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Tools</string>
-   </property>
-  </action>
-  <action name="actionHistory" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>History</string>
-   </property>
-  </action>
-  <action name="actionInformation" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="checked" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Information</string>
-   </property>
-  </action>
-  <action name="actionRecorder" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Movie / Image Recorder</string>
-   </property>
-  </action>
-  <action name="actionFilters" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Filters</string>
-   </property>
-  </action>
-  <action name="action2D_Transfer_Function_Editor" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>2D Transfer Function Editor</string>
-   </property>
-  </action>
-  <action name="action1D_Transfer_Function_Editor" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>1D Transfer Function Editor</string>
-   </property>
-  </action>
   <action name="actionLoad_Workspace" >
    <property name="text" >
     <string>Load Workspace</string>
@@ -2369,6 +2350,65 @@
   <action name="actionSave_Window_Geometry" >
    <property name="text" >
     <string>Save Window Geometry</string>
+   </property>
+  </action>
+  <action name="action1D_Transfer_Function_Editor" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>1D Transfer Function Editor</string>
+   </property>
+  </action>
+  <action name="action2D_Transfer_Function_Editor" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>2D Transfer Function Editor</string>
+   </property>
+  </action>
+  <action name="actionFilters" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Filters</string>
+   </property>
+  </action>
+  <action name="actionRecorder" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Movie / Image Recorder</string>
+   </property>
+  </action>
+  <action name="actionInformation" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Information</string>
+   </property>
+  </action>
+  <action name="actionHistory" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>History</string>
+   </property>
+  </action>
+  <action name="actionTools" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Tools</string>
    </property>
   </action>
  </widget>
@@ -2552,118 +2592,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkBox_Alpha</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Transfer1DCBClicked()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>814</x>
-     <y>831</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>595</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox_Blue</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Transfer1DCBClicked()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>814</x>
-     <y>807</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>595</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox_Green</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Transfer1DCBClicked()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>814</x>
-     <y>783</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>595</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox_Red</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Transfer1DCBClicked()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>814</x>
-     <y>759</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>595</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton_Intensity</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Transfer1DRadioClicked()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>814</x>
-     <y>937</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>595</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton_Luminance</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Transfer1DRadioClicked()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>814</x>
-     <y>913</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>595</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton_User</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Transfer1DRadioClicked()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>814</x>
-     <y>889</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>595</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionLoad_Workspace</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
@@ -2743,6 +2671,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>checkBox_Use1DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Use1DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>217</x>
+     <y>689</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>532</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_Use2DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Use2DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>541</x>
+     <y>698</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>532</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -2759,5 +2719,7 @@
   <slot>LoadDirectory()</slot>
   <slot>LoadGeometry()</slot>
   <slot>SaveGeometry()</slot>
+  <slot>Use1DTrans()</slot>
+  <slot>Use2DTrans()</slot>
  </slots>
 </ui>

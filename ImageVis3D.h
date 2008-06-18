@@ -24,6 +24,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void Transfer1DCBClicked();
 		void Transfer1DRadioClicked();
 
+		void Use1DTrans();
+		void Use2DTrans();
+
 		void LoadWorkspace();
 		void SaveWorkspace();
 		void ApplyWorkspace();

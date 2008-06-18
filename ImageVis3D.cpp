@@ -199,3 +199,11 @@ void MainWindow::Transfer1DRadioClicked() {
 	checkBox_Blue->setChecked(true);	
 	checkBox_Alpha->setChecked(iState==2);
 }
+
+void MainWindow::Use1DTrans() {
+	checkBox_Use2DTrans->setChecked(!checkBox_Use1DTrans->isChecked());
+}
+
+void MainWindow::Use2DTrans() {
+	checkBox_Use1DTrans->setChecked(!checkBox_Use2DTrans->isChecked());
+}
