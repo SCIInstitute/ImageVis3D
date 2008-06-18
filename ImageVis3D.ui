@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1192</width>
-    <height>1161</height>
+    <width>1190</width>
+    <height>1005</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -33,10 +33,10 @@
   <widget class="QWidget" name="centralwidget" >
    <property name="geometry" >
     <rect>
-     <x>278</x>
+     <x>196</x>
      <y>22</y>
-     <width>692</width>
-     <height>747</height>
+     <width>796</width>
+     <height>624</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2" >
@@ -50,7 +50,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1192</width>
+     <width>1190</width>
      <height>22</height>
     </rect>
    </property>
@@ -144,8 +144,8 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1140</y>
-     <width>1192</width>
+     <y>984</y>
+     <width>1190</width>
      <height>21</height>
     </rect>
    </property>
@@ -155,8 +155,8 @@
     <rect>
      <x>0</x>
      <y>22</y>
-     <width>274</width>
-     <height>309</height>
+     <width>192</width>
+     <height>307</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -185,8 +185,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>274</width>
-      <height>287</height>
+      <width>192</width>
+      <height>285</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout" >
@@ -209,8 +209,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
-          <height>242</height>
+          <width>168</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -218,33 +218,51 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_5" >
          <item>
-          <widget class="QCheckBox" name="checkBox" >
-           <property name="layoutDirection" >
-            <enum>Qt::LeftToRight</enum>
+          <widget class="QFrame" name="frame_7" >
+           <property name="frameShape" >
+            <enum>QFrame::NoFrame</enum>
            </property>
-           <property name="text" >
-            <string>Stipple</string>
+           <property name="frameShadow" >
+            <enum>QFrame::Raised</enum>
            </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_9" >
+            <item>
+             <widget class="QCheckBox" name="checkBox" >
+              <property name="minimumSize" >
+               <size>
+                <width>0</width>
+                <height>18</height>
+               </size>
+              </property>
+              <property name="layoutDirection" >
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="text" >
+               <string>Stipple</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkBox_3" >
+              <property name="minimumSize" >
+               <size>
+                <width>0</width>
+                <height>18</height>
+               </size>
+              </property>
+              <property name="layoutDirection" >
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="text" >
+               <string>Silhouette</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_3" >
-           <property name="layoutDirection" >
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="text" >
-            <string>Silhouette</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="toolButton" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QPushButton" name="pushButton_3" >
            <property name="minimumSize" >
             <size>
              <width>0</width>
@@ -257,13 +275,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_2" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QPushButton" name="pushButton_4" >
            <property name="minimumSize" >
             <size>
              <width>0</width>
@@ -276,16 +288,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_3" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QPushButton" name="pushButton_19" >
            <property name="minimumSize" >
             <size>
-             <width>80</width>
+             <width>0</width>
              <height>23</height>
             </size>
            </property>
@@ -295,16 +301,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_4" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QPushButton" name="pushButton_20" >
            <property name="minimumSize" >
             <size>
-             <width>80</width>
+             <width>0</width>
              <height>23</height>
             </size>
            </property>
@@ -333,8 +333,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
-          <height>242</height>
+          <width>168</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -344,7 +344,7 @@
          <item>
           <widget class="QFrame" name="frame" >
            <property name="frameShape" >
-            <enum>QFrame::StyledPanel</enum>
+            <enum>QFrame::NoFrame</enum>
            </property>
            <property name="frameShadow" >
             <enum>QFrame::Raised</enum>
@@ -384,16 +384,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_6" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QPushButton" name="pushButton_21" >
            <property name="minimumSize" >
             <size>
-             <width>60</width>
+             <width>0</width>
              <height>23</height>
             </size>
            </property>
@@ -403,16 +397,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_5" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QPushButton" name="pushButton_22" >
            <property name="minimumSize" >
             <size>
-             <width>60</width>
+             <width>0</width>
              <height>23</height>
             </size>
            </property>
@@ -441,15 +429,172 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
-          <height>242</height>
+          <width>168</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
          <string>Resample</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_7" >
-         <item row="5" column="1" >
+        <layout class="QVBoxLayout" name="verticalLayout_10" >
+         <item>
+          <widget class="QFrame" name="frame_6" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="frameShape" >
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow" >
+            <enum>QFrame::Plain</enum>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_7" >
+            <item row="0" column="0" >
+             <widget class="QLabel" name="label_15" >
+              <property name="maximumSize" >
+               <size>
+                <width>40</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text" >
+               <string>X:</string>
+              </property>
+              <property name="buddy" >
+               <cstring>spinBox_5</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" >
+             <widget class="QSpinBox" name="spinBox_5" >
+              <property name="minimum" >
+               <number>1</number>
+              </property>
+              <property name="maximum" >
+               <number>512</number>
+              </property>
+              <property name="value" >
+               <number>128</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" >
+             <widget class="QLabel" name="label_16" >
+              <property name="maximumSize" >
+               <size>
+                <width>40</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text" >
+               <string>Y:</string>
+              </property>
+              <property name="buddy" >
+               <cstring>spinBox_6</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" >
+             <widget class="QSpinBox" name="spinBox_6" >
+              <property name="minimum" >
+               <number>1</number>
+              </property>
+              <property name="maximum" >
+               <number>512</number>
+              </property>
+              <property name="value" >
+               <number>128</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" >
+             <widget class="QLabel" name="label_17" >
+              <property name="maximumSize" >
+               <size>
+                <width>40</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text" >
+               <string>Z:</string>
+              </property>
+              <property name="buddy" >
+               <cstring>spinBox_7</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1" >
+             <widget class="QSpinBox" name="spinBox_7" >
+              <property name="minimum" >
+               <number>1</number>
+              </property>
+              <property name="maximum" >
+               <number>512</number>
+              </property>
+              <property name="value" >
+               <number>128</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" >
+             <widget class="QLabel" name="label_18" >
+              <property name="maximumSize" >
+               <size>
+                <width>40</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text" >
+               <string>Filter:</string>
+              </property>
+              <property name="buddy" >
+               <cstring>comboBox_2</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1" >
+             <widget class="QComboBox" name="comboBox_2" >
+              <item>
+               <property name="text" >
+                <string>Box</string>
+               </property>
+              </item>
+              <item>
+               <property name="text" >
+                <string>Tent</string>
+               </property>
+              </item>
+              <item>
+               <property name="text" >
+                <string>Cubic</string>
+               </property>
+              </item>
+              <item>
+               <property name="text" >
+                <string>Quadric</string>
+               </property>
+              </item>
+              <item>
+               <property name="text" >
+                <string>Gaussian</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_23" >
+           <property name="text" >
+            <string>Execute</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="verticalSpacer_8" >
            <property name="orientation" >
             <enum>Qt::Vertical</enum>
@@ -462,133 +607,6 @@
            </property>
           </spacer>
          </item>
-         <item row="0" column="0" >
-          <widget class="QLabel" name="label_15" >
-           <property name="text" >
-            <string>X:</string>
-           </property>
-           <property name="buddy" >
-            <cstring>spinBox_5</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1" >
-          <widget class="QSpinBox" name="spinBox_7" >
-           <property name="minimum" >
-            <number>1</number>
-           </property>
-           <property name="maximum" >
-            <number>512</number>
-           </property>
-           <property name="value" >
-            <number>128</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1" >
-          <widget class="QSpinBox" name="spinBox_6" >
-           <property name="minimum" >
-            <number>1</number>
-           </property>
-           <property name="maximum" >
-            <number>512</number>
-           </property>
-           <property name="value" >
-            <number>128</number>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" >
-          <widget class="QSpinBox" name="spinBox_5" >
-           <property name="minimum" >
-            <number>1</number>
-           </property>
-           <property name="maximum" >
-            <number>512</number>
-           </property>
-           <property name="value" >
-            <number>128</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" >
-          <widget class="QLabel" name="label_16" >
-           <property name="text" >
-            <string>Y:</string>
-           </property>
-           <property name="buddy" >
-            <cstring>spinBox_6</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" >
-          <widget class="QLabel" name="label_18" >
-           <property name="text" >
-            <string>Filter:</string>
-           </property>
-           <property name="buddy" >
-            <cstring>comboBox_2</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1" >
-          <widget class="QComboBox" name="comboBox_2" >
-           <item>
-            <property name="text" >
-             <string>Box</string>
-            </property>
-           </item>
-           <item>
-            <property name="text" >
-             <string>Tent</string>
-            </property>
-           </item>
-           <item>
-            <property name="text" >
-             <string>Cubic</string>
-            </property>
-           </item>
-           <item>
-            <property name="text" >
-             <string>Quadric</string>
-            </property>
-           </item>
-           <item>
-            <property name="text" >
-             <string>Gaussian</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="2" column="0" >
-          <widget class="QLabel" name="label_17" >
-           <property name="text" >
-            <string>Z:</string>
-           </property>
-           <property name="buddy" >
-            <cstring>spinBox_7</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1" >
-          <widget class="QToolButton" name="toolButton_14" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize" >
-            <size>
-             <width>0</width>
-             <height>23</height>
-            </size>
-           </property>
-           <property name="text" >
-            <string>Execute</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </widget>
        <widget class="QWidget" name="tab_6" >
@@ -596,8 +614,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
-          <height>242</height>
+          <width>168</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -607,7 +625,7 @@
          <item>
           <widget class="QFrame" name="frame_2" >
            <property name="frameShape" >
-            <enum>QFrame::StyledPanel</enum>
+            <enum>QFrame::NoFrame</enum>
            </property>
            <property name="frameShadow" >
             <enum>QFrame::Raised</enum>
@@ -627,6 +645,15 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="frameShadow" >
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="smallDecimalPoint" >
+               <bool>false</bool>
+              </property>
+              <property name="numDigits" >
+               <number>5</number>
               </property>
               <property name="segmentStyle" >
                <enum>QLCDNumber::Filled</enum>
@@ -648,6 +675,15 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="frameShadow" >
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="smallDecimalPoint" >
+               <bool>false</bool>
+              </property>
+              <property name="numDigits" >
+               <number>5</number>
+              </property>
               <property name="segmentStyle" >
                <enum>QLCDNumber::Filled</enum>
               </property>
@@ -667,6 +703,15 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="frameShadow" >
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="smallDecimalPoint" >
+               <bool>false</bool>
+              </property>
+              <property name="numDigits" >
+               <number>5</number>
               </property>
               <property name="segmentStyle" >
                <enum>QLCDNumber::Filled</enum>
@@ -688,6 +733,15 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="frameShadow" >
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="smallDecimalPoint" >
+               <bool>false</bool>
+              </property>
+              <property name="numDigits" >
+               <number>5</number>
+              </property>
               <property name="segmentStyle" >
                <enum>QLCDNumber::Filled</enum>
               </property>
@@ -707,6 +761,15 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="frameShadow" >
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="smallDecimalPoint" >
+               <bool>false</bool>
+              </property>
+              <property name="numDigits" >
+               <number>5</number>
               </property>
               <property name="segmentStyle" >
                <enum>QLCDNumber::Filled</enum>
@@ -728,6 +791,15 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="frameShadow" >
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="smallDecimalPoint" >
+               <bool>false</bool>
+              </property>
+              <property name="numDigits" >
+               <number>5</number>
+              </property>
               <property name="segmentStyle" >
                <enum>QLCDNumber::Filled</enum>
               </property>
@@ -737,13 +809,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_29" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QPushButton" name="pushButton_24" >
            <property name="minimumSize" >
             <size>
              <width>0</width>
@@ -778,10 +844,10 @@
   <widget class="QDockWidget" name="dockWidget_Recorder" >
    <property name="geometry" >
     <rect>
-     <x>974</x>
+     <x>996</x>
      <y>22</y>
-     <width>218</width>
-     <height>487</height>
+     <width>194</width>
+     <height>388</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -795,8 +861,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>218</width>
-      <height>465</height>
+      <width>194</width>
+      <height>366</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -982,10 +1048,10 @@
   <widget class="QDockWidget" name="dockWidget_Filters" >
    <property name="geometry" >
     <rect>
-     <x>974</x>
-     <y>513</y>
-     <width>218</width>
-     <height>256</height>
+     <x>0</x>
+     <y>479</y>
+     <width>192</width>
+     <height>167</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -998,15 +1064,15 @@
     <string>Filters</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>2</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_5" >
     <property name="geometry" >
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>218</width>
-      <height>234</height>
+      <width>192</width>
+      <height>145</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4" >
@@ -1038,8 +1104,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>194</width>
-          <height>160</height>
+          <width>168</width>
+          <height>71</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1058,6 +1124,12 @@
          </item>
          <item row="0" column="1" >
           <widget class="QSpinBox" name="spinBox_8" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
            <property name="minimum" >
             <number>1</number>
            </property>
@@ -1081,6 +1153,12 @@
          </item>
          <item row="1" column="1" >
           <widget class="QSpinBox" name="spinBox_9" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
            <property name="minimum" >
             <number>1</number>
            </property>
@@ -1125,8 +1203,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>194</width>
-          <height>160</height>
+          <width>168</width>
+          <height>71</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1145,6 +1223,12 @@
          </item>
          <item row="0" column="1" >
           <widget class="QSpinBox" name="spinBox_12" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
            <property name="minimum" >
             <number>1</number>
            </property>
@@ -1186,8 +1270,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>194</width>
-          <height>160</height>
+          <width>168</width>
+          <height>71</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1206,6 +1290,12 @@
          </item>
          <item row="0" column="1" >
           <widget class="QSpinBox" name="spinBox_10" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
            <property name="minimum" >
             <number>1</number>
            </property>
@@ -1226,6 +1316,12 @@
          </item>
          <item row="1" column="1" >
           <widget class="QSpinBox" name="spinBox_11" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
            <property name="minimum" >
             <number>1</number>
            </property>
@@ -1286,10 +1382,10 @@
   <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="geometry" >
     <rect>
-     <x>0</x>
-     <y>335</y>
-     <width>274</width>
-     <height>248</height>
+     <x>996</x>
+     <y>414</y>
+     <width>194</width>
+     <height>232</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1302,15 +1398,15 @@
     <string>Information</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>1</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_8" >
     <property name="geometry" >
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>274</width>
-      <height>226</height>
+      <width>194</width>
+      <height>210</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1319,7 +1415,7 @@
        <property name="minimumSize" >
         <size>
          <width>0</width>
-         <height>163</height>
+         <height>0</height>
         </size>
        </property>
        <property name="title" >
@@ -1328,6 +1424,12 @@
        <layout class="QGridLayout" name="gridLayout" >
         <item row="0" column="0" >
          <widget class="QLabel" name="label_3" >
+          <property name="maximumSize" >
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Value:</string>
           </property>
@@ -1338,7 +1440,7 @@
           <property name="minimumSize" >
            <size>
             <width>81</width>
-            <height>28</height>
+            <height>23</height>
            </size>
           </property>
           <property name="segmentStyle" >
@@ -1348,6 +1450,12 @@
         </item>
         <item row="1" column="0" >
          <widget class="QLabel" name="label_4" >
+          <property name="maximumSize" >
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Position X:</string>
           </property>
@@ -1358,7 +1466,7 @@
           <property name="minimumSize" >
            <size>
             <width>81</width>
-            <height>27</height>
+            <height>23</height>
            </size>
           </property>
           <property name="segmentStyle" >
@@ -1368,6 +1476,12 @@
         </item>
         <item row="2" column="0" >
          <widget class="QLabel" name="label_6" >
+          <property name="maximumSize" >
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Position Y:</string>
           </property>
@@ -1378,7 +1492,7 @@
           <property name="minimumSize" >
            <size>
             <width>81</width>
-            <height>28</height>
+            <height>23</height>
            </size>
           </property>
           <property name="segmentStyle" >
@@ -1388,6 +1502,12 @@
         </item>
         <item row="3" column="0" >
          <widget class="QLabel" name="label_5" >
+          <property name="maximumSize" >
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Position Z:</string>
           </property>
@@ -1398,26 +1518,13 @@
           <property name="minimumSize" >
            <size>
             <width>81</width>
-            <height>28</height>
+            <height>23</height>
            </size>
           </property>
           <property name="segmentStyle" >
            <enum>QLCDNumber::Filled</enum>
           </property>
          </widget>
-        </item>
-        <item row="1" column="2" >
-         <spacer name="horizontalSpacer" >
-          <property name="orientation" >
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0" >
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -1442,9 +1549,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>587</y>
-     <width>274</width>
-     <height>182</height>
+     <y>333</y>
+     <width>192</width>
+     <height>142</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -1470,8 +1577,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>274</width>
-      <height>160</height>
+      <width>192</width>
+      <height>120</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2" >
@@ -1480,6 +1587,12 @@
      </item>
      <item row="1" column="0" >
       <widget class="QPushButton" name="pushButton_Undo" >
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>23</height>
+        </size>
+       </property>
        <property name="text" >
         <string>Undo</string>
        </property>
@@ -1487,6 +1600,12 @@
      </item>
      <item row="1" column="1" >
       <widget class="QPushButton" name="pushButton_Redo" >
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>23</height>
+        </size>
+       </property>
        <property name="text" >
         <string>Redo</string>
        </property>
@@ -1499,9 +1618,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>773</y>
+     <y>650</y>
      <width>440</width>
-     <height>367</height>
+     <height>334</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1522,7 +1641,7 @@
       <x>0</x>
       <y>22</y>
       <width>440</width>
-      <height>345</height>
+      <height>312</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_10" >
@@ -1534,6 +1653,12 @@
        <layout class="QVBoxLayout" name="verticalLayout_8" >
         <item>
          <widget class="QCheckBox" name="checkBox_Red" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Red</string>
           </property>
@@ -1544,6 +1669,12 @@
         </item>
         <item>
          <widget class="QCheckBox" name="checkBox_Green" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Green</string>
           </property>
@@ -1554,6 +1685,12 @@
         </item>
         <item>
          <widget class="QCheckBox" name="checkBox_Blue" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Blue</string>
           </property>
@@ -1564,6 +1701,12 @@
         </item>
         <item>
          <widget class="QCheckBox" name="checkBox_Alpha" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Alpha</string>
           </property>
@@ -1615,6 +1758,12 @@
        <layout class="QVBoxLayout" name="verticalLayout_9" >
         <item>
          <widget class="QRadioButton" name="radioButton_User" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
           <property name="text" >
            <string>User</string>
           </property>
@@ -1622,6 +1771,12 @@
         </item>
         <item>
          <widget class="QRadioButton" name="radioButton_Luminance" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Luminance</string>
           </property>
@@ -1632,6 +1787,12 @@
         </item>
         <item>
          <widget class="QRadioButton" name="radioButton_Intensity" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Intensity</string>
           </property>
@@ -1686,9 +1847,9 @@
    <property name="geometry" >
     <rect>
      <x>444</x>
-     <y>773</y>
-     <width>748</width>
-     <height>367</height>
+     <y>650</y>
+     <width>746</width>
+     <height>334</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1711,8 +1872,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>748</width>
-      <height>345</height>
+      <width>746</width>
+      <height>312</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_9" >
@@ -1744,7 +1905,7 @@
      <item rowspan="2" row="0" column="1" >
       <widget class="QFrame" name="frame_4" >
        <property name="frameShape" >
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow" >
         <enum>QFrame::Raised</enum>
@@ -1809,7 +1970,7 @@
         <item row="2" column="0" colspan="2" >
          <widget class="QFrame" name="frame_3" >
           <property name="frameShape" >
-           <enum>QFrame::StyledPanel</enum>
+           <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow" >
            <enum>QFrame::Raised</enum>
@@ -1840,6 +2001,12 @@
            </item>
            <item>
             <widget class="QSpinBox" name="spinBox_2" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
              <property name="readOnly" >
               <bool>true</bool>
              </property>
@@ -1899,7 +2066,7 @@
      <item row="1" column="0" >
       <widget class="QFrame" name="frame_5" >
        <property name="frameShape" >
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow" >
         <enum>QFrame::Raised</enum>
