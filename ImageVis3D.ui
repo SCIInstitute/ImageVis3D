@@ -33,9 +33,9 @@
   <widget class="QWidget" name="centralwidget" >
    <property name="geometry" >
     <rect>
-     <x>196</x>
+     <x>278</x>
      <y>22</y>
-     <width>809</width>
+     <width>727</width>
      <height>624</height>
     </rect>
    </property>
@@ -155,7 +155,7 @@
     <rect>
      <x>0</x>
      <y>22</y>
-     <width>192</width>
+     <width>274</width>
      <height>307</height>
     </rect>
    </property>
@@ -185,7 +185,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>192</width>
+      <width>274</width>
       <height>285</height>
      </rect>
     </property>
@@ -209,7 +209,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>168</width>
+          <width>250</width>
           <height>240</height>
          </rect>
         </property>
@@ -331,8 +331,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>168</width>
           <height>240</height>
          </rect>
@@ -427,8 +427,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>168</width>
           <height>240</height>
          </rect>
@@ -612,8 +612,8 @@
        <widget class="QWidget" name="tab_6" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>168</width>
           <height>240</height>
          </rect>
@@ -847,7 +847,7 @@
      <x>1009</x>
      <y>22</y>
      <width>194</width>
-     <height>409</height>
+     <height>354</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -862,7 +862,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>387</height>
+      <height>332</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1049,8 +1049,8 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>479</y>
-     <width>192</width>
+     <y>333</y>
+     <width>274</width>
      <height>167</height>
     </rect>
    </property>
@@ -1071,7 +1071,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>192</width>
+      <width>274</width>
       <height>145</height>
      </rect>
     </property>
@@ -1104,7 +1104,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>168</width>
+          <width>250</width>
           <height>71</height>
          </rect>
         </property>
@@ -1201,8 +1201,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>168</width>
           <height>71</height>
          </rect>
@@ -1268,8 +1268,8 @@
        <widget class="QWidget" name="Seite" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>168</width>
           <height>71</height>
          </rect>
@@ -1383,9 +1383,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>435</y>
+     <y>380</y>
      <width>194</width>
-     <height>211</height>
+     <height>266</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1406,7 +1406,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>189</height>
+      <height>244</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1549,8 +1549,8 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>333</y>
-     <width>192</width>
+     <y>504</y>
+     <width>274</width>
      <height>142</height>
     </rect>
    </property>
@@ -1577,7 +1577,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>192</width>
+      <width>274</width>
       <height>120</height>
      </rect>
     </property>
@@ -2700,6 +2700,22 @@
     <hint type="destinationlabel" >
      <x>601</x>
      <y>532</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLoad_Dataset_from_Directory</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>LoadDirectory()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>524</y>
     </hint>
    </hints>
   </connection>
