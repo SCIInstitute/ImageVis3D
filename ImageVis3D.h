@@ -49,4 +49,4 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		
 };
 
-#endif 
+#endif // IMAGEVIS3D_H
