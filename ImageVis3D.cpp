@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 *
 	LoadWorkspace("Default.wsp", true);
 	
 	UpdateMRUActions();
+	UpdateMenus();
 }
 
 MainWindow::~MainWindow()
@@ -247,8 +248,33 @@ RenderWindow* MainWindow::GetActiveRenderWindow()
 void MainWindow::UpdateMenus() {
 	bool bHasMdiChild = (GetActiveRenderWindow() != 0);
 	actionSave_Dataset->setEnabled(bHasMdiChild);
-	menu_View->setEnabled(bHasMdiChild);
-	menu_Edit->setEnabled(bHasMdiChild);
+	//menu_View->setEnabled(bHasMdiChild);
+	//menu_Edit->setEnabled(bHasMdiChild);
+
+    actionGo_Fullscreen->setEnabled(bHasMdiChild);
+	actionCascade->setEnabled(bHasMdiChild);
+    actionTile->setEnabled(bHasMdiChild);
+    actionNext->setEnabled(bHasMdiChild);
+    actionPrevious->setEnabled(bHasMdiChild);
+    action2_x_2_View->setEnabled(bHasMdiChild);
+    action1_x_3_View->setEnabled(bHasMdiChild);
+    actionSinge_View->setEnabled(bHasMdiChild);
+    actionCloneCurrentView->setEnabled(bHasMdiChild);
+    actionSlice_Rendering->setEnabled(bHasMdiChild);
+    actionDirect_Volume_Rendering->setEnabled(bHasMdiChild);
+	actionIsosurface_Rendering->setEnabled(bHasMdiChild);
+    actionStereo_Projection->setEnabled(bHasMdiChild);
+
+	actionBox->setEnabled(bHasMdiChild);
+    actionPoly_Line->setEnabled(bHasMdiChild);
+    actionSelect_All->setEnabled(bHasMdiChild);
+    actionDelete_Selection->setEnabled(bHasMdiChild);
+    actionInvert_Selection->setEnabled(bHasMdiChild);
+    actionStastistcs->setEnabled(bHasMdiChild);
+    actionUndo->setEnabled(bHasMdiChild);
+    actionRedo->setEnabled(bHasMdiChild);
+
+	
 }
 
 // ******************************************
