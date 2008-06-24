@@ -1,8 +1,11 @@
 #include "RenderWindow.h"
 
-RenderWindow::RenderWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QDialog(parent, flags)
+RenderWindow::RenderWindow(QString dataset, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QDialog(parent, flags)
 {
 	setupUi(this);
+
+	m_strDataset = dataset;
+	setWindowTitle(dataset);
 
 	LoadImages();
 

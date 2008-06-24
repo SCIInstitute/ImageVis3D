@@ -2,15 +2,17 @@
 
 #include "QDataRadioButton.h"
 #include <QtCore/QFileInfo>
+#include <QtGui/QMessageBox>
 
 
 BrowseData::BrowseData(QDialog* pleaseWaitDialog, QString strDir, QWidget* parent, Qt::WindowFlags flags) : 
+	m_bDataFound(false),
 	m_strDir(strDir),
 	m_strFilename("")
 {
 	setupUi(this);
 
-	FillTable(pleaseWaitDialog);
+	m_bDataFound = FillTable(pleaseWaitDialog);
 
 	// TODO: add actions to set the correct filename
 	m_strFilename = "DICOM Dataset";
@@ -21,7 +23,7 @@ void BrowseData::showEvent ( QShowEvent * event ) {
 }
 
 
-void BrowseData::FillTable(QDialog* pleaseWaitDialog)
+bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 {
 	DICOMParser p;
 	p.GetDirInfo(m_strDir.toStdString());
@@ -36,5 +38,7 @@ void BrowseData::FillTable(QDialog* pleaseWaitDialog)
 	}
 
 	if (pleaseWaitDialog != NULL) pleaseWaitDialog->close();
+
+	return p.m_DICOMstacks.size() > 0;
 }
 

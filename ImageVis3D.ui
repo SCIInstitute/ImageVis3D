@@ -67,13 +67,16 @@
     </widget>
     <addaction name="actionLoadDataset" />
     <addaction name="actionLoad_Dataset_from_Directory" />
-    <addaction name="actionSave_Current_Project" />
+    <addaction name="actionSave_Dataset" />
     <addaction name="separator" />
     <addaction name="menuLast_Used_Projects" />
     <addaction name="separator" />
     <addaction name="actionQuit" />
    </widget>
    <widget class="QMenu" name="menu_View" >
+    <property name="enabled" >
+     <bool>false</bool>
+    </property>
     <property name="title" >
      <string>&amp;View</string>
     </property>
@@ -115,7 +118,10 @@
     <addaction name="separator" />
     <addaction name="actionOpen_Online_Help" />
    </widget>
-   <widget class="QMenu" name="menuSelection" >
+   <widget class="QMenu" name="menu_Edit" >
+    <property name="enabled" >
+     <bool>false</bool>
+    </property>
     <property name="title" >
      <string>Edit</string>
     </property>
@@ -133,7 +139,7 @@
    </widget>
    <addaction name="menu_File" />
    <addaction name="menu_View" />
-   <addaction name="menuSelection" />
+   <addaction name="menu_Edit" />
    <addaction name="menu_Workspace" />
    <addaction name="menu_Help" />
   </widget>
@@ -1415,8 +1421,32 @@
          <height>0</height>
         </size>
        </property>
+       <property name="sizeIncrement" >
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="font" >
+        <font>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="autoFillBackground" >
+        <bool>false</bool>
+       </property>
        <property name="title" >
         <string>Cursor</string>
+       </property>
+       <property name="flat" >
+        <bool>false</bool>
+       </property>
+       <property name="checkable" >
+        <bool>false</bool>
+       </property>
+       <property name="checked" >
+        <bool>false</bool>
        </property>
        <layout class="QGridLayout" name="gridLayout" >
         <item row="0" column="0" >
@@ -1680,6 +1710,9 @@
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QGridLayout" name="gridLayout_9" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
         <item row="0" column="0" >
          <widget class="QGroupBox" name="groupBox_6" >
           <property name="title" >
@@ -1824,7 +1857,7 @@
          </widget>
         </item>
         <item row="2" column="0" >
-         <widget class="QPushButton" name="pushButton_15" >
+         <widget class="QPushButton" name="pushButton_Load1DTrans" >
           <property name="minimumSize" >
            <size>
             <width>0</width>
@@ -1837,7 +1870,7 @@
          </widget>
         </item>
         <item row="3" column="0" >
-         <widget class="QPushButton" name="pushButton_16" >
+         <widget class="QPushButton" name="pushButton_Save1DTrans" >
           <property name="minimumSize" >
            <size>
             <width>0</width>
@@ -1898,6 +1931,9 @@
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QGridLayout" name="gridLayout_8" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
         <item row="2" column="0" >
          <widget class="QGroupBox" name="groupBox_5" >
           <property name="title" >
@@ -2009,7 +2045,7 @@
          </widget>
         </item>
         <item row="4" column="0" >
-         <widget class="QPushButton" name="pushButton_17" >
+         <widget class="QPushButton" name="pushButton_Load2DTrans" >
           <property name="minimumSize" >
            <size>
             <width>0</width>
@@ -2022,7 +2058,7 @@
          </widget>
         </item>
         <item row="4" column="1" >
-         <widget class="QPushButton" name="pushButton_18" >
+         <widget class="QPushButton" name="pushButton_Save2DTrans" >
           <property name="minimumSize" >
            <size>
             <width>0</width>
@@ -2072,6 +2108,12 @@
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_11" >
+        <property name="spacing" >
+         <number>9</number>
+        </property>
+        <property name="margin" >
+         <number>0</number>
+        </property>
         <item>
          <widget class="QLabel" name="label_10" >
           <property name="sizePolicy" >
@@ -2106,6 +2148,9 @@
            <enum>QFrame::Raised</enum>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_10" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
            <item>
             <widget class="QPushButton" name="pushButton_25" >
              <property name="minimumSize" >
@@ -2159,7 +2204,10 @@
     <string>Load Dataset Frome File</string>
    </property>
   </action>
-  <action name="actionSave_Current_Project" >
+  <action name="actionSave_Dataset" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="text" >
     <string>Save Dataset</string>
    </property>
@@ -2335,7 +2383,7 @@
    </property>
   </action>
  </widget>
- <layoutdefault spacing="6" margin="0" />
+ <includes/>
  <resources/>
  <connections>
   <connection>
@@ -2658,6 +2706,102 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>mdiArea</sender>
+   <signal>subWindowActivated(QMdiSubWindow*)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>UpdateMenus()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>641</x>
+     <y>333</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>524</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave_Dataset</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SaveDataset()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>524</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Load1DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Load1DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>63</x>
+     <y>977</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>524</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Save1DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Save1DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>63</x>
+     <y>1006</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>524</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Load2DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Load2DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>532</x>
+     <y>1007</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>524</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Save2DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Save2DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>708</x>
+     <y>1007</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>524</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -2677,5 +2821,11 @@
   <slot>Use1DTrans()</slot>
   <slot>Use2DTrans()</slot>
   <slot>ClearMRUList()</slot>
+  <slot>UpdateMenus()</slot>
+  <slot>SaveDataset()</slot>
+  <slot>Save1DTrans()</slot>
+  <slot>Load1DTrans()</slot>
+  <slot>Save2DTrans()</slot>
+  <slot>Load2DTrans()</slot>
  </slots>
 </ui>

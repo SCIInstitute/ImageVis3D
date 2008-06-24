@@ -15,11 +15,15 @@ class BrowseData : public QDialog, protected Ui_BrowseData
 
 		QString GetFileName() {return m_strFilename;}
 
+		bool DataFound() {return m_bDataFound;}
+
 	private:
+		bool	m_bDataFound;
 		QString m_strDir;
 		QString m_strFilename;
 
-		void FillTable(QDialog* pleaseWaitDialog);
+
+		bool FillTable(QDialog* pleaseWaitDialog);
 
 		virtual void showEvent ( QShowEvent * event );
 };

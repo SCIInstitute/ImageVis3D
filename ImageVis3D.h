@@ -39,10 +39,18 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
 		void ClearMRUList();
 
+		void UpdateMenus();
+
+		void SaveDataset();
+		void Load1DTrans();
+		void Save1DTrans();
+		void Load2DTrans();
+		void Save2DTrans();
+
 	private :
 		QString m_strCurrentWorkspaceFilename;
 
-		RenderWindow* CreateNewRenderWindow();
+		RenderWindow* CreateNewRenderWindow(QString dataset);
 		RenderWindow* GetActiveRenderWindow();
 
 		void SetupWorkspaceMenu();

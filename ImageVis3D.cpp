@@ -30,6 +30,26 @@ MainWindow::~MainWindow()
 
 }
 
+void MainWindow::SaveDataset(){
+	QString fileName = QFileDialog::getSaveFileName(this, "Save Current Dataset", ".", "Nearly Raw Raster Data (*.nrrd);;QVis Data (*.dat);;Universal Volume Format (*.uvf)");
+}
+
+void MainWindow::Load1DTrans(){
+	QString fileName = QFileDialog::getOpenFileName(this, "Load 1D Transferfunction", ".", "1D Transferfunction File (*.1dt)");
+}
+
+void MainWindow::Save1DTrans(){
+	QString fileName = QFileDialog::getSaveFileName(this, "Save 1D Transferfunction", ".", "1D Transferfunction File (*.1dt)");
+}
+
+void MainWindow::Load2DTrans(){
+	QString fileName = QFileDialog::getOpenFileName(this, "Load 2D Transferfunction", ".", "2D Transferfunction File (*.2dt)");
+}
+
+void MainWindow::Save2DTrans(){
+	QString fileName = QFileDialog::getSaveFileName(this, "Save 2D Transferfunction", ".", "2D Transferfunction File (*.2dt)");
+}
+
 // ******************************************
 // Geometry
 // ******************************************
@@ -152,7 +172,7 @@ void MainWindow::ApplyWorkspace() {
 // ******************************************
 
 void MainWindow::CloneCurrentView() {
-	 RenderWindow *renderWin = CreateNewRenderWindow();
+	 RenderWindow *renderWin = CreateNewRenderWindow(GetActiveRenderWindow()->GetDataset());
 	 renderWin->show();
 }
 
@@ -162,7 +182,7 @@ void MainWindow::LoadDataset() {
 
 void MainWindow::LoadDataset(QString fileName) {
 	if (!fileName.isEmpty()) {
-		RenderWindow *renderWin = CreateNewRenderWindow();
+		RenderWindow *renderWin = CreateNewRenderWindow(fileName);
 		renderWin->show();
 
 		AddFileToMRUList(fileName);
@@ -179,16 +199,22 @@ void MainWindow::LoadDirectory() {
 
 		QString fileName;
 		BrowseData browseDataDialog((QDialog*)&pleaseWait,directoryName, this);
-		if (browseDataDialog.exec() == QDialog::Accepted) {
-			LoadDataset(browseDataDialog.GetFileName());
+
+		if (browseDataDialog.DataFound()) {
+			if (browseDataDialog.exec() == QDialog::Accepted) {
+				LoadDataset(browseDataDialog.GetFileName());
+			}
+		} else {
+			QString msg = tr("Error no valid DICOM files in directory %1 found.").arg(directoryName);
+			QMessageBox::information(this, tr("Problem"), msg);
 		}
 	}
 }
 
 
-RenderWindow* MainWindow::CreateNewRenderWindow()
+RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
  {
-     RenderWindow *renderWin = new RenderWindow;
+     RenderWindow *renderWin = new RenderWindow(dataset);
      mdiArea->addSubWindow(renderWin);
 
      return renderWin;
@@ -218,6 +244,12 @@ RenderWindow* MainWindow::GetActiveRenderWindow()
 		return NULL;
 }
 
+void MainWindow::UpdateMenus() {
+	bool bHasMdiChild = (GetActiveRenderWindow() != 0);
+	actionSave_Dataset->setEnabled(bHasMdiChild);
+	menu_View->setEnabled(bHasMdiChild);
+	menu_Edit->setEnabled(bHasMdiChild);
+}
 
 // ******************************************
 // 1D Transfer Function Dock
