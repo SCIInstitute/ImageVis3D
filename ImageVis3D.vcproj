@@ -181,12 +181,28 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath="P:\c++\include\tools\DICOM\DICOMParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath="P:\c++\include\tools\SysTools.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="P:\c++\include\tools\DICOM\DICOMParser.h"
+				>
+			</File>
+			<File
+				RelativePath="P:\c++\include\tools\SysTools.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Forms"
@@ -195,6 +211,10 @@
 				Name="UI Files"
 				Filter="ui"
 				>
+				<File
+					RelativePath=".\BrowseData.ui"
+					>
+				</File>
 				<File
 					RelativePath=".\ImageVis3D.ui"
 					>
@@ -208,11 +228,19 @@
 				Name="Automaticaly Generated Files"
 				>
 				<File
+					RelativePath=".\moc_BrowseData.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\moc_ImageVis3D.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\moc_RenderWindow.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui_BrowseData.h"
 					>
 				</File>
 				<File
@@ -227,6 +255,34 @@
 			<Filter
 				Name="Implemented Files"
 				>
+				<File
+					RelativePath=".\BrowseData.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\BrowseData.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+				</File>
 				<File
 					RelativePath=".\ImageVis3D.cpp"
 					>

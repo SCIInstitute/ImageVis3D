@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
@@ -15,7 +17,7 @@ class RenderWindow : public QDialog, protected Ui_RenderWindow
 		void ToggleRenderWindowView2x2();
 		void ToggleRenderWindowViewSingle();
 
-private :
+	private :
 		void LoadImages();
 		QPixmap m_Pixmap1x3;
 		QPixmap m_Pixmap2x2;

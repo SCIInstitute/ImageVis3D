@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef IMAGEVIS3D_H
 #define IMAGEVIS3D_H
 
@@ -33,6 +35,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
 		void LoadGeometry();
 		void SaveGeometry();
+		void OpenRecentFile();
+
+		void ClearMRUList();
 
 	private :
 		QString m_strCurrentWorkspaceFilename;
@@ -41,11 +46,21 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		RenderWindow* GetActiveRenderWindow();
 
 		void SetupWorkspaceMenu();
-		void LoadWorkspace(QString strFilename);
+		void LoadWorkspace(QString strFilename, bool bSilentFail = false);
 		void SaveWorkspace(QString strFilename);
 
-		void LoadGeometry(QString strFilename);
+		void LoadGeometry(QString strFilename, bool bSilentFail = false);
 		void SaveGeometry(QString strFilename);
+
+		QString strippedName(const QString &fullFileName);
+		static const unsigned int ms_iMaxRecentFiles = 5;
+		QAction *m_recentFileActs[ms_iMaxRecentFiles];
+		void UpdateMRUActions();
+		void AddFileToMRUList(const QString &fileName);
+
+		void setupUi(QMainWindow *MainWindow);
+		
+		void LoadDataset(QString fileName);
 		
 };
 

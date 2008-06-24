@@ -62,11 +62,8 @@
      <property name="title" >
       <string>Most Recently Used</string>
      </property>
-     <addaction name="actionHand_dat" />
-     <addaction name="actionLeg_nnrd" />
-     <addaction name="actionHead_dicom" />
-     <addaction name="separator" />
      <addaction name="actionClear_List" />
+     <addaction name="separator" />
     </widget>
     <addaction name="actionLoadDataset" />
     <addaction name="actionLoad_Dataset_from_Directory" />
@@ -331,9 +328,9 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>168</width>
+          <x>0</x>
+          <y>0</y>
+          <width>250</width>
           <height>240</height>
          </rect>
         </property>
@@ -427,9 +424,9 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>168</width>
+          <x>0</x>
+          <y>0</y>
+          <width>250</width>
           <height>240</height>
          </rect>
         </property>
@@ -612,9 +609,9 @@
        <widget class="QWidget" name="tab_6" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>168</width>
+          <x>0</x>
+          <y>0</y>
+          <width>250</width>
           <height>240</height>
          </rect>
         </property>
@@ -1201,9 +1198,9 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>168</width>
+          <x>0</x>
+          <y>0</y>
+          <width>250</width>
           <height>71</height>
          </rect>
         </property>
@@ -1268,9 +1265,9 @@
        <widget class="QWidget" name="Seite" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>168</width>
+          <x>0</x>
+          <y>0</y>
+          <width>250</width>
           <height>71</height>
          </rect>
         </property>
@@ -2266,11 +2263,6 @@
     <string>Stereo Projection</string>
    </property>
   </action>
-  <action name="actionHand_dat" >
-   <property name="text" >
-    <string>Hand.dat</string>
-   </property>
-  </action>
   <action name="actionClear_List" >
    <property name="text" >
     <string>Clear List</string>
@@ -2322,16 +2314,6 @@
     <string>Save Workspace</string>
    </property>
   </action>
-  <action name="actionLeg_nnrd" >
-   <property name="text" >
-    <string>Leg.nnrd</string>
-   </property>
-  </action>
-  <action name="actionHead_dicom" >
-   <property name="text" >
-    <string>head.dicom</string>
-   </property>
-  </action>
   <action name="actionReset_Workspace" >
    <property name="text" >
     <string>Reset Workspace</string>
@@ -2350,65 +2332,6 @@
   <action name="actionSave_Window_Geometry" >
    <property name="text" >
     <string>Save Window Geometry</string>
-   </property>
-  </action>
-  <action name="action1D_Transfer_Function_Editor" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>1D Transfer Function Editor</string>
-   </property>
-  </action>
-  <action name="action2D_Transfer_Function_Editor" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>2D Transfer Function Editor</string>
-   </property>
-  </action>
-  <action name="actionFilters" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Filters</string>
-   </property>
-  </action>
-  <action name="actionRecorder" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Movie / Image Recorder</string>
-   </property>
-  </action>
-  <action name="actionInformation" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="checked" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Information</string>
-   </property>
-  </action>
-  <action name="actionHistory" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>History</string>
-   </property>
-  </action>
-  <action name="actionTools" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Tools</string>
    </property>
   </action>
  </widget>
@@ -2719,6 +2642,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionClear_List</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ClearMRUList()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>524</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -2737,5 +2676,6 @@
   <slot>SaveGeometry()</slot>
   <slot>Use1DTrans()</slot>
   <slot>Use2DTrans()</slot>
+  <slot>ClearMRUList()</slot>
  </slots>
 </ui>
