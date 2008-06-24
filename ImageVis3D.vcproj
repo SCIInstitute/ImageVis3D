@@ -186,6 +186,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\QDataRadioButton.cpp"
+				>
+			</File>
+			<File
 				RelativePath="P:\c++\include\tools\SysTools.cpp"
 				>
 			</File>
@@ -197,6 +201,10 @@
 			>
 			<File
 				RelativePath="P:\c++\include\tools\DICOM\DICOMParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QDataRadioButton.h"
 				>
 			</File>
 			<File
@@ -220,6 +228,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\PleaseWait.ui"
+					>
+				</File>
+				<File
 					RelativePath=".\RenderWindow.ui"
 					>
 				</File>
@@ -236,6 +248,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\moc_PleaseWait.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\moc_RenderWindow.cpp"
 					>
 				</File>
@@ -245,6 +261,10 @@
 				</File>
 				<File
 					RelativePath=".\ui_ImageVis3D.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui_PleaseWait.h"
 					>
 				</File>
 				<File
@@ -268,7 +288,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -278,7 +298,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -307,6 +327,34 @@
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
 							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\PleaseWait.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PleaseWait.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
 							Outputs="$(InputDir)moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>

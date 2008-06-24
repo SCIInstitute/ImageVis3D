@@ -6,6 +6,8 @@
 #include <QtCore/QSettings>
 #include <QtGui/QMessageBox>
 
+#include "PleaseWait.h"
+
 #include <fstream>
 #include <string>
 
@@ -167,15 +169,16 @@ void MainWindow::LoadDataset(QString fileName) {
 	}
 }
 
-
 void MainWindow::LoadDirectory() {
+	PleaseWaitDialog pleaseWait(this);
+
 	QString directoryName = QFileDialog::getExistingDirectory(this, "Load Dataset from Directory");
+
 	if (!directoryName.isEmpty()) {
-	
+		pleaseWait.SetText("Scanning directory for DICOM files, please wait  ...");
+
 		QString fileName;
-
-		BrowseData browseDataDialog(directoryName, this);
-
+		BrowseData browseDataDialog((QDialog*)&pleaseWait,directoryName, this);
 		if (browseDataDialog.exec() == QDialog::Accepted) {
 			LoadDataset(browseDataDialog.GetFileName());
 		}
