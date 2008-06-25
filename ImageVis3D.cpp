@@ -111,9 +111,12 @@ void MainWindow::SetupWorkspaceMenu() {
 	menu_Workspace->addAction(dockWidget_History->toggleViewAction());
 	menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
 	menu_Workspace->addAction(dockWidget_Recorder->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_LockOptions->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_RenderOptions->toggleViewAction());
 	menu_Workspace->addSeparator();
 	menu_Workspace->addAction(dockWidget_1DTrans->toggleViewAction());
 	menu_Workspace->addAction(dockWidget_2DTrans->toggleViewAction());
+	menu_Workspace->addAction(dockWidget_IsoSurface->toggleViewAction());
 }
 
 void MainWindow::LoadWorkspace() {
@@ -215,7 +218,9 @@ void MainWindow::LoadDirectory() {
 
 RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
  {
-     RenderWindow *renderWin = new RenderWindow(dataset);
+	 static unsigned int iCounter = 0;
+	 
+     RenderWindow *renderWin = new RenderWindow(dataset, listWidget_Lock, iCounter++);
      mdiArea->addSubWindow(renderWin);
 
      return renderWin;
@@ -248,8 +253,6 @@ RenderWindow* MainWindow::GetActiveRenderWindow()
 void MainWindow::UpdateMenus() {
 	bool bHasMdiChild = (GetActiveRenderWindow() != 0);
 	actionSave_Dataset->setEnabled(bHasMdiChild);
-	//menu_View->setEnabled(bHasMdiChild);
-	//menu_Edit->setEnabled(bHasMdiChild);
 
     actionGo_Fullscreen->setEnabled(bHasMdiChild);
 	actionCascade->setEnabled(bHasMdiChild);
@@ -260,10 +263,6 @@ void MainWindow::UpdateMenus() {
     action1_x_3_View->setEnabled(bHasMdiChild);
     actionSinge_View->setEnabled(bHasMdiChild);
     actionCloneCurrentView->setEnabled(bHasMdiChild);
-    actionSlice_Rendering->setEnabled(bHasMdiChild);
-    actionDirect_Volume_Rendering->setEnabled(bHasMdiChild);
-	actionIsosurface_Rendering->setEnabled(bHasMdiChild);
-    actionStereo_Projection->setEnabled(bHasMdiChild);
 
 	actionBox->setEnabled(bHasMdiChild);
     actionPoly_Line->setEnabled(bHasMdiChild);
@@ -272,9 +271,7 @@ void MainWindow::UpdateMenus() {
     actionInvert_Selection->setEnabled(bHasMdiChild);
     actionStastistcs->setEnabled(bHasMdiChild);
     actionUndo->setEnabled(bHasMdiChild);
-    actionRedo->setEnabled(bHasMdiChild);
-
-	
+    actionRedo->setEnabled(bHasMdiChild);	
 }
 
 // ******************************************
@@ -303,11 +300,54 @@ void MainWindow::Transfer1DRadioClicked() {
 }
 
 void MainWindow::Use1DTrans() {
-	checkBox_Use2DTrans->setChecked(!checkBox_Use1DTrans->isChecked());
+	checkBox_Use2DTrans->setChecked(false);
+	checkBox_Use2DTrans->setEnabled(true);
+	checkBox_UseIso->setChecked(false);
+	checkBox_UseIso->setEnabled(true);
+	checkBox_Use1DTrans->setEnabled(false);
+	checkBox_Use1DTrans->setChecked(true);
+	radioButton_1DTrans->setChecked(true);
 }
 
 void MainWindow::Use2DTrans() {
-	checkBox_Use1DTrans->setChecked(!checkBox_Use2DTrans->isChecked());
+	checkBox_Use1DTrans->setChecked(false);
+	checkBox_Use1DTrans->setEnabled(true);
+	checkBox_UseIso->setChecked(false);
+	checkBox_UseIso->setEnabled(true);
+	checkBox_Use2DTrans->setEnabled(false);
+	checkBox_Use2DTrans->setChecked(true);
+	radioButton_2DTrans->setChecked(true);
+}
+
+void MainWindow::UseIso() {
+	checkBox_Use2DTrans->setChecked(false);
+	checkBox_Use2DTrans->setEnabled(true);
+	checkBox_Use1DTrans->setChecked(false);
+	checkBox_Use1DTrans->setEnabled(true);
+	checkBox_UseIso->setEnabled(false);
+	checkBox_UseIso->setChecked(true);
+	radioButton_Iso->setChecked(true);
+}
+
+
+// ******************************************
+// Locks
+// ******************************************
+
+void MainWindow::EditViewLocks() {
+	pushButton_RelativeLock->setEnabled(true);	
+}
+
+void MainWindow::EditRenderLocks() {
+	pushButton_RelativeLock->setEnabled(false);
+}
+
+void MainWindow::EditToolsLocks() {
+	pushButton_RelativeLock->setEnabled(false);
+}
+
+void MainWindow::EditFiltersLocks() {
+	pushButton_RelativeLock->setEnabled(false);
 }
 
 // ******************************************

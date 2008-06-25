@@ -28,6 +28,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
 		void Use1DTrans();
 		void Use2DTrans();
+		void UseIso();
 
 		void LoadWorkspace();
 		void SaveWorkspace();
@@ -46,6 +47,12 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void Save1DTrans();
 		void Load2DTrans();
 		void Save2DTrans();
+
+		void EditViewLocks();
+		void EditRenderLocks();
+		void EditToolsLocks();
+		void EditFiltersLocks();
+
 
 	private :
 		QString m_strCurrentWorkspaceFilename;

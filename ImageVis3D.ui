@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1203</width>
-    <height>1049</height>
+    <height>1405</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -33,13 +33,13 @@
   <widget class="QWidget" name="centralwidget" >
    <property name="geometry" >
     <rect>
-     <x>278</x>
+     <x>279</x>
      <y>22</y>
      <width>726</width>
-     <height>630</height>
+     <height>998</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2" >
+   <layout class="QHBoxLayout" name="horizontalLayout_8" >
     <item>
      <widget class="QMdiArea" name="mdiArea" />
     </item>
@@ -92,12 +92,6 @@
     <addaction name="separator" />
     <addaction name="actionCloneCurrentView" />
     <addaction name="separator" />
-    <addaction name="actionSlice_Rendering" />
-    <addaction name="actionDirect_Volume_Rendering" />
-    <addaction name="actionIsosurface_Rendering" />
-    <addaction name="separator" />
-    <addaction name="actionStereo_Projection" />
-    <addaction name="separator" />
     <addaction name="actionLoad_Window_Geometry" />
     <addaction name="actionSave_Window_Geometry" />
    </widget>
@@ -147,7 +141,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1028</y>
+     <y>1384</y>
      <width>1203</width>
      <height>21</height>
     </rect>
@@ -158,8 +152,8 @@
     <rect>
      <x>0</x>
      <y>22</y>
-     <width>274</width>
-     <height>309</height>
+     <width>275</width>
+     <height>307</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -188,8 +182,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>274</width>
-      <height>287</height>
+      <width>275</width>
+      <height>285</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout" >
@@ -212,8 +206,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
-          <height>242</height>
+          <width>251</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -342,8 +336,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
-          <height>242</height>
+          <width>251</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -444,8 +438,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
-          <height>242</height>
+          <width>251</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -635,8 +629,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
-          <height>242</height>
+          <width>251</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -871,10 +865,10 @@
   <widget class="QDockWidget" name="dockWidget_Recorder" >
    <property name="geometry" >
     <rect>
-     <x>1008</x>
+     <x>1009</x>
      <y>22</y>
-     <width>195</width>
-     <height>362</height>
+     <width>194</width>
+     <height>444</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -888,8 +882,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>195</width>
-      <height>340</height>
+      <width>194</width>
+      <height>422</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1094,8 +1088,8 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>335</y>
-     <width>274</width>
+     <y>333</y>
+     <width>275</width>
      <height>167</height>
     </rect>
    </property>
@@ -1116,7 +1110,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>274</width>
+      <width>275</width>
       <height>145</height>
      </rect>
     </property>
@@ -1158,7 +1152,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
+          <width>251</width>
           <height>71</height>
          </rect>
         </property>
@@ -1263,7 +1257,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
+          <width>251</width>
           <height>71</height>
          </rect>
         </property>
@@ -1336,7 +1330,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>250</width>
+          <width>251</width>
           <height>71</height>
          </rect>
         </property>
@@ -1436,13 +1430,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_27" >
-       <property name="minimumSize" >
-        <size>
-         <width>60</width>
-         <height>23</height>
-        </size>
-       </property>
+      <widget class="QPushButton" name="pushButton" >
        <property name="text" >
         <string>Start</string>
        </property>
@@ -1454,10 +1442,10 @@
   <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="geometry" >
     <rect>
-     <x>1008</x>
-     <y>388</y>
-     <width>195</width>
-     <height>264</height>
+     <x>1009</x>
+     <y>470</y>
+     <width>194</width>
+     <height>240</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1477,8 +1465,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>195</width>
-      <height>242</height>
+      <width>194</width>
+      <height>218</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1657,9 +1645,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>506</y>
-     <width>274</width>
-     <height>146</height>
+     <y>504</y>
+     <width>275</width>
+     <height>142</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -1685,8 +1673,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>274</width>
-      <height>124</height>
+      <width>275</width>
+      <height>120</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2" >
@@ -1726,9 +1714,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>656</y>
+     <y>1024</y>
      <width>417</width>
-     <height>372</height>
+     <height>360</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1749,7 +1737,7 @@
       <x>0</x>
       <y>22</y>
       <width>417</width>
-      <height>350</height>
+      <height>338</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_12" >
@@ -1973,9 +1961,9 @@
    <property name="geometry" >
     <rect>
      <x>421</x>
-     <y>656</y>
+     <y>1024</y>
      <width>782</width>
-     <height>372</height>
+     <height>360</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1999,7 +1987,7 @@
       <x>0</x>
       <y>22</y>
       <width>782</width>
-      <height>350</height>
+      <height>338</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_11" >
@@ -2280,6 +2268,360 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidget_RenderOptions" >
+   <property name="geometry" >
+    <rect>
+     <x>1009</x>
+     <y>714</y>
+     <width>194</width>
+     <height>306</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Rendering Options</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_7" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>194</width>
+      <height>284</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_13" >
+     <item>
+      <widget class="QGroupBox" name="groupBox_8" >
+       <property name="title" >
+        <string>Renderer</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_14" >
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <property name="margin" >
+         <number>9</number>
+        </property>
+        <item>
+         <widget class="QRadioButton" name="radioButton" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>Slice Based</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_2" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>GPU Raycasting</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_3" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>CPU Raycasting</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_9" >
+       <property name="title" >
+        <string>Rendermode</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_15" >
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <property name="margin" >
+         <number>9</number>
+        </property>
+        <item>
+         <widget class="QRadioButton" name="radioButton_1DTrans" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>DVR 1D Transfer function</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_2DTrans" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>DVR 2D Transfer Function</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_Iso" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>Isosurface Rendering</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_13" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_LockOptions" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>650</y>
+     <width>275</width>
+     <height>274</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Locking Options</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_9" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>275</width>
+      <height>252</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_17" >
+     <item>
+      <widget class="QGroupBox" name="groupBox_10" >
+       <property name="title" >
+        <string>Modality</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_18" >
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <property name="margin" >
+         <number>9</number>
+        </property>
+        <item>
+         <widget class="QRadioButton" name="radioButton_ViewLock" >
+          <property name="text" >
+           <string>View Transformation</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_RenderModeLock" >
+          <property name="text" >
+           <string>Rendermode (includes Transferfunction)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_ToolsLock" >
+          <property name="text" >
+           <string>Tools</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_FiltersLock" >
+          <property name="text" >
+           <string>Filters</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QListWidget" name="listWidget_Lock" >
+       <property name="alternatingRowColors" >
+        <bool>true</bool>
+       </property>
+       <property name="selectionMode" >
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frame_11" >
+       <property name="frameShape" >
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow" >
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_12" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="pushButton_RelativeLock" >
+          <property name="text" >
+           <string>Realative</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_AbsoluteLock" >
+          <property name="text" >
+           <string>Absolute</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_Unlock" >
+          <property name="text" >
+           <string>Unlock</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_IsoSurface" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>928</y>
+     <width>275</width>
+     <height>92</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Isosurface Settings</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_10" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>275</width>
+      <height>70</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_16" >
+     <item>
+      <widget class="QCheckBox" name="checkBox_UseIso" >
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>18</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>Use Isosurface Rendering</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frame_10" >
+       <property name="frameShape" >
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow" >
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QSlider" name="horizontalSlider_2" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="spinBox_3" />
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_12" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionLoadDataset" >
    <property name="text" >
     <string>Load Dataset Frome File</string>
@@ -2311,22 +2653,6 @@
   <action name="actionSinge_View" >
    <property name="text" >
     <string>Single View</string>
-   </property>
-  </action>
-  <action name="actionDirect_Volume_Rendering" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Direct Volume Rendering</string>
-   </property>
-  </action>
-  <action name="actionIsosurface_Rendering" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Isosurface Rendering</string>
    </property>
   </action>
   <action name="actionBox" >
@@ -2384,14 +2710,6 @@
     <string>Open Online Help</string>
    </property>
   </action>
-  <action name="actionStereo_Projection" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Stereo Projection</string>
-   </property>
-  </action>
   <action name="actionClear_List" >
    <property name="text" >
     <string>Clear List</string>
@@ -2400,17 +2718,6 @@
   <action name="actionCloneCurrentView" >
    <property name="text" >
     <string>Clone View</string>
-   </property>
-  </action>
-  <action name="actionSlice_Rendering" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="checked" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Slice Rendering</string>
    </property>
   </action>
   <action name="actionCascade" >
@@ -2465,7 +2772,70 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="0" />
- <includes/>
+ <tabstops>
+  <tabstop>checkBox_3</tabstop>
+  <tabstop>pushButton_3</tabstop>
+  <tabstop>horizontalSlider_2</tabstop>
+  <tabstop>spinBox_3</tabstop>
+  <tabstop>pushButton_4</tabstop>
+  <tabstop>pushButton_19</tabstop>
+  <tabstop>pushButton_20</tabstop>
+  <tabstop>spinBox</tabstop>
+  <tabstop>checkBox_2</tabstop>
+  <tabstop>pushButton_21</tabstop>
+  <tabstop>pushButton_22</tabstop>
+  <tabstop>spinBox_5</tabstop>
+  <tabstop>spinBox_6</tabstop>
+  <tabstop>spinBox_7</tabstop>
+  <tabstop>comboBox_2</tabstop>
+  <tabstop>pushButton_23</tabstop>
+  <tabstop>pushButton_24</tabstop>
+  <tabstop>pushButton_5</tabstop>
+  <tabstop>pushButton_6</tabstop>
+  <tabstop>pushButton_7</tabstop>
+  <tabstop>pushButton_9</tabstop>
+  <tabstop>pushButton_8</tabstop>
+  <tabstop>pushButton_10</tabstop>
+  <tabstop>pushButton_11</tabstop>
+  <tabstop>pushButton_12</tabstop>
+  <tabstop>pushButton_13</tabstop>
+  <tabstop>tabWidged_Filters</tabstop>
+  <tabstop>spinBox_8</tabstop>
+  <tabstop>spinBox_9</tabstop>
+  <tabstop>spinBox_12</tabstop>
+  <tabstop>spinBox_10</tabstop>
+  <tabstop>spinBox_11</tabstop>
+  <tabstop>listWidget</tabstop>
+  <tabstop>pushButton_Undo</tabstop>
+  <tabstop>pushButton_Redo</tabstop>
+  <tabstop>checkBox_Use1DTrans</tabstop>
+  <tabstop>checkBox_Red</tabstop>
+  <tabstop>checkBox_Green</tabstop>
+  <tabstop>checkBox_Blue</tabstop>
+  <tabstop>checkBox_Alpha</tabstop>
+  <tabstop>radioButton_User</tabstop>
+  <tabstop>radioButton_Luminance</tabstop>
+  <tabstop>radioButton_Intensity</tabstop>
+  <tabstop>pushButton_Load1DTrans</tabstop>
+  <tabstop>pushButton_Save1DTrans</tabstop>
+  <tabstop>horizontalSlider</tabstop>
+  <tabstop>spinBox_2</tabstop>
+  <tabstop>pushButton_Load2DTrans</tabstop>
+  <tabstop>pushButton_Save2DTrans</tabstop>
+  <tabstop>checkBox_Use2DTrans</tabstop>
+  <tabstop>pushButton_25</tabstop>
+  <tabstop>pushButton_26</tabstop>
+  <tabstop>pushButton_27</tabstop>
+  <tabstop>radioButton</tabstop>
+  <tabstop>radioButton_2</tabstop>
+  <tabstop>radioButton_3</tabstop>
+  <tabstop>radioButton_1DTrans</tabstop>
+  <tabstop>radioButton_Iso</tabstop>
+  <tabstop>radioButton_2DTrans</tabstop>
+  <tabstop>tabWidget_2</tabstop>
+  <tabstop>checkBox_UseIso</tabstop>
+  <tabstop>checkBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -2635,12 +3005,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>650</x>
-     <y>938</y>
+     <x>718</x>
+     <y>1335</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>728</x>
-     <y>941</y>
+     <x>766</x>
+     <y>1336</y>
     </hint>
    </hints>
   </connection>
@@ -2732,7 +3102,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>217</x>
-     <y>689</y>
+     <y>1057</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -2748,7 +3118,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>541</x>
-     <y>698</y>
+     <y>1066</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -2827,8 +3197,8 @@
    <slot>Load1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>63</x>
-     <y>977</y>
+     <x>65</x>
+     <y>1344</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -2843,8 +3213,8 @@
    <slot>Save1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>63</x>
-     <y>1006</y>
+     <x>65</x>
+     <y>1373</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -2860,7 +3230,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>532</x>
-     <y>1007</y>
+     <y>1374</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -2875,12 +3245,188 @@
    <slot>Save2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>708</x>
-     <y>1007</y>
+     <x>775</x>
+     <y>1374</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
      <y>524</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_3</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>37</x>
+     <y>1002</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>264</x>
+     <y>1003</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_3</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider_2</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>264</x>
+     <y>1003</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>77</x>
+     <y>1002</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_UseIso</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>UseIso()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>136</x>
+     <y>967</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>602</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_1DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Use1DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1115</x>
+     <y>892</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>602</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_2DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Use2DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1115</x>
+     <y>916</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>602</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_Iso</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>UseIso()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1115</x>
+     <y>940</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>602</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>742</x>
+     <y>1318</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>675</x>
+     <y>1323</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_ViewLock</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>EditViewLocks()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>137</x>
+     <y>713</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>702</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_RenderModeLock</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>EditRenderLocks()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>137</x>
+     <y>737</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>702</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_ToolsLock</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>EditToolsLocks()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>137</x>
+     <y>761</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>702</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_FiltersLock</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>EditFiltersLocks()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>137</x>
+     <y>785</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>702</y>
     </hint>
    </hints>
   </connection>
@@ -2909,5 +3455,10 @@
   <slot>Load1DTrans()</slot>
   <slot>Save2DTrans()</slot>
   <slot>Load2DTrans()</slot>
+  <slot>UseIso()</slot>
+  <slot>EditViewLocks()</slot>
+  <slot>EditRenderLocks()</slot>
+  <slot>EditToolsLocks()</slot>
+  <slot>EditFiltersLocks()</slot>
  </slots>
 </ui>

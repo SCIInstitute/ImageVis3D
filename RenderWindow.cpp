@@ -1,11 +1,17 @@
 #include "RenderWindow.h"
+#include <assert.h>
 
-RenderWindow::RenderWindow(QString dataset, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QDialog(parent, flags)
-{
+
+RenderWindow::RenderWindow(QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
+	QDialog(parent, flags),
+	m_listWidget_Lock(listWidget_Lock),
+	m_strDataset(dataset)
+{	
 	setupUi(this);
 
-	m_strDataset = dataset;
-	setWindowTitle(dataset);
+	m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
+	setWindowTitle(m_strID);
+	m_listWidget_Lock->addItem(m_strID);
 
 	LoadImages();
 
@@ -32,4 +38,14 @@ void RenderWindow::ToggleRenderWindowView2x2() {
 
 void RenderWindow::ToggleRenderWindowViewSingle() {
 	label->setPixmap(m_PixmapSingle);
+}
+
+void RenderWindow::closeEvent(QCloseEvent *event) {
+	QDialog::closeEvent(event);
+
+	QList<QListWidgetItem*> l = m_listWidget_Lock->findItems(m_strID,  Qt::MatchExactly);
+
+	assert(l.size() == 1); // if l.size() != 1 something went wrong during the creation of the list
+
+	delete l[0];
 }

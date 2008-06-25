@@ -4,13 +4,14 @@
 #define RENDERWINDOW_H
 
 #include "ui_RenderWindow.h"
+#include <QtGui/QListWidget>
 
 
 class RenderWindow : public QDialog, protected Ui_RenderWindow
 {
 	Q_OBJECT
 	public:
-		RenderWindow(QString dataset, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+		RenderWindow(QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QWidget* parent = 0, Qt::WindowFlags flags = 0);
 		virtual ~RenderWindow();
 
 		void ToggleRenderWindowView1x3();
@@ -18,14 +19,19 @@ class RenderWindow : public QDialog, protected Ui_RenderWindow
 		void ToggleRenderWindowViewSingle();
 		
 		QString GetDataset() {return m_strDataset;}
+	
+	protected:
+		void closeEvent(QCloseEvent *event);
 
 	private :
-		void LoadImages();
 		QPixmap m_Pixmap1x3;
 		QPixmap m_Pixmap2x2;
 		QPixmap m_PixmapSingle;
 		QString m_strDataset;
+		QString m_strID;
+		QListWidget *m_listWidget_Lock;
 
+		void LoadImages();
 
 };
 
