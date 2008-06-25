@@ -4,8 +4,8 @@
 
 RenderWindow::RenderWindow(QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
 	QDialog(parent, flags),
-	m_listWidget_Lock(listWidget_Lock),
-	m_strDataset(dataset)
+	m_strDataset(dataset),
+	m_listWidget_Lock(listWidget_Lock)
 {	
 	setupUi(this);
 
