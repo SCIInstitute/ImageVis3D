@@ -371,7 +371,7 @@ void MainWindow::EditFiltersLocks() {
 
 	 files.removeAll(fileName);
      files.prepend(fileName);
-     while (files.size() > ms_iMaxRecentFiles) files.removeLast();
+     while ((unsigned int)(files.size()) > ms_iMaxRecentFiles) files.removeLast();
 
      settings.setValue("recentFileList", files);
 
