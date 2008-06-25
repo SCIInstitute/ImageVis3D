@@ -70,7 +70,7 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
 		// TODO: handle color data
 	}
 
-	delete [] pData;
+	delete [] (char*)pData;
 
 	icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::Off);
 	setIcon(icon);
