@@ -391,7 +391,7 @@ void MainWindow::EditFiltersLocks() {
          m_recentFileActs[i]->setData(files[i]);
          m_recentFileActs[i]->setVisible(true);
      }
-     for (int j = numRecentFiles; j < ms_iMaxRecentFiles; ++j) m_recentFileActs[j]->setVisible(false);
+     for (unsigned int j = numRecentFiles; j < ms_iMaxRecentFiles; ++j) m_recentFileActs[j]->setVisible(false);
  }
 
 QString MainWindow::strippedName(const QString &fullFileName)
@@ -403,7 +403,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
 	Ui_MainWindow::setupUi(MainWindow);
 
-	for (int i = 0; i < ms_iMaxRecentFiles; ++i) {
+	for (unsigned int i = 0; i < ms_iMaxRecentFiles; ++i) {
 		m_recentFileActs[i] = new QAction(this);
 		m_recentFileActs[i]->setVisible(false);
 		connect(m_recentFileActs[i], SIGNAL(triggered()),this, SLOT(OpenRecentFile()));
