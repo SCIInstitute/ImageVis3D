@@ -6,6 +6,7 @@
 
 
 BrowseData::BrowseData(QDialog* pleaseWaitDialog, QString strDir, QWidget* parent, Qt::WindowFlags flags) : 
+	QDialog(parent, flags),
 	m_bDataFound(false),
 	m_strDir(strDir),
 	m_strFilename("")
@@ -19,7 +20,7 @@ BrowseData::BrowseData(QDialog* pleaseWaitDialog, QString strDir, QWidget* paren
 }
 
 
-void BrowseData::showEvent ( QShowEvent * event ) {
+void BrowseData::showEvent ( QShowEvent * ) {
 }
 
 
