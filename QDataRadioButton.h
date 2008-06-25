@@ -3,7 +3,7 @@
 #ifndef QDATARADIOBUTTON
 #define QDATARADIOBUTTON
 
-#include <QtGui/QRadioButton.h>
+#include <QtGui/QRadioButton>
 #include <tools/DICOM/DICOMParser.h>
 
 class QDataRadioButton : public QRadioButton
