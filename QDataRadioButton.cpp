@@ -91,7 +91,7 @@ void QDataRadioButton::SetupInfo() {
 		.arg(m_stackInfo.m_ivSize.y)
 		.arg(m_stackInfo.m_ivSize.z*iElemCount);
 
-	setText(desc);
+	//setText(desc);
 
 	SetStackImage(iElemCount/2);
 }
