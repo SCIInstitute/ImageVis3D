@@ -2,14 +2,14 @@
 #include <QtGui/QMouseEvent>
 
 QDataRadioButton::QDataRadioButton(DICOMStackInfo stack, QWidget *parent) : 
-	QRadioButton(parent), 
+	QLabel(parent), 
 	m_iCurrentImage((unsigned int)(-1)),  
 	m_stackInfo(stack) 
 {
 		SetupInfo();
 }
 QDataRadioButton::QDataRadioButton(DICOMStackInfo stack, const QString &text, QWidget *parent) :
-	QRadioButton(text, parent), 
+	QLabel(text, parent), 
 	m_iCurrentImage((unsigned int)(-1)),  
 	m_stackInfo(stack) 
 {
@@ -18,13 +18,13 @@ QDataRadioButton::QDataRadioButton(DICOMStackInfo stack, const QString &text, QW
 
 
 void QDataRadioButton::leaveEvent ( QEvent * event ) {
-	QRadioButton::leaveEvent(event);
+	QLabel::leaveEvent(event);
 
 	SetStackImage(m_stackInfo.m_Elements.size()/2);
 }
 
 void QDataRadioButton::mouseMoveEvent(QMouseEvent *event){
-	QRadioButton::mouseMoveEvent(event);
+	QLabel::mouseMoveEvent(event);
 
 	unsigned int i = (unsigned int)(float(event->x())/float(width())*m_stackInfo.m_Elements.size());
 
@@ -72,9 +72,7 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
 	delete [] (char*)pData;
 
 
-//	QIcon icon(QPixmap::fromImage(image));
-	QIcon icon("trans2d_c.png");
-	setIcon(icon);
+	setPixmap(QPixmap::fromImage(image));
 	update();
 }
 
