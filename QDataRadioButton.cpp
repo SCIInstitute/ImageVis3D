@@ -73,6 +73,7 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
 
 
 	image.load("trans2d_c.png");
+	QImage::Format f = image.format();
 
     setMinimumSize(QSize(150, 150));
 	setPixmap(QPixmap::fromImage(image));
