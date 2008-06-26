@@ -3,10 +3,10 @@
 #ifndef QDATARADIOBUTTON
 #define QDATARADIOBUTTON
 
-#include <QtGui/QLabel>
+#include <QtGui/QRadioButton>
 #include <tools/DICOM/DICOMParser.h>
 
-class QDataRadioButton : public QLabel
+class QDataRadioButton : public QRadioButton
 {
 public:
 	QDataRadioButton(DICOMStackInfo stack, QWidget *parent=0);

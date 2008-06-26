@@ -33,8 +33,8 @@ bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 		QDataRadioButton *pDICOMElement;
 		pDICOMElement = new QDataRadioButton(p.m_DICOMstacks[iStackID],frame);
 		pDICOMElement->setMinimumSize(QSize(0, 80));
-//		pDICOMElement->setChecked(iStackID==0);
-//		pDICOMElement->setIconSize(QSize(80, 80));
+		pDICOMElement->setChecked(iStackID==0);
+		pDICOMElement->setIconSize(QSize(80, 80));
 		verticalLayout_DICOM->addWidget(pDICOMElement);
 	}
 
