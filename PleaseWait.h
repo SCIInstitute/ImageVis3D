@@ -10,7 +10,7 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
 		PleaseWaitDialog(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 		virtual ~PleaseWaitDialog();
 
-		void SetText(QString text) {hide(); label->setText(text); show(); repaint();}
+		void SetText(QString text) {hide(); label->setText(text); show(); raise(); update(); repaint();}
 
 
 };

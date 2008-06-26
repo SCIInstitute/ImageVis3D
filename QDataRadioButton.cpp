@@ -72,7 +72,8 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
 
 	delete [] (char*)pData;
 
-	icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::Off);
+
+	icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::On);
 	setIcon(icon);
 	update();
 }
