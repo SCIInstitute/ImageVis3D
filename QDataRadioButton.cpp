@@ -72,7 +72,12 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
 	delete [] (char*)pData;
 
 
-	setPixmap(QPixmap::fromImage(image));
+    setObjectName(QString::fromUtf8("label_2xxx"));
+    setMinimumSize(QSize(150, 150));
+    setPixmap(QPixmap(QString::fromUtf8("trans2d_c.png")));
+    setScaledContents(true);
+
+	//setPixmap(QPixmap::fromImage(image));
 	update();
 }
 
