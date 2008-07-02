@@ -248,7 +248,7 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 		
 		// delete the old pixmap an create a new one if the size has changed
 		if ((unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
-			delete [] m_pBackdropCache;
+			delete m_pBackdropCache;
 			m_pBackdropCache = new QPixmap(width(),height());
 		}
 
