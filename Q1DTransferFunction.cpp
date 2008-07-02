@@ -208,7 +208,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	unsigned int iVectorSize = m_Trans.pColorData.size();
 
 	// compute position in color array
-	int iCurrentIndex = (float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth);
+	int iCurrentIndex = int((float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth));
 	iCurrentIndex = std::min<int>(iVectorSize-1, std::max<int>(0,iCurrentIndex));
 
 	// ifnd out the range to change
