@@ -208,7 +208,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	unsigned int iVectorSize = m_Trans.pColorData.size();
 
 	// compute position in color array
-	int iCurrentIndex = (float(event->x())-m_iLeftBorder-1)*(iVectorSize-1)/float(iGridWidth);
+	int iCurrentIndex = (float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth);
 	iCurrentIndex = std::min<int>(iVectorSize-1, std::max<int>(0,iCurrentIndex));
 
 	// ifnd out the range to change
@@ -247,7 +247,7 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 	if (!m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
 		
 		// delete the old pixmap an create a new one if the size has changed
-		if ((unsigned int)height() != m_iCachedHeight || (unsigned int)swidth() != m_iCachedWidth) {
+		if ((unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
 			delete [] m_pBackdropCache;
 			m_pBackdropCache = new QPixmap(width(),height());
 		}
