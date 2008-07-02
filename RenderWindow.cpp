@@ -16,7 +16,6 @@ RenderWindow::RenderWindow(QString dataset, QListWidget *listWidget_Lock, unsign
 	LoadImages();
 
 	ToggleRenderWindowView1x3();
-	resize(405, 278);
 }
 
 RenderWindow::~RenderWindow() {
