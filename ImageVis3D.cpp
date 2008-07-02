@@ -37,10 +37,17 @@ void MainWindow::SaveDataset(){
 
 void MainWindow::Load1DTrans(){
 	QString fileName = QFileDialog::getOpenFileName(this, "Load 1D Transferfunction", ".", "1D Transferfunction File (*.1dt)");
+
+	if (fileName != "") {
+		m_1DTransferFunction->LoadFromFile(fileName);
+	}
 }
 
 void MainWindow::Save1DTrans(){
 	QString fileName = QFileDialog::getSaveFileName(this, "Save 1D Transferfunction", ".", "1D Transferfunction File (*.1dt)");
+	if (fileName != "") {
+		m_1DTransferFunction->SaveToFile(fileName);
+	}
 }
 
 void MainWindow::Load2DTrans(){
@@ -280,23 +287,38 @@ void MainWindow::UpdateMenus() {
 
 void MainWindow::Transfer1DCBClicked() {
 	radioButton_User->setChecked(true);
+
+	unsigned int iPaintmode = Q1DT_PAINT_NONE;
+	
+
+	if (checkBox_Red->isChecked() ) iPaintmode |= Q1DT_PAINT_RED;
+	if (checkBox_Green->isChecked() ) iPaintmode |= Q1DT_PAINT_GREEN;
+	if (checkBox_Blue->isChecked() ) iPaintmode |= Q1DT_PAINT_BLUE;
+	if (checkBox_Alpha->isChecked() ) iPaintmode |= Q1DT_PAINT_ALPHA;
+
+
+	m_1DTransferFunction->SetPaintmode(iPaintmode);
 }
 
 void MainWindow::Transfer1DRadioClicked() {
 	// determine current CB state
-	unsigned int iState;
-	if (radioButton_User->isChecked()) iState = 0;
-		else if (radioButton_Luminance->isChecked()) iState = 1;
-			else iState = 2;
+	unsigned int iRadioState;
+	if (radioButton_User->isChecked()) iRadioState = 0;
+		else if (radioButton_Luminance->isChecked()) iRadioState = 1;
+			else iRadioState = 2;
 
-	// if were in usermode exit
-	if (iState == 0) return;
+	// if we are in usermode do nothing
+	if (iRadioState == 0) return;
 
-	// apply checks according to current state
+	// apply iRadioState
 	checkBox_Red->setChecked(true);	
 	checkBox_Green->setChecked(true);	
 	checkBox_Blue->setChecked(true);	
-	checkBox_Alpha->setChecked(iState==2);
+	checkBox_Alpha->setChecked(iRadioState==2);
+
+	m_1DTransferFunction->SetPaintmode(Q1DT_PAINT_RED | Q1DT_PAINT_GREEN | Q1DT_PAINT_BLUE | ((iRadioState==2) ? Q1DT_PAINT_ALPHA : Q1DT_PAINT_NONE));
+
+
 }
 
 void MainWindow::Use1DTrans() {
@@ -402,6 +424,16 @@ QString MainWindow::strippedName(const QString &fullFileName)
 void MainWindow::setupUi(QMainWindow *MainWindow) {
 
 	Ui_MainWindow::setupUi(MainWindow);
+
+    m_1DTransferFunction = new Q1DTransferFunction(dockWidgetContents_6);
+
+	// MOCKUP CODE: Just generate a random histogram
+	std::vector<unsigned int> vHistrogram(4096);
+	for (size_t i = 0;i<vHistrogram.size();i++) vHistrogram[i] = i+(rand()*10) / RAND_MAX;
+	m_1DTransferFunction->SetHistogram(vHistrogram);
+	// END MOCKUP CODE
+
+	horizontalLayout_13->addWidget(m_1DTransferFunction);
 
 	for (unsigned int i = 0; i < ms_iMaxRecentFiles; ++i) {
 		m_recentFileActs[i] = new QAction(this);

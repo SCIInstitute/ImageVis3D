@@ -5,6 +5,7 @@
 
 #include "ui_ImageVis3D.h"
 #include "RenderWindow.h"
+#include "Q1DTransferFunction.h"
 
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow
@@ -55,7 +56,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
 
 	private :
-		QString m_strCurrentWorkspaceFilename;
+		QString					m_strCurrentWorkspaceFilename;
+		Q1DTransferFunction*	m_1DTransferFunction;
 
 		RenderWindow* CreateNewRenderWindow(QString dataset);
 		RenderWindow* GetActiveRenderWindow();

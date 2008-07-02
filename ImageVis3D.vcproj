@@ -186,11 +186,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Q1DTransferFunction.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\QDataRadioButton.cpp"
 				>
 			</File>
 			<File
 				RelativePath="P:\c++\include\tools\SysTools.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Transferfunction1D.cpp"
 				>
 			</File>
 		</Filter>
@@ -204,11 +212,39 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Q1DTransferFunction.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Performing moc on $(InputName).h"
+						CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+						Outputs="$(InputDir)moc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Performing moc on $(InputName).h"
+						CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
+						Outputs="$(InputDir)moc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\QDataRadioButton.h"
 				>
 			</File>
 			<File
 				RelativePath="P:\c++\include\tools\SysTools.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Transferfunction1D.h"
 				>
 			</File>
 		</Filter>
@@ -249,6 +285,10 @@
 				</File>
 				<File
 					RelativePath=".\moc_PleaseWait.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\moc_Q1DTransferFunction.cpp"
 					>
 				</File>
 				<File
