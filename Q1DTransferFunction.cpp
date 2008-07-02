@@ -218,7 +218,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	m_iLastIndex = iCurrentIndex;
 
 	// compute actual color value 
-	float fValue = (m_iTopBorder+iGridHeight-float(event->y()))/float(iGridHeight);
+	float fValue = (float(m_iTopBorder)+float(iGridHeight)-float(event->y()))/float(iGridHeight);
 	fValue	  = std::min<float>(1.0f, std::max<float>(0.0f,fValue));
 
 	// update transfer function
@@ -244,10 +244,10 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 	QWidget::paintEvent(event);
 
 	// as drawing the histogram can become quite expensive we'll cache it in an image and only redraw if needed
-	if (!m_bBackdropCacheUptodate || height() != m_iCachedHeight || width() != m_iCachedWidth) {
+	if (!m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
 		
 		// delete the old pixmap an create a new one if the size has changed
-		if (height() != m_iCachedHeight || width() != m_iCachedWidth) {
+		if ((unsigned int)height() != m_iCachedHeight || (unsigned int)swidth() != m_iCachedWidth) {
 			delete [] m_pBackdropCache;
 			m_pBackdropCache = new QPixmap(width(),height());
 		}
