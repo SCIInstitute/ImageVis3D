@@ -12,6 +12,9 @@
 		<Platform
 			Name="Win32"
 		/>
+		<Platform
+			Name="x64"
+		/>
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
@@ -21,8 +24,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\Win32\$(ConfigurationName)\bin"
+			IntermediateDirectory="Build\Win32\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -47,6 +50,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(QTDIR)include&quot;;."
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -68,6 +72,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib QtOpenGLd4.lib qtmaind.lib QtGuid4.lib QtCored4.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(QTDIR)lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -95,9 +100,87 @@
 			/>
 		</Configuration>
 		<Configuration
+			Name="Debug|x64"
+			OutputDirectory="$(SolutionDir)Build\Win64\$(ConfigurationName)\bin"
+			IntermediateDirectory="Build\Win64\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="UI"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(QTDIR)include&quot;;."
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib QtOpenGLd4.lib qtmaind.lib QtGuid4.lib QtCored4.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(QTDIR)lib"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\Win32\$(ConfigurationName)\bin"
+			IntermediateDirectory="Build\Win32\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -124,6 +207,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="&quot;$(QTDIR)include&quot;;."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -142,8 +226,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="qtmain.lib QtGui4.lib QtCore4.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(QTDIR)lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -172,260 +257,112 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			OutputDirectory="$(SolutionDir)Build\Win64\$(ConfigurationName)\bin"
+			IntermediateDirectory="Build\Win64\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="UI"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="&quot;$(QTDIR)include&quot;;."
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(QTDIR)lib"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
 	<Files>
 		<Filter
-			Name="Source"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="IO"
 			>
 			<File
-				RelativePath="P:\c++\include\tools\DICOM\DICOMParser.cpp"
+				RelativePath=".\IO\Transferfunction1D.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Q1DTransferFunction.cpp"
+				RelativePath=".\IO\Transferfunction1D.h"
 				>
 			</File>
-			<File
-				RelativePath=".\QDataRadioButton.cpp"
-				>
-			</File>
-			<File
-				RelativePath="P:\c++\include\tools\SysTools.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Transferfunction1D.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath="P:\c++\include\tools\DICOM\DICOMParser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Q1DTransferFunction.h"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Performing moc on $(InputName).h"
-						CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
-						Outputs="$(InputDir)moc_$(InputName).cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="Performing moc on $(InputName).h"
-						CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;"
-						Outputs="$(InputDir)moc_$(InputName).cpp"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\QDataRadioButton.h"
-				>
-			</File>
-			<File
-				RelativePath="P:\c++\include\tools\SysTools.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Transferfunction1D.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Forms"
-			>
 			<Filter
-				Name="UI Files"
-				Filter="ui"
+				Name="DICOM"
 				>
 				<File
-					RelativePath=".\BrowseData.ui"
+					RelativePath=".\IO\DICOM\DICOMParser.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\ImageVis3D.ui"
+					RelativePath=".\IO\DICOM\DICOMParser.h"
 					>
-				</File>
-				<File
-					RelativePath=".\PleaseWait.ui"
-					>
-				</File>
-				<File
-					RelativePath=".\RenderWindow.ui"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Automatically Generated Files"
-				>
-				<File
-					RelativePath=".\moc_BrowseData.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\moc_ImageVis3D.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\moc_PleaseWait.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\moc_Q1DTransferFunction.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\moc_RenderWindow.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\ui_BrowseData.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ui_ImageVis3D.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ui_PleaseWait.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ui_RenderWindow.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Implemented Files"
-				>
-				<File
-					RelativePath=".\BrowseData.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\BrowseData.h"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\ImageVis3D.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\ImageVis3D.h"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\PleaseWait.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\PleaseWait.h"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\RenderWindow.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\RenderWindow.h"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>
@@ -472,6 +409,363 @@
 			</File>
 			<File
 				RelativePath=".\trans2d_c.png"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="UI"
+			>
+			<Filter
+				Name="Automatically Generated Files"
+				>
+				<File
+					RelativePath=".\moc_BrowseData.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\moc_ImageVis3D.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\moc_PleaseWait.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\moc_Q1DTransferFunction.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\moc_RenderWindow.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ui_BrowseData.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui_ImageVis3D.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui_PleaseWait.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ui_RenderWindow.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="UI Files"
+				Filter="ui"
+				>
+				<File
+					RelativePath=".\UI\UI\BrowseData.ui"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\UI\ImageVis3D.ui"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\UI\PleaseWait.ui"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\UI\RenderWindow.ui"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Implemented Files"
+				>
+				<File
+					RelativePath=".\UI\BrowseData.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\BrowseData.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\UI\ImageVis3D.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\ImageVis3D.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\UI\PleaseWait.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\PleaseWait.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\UI\Q1DTransferFunction.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\Q1DTransferFunction.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\UI\QDataRadioButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\QDataRadioButton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\RenderWindow.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\RenderWindow.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Basics"
+			>
+			<File
+				RelativePath=".\Basics\Console.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\EndianConvert.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\MathTools.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\MathTools.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\MemMappedFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\MemMappedFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\SysTools.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\SysTools.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\Vectors.h"
 				>
 			</File>
 		</Filter>

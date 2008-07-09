@@ -3,7 +3,7 @@
 #ifndef BROWSEDATA_H
 #define BROWSEDATA_H
 
-#include "ui_BrowseData.h"
+#include "AutoGen/ui_BrowseData.h"
 #include "RenderWindow.h"
 
 class BrowseData : public QDialog, protected Ui_BrowseData

@@ -3,7 +3,7 @@
 #ifndef IMAGEVIS3D_H
 #define IMAGEVIS3D_H
 
-#include "ui_ImageVis3D.h"
+#include "AutoGen/ui_ImageVis3D.h"
 #include "RenderWindow.h"
 #include "Q1DTransferFunction.h"
 

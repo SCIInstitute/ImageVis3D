@@ -1,7 +1,7 @@
 #ifndef PLEASEWAIT_H
 #define PLEASEWAIT_H
 
-#include "ui_PleaseWait.h"
+#include "AutoGen/ui_PleaseWait.h"
 
 class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
 {

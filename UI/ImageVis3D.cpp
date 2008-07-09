@@ -429,7 +429,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
 	// MOCKUP CODE: Just generate a random histogram
 	std::vector<unsigned int> vHistrogram(4096);
-	for (size_t i = 0;i<vHistrogram.size();i++) vHistrogram[i] = i+(rand()*10) / RAND_MAX;
+	for (size_t i = 0;i<vHistrogram.size();i++) vHistrogram[i] = (unsigned int)(i+(rand()*10) / RAND_MAX);
 	m_1DTransferFunction->SetHistogram(vHistrogram);
 	// END MOCKUP CODE
 

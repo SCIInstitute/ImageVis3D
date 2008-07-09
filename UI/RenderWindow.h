@@ -3,7 +3,7 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
-#include "ui_RenderWindow.h"
+#include "AutoGen/ui_RenderWindow.h"
 #include <QtGui/QListWidget>
 
 

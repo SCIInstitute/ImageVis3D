@@ -4,7 +4,7 @@
 #define Q1DTRANSFERFUNCTION
 
 #include <QtGui/QWidget>
-#include "Transferfunction1D.h"
+#include <IO/Transferfunction1D.h>
 
 #define Q1DT_PAINT_NONE  0
 #define Q1DT_PAINT_RED   1

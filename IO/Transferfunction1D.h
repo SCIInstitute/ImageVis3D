@@ -26,23 +26,48 @@
    DEALINGS IN THE SOFTWARE.
 */
 
+/**
+	\file		Transferfunction1D.h
+	\author		Jens Krueger
+				SCI Institute
+				University of Utah
+	\version	1.0
+	\date		July 2008
+*/
 
-//!    File   : main.cpp
-//!    Author : Jens Krueger
-//!             SCI Institute
-//!             University of Utah
-//!    Date   : July 2008
-//
-//!    Copyright (C) 2008 SCI Institute
+#pragma once
 
+#ifndef TRANSFERFUNCTION1D
+#define TRANSFERFUNCTION1D
 
-#include <QtGui/QApplication>
-#include "UI/ImageVis3D.h"
+#include <string>
+#include <vector>
 
-int main(int argc, char* argv[])
+template <class T=float> class TFColor {
+public:
+	T r, g, b, a;	
+
+	operator T*(void) {return &r;}
+	const T *operator *(void) const {return &r;}
+	T *operator *(void) {return &r;}
+};
+
+class Transferfunction1D
 {
-	QApplication app( argc, argv );
-	MainWindow mainWindow(0, Qt::Window);
-	mainWindow.show();
-	return app.exec();
-}
+public:
+	Transferfunction1D(unsigned int iSize = 0);
+	~Transferfunction1D(void);
+	
+	void Resize(unsigned int iSize);
+
+	bool Load(const std::string& filename);
+	bool Save(const std::string& filename);
+
+	void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
+	void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
+	void GetFloatArray(float** pfData);
+
+	std::vector< TFColor<float> > pColorData;
+};
+
+#endif // TRANSFERFUNCTION1D

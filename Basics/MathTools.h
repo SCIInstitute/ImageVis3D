@@ -26,23 +26,42 @@
    DEALINGS IN THE SOFTWARE.
 */
 
+/**
+	\file		MathTools.h
+	\author		Jens Krueger
+				SCI Institute
+				University of Utah
+	\version	1.1
+	\date		July 2008
+*/
 
-//!    File   : main.cpp
-//!    Author : Jens Krueger
-//!             SCI Institute
-//!             University of Utah
-//!    Date   : July 2008
-//
-//!    Copyright (C) 2008 SCI Institute
+#pragma once
 
+#ifndef MATHTOOLS_H
+#define MATHTOOLS_H
 
-#include <QtGui/QApplication>
-#include "UI/ImageVis3D.h"
+#ifdef _WIN32
+	typedef unsigned __int64 UINT64;
+#else
+	typedef unsigned long long UINT64;
+#endif
 
-int main(int argc, char* argv[])
-{
-	QApplication app( argc, argv );
-	MainWindow mainWindow(0, Qt::Window);
-	mainWindow.show();
-	return app.exec();
-}
+namespace MathTools {
+	unsigned int Log(unsigned int value, unsigned int base);
+	float Log(float value, float base);
+	unsigned int Pow(unsigned int base, unsigned int exponent);
+	UINT64 Pow(UINT64 base, UINT64 exponent);
+
+	unsigned int Log2(unsigned int n);
+	unsigned int Pow2(unsigned int e);
+	UINT64 Log2(UINT64 n);
+	UINT64 Pow2(UINT64 e);	
+	unsigned int GaussianSum(unsigned int n);
+	bool IsPow2(unsigned int n);
+	unsigned int NextPow2(unsigned int n, bool bReturn_ID_on_Pow2=true);
+
+	template<class T> inline T sign(T v){return T((v > T(0)) - (v < T(0)));}
+
+};
+
+#endif // MATHTOOLS_H
