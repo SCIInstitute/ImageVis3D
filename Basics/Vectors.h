@@ -62,9 +62,13 @@
 #include <math.h>
 #include <assert.h>
 
-#pragma warning( disable : 4995 ) // disable deprecated warning 
+#ifdef WIN32
+	#pragma warning( disable : 4995 ) // disable deprecated warning 
+#else
 #include <ostream>
-#pragma warning( default : 4995 ) 
+#ifdef WIN32
+	#pragma warning( default : 4995 ) 
+#else
 
 #ifdef WIN32
 	#pragma warning( disable : 4201 )  // Disable warning messages about nameless union

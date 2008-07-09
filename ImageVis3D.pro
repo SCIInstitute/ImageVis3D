@@ -3,7 +3,12 @@
 ######################################################################
 
 TEMPLATE     = app
-TARGET       = Build
+unix:TARGET = Build/Linux32/Bin/ImageVis3D
+win32:TARGET = Build/Win32/Bin/ImageVis3D
+mac:TARGET = Build/OSX/Bin/ImageVis3D
+unix:OBJECTS_DIR = Build/Linux32
+win32:OBJECTS_DIR = Build/Win32
+mac:OBJECTS_DIR = Build/OSX/Bin/ImageVis3D
 UI_DIR       = UI/AutoGen
 MOC_DIR      = UI/AutoGen
 DEPENDPATH  += .
