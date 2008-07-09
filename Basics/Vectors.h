@@ -64,11 +64,11 @@
 
 #ifdef WIN32
 	#pragma warning( disable : 4995 ) // disable deprecated warning 
-#else
+#endif
 #include <ostream>
 #ifdef WIN32
 	#pragma warning( default : 4995 ) 
-#else
+#endif
 
 #ifdef WIN32
 	#pragma warning( disable : 4201 )  // Disable warning messages about nameless union
