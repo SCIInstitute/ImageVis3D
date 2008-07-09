@@ -12,7 +12,6 @@ INCLUDEPATH += .
 # Input
 HEADERS += UI/BrowseData.h \
            UI/ImageVis3D.h \
-           UI/ImageVis3D_auto.h \
            UI/PleaseWait.h \
            UI/Q1DTransferFunction.h \
            UI/QDataRadioButton.h \
@@ -27,5 +26,5 @@ SOURCES += UI/BrowseData.cpp \
            UI/QDataRadioButton.cpp \
            UI/RenderWindow.cpp \
            IO/Transferfunction1D.cpp \
-		   basics/SysTools.cpp \
-	       IO/DICOM/DICOMParser.cpp
+	       IO/DICOM/DICOMParser.cpp \
+		   Basics/SysTools.cpp
