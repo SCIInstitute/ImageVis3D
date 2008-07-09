@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE     = app
-unix:TARGET = Build/Linux32/Bin/ImageVis3D
+unix:TARGET = Build/Linux/Bin/ImageVis3D
 win32:TARGET = Build/Win32/Bin/ImageVis3D
 mac:TARGET = Build/OSX/Bin/ImageVis3D
 unix:OBJECTS_DIR = Build/Linux32
