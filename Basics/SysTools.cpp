@@ -44,6 +44,10 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+	#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 // define MAX / MIN 
 #ifndef MAX
 	#define MAX(a,b)            (((a) > (b)) ? (a) : (b))
@@ -61,6 +65,37 @@
 using namespace std;
 
 namespace SysTools {
+
+	string GetFromResourceOnMac(const string& fileName) {
+		string filename = RemoveExt(fileName);
+		string ext = GetExt(fileName);
+
+		#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+			CFURLRef    imageURL = CFBundleCopyResourceURL( CFBundleGetMainBundle(), CFSTR(filename.c_str()), CFSTR(ext.c_str()), NULL );
+			CFStringRef macPath = CFURLCopyFileSystemPath(imageURL, kCFURLPOSIXPathStyle);
+			const char *pathPtr = CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding());
+			string result = pathPtr;
+			return result;
+		#else
+			return fileName;
+		#endif
+
+	}
+
+	wstring GetFromResourceOnMac(const wstring& fileName) {
+		wstring filename = RemoveExt(fileName);
+		wstring ext = GetExt(fileName);
+
+		#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+			CFURLRef    imageURL = CFBundleCopyResourceURL( CFBundleGetMainBundle(), CFSTR(filename.c_str()), CFSTR(ext.c_str()), NULL );
+			CFStringRef macPath = CFURLCopyFileSystemPath(imageURL, kCFURLPOSIXPathStyle);
+			const char *pathPtr = CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding());
+			wstring result = pathPtr;
+			return result;
+		#else
+			return fileName;
+		#endif
+	}
 
 	void ReplaceAll(string& input, const string& search, const string& replace) {
 		size_t pos=0;

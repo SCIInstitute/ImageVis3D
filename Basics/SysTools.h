@@ -62,6 +62,9 @@
 #endif
 
 namespace SysTools {
+	std::string GetFromResourceOnMac(const std::string& fileName);
+	std::wstring GetFromResourceOnMac(const std::wstring& fileName);
+
 	bool FileExists(const std::string& fileName);
 	bool FileExists(const std::wstring& fileName);
 
