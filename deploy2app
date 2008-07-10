@@ -1,15 +1,35 @@
-cd Build/OSX/Bin
+if [ -d Build/OSX/Bin/ImageVis3D.app ]; then
+	echo Changing into Bin directory 
+	cd Build/OSX/Bin
+	
+	echo Copying framework files
+	if [ -d ImageVis3D.app/Contents/Frameworks/QtCore.framework ]; then
+		rm -rf ImageVis3D.app/Contents/Frameworks/QtCore.framework
+	fi
+	if [ -d ImageVis3D.app/Contents/Frameworks/QtGui.framework ]; then
+		rm -rf ImageVis3D.app/Contents/Frameworks/QtGui.framework
+	fi
+	if [ -d ImageVis3D.app/Contents/Frameworks ]; then
+          echo Using existing framework directory
+	else
+          echo Creating new framework directory
+	  mkdir ImageVis3D.app/Contents/Frameworks
+	fi
+	cp -R /Library/Frameworks/QtCore.framework ImageVis3D.app/Contents/Frameworks
+	cp -R /Library/Frameworks/QtGui.framework  ImageVis3D.app/Contents/Frameworks
 
-mkdir ImageVis3D.app/Contents/Frameworks
-cp -R /Library/Frameworks/QtCore.framework ImageVis3D.app/Contents/Frameworks
-cp -R /Library/Frameworks/QtGui.framework  ImageVis3D.app/Contents/Frameworks
+	echo Running install_name_tool 
+	install_name_tool -id @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore ImageVis3D.app/Contents/Frameworks/QtCore.framework/Versions/4/QtCore
+	install_name_tool -id @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui ImageVis3D.app/Contents/Frameworks/QtGui.framework/Versions/4/QtGui
+	install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore ImageVis3D.app/Contents/MacOs/ImageVis3D
+	install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui ImageVis3D.app/Contents/MacOs/ImageVis3D
+	install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore ImageVis3D.app/Contents/Frameworks/QtGui.framework/Versions/4/QtGui
 
-install_name_tool -id @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore ImageVis3D.app/Contents/Frameworks/QtCore.framework/Versions/4/QtCore
-install_name_tool -id @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui ImageVis3D.app/Contents/Frameworks/QtGui.framework/Versions/4/QtGui
+	echo Copying additional resources 
 
-install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore ImageVis3D.app/Contents/MacOs/ImageVis3D
-install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui ImageVis3D.app/Contents/MacOs/ImageVis3D
 
-install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore ImageVis3D.app/Contents/Frameworks/QtGui.framework/Versions/4/QtGui
-
-cd ../../..
+	echo Changing back to where we came from 
+	cd ../../..
+else
+	echo Build/OSX/Bin/ImageVis3D.app not found, build the application in xcode before running this script
+fi

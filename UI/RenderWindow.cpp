@@ -22,10 +22,24 @@ RenderWindow::~RenderWindow() {
 
 }
 
+
+#include <CoreFoundation/CoreFoundation.h>
+
 void RenderWindow::LoadImages() {
-	m_Pixmap1x3.load("RenderWin1x3.png");
-	m_Pixmap2x2.load("RenderWin2x2.png");
+#if defined(Q_OS_MACX) 
+	CFURLRef    imageURL = CFBundleCopyResourceURL( CFBundleGetMainBundle(), CFSTR("RenderWin1x3"), CFSTR("png"), NULL );
+	CFStringRef macPath = CFURLCopyFileSystemPath(imageURL, kCFURLPOSIXPathStyle);
+	const char *pathPtr = CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding());
+	m_Pixmap1x3.load(pathPtr);
+	
+	
+	m_Pixmap2x2.load(pathPtr);
+	m_PixmapSingle.load(pathPtr);
+#else
+	m_Pixmap1x3.load("../Resources/RenderWin1x3.png");
+	m_Pixmap2x2.load("Resources/RenderWin2x2.png");
 	m_PixmapSingle.load("RenderWin1.png");
+#endif
 }
 
 void RenderWindow::ToggleRenderWindowView1x3() {
