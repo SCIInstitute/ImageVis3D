@@ -3,10 +3,10 @@
 	1D830425BF351FAA1C7C054A /* ImageVis3D */ = {
 		activeExec = 0;
 		executables = (
-			56FBC55C0E26912C0095419D /* ImageVis3D */,
+			561EB1BC0E2693A80011218E /* ImageVis3D */,
 		);
 	};
-	56FBC55C0E26912C0095419D /* ImageVis3D */ = {
+	561EB1BC0E2693A80011218E /* ImageVis3D */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
 		);
@@ -19,7 +19,6 @@
 		customDataFormattersEnabled = 1;
 		debuggerPlugin = GDBDebugging;
 		disassemblyDisplayState = 0;
-		dylibVariantSuffix = "";
 		enableDebugStr = 1;
 		environmentEntries = (
 		);
@@ -43,12 +42,12 @@
 	};
 	91B15E841AA80083484172DE /* Project object */ = {
 		activeArchitecture = i386;
-		activeBuildConfigurationName = Debug;
-		activeExecutable = 56FBC55C0E26912C0095419D /* ImageVis3D */;
+		activeBuildConfigurationName = Release;
+		activeExecutable = 561EB1BC0E2693A80011218E /* ImageVis3D */;
 		activeTarget = 1D830425BF351FAA1C7C054A /* ImageVis3D */;
 		codeSenseManager = 56FBC5730E26914A0095419D /* Code sense */;
 		executables = (
-			56FBC55C0E26912C0095419D /* ImageVis3D */,
+			561EB1BC0E2693A80011218E /* ImageVis3D */,
 		);
 		perUserDictionary = {
 			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
@@ -58,7 +57,7 @@
 					20,
 					243,
 					20,
-					48.16259765625,
+					48,
 					43,
 					43,
 					20,
@@ -73,8 +72,8 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 237408556;
-			PBXWorkspaceStateSaveDate = 237408556;
+			PBXPerProjectTemplateStateSaveDate = 237409192;
+			PBXWorkspaceStateSaveDate = 237409192;
 		};
 		sourceControlManager = 56FBC5720E26914A0095419D /* Source Control */;
 		userBuildSettings = {

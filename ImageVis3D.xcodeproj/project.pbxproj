@@ -16,7 +16,7 @@
 		3B5B8771F86A16B476079AFD /* SysTools.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = D98C1AC87E6E066F2783D434 /* SysTools.cpp */; settings = {ATTRIBUTES = (); }; };
 		501667F26B3C1FF6767A7C12 /* QtGui.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 9B36DA7E32F0304E780E7972 /* QtGui.framework */; };
 		51D4DBF7CB8537BE86EBD055 /* AppKit.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 821416211D63F190AAAD016A /* AppKit.framework */; };
-		56FBC55D0E26912C0095419D /* ImageVis3D.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 56FBC55A0E26912C0095419D /* ImageVis3D.app */; };
+		561EB1BD0E2693A80011218E /* ImageVis3D.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 561EB1BA0E2693A80011218E /* ImageVis3D.app */; };
 		6078053DD5EF512AF811C511 /* moc_BrowseData.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 9E1E82F691A084D7A3931FC2 /* moc_BrowseData.cpp */; settings = {ATTRIBUTES = (); }; };
 		7A5438E038EB8FC6F3F239AC /* PleaseWait.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 78BAC5CC6048063D7B1FF4BD /* PleaseWait.cpp */; settings = {ATTRIBUTES = (); }; };
 		8020BCB6BFE0FEE3B325E4CF /* DICOMParser.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 88B53055C26A8AFBA8166DD3 /* DICOMParser.cpp */; settings = {ATTRIBUTES = (); }; };
@@ -37,7 +37,7 @@
 			dstPath = /Users/krueger/Documents/Projects/ImageVis3D/Build/OSX/Bin;
 			dstSubfolderSpec = 0;
 			files = (
-				56FBC55D0E26912C0095419D /* ImageVis3D.app in Project Copy */,
+				561EB1BD0E2693A80011218E /* ImageVis3D.app in Project Copy */,
 			);
 			name = "Project Copy";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -58,7 +58,7 @@
 		4279343C8760169DB5C8DCC5 /* BrowseData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BrowseData.cpp; path = UI/BrowseData.cpp; sourceTree = "<group>"; };
 		42C4A4D153B2B116249852FE /* ImageVis3D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ImageVis3D.cpp; path = UI/ImageVis3D.cpp; sourceTree = "<group>"; };
 		4522C39C27B8653DC5FF47F4 /* ui_BrowseData.h */ = {isa = PBXFileReference; lastKnownFileType = file; name = ui_BrowseData.h; path = UI/AutoGen/ui_BrowseData.h; sourceTree = "<group>"; };
-		56FBC55A0E26912C0095419D /* ImageVis3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageVis3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		561EB1BA0E2693A80011218E /* ImageVis3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageVis3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57642517CD31AA70C457172E /* Q1DTransferFunction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Q1DTransferFunction.cpp; path = UI/Q1DTransferFunction.cpp; sourceTree = "<group>"; };
 		5B6BE7F87CDDF1AA57682FAC /* moc_Q1DTransferFunction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = moc_Q1DTransferFunction.cpp; path = UI/AutoGen/moc_Q1DTransferFunction.cpp; sourceTree = "<group>"; };
 		637A24CAC534D50BF79EFB34 /* QDataRadioButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QDataRadioButton.h; path = UI/QDataRadioButton.h; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 				7CABE3C80E79AD2B307756D2 /* Sources [qmake] */,
 				EEC299C65D5017EB9DD513B0 /* Sources [UIC] */,
 				ED1E82605DD74B483AF3C982 /* External Frameworks and Libraries */,
-				56FBC55B0E26912C0095419D /* Products */,
+				561EB1BB0E2693A80011218E /* Products */,
 			);
 			name = ImageVis3D;
 			sourceTree = "<group>";
@@ -172,10 +172,10 @@
 			name = IO;
 			sourceTree = "<group>";
 		};
-		56FBC55B0E26912C0095419D /* Products */ = {
+		561EB1BB0E2693A80011218E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				56FBC55A0E26912C0095419D /* ImageVis3D.app */,
+				561EB1BA0E2693A80011218E /* ImageVis3D.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -286,7 +286,7 @@
 /* Begin PBXNativeTarget section */
 		1D830425BF351FAA1C7C054A /* ImageVis3D */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 56FBC5710E26914A0095419D /* Build configuration list for PBXNativeTarget "ImageVis3D" */;
+			buildConfigurationList = 561EB1D40E2693AB0011218E /* Build configuration list for PBXNativeTarget "ImageVis3D" */;
 			buildPhases = (
 				D7BA7D76DAB5DD13389D6332 /* Qt Qmake */,
 				A0A52A2ADF7A1E2A99738674 /* Qt Preprocessors */,
@@ -302,7 +302,7 @@
 			name = ImageVis3D;
 			productInstallPath = Build/OSX/Bin/;
 			productName = ImageVis3D;
-			productReference = 56FBC55A0E26912C0095419D /* ImageVis3D.app */;
+			productReference = 561EB1BA0E2693A80011218E /* ImageVis3D.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -314,7 +314,7 @@
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 05596AB53D8D521C69802C27 /* ImageVis3D */;
-			productRefGroup = 56FBC55B0E26912C0095419D /* Products */;
+			productRefGroup = 561EB1BB0E2693A80011218E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -384,7 +384,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		56FBC56C0E26912C0095419D /* Debug */ = {
+		561EB1CC0E2693A80011218E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
@@ -449,7 +449,7 @@
 			};
 			name = Debug;
 		};
-		56FBC56D0E26912C0095419D /* Release */ = {
+		561EB1CD0E2693A80011218E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
@@ -513,7 +513,7 @@
 			};
 			name = Release;
 		};
-		56FBC56E0E26912C0095419D /* Default */ = {
+		561EB1CE0E2693A80011218E /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
@@ -604,12 +604,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		56FBC5710E26914A0095419D /* Build configuration list for PBXNativeTarget "ImageVis3D" */ = {
+		561EB1D40E2693AB0011218E /* Build configuration list for PBXNativeTarget "ImageVis3D" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				56FBC56C0E26912C0095419D /* Debug */,
-				56FBC56D0E26912C0095419D /* Release */,
-				56FBC56E0E26912C0095419D /* Default */,
+				561EB1CC0E2693A80011218E /* Debug */,
+				561EB1CD0E2693A80011218E /* Release */,
+				561EB1CE0E2693A80011218E /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
