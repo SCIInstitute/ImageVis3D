@@ -1,3 +1,5 @@
+cd Build/OSX/Bin
+
 mkdir ImageVis3D.app/Contents/Frameworks
 cp -R /Library/Frameworks/QtCore.framework ImageVis3D.app/Contents/Frameworks
 cp -R /Library/Frameworks/QtGui.framework  ImageVis3D.app/Contents/Frameworks
@@ -9,3 +11,5 @@ install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/..
 install_name_tool -change QtGui.framework/Versions/4/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui ImageVis3D.app/Contents/MacOs/ImageVis3D
 
 install_name_tool -change QtCore.framework/Versions/4/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore ImageVis3D.app/Contents/Frameworks/QtGui.framework/Versions/4/QtGui
+
+cd ../../..
