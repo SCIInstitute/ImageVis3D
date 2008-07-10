@@ -1,0 +1,84 @@
+// !$*UTF8*$!
+{
+	1D830425BF351FAA1C7C054A /* ImageVis3D */ = {
+		activeExec = 0;
+		executables = (
+			56FBC55C0E26912C0095419D /* ImageVis3D */,
+		);
+	};
+	56FBC55C0E26912C0095419D /* ImageVis3D */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = ImageVis3D;
+		sourceDirectories = (
+		);
+	};
+	56FBC5720E26914A0095419D /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+	};
+	56FBC5730E26914A0095419D /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	91B15E841AA80083484172DE /* Project object */ = {
+		activeArchitecture = i386;
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 56FBC55C0E26912C0095419D /* ImageVis3D */;
+		activeTarget = 1D830425BF351FAA1C7C054A /* ImageVis3D */;
+		codeSenseManager = 56FBC5730E26914A0095419D /* Code sense */;
+		executables = (
+			56FBC55C0E26912C0095419D /* ImageVis3D */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					243,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 237408556;
+			PBXWorkspaceStateSaveDate = 237408556;
+		};
+		sourceControlManager = 56FBC5720E26914A0095419D /* Source Control */;
+		userBuildSettings = {
+			SYMROOT = /Users/krueger/Documents/Projects/ImageVis3D/Build/OSX;
+		};
+	};
+}

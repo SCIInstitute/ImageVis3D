@@ -1,0 +1,620 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0011FFECDA5B7055DA03DE38 /* ImageVis3D.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 42C4A4D153B2B116249852FE /* ImageVis3D.cpp */; settings = {ATTRIBUTES = (); }; };
+		069D05B0128AE5DC7EE31738 /* QtCore.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 7BC2E65A5E699A5E5D834CA2 /* QtCore.framework */; };
+		1B135A5239FEE80ADACB29AF /* RenderWindow.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 2D35139F03183DA58A907984 /* RenderWindow.cpp */; settings = {ATTRIBUTES = (); }; };
+		207004E9C11CADB71BBB3763 /* moc_Q1DTransferFunction.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 5B6BE7F87CDDF1AA57682FAC /* moc_Q1DTransferFunction.cpp */; settings = {ATTRIBUTES = (); }; };
+		28F282390EDF7B98F2D4034F /* Transferfunction1D.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 3D580B408584C358D4210722 /* Transferfunction1D.cpp */; settings = {ATTRIBUTES = (); }; };
+		2B093CA6F071B023A473CED0 /* main.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 118FCBAABA162BA17933C789 /* main.cpp */; settings = {ATTRIBUTES = (); }; };
+		3B5B8771F86A16B476079AFD /* SysTools.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = D98C1AC87E6E066F2783D434 /* SysTools.cpp */; settings = {ATTRIBUTES = (); }; };
+		501667F26B3C1FF6767A7C12 /* QtGui.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 9B36DA7E32F0304E780E7972 /* QtGui.framework */; };
+		51D4DBF7CB8537BE86EBD055 /* AppKit.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 821416211D63F190AAAD016A /* AppKit.framework */; };
+		56FBC55D0E26912C0095419D /* ImageVis3D.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 56FBC55A0E26912C0095419D /* ImageVis3D.app */; };
+		6078053DD5EF512AF811C511 /* moc_BrowseData.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 9E1E82F691A084D7A3931FC2 /* moc_BrowseData.cpp */; settings = {ATTRIBUTES = (); }; };
+		7A5438E038EB8FC6F3F239AC /* PleaseWait.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 78BAC5CC6048063D7B1FF4BD /* PleaseWait.cpp */; settings = {ATTRIBUTES = (); }; };
+		8020BCB6BFE0FEE3B325E4CF /* DICOMParser.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 88B53055C26A8AFBA8166DD3 /* DICOMParser.cpp */; settings = {ATTRIBUTES = (); }; };
+		8567756F095564A569B8813B /* moc_PleaseWait.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = C341DFF74DA47CA865D66E57 /* moc_PleaseWait.cpp */; settings = {ATTRIBUTES = (); }; };
+		B833EBAA11ECAD8EA0653A31 /* moc_ImageVis3D.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 797E60C086ABF8ED81C69C96 /* moc_ImageVis3D.cpp */; settings = {ATTRIBUTES = (); }; };
+		C1CE207A9D3A3B10A3EA966D /* moc_RenderWindow.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 40C0DA1B4335F681242D4183 /* moc_RenderWindow.cpp */; settings = {ATTRIBUTES = (); }; };
+		C8FD4A1AAA37CF2CA2824CCF /* Carbon.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = DA138F75C9F545CDAE7FB264 /* Carbon.framework */; };
+		ED41C217D1C276C026E4CAF5 /* BrowseData.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 4279343C8760169DB5C8DCC5 /* BrowseData.cpp */; settings = {ATTRIBUTES = (); }; };
+		EEB4E9F2ECBE9A630C684795 /* Q1DTransferFunction.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 57642517CD31AA70C457172E /* Q1DTransferFunction.cpp */; settings = {ATTRIBUTES = (); }; };
+		F89A9BCE2C72AA94A06AEB9B /* QDataRadioButton.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = EE927BDB3F2027DD338C1AA7 /* QDataRadioButton.cpp */; settings = {ATTRIBUTES = (); }; };
+		F9E76E570E10AF14870553A7 /* ApplicationServices.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 27AE7A480FD6C52FCA80FECD /* ApplicationServices.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F6069D5A5DA8AA28EDB8B3C6 /* Project Copy */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /Users/krueger/Documents/Projects/ImageVis3D/Build/OSX/Bin;
+			dstSubfolderSpec = 0;
+			files = (
+				56FBC55D0E26912C0095419D /* ImageVis3D.app in Project Copy */,
+			);
+			name = "Project Copy";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		118FCBAABA162BA17933C789 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		12F0E317F7F4FF0CEBA71F42 /* ui_RenderWindow.h */ = {isa = PBXFileReference; lastKnownFileType = file; name = ui_RenderWindow.h; path = UI/AutoGen/ui_RenderWindow.h; sourceTree = "<group>"; };
+		1727EE1830E09FD641794402 /* ImageVis3D.ui */ = {isa = PBXFileReference; lastKnownFileType = text; name = ImageVis3D.ui; path = UI/UI/ImageVis3D.ui; sourceTree = "<group>"; };
+		1AFF5E40DBA2AB863E40B0E0 /* Transferfunction1D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Transferfunction1D.h; path = IO/Transferfunction1D.h; sourceTree = "<group>"; };
+		26462B938C217A18CFCAD4CC /* BrowseData.ui */ = {isa = PBXFileReference; lastKnownFileType = text; name = BrowseData.ui; path = UI/UI/BrowseData.ui; sourceTree = "<group>"; };
+		26952C15E03EFFB67648B0BE /* RenderWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RenderWindow.h; path = UI/RenderWindow.h; sourceTree = "<group>"; };
+		27AE7A480FD6C52FCA80FECD /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
+		2D35139F03183DA58A907984 /* RenderWindow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RenderWindow.cpp; path = UI/RenderWindow.cpp; sourceTree = "<group>"; };
+		3D580B408584C358D4210722 /* Transferfunction1D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Transferfunction1D.cpp; path = IO/Transferfunction1D.cpp; sourceTree = "<group>"; };
+		40C0DA1B4335F681242D4183 /* moc_RenderWindow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = moc_RenderWindow.cpp; path = UI/AutoGen/moc_RenderWindow.cpp; sourceTree = "<group>"; };
+		4279343C8760169DB5C8DCC5 /* BrowseData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BrowseData.cpp; path = UI/BrowseData.cpp; sourceTree = "<group>"; };
+		42C4A4D153B2B116249852FE /* ImageVis3D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ImageVis3D.cpp; path = UI/ImageVis3D.cpp; sourceTree = "<group>"; };
+		4522C39C27B8653DC5FF47F4 /* ui_BrowseData.h */ = {isa = PBXFileReference; lastKnownFileType = file; name = ui_BrowseData.h; path = UI/AutoGen/ui_BrowseData.h; sourceTree = "<group>"; };
+		56FBC55A0E26912C0095419D /* ImageVis3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageVis3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		57642517CD31AA70C457172E /* Q1DTransferFunction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Q1DTransferFunction.cpp; path = UI/Q1DTransferFunction.cpp; sourceTree = "<group>"; };
+		5B6BE7F87CDDF1AA57682FAC /* moc_Q1DTransferFunction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = moc_Q1DTransferFunction.cpp; path = UI/AutoGen/moc_Q1DTransferFunction.cpp; sourceTree = "<group>"; };
+		637A24CAC534D50BF79EFB34 /* QDataRadioButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QDataRadioButton.h; path = UI/QDataRadioButton.h; sourceTree = "<group>"; };
+		78BAC5CC6048063D7B1FF4BD /* PleaseWait.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PleaseWait.cpp; path = UI/PleaseWait.cpp; sourceTree = "<group>"; };
+		797E60C086ABF8ED81C69C96 /* moc_ImageVis3D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = moc_ImageVis3D.cpp; path = UI/AutoGen/moc_ImageVis3D.cpp; sourceTree = "<group>"; };
+		7BC2E65A5E699A5E5D834CA2 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = /Library/Frameworks/QtCore.framework; sourceTree = "<absolute>"; };
+		821416211D63F190AAAD016A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		88B53055C26A8AFBA8166DD3 /* DICOMParser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DICOMParser.cpp; path = IO/DICOM/DICOMParser.cpp; sourceTree = "<group>"; };
+		9B36DA7E32F0304E780E7972 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = /Library/Frameworks/QtGui.framework; sourceTree = "<absolute>"; };
+		9E1E82F691A084D7A3931FC2 /* moc_BrowseData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = moc_BrowseData.cpp; path = UI/AutoGen/moc_BrowseData.cpp; sourceTree = "<group>"; };
+		9E45BE5F6FBB23C8488ADFF8 /* ImageVis3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ImageVis3D.h; path = UI/ImageVis3D.h; sourceTree = "<group>"; };
+		C0995966BBDD7BA1E8FBF1B6 /* Q1DTransferFunction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Q1DTransferFunction.h; path = UI/Q1DTransferFunction.h; sourceTree = "<group>"; };
+		C341DFF74DA47CA865D66E57 /* moc_PleaseWait.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = moc_PleaseWait.cpp; path = UI/AutoGen/moc_PleaseWait.cpp; sourceTree = "<group>"; };
+		C6DD8FF3FEAF127A466AF41B /* PleaseWait.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PleaseWait.h; path = UI/PleaseWait.h; sourceTree = "<group>"; };
+		D2A897C9E6BA2E3A5B7E876D /* BrowseData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BrowseData.h; path = UI/BrowseData.h; sourceTree = "<group>"; };
+		D6356449410D6C3F1F8F183B /* ImageVis3D.pro */ = {isa = PBXFileReference; lastKnownFileType = text; path = ImageVis3D.pro; sourceTree = "<group>"; };
+		D98C1AC87E6E066F2783D434 /* SysTools.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SysTools.cpp; path = Basics/SysTools.cpp; sourceTree = "<group>"; };
+		DA138F75C9F545CDAE7FB264 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		DFC429F2703B4493ADAD6AB0 /* RenderWindow.ui */ = {isa = PBXFileReference; lastKnownFileType = text; name = RenderWindow.ui; path = UI/UI/RenderWindow.ui; sourceTree = "<group>"; };
+		E38F7B47A08502C49F34418D /* ui_ImageVis3D.h */ = {isa = PBXFileReference; lastKnownFileType = file; name = ui_ImageVis3D.h; path = UI/AutoGen/ui_ImageVis3D.h; sourceTree = "<group>"; };
+		E3E7EEA12463C1B8A75468EE /* PleaseWait.ui */ = {isa = PBXFileReference; lastKnownFileType = text; name = PleaseWait.ui; path = UI/UI/PleaseWait.ui; sourceTree = "<group>"; };
+		E83EF1288E8535A5E5C68E6D /* ui_PleaseWait.h */ = {isa = PBXFileReference; lastKnownFileType = file; name = ui_PleaseWait.h; path = UI/AutoGen/ui_PleaseWait.h; sourceTree = "<group>"; };
+		EE927BDB3F2027DD338C1AA7 /* QDataRadioButton.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = QDataRadioButton.cpp; path = UI/QDataRadioButton.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2A1043669E6E5A7426EA502A /* Frameworks & Libraries */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				501667F26B3C1FF6767A7C12 /* QtGui.framework in Frameworks & Libraries */,
+				C8FD4A1AAA37CF2CA2824CCF /* Carbon.framework in Frameworks & Libraries */,
+				51D4DBF7CB8537BE86EBD055 /* AppKit.framework in Frameworks & Libraries */,
+				069D05B0128AE5DC7EE31738 /* QtCore.framework in Frameworks & Libraries */,
+				F9E76E570E10AF14870553A7 /* ApplicationServices.framework in Frameworks & Libraries */,
+			);
+			name = "Frameworks & Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		03CF06F728FA49722BD955F4 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				61CB14BB2AAED346147D27DE /* UI */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		05596AB53D8D521C69802C27 /* ImageVis3D */ = {
+			isa = PBXGroup;
+			children = (
+				FB61758D0F0FDA4BA867C3D5 /* Sources */,
+				46E892BBB6BB6952967E0561 /* Temporary Sources */,
+				883D7615C4D2DE3FA1218F12 /* Headers */,
+				7CABE3C80E79AD2B307756D2 /* Sources [qmake] */,
+				EEC299C65D5017EB9DD513B0 /* Sources [UIC] */,
+				ED1E82605DD74B483AF3C982 /* External Frameworks and Libraries */,
+				56FBC55B0E26912C0095419D /* Products */,
+			);
+			name = ImageVis3D;
+			sourceTree = "<group>";
+		};
+		0BDE2F1BC80D9AD9C323897F /* AutoGen */ = {
+			isa = PBXGroup;
+			children = (
+				9E1E82F691A084D7A3931FC2 /* moc_BrowseData.cpp */,
+				797E60C086ABF8ED81C69C96 /* moc_ImageVis3D.cpp */,
+				C341DFF74DA47CA865D66E57 /* moc_PleaseWait.cpp */,
+				5B6BE7F87CDDF1AA57682FAC /* moc_Q1DTransferFunction.cpp */,
+				40C0DA1B4335F681242D4183 /* moc_RenderWindow.cpp */,
+				4522C39C27B8653DC5FF47F4 /* ui_BrowseData.h */,
+				E38F7B47A08502C49F34418D /* ui_ImageVis3D.h */,
+				E83EF1288E8535A5E5C68E6D /* ui_PleaseWait.h */,
+				12F0E317F7F4FF0CEBA71F42 /* ui_RenderWindow.h */,
+			);
+			name = AutoGen;
+			sourceTree = "<group>";
+		};
+		1AD9DF811FE021146CB77EBD /* IO */ = {
+			isa = PBXGroup;
+			children = (
+				3D580B408584C358D4210722 /* Transferfunction1D.cpp */,
+				6AFE3C9D1244F5A0DF5D6C73 /* DICOM */,
+			);
+			name = IO;
+			sourceTree = "<group>";
+		};
+		444BF3B21846B134C41D2134 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				0BDE2F1BC80D9AD9C323897F /* AutoGen */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		46E892BBB6BB6952967E0561 /* Temporary Sources */ = {
+			isa = PBXGroup;
+			children = (
+				444BF3B21846B134C41D2134 /* UI */,
+			);
+			name = "Temporary Sources";
+			sourceTree = "<group>";
+		};
+		53081DFAE5B8AB0B149943A0 /* IO */ = {
+			isa = PBXGroup;
+			children = (
+				1AFF5E40DBA2AB863E40B0E0 /* Transferfunction1D.h */,
+			);
+			name = IO;
+			sourceTree = "<group>";
+		};
+		56FBC55B0E26912C0095419D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				56FBC55A0E26912C0095419D /* ImageVis3D.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		61CB14BB2AAED346147D27DE /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				26462B938C217A18CFCAD4CC /* BrowseData.ui */,
+				1727EE1830E09FD641794402 /* ImageVis3D.ui */,
+				E3E7EEA12463C1B8A75468EE /* PleaseWait.ui */,
+				DFC429F2703B4493ADAD6AB0 /* RenderWindow.ui */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		6AFE3C9D1244F5A0DF5D6C73 /* DICOM */ = {
+			isa = PBXGroup;
+			children = (
+				88B53055C26A8AFBA8166DD3 /* DICOMParser.cpp */,
+			);
+			name = DICOM;
+			sourceTree = "<group>";
+		};
+		7CABE3C80E79AD2B307756D2 /* Sources [qmake] */ = {
+			isa = PBXGroup;
+			children = (
+				D6356449410D6C3F1F8F183B /* ImageVis3D.pro */,
+			);
+			name = "Sources [qmake]";
+			sourceTree = "<group>";
+		};
+		883D7615C4D2DE3FA1218F12 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				9FA9B2DB05EF9049DE253C52 /* UI */,
+				53081DFAE5B8AB0B149943A0 /* IO */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		88A79AACAFC37029ED3D6944 /* Basics */ = {
+			isa = PBXGroup;
+			children = (
+				D98C1AC87E6E066F2783D434 /* SysTools.cpp */,
+			);
+			name = Basics;
+			sourceTree = "<group>";
+		};
+		9FA9B2DB05EF9049DE253C52 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				D2A897C9E6BA2E3A5B7E876D /* BrowseData.h */,
+				9E45BE5F6FBB23C8488ADFF8 /* ImageVis3D.h */,
+				C6DD8FF3FEAF127A466AF41B /* PleaseWait.h */,
+				C0995966BBDD7BA1E8FBF1B6 /* Q1DTransferFunction.h */,
+				637A24CAC534D50BF79EFB34 /* QDataRadioButton.h */,
+				26952C15E03EFFB67648B0BE /* RenderWindow.h */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		ED1E82605DD74B483AF3C982 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				9B36DA7E32F0304E780E7972 /* QtGui.framework */,
+				DA138F75C9F545CDAE7FB264 /* Carbon.framework */,
+				821416211D63F190AAAD016A /* AppKit.framework */,
+				7BC2E65A5E699A5E5D834CA2 /* QtCore.framework */,
+				27AE7A480FD6C52FCA80FECD /* ApplicationServices.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		EEC299C65D5017EB9DD513B0 /* Sources [UIC] */ = {
+			isa = PBXGroup;
+			children = (
+				03CF06F728FA49722BD955F4 /* UI */,
+			);
+			name = "Sources [UIC]";
+			sourceTree = "<group>";
+		};
+		F697C2611F9EA66F8C819228 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				4279343C8760169DB5C8DCC5 /* BrowseData.cpp */,
+				42C4A4D153B2B116249852FE /* ImageVis3D.cpp */,
+				78BAC5CC6048063D7B1FF4BD /* PleaseWait.cpp */,
+				57642517CD31AA70C457172E /* Q1DTransferFunction.cpp */,
+				EE927BDB3F2027DD338C1AA7 /* QDataRadioButton.cpp */,
+				2D35139F03183DA58A907984 /* RenderWindow.cpp */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		FB61758D0F0FDA4BA867C3D5 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				F697C2611F9EA66F8C819228 /* UI */,
+				118FCBAABA162BA17933C789 /* main.cpp */,
+				1AD9DF811FE021146CB77EBD /* IO */,
+				88A79AACAFC37029ED3D6944 /* Basics */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D830425BF351FAA1C7C054A /* ImageVis3D */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56FBC5710E26914A0095419D /* Build configuration list for PBXNativeTarget "ImageVis3D" */;
+			buildPhases = (
+				D7BA7D76DAB5DD13389D6332 /* Qt Qmake */,
+				A0A52A2ADF7A1E2A99738674 /* Qt Preprocessors */,
+				F6069D5A5DA8AA28EDB8B3C6 /* Project Copy */,
+				C29B8785722055ED95EF7B57 /* Build Sources */,
+				2A1043669E6E5A7426EA502A /* Frameworks & Libraries */,
+				3787F99312C85FF0073FD7BA /* Bundle Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ImageVis3D;
+			productInstallPath = Build/OSX/Bin/;
+			productName = ImageVis3D;
+			productReference = 56FBC55A0E26912C0095419D /* ImageVis3D.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		91B15E841AA80083484172DE /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 2A951308CDB28F104D0A4BD2 /* Build configuration list for PBXProject "ImageVis3D" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			mainGroup = 05596AB53D8D521C69802C27 /* ImageVis3D */;
+			productRefGroup = 56FBC55B0E26912C0095419D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D830425BF351FAA1C7C054A /* ImageVis3D */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3787F99312C85FF0073FD7BA /* Bundle Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "Bundle Resources";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A0A52A2ADF7A1E2A99738674 /* Qt Preprocessors */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "Qt Preprocessors";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/krueger/Documents/Projects/ImageVis3D -f ImageVis3D.xcodeproj/qt_preprocess.mak";
+		};
+		D7BA7D76DAB5DD13389D6332 /* Qt Qmake */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "Qt Qmake";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/krueger/Documents/Projects/ImageVis3D -f ImageVis3D.xcodeproj/qt_makeqmake.mak";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C29B8785722055ED95EF7B57 /* Build Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED41C217D1C276C026E4CAF5 /* BrowseData.cpp in Build Sources */,
+				0011FFECDA5B7055DA03DE38 /* ImageVis3D.cpp in Build Sources */,
+				2B093CA6F071B023A473CED0 /* main.cpp in Build Sources */,
+				7A5438E038EB8FC6F3F239AC /* PleaseWait.cpp in Build Sources */,
+				EEB4E9F2ECBE9A630C684795 /* Q1DTransferFunction.cpp in Build Sources */,
+				F89A9BCE2C72AA94A06AEB9B /* QDataRadioButton.cpp in Build Sources */,
+				1B135A5239FEE80ADACB29AF /* RenderWindow.cpp in Build Sources */,
+				28F282390EDF7B98F2D4034F /* Transferfunction1D.cpp in Build Sources */,
+				8020BCB6BFE0FEE3B325E4CF /* DICOMParser.cpp in Build Sources */,
+				3B5B8771F86A16B476079AFD /* SysTools.cpp in Build Sources */,
+				6078053DD5EF512AF811C511 /* moc_BrowseData.cpp in Build Sources */,
+				B833EBAA11ECAD8EA0653A31 /* moc_ImageVis3D.cpp in Build Sources */,
+				8567756F095564A569B8813B /* moc_PleaseWait.cpp in Build Sources */,
+				207004E9C11CADB71BBB3763 /* moc_Q1DTransferFunction.cpp in Build Sources */,
+				C1CE207A9D3A3B10A3EA966D /* moc_RenderWindow.cpp in Build Sources */,
+			);
+			name = "Build Sources";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		56FBC56C0E26912C0095419D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1.0;
+				DYLIB_CURRENT_VERSION = 1.0.0;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/QtCore.framework/Versions/4/Headers,
+					/usr/include/QtCore,
+					/Library/Frameworks/QtGui.framework/Versions/4/Headers,
+					/usr/include/QtGui,
+					/usr/include,
+					.,
+					UI/AutoGen,
+					UI/AutoGen,
+					/usr/local/include,
+					/System/Library/Frameworks/CarbonCore.framework/Headers,
+					"/usr/local/Qt4.4/mkspecs/macx-xcode",
+				);
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_DIR = /Users/krueger/Documents/Projects/ImageVis3D/Build/OSX/Bin/;
+				LEXFLAGS = "";
+				LIBRARY_SEARCH_PATHS = (
+					/Library/Frameworks,
+					/System/Library/Frameworks/,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OBJROOT = Build/OSX/;
+				OTHER_CFLAGS = (
+					"-pipe",
+					"-g",
+					"-Wall",
+					"-W",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB",
+					"-DQT_SHARED",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-pipe",
+					"-g",
+					"-Wall",
+					"-W",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB",
+					"-DQT_SHARED",
+				);
+				OTHER_LDFLAGS = (
+					"-headerpad_max_install_names",
+					"-L/Library/Frameworks",
+					"-F/Library/Frameworks",
+					"-lz",
+					"-lm",
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = ImageVis3D;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "";
+				YACCFLAGS = "-d";
+			};
+			name = Debug;
+		};
+		56FBC56D0E26912C0095419D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1.0;
+				DYLIB_CURRENT_VERSION = 1.0.0;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/QtCore.framework/Versions/4/Headers,
+					/usr/include/QtCore,
+					/Library/Frameworks/QtGui.framework/Versions/4/Headers,
+					/usr/include/QtGui,
+					/usr/include,
+					.,
+					UI/AutoGen,
+					UI/AutoGen,
+					/usr/local/include,
+					/System/Library/Frameworks/CarbonCore.framework/Headers,
+					"/usr/local/Qt4.4/mkspecs/macx-xcode",
+				);
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_DIR = /Users/krueger/Documents/Projects/ImageVis3D/Build/OSX/Bin/;
+				LEXFLAGS = "";
+				LIBRARY_SEARCH_PATHS = (
+					/Library/Frameworks,
+					/System/Library/Frameworks/,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OBJROOT = Build/OSX/;
+				OTHER_CFLAGS = (
+					"-pipe",
+					"-g",
+					"-Wall",
+					"-W",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB",
+					"-DQT_SHARED",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-pipe",
+					"-g",
+					"-Wall",
+					"-W",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB",
+					"-DQT_SHARED",
+				);
+				OTHER_LDFLAGS = (
+					"-headerpad_max_install_names",
+					"-L/Library/Frameworks",
+					"-F/Library/Frameworks",
+					"-lz",
+					"-lm",
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = ImageVis3D;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "";
+				YACCFLAGS = "-d";
+			};
+			name = Release;
+		};
+		56FBC56E0E26912C0095419D /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
+				DYLIB_COMPATIBILITY_VERSION = 1.0;
+				DYLIB_CURRENT_VERSION = 1.0.0;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/QtCore.framework/Versions/4/Headers,
+					/usr/include/QtCore,
+					/Library/Frameworks/QtGui.framework/Versions/4/Headers,
+					/usr/include/QtGui,
+					/usr/include,
+					.,
+					UI/AutoGen,
+					UI/AutoGen,
+					/usr/local/include,
+					/System/Library/Frameworks/CarbonCore.framework/Headers,
+					"/usr/local/Qt4.4/mkspecs/macx-xcode",
+				);
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_DIR = /Users/krueger/Documents/Projects/ImageVis3D/Build/OSX/Bin/;
+				LEXFLAGS = "";
+				LIBRARY_SEARCH_PATHS = (
+					/Library/Frameworks,
+					/System/Library/Frameworks/,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OBJROOT = Build/OSX/;
+				OTHER_CFLAGS = (
+					"-pipe",
+					"-g",
+					"-Wall",
+					"-W",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB",
+					"-DQT_SHARED",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-pipe",
+					"-g",
+					"-Wall",
+					"-W",
+					"-DQT_GUI_LIB",
+					"-DQT_CORE_LIB",
+					"-DQT_SHARED",
+				);
+				OTHER_LDFLAGS = (
+					"-headerpad_max_install_names",
+					"-L/Library/Frameworks",
+					"-F/Library/Frameworks",
+					"-lz",
+					"-lm",
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = ImageVis3D;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "";
+				YACCFLAGS = "-d";
+			};
+			name = Default;
+		};
+		8DB1DD96F65B1BF1FFC506E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+			};
+			name = Debug;
+		};
+		95E1EB2E5DDD587BE5B3E548 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2A951308CDB28F104D0A4BD2 /* Build configuration list for PBXProject "ImageVis3D" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8DB1DD96F65B1BF1FFC506E0 /* Debug */,
+				95E1EB2E5DDD587BE5B3E548 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		56FBC5710E26914A0095419D /* Build configuration list for PBXNativeTarget "ImageVis3D" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56FBC56C0E26912C0095419D /* Debug */,
+				56FBC56D0E26912C0095419D /* Release */,
+				56FBC56E0E26912C0095419D /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 91B15E841AA80083484172DE /* Project object */;
+}
