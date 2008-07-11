@@ -68,10 +68,11 @@ namespace SysTools {
 
 	string GetFromResourceOnMac(const string& strFileName) {
 
-		CFStringRef cfFilename = CFStringCreateWithCString(kCFAllocatorDefault, RemoveExt(strFileName).c_str(), CFStringGetSystemEncoding()); 	
-		CFStringRef cfExt = CFStringCreateWithCString(kCFAllocatorDefault, GetExt(strFileName).c_str(), CFStringGetSystemEncoding()); 	
 
 		#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+			CFStringRef cfFilename = CFStringCreateWithCString(kCFAllocatorDefault, RemoveExt(strFileName).c_str(), CFStringGetSystemEncoding()); 	
+			CFStringRef cfExt = CFStringCreateWithCString(kCFAllocatorDefault, GetExt(strFileName).c_str(), CFStringGetSystemEncoding()); 	
+
 			CFURLRef    imageURL = CFBundleCopyResourceURL( CFBundleGetMainBundle(), cfFilename, cfExt, NULL );
 			CFStringRef macPath = CFURLCopyFileSystemPath(imageURL, kCFURLPOSIXPathStyle);
 			const char *pathPtr = CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding());
