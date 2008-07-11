@@ -74,6 +74,7 @@ class Q1DTransferFunction : public QWidget
 
 		// mouse motion handling
 		int m_iLastIndex;
+		float m_fLastValue;
 
 		// drawing routines
 		void DrawCoordinateSystem(QPainter& painter);

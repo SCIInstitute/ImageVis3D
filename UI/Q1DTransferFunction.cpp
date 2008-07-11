@@ -33,7 +33,8 @@ Q1DTransferFunction::Q1DTransferFunction(QWidget *parent) :
 	m_iMarkerLength(5),
 	m_iBigMarkerLength(m_iMarkerLength*3),
 	// mouse motion
-	m_iLastIndex(-1)
+	m_iLastIndex(-1),
+	m_fLastValue(0)
 {
 }
 
@@ -211,28 +212,60 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	int iCurrentIndex = int((float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth));
 	iCurrentIndex = std::min<int>(iVectorSize-1, std::max<int>(0,iCurrentIndex));
 
-	// ifnd out the range to change
-	if (m_iLastIndex == -1) m_iLastIndex = iCurrentIndex;
-	int iIndexMin = std::min(m_iLastIndex,iCurrentIndex);
-	int iIndexMax = std::max(m_iLastIndex,iCurrentIndex);
-	m_iLastIndex = iCurrentIndex;
-
 	// compute actual color value 
 	float fValue = (float(m_iTopBorder)+float(iGridHeight)-float(event->y()))/float(iGridHeight);
 	fValue	  = std::min<float>(1.0f, std::max<float>(0.0f,fValue));
 
+	// find out the range to change
+	if (m_iLastIndex == -1) {
+		m_iLastIndex = iCurrentIndex;
+		m_fLastValue = fValue;
+	}
+	
+	int iIndexMin, iIndexMax;
+	float fValueMin, fValueInc;
+
+	if (m_iLastIndex < iCurrentIndex) {
+		iIndexMin = m_iLastIndex;
+		iIndexMax = iCurrentIndex;
+
+		fValueMin = m_fLastValue;
+		fValueInc = -(fValue-m_fLastValue)/(m_iLastIndex-iCurrentIndex);
+	} else {
+		iIndexMin = iCurrentIndex;
+		iIndexMax = m_iLastIndex;
+
+		fValueMin = fValue;
+		fValueInc = -(fValue-m_fLastValue)/(m_iLastIndex-iCurrentIndex);
+	}
+
+	m_iLastIndex = iCurrentIndex;
+	m_fLastValue = fValue;
+
 	// update transfer function
 	if (m_iPaintmode & Q1DT_PAINT_RED) {
-		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) m_Trans.pColorData[iIndex].r = fValue;
+		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
+			m_Trans.pColorData[iIndex].r = fValueMin;
+			fValueMin += fValueInc;
+		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_GREEN) {
-		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) m_Trans.pColorData[iIndex].g = fValue;
+		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
+			m_Trans.pColorData[iIndex].g = fValueMin;
+			fValueMin += fValueInc;
+		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_BLUE) {
-		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) m_Trans.pColorData[iIndex].b = fValue;
+		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
+			m_Trans.pColorData[iIndex].b = fValueMin;
+			fValueMin += fValueInc;
+		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_ALPHA) {
-		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) m_Trans.pColorData[iIndex].a = fValue;
+		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
+			m_Trans.pColorData[iIndex].a = fValueMin;
+			fValueMin += fValueInc;
+		}
 	}
 
 	// redraw this widget
