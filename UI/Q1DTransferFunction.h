@@ -32,7 +32,8 @@ class Q1DTransferFunction : public QWidget
 		virtual void mousePressEvent(QMouseEvent *event);
 		virtual void mouseReleaseEvent(QMouseEvent *event);
 
-	private:
+	public:  // DEBUG
+//	private:
 		// states
 		std::vector<float> m_vHistrogram;
 		unsigned int m_iPaintmode;
