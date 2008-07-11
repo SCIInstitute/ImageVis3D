@@ -346,11 +346,11 @@
 			Name="IO"
 			>
 			<File
-				RelativePath=".\IO\Transferfunction1D.cpp"
+				RelativePath=".\IO\TransferFunction1D.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\IO\Transferfunction1D.h"
+				RelativePath=".\IO\TransferFunction1D.h"
 				>
 			</File>
 			<Filter
