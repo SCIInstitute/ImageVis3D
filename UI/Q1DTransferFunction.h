@@ -11,6 +11,7 @@
 #define Q1DT_PAINT_GREEN 2
 #define Q1DT_PAINT_BLUE  4
 #define Q1DT_PAINT_ALPHA 8
+#define Q1DT_PAINT_UNDEF 16
 
 class Q1DTransferFunction : public QWidget
 {
@@ -20,7 +21,7 @@ class Q1DTransferFunction : public QWidget
 		Q1DTransferFunction(QWidget *parent=0);
 		virtual ~Q1DTransferFunction(void);
 		void SetHistogram(std::vector<unsigned int> vHistrogram);
-		void SetPaintmode(unsigned int iPaintmode) {if (iPaintmode <= Q1DT_PAINT_ALPHA) m_iPaintmode = iPaintmode;};
+		void SetPaintmode(unsigned int iPaintmode) {if (iPaintmode < Q1DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
 
 	public slots:
 		bool LoadFromFile(const QString& strFilename);

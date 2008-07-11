@@ -11,7 +11,7 @@
 	1D830425BF351FAA1C7C054A /* ImageVis3D */ = {
 		activeExec = 0;
 		executables = (
-			561EB1BC0E2693A80011218E /* ImageVis3D */,
+			566E46630E27B8BA007FF895 /* ImageVis3D */,
 		);
 	};
 	2D35139F03183DA58A907984 /* RenderWindow.cpp */ = {
@@ -22,14 +22,14 @@
 			sepNavWindowFrame = "{{61, 153}, {1739, 978}}";
 		};
 	};
-	561EB1BC0E2693A80011218E /* ImageVis3D */ = {
+	566E46630E27B8BA007FF895 /* ImageVis3D */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
 		);
 		argumentStrings = (
 		);
 		autoAttachOnCrash = 1;
-		breakpointsEnabled = 1;
+		breakpointsEnabled = 0;
 		configStateDict = {
 		};
 		customDataFormattersEnabled = 1;
@@ -50,6 +50,23 @@
 		variableFormatDictionary = {
 		};
 	};
+	566E46870E27B96E007FF895 /* Q1DTransferFunction.cpp:247 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 57642517CD31AA70C457172E /* Q1DTransferFunction.cpp */;
+		functionName = "Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event)";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 247;
+		location = ImageVis3D;
+		modificationTime = 237484663.813711;
+		state = 2;
+	};
 	56FBC5720E26914A0095419D /* Source Control */ = {
 		isa = PBXSourceControlManager;
 		fallbackIsa = XCSourceControlManager;
@@ -61,19 +78,28 @@
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
 	};
+	57642517CD31AA70C457172E /* Q1DTransferFunction.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1680, 4592}}";
+			sepNavSelRange = "{8492, 0}";
+			sepNavVisRange = "{7729, 1697}";
+			sepNavWindowFrame = "{{96, 179}, {1739, 978}}";
+		};
+	};
 	91B15E841AA80083484172DE /* Project object */ = {
 		activeArchitecture = i386;
 		activeBuildConfigurationName = Debug;
-		activeExecutable = 561EB1BC0E2693A80011218E /* ImageVis3D */;
+		activeExecutable = 566E46630E27B8BA007FF895 /* ImageVis3D */;
 		activeTarget = 1D830425BF351FAA1C7C054A /* ImageVis3D */;
 		addToTargets = (
 			1D830425BF351FAA1C7C054A /* ImageVis3D */,
 		);
 		breakpoints = (
+			566E46870E27B96E007FF895 /* Q1DTransferFunction.cpp:247 */,
 		);
 		codeSenseManager = 56FBC5730E26914A0095419D /* Code sense */;
 		executables = (
-			561EB1BC0E2693A80011218E /* ImageVis3D */,
+			566E46630E27B8BA007FF895 /* ImageVis3D */,
 		);
 		perUserDictionary = {
 			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA1AED706398EBD00589147" = {
@@ -119,7 +145,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					315,
+					481,
 					20,
 					48,
 					43,
@@ -127,6 +153,30 @@
 					20,
 				);
 				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.XCSCMDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					457,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_SCM_ColumnID,
 					PBXFileDataSource_FiletypeID,
 					PBXFileDataSource_Filename_ColumnID,
 					PBXFileDataSource_Built_ColumnID,
@@ -158,8 +208,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 237409192;
-			PBXWorkspaceStateSaveDate = 237409192;
+			PBXPerProjectTemplateStateSaveDate = 237484218;
+			PBXWorkspaceStateSaveDate = 237484218;
 		};
 		sourceControlManager = 56FBC5720E26914A0095419D /* Source Control */;
 		userBuildSettings = {
@@ -168,9 +218,9 @@
 	};
 	C0995966BBDD7BA1E8FBF1B6 /* Q1DTransferFunction.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {984, 1204}}";
-			sepNavSelRange = "{0, 0}";
-			sepNavVisRange = "{14, 1384}";
+			sepNavIntBoundsRect = "{{0, 0}, {984, 1260}}";
+			sepNavSelRange = "{605, 0}";
+			sepNavVisRange = "{0, 1342}";
 			sepNavWindowFrame = "{{38, 347}, {1043, 805}}";
 		};
 	};

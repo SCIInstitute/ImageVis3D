@@ -245,27 +245,31 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 
 	// update transfer function
 	if (m_iPaintmode & Q1DT_PAINT_RED) {
+		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].r = fValueMin;
-			fValueMin += fValueInc;
+			m_Trans.pColorData[iIndex].r = _fValueMin;
+			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_GREEN) {
+		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].g = fValueMin;
-			fValueMin += fValueInc;
+			m_Trans.pColorData[iIndex].g = _fValueMin;
+			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_BLUE) {
+		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].b = fValueMin;
-			fValueMin += fValueInc;
+			m_Trans.pColorData[iIndex].b = _fValueMin;
+			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_ALPHA) {
+		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].a = fValueMin;
-			fValueMin += fValueInc;
+			m_Trans.pColorData[iIndex].a = _fValueMin;
+			_fValueMin += fValueInc;
 		}
 	}
 

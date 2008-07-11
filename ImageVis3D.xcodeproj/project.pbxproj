@@ -16,13 +16,13 @@
 		3B5B8771F86A16B476079AFD /* SysTools.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = D98C1AC87E6E066F2783D434 /* SysTools.cpp */; settings = {ATTRIBUTES = (); }; };
 		501667F26B3C1FF6767A7C12 /* QtGui.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 9B36DA7E32F0304E780E7972 /* QtGui.framework */; };
 		51D4DBF7CB8537BE86EBD055 /* AppKit.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 821416211D63F190AAAD016A /* AppKit.framework */; };
-		561EB1BD0E2693A80011218E /* ImageVis3D.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 561EB1BA0E2693A80011218E /* ImageVis3D.app */; };
-		561EB4400E26CE600011218E /* RenderWin1.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 561EB43F0E26CE600011218E /* RenderWin1.png */; };
-		561EB4490E26CEAD0011218E /* RenderWin1x3.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 561EB4440E26CEAD0011218E /* RenderWin1x3.png */; };
-		561EB44A0E26CEAD0011218E /* RenderWin2x2.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 561EB4450E26CEAD0011218E /* RenderWin2x2.png */; };
-		561EB44B0E26CEAD0011218E /* trans2d_a.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 561EB4460E26CEAD0011218E /* trans2d_a.png */; };
-		561EB44C0E26CEAD0011218E /* trans2d_b.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 561EB4470E26CEAD0011218E /* trans2d_b.png */; };
-		561EB44D0E26CEAD0011218E /* trans2d_c.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 561EB4480E26CEAD0011218E /* trans2d_c.png */; };
+		566E46640E27B8BA007FF895 /* ImageVis3D.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 566E46610E27B8BA007FF895 /* ImageVis3D.app */; };
+		566E46A70E27BB12007FF895 /* RenderWin1.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 566E46A10E27BB12007FF895 /* RenderWin1.png */; };
+		566E46A80E27BB12007FF895 /* RenderWin1x3.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 566E46A20E27BB12007FF895 /* RenderWin1x3.png */; };
+		566E46A90E27BB12007FF895 /* RenderWin2x2.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 566E46A30E27BB12007FF895 /* RenderWin2x2.png */; };
+		566E46AA0E27BB12007FF895 /* trans2d_b.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 566E46A40E27BB12007FF895 /* trans2d_b.png */; };
+		566E46AB0E27BB12007FF895 /* trans2d_c.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 566E46A50E27BB12007FF895 /* trans2d_c.png */; };
+		566E46AC0E27BB12007FF895 /* trans2d_a.png in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 566E46A60E27BB12007FF895 /* trans2d_a.png */; };
 		6078053DD5EF512AF811C511 /* moc_BrowseData.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 9E1E82F691A084D7A3931FC2 /* moc_BrowseData.cpp */; settings = {ATTRIBUTES = (); }; };
 		7A5438E038EB8FC6F3F239AC /* PleaseWait.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 78BAC5CC6048063D7B1FF4BD /* PleaseWait.cpp */; settings = {ATTRIBUTES = (); }; };
 		8020BCB6BFE0FEE3B325E4CF /* DICOMParser.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 88B53055C26A8AFBA8166DD3 /* DICOMParser.cpp */; settings = {ATTRIBUTES = (); }; };
@@ -43,7 +43,7 @@
 			dstPath = /Users/krueger/Documents/Projects/ImageVis3D/Build/OSX/Bin;
 			dstSubfolderSpec = 0;
 			files = (
-				561EB1BD0E2693A80011218E /* ImageVis3D.app in Project Copy */,
+				566E46640E27B8BA007FF895 /* ImageVis3D.app in Project Copy */,
 			);
 			name = "Project Copy";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,13 +64,13 @@
 		4279343C8760169DB5C8DCC5 /* BrowseData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BrowseData.cpp; path = UI/BrowseData.cpp; sourceTree = "<group>"; };
 		42C4A4D153B2B116249852FE /* ImageVis3D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ImageVis3D.cpp; path = UI/ImageVis3D.cpp; sourceTree = "<group>"; };
 		4522C39C27B8653DC5FF47F4 /* ui_BrowseData.h */ = {isa = PBXFileReference; lastKnownFileType = file; name = ui_BrowseData.h; path = UI/AutoGen/ui_BrowseData.h; sourceTree = "<group>"; };
-		561EB1BA0E2693A80011218E /* ImageVis3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageVis3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		561EB43F0E26CE600011218E /* RenderWin1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RenderWin1.png; sourceTree = "<group>"; };
-		561EB4440E26CEAD0011218E /* RenderWin1x3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RenderWin1x3.png; sourceTree = "<group>"; };
-		561EB4450E26CEAD0011218E /* RenderWin2x2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RenderWin2x2.png; sourceTree = "<group>"; };
-		561EB4460E26CEAD0011218E /* trans2d_a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trans2d_a.png; sourceTree = "<group>"; };
-		561EB4470E26CEAD0011218E /* trans2d_b.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trans2d_b.png; sourceTree = "<group>"; };
-		561EB4480E26CEAD0011218E /* trans2d_c.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trans2d_c.png; sourceTree = "<group>"; };
+		566E46610E27B8BA007FF895 /* ImageVis3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageVis3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		566E46A10E27BB12007FF895 /* RenderWin1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RenderWin1.png; sourceTree = "<group>"; };
+		566E46A20E27BB12007FF895 /* RenderWin1x3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RenderWin1x3.png; sourceTree = "<group>"; };
+		566E46A30E27BB12007FF895 /* RenderWin2x2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RenderWin2x2.png; sourceTree = "<group>"; };
+		566E46A40E27BB12007FF895 /* trans2d_b.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trans2d_b.png; sourceTree = "<group>"; };
+		566E46A50E27BB12007FF895 /* trans2d_c.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trans2d_c.png; sourceTree = "<group>"; };
+		566E46A60E27BB12007FF895 /* trans2d_a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trans2d_a.png; sourceTree = "<group>"; };
 		57642517CD31AA70C457172E /* Q1DTransferFunction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Q1DTransferFunction.cpp; path = UI/Q1DTransferFunction.cpp; sourceTree = "<group>"; };
 		5B6BE7F87CDDF1AA57682FAC /* moc_Q1DTransferFunction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = moc_Q1DTransferFunction.cpp; path = UI/AutoGen/moc_Q1DTransferFunction.cpp; sourceTree = "<group>"; };
 		637A24CAC534D50BF79EFB34 /* QDataRadioButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QDataRadioButton.h; path = UI/QDataRadioButton.h; sourceTree = "<group>"; };
@@ -124,19 +124,19 @@
 		05596AB53D8D521C69802C27 /* ImageVis3D */ = {
 			isa = PBXGroup;
 			children = (
-				561EB4440E26CEAD0011218E /* RenderWin1x3.png */,
-				561EB4450E26CEAD0011218E /* RenderWin2x2.png */,
-				561EB4460E26CEAD0011218E /* trans2d_a.png */,
-				561EB4470E26CEAD0011218E /* trans2d_b.png */,
-				561EB4480E26CEAD0011218E /* trans2d_c.png */,
-				561EB43F0E26CE600011218E /* RenderWin1.png */,
+				566E46A10E27BB12007FF895 /* RenderWin1.png */,
+				566E46A20E27BB12007FF895 /* RenderWin1x3.png */,
+				566E46A30E27BB12007FF895 /* RenderWin2x2.png */,
+				566E46A40E27BB12007FF895 /* trans2d_b.png */,
+				566E46A50E27BB12007FF895 /* trans2d_c.png */,
+				566E46A60E27BB12007FF895 /* trans2d_a.png */,
 				FB61758D0F0FDA4BA867C3D5 /* Sources */,
 				46E892BBB6BB6952967E0561 /* Temporary Sources */,
 				883D7615C4D2DE3FA1218F12 /* Headers */,
 				7CABE3C80E79AD2B307756D2 /* Sources [qmake] */,
 				EEC299C65D5017EB9DD513B0 /* Sources [UIC] */,
 				ED1E82605DD74B483AF3C982 /* External Frameworks and Libraries */,
-				561EB1BB0E2693A80011218E /* Products */,
+				566E46620E27B8BA007FF895 /* Products */,
 			);
 			name = ImageVis3D;
 			sourceTree = "<group>";
@@ -190,10 +190,10 @@
 			name = IO;
 			sourceTree = "<group>";
 		};
-		561EB1BB0E2693A80011218E /* Products */ = {
+		566E46620E27B8BA007FF895 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				561EB1BA0E2693A80011218E /* ImageVis3D.app */,
+				566E46610E27B8BA007FF895 /* ImageVis3D.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -304,7 +304,7 @@
 /* Begin PBXNativeTarget section */
 		1D830425BF351FAA1C7C054A /* ImageVis3D */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 561EB1D40E2693AB0011218E /* Build configuration list for PBXNativeTarget "ImageVis3D" */;
+			buildConfigurationList = 566E46820E27B8C9007FF895 /* Build configuration list for PBXNativeTarget "ImageVis3D" */;
 			buildPhases = (
 				D7BA7D76DAB5DD13389D6332 /* Qt Qmake */,
 				A0A52A2ADF7A1E2A99738674 /* Qt Preprocessors */,
@@ -312,7 +312,6 @@
 				C29B8785722055ED95EF7B57 /* Build Sources */,
 				2A1043669E6E5A7426EA502A /* Frameworks & Libraries */,
 				3787F99312C85FF0073FD7BA /* Bundle Resources */,
-				561EB43D0E26CE420011218E /* Rez */,
 			);
 			buildRules = (
 			);
@@ -321,7 +320,7 @@
 			name = ImageVis3D;
 			productInstallPath = Build/OSX/Bin/;
 			productName = ImageVis3D;
-			productReference = 561EB1BA0E2693A80011218E /* ImageVis3D.app */;
+			productReference = 566E46610E27B8BA007FF895 /* ImageVis3D.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -333,7 +332,7 @@
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 05596AB53D8D521C69802C27 /* ImageVis3D */;
-			productRefGroup = 561EB1BB0E2693A80011218E /* Products */;
+			productRefGroup = 566E46620E27B8BA007FF895 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -347,27 +346,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				561EB4400E26CE600011218E /* RenderWin1.png in Bundle Resources */,
-				561EB4490E26CEAD0011218E /* RenderWin1x3.png in Bundle Resources */,
-				561EB44A0E26CEAD0011218E /* RenderWin2x2.png in Bundle Resources */,
-				561EB44B0E26CEAD0011218E /* trans2d_a.png in Bundle Resources */,
-				561EB44C0E26CEAD0011218E /* trans2d_b.png in Bundle Resources */,
-				561EB44D0E26CEAD0011218E /* trans2d_c.png in Bundle Resources */,
+				566E46A70E27BB12007FF895 /* RenderWin1.png in Bundle Resources */,
+				566E46A80E27BB12007FF895 /* RenderWin1x3.png in Bundle Resources */,
+				566E46A90E27BB12007FF895 /* RenderWin2x2.png in Bundle Resources */,
+				566E46AA0E27BB12007FF895 /* trans2d_b.png in Bundle Resources */,
+				566E46AB0E27BB12007FF895 /* trans2d_c.png in Bundle Resources */,
+				566E46AC0E27BB12007FF895 /* trans2d_a.png in Bundle Resources */,
 			);
 			name = "Bundle Resources";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXRezBuildPhase section */
-		561EB43D0E26CE420011218E /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		A0A52A2ADF7A1E2A99738674 /* Qt Preprocessors */ = {
@@ -419,7 +408,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		561EB1CC0E2693A80011218E /* Debug */ = {
+		566E46730E27B8BA007FF895 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
@@ -484,7 +473,7 @@
 			};
 			name = Debug;
 		};
-		561EB1CD0E2693A80011218E /* Release */ = {
+		566E46740E27B8BA007FF895 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
@@ -548,7 +537,7 @@
 			};
 			name = Release;
 		};
-		561EB1CE0E2693A80011218E /* Default */ = {
+		566E46750E27B8BA007FF895 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
@@ -639,12 +628,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		561EB1D40E2693AB0011218E /* Build configuration list for PBXNativeTarget "ImageVis3D" */ = {
+		566E46820E27B8C9007FF895 /* Build configuration list for PBXNativeTarget "ImageVis3D" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				561EB1CC0E2693A80011218E /* Debug */,
-				561EB1CD0E2693A80011218E /* Release */,
-				561EB1CE0E2693A80011218E /* Default */,
+				566E46730E27B8BA007FF895 /* Debug */,
+				566E46740E27B8BA007FF895 /* Release */,
+				566E46750E27B8BA007FF895 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
