@@ -431,16 +431,6 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 	std::vector<unsigned int> vHistrogram(4096);
 	for (size_t i = 0;i<vHistrogram.size();i++) vHistrogram[i] = (unsigned int)(i+(rand()*10) / RAND_MAX);
 	m_1DTransferFunction->SetHistogram(vHistrogram);
-
-
-	for (size_t i = 0;i<vHistrogram.size();i++) {
-		m_1DTransferFunction->m_Trans.pColorData[i].r = std::min(1.0f,(1.0f*i)/vHistrogram.size());
-		m_1DTransferFunction->m_Trans.pColorData[i].g = std::min(1.0f,(2.0f*i)/vHistrogram.size());
-		m_1DTransferFunction->m_Trans.pColorData[i].b = std::min(1.0f,(3.0f*i)/vHistrogram.size());
-		m_1DTransferFunction->m_Trans.pColorData[i].a = std::min(1.0f,(4.0f*i)/vHistrogram.size());
-	}
-
-
 	// END MOCKUP CODE
 
 	horizontalLayout_13->addWidget(m_1DTransferFunction);
