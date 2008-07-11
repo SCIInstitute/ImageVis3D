@@ -31,14 +31,14 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void Use2DTrans();
 		void UseIso();
 
-		void LoadWorkspace();
-		void SaveWorkspace();
-		void ApplyWorkspace();
+		bool LoadWorkspace();
+		bool SaveWorkspace();
+		bool ApplyWorkspace();
 
-		void LoadGeometry();
-		void SaveGeometry();
+		bool LoadGeometry();
+		bool SaveGeometry();
+
 		void OpenRecentFile();
-
 		void ClearMRUList();
 
 		void UpdateMenus();
@@ -63,11 +63,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		RenderWindow* GetActiveRenderWindow();
 
 		void SetupWorkspaceMenu();
-		void LoadWorkspace(QString strFilename, bool bSilentFail = false);
-		void SaveWorkspace(QString strFilename);
+		bool LoadWorkspace(QString strFilename, bool bSilentFail = false, bool bRetryResource = true);
+		bool SaveWorkspace(QString strFilename);
 
-		void LoadGeometry(QString strFilename, bool bSilentFail = false);
-		void SaveGeometry(QString strFilename);
+		bool LoadGeometry(QString strFilename, bool bSilentFail = false, bool bRetryResource = true);
+		bool SaveGeometry(QString strFilename);
 
 		QString strippedName(const QString &fullFileName);
 		static const unsigned int ms_iMaxRecentFiles = 5;

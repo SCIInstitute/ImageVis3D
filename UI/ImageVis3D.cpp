@@ -10,6 +10,7 @@
 
 #include <fstream>
 #include <string>
+#include <Basics/SysTools.h>
 
 using namespace std;
 
@@ -62,48 +63,57 @@ void MainWindow::Save2DTrans(){
 // Geometry
 // ******************************************
 
-void MainWindow::LoadGeometry() {
+bool MainWindow::LoadGeometry() {
 	QString fileName = QFileDialog::getOpenFileName(this, "Load Geometry", ".", "Geometry Files (*.geo)");
 	if (!fileName.isEmpty()) {
-		LoadGeometry(fileName);
-	}
+		return LoadGeometry(fileName);
+	} else return false;
 }
 
-void MainWindow::SaveGeometry() {
+bool MainWindow::SaveGeometry() {
 	QString fileName = QFileDialog::getSaveFileName(this, "Save Current Geometry", ".", "Geometry Files (*.geo)");
 	if (!fileName.isEmpty()) {
-		SaveGeometry(fileName);
-	}
+		return SaveGeometry(fileName);
+	} return false;
 }
 
-void MainWindow::LoadGeometry(QString strFilename, bool bSilentFail) {
-	QSettings settings( strFilename, QSettings::IniFormat ); 
+bool MainWindow::LoadGeometry(QString strFilename, bool bSilentFail, bool bRetryResource) {
+	QSettings settings( strFilename, QSettings::IniFormat );
 
 	settings.beginGroup("Geometry");
 	bool bOK = restoreGeometry( settings.value("MainWinGeometry").toByteArray() ); 
 	settings.endGroup();
 
+	if (!bOK && bRetryResource) {
+		string stdString = strFilename.toAscii();
+		if (LoadGeometry(SysTools::GetFromResourceOnMac(stdString).c_str(), true, false)) {
+			return true;
+		}
+	}
+
 	if (!bSilentFail && !bOK) {
 		QString msg = tr("Error reading geometry file %1").arg(strFilename);
 		QMessageBox::warning(this, tr("Error"), msg);
-		return;
+		return false;
 	}
 
-	m_strCurrentWorkspaceFilename = strFilename;
+	return bOK;
 }
 
-void MainWindow::SaveGeometry(QString strFilename) {
+bool MainWindow::SaveGeometry(QString strFilename) {
 	QSettings settings( strFilename, QSettings::IniFormat ); 
 
 	if (!settings.isWritable()) {
 		QString msg = tr("Error saving geometry file %1").arg(strFilename);
 		QMessageBox::warning(this, tr("Error"), msg);
-		return;
+		return false;
 	}
 
 	settings.beginGroup("Geometry");
 	settings.setValue("MainWinGeometry", this->saveGeometry() ); 
-	settings.endGroup(); 	
+	settings.endGroup();
+
+	return true;
 }
 
 
@@ -126,55 +136,69 @@ void MainWindow::SetupWorkspaceMenu() {
 	menu_Workspace->addAction(dockWidget_IsoSurface->toggleViewAction());
 }
 
-void MainWindow::LoadWorkspace() {
+bool MainWindow::LoadWorkspace() {
 	QString fileName = QFileDialog::getOpenFileName(this, "Load Workspace", ".", "Workspace Files (*.wsp)");
 	if (!fileName.isEmpty()) {
-		LoadWorkspace(fileName);
-	}
+		return LoadWorkspace(fileName);
+	} else return false;
 }
 
-void MainWindow::SaveWorkspace() {
+bool MainWindow::SaveWorkspace() {
 	QString fileName = QFileDialog::getSaveFileName(this, "Save Current Workspace", ".", "Workspace Files (*.wsp)");
 	if (!fileName.isEmpty()) {
-		SaveWorkspace(fileName);
-	}
+		return SaveWorkspace(fileName);
+	} else return false;
 }
 
-void MainWindow::LoadWorkspace(QString strFilename, bool bSilentFail) {
+bool MainWindow::LoadWorkspace(QString strFilename, bool bSilentFail, bool bRetryResource) {
 	QSettings settings( strFilename, QSettings::IniFormat ); 
 
 	settings.beginGroup("Geometry");
 	bool bOK = restoreState( settings.value("DockGeometry").toByteArray() ); 
 	settings.endGroup();
 
+	if (!bOK) {
+		string stdString = strFilename.toAscii();
+		if (LoadWorkspace(SysTools::GetFromResourceOnMac(stdString).c_str(), true, false)) {
+			m_strCurrentWorkspaceFilename = SysTools::GetFromResourceOnMac(stdString).c_str();
+			return true;
+		}
+	}
+
+
 	if (!bSilentFail && !bOK) {
 		QString msg = tr("Error reading workspace file %1").arg(strFilename);
 		QMessageBox::warning(this, tr("Error"), msg);
-		return;
+		return false;
 	}
 
 	m_strCurrentWorkspaceFilename = strFilename;
+
+	return bOK;
 }
 
-void MainWindow::SaveWorkspace(QString strFilename) {
+bool MainWindow::SaveWorkspace(QString strFilename) {
 	QSettings settings( strFilename, QSettings::IniFormat ); 
 
 	if (!settings.isWritable()) {
 		QString msg = tr("Error saving workspace file %1").arg(strFilename);
 		QMessageBox::warning(this, tr("Error"), msg);
-		return;
+		return false;
 	}
 
 	settings.beginGroup("Geometry");
 	settings.setValue("DockGeometry", this->saveState() ); 
 	settings.endGroup(); 	
 
+	return true;
 }
 
 
-void MainWindow::ApplyWorkspace() {
+bool MainWindow::ApplyWorkspace() {
 	if (!m_strCurrentWorkspaceFilename.isEmpty())
-		LoadWorkspace(m_strCurrentWorkspaceFilename);
+		return LoadWorkspace(m_strCurrentWorkspaceFilename);
+	else 
+		return false;
 }
 
 
