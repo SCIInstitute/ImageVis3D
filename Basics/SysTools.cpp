@@ -66,35 +66,34 @@ using namespace std;
 
 namespace SysTools {
 
-	string GetFromResourceOnMac(const string& fileName) {
-		string filename = RemoveExt(fileName);
-		string ext = GetExt(fileName);
+	string GetFromResourceOnMac(const string& strFileName) {
+
+		CFStringRef cfFilename = CFStringCreateWithCString(kCFAllocatorDefault, RemoveExt(strFileName).c_str(), CFStringGetSystemEncoding()); 	
+		CFStringRef cfExt = CFStringCreateWithCString(kCFAllocatorDefault, GetExt(strFileName).c_str(), CFStringGetSystemEncoding()); 	
 
 		#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
-			CFURLRef    imageURL = CFBundleCopyResourceURL( CFBundleGetMainBundle(), CFSTR(filename.c_str()), CFSTR(ext.c_str()), NULL );
+			CFURLRef    imageURL = CFBundleCopyResourceURL( CFBundleGetMainBundle(), cfFilename, cfExt, NULL );
 			CFStringRef macPath = CFURLCopyFileSystemPath(imageURL, kCFURLPOSIXPathStyle);
 			const char *pathPtr = CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding());
 			string result = pathPtr;
 			return result;
 		#else
-			return fileName;
+			return strFileName;
 		#endif
 
 	}
 
-	wstring GetFromResourceOnMac(const wstring& fileName) {
-		wstring filename = RemoveExt(fileName);
-		wstring ext = GetExt(fileName);
-
+	wstring GetFromResourceOnMac(const wstring& wstrFileName) {
 		#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
-			CFURLRef    imageURL = CFBundleCopyResourceURL( CFBundleGetMainBundle(), CFSTR(filename.c_str()), CFSTR(ext.c_str()), NULL );
-			CFStringRef macPath = CFURLCopyFileSystemPath(imageURL, kCFURLPOSIXPathStyle);
-			const char *pathPtr = CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding());
-			wstring result = pathPtr;
-			return result;
+			// for now just call the string method by converting the unicode string down to an 8bit string
+			string strFileName(wstrFileName.begin(), wstrFileName.end());
+			string strResult = GetFromResourceOnMac(strFileName);
+			wstring wstrResult(strResult.begin(), strResult.end());
+			return wstrResult; 
 		#else
-			return fileName;
+			return wstrFileName;
 		#endif
+
 	}
 
 	void ReplaceAll(string& input, const string& search, const string& replace) {
