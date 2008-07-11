@@ -164,16 +164,17 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 
 		// select the color
 		switch (j) {
-			case 0  : penCurve.setColor(m_colorRedLine); break;
+			case 0  : penCurve.setColor(m_colorRedLine);   break;
 			case 1  : penCurve.setColor(m_colorGreenLine); break;
-			case 2  : penCurve.setColor(m_colorBlueLine); break;
+			case 2  : penCurve.setColor(m_colorBlueLine);  break;
 			default : penCurve.setColor(m_colorAlphaLine); break;
 		}
 
 		// define the polyline
-		for (size_t i = 0;i<pointList.size();i++) 
+		for (size_t i = 0;i<pointList.size();i++) {
 			pointList[i]= QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(pointList.size()-1),
 						          m_iTopBorder+iGridHeight-m_Trans.pColorData[i][j]*iGridHeight);
+		}
 
 		// draw the polyline
 		painter.setPen(penCurve);
