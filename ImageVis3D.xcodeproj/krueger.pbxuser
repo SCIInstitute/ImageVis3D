@@ -22,6 +22,31 @@
 			sepNavWindowFrame = "{{61, 153}, {1739, 978}}";
 		};
 	};
+	42C4A4D153B2B116249852FE /* ImageVis3D.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1859, 6664}}";
+			sepNavSelRange = "{5140, 0}";
+			sepNavVisRange = "{4466, 1555}";
+		};
+	};
+	561A36060E27E1AA0014EC08 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: conversion from ‘QByteArray’ to non-scalar type ‘std::basic_string<char, std::char_traits<char>, std::allocator<char> >’ requested";
+		fRef = 42C4A4D153B2B116249852FE /* ImageVis3D.cpp */;
+		rLen = 1;
+		rLoc = 87;
+		rType = 1;
+	};
+	561A36070E27E1AA0014EC08 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 42C4A4D153B2B116249852FE /* ImageVis3D.cpp */;
+		name = "ImageVis3D.cpp: 162";
+		rLen = 0;
+		rLoc = 5140;
+		rType = 0;
+		vrLen = 1555;
+		vrLoc = 4466;
+	};
 	566E46630E27B8BA007FF895 /* ImageVis3D */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
@@ -88,7 +113,7 @@
 	};
 	91B15E841AA80083484172DE /* Project object */ = {
 		activeArchitecture = i386;
-		activeBuildConfigurationName = Debug;
+		activeBuildConfigurationName = Release;
 		activeExecutable = 566E46630E27B8BA007FF895 /* ImageVis3D */;
 		activeTarget = 1D830425BF351FAA1C7C054A /* ImageVis3D */;
 		addToTargets = (
@@ -208,8 +233,12 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 237484218;
-			PBXWorkspaceStateSaveDate = 237484218;
+			PBXPerProjectTemplateStateSaveDate = 237494536;
+			PBXWorkspaceStateSaveDate = 237494536;
+		};
+		perUserProjectItems = {
+			561A36060E27E1AA0014EC08 /* PBXTextBookmark */ = 561A36060E27E1AA0014EC08 /* PBXTextBookmark */;
+			561A36070E27E1AA0014EC08 /* PBXTextBookmark */ = 561A36070E27E1AA0014EC08 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 56FBC5720E26914A0095419D /* Source Control */;
 		userBuildSettings = {

@@ -85,7 +85,7 @@ bool MainWindow::LoadGeometry(QString strFilename, bool bSilentFail, bool bRetry
 	settings.endGroup();
 
 	if (!bOK && bRetryResource) {
-		string stdString = strFilename.toAscii();
+		string stdString(strFilename.toAscii());
 		if (LoadGeometry(SysTools::GetFromResourceOnMac(stdString).c_str(), true, false)) {
 			return true;
 		}
@@ -157,8 +157,9 @@ bool MainWindow::LoadWorkspace(QString strFilename, bool bSilentFail, bool bRetr
 	bool bOK = restoreState( settings.value("DockGeometry").toByteArray() ); 
 	settings.endGroup();
 
-	if (!bOK) {
-		string stdString = strFilename.toAscii();
+	if (!bOK && bRetryResource) {
+		string stdString(strFilename.toAscii());
+
 		if (LoadWorkspace(SysTools::GetFromResourceOnMac(stdString).c_str(), true, false)) {
 			m_strCurrentWorkspaceFilename = SysTools::GetFromResourceOnMac(stdString).c_str();
 			return true;
