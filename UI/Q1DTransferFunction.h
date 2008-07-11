@@ -4,7 +4,7 @@
 #define Q1DTRANSFERFUNCTION
 
 #include <QtGui/QWidget>
-#include <IO/Transferfunction1D.h>
+#include <IO/TransferFunction1D.h>
 
 #define Q1DT_PAINT_NONE  0
 #define Q1DT_PAINT_RED   1
@@ -70,7 +70,7 @@ class Q1DTransferFunction : public QWidget
 		unsigned int m_iMarkerLength;
 		unsigned int m_iBigMarkerLength;
 
-		Transferfunction1D m_Trans;
+		TransferFunction1D m_Trans;
 
 		// mouse motion handling
 		int m_iLastIndex;

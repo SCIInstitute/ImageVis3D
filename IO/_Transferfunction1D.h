@@ -27,7 +27,7 @@
 */
 
 /**
-	\file		Transferfunction1D.h
+	\file		TransferFunction1D.h
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
@@ -52,11 +52,11 @@ public:
 	T *operator *(void) {return &r;}
 };
 
-class Transferfunction1D
+class TransferFunction1D
 {
 public:
-	Transferfunction1D(unsigned int iSize = 0);
-	~Transferfunction1D(void);
+	TransferFunction1D(unsigned int iSize = 0);
+	~TransferFunction1D(void);
 	
 	void Resize(unsigned int iSize);
 

@@ -309,7 +309,7 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 }
 
 bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
-	// hand the load call over to the Transferfunction1D class
+	// hand the load call over to the TransferFunction1D class
 	if( m_Trans.Load(strFilename.toStdString()) ) {
 		update();
 		return true;
@@ -317,6 +317,6 @@ bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
 }
 
 bool Q1DTransferFunction::SaveToFile(const QString& strFilename) {
-	// hand the save call over to the Transferfunction1D class
+	// hand the save call over to the TransferFunction1D class
 	return m_Trans.Save(strFilename.toStdString());
 }
