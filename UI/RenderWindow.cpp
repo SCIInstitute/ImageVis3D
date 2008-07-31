@@ -13,7 +13,7 @@ RenderWindow::RenderWindow(QString dataset, QListWidget *listWidget_Lock, unsign
 	setWindowTitle(m_strID);
 	m_listWidget_Lock->addItem(m_strID);
 
-	LoadImages();
+	InitGL();
 
 	ToggleRenderWindowView1x3();
 }
@@ -22,22 +22,31 @@ RenderWindow::~RenderWindow() {
 
 }
 
-void RenderWindow::LoadImages() {
+void RenderWindow::InitGL() {
+
+	m_glWidget = new QGLVolumeRenderWidget;
+	horizontalLayout->addWidget(m_glWidget);
+
+//	QHBoxLayout *mainLayout = new QHBoxLayout;
+//	setLayout(mainLayout);
+	/*
 	m_Pixmap1x3.load(SysTools::GetFromResourceOnMac("RenderWin1x3.png").c_str());
 	m_Pixmap2x2.load(SysTools::GetFromResourceOnMac("RenderWin2x2.png").c_str());
 	m_PixmapSingle.load(SysTools::GetFromResourceOnMac("RenderWin1.png").c_str());
+
+	*/
 }
 
 void RenderWindow::ToggleRenderWindowView1x3() {
-	label->setPixmap(m_Pixmap1x3);
+	//label->setPixmap(m_Pixmap1x3);
 }
 
 void RenderWindow::ToggleRenderWindowView2x2() {
-	label->setPixmap(m_Pixmap2x2);
+	//label->setPixmap(m_Pixmap2x2);
 }
 
 void RenderWindow::ToggleRenderWindowViewSingle() {
-	label->setPixmap(m_PixmapSingle);
+	//label->setPixmap(m_PixmapSingle);
 }
 
 void RenderWindow::closeEvent(QCloseEvent *event) {

@@ -4,6 +4,7 @@
 #define RENDERWINDOW_H
 
 #include "AutoGen/ui_RenderWindow.h"
+#include "QGLVolumeRenderWidget.h"
 #include <QtGui/QListWidget>
 
 
@@ -31,7 +32,9 @@ class RenderWindow : public QDialog, protected Ui_RenderWindow
 		QString m_strID;
 		QListWidget *m_listWidget_Lock;
 
-		void LoadImages();
+		void InitGL();
+
+		QGLVolumeRenderWidget *m_glWidget;
 
 };
 

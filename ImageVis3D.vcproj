@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib QtOpenGLd4.lib qtmaind.lib QtGuid4.lib QtCored4.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib QtOpenGLd4.lib qtmaind.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(QTDIR)lib"
 				GenerateDebugInformation="true"
@@ -148,7 +148,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib QtOpenGLd4.lib qtmaind.lib QtGuid4.lib QtCored4.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib QtOpenGLd4.lib qtmaind.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(QTDIR)lib"
 				GenerateDebugInformation="true"
@@ -226,7 +226,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(QTDIR)lib"
 				GenerateDebugInformation="true"
@@ -307,7 +307,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(QTDIR)lib"
 				GenerateDebugInformation="true"
@@ -432,6 +432,10 @@
 				</File>
 				<File
 					RelativePath=".\UI\AutoGen\moc_Q1DTransferFunction.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\AutoGen\moc_QGLVolumeRenderWidget.cpp"
 					>
 				</File>
 				<File
@@ -678,6 +682,54 @@
 				<File
 					RelativePath=".\UI\QDataRadioButton.h"
 					>
+				</File>
+				<File
+					RelativePath=".\UI\QGLVolumeRenderWidget.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\QGLVolumeRenderWidget.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\UI\RenderWindow.cpp"
