@@ -193,6 +193,30 @@ namespace SysTools {
 		return ext;
 	}
 
+	wstring ToLowerCase(const wstring& str) {
+		wstring result(str);
+		transform(str.begin(), str.end(), result.begin(), myTolower);
+		return result;
+	}
+
+	string ToLowerCase(const string& str) {
+		string result(str);
+		transform(str.begin(), str.end(), result.begin(), myTolower);
+		return result;
+	}
+
+	wstring ToUpperCase(const wstring& str) {
+		wstring result(str);
+		transform(str.begin(), str.end(), result.begin(), myToupper);
+		return result;
+	}
+
+	string ToUpperCase(const string& str) {
+		string result(str);
+		transform(str.begin(), str.end(), result.begin(), myToupper);
+		return result;
+	}
+
 	string GetPath(const string& fileName) {
 		string path = fileName.substr(0,MAX(int(fileName.find_last_of("\\")),int(fileName.find_last_of("/")))+1);
 		return path;

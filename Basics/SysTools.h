@@ -32,7 +32,7 @@
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
-	\version	1.32
+	\version	1.4
 	\date		July 2008
 */
 
@@ -62,6 +62,12 @@
 #endif
 
 namespace SysTools {
+
+	std::wstring ToLowerCase(const std::wstring& str);
+	std::string ToLowerCase(const std::string& str);
+	std::wstring ToUpperCase(const std::wstring& str);
+	std::string ToUpperCase(const std::string& str);
+
 	std::string GetFromResourceOnMac(const std::string& fileName);
 	std::wstring GetFromResourceOnMac(const std::wstring& fileName);
 
