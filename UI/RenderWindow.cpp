@@ -19,15 +19,8 @@ RenderWindow::RenderWindow(QString dataset, QListWidget *listWidget_Lock, unsign
 
 	ToggleRenderWindowView1x3();
 
-	m_IDTex[0] = 0;
-	m_IDTex[1] = 0;
-	m_IDTex[2] = 0;
 	xRot = 0;
 }
-
-
-
-
 
 RenderWindow::~RenderWindow()
 {
