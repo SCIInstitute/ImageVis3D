@@ -39,12 +39,12 @@ class RenderWindow : public QGLWidget
 		int xRot;
 		QPoint lastPos;
 		
-		GLuint m_IDTex[3];
-		int m_iCurrentView;
-
 		QString m_strDataset;
 		QString m_strID;
 		QListWidget *m_listWidget_Lock;
+		GLuint m_IDTex[3];
+		int m_iCurrentView;
+
 };
 
 #endif // RENDERWINDOW_H

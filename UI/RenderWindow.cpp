@@ -105,7 +105,7 @@ void RenderWindow::mousePressEvent(QMouseEvent *event)
 
 void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 {
-	int dx = event->x() - lastPos.x();
+	// int dx = event->x() - lastPos.x();
 	int dy = event->y() - lastPos.y();
 
 	if (event->buttons() & Qt::LeftButton) {
