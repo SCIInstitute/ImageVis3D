@@ -27,7 +27,7 @@
 */
 
 /**
-	\file		TransferFunction1D.cpp
+	\file		TransferFunction.cpp
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
@@ -35,26 +35,25 @@
 	\date		July 2008
 */
 
-#include "TransferFunction1D.h"
+#include "TransferFunction.h"
 #include <fstream>
 
 using namespace std;
 
-TransferFunction1D::TransferFunction1D(unsigned int iSize)
+TransferFunction::TransferFunction(unsigned int iSize)
 {
 	Resize(iSize);
 }
 
-TransferFunction1D::~TransferFunction1D(void)
+TransferFunction::~TransferFunction(void)
 {
 }
 
-
-void TransferFunction1D::Resize(unsigned int iSize) {
+void TransferFunction::Resize(unsigned int iSize) {
 	pColorData.resize(iSize);
 }
 
-bool TransferFunction1D::Load(const std::string& filename) {
+bool TransferFunction::Load(const std::string& filename) {
 	ifstream file(filename.c_str());
 
 	if (!file.is_open()) return false;
@@ -72,7 +71,7 @@ bool TransferFunction1D::Load(const std::string& filename) {
 	return true;
 }
 
-bool TransferFunction1D::Save(const std::string& filename) {
+bool TransferFunction::Save(const std::string& filename) {
 	ofstream file(filename.c_str());
 
 	if (!file.is_open()) return false;
@@ -89,7 +88,7 @@ bool TransferFunction1D::Save(const std::string& filename) {
 	return true;
 }
 
-void TransferFunction1D::GetByteArray(unsigned char** pcData, unsigned char cUsedRange) {
+void TransferFunction::GetByteArray(unsigned char** pcData, unsigned char cUsedRange) {
 	if (*pcData == NULL) *pcData = new unsigned char[pColorData.size()];
 
 	unsigned char *pcDataIterator = *pcData;
@@ -101,7 +100,7 @@ void TransferFunction1D::GetByteArray(unsigned char** pcData, unsigned char cUse
 	}
 }
 
-void TransferFunction1D::GetShortArray(unsigned short** psData, unsigned short sUsedRange) {
+void TransferFunction::GetShortArray(unsigned short** psData, unsigned short sUsedRange) {
 	if (*psData == NULL) *psData = new unsigned short[pColorData.size()];
 
 	unsigned short *psDataIterator = *psData;
@@ -113,7 +112,7 @@ void TransferFunction1D::GetShortArray(unsigned short** psData, unsigned short s
 	}
 }
 
-void TransferFunction1D::GetFloatArray(float** pfData) {
+void TransferFunction::GetFloatArray(float** pfData) {
 	if (*pfData == NULL) *pfData = new float[pColorData.size()];
 	memcpy(*pfData, &pfData[0], sizeof(float)*pColorData.size());
 }
