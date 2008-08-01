@@ -16,6 +16,7 @@ UI_DIR            = UI/AutoGen
 MOC_DIR           = UI/AutoGen
 DEPENDPATH       += .
 INCLUDEPATH      += .
+QT               += opengl
 
 # Input
 HEADERS += UI/BrowseData.h \
