@@ -25,7 +25,7 @@ HEADERS += UI/BrowseData.h \
            UI/QDataRadioButton.h \
            UI/RenderWindow.h \
            IO/Transferfunction1D.h
-FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui UI/UI/RenderWindow.ui
+FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui
 SOURCES += UI/BrowseData.cpp \
            UI/ImageVis3D.cpp \
            main.cpp \
@@ -34,5 +34,5 @@ SOURCES += UI/BrowseData.cpp \
            UI/QDataRadioButton.cpp \
            UI/RenderWindow.cpp \
            IO/Transferfunction1D.cpp \
-	       IO/DICOM/DICOMParser.cpp \
-		   Basics/SysTools.cpp
+           IO/DICOM/DICOMParser.cpp \
+           Basics/SysTools.cpp
