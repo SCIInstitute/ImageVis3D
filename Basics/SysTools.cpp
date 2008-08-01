@@ -74,6 +74,7 @@ namespace SysTools {
 			CFStringRef cfExt = CFStringCreateWithCString(kCFAllocatorDefault, GetExt(strFileName).c_str(), CFStringGetSystemEncoding()); 	
 
 			CFURLRef    imageURL = CFBundleCopyResourceURL( CFBundleGetMainBundle(), cfFilename, cfExt, NULL );
+			if (imageURL == NULL) return "";
 			CFStringRef macPath = CFURLCopyFileSystemPath(imageURL, kCFURLPOSIXPathStyle);
 			const char *pathPtr = CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding());
 			string result = pathPtr;
