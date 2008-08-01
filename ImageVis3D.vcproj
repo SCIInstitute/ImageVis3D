@@ -435,10 +435,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\UI\AutoGen\moc_QGLVolumeRenderWidget.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\UI\AutoGen\moc_RenderWindow.cpp"
 					>
 				</File>
@@ -452,10 +448,6 @@
 				</File>
 				<File
 					RelativePath=".\UI\AutoGen\ui_PleaseWait.h"
-					>
-				</File>
-				<File
-					RelativePath=".\UI\AutoGen\ui_RenderWindow.h"
 					>
 				</File>
 			</Filter>
@@ -473,10 +465,6 @@
 				</File>
 				<File
 					RelativePath=".\UI\UI\PleaseWait.ui"
-					>
-				</File>
-				<File
-					RelativePath=".\UI\UI\RenderWindow.ui"
 					>
 				</File>
 			</Filter>
@@ -684,54 +672,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\UI\QGLVolumeRenderWidget.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\UI\QGLVolumeRenderWidget.h"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath=".\UI\RenderWindow.cpp"
 					>
 				</File>
@@ -820,6 +760,10 @@
 				RelativePath=".\Basics\Vectors.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Controller"
+			>
 		</Filter>
 		<File
 			RelativePath=".\main.cpp"

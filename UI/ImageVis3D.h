@@ -58,6 +58,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 	private :
 		QString					m_strCurrentWorkspaceFilename;
 		Q1DTransferFunction*	m_1DTransferFunction;
+		QGLWidget*				m_glShareWidget;
 
 		RenderWindow* CreateNewRenderWindow(QString dataset);
 		RenderWindow* GetActiveRenderWindow();

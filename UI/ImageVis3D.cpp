@@ -14,6 +14,7 @@
 
 using namespace std;
 
+
 MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QMainWindow(parent, flags), m_strCurrentWorkspaceFilename("")
 {
 	setupUi(this);
@@ -252,7 +253,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
  {
 	 static unsigned int iCounter = 0;
 	 
-     RenderWindow *renderWin = new RenderWindow(dataset, listWidget_Lock, iCounter++);
+	 RenderWindow *renderWin = new RenderWindow(dataset, listWidget_Lock, iCounter++, m_glShareWidget, this);
      mdiArea->addSubWindow(renderWin);
 
      return renderWin;
@@ -466,6 +467,10 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 		connect(m_recentFileActs[i], SIGNAL(triggered()),this, SLOT(OpenRecentFile()));
 		menuLast_Used_Projects->addAction(m_recentFileActs[i]);
 	}
+
+	// this widget is used to share the contexts amongst the  render windows
+	m_glShareWidget = new QGLWidget(this);
+	this->horizontalLayout->addWidget(m_glShareWidget);
 }
 
 void MainWindow::OpenRecentFile()
