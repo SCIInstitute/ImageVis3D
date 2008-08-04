@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+  
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -27,7 +27,7 @@
 */
 
 /**
-	\file		TransferFunction.cpp
+	\file		TransferFunction1D.cpp
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
@@ -35,25 +35,26 @@
 	\date		July 2008
 */
 
-#include "TransferFunction.h"
+#include "TransferFunction1D.h"
 #include <fstream>
 
 using namespace std;
 
-TransferFunction::TransferFunction(unsigned int iSize)
+TransferFunction1D::TransferFunction1D(unsigned int iSize)
 {
 	Resize(iSize);
 }
 
-TransferFunction::~TransferFunction(void)
+TransferFunction1D::~TransferFunction1D(void)
 {
 }
 
-void TransferFunction::Resize(unsigned int iSize) {
+
+void TransferFunction1D::Resize(unsigned int iSize) {
 	pColorData.resize(iSize);
 }
 
-bool TransferFunction::Load(const std::string& filename) {
+bool TransferFunction1D::Load(const std::string& filename) {
 	ifstream file(filename.c_str());
 
 	if (!file.is_open()) return false;
@@ -71,7 +72,7 @@ bool TransferFunction::Load(const std::string& filename) {
 	return true;
 }
 
-bool TransferFunction::Save(const std::string& filename) {
+bool TransferFunction1D::Save(const std::string& filename) {
 	ofstream file(filename.c_str());
 
 	if (!file.is_open()) return false;
@@ -88,7 +89,7 @@ bool TransferFunction::Save(const std::string& filename) {
 	return true;
 }
 
-void TransferFunction::GetByteArray(unsigned char** pcData, unsigned char cUsedRange) {
+void TransferFunction1D::GetByteArray(unsigned char** pcData, unsigned char cUsedRange) {
 	if (*pcData == NULL) *pcData = new unsigned char[pColorData.size()];
 
 	unsigned char *pcDataIterator = *pcData;
@@ -100,7 +101,7 @@ void TransferFunction::GetByteArray(unsigned char** pcData, unsigned char cUsedR
 	}
 }
 
-void TransferFunction::GetShortArray(unsigned short** psData, unsigned short sUsedRange) {
+void TransferFunction1D::GetShortArray(unsigned short** psData, unsigned short sUsedRange) {
 	if (*psData == NULL) *psData = new unsigned short[pColorData.size()];
 
 	unsigned short *psDataIterator = *psData;
@@ -112,7 +113,7 @@ void TransferFunction::GetShortArray(unsigned short** psData, unsigned short sUs
 	}
 }
 
-void TransferFunction::GetFloatArray(float** pfData) {
+void TransferFunction1D::GetFloatArray(float** pfData) {
 	if (*pfData == NULL) *pfData = new float[pColorData.size()];
 	memcpy(*pfData, &pfData[0], sizeof(float)*pColorData.size());
 }

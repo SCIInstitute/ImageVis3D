@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+  
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -27,7 +27,7 @@
 */
 
 /**
-	\file		TransferFunction.h
+	\file		TransferFunction1D.h
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
@@ -37,8 +37,8 @@
 
 #pragma once
 
-#ifndef TRANSFERFUNCTION
-#define TRANSFERFUNCTION
+#ifndef TRANSFERFUNCTION1D
+#define TRANSFERFUNCTION1D
 
 #include <string>
 #include <vector>
@@ -52,13 +52,12 @@ public:
 	T *operator *(void) {return &r;}
 };
 
-class TransferFunction
+class TransferFunction1D
 {
 public:
-	TransferFunction(unsigned int iSize = 0);
-	~TransferFunction(void);
+	TransferFunction1D(unsigned int iSize = 0);
+	~TransferFunction1D(void);
 	
-	void Resize(unsigned int iSizeX, unsigned int iSizeY) {Resize(iSizeX*iSizeY);}
 	void Resize(unsigned int iSize);
 
 	bool Load(const std::string& filename);
@@ -67,8 +66,8 @@ public:
 	void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
 	void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
 	void GetFloatArray(float** pfData);
-private:
+
 	std::vector< TFColor<float> > pColorData;
 };
 
-#endif // TRANSFERFUNCTION
+#endif // TRANSFERFUNCTION1D
