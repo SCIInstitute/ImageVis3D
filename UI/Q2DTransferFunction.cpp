@@ -55,7 +55,7 @@ void Q2DTransferFunction::SetHistogram(const Histogram2D& vHistrogram) {
 
 	// rescale the histogram to the [0..1] range
 	// first find min and max ...
-	unsigned int iMax = vHistrogram.GetLinear(0), 
+	unsigned int iMax = vHistrogram.GetLinear(0);
 	unsigned int iMin = iMax;
 	for (size_t i = 0;i<m_vHistrogram.GetSize().area();i++) {
 		if (vHistrogram.GetLinear(i) > iMax) iMax = vHistrogram.GetLinear(i);
