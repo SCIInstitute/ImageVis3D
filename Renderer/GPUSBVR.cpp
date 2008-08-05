@@ -5,7 +5,8 @@
 #include "../Controller/MasterController.h"
 
 GPUSBVR::GPUSBVR(MasterController* pMasterController) :
-	m_xRot(0)
+	m_xRot(0),
+	m_iCurrentView(0)
 {
 	m_pMasterController = pMasterController;
 }
@@ -24,9 +25,21 @@ void GPUSBVR::Initialize() {
 	glEnable(GL_TEXTURE_2D);
 	glDisable(GL_CULL_FACE);
 	
-	m_IDTex[0] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1x3.png").c_str());
-	m_IDTex[1] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin2x2.png").c_str());
-	m_IDTex[2] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1.png").c_str());
+	m_IDTex[0] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1x3.bmp").c_str());
+	if (m_IDTex[0] == -1) {
+		m_pMasterController->DebugOut()->printf("GPUSBVR::Initialize: First Image load failed");		
+		m_IDTex[0] = 0;
+	}
+	m_IDTex[1] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin2x2.bmp").c_str());
+	if (m_IDTex[1] == -1) {
+		m_pMasterController->DebugOut()->printf("GPUSBVR::Initialize: Second Image load failed");		
+		m_IDTex[1] = 0;
+	}
+	m_IDTex[2] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1.bmp").c_str());
+	if (m_IDTex[2] == -1) {
+		m_pMasterController->DebugOut()->printf("GPUSBVR::Initialize: Third Image load failed");		
+		m_IDTex[2] = 0;
+	}
 }
 
 void GPUSBVR::Paint() {

@@ -44,8 +44,11 @@
 #include <vector>
 #include "../IO/TransferFunction1D.h"
 #include "../IO/TransferFunction2D.h"
-#include "../Renderer/GPUMemMan.h"
 
+#include "../DebugOut/AbstrDebugOut.h"
+#include "../DebugOut/ConsoleOut.h"
+
+#include "../Renderer/GPUMemMan.h"
 #include "../Renderer/AbstrRenderer.h"
 #include "../Renderer/GPUSBVR.h"
 
@@ -59,10 +62,17 @@ class MasterController {
 		virtual ~MasterController();
 
 		AbstrRenderer* RequestNewVolumerenderer(VolumeRenderer eRendererType);
+		
+		void SetDebugOut(AbstrDebugOut* debugOut);
 
-
+		AbstrDebugOut* DebugOut() {return m_pDebugOut;}
+		GPUMemMan*	   MemMan() {return m_pGPUMemMan;}
+		
 	private:
-		GPUMemMan m_GPUMemMan;
+		GPUMemMan*     m_pGPUMemMan;
+		AbstrDebugOut* m_pDebugOut;
+		bool		   m_bStartDebugOut;	
+
 		std::vector<AbstrRenderer*> m_vVolumeRenderer;
 		std::vector<TransferFunction1D*> m_v1DTrans;
 		std::vector<TransferFunction2D*> m_v2DTrans;

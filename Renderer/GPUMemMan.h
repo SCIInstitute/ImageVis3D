@@ -46,17 +46,48 @@
 	#include <GL/GL.h>
 #endif
 
+
 // TODO: realize include GL for other platforms
 
+#include <deque>
 #include <string>
+#include "../IO/VolumeDataset.h"
+
+typedef std::pair<unsigned int, VolumeDataset*> VolDataListElem;
+typedef std::deque<VolDataListElem> VolDataList;
+typedef VolDataList::iterator VolDataListIter;
+
+struct SimpleTextureListElem {
+	SimpleTextureListElem(unsigned int _iAccessCounter, GLuint _iGLID, std::string _strFilename) :
+		iAccessCounter(_iAccessCounter), 
+		iGLID(_iGLID), 
+		strFilename(_strFilename)
+	{}
+
+	unsigned int	iAccessCounter;
+	GLuint			iGLID;
+	std::string		strFilename;
+};
+typedef std::deque<SimpleTextureListElem> SimpleTextureList;
+typedef SimpleTextureList::iterator SimpleTextureListIter;
+
+class MasterController;
 
 class GPUMemMan {
 	public:
-		GPUMemMan();
+		GPUMemMan(MasterController* masterController);
 		virtual ~GPUMemMan();
 
-		GLuint Load2DTextureFromFile(std::string filename);
+		VolumeDataset* LoadDataset(const std::string& strFilename);
+		void FreeDataset(VolumeDataset* pVolumeDataset);
+
+		GLuint Load2DTextureFromFile(const std::string& strFilename);
+		void FreeTexture(GLuint iTexture);
+
 	private:
+		VolDataList			m_vpVolumeDatasets;
+		SimpleTextureList   m_vpSimpleTextures;
+		MasterController*	m_MasterController;
 };
 
 #endif // GPUMEMMAN_H

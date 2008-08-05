@@ -20,7 +20,7 @@ class Q1DTransferFunction : public QWidget
 	public:
 		Q1DTransferFunction(QWidget *parent=0);
 		virtual ~Q1DTransferFunction(void);
-		void SetHistogram(const Histogram1D& vHistrogram);
+		void SetData(const Histogram1D& vHistrogram, TransferFunction1D* Trans);
 		void SetPaintmode(unsigned int iPaintmode) {if (iPaintmode < Q1DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
 
 	public slots:
@@ -37,6 +37,7 @@ class Q1DTransferFunction : public QWidget
 	private:
 		// states
 		NormalizedHistogram1D m_vHistrogram;
+		TransferFunction1D* m_pTrans;
 		unsigned int m_iPaintmode;
 
 		// cached image of the backdrop
@@ -73,8 +74,6 @@ class Q1DTransferFunction : public QWidget
 		unsigned int m_iBigMarkerSpacingY;
 		unsigned int m_iMarkerLength;
 		unsigned int m_iBigMarkerLength;
-
-		TransferFunction1D m_Trans;
 
 		// mouse motion handling
 		int m_iLastIndex;

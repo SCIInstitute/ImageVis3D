@@ -43,10 +43,8 @@
 
 class AbstrDebugOut {
 	public:
-		AbstrDebugOut();
-		virtual ~AbstrDebugOut();
-
-		void printf(const CHAR* format, ...) = NULL;
+		virtual ~AbstrDebugOut() {}
+		virtual void printf(const char* format, ...) = 0;
 };
 
 #endif // ABSTRDEBUGOUT_H

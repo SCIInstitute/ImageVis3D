@@ -27,7 +27,7 @@
 */
 
 /**
-	\file		AbstrRenderer.h
+	\file		QTOut.h
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
@@ -38,16 +38,20 @@
 
 #pragma once
 
-#ifndef ABSTRRENDERER_H
-#define ABSTRRENDERER_H
+#ifndef QTOut_H
+#define QTOut_H
 
-#include "../IO/TransferFunction1D.h"
-#include "../IO/TransferFunction2D.h"
+#include "AbstrDebugOut.h"
+#include <QtGui/QListWidget>
 
-class AbstrRenderer {
+class QTOut : public AbstrDebugOut{
 	public:
-		AbstrRenderer();
-		virtual ~AbstrRenderer();
+		QTOut(QListWidget *listWidget);
+		virtual ~QTOut();
+
+		virtual void printf(const char* format, ...);
+	private:
+		QListWidget *m_listWidget;
 };
 
-#endif // ABSTRRENDERER_H
+#endif // QTOut_H

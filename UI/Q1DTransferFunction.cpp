@@ -4,6 +4,7 @@
 
 Q1DTransferFunction::Q1DTransferFunction(QWidget *parent) :
 	QWidget(parent),
+	m_pTrans(NULL),
 	m_iPaintmode(Q1DT_PAINT_NONE),
 	m_bBackdropCacheUptodate(false),
 	m_iCachedHeight(0),
@@ -35,12 +36,14 @@ Q1DTransferFunction::~Q1DTransferFunction(void)
 	delete m_pBackdropCache;
 }
 
-void Q1DTransferFunction::SetHistogram(const Histogram1D& vHistrogram) {
+void Q1DTransferFunction::SetData(const Histogram1D& vHistrogram, TransferFunction1D* pTrans) {
+	if (m_pTrans == NULL) return;
+
 	// store histogram
 	m_vHistrogram.Resize(vHistrogram.GetSize());
 	
-	// resize the transferfunction to match the histogram
-	m_Trans.Resize(vHistrogram.GetSize());
+	// store transfer function
+	m_pTrans = pTrans;
 
 	// force the draw routine to recompute the backdrop cache
 	m_bBackdropCacheUptodate = false;
@@ -55,7 +58,7 @@ void Q1DTransferFunction::SetHistogram(const Histogram1D& vHistrogram) {
 		if (vHistrogram.GetLinear(i) > iMax) iMax = vHistrogram.GetLinear(i);
 		if (vHistrogram.GetLinear(i) < iMin) iMin = vHistrogram.GetLinear(i);
 
-		m_Trans.pColorData[i] = FLOATVECTOR4(0,0,0,0);
+		m_pTrans->pColorData[i] = FLOATVECTOR4(0,0,0,0);
 	}
 
 	// ... than rescale
@@ -114,8 +117,7 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
 }
 
 void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
-	// nothing todo if the histogram is empty
-	if (m_vHistrogram.GetSize() == 0) return;
+	if (m_pTrans == NULL) return;
 
 	// compute some grid dimensions
 	unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
@@ -137,15 +139,14 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 }
 
 void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
-	// nothing todo if the histogram is empty
-	if (m_vHistrogram.GetSize() == 0) return;
+	if (m_pTrans == NULL) return;
 
 	// compute some grid dimensions
 	unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
 	unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
 
 	// draw the tranfer function as one larger polyline
-	std::vector<QPointF> pointList(m_Trans.pColorData.size());
+	std::vector<QPointF> pointList(m_pTrans->pColorData.size());
 	QPen penCurve(m_colorBorder, 1, Qt::SolidLine);
 	
 	// for every component
@@ -162,7 +163,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 		// define the polyline
 		for (size_t i = 0;i<pointList.size();i++) {
 			pointList[i]= QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(pointList.size()-1),
-						          m_iTopBorder+iGridHeight-m_Trans.pColorData[i][j]*iGridHeight);
+						          m_iTopBorder+iGridHeight-m_pTrans->pColorData[i][j]*iGridHeight);
 		}
 
 		// draw the polyline
@@ -173,6 +174,8 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 }
 
 void Q1DTransferFunction::mousePressEvent(QMouseEvent *event) {
+	if (m_pTrans == NULL) return;
+
 	// call superclass method
 	QWidget::mousePressEvent(event);
 	// clear the "last position" index
@@ -180,6 +183,8 @@ void Q1DTransferFunction::mousePressEvent(QMouseEvent *event) {
 }
 
 void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
+	if (m_pTrans == NULL) return;
+
 	// call superclass method
 	QWidget::mouseReleaseEvent(event);
 	// clear the "last position" index
@@ -187,6 +192,8 @@ void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
+	if (m_pTrans == NULL) return;
+
 	// call superclass method
 	QWidget::mouseMoveEvent(event);
 
@@ -196,7 +203,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	// compute some grid dimensions
 	unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
 	unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
-	unsigned int iVectorSize = m_Trans.pColorData.size();
+	unsigned int iVectorSize = m_pTrans->pColorData.size();
 
 	// compute position in color array
 	int iCurrentIndex = int((float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth));
@@ -236,28 +243,28 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	if (m_iPaintmode & Q1DT_PAINT_RED) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex][0] = _fValueMin;
+			m_pTrans->pColorData[iIndex][0] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_GREEN) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex][1] = _fValueMin;
+			m_pTrans->pColorData[iIndex][1] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_BLUE) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex][2] = _fValueMin;
+			m_pTrans->pColorData[iIndex][2] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_ALPHA) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex][3] = _fValueMin;
+			m_pTrans->pColorData[iIndex][3] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
@@ -339,7 +346,7 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 
 bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
 	// hand the load call over to the TransferFunction1D class
-	if( m_Trans.Load(strFilename.toStdString()) ) {
+	if( m_pTrans->Load(strFilename.toStdString()) ) {
 		update();
 		return true;
 	} else return false;
@@ -347,5 +354,5 @@ bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
 
 bool Q1DTransferFunction::SaveToFile(const QString& strFilename) {
 	// hand the save call over to the TransferFunction1D class
-	return m_Trans.Save(strFilename.toStdString());
+	return m_pTrans->Save(strFilename.toStdString());
 }

@@ -1,24 +1,12 @@
-#include "QTOut.h"
-#include <stdarg.h>
-#include <stdio.h>
+#include "ConsoleOut.h"
+#include "Basics/Console.h"
 
 
 #ifdef WIN32
 	#include <windows.h>
 #endif
 
-QTOut::QTOut(QListWidget *listWidget) :
-	m_listWidget(listWidget)
-{
-
-}
-
-QTOut::~QTOut() {
-
-}
-
-
-void QTOut::printf(const char* format, ...)
+void ConsoleOut::printf(const char* format, ...)
 {
 	// output string
 	char buff[16384];
@@ -34,5 +22,5 @@ void QTOut::printf(const char* format, ...)
 	vswprintf( buff, sizeof(buff), format, args);
 #endif
 
-	m_listWidget->addItem ( buff );
+	Console::printf("%s\n",buff);
 }

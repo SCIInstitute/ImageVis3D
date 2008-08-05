@@ -26,28 +26,26 @@
    DEALINGS IN THE SOFTWARE.
 */
 
+/**
+	\file		ConsoleOut.h
+	\author		Jens Krueger
+				SCI Institute
+				University of Utah
+	\version	1.0
+	\date		August 2008
+*/
 
-//!    File   : main.cpp
-//!    Author : Jens Krueger
-//!             SCI Institute
-//!             University of Utah
-//!    Date   : July 2008
-//
-//!    Copyright (C) 2008 SCI Institute
 
+#pragma once
 
-#include <QtGui/QApplication>
-#include "UI/ImageVis3D.h"
-#include "Controller/MasterController.h"
+#ifndef CONSOLEOUT_H
+#define CONSOLEOUT_H
 
-int main(int argc, char* argv[])
-{
-	MasterController masterController;
+#include "AbstrDebugOut.h"
 
-	QApplication app( argc, argv );
-	MainWindow mainWindow(masterController, 0, Qt::Window);
-	masterController.SetDebugOut(mainWindow.GetDebugOut());
+class ConsoleOut : public AbstrDebugOut{
+	public:
+		virtual void printf(const char* format, ...);
+};
 
-	mainWindow.show();
-	return app.exec();
-}
+#endif // CONSOLEOUT_H

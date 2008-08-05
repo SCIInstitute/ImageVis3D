@@ -361,6 +361,14 @@
 				RelativePath=".\IO\TransferFunction2D.h"
 				>
 			</File>
+			<File
+				RelativePath=".\IO\VolumeDataset.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IO\VolumeDataset.h"
+				>
+			</File>
 			<Filter
 				Name="DICOM"
 				>
@@ -370,6 +378,14 @@
 				</File>
 				<File
 					RelativePath=".\IO\DICOM\DICOMParser.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Images"
+				>
+				<File
+					RelativePath=".\IO\Images\BMPLoader.h"
 					>
 				</File>
 			</Filter>
@@ -392,31 +408,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RenderWin1.png"
+				RelativePath=".\RenderWin1.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\RenderWin1x3.png"
+				RelativePath=".\RenderWin1x3.bmp"
 				>
 			</File>
 			<File
-				RelativePath=".\RenderWin2x2.png"
-				>
-			</File>
-			<File
-				RelativePath=".\trans1d.png"
-				>
-			</File>
-			<File
-				RelativePath=".\trans2d_a.png"
-				>
-			</File>
-			<File
-				RelativePath=".\trans2d_b.png"
-				>
-			</File>
-			<File
-				RelativePath=".\trans2d_c.png"
+				RelativePath=".\RenderWin2x2.bmp"
 				>
 			</File>
 		</Filter>
@@ -862,6 +862,30 @@
 			</File>
 			<File
 				RelativePath=".\Renderer\GPUSBVR.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="DebugOut"
+			>
+			<File
+				RelativePath=".\DebugOut\AbstrDebugOut.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DebugOut\ConsoleOut.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DebugOut\ConsoleOut.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DebugOut\QTOut.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DebugOut\QTOut.h"
 				>
 			</File>
 		</Filter>

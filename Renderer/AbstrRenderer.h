@@ -41,19 +41,23 @@
 #ifndef ABSTRRENDERER_H
 #define ABSTRRENDERER_H
 
+#include <string>
+
+#include "../IO/VolumeDataset.h"
 #include "../IO/TransferFunction1D.h"
 #include "../IO/TransferFunction2D.h"
+
 
 class MasterController;
 
 class AbstrRenderer {
 public:
-	virtual ~AbstrRenderer() {}
-
-	bool LoadDataset(string strFilename);
+	virtual ~AbstrRenderer();
+	bool LoadDataset(const std::string& strFilename);
 
 protected:
 	MasterController* m_pMasterController;
+	VolumeDataset*	  m_pDataset;
 };
 
 #endif // ABSTRRENDERER_H

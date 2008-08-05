@@ -22,6 +22,8 @@ MainWindow::MainWindow(MasterController& masterController, QWidget* parent /* = 
 {
 	setupUi(this);
 
+	m_DebugOut = new QTOut(listWidget_3);
+
 	SetupWorkspaceMenu();
 
 	LoadGeometry("Default.geo", true);
@@ -33,7 +35,7 @@ MainWindow::MainWindow(MasterController& masterController, QWidget* parent /* = 
 
 MainWindow::~MainWindow()
 {
-
+	delete m_DebugOut;
 }
 
 void MainWindow::SaveDataset(){
@@ -485,7 +487,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 	// generate a random 1D histogram
 	Histogram1D v1DHistrogram(4096);
 	for (size_t i = 0;i<v1DHistrogram.GetSize();i++) v1DHistrogram.Set(i, (unsigned int)(i+(rand()*10) / RAND_MAX));
-	m_1DTransferFunction->SetHistogram(v1DHistrogram);
+	m_1DTransferFunction->SetData(v1DHistrogram, NULL);
 	// generate a random 2D histogram
 	Histogram2D v2DHistrogram(UINTVECTOR2(100,200));
 	for (size_t y = 0;y<v2DHistrogram.GetSize().y;y++)
@@ -504,6 +506,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 	// this widget is used to share the contexts amongst the render windows
 	m_glShareWidget = new QGLWidget(this);
 	this->horizontalLayout->addWidget(m_glShareWidget);
+
+	LoadDataset("DEBUG");
 }
 
 void MainWindow::OpenRecentFile()

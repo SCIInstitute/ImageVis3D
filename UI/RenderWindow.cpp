@@ -11,20 +11,21 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
 	m_strDataset(dataset),
 	m_listWidget_Lock(listWidget_Lock)
 {	
-
 	m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
 	setWindowTitle(m_strID);
 	m_listWidget_Lock->addItem(m_strID);
 
-	ToggleRenderWindowView1x3();
+	if (!m_Renderer->LoadDataset(m_strDataset.toStdString()))
+
+	m_Renderer->SetCurrentView(0);
 
 	xRot = 0;
 }
 
 RenderWindow::~RenderWindow()
 {
-//	makeCurrent();
-//	glDeleteLists(object, 1);
+	makeCurrent();
+	m_Renderer->Cleanup();
 }
 
 QSize RenderWindow::minimumSizeHint() const

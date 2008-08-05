@@ -26,28 +26,31 @@
    DEALINGS IN THE SOFTWARE.
 */
 
+/**
+	\file		VolumeDataset.h
+	\author		Jens Krueger
+				SCI Institute
+				University of Utah
+	\version	1.0
+	\date		August 2008
+*/
 
-//!    File   : main.cpp
-//!    Author : Jens Krueger
-//!             SCI Institute
-//!             University of Utah
-//!    Date   : July 2008
-//
-//!    Copyright (C) 2008 SCI Institute
 
+#pragma once
 
-#include <QtGui/QApplication>
-#include "UI/ImageVis3D.h"
-#include "Controller/MasterController.h"
+#ifndef VOLUMEDATASET_H
+#define VOLUMEDATASET_H
 
-int main(int argc, char* argv[])
-{
-	MasterController masterController;
+#include <string>
 
-	QApplication app( argc, argv );
-	MainWindow mainWindow(masterController, 0, Qt::Window);
-	masterController.SetDebugOut(mainWindow.GetDebugOut());
+class VolumeDataset {
+public:
+	VolumeDataset(const std::string& strFilename);
+	bool IsLoaded() const;
+	std::string Filename() const {return m_strFilename;}
 
-	mainWindow.show();
-	return app.exec();
-}
+private:	
+	std::string m_strFilename;
+};
+
+#endif // VOLUMEDATASET_H

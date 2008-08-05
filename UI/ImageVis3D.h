@@ -8,6 +8,7 @@
 #include "Q1DTransferFunction.h"
 #include "Q2DTransferFunction.h"
 #include "Controller/MasterController.h"
+#include "DebugOut/QTOut.h"
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow
 {
@@ -16,6 +17,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		MainWindow(MasterController& masterController, QWidget* parent = 0, Qt::WindowFlags flags = 0);
 		virtual ~MainWindow();
 	
+		QTOut* GetDebugOut() {return m_DebugOut;}
+
 	protected slots:
 		void LoadDataset();
 		void LoadDirectory();
@@ -62,6 +65,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		Q1DTransferFunction*	m_1DTransferFunction;
 		Q2DTransferFunction*	m_2DTransferFunction;
 		QGLWidget*				m_glShareWidget;
+		QTOut*					m_DebugOut;
 
 		RenderWindow* CreateNewRenderWindow(QString dataset);
 		RenderWindow* GetActiveRenderWindow();
