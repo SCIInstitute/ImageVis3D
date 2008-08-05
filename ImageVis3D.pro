@@ -19,21 +19,47 @@ INCLUDEPATH      += .
 QT               += opengl
 
 # Input
-HEADERS += UI/BrowseData.h \
+HEADERS += Basics/Grids.h \
+           Basics/SysTools.h \
+           Basics/Vectors.h \
+           UI/BrowseData.h \
            UI/ImageVis3D.h \
            UI/PleaseWait.h \
            UI/Q1DTransferFunction.h \
+           UI/Q2DTransferFunction.h \
            UI/QDataRadioButton.h \
            UI/RenderWindow.h \
-           IO/Transferfunction1D.h
+           IO/Transferfunction1D.h \
+           IO/Transferfunction2D.h \
+           IO/VolumeDataset.h \
+           IO/Images/BMPLoader.h \
+           Controller/MasterController.h \
+           DebugOut/AbstrDebugOut.h \
+           DebugOut/QTOut.h \
+           DebugOut/ConsoleOut.h \
+           Renderer/AbstrRenderer.h \
+           Renderer/GPUSBVR.h \
+           Renderer/GPUMemMan.h
+
+
 FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui
-SOURCES += UI/BrowseData.cpp \
+
+SOURCES += Basics/SysTools.cpp \
+           UI/BrowseData.cpp \
            UI/ImageVis3D.cpp \
-           main.cpp \
            UI/PleaseWait.cpp \
            UI/Q1DTransferFunction.cpp \
+           UI/Q2DTransferFunction.cpp \
            UI/QDataRadioButton.cpp \
            UI/RenderWindow.cpp \
            IO/Transferfunction1D.cpp \
+           IO/Transferfunction2D.cpp \
+           IO/VolumeDataset.cpp \
            IO/DICOM/DICOMParser.cpp \
-           Basics/SysTools.cpp
+           Controller/MasterController.cpp \
+           DebugOut/QTOut.cpp \
+           DebugOut/ConsoleOut.cpp \
+           Renderer/AbstrRenderer.cpp \
+           Renderer/GPUSBVR.cpp \
+           Renderer/GPUMemMan.cpp \
+           main.cpp
