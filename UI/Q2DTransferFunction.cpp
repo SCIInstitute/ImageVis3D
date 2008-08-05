@@ -55,7 +55,8 @@ void Q2DTransferFunction::SetHistogram(const Histogram2D& vHistrogram) {
 
 	// rescale the histogram to the [0..1] range
 	// first find min and max ...
-	unsigned int iMax = vHistrogram.GetLinear(0), iMin = m_vHistrogram.GetLinear(0);
+	unsigned int iMax = vHistrogram.GetLinear(0), 
+	unsigned int iMin = iMax;
 	for (size_t i = 0;i<m_vHistrogram.GetSize().area();i++) {
 		if (vHistrogram.GetLinear(i) > iMax) iMax = vHistrogram.GetLinear(i);
 		if (vHistrogram.GetLinear(i) < iMin) iMin = vHistrogram.GetLinear(i);
@@ -129,9 +130,9 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter, float fScale) {
 	for (size_t y = 0;y<m_vHistrogram.GetSize().y;y++) 
 		for (size_t x = 0;x<m_vHistrogram.GetSize().x;x++) {
 			float value = min(1.0f, fScale*m_vHistrogram.Get(x,y));
-			image.setPixel(x,y,qRgb(m_colorBack.red()*(1.0f-value)   + m_colorHistogram.red()*value,
-				                    m_colorBack.green()*(1.0f-value) + m_colorHistogram.green()*value,
-									m_colorBack.blue()*(1.0f-value)  + m_colorHistogram.blue()*value));
+			image.setPixel(x,y,qRgb(int(m_colorBack.red()*(1.0f-value)   + m_colorHistogram.red()*value),
+				                    int(m_colorBack.green()*(1.0f-value) + m_colorHistogram.green()*value),
+									int(m_colorBack.blue()*(1.0f-value)  + m_colorHistogram.blue()*value)));
 		}
 
 	// ... draw it
