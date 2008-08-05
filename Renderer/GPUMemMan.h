@@ -43,8 +43,8 @@
 
 #ifdef WIN32
 	#include <windows.h>
-	#include <GL/GL.h>
 #endif
+#include <GL/GL.h>
 
 
 // TODO: realize include GL for other platforms
