@@ -41,10 +41,10 @@ using namespace std;
 
 TransferFunction2D::TransferFunction2D()
 {
-	Resize(UINTVECTOR2(0,0));
+	Resize(VECTOR2<size_t>(0,0));
 }
 
-TransferFunction2D::TransferFunction2D(const UINTVECTOR2& iSize)
+TransferFunction2D::TransferFunction2D(const VECTOR2<size_t>& iSize)
 {
 	Resize(iSize);
 }

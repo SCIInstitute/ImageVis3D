@@ -40,7 +40,7 @@
 
 using namespace std;
 
-TransferFunction1D::TransferFunction1D(unsigned int iSize)
+TransferFunction1D::TransferFunction1D(size_t iSize)
 {
 	Resize(iSize);
 }

@@ -51,7 +51,7 @@ typedef Grid1D<float> NormalizedHistogram1D;
 class TransferFunction1D
 {
 public:
-	TransferFunction1D(unsigned int iSize = 0);
+	TransferFunction1D(size_t iSize = 0);
 	~TransferFunction1D(void);
 	
 	void Resize(size_t iSize);

@@ -69,7 +69,7 @@ class TransferFunction2D
 {
 public:
 	TransferFunction2D();
-	TransferFunction2D(const UINTVECTOR2& iSize);
+	TransferFunction2D(const VECTOR2<size_t>& iSize);
 	~TransferFunction2D(void);
 	
 	void Resize(const Histogram2D& hist) {Resize(hist.GetSize());}
