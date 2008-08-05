@@ -74,7 +74,7 @@ public:
 	
 	void Resize(const Histogram2D& hist) {Resize(hist.GetSize());}
 	void Resize(const NormalizedHistogram2D& hist) {Resize(hist.GetSize());}
-	void Resize(const UINTVECTOR2& iSize);
+	void Resize(const VECTOR2<size_t>& iSize);
 
 	bool Load(const std::string& filename);
 	bool Save(const std::string& filename);

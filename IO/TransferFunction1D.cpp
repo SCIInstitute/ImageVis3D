@@ -50,7 +50,7 @@ TransferFunction1D::~TransferFunction1D(void)
 }
 
 
-void TransferFunction1D::Resize(unsigned int iSize) {
+void TransferFunction1D::Resize(size_t iSize) {
 	pColorData.resize(iSize);
 }
 

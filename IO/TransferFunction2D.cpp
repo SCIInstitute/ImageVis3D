@@ -53,7 +53,7 @@ TransferFunction2D::~TransferFunction2D(void)
 {
 }
 
-void TransferFunction2D::Resize(const UINTVECTOR2& iSize) {
+void TransferFunction2D::Resize(const VECTOR2<size_t>& iSize) {
 	pColorData.Resize(iSize);
 }
 

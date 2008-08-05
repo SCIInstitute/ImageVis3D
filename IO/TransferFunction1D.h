@@ -54,7 +54,7 @@ public:
 	TransferFunction1D(unsigned int iSize = 0);
 	~TransferFunction1D(void);
 	
-	void Resize(unsigned int iSize);
+	void Resize(size_t iSize);
 
 	bool Load(const std::string& filename);
 	bool Save(const std::string& filename);
