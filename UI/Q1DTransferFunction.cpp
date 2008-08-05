@@ -53,7 +53,7 @@ void Q1DTransferFunction::SetData(const Histogram1D& vHistrogram, TransferFuncti
 
 	// rescale the histogram to the [0..1] range
 	// first find min and max ...
-	unsigned int iMax = vHistrogram.GetLinear(0), 
+	unsigned int iMax = vHistrogram.GetLinear(0); 
 	unsigned int iMin = iMax;
 	for (size_t i = 0;i<m_vHistrogram.GetSize();i++) {
 		if (vHistrogram.GetLinear(i) > iMax) iMax = vHistrogram.GetLinear(i);
