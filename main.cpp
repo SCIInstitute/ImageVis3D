@@ -38,11 +38,14 @@
 
 #include <QtGui/QApplication>
 #include "UI/ImageVis3D.h"
+#include "Controller/MasterController.h"
 
 int main(int argc, char* argv[])
 {
+	MasterController masterController;
+
 	QApplication app( argc, argv );
-	MainWindow mainWindow(0, Qt::Window);
+	MainWindow mainWindow(masterController, 0, Qt::Window);
 	mainWindow.show();
 	return app.exec();
 }

@@ -2,40 +2,26 @@
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
 
+using namespace std;
+
 Q2DTransferFunction::Q2DTransferFunction(QWidget *parent) :
 	QWidget(parent),
 	m_iPaintmode(Q2DT_PAINT_NONE),
+	m_iActiveSwatchIndex(-1),
 	m_bBackdropCacheUptodate(false),
 	m_iCachedHeight(0),
 	m_iCachedWidth(0),
 	m_pBackdropCache(NULL),
-	// borders, may be changed arbitrarly
-	m_iLeftBorder(20),
-	m_iBottomBorder(20),
-	// automatically computed borders
-	m_iRightBorder(0),
-	m_iTopBorder(0),
-	// colors, may be changed arbitrarily 
-	m_colorHistogram(50,50,50),
-	m_colorBack(Qt::black),
-	m_colorBorder(100, 100, 255),
-	m_colorScale(100, 100, 255),
-	m_colorLargeScale(180, 180, 180),
-	m_colorRedLine(255, 0, 0),
-	m_colorGreenLine(0, 255, 0),
-	m_colorBlueLine(0, 0, 255),
-	m_colorAlphaLine(Qt::white),
-	// scale apearance, may be changed arbitrarily (except for the marker length wich should both be less or equal to m_iLeftBorder and m_iBottomBorder)
-	m_iMarkersX(40),
-	m_iMarkersY (40),
-	m_iBigMarkerSpacingX(5),
-	m_iBigMarkerSpacingY(5),
-	m_iMarkerLength(5),
-	m_iBigMarkerLength(m_iMarkerLength*3),
+	
+	// border size, may be changed arbitrarily
+	m_iBorderSize(4),
+	m_iSwatchBorderSize(5),
+
 	// mouse motion
 	m_iLastIndex(-1),
 	m_fLastValue(0)
 {
+	SetColor(isEnabled());
 }
 
 Q2DTransferFunction::~Q2DTransferFunction(void)
@@ -44,143 +30,178 @@ Q2DTransferFunction::~Q2DTransferFunction(void)
 	delete m_pBackdropCache;
 }
 
-void Q2DTransferFunction::SetHistogram(std::vector<unsigned int> vHistrogram) {
+QSize Q2DTransferFunction::minimumSizeHint() const
+{
+	return QSize(50, 50);
+}
+
+QSize Q2DTransferFunction::sizeHint() const
+{
+	return QSize(400, 400);
+}
+
+void Q2DTransferFunction::SetHistogram(const Histogram2D& vHistrogram) {
 	// resize the histogram vector
-	m_vHistrogram.resize(vHistrogram.size());
+	m_vHistrogram.Resize(vHistrogram.GetSize());
 	
 	// also resize the transferfunction
-	m_Trans.Resize(vHistrogram.size());
+	m_Trans.Resize(m_vHistrogram);
 
 	// force the draw routine to recompute the backdrop cache
 	m_bBackdropCacheUptodate = false;
 
 	// if the histogram is empty we are done
-	if (m_vHistrogram.size() == 0)  return;
+	if (m_vHistrogram.GetSize().area() == 0)  return;
 
 	// rescale the histogram to the [0..1] range
 	// first find min and max ...
-	float fMax = float(vHistrogram[0]), fMin = float(vHistrogram[0]);
-	for (size_t i = 0;i<m_vHistrogram.size();i++) {
-		if (float(vHistrogram[i]) > fMax) fMax = float(vHistrogram[i]);
-		if (float(vHistrogram[i]) < fMin) fMin = float(vHistrogram[i]);
+	unsigned int iMax = vHistrogram.GetLinear(0), iMin = m_vHistrogram.GetLinear(0);
+	for (size_t i = 0;i<m_vHistrogram.GetSize().area();i++) {
+		if (vHistrogram.GetLinear(i) > iMax) iMax = vHistrogram.GetLinear(i);
+		if (vHistrogram.GetLinear(i) < iMin) iMin = vHistrogram.GetLinear(i);
 
-		for (unsigned int j = 0;j<4;j++) m_Trans.pColorData[i][j] = 0.0f;
+		m_Trans.pColorData.GetLinear(i) = FLOATVECTOR4(0,0,0,0);
 	}
 
 	// ... than rescale
-	float fDiff = fMax-fMin;
-	for (size_t i = 0;i<m_vHistrogram.size();i++) {
-		m_vHistrogram[i]  = vHistrogram[i] - fMin;
-		m_vHistrogram[i] /= fDiff;
+	float fDiff = float(iMax)-float(iMin);
+	for (size_t i = 0;i<m_vHistrogram.GetSize().area();i++)
+		m_vHistrogram.SetLinear(i, (float(vHistrogram.GetLinear(i)) - float(iMin)) / fDiff);
+
+
+	// debug
+	{
+		TFPolygon mySwatch;
+		mySwatch.pPoints.push_back(FLOATVECTOR2(1.0f,0.0f));
+		mySwatch.pPoints.push_back(FLOATVECTOR2(0.8f,0.0f));
+		mySwatch.pPoints.push_back(FLOATVECTOR2(0.8f,0.8f));
+		mySwatch.pPoints.push_back(FLOATVECTOR2(1.0f,1.0f));
+	
+		mySwatch.pGradientCoords[0] = FLOATVECTOR2(0.1f,0.1f);
+		mySwatch.pGradientCoords[1] = FLOATVECTOR2(0.5f,0.5f);
+
+		mySwatch.pGradientStops.push_back(GradientStop(0.0f,FLOATVECTOR4(0,0,0,0)));
+		mySwatch.pGradientStops.push_back(GradientStop(0.5f,FLOATVECTOR4(1,0,0,1)));
+		mySwatch.pGradientStops.push_back(GradientStop(1.0f,FLOATVECTOR4(0,0,0,0)));
+		
+		m_Trans.m_Swatches.push_back(mySwatch);
 	}
+	{
+		TFPolygon mySwatch;
+		mySwatch.pPoints.push_back(FLOATVECTOR2(0.0f,0.5f));
+		mySwatch.pPoints.push_back(FLOATVECTOR2(0.2f,0.5f));
+		mySwatch.pPoints.push_back(FLOATVECTOR2(0.2f,0.8f));
+		mySwatch.pPoints.push_back(FLOATVECTOR2(0.0f,0.8f));
+		
+		mySwatch.pGradientCoords[0] = FLOATVECTOR2(0.0f,0.7f);
+		mySwatch.pGradientCoords[1] = FLOATVECTOR2(0.2f,0.7f);
+
+		mySwatch.pGradientStops.push_back(GradientStop(0.1f,FLOATVECTOR4(0,0,1,1)));
+		mySwatch.pGradientStops.push_back(GradientStop(0.5f,FLOATVECTOR4(1,1,1,0.0f)));
+		mySwatch.pGradientStops.push_back(GradientStop(1.0f,FLOATVECTOR4(0,0,1,1)));
+
+		m_Trans.m_Swatches.push_back(mySwatch);
+	}
+
+
+	m_iActiveSwatchIndex = 0;
+
+
 }
 
-void Q2DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
-	// adjust left and bottom border so that the marker count can be met
-	m_iRightBorder   = (width()-(m_iLeftBorder+2))   %m_iMarkersX;
-	m_iTopBorder     = (height()-(m_iBottomBorder+2))%m_iMarkersY;
+void Q2DTransferFunction::DrawBorder(QPainter& painter) {
+	// draw background with border
+	QPen borderPen(m_colorBorder, m_iBorderSize, Qt::SolidLine);
+	painter.setPen(borderPen);
 
-	// compute the actual marker spaceing
-	unsigned int iMarkerSpacingX = (width()-(m_iLeftBorder+2))/m_iMarkersX;
-	unsigned int iMarkerSpacingY = (height()-(m_iBottomBorder+2))/m_iMarkersY;
-
-	// draw background
 	painter.setBrush(m_colorBack);
 	QRect backRect(0,0,width(),height());
 	painter.drawRect(backRect);
-
-	// draw grid borders
-	QPen borderPen(m_colorBorder, 1, Qt::SolidLine);
-	painter.setPen(borderPen);
-	QRect borderRect(m_iLeftBorder,m_iTopBorder, width()-(m_iLeftBorder+2+m_iRightBorder), height()-(m_iTopBorder+m_iBottomBorder+2));
-	painter.drawRect(borderRect);
-
-	// draw Y axis markers
-	QPen penScale(m_colorScale, 1, Qt::SolidLine);
-	QPen penLargeScale(m_colorLargeScale, 1, Qt::SolidLine);
-	for (unsigned int i = 0;i<m_iMarkersY;i++) {
-		int iPosY = height()-m_iBottomBorder-2 - i*iMarkerSpacingY; 
-
-		if (i%m_iBigMarkerSpacingY == 0) {
-			painter.setPen(penLargeScale);
-			painter.drawLine(m_iLeftBorder-m_iBigMarkerLength, iPosY, m_iLeftBorder, iPosY);
-		} else {
-			painter.setPen(penScale);
-			painter.drawLine(m_iLeftBorder-m_iMarkerLength, iPosY, m_iLeftBorder, iPosY);
-		}
-	}
-
-	// draw X axis markers
-	unsigned int iStartY = height()-(m_iBottomBorder+2);
-	for (unsigned int i = 0;i<m_iMarkersX;i++) {
-		int iPosX = m_iLeftBorder+i*iMarkerSpacingX;
-		if (i%m_iBigMarkerSpacingX == 0) {
-			painter.setPen(penLargeScale);
-			painter.drawLine(iPosX, iStartY+m_iBigMarkerLength, iPosX, iStartY);
-		} else {
-			painter.setPen(penScale);
-			painter.drawLine(iPosX, iStartY+m_iMarkerLength, iPosX, iStartY);
-		}
-	}
 }
 
-void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
+void Q2DTransferFunction::DrawHistogram(QPainter& painter, float fScale) {
 	// nothing todo if the histogram is empty
-	if (m_vHistrogram.size() == 0) return;
+	if (m_vHistrogram.GetSize().area() == 0) return;
 
-	// compute some grid dimensions
-	unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
-	unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
-
-	// draw the histogram a as large polygon
-	// define the polygon ...
-	std::vector<QPointF> pointList;
-	pointList.push_back(QPointF(m_iLeftBorder+1, iGridHeight-m_iBottomBorder));
-	for (size_t i = 0;i<m_vHistrogram.size();i++) 
-		pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistrogram.size()-1), m_iTopBorder+iGridHeight-m_vHistrogram[i]*iGridHeight));	
-	pointList.push_back(QPointF(m_iLeftBorder+iGridWidth, m_iTopBorder+iGridHeight));
-	pointList.push_back(QPointF(m_iLeftBorder+1, m_iTopBorder+iGridHeight));
+	// convert the histogram into an image
+	// define the bitmap ...
+	QImage image(QSize(m_vHistrogram.GetSize().x, m_vHistrogram.GetSize().y), QImage::Format_RGB32);
+	for (size_t y = 0;y<m_vHistrogram.GetSize().y;y++) 
+		for (size_t x = 0;x<m_vHistrogram.GetSize().x;x++) {
+			float value = min(1.0f, fScale*m_vHistrogram.Get(x,y));
+			image.setPixel(x,y,qRgb(m_colorBack.red()*(1.0f-value)   + m_colorHistogram.red()*value,
+				                    m_colorBack.green()*(1.0f-value) + m_colorHistogram.green()*value,
+									m_colorBack.blue()*(1.0f-value)  + m_colorHistogram.blue()*value));
+		}
 
 	// ... draw it
-	painter.setPen(Qt::NoPen);
-	painter.setBrush(m_colorHistogram);
-	painter.drawPolygon(&pointList[0], pointList.size());
+    QRectF target(m_iBorderSize/2, m_iBorderSize/2, width()-m_iBorderSize, height()-m_iBorderSize);
+    QRectF source(0.0, 0.0, m_vHistrogram.GetSize().x, m_vHistrogram.GetSize().y);
+	painter.drawImage( target, image, source );
 }
 
-void Q2DTransferFunction::DrawFunctionPlots(QPainter& painter) {
-	// nothing todo if the histogram is empty
-	if (m_vHistrogram.size() == 0) return;
 
-	// compute some grid dimensions
-	unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
-	unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
 
-	// draw the tranfer function as one larger polyline
-	std::vector<QPointF> pointList(m_Trans.pColorData.size());
-	QPen penCurve(m_colorBorder, 1, Qt::SolidLine);
-	
-	// for every component
-	for (unsigned int j = 0;j<4;j++) {
+INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
+	return INTVECTOR2(m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x*(width()-m_iBorderSize-m_iSwatchBorderSize),
+					  m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.y*(height()-m_iBorderSize-m_iSwatchBorderSize));
+}
 
-		// select the color
-		switch (j) {
-			case 0  : penCurve.setColor(m_colorRedLine);   break;
-			case 1  : penCurve.setColor(m_colorGreenLine); break;
-			case 2  : penCurve.setColor(m_colorBlueLine);  break;
-			default : penCurve.setColor(m_colorAlphaLine); break;
+void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
+	if (m_vHistrogram.GetSize().area() == 0) return;
+
+	painter.setRenderHint(painter.Antialiasing, true);
+	painter.translate(+0.5, +0.5);  // TODO: check if we need this
+
+	QPen borderPen(m_colorSwatchBorder,       m_iSwatchBorderSize, Qt::SolidLine);
+	QPen circlePen(m_colorSwatchBorderCircle, m_iSwatchBorderSize, Qt::SolidLine);
+	QPen gradCircePen(m_colorSwatchGradCircle, m_iSwatchBorderSize/2, Qt::SolidLine);
+
+
+	QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
+
+	// render swatches
+	for (size_t i = 0;i<m_Trans.m_Swatches.size();i++) {
+		TFPolygon& currentSwatch = m_Trans.m_Swatches[i];
+		
+		std::vector<QPoint> pointList(currentSwatch.pPoints.size());
+		for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {		
+			INTVECTOR2 vPixelPos = Rel2Abs(currentSwatch.pPoints[j]);
+			pointList[j] = QPoint(vPixelPos.x, vPixelPos.y);
 		}
 
-		// define the polyline
-		for (size_t i = 0;i<pointList.size();i++) {
-			pointList[i]= QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(pointList.size()-1),
-						          m_iTopBorder+iGridHeight-m_Trans.pColorData[i][j]*iGridHeight);
+		INTVECTOR2 vPixelPos0 = Rel2Abs(currentSwatch.pGradientCoords[0])-m_iSwatchBorderSize, vPixelPos1 = Rel2Abs(currentSwatch.pGradientCoords[1])-m_iSwatchBorderSize; 
+		QLinearGradient linearBrush(vPixelPos0.x, vPixelPos0.y, vPixelPos1.x, vPixelPos1.y);
+		
+		for (size_t j = 0;j<currentSwatch.pGradientStops.size();j++) {			
+			linearBrush.setColorAt(currentSwatch.pGradientStops[j].first, 
+								   QColor(currentSwatch.pGradientStops[j].second[0]*255,
+										  currentSwatch.pGradientStops[j].second[1]*255,
+								          currentSwatch.pGradientStops[j].second[2]*255,
+								          currentSwatch.pGradientStops[j].second[3]*255));
 		}
 
-		// draw the polyline
-		painter.setPen(penCurve);
-		painter.drawPolyline(&pointList[0], pointList.size());
+		painter.setPen(borderPen);
+		painter.setBrush(linearBrush);
+		painter.drawPolygon(&pointList[0], currentSwatch.pPoints.size());
+		painter.setBrush(Qt::NoBrush);
+
+		if (m_iActiveSwatchIndex == i) {
+			painter.setPen(circlePen);
+			painter.setBrush(solidBrush);
+			for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {		
+				painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
+			}
+
+			painter.setBrush(Qt::NoBrush);
+			painter.setPen(gradCircePen);
+			INTVECTOR2 vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[0])-m_iSwatchBorderSize;
+			painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
+			vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[1])-m_iSwatchBorderSize;
+			painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);			
+		}
 	}
-
+	painter.setRenderHint(painter.Antialiasing, false);
 }
 
 void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
@@ -201,7 +222,7 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	// call superclass method
 	QWidget::mouseMoveEvent(event);
 
-	// exit if nothing is to be painted
+/*	// exit if nothing is to be painted
 	if (m_iPaintmode == Q2DT_PAINT_NONE) return;
 
 	// compute some grid dimensions
@@ -247,34 +268,65 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	if (m_iPaintmode & Q2DT_PAINT_RED) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].r = _fValueMin;
+			m_Trans.pColorData[iIndex][0] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q2DT_PAINT_GREEN) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].g = _fValueMin;
+			m_Trans.pColorData[iIndex][1] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q2DT_PAINT_BLUE) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].b = _fValueMin;
+			m_Trans.pColorData[iIndex][2] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q2DT_PAINT_ALPHA) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].a = _fValueMin;
+			m_Trans.pColorData[iIndex][3] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 
 	// redraw this widget
 	update();
+
+	*/
+}
+
+void Q2DTransferFunction::SetColor(bool bIsEnabled) {
+		if (bIsEnabled) {
+			m_colorHistogram = QColor(255,255,255);
+			m_colorBack = QColor(Qt::black);
+			m_colorBorder = QColor(255, 255, 255);
+			m_colorSwatchBorder = QColor(255, 0, 0);
+			m_colorSwatchBorderCircle = QColor(255, 255, 0);
+			m_colorSwatchGradCircle = QColor(0, 255, 0);
+		} else {
+			m_colorHistogram = QColor(55,55,55);
+			m_colorBack = QColor(Qt::black);
+			m_colorBorder = QColor(100, 100, 100);
+			m_colorSwatchBorder = QColor(100, 50, 50);
+			m_colorSwatchBorderCircle = QColor(100, 100, 50);
+			m_colorSwatchGradCircle = QColor(50, 100, 50);
+		}
+}
+
+void Q2DTransferFunction::changeEvent(QEvent * event) {
+	// call superclass method
+	QWidget::changeEvent(event);
+
+	if (event->type() == QEvent::EnabledChange) {
+		SetColor(isEnabled());
+		m_bBackdropCacheUptodate = false;
+		update();
+	}
 }
 
 void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
@@ -293,8 +345,8 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 		// attach a painter to the pixmap
 		QPainter image_painter(m_pBackdropCache);
 
-		// draw the abckdrop into the image
-		DrawCoordinateSystem(image_painter);
+		// draw the backdrop into the image
+		DrawBorder(image_painter);
 		DrawHistogram(image_painter);
 
 		// update change detection states
@@ -309,8 +361,8 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 	// the image captured before (or cached from a previous call)
 	painter.drawImage(0,0,m_pBackdropCache->toImage());
 
-	// and the funtion plots
-	DrawFunctionPlots(painter);
+	// and the swatches
+	DrawSwatches(painter);
 }
 
 bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {

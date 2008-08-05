@@ -42,15 +42,11 @@
 
 #include <string>
 #include <vector>
+#include <Basics/Vectors.h>
+#include <Basics/Grids.h>
 
-template <class T=float> class TFColor {
-public:
-	T r, g, b, a;	
-
-	operator T*(void) {return &r;}
-	const T *operator *(void) const {return &r;}
-	T *operator *(void) {return &r;}
-};
+typedef Grid1D<unsigned int> Histogram1D;
+typedef Grid1D<float> NormalizedHistogram1D;
 
 class TransferFunction1D
 {
@@ -67,7 +63,8 @@ public:
 	void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
 	void GetFloatArray(float** pfData);
 
-	std::vector< TFColor<float> > pColorData;
+	std::vector< FLOATVECTOR4 > pColorData;
+
 };
 
 #endif // TRANSFERFUNCTION1D

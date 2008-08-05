@@ -94,10 +94,10 @@ void TransferFunction1D::GetByteArray(unsigned char** pcData, unsigned char cUse
 
 	unsigned char *pcDataIterator = *pcData;
 	for (unsigned int i = 0;i<pColorData.size();i++) {
-		*pcDataIterator++ = (unsigned char)(pColorData[i].r*cUsedRange);
-		*pcDataIterator++ = (unsigned char)(pColorData[i].g*cUsedRange);
-		*pcDataIterator++ = (unsigned char)(pColorData[i].b*cUsedRange);
-		*pcDataIterator++ = (unsigned char)(pColorData[i].a*cUsedRange);
+		*pcDataIterator++ = (unsigned char)(pColorData[i][0]*cUsedRange);
+		*pcDataIterator++ = (unsigned char)(pColorData[i][1]*cUsedRange);
+		*pcDataIterator++ = (unsigned char)(pColorData[i][2]*cUsedRange);
+		*pcDataIterator++ = (unsigned char)(pColorData[i][3]*cUsedRange);
 	}
 }
 
@@ -106,14 +106,14 @@ void TransferFunction1D::GetShortArray(unsigned short** psData, unsigned short s
 
 	unsigned short *psDataIterator = *psData;
 	for (unsigned int i = 0;i<pColorData.size();i++) {
-		*psDataIterator++ = (unsigned short)(pColorData[i].r*sUsedRange);
-		*psDataIterator++ = (unsigned short)(pColorData[i].g*sUsedRange);
-		*psDataIterator++ = (unsigned short)(pColorData[i].b*sUsedRange);
-		*psDataIterator++ = (unsigned short)(pColorData[i].a*sUsedRange);
+		*psDataIterator++ = (unsigned short)(pColorData[i][0]*sUsedRange);
+		*psDataIterator++ = (unsigned short)(pColorData[i][1]*sUsedRange);
+		*psDataIterator++ = (unsigned short)(pColorData[i][2]*sUsedRange);
+		*psDataIterator++ = (unsigned short)(pColorData[i][3]*sUsedRange);
 	}
 }
 
 void TransferFunction1D::GetFloatArray(float** pfData) {
-	if (*pfData == NULL) *pfData = new float[pColorData.size()];
-	memcpy(*pfData, &pfData[0], sizeof(float)*pColorData.size());
+	if (*pfData == NULL) *pfData = new float[4*pColorData.size()];
+	memcpy(*pfData, &pfData[0], sizeof(float)*4*pColorData.size());
 }

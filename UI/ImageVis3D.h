@@ -6,13 +6,14 @@
 #include "AutoGen/ui_ImageVis3D.h"
 #include "RenderWindow.h"
 #include "Q1DTransferFunction.h"
-
+#include "Q2DTransferFunction.h"
+#include "Controller/MasterController.h"
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow
 {
 	Q_OBJECT
 	public:
-		MainWindow(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+		MainWindow(MasterController& masterController, QWidget* parent = 0, Qt::WindowFlags flags = 0);
 		virtual ~MainWindow();
 	
 	protected slots:
@@ -56,8 +57,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
 
 	private :
+		MasterController&		m_MasterController;
 		QString					m_strCurrentWorkspaceFilename;
 		Q1DTransferFunction*	m_1DTransferFunction;
+		Q2DTransferFunction*	m_2DTransferFunction;
 		QGLWidget*				m_glShareWidget;
 
 		RenderWindow* CreateNewRenderWindow(QString dataset);

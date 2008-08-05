@@ -27,7 +27,7 @@
 */
 
 /**
-	\file		Verctors.h
+	\file		Vectors.h
 	\brief		Simple vector and matrix templates
 	\author		Jens Krueger
 				SCI Institute

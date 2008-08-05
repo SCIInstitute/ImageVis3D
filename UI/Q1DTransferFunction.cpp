@@ -9,22 +9,12 @@ Q1DTransferFunction::Q1DTransferFunction(QWidget *parent) :
 	m_iCachedHeight(0),
 	m_iCachedWidth(0),
 	m_pBackdropCache(NULL),
-	// borders, may be changed arbitrarly
+	// borders, may be changed arbitrarily
 	m_iLeftBorder(20),
 	m_iBottomBorder(20),
 	// automatically computed borders
 	m_iRightBorder(0),
 	m_iTopBorder(0),
-	// colors, may be changed arbitrarily 
-	m_colorHistogram(50,50,50),
-	m_colorBack(Qt::black),
-	m_colorBorder(100, 100, 255),
-	m_colorScale(100, 100, 255),
-	m_colorLargeScale(180, 180, 180),
-	m_colorRedLine(255, 0, 0),
-	m_colorGreenLine(0, 255, 0),
-	m_colorBlueLine(0, 0, 255),
-	m_colorAlphaLine(Qt::white),
 	// scale apearance, may be changed arbitrarily (except for the marker length wich should both be less or equal to m_iLeftBorder and m_iBottomBorder)
 	m_iMarkersX(40),
 	m_iMarkersY (40),
@@ -36,6 +26,7 @@ Q1DTransferFunction::Q1DTransferFunction(QWidget *parent) :
 	m_iLastIndex(-1),
 	m_fLastValue(0)
 {
+	SetColor(isEnabled());
 }
 
 Q1DTransferFunction::~Q1DTransferFunction(void)
@@ -44,35 +35,33 @@ Q1DTransferFunction::~Q1DTransferFunction(void)
 	delete m_pBackdropCache;
 }
 
-void Q1DTransferFunction::SetHistogram(std::vector<unsigned int> vHistrogram) {
-	// resize the histogram vector
-	m_vHistrogram.resize(vHistrogram.size());
+void Q1DTransferFunction::SetHistogram(const Histogram1D& vHistrogram) {
+	// store histogram
+	m_vHistrogram.Resize(vHistrogram.GetSize());
 	
-	// also resize the transferfunction
-	m_Trans.Resize(vHistrogram.size());
+	// resize the transferfunction to match the histogram
+	m_Trans.Resize(vHistrogram.GetSize());
 
 	// force the draw routine to recompute the backdrop cache
 	m_bBackdropCacheUptodate = false;
 
 	// if the histogram is empty we are done
-	if (m_vHistrogram.size() == 0)  return;
+	if (m_vHistrogram.GetSize() == 0)  return;
 
 	// rescale the histogram to the [0..1] range
 	// first find min and max ...
-	float fMax = float(vHistrogram[0]), fMin = float(vHistrogram[0]);
-	for (size_t i = 0;i<m_vHistrogram.size();i++) {
-		if (float(vHistrogram[i]) > fMax) fMax = float(vHistrogram[i]);
-		if (float(vHistrogram[i]) < fMin) fMin = float(vHistrogram[i]);
+	unsigned int iMax = vHistrogram.GetLinear(0), iMin = m_vHistrogram.GetLinear(0);
+	for (size_t i = 0;i<m_vHistrogram.GetSize();i++) {
+		if (vHistrogram.GetLinear(i) > iMax) iMax = vHistrogram.GetLinear(i);
+		if (vHistrogram.GetLinear(i) < iMin) iMin = vHistrogram.GetLinear(i);
 
-		for (unsigned int j = 0;j<4;j++) m_Trans.pColorData[i][j] = 0.0f;
+		m_Trans.pColorData[i] = FLOATVECTOR4(0,0,0,0);
 	}
 
 	// ... than rescale
-	float fDiff = fMax-fMin;
-	for (size_t i = 0;i<m_vHistrogram.size();i++) {
-		m_vHistrogram[i]  = vHistrogram[i] - fMin;
-		m_vHistrogram[i] /= fDiff;
-	}
+	float fDiff = float(iMax)-float(iMin);
+	for (size_t i = 0;i<m_vHistrogram.GetSize();i++)
+		m_vHistrogram.SetLinear(i, (float(vHistrogram.GetLinear(i)) - float(iMin)) / fDiff);
 }
 
 void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
@@ -126,7 +115,7 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
 
 void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 	// nothing todo if the histogram is empty
-	if (m_vHistrogram.size() == 0) return;
+	if (m_vHistrogram.GetSize() == 0) return;
 
 	// compute some grid dimensions
 	unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
@@ -136,8 +125,8 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 	// define the polygon ...
 	std::vector<QPointF> pointList;
 	pointList.push_back(QPointF(m_iLeftBorder+1, iGridHeight-m_iBottomBorder));
-	for (size_t i = 0;i<m_vHistrogram.size();i++) 
-		pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistrogram.size()-1), m_iTopBorder+iGridHeight-m_vHistrogram[i]*iGridHeight));	
+	for (size_t i = 0;i<m_vHistrogram.GetSize();i++) 
+		pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistrogram.GetSize()-1), m_iTopBorder+iGridHeight-m_vHistrogram.Get(i)*iGridHeight));	
 	pointList.push_back(QPointF(m_iLeftBorder+iGridWidth, m_iTopBorder+iGridHeight));
 	pointList.push_back(QPointF(m_iLeftBorder+1, m_iTopBorder+iGridHeight));
 
@@ -149,7 +138,7 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 
 void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 	// nothing todo if the histogram is empty
-	if (m_vHistrogram.size() == 0) return;
+	if (m_vHistrogram.GetSize() == 0) return;
 
 	// compute some grid dimensions
 	unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
@@ -247,34 +236,69 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	if (m_iPaintmode & Q1DT_PAINT_RED) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].r = _fValueMin;
+			m_Trans.pColorData[iIndex][0] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_GREEN) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].g = _fValueMin;
+			m_Trans.pColorData[iIndex][1] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_BLUE) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].b = _fValueMin;
+			m_Trans.pColorData[iIndex][2] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_ALPHA) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex].a = _fValueMin;
+			m_Trans.pColorData[iIndex][3] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 
 	// redraw this widget
 	update();
+}
+
+void Q1DTransferFunction::SetColor(bool bIsEnabled) {
+		if (bIsEnabled) {
+			m_colorHistogram = QColor(50,50,50);
+			m_colorBack = QColor(Qt::black);
+			m_colorBorder = QColor(100, 100, 255);
+			m_colorScale = QColor(100, 100, 255);
+			m_colorLargeScale = QColor(180, 180, 180);
+			m_colorRedLine = QColor(255, 0, 0);
+			m_colorGreenLine = QColor(0, 255, 0);
+			m_colorBlueLine = QColor(0, 0, 255);
+			m_colorAlphaLine = QColor(Qt::white);
+		} else {
+			m_colorHistogram = QColor(50,50,50);
+			m_colorBack = QColor(Qt::black);
+			m_colorBorder = QColor(100, 100, 100);
+			m_colorScale = QColor(100, 100, 100);
+			m_colorLargeScale = QColor(180, 180, 180);
+			m_colorRedLine = QColor(100, 40, 40);
+			m_colorGreenLine = QColor(40, 100, 40);
+			m_colorBlueLine = QColor(40, 40, 100);
+			m_colorAlphaLine = QColor(100,100,100);
+		}
+}
+
+void Q1DTransferFunction::changeEvent(QEvent * event) {
+	// call superclass method
+	QWidget::changeEvent(event);
+
+	if (event->type() == QEvent::EnabledChange) {
+		SetColor(isEnabled());
+		m_bBackdropCacheUptodate = false;
+		update();
+	}
 }
 
 void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
@@ -293,7 +317,7 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 		// attach a painter to the pixmap
 		QPainter image_painter(m_pBackdropCache);
 
-		// draw the abckdrop into the image
+		// draw the backdrop into the image
 		DrawCoordinateSystem(image_painter);
 		DrawHistogram(image_painter);
 

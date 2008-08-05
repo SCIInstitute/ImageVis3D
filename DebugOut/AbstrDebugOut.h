@@ -27,64 +27,26 @@
 */
 
 /**
-	\file		TransferFunction2D.h
+	\file		AbstrDebugOut.h
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
 	\version	1.0
-	\date		July 2008
+	\date		August 2008
 */
+
 
 #pragma once
 
-#ifndef TRANSFERFUNCTION2D
-#define TRANSFERFUNCTION2D
+#ifndef ABSTRDEBUGOUT_H
+#define ABSTRDEBUGOUT_H
 
-#include <fstream>
-#include <string>
-#include <vector>
-#include <Basics/Vectors.h>
-#include <Basics/Grids.h>
-
-typedef Grid2D<unsigned int> Histogram2D;
-typedef Grid2D<float> NormalizedHistogram2D;
-typedef Grid2D<FLOATVECTOR4> ColorData2D;
-
-typedef std::pair< float, FLOATVECTOR4 > GradientStop;
-
-class TFPolygon {
+class AbstrDebugOut {
 	public:
-		TFPolygon() {}
+		AbstrDebugOut();
+		virtual ~AbstrDebugOut();
 
-		void Load(std::ifstream& file);
-		void Save(std::ofstream& file);
-
-		std::vector< FLOATVECTOR2 > pPoints;
-		FLOATVECTOR2 pGradientCoords[2];
-		std::vector< GradientStop > pGradientStops;
+		void printf(const CHAR* format, ...) = NULL;
 };
 
-
-class TransferFunction2D
-{
-public:
-	TransferFunction2D();
-	TransferFunction2D(const UINTVECTOR2& iSize);
-	~TransferFunction2D(void);
-	
-	void Resize(const Histogram2D& hist) {Resize(hist.GetSize());}
-	void Resize(const NormalizedHistogram2D& hist) {Resize(hist.GetSize());}
-	void Resize(const UINTVECTOR2& iSize);
-
-	bool Load(const std::string& filename);
-	bool Save(const std::string& filename);
-
-	void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
-	void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
-	void GetFloatArray(float** pfData);
-
-	ColorData2D pColorData;
-	std::vector< TFPolygon > m_Swatches;
-};
-
-#endif // TRANSFERFUNCTION2D
+#endif // ABSTRDEBUGOUT_H

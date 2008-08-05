@@ -2,15 +2,14 @@
 
 #include <QtGui/QtGui>
 #include <QtOpenGL/QtOpenGL>
-#include <math.h>
-#include <Basics/SysTools.h>
 #include <assert.h>
 
-RenderWindow::RenderWindow(QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QGLWidget* glShareWidget, QWidget* parent, Qt::WindowFlags flags) :
+RenderWindow::RenderWindow(MasterController& masterController, QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QGLWidget* glShareWidget, QWidget* parent, Qt::WindowFlags flags) :
+	m_Renderer((GPUSBVR*)masterController.RequestNewVolumerenderer(OPENGL_SBVR)),
 	QGLWidget(parent, glShareWidget,  flags),
+	m_MasterController(masterController),
 	m_strDataset(dataset),
-	m_listWidget_Lock(listWidget_Lock),
-	m_iCurrentView(0)
+	m_listWidget_Lock(listWidget_Lock)
 {	
 
 	m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
@@ -40,49 +39,17 @@ QSize RenderWindow::sizeHint() const
 
 void RenderWindow::initializeGL()
 {
-	QColor trolltechPurple = QColor::fromCmykF(0.39, 0.39, 0.0, 0.0);
-	qglClearColor(trolltechPurple.dark());
-	glShadeModel(GL_SMOOTH);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_TEXTURE_2D);
-	glDisable(GL_CULL_FACE);
-	
-	m_IDTex[0] = bindTexture(QPixmap(SysTools::GetFromResourceOnMac("RenderWin1x3.png").c_str()),GL_TEXTURE_2D);
-	m_IDTex[1] = bindTexture(QPixmap(SysTools::GetFromResourceOnMac("RenderWin2x2.png").c_str()),GL_TEXTURE_2D);
-	m_IDTex[2] = bindTexture(QPixmap(SysTools::GetFromResourceOnMac("RenderWin1.png").c_str()),GL_TEXTURE_2D);
+	if (m_Renderer != NULL) m_Renderer->Initialize();
 }
 
 void RenderWindow::paintGL()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-	glTranslated(0.0, 0.0, -10.0);
-	glRotated(xRot / 16.0, 1.0, 0.0, 0.0);
-
-	glBindTexture(GL_TEXTURE_2D, m_IDTex[m_iCurrentView]);
-
-	glBegin(GL_QUADS);
-		glColor4d(1,1,1,1);
-		glTexCoord2d(0,0);
-		glVertex3d(-0.5,  0.5, -0.05);
-		glTexCoord2d(1,0);
-		glVertex3d( 0.5,  0.5, -0.05);
-		glTexCoord2d(1,1);
-		glVertex3d( 0.5, -0.5, -0.05);
-		glTexCoord2d(0,1);
-		glVertex3d(-0.5, -0.5, -0.05);
-	glEnd();
+	if (m_Renderer != NULL) m_Renderer->Paint();
 }
 
 void RenderWindow::resizeGL(int width, int height)
 {
-	int side = qMin(width, height);
-	glViewport((width - side) / 2, (height - side) / 2, side, side);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0);
-	glMatrixMode(GL_MODELVIEW);
+	if (m_Renderer != NULL) m_Renderer->Resize(width, height);
 }
 
 void RenderWindow::mousePressEvent(QMouseEvent *event)
@@ -90,8 +57,8 @@ void RenderWindow::mousePressEvent(QMouseEvent *event)
 	lastPos = event->pos();
 
 	if (event->buttons() & Qt::RightButton) {
-		m_iCurrentView = (m_iCurrentView + 1 ) %3;
-		emit RenderWindowViewChanged(m_iCurrentView);
+		if (m_Renderer != NULL) m_Renderer->SetCurrentView((m_Renderer->GetCurrentView()+1) %3);
+		emit RenderWindowViewChanged(m_Renderer->GetCurrentView());
 		updateGL();
 	}
 }
@@ -106,6 +73,7 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 		normalizeAngle(&angle);
 		if (angle != xRot) {
 			xRot = angle;
+			if (m_Renderer != NULL) m_Renderer->SetRotation(xRot);
 			updateGL();
 		}
 	}
@@ -119,20 +87,20 @@ void RenderWindow::normalizeAngle(int *angle)
 }
 
 void RenderWindow::ToggleRenderWindowView1x3() {
-	m_iCurrentView = 0;
-	emit RenderWindowViewChanged(m_iCurrentView);
+	if (m_Renderer != NULL) m_Renderer->SetCurrentView(0);
+	emit RenderWindowViewChanged(0);
 	updateGL();
 }
 
 void RenderWindow::ToggleRenderWindowView2x2() {
-	m_iCurrentView = 1;
-	emit RenderWindowViewChanged(m_iCurrentView);
+	if (m_Renderer != NULL) m_Renderer->SetCurrentView(1);
+	emit RenderWindowViewChanged(1);
 	updateGL();
 }
 
 void RenderWindow::ToggleRenderWindowViewSingle() {
-	m_iCurrentView = 2;
-	emit RenderWindowViewChanged(m_iCurrentView);
+	if (m_Renderer != NULL) m_Renderer->SetCurrentView(2);
+	emit RenderWindowViewChanged(2);
 	updateGL();
 }
 

@@ -20,7 +20,7 @@ class Q1DTransferFunction : public QWidget
 	public:
 		Q1DTransferFunction(QWidget *parent=0);
 		virtual ~Q1DTransferFunction(void);
-		void SetHistogram(std::vector<unsigned int> vHistrogram);
+		void SetHistogram(const Histogram1D& vHistrogram);
 		void SetPaintmode(unsigned int iPaintmode) {if (iPaintmode < Q1DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
 
 	public slots:
@@ -32,10 +32,11 @@ class Q1DTransferFunction : public QWidget
 		virtual void mouseMoveEvent(QMouseEvent *event);
 		virtual void mousePressEvent(QMouseEvent *event);
 		virtual void mouseReleaseEvent(QMouseEvent *event);
+		virtual void changeEvent(QEvent * event);
 
 	private:
 		// states
-		std::vector<float> m_vHistrogram;
+		NormalizedHistogram1D m_vHistrogram;
 		unsigned int m_iPaintmode;
 
 		// cached image of the backdrop
@@ -48,11 +49,11 @@ class Q1DTransferFunction : public QWidget
 		unsigned int m_iLeftBorder;
 		unsigned int m_iBottomBorder;
 
-		// automaticall computed borders (computed by DrawCoordinateSystem)
+		// automatically computed borders (computed by DrawCoordinateSystem)
 		unsigned int m_iRightBorder;
 		unsigned int m_iTopBorder;
 
-		// colors, may be changed in the constructor 
+		// colors, may be changed in the setcolor 
 		QColor m_colorHistogram;
 		QColor m_colorBack;
 		QColor m_colorBorder;
@@ -62,6 +63,8 @@ class Q1DTransferFunction : public QWidget
 		QColor m_colorGreenLine;
 		QColor m_colorBlueLine;
 		QColor m_colorAlphaLine;
+
+		void SetColor(bool bIsEnabled);
 
 		// scale apearance, may be changed in the constructor 
 		unsigned int m_iMarkersX;

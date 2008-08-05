@@ -20,23 +20,36 @@ class Q2DTransferFunction : public QWidget
 	public:
 		Q2DTransferFunction(QWidget *parent=0);
 		virtual ~Q2DTransferFunction(void);
-		void SetHistogram(std::vector<unsigned int> vHistrogram);
+		void SetHistogram(const Histogram2D& m_vHistrogram);
 		void SetPaintmode(unsigned int iPaintmode) {if (iPaintmode < Q2DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
 
+		QSize minimumSizeHint() const;
+		QSize sizeHint() const;
+
 	public slots:
+//		void SetActiveSwatch(const int iActiveSwatch);
+//		void AddSwatch();
+//		void DeleteCurrentSwatch();
+
 		bool LoadFromFile(const QString& strFilename);
 		bool SaveToFile(const QString& strFilename);
+
+//	signals:
+//		void ChangedActiveSwatch();
 	
 	protected:
 		virtual void paintEvent(QPaintEvent *event);
 		virtual void mouseMoveEvent(QMouseEvent *event);
 		virtual void mousePressEvent(QMouseEvent *event);
 		virtual void mouseReleaseEvent(QMouseEvent *event);
+		virtual void changeEvent(QEvent * event);
 
 	private:
 		// states
-		std::vector<float> m_vHistrogram;
+		NormalizedHistogram2D m_vHistrogram;
 		unsigned int m_iPaintmode;
+		TransferFunction2D m_Trans;
+		int m_iActiveSwatchIndex;
 
 		// cached image of the backdrop
 		bool		 m_bBackdropCacheUptodate;
@@ -44,43 +57,31 @@ class Q2DTransferFunction : public QWidget
 		unsigned int m_iCachedWidth;
 		QPixmap*	 m_pBackdropCache;
 
-		// borders, may be changed in the constructor 
-		unsigned int m_iLeftBorder;
-		unsigned int m_iBottomBorder;
+		// border size, may be changed in the constructor 
+		unsigned int m_iBorderSize;
+		unsigned int m_iSwatchBorderSize;
 
-		// automaticall computed borders (computed by DrawCoordinateSystem)
-		unsigned int m_iRightBorder;
-		unsigned int m_iTopBorder;
-
-		// colors, may be changed in the constructor 
+		// colors, may be changed in the setcolor 
 		QColor m_colorHistogram;
 		QColor m_colorBack;
 		QColor m_colorBorder;
-		QColor m_colorScale;
-		QColor m_colorLargeScale;
-		QColor m_colorRedLine;
-		QColor m_colorGreenLine;
-		QColor m_colorBlueLine;
-		QColor m_colorAlphaLine;
+		QColor m_colorSwatchBorder;
+		QColor m_colorSwatchBorderCircle;
+		QColor m_colorSwatchGradCircle;
 
-		// scale apearance, may be changed in the constructor 
-		unsigned int m_iMarkersX;
-		unsigned int m_iMarkersY;
-		unsigned int m_iBigMarkerSpacingX;
-		unsigned int m_iBigMarkerSpacingY;
-		unsigned int m_iMarkerLength;
-		unsigned int m_iBigMarkerLength;
-
-		TransferFunction2D m_Trans;
+		void SetColor(bool bIsEnabled);
 
 		// mouse motion handling
 		int m_iLastIndex;
 		float m_fLastValue;
 
 		// drawing routines
-		void DrawCoordinateSystem(QPainter& painter);
-		void DrawHistogram(QPainter& painter);
-		void DrawFunctionPlots(QPainter& painter);
+		void DrawBorder(QPainter& painter);
+		void DrawHistogram(QPainter& painter, float fScale=1.0f);
+		void DrawSwatches(QPainter& painter);
+
+		// helper
+		INTVECTOR2 Rel2Abs(FLOATVECTOR2 vfCoord);
 };
 
 

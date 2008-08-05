@@ -688,7 +688,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -698,7 +698,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -708,7 +708,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -718,7 +718,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -793,6 +793,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Basics\Grids.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Basics\MathTools.cpp"
 				>
 			</File>
@@ -824,6 +828,42 @@
 		<Filter
 			Name="Controller"
 			>
+			<File
+				RelativePath=".\Controller\MasterController.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Controller\MasterController.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Renderer"
+			>
+			<File
+				RelativePath=".\Renderer\AbstrRenderer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\AbstrRenderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\GPUMemMan.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\GPUMemMan.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\GPUSBVR.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\GPUSBVR.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\main.cpp"

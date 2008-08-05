@@ -6,11 +6,13 @@
 #include <QtGui/QListWidget>
 #include <QtOpenGL/QGLWidget>
 
+#include "Controller/MasterController.h"
+
 class RenderWindow : public QGLWidget
 {
 	Q_OBJECT
 	public:
-		RenderWindow(QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QGLWidget* glWidget, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+		RenderWindow(MasterController& masterController, QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QGLWidget* glWidget, QWidget* parent = 0, Qt::WindowFlags flags = 0);
 		virtual ~RenderWindow();
 
 		QString GetDataset() {return m_strDataset;}
@@ -34,6 +36,8 @@ class RenderWindow : public QGLWidget
 		void closeEvent(QCloseEvent *event);
 
 	private:
+		MasterController&		m_MasterController;
+		GPUSBVR*				m_Renderer;
 		
 		void normalizeAngle(int *angle);
 		int xRot;
@@ -42,8 +46,6 @@ class RenderWindow : public QGLWidget
 		QString m_strDataset;
 		QString m_strID;
 		QListWidget *m_listWidget_Lock;
-		GLuint m_IDTex[3];
-		int m_iCurrentView;
 
 };
 

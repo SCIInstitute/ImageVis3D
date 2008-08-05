@@ -15,7 +15,10 @@
 using namespace std;
 
 
-MainWindow::MainWindow(QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : QMainWindow(parent, flags), m_strCurrentWorkspaceFilename("")
+MainWindow::MainWindow(MasterController& masterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
+	QMainWindow(parent, flags),
+	m_MasterController(masterController),
+	m_strCurrentWorkspaceFilename("")
 {
 	setupUi(this);
 
@@ -54,10 +57,16 @@ void MainWindow::Save1DTrans(){
 
 void MainWindow::Load2DTrans(){
 	QString fileName = QFileDialog::getOpenFileName(this, "Load 2D Transferfunction", ".", "2D Transferfunction File (*.2dt)");
+	if (fileName != "") {
+		m_2DTransferFunction->LoadFromFile(fileName);
+	}
 }
 
 void MainWindow::Save2DTrans(){
 	QString fileName = QFileDialog::getSaveFileName(this, "Save 2D Transferfunction", ".", "2D Transferfunction File (*.2dt)");
+	if (fileName != "") {
+		m_2DTransferFunction->SaveToFile(fileName);
+	}
 }
 
 // ******************************************
@@ -135,6 +144,9 @@ void MainWindow::SetupWorkspaceMenu() {
 	menu_Workspace->addAction(dockWidget_1DTrans->toggleViewAction());
 	menu_Workspace->addAction(dockWidget_2DTrans->toggleViewAction());
 	menu_Workspace->addAction(dockWidget_IsoSurface->toggleViewAction());
+
+	menu_Help->addAction(dockWidget_Debug->toggleViewAction());
+
 }
 
 bool MainWindow::LoadWorkspace() {
@@ -253,7 +265,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
  {
 	 static unsigned int iCounter = 0;
 	 
-	 RenderWindow *renderWin = new RenderWindow(dataset, listWidget_Lock, iCounter++, m_glShareWidget, this);
+	 RenderWindow *renderWin = new RenderWindow(m_MasterController, dataset, listWidget_Lock, iCounter++, m_glShareWidget, this);
      mdiArea->addSubWindow(renderWin);
 
      return renderWin;
@@ -322,7 +334,6 @@ void MainWindow::Transfer1DCBClicked() {
 	if (checkBox_Blue->isChecked() ) iPaintmode |= Q1DT_PAINT_BLUE;
 	if (checkBox_Alpha->isChecked() ) iPaintmode |= Q1DT_PAINT_ALPHA;
 
-
 	m_1DTransferFunction->SetPaintmode(iPaintmode);
 }
 
@@ -355,6 +366,10 @@ void MainWindow::Use1DTrans() {
 	checkBox_Use1DTrans->setEnabled(false);
 	checkBox_Use1DTrans->setChecked(true);
 	radioButton_1DTrans->setChecked(true);
+
+	m_1DTransferFunction->setEnabled(true);
+	m_2DTransferFunction->setEnabled(false);
+	// todo disable iso controlls
 }
 
 void MainWindow::Use2DTrans() {
@@ -365,6 +380,10 @@ void MainWindow::Use2DTrans() {
 	checkBox_Use2DTrans->setEnabled(false);
 	checkBox_Use2DTrans->setChecked(true);
 	radioButton_2DTrans->setChecked(true);
+
+	m_1DTransferFunction->setEnabled(false);
+	m_2DTransferFunction->setEnabled(true);
+	// todo disable iso controlls
 }
 
 void MainWindow::UseIso() {
@@ -375,6 +394,10 @@ void MainWindow::UseIso() {
 	checkBox_UseIso->setEnabled(false);
 	checkBox_UseIso->setChecked(true);
 	radioButton_Iso->setChecked(true);
+
+	m_1DTransferFunction->setEnabled(false);
+	m_2DTransferFunction->setEnabled(false);
+	// todo enable iso controlls
 }
 
 
@@ -452,14 +475,24 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 	Ui_MainWindow::setupUi(MainWindow);
 
     m_1DTransferFunction = new Q1DTransferFunction(dockWidgetContents_6);
-
-	// MOCKUP CODE: Just generate a random histogram
-	std::vector<unsigned int> vHistrogram(4096);
-	for (size_t i = 0;i<vHistrogram.size();i++) vHistrogram[i] = (unsigned int)(i+(rand()*10) / RAND_MAX);
-	m_1DTransferFunction->SetHistogram(vHistrogram);
-	// END MOCKUP CODE
-
 	horizontalLayout_13->addWidget(m_1DTransferFunction);
+	m_2DTransferFunction = new Q2DTransferFunction(frame_5);
+	verticalLayout_11->addWidget(m_2DTransferFunction);
+
+	Use2DTrans();
+
+	// DEBUG CODE
+	// generate a random 1D histogram
+	Histogram1D v1DHistrogram(4096);
+	for (size_t i = 0;i<v1DHistrogram.GetSize();i++) v1DHistrogram.Set(i, (unsigned int)(i+(rand()*10) / RAND_MAX));
+	m_1DTransferFunction->SetHistogram(v1DHistrogram);
+	// generate a random 2D histogram
+	Histogram2D v2DHistrogram(UINTVECTOR2(100,200));
+	for (size_t y = 0;y<v2DHistrogram.GetSize().y;y++)
+		for (size_t x = 0;x<v2DHistrogram.GetSize().x;x++) 
+			v2DHistrogram.Set(x,y,(unsigned int)(x+(rand()*10) / RAND_MAX)*(unsigned int)(y+(rand()*10) / RAND_MAX));
+	m_2DTransferFunction->SetHistogram(v2DHistrogram);
+	// END DEBUG CODE
 
 	for (unsigned int i = 0; i < ms_iMaxRecentFiles; ++i) {
 		m_recentFileActs[i] = new QAction(this);
@@ -468,7 +501,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 		menuLast_Used_Projects->addAction(m_recentFileActs[i]);
 	}
 
-	// this widget is used to share the contexts amongst the  render windows
+	// this widget is used to share the contexts amongst the render windows
 	m_glShareWidget = new QGLWidget(this);
 	this->horizontalLayout->addWidget(m_glShareWidget);
 }
