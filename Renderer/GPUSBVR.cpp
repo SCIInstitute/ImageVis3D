@@ -55,13 +55,13 @@ void GPUSBVR::Paint() {
 	glBegin(GL_QUADS);
 		glColor4d(1,1,1,1);
 		glTexCoord2d(0,0);
-		glVertex3d(-0.5,  0.5, -0.05);
+		glVertex3d(-0.5,  0.5, 0.0);
 		glTexCoord2d(1,0);
-		glVertex3d( 0.5,  0.5, -0.05);
+		glVertex3d( 0.5,  0.5, 0.0);
 		glTexCoord2d(1,1);
-		glVertex3d( 0.5, -0.5, -0.05);
+		glVertex3d( 0.5, -0.5, 0.0);
 		glTexCoord2d(0,1);
-		glVertex3d(-0.5, -0.5, -0.05);
+		glVertex3d(-0.5, -0.5, 0.0);
 	glEnd();
 }
 

@@ -41,7 +41,7 @@
 #ifndef GRIDS
 #define GRIDS
 
-#include "vectors.h"
+#include "Vectors.h"
 
 template <class T=float> class GridnD  {
 	public:
