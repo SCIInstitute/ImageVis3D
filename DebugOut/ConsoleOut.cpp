@@ -19,7 +19,7 @@ void ConsoleOut::printf(const char* format, ...)
 #ifdef WIN32
 	_vsnprintf_s( buff, 16384, sizeof(buff), format, args);
 #else
-	vswprintf( buff, sizeof(buff), format, args);
+	vsnprintf( buff, sizeof(buff), format, args);
 #endif
 
 	Console::printf("%s\n",buff);
