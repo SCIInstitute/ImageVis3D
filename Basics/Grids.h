@@ -43,7 +43,7 @@
 
 #include "Vectors.h"
 
-template <class T=float> class GridnD  {
+template <class T> class GridnD  {
 	public:
 		GridnD<T>() : m_pData(NULL) {}
 		virtual ~GridnD<T>() {delete [] this->m_pData;}
@@ -56,7 +56,7 @@ template <class T=float> class GridnD  {
 		T* m_pData;
 };
 
-template <class T=float> class Grid1D : public GridnD<T> {
+template <class T> class Grid1D : public GridnD<T> {
 	public:
 		Grid1D<T>() : m_iSize(0), GridnD<T>() {}
 		Grid1D<T>(const size_t& iSize) : m_iSize(iSize) { this->m_pData = new T[m_iSize];}
@@ -88,7 +88,7 @@ template <class T=float> class Grid1D : public GridnD<T> {
 		size_t m_iSize;
 };
 
-template <class T=float> class Grid2D : public GridnD<T> {
+template <class T> class Grid2D : public GridnD<T> {
 	public:
 		Grid2D<T>() : m_iSize(0,0), GridnD<T>() {}
 		Grid2D<T>(const VECTOR2<size_t>& iSize) : m_iSize(iSize) { this->m_pData = new T[m_iSize.area()];}
@@ -123,7 +123,7 @@ template <class T=float> class Grid2D : public GridnD<T> {
 };
 
 
-template <class T=float> class Grid3D : public GridnD<T> {
+template <class T> class Grid3D : public GridnD<T> {
 	public:
 		Grid3D<T>() : m_iSize(0,0), GridnD<T>() {}
 		Grid3D<T>(const VECTOR3<size_t>& iSize) : m_iSize(iSize) { this->m_pData = new T[m_iSize.volume()];}
