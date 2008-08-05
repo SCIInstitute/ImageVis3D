@@ -63,7 +63,7 @@ bool TransferFunction2D::Load(const std::string& filename) {
 	if (!file.is_open()) return false;
 
 	// load gridsize
-	UINTVECTOR2 iSize;
+	VECTOR2<size_t> iSize;
 	file >> iSize.x;
 	file >> iSize.y;
 	pColorData.Resize(iSize);
