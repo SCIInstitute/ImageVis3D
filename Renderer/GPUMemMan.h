@@ -44,7 +44,12 @@
 #ifdef WIN32
 	#include <windows.h>
 #endif
-#include <GL/GL.h>
+
+#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+	#include <GL/GL.h>
+#else
+	#include <GL/GL>
+#endif
 
 
 // TODO: realize include GL for other platforms
