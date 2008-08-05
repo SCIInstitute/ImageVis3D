@@ -58,7 +58,7 @@ template <class T> class GridnD  {
 
 template <class T> class Grid1D : public GridnD<T> {
 	public:
-		Grid1D<T>() : m_iSize(0), GridnD<T>() {}
+		Grid1D<T>() : GridnD<T>(), m_iSize(0) {}
 		Grid1D<T>(const size_t& iSize) : m_iSize(iSize) { this->m_pData = new T[m_iSize];}
 		Grid1D<T>(const Grid1D<T> &other): m_iSize(other.m_iSize) {
 			this->m_pData = new T[m_iSize];
@@ -90,7 +90,7 @@ template <class T> class Grid1D : public GridnD<T> {
 
 template <class T> class Grid2D : public GridnD<T> {
 	public:
-		Grid2D<T>() : m_iSize(0,0), GridnD<T>() {}
+		Grid2D<T>() : GridnD<T>(), m_iSize(0,0) {}
 		Grid2D<T>(const VECTOR2<size_t>& iSize) : m_iSize(iSize) { this->m_pData = new T[m_iSize.area()];}
 		Grid2D<T>(const Grid2D<T> &other): m_iSize(other.m_iSize) {
 			this->m_pData = new T[m_iSize.area()];
@@ -125,7 +125,7 @@ template <class T> class Grid2D : public GridnD<T> {
 
 template <class T> class Grid3D : public GridnD<T> {
 	public:
-		Grid3D<T>() : m_iSize(0,0), GridnD<T>() {}
+		Grid3D<T>() : GridnD<T>(), m_iSize(0,0,0) {}
 		Grid3D<T>(const VECTOR3<size_t>& iSize) : m_iSize(iSize) { this->m_pData = new T[m_iSize.volume()];}
 		Grid3D<T>(const Grid3D<T> &other): m_iSize(other.m_iSize) {
 			this->m_pData = new T[m_iSize.volume()];
