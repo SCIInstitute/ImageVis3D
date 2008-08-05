@@ -144,8 +144,8 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter, float fScale) {
 
 
 INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
-	return INTVECTOR2(m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x*(width()-m_iBorderSize-m_iSwatchBorderSize),
-					  m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.y*(height()-m_iBorderSize-m_iSwatchBorderSize));
+	return INTVECTOR2(int(m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x*(width()-m_iBorderSize-m_iSwatchBorderSize)),
+					  int(m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.y*(height()-m_iBorderSize-m_iSwatchBorderSize)));
 }
 
 void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
