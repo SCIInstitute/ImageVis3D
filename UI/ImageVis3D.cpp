@@ -489,7 +489,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 	for (size_t i = 0;i<v1DHistrogram.GetSize();i++) v1DHistrogram.Set(i, (unsigned int)(i+(rand()*10) / RAND_MAX));
 	m_1DTransferFunction->SetData(v1DHistrogram, NULL);
 	// generate a random 2D histogram
-	Histogram2D v2DHistrogram(UINTVECTOR2(100,200));
+	Histogram2D v2DHistrogram(VECTOR2<size_t>(100,200));
 	for (size_t y = 0;y<v2DHistrogram.GetSize().y;y++)
 		for (size_t x = 0;x<v2DHistrogram.GetSize().x;x++) 
 			v2DHistrogram.Set(x,y,(unsigned int)(x+(rand()*10) / RAND_MAX)*(unsigned int)(y+(rand()*10) / RAND_MAX));
