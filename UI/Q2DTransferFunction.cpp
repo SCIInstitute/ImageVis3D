@@ -176,10 +176,10 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 		
 		for (size_t j = 0;j<currentSwatch.pGradientStops.size();j++) {			
 			linearBrush.setColorAt(currentSwatch.pGradientStops[j].first, 
-								   QColor(currentSwatch.pGradientStops[j].second[0]*255,
-										  currentSwatch.pGradientStops[j].second[1]*255,
-								          currentSwatch.pGradientStops[j].second[2]*255,
-								          currentSwatch.pGradientStops[j].second[3]*255));
+								   QColor(int(currentSwatch.pGradientStops[j].second[0]*255),
+										  int(currentSwatch.pGradientStops[j].second[1]*255),
+								          int(currentSwatch.pGradientStops[j].second[2]*255),
+								          int(currentSwatch.pGradientStops[j].second[3]*255)));
 		}
 
 		painter.setPen(borderPen);
@@ -187,7 +187,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 		painter.drawPolygon(&pointList[0], currentSwatch.pPoints.size());
 		painter.setBrush(Qt::NoBrush);
 
-		if (m_iActiveSwatchIndex == i) {
+		if (m_iActiveSwatchIndex == int(i)) {
 			painter.setPen(circlePen);
 			painter.setBrush(solidBrush);
 			for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {		
