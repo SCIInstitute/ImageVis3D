@@ -42,23 +42,23 @@
 #define GPUSBVR_H
 
 #include "AbstrRenderer.h"
-#include "GPUMemMan.h"
+#include "../Renderer/GPUMemMan.h"
 
 class GPUSBVR : public AbstrRenderer {
 	public:
-		GPUSBVR(GPUMemMan& memMan);
+		GPUSBVR(MasterController* pMasterController);
 		virtual ~GPUSBVR();
 
 		void Initialize();
 		void Paint();
 		void Resize(int width, int height);
+		void Cleanup();
 
 		void SetRotation(int xRot) {m_xRot = xRot;}
 		void SetCurrentView(int iCurrentView) {m_iCurrentView = iCurrentView;}
 		int GetCurrentView() {return m_iCurrentView;}
-	protected:
-		GPUMemMan& m_memMan;
 
+	protected:
 		GLuint m_IDTex[3];
 		int m_iCurrentView;
 		int m_xRot;

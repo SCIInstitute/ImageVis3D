@@ -44,10 +44,16 @@
 #include "../IO/TransferFunction1D.h"
 #include "../IO/TransferFunction2D.h"
 
+class MasterController;
+
 class AbstrRenderer {
-	public:
-		AbstrRenderer();
-		virtual ~AbstrRenderer();
+public:
+	virtual ~AbstrRenderer() {}
+
+	bool LoadDataset(string strFilename);
+
+protected:
+	MasterController* m_pMasterController;
 };
 
 #endif // ABSTRRENDERER_H

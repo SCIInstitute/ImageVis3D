@@ -2,32 +2,36 @@
 
 #include <math.h>
 #include <Basics/SysTools.h>
+#include "../Controller/MasterController.h"
 
-GPUSBVR::GPUSBVR(GPUMemMan& memMan) :
-	m_memMan(memMan),
+GPUSBVR::GPUSBVR(MasterController* pMasterController) :
 	m_xRot(0)
 {
-
+	m_pMasterController = pMasterController;
 }
 
 GPUSBVR::~GPUSBVR() {
-
 }
 
 
 void GPUSBVR::Initialize() {
+
+	m_pMasterController->DebugOut()->printf("GPUSBVR::Initialize");
+
 	glClearColor(1,0,0,0);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
 	glDisable(GL_CULL_FACE);
 	
-	m_IDTex[0] = m_memMan.Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1x3.png").c_str());
-	m_IDTex[1] = m_memMan.Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin2x2.png").c_str());
-	m_IDTex[2] = m_memMan.Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1.png").c_str());
+	m_IDTex[0] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1x3.png").c_str());
+	m_IDTex[1] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin2x2.png").c_str());
+	m_IDTex[2] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1.png").c_str());
 }
 
 void GPUSBVR::Paint() {
+	m_pMasterController->DebugOut()->printf("GPUSBVR::Paint");
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	glTranslated(0.0, 0.0, -10.0);
@@ -49,6 +53,8 @@ void GPUSBVR::Paint() {
 }
 
 void GPUSBVR::Resize(int width, int height) {
+	m_pMasterController->DebugOut()->printf("GPUSBVR::Resize");
+
 	int side = std::min(width, height);
 	glViewport((width - side) / 2, (height - side) / 2, side, side);
 
@@ -56,4 +62,9 @@ void GPUSBVR::Resize(int width, int height) {
 	glLoadIdentity();
 	glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0);
 	glMatrixMode(GL_MODELVIEW);
+}
+
+
+void GPUSBVR::Cleanup() {
+//	glDeleteLists(object, 1);
 }
