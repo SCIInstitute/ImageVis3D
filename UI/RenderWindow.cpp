@@ -5,8 +5,8 @@
 #include <assert.h>
 
 RenderWindow::RenderWindow(MasterController& masterController, QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QGLWidget* glShareWidget, QWidget* parent, Qt::WindowFlags flags) :
-	m_Renderer((GPUSBVR*)masterController.RequestNewVolumerenderer(OPENGL_SBVR)),
 	QGLWidget(parent, glShareWidget, flags),
+	m_Renderer((GPUSBVR*)masterController.RequestNewVolumerenderer(OPENGL_SBVR)),
 	m_MasterController(masterController),
 	m_strDataset(dataset),
 	m_listWidget_Lock(listWidget_Lock)
@@ -15,8 +15,7 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
 	setWindowTitle(m_strID);
 	m_listWidget_Lock->addItem(m_strID);
 
-	if (!m_Renderer->LoadDataset(m_strDataset.toStdString()))
-
+	m_Renderer->LoadDataset(m_strDataset.toStdString());
 	m_Renderer->SetCurrentView(0);
 
 	xRot = 0;
