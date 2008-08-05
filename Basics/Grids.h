@@ -62,7 +62,7 @@ template <class T=float> class Grid1D : public GridnD<T> {
 		Grid1D<T>(const size_t& iSize) : m_iSize(iSize) { this->m_pData = new T[m_iSize];}
 		Grid1D<T>(const Grid1D<T> &other): m_iSize(other.m_iSize) {
 			this->m_pData = new T[m_iSize];
-			memcpy(this->m_pData, other.this->m_pData, sizeof(T)*m_iSize);
+			memcpy(this->m_pData, other->m_pData, sizeof(T)*m_iSize);
 		}
 		virtual ~Grid1D<T>() {}
 
@@ -80,7 +80,7 @@ template <class T=float> class Grid1D : public GridnD<T> {
 			delete [] this->m_pData; 
 			m_iSize = other.m_iSize;
 			this->m_pData = new T[m_iSize];
-			memcpy(this->m_pData, other.this->m_pData, sizeof(T)*m_iSize);
+			memcpy(this->m_pData, other->m_pData, sizeof(T)*m_iSize);
 			return *this; 
 		}
 
@@ -94,7 +94,7 @@ template <class T=float> class Grid2D : public GridnD<T> {
 		Grid2D<T>(const VECTOR2<size_t>& iSize) : m_iSize(iSize) { this->m_pData = new T[m_iSize.area()];}
 		Grid2D<T>(const Grid2D<T> &other): m_iSize(other.m_iSize) {
 			this->m_pData = new T[m_iSize.area()];
-			memcpy(this->m_pData, other.this->m_pData, sizeof(T)*m_iSize.area());
+			memcpy(this->m_pData, other->m_pData, sizeof(T)*m_iSize.area());
 		}
 		virtual ~Grid2D<T>() {}
 
@@ -114,7 +114,7 @@ template <class T=float> class Grid2D : public GridnD<T> {
 			delete [] this->m_pData; 
 			m_iSize = other.m_iSize;
 			this->m_pData = new T[m_iSize.area()];
-			memcpy(this->m_pData, other.this->m_pData, sizeof(T)*m_iSize.area());
+			memcpy(this->m_pData, other->m_pData, sizeof(T)*m_iSize.area());
 			return *this; 
 		}
 
@@ -129,7 +129,7 @@ template <class T=float> class Grid3D : public GridnD<T> {
 		Grid3D<T>(const VECTOR3<size_t>& iSize) : m_iSize(iSize) { this->m_pData = new T[m_iSize.volume()];}
 		Grid3D<T>(const Grid3D<T> &other): m_iSize(other.m_iSize) {
 			this->m_pData = new T[m_iSize.volume()];
-			memcpy(this->m_pData, other.this->m_pData, sizeof(T)*m_iSize.volume());
+			memcpy(this->m_pData, other->m_pData, sizeof(T)*m_iSize.volume());
 		}
 		virtual ~Grid3D<T>() {}
 
@@ -149,7 +149,7 @@ template <class T=float> class Grid3D : public GridnD<T> {
 			delete [] this->m_pData; 
 			m_iSize = other.m_iSize;
 			this->m_pData = new T[m_iSize.volume()];
-			memcpy(this->m_pData, other.this->m_pData, sizeof(T)*m_iSize.volume());
+			memcpy(this->m_pData, other->m_pData, sizeof(T)*m_iSize.volume());
 			return *this; 
 		}
 
