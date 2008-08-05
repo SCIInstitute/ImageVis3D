@@ -46,9 +46,9 @@
 #endif
 
 #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
-	#include <GL/GL.h>
-#else
 	#include <GL/GL>
+#else
+	#include <GL/GL.h>
 #endif
 
 
