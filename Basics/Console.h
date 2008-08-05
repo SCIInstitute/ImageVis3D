@@ -144,9 +144,9 @@ namespace Console {
 			std::cout << buff;
 		}
 
-		static void printfd(const wchar_t* format, ...)
-		{
-			#ifdef _DEBUG
+		#ifdef _DEBUG
+			static void printfd(const wchar_t* format, ...)
+			{
 					// output string
 					wchar_t buff[16384];
 			       
@@ -156,8 +156,10 @@ namespace Console {
 
 					vswprintf( buff, sizeof(buff), format, args);
 					cout << buff;
-			#endif
-		}
+			}
+		#else
+			static void printfd(const wchar_t*, ...) {}
+		#endif
 
 
 		static void printf(const char* format, ...)
@@ -173,9 +175,9 @@ namespace Console {
             std::cout << buff;
 		}
 
-		static void printfd(const char* format, ...)
-		{
-			#ifdef _DEBUG
+		#ifdef _DEBUG
+			static void printfd(const char* format, ...)
+			{
 					// output string
 					char buff[16384];
 			       
@@ -184,9 +186,11 @@ namespace Console {
 					va_start(args, format);
 
 					vsnprintf( buff, sizeof(buff), format, args);
-                    std::cout << buff;
-			#endif
-		}
+					std::cout << buff;
+			}
+		#else
+		static void printfd(const char*, ...) {}
+		#endif
 
 
 #endif
