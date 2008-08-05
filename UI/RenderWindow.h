@@ -36,8 +36,8 @@ class RenderWindow : public QGLWidget
 		void closeEvent(QCloseEvent *event);
 
 	private:
-		MasterController&		m_MasterController;
 		GPUSBVR*				m_Renderer;
+		MasterController&		m_MasterController;
 		
 		void normalizeAngle(int *angle);
 		int xRot;

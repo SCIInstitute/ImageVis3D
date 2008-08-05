@@ -6,7 +6,7 @@
 
 RenderWindow::RenderWindow(MasterController& masterController, QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QGLWidget* glShareWidget, QWidget* parent, Qt::WindowFlags flags) :
 	m_Renderer((GPUSBVR*)masterController.RequestNewVolumerenderer(OPENGL_SBVR)),
-	QGLWidget(parent, glShareWidget,  flags),
+	QGLWidget(parent, glShareWidget, flags),
 	m_MasterController(masterController),
 	m_strDataset(dataset),
 	m_listWidget_Lock(listWidget_Lock)
