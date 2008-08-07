@@ -33,9 +33,9 @@
   <widget class="QWidget" name="centralwidget" >
    <property name="geometry" >
     <rect>
-     <x>407</x>
+     <x>388</x>
      <y>22</y>
-     <width>598</width>
+     <width>617</width>
      <height>1191</height>
     </rect>
    </property>
@@ -152,7 +152,7 @@
     <rect>
      <x>0</x>
      <y>22</y>
-     <width>403</width>
+     <width>384</width>
      <height>307</height>
     </rect>
    </property>
@@ -182,7 +182,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>403</width>
+      <width>384</width>
       <height>285</height>
      </rect>
     </property>
@@ -206,7 +206,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>379</width>
+          <width>360</width>
           <height>240</height>
          </rect>
         </property>
@@ -334,8 +334,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>379</width>
           <height>240</height>
          </rect>
@@ -436,8 +436,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>379</width>
           <height>240</height>
          </rect>
@@ -627,8 +627,8 @@
        <widget class="QWidget" name="tab_6" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>379</width>
           <height>240</height>
          </rect>
@@ -1089,7 +1089,7 @@
     <rect>
      <x>0</x>
      <y>333</y>
-     <width>403</width>
+     <width>384</width>
      <height>167</height>
     </rect>
    </property>
@@ -1110,7 +1110,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>403</width>
+      <width>384</width>
       <height>145</height>
      </rect>
     </property>
@@ -1150,8 +1150,8 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>379</width>
           <height>71</height>
          </rect>
@@ -1255,8 +1255,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>379</width>
           <height>71</height>
          </rect>
@@ -1330,7 +1330,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>379</width>
+          <width>360</width>
           <height>71</height>
          </rect>
         </property>
@@ -1445,7 +1445,7 @@
      <x>1009</x>
      <y>482</y>
      <width>194</width>
-     <height>388</height>
+     <height>389</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1466,7 +1466,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>366</height>
+      <height>367</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1646,7 +1646,7 @@
     <rect>
      <x>0</x>
      <y>504</y>
-     <width>403</width>
+     <width>384</width>
      <height>142</height>
     </rect>
    </property>
@@ -1673,7 +1673,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>403</width>
+      <width>384</width>
       <height>120</height>
      </rect>
     </property>
@@ -2174,9 +2174,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>874</y>
+     <y>875</y>
      <width>194</width>
-     <height>339</height>
+     <height>338</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2191,7 +2191,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>317</height>
+      <height>316</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
@@ -2330,7 +2330,7 @@
     <rect>
      <x>0</x>
      <y>650</y>
-     <width>403</width>
+     <width>384</width>
      <height>274</height>
     </rect>
    </property>
@@ -2345,7 +2345,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>403</width>
+      <width>384</width>
       <height>252</height>
      </rect>
     </property>
@@ -2450,7 +2450,7 @@
     <rect>
      <x>0</x>
      <y>928</y>
-     <width>403</width>
+     <width>384</width>
      <height>92</height>
     </rect>
    </property>
@@ -2465,7 +2465,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>403</width>
+      <width>384</width>
       <height>70</height>
      </rect>
     </property>
@@ -2529,7 +2529,7 @@
     <rect>
      <x>0</x>
      <y>1024</y>
-     <width>403</width>
+     <width>384</width>
      <height>189</height>
     </rect>
    </property>
@@ -2547,7 +2547,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>403</width>
+      <width>384</width>
       <height>167</height>
      </rect>
     </property>
@@ -2627,6 +2627,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_ClearDebug" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>23</height>
+           </size>
+          </property>
           <property name="baseSize" >
            <size>
             <width>0</width>
