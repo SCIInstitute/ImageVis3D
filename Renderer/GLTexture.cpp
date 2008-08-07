@@ -8,5 +8,5 @@ GLTexture::~GLTexture() {
 
 void GLTexture::Delete() {
 	glDeleteTextures(1,&m_iGLID); 
-	m_iGLID = -1;
+	m_iGLID = (unsigned int)(-1);
 }
