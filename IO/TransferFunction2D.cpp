@@ -86,10 +86,10 @@ bool TransferFunction2D::Save(const std::string& filename) {
 	if (!file.is_open()) return false;
 
 	// save gridsize
-	file << pColorData.GetSize().x << " " << pColorData.GetSize().y << " ";
+	file << pColorData.GetSize().x << " " << pColorData.GetSize().y << endl;
 
 	// save swatch count
-	file << m_Swatches.size() << " ";
+	file << m_Swatches.size() << endl;
 
 	// save Swatches
 	for (unsigned int i = 0;i<m_Swatches.size();i++) m_Swatches[i].Save(file);
@@ -169,10 +169,10 @@ void TFPolygon::Save(ofstream& file) {
 	file << pGradientCoords[0][0] << " " << pGradientCoords[0][1] << " ";
 	file << pGradientCoords[1][0] << " " << pGradientCoords[1][1];
 	file << endl;
-	file << pGradientStops.size() << " ";
+	file << pGradientStops.size() << endl;
 
 	for(unsigned int i=0;i<pGradientStops.size();++i){
-		file << pGradientStops[i].first << endl;
+		file << pGradientStops[i].first << "  ";
 		for(unsigned int j=0;j<4;++j){
 			file << pGradientStops[i].second[j] << " ";
 		}

@@ -70,44 +70,7 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistrogram, TransferFuncti
 		m_vHistrogram.SetLinear(i, (float(vHistrogram->GetLinear(i)) - float(iMin)) / fDiff);
 
 
-	// debug
-	{
-		TFPolygon mySwatch;
-		mySwatch.pPoints.push_back(FLOATVECTOR2(1.0f,0.0f));
-		mySwatch.pPoints.push_back(FLOATVECTOR2(0.8f,0.0f));
-		mySwatch.pPoints.push_back(FLOATVECTOR2(0.8f,0.8f));
-		mySwatch.pPoints.push_back(FLOATVECTOR2(1.0f,1.0f));
-	
-		mySwatch.pGradientCoords[0] = FLOATVECTOR2(0.1f,0.1f);
-		mySwatch.pGradientCoords[1] = FLOATVECTOR2(0.5f,0.5f);
-
-		mySwatch.pGradientStops.push_back(GradientStop(0.0f,FLOATVECTOR4(0,0,0,0)));
-		mySwatch.pGradientStops.push_back(GradientStop(0.5f,FLOATVECTOR4(1,0,0,1)));
-		mySwatch.pGradientStops.push_back(GradientStop(1.0f,FLOATVECTOR4(0,0,0,0)));
-		
-		m_pTrans->m_Swatches.push_back(mySwatch);
-	}
-	{
-		TFPolygon mySwatch;
-		mySwatch.pPoints.push_back(FLOATVECTOR2(0.0f,0.5f));
-		mySwatch.pPoints.push_back(FLOATVECTOR2(0.2f,0.5f));
-		mySwatch.pPoints.push_back(FLOATVECTOR2(0.2f,0.8f));
-		mySwatch.pPoints.push_back(FLOATVECTOR2(0.0f,0.8f));
-		
-		mySwatch.pGradientCoords[0] = FLOATVECTOR2(0.0f,0.7f);
-		mySwatch.pGradientCoords[1] = FLOATVECTOR2(0.2f,0.7f);
-
-		mySwatch.pGradientStops.push_back(GradientStop(0.1f,FLOATVECTOR4(0,0,1,1)));
-		mySwatch.pGradientStops.push_back(GradientStop(0.5f,FLOATVECTOR4(1,1,1,0.0f)));
-		mySwatch.pGradientStops.push_back(GradientStop(1.0f,FLOATVECTOR4(0,0,1,1)));
-
-		m_pTrans->m_Swatches.push_back(mySwatch);
-	}
-
-
-	m_iActiveSwatchIndex = 0;
-
-
+	m_iActiveSwatchIndex = 0; // DEBUG
 }
 
 void Q2DTransferFunction::DrawBorder(QPainter& painter) {
@@ -150,13 +113,15 @@ INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
 void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 	if (m_pTrans == NULL) return;
 
+	static bool t = true;
+	if (!t) return;
+
 	painter.setRenderHint(painter.Antialiasing, true);
 	painter.translate(+0.5, +0.5);  // TODO: check if we need this
 
 	QPen borderPen(m_colorSwatchBorder,       m_iSwatchBorderSize, Qt::SolidLine);
 	QPen circlePen(m_colorSwatchBorderCircle, m_iSwatchBorderSize, Qt::SolidLine);
 	QPen gradCircePen(m_colorSwatchGradCircle, m_iSwatchBorderSize/2, Qt::SolidLine);
-
 
 	QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
 
