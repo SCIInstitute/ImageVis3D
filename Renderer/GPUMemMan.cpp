@@ -49,7 +49,6 @@ void GPUMemMan::FreeDataset(VolumeDataset* pVolumeDataset, AbstrRenderer* reques
 					}
 					return;
 				}
-				break;
 			}
 		}
 	}
