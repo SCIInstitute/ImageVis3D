@@ -37,6 +37,10 @@ HEADERS += Basics/Grids.h \
            DebugOut/AbstrDebugOut.h \
            DebugOut/QTOut.h \
            DebugOut/ConsoleOut.h \
+           Renderer/GLInclude.h \
+           Renderer/GLTexture.h \
+           Renderer/GLTexture1D.h \
+           Renderer/GLTexture2D.h \
            Renderer/AbstrRenderer.h \
            Renderer/GPUSBVR.h \
            Renderer/GPUMemMan.h
@@ -59,6 +63,9 @@ SOURCES += Basics/SysTools.cpp \
            Controller/MasterController.cpp \
            DebugOut/QTOut.cpp \
            DebugOut/ConsoleOut.cpp \
+           Renderer/GLTexture.cpp \
+           Renderer/GLTexture1D.cpp \
+           Renderer/GLTexture2D.cpp \
            Renderer/AbstrRenderer.cpp \
            Renderer/GPUSBVR.cpp \
            Renderer/GPUMemMan.cpp \
