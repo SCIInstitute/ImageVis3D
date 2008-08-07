@@ -39,6 +39,7 @@ class RenderWindow : public QGLWidget
 		virtual void mouseMoveEvent(QMouseEvent *event);
 		virtual void closeEvent(QCloseEvent *event);
 		virtual void focusInEvent(QFocusEvent * event);
+		virtual void Cleanup();
 
 	private:
 		GPUSBVR*				m_Renderer;

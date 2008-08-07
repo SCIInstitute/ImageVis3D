@@ -23,9 +23,7 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
 
 RenderWindow::~RenderWindow()
 {
-	makeCurrent();
-	m_Renderer->Cleanup();
-	m_MasterController.ReleaseVolumerenderer(m_Renderer);
+	Cleanup();
 }
 
 QSize RenderWindow::minimumSizeHint() const
@@ -103,6 +101,15 @@ void RenderWindow::ToggleRenderWindowViewSingle() {
 	if (m_Renderer != NULL) m_Renderer->SetCurrentView(2);
 	emit RenderWindowViewChanged(2);
 	updateGL();
+}
+
+void RenderWindow::Cleanup() {
+	if (m_Renderer == NULL) return;
+	
+	makeCurrent();
+	m_Renderer->Cleanup();
+	m_MasterController.ReleaseVolumerenderer(m_Renderer);
+	m_Renderer = NULL;
 }
 
 void RenderWindow::closeEvent(QCloseEvent *event) {

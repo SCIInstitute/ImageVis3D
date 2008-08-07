@@ -306,8 +306,6 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 	m_1DTransferFunction->update();
 	m_2DTransferFunction->SetData(NULL, NULL);
 	m_2DTransferFunction->update();
-
-	delete sender;
 }
 
 
