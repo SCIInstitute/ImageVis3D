@@ -16,7 +16,6 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
 	m_Renderer->LoadDataset(m_strDataset.toStdString());
 	m_Renderer->SetCurrentView(0);
 
-
 	this->setFocusPolicy(Qt::StrongFocus);
 
 	xRot = 0;
@@ -26,6 +25,7 @@ RenderWindow::~RenderWindow()
 {
 	makeCurrent();
 	m_Renderer->Cleanup();
+	m_MasterController.ReleaseVolumerenderer(m_Renderer);
 }
 
 QSize RenderWindow::minimumSizeHint() const

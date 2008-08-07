@@ -76,5 +76,7 @@ void GPUSBVR::Resize(int width, int height) {
 
 
 void GPUSBVR::Cleanup() {
-//	glDeleteLists(object, 1);
+	m_pMasterController->MemMan()->FreeTexture(m_IDTex[0]);
+	m_pMasterController->MemMan()->FreeTexture(m_IDTex[1]);
+	m_pMasterController->MemMan()->FreeTexture(m_IDTex[2]);
 }

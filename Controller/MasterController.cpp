@@ -8,12 +8,8 @@ MasterController::MasterController() :
 }
 
 MasterController::~MasterController() {
-	for (size_t i = 0;i<m_vVolumeRenderer.size();i++) delete m_vVolumeRenderer[i];
+	for (AbstrRendererListIter i = m_vVolumeRenderer.begin();i<m_vVolumeRenderer.end();i++) delete (*i);
 	m_vVolumeRenderer.resize(0);
-	for (size_t i = 0;i<m_v1DTrans.size();i++) delete m_v1DTrans[i];
-	m_v1DTrans.resize(0);
-	for (size_t i = 0;i<m_v2DTrans.size();i++) delete m_v2DTrans[i];
-	m_v2DTrans.resize(0);
 
 	delete m_pGPUMemMan;
 	if (m_bStartDebugOut) delete m_pDebugOut;
@@ -55,4 +51,18 @@ AbstrRenderer* MasterController::RequestNewVolumerenderer(VolumeRenderer eRender
 						   }
 		default : return NULL;
 	};
+}
+
+
+void MasterController::ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer) {
+
+	for (AbstrRendererListIter i = m_vVolumeRenderer.begin();i<m_vVolumeRenderer.end();i++) {
+		if (*i == pVolumeRenderer) {
+			m_pDebugOut->Message("MasterController::ReleaseVolumerenderer","Deleting volume renderer");
+			delete pVolumeRenderer;
+			m_vVolumeRenderer.erase(i);
+			return;
+		}
+	}
+	m_pDebugOut->Warning("MasterController::ReleaseVolumerenderer","requested volume rendere not found");
 }

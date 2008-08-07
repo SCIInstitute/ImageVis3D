@@ -42,14 +42,12 @@ QSize Q2DTransferFunction::sizeHint() const
 }
 
 void Q2DTransferFunction::SetData(const Histogram2D* vHistrogram, TransferFunction2D* pTrans) {
-	if (pTrans == NULL) return;
+	m_pTrans = pTrans;
+	if (m_pTrans == NULL) return;
 
 	// resize the histogram vector
 	m_vHistrogram.Resize(vHistrogram->GetSize());
 	
-	// also resize the transferfunction
-	m_pTrans = pTrans;
-
 	// force the draw routine to recompute the backdrop cache
 	m_bBackdropCacheUptodate = false;
 
@@ -337,6 +335,12 @@ void Q2DTransferFunction::changeEvent(QEvent * event) {
 void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 	// call superclass method
 	QWidget::paintEvent(event);
+	
+	if (m_pTrans == NULL) {
+		QPainter painter(this);
+		DrawBorder(painter);
+		return;
+	}
 
 	// as drawing the histogram can become quite expensive we'll cache it in an image and only redraw if needed
 	if (!m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {

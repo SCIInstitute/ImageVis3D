@@ -37,14 +37,12 @@ Q1DTransferFunction::~Q1DTransferFunction(void)
 }
 
 void Q1DTransferFunction::SetData(const Histogram1D* vHistrogram, TransferFunction1D* pTrans) {
-	if (pTrans == NULL) return;
+	m_pTrans = pTrans;
+	if (m_pTrans == NULL) return;
 
 	// store histogram
 	m_vHistrogram.Resize(vHistrogram->GetSize());
 	
-	// store transfer function
-	m_pTrans = pTrans;
-
 	// force the draw routine to recompute the backdrop cache
 	m_bBackdropCacheUptodate = false;
 
@@ -313,6 +311,12 @@ void Q1DTransferFunction::changeEvent(QEvent * event) {
 void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 	// call superclass method
 	QWidget::paintEvent(event);
+
+	if (m_pTrans == NULL) {
+		QPainter painter(this);
+		DrawCoordinateSystem(painter);
+		return;
+	}
 
 	// as drawing the histogram can become quite expensive we'll cache it in an image and only redraw if needed
 	if (!m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {

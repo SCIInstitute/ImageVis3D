@@ -85,12 +85,16 @@ void GPUMemMan::FreeTexture(GLTexture2D* pTexture) {
 		if (i->pTexture == pTexture) {
 			i->iAccessCounter--;
 			if (i->iAccessCounter == 0) {
+				m_MasterController->DebugOut()->Message("GPUMemMan::FreeTexture","Deleted texture %s", i->strFilename.c_str());
 				i->pTexture->Delete();
 				m_vpSimpleTextures.erase(i);
+			} else {
+				m_MasterController->DebugOut()->Message("GPUMemMan::FreeTexture","Decreased access count but the texture %s is still in use by another subsystem",i->strFilename.c_str());
 			}
-			break;
+			return;
 		}
 	}
+	m_MasterController->DebugOut()->Warning("GPUMemMan::FreeTexture","Texture not found");
 }
 
 

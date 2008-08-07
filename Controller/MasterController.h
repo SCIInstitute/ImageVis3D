@@ -62,6 +62,7 @@ class MasterController {
 		virtual ~MasterController();
 
 		AbstrRenderer* RequestNewVolumerenderer(VolumeRenderer eRendererType);
+		void ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer);
 		
 		void SetDebugOut(AbstrDebugOut* debugOut);
 		void RemoveDebugOut(AbstrDebugOut* debugOut);
@@ -74,9 +75,7 @@ class MasterController {
 		AbstrDebugOut* m_pDebugOut;
 		bool		   m_bStartDebugOut;	
 
-		std::vector<AbstrRenderer*> m_vVolumeRenderer;
-		std::vector<TransferFunction1D*> m_v1DTrans;
-		std::vector<TransferFunction2D*> m_v2DTrans;
+		AbstrRendererList					m_vVolumeRenderer;
 };
 
 #endif // MASTERCONTROLLER_H
