@@ -46,7 +46,7 @@
 class GLTexture2D : public GLTexture {
 	public:
 		GLTexture2D(GLuint iSizeX, GLuint iSizeY, GLint internalformat, GLenum format, GLenum type, 
-					const GLvoid *pixels = NULL,
+					const GLvoid *pixels = 0,
 					GLint iMagFilter = GL_NEAREST, 
 					GLint iMinFilter = GL_NEAREST,
 					GLint wrapX = GL_CLAMP,

@@ -45,7 +45,7 @@
 class GLTexture1D : public GLTexture {
 	public:
 		GLTexture1D(GLuint iSize, GLint internalformat, GLenum format, GLenum type, 
-					const GLvoid *pixels = NULL,
+					const GLvoid *pixels = 0,
 					GLint iMagFilter = GL_NEAREST, 
 					GLint iMinFilter = GL_NEAREST,
 					GLint wrap = GL_CLAMP);
