@@ -1,7 +1,7 @@
 #include "GPUMemMan.h"
 #include "../IO/Images/BMPLoader.h"
 #include "../Controller/MasterController.h"
-#include "GLinclude.h"
+#include "GLInclude.h"
 
 using namespace std;
 
