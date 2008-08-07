@@ -5,13 +5,10 @@
 #include "../Controller/MasterController.h"
 
 GPUSBVR::GPUSBVR(MasterController* pMasterController) :
-	m_xRot(0),
-	m_iCurrentView(0)
+	m_iCurrentView(0),
+	m_xRot(0)
 {
 	m_pMasterController = pMasterController;
-
-
-
 }
 
 GPUSBVR::~GPUSBVR() {
