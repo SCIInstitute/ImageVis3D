@@ -61,6 +61,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void RenderWindowActive(RenderWindow* sender);
 		void RenderWindowClosing(RenderWindow* sender);
 
+		void ClearDebugWin();
+		void SetDebugViewMask();
 
 	private :
 		MasterController&		m_MasterController;

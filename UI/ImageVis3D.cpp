@@ -281,7 +281,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
 void MainWindow::RenderWindowActive(RenderWindow* sender) {
 	if (m_ActiveRenderWin != sender) {
-		m_MasterController.DebugOut()->Message("MainWindow::RenderWindowActive","ACK that %s it now active", sender->GetDatasetName().toStdString().c_str());
+		m_MasterController.DebugOut()->Message("MainWindow::RenderWindowActive","ACK that %s is now active", sender->GetDatasetName().toStdString().c_str());
 		m_ActiveRenderWin = sender;
 
 		m_1DTransferFunction->SetData(sender->GetRenderer()->GetDataSet()->Get1DHistogramm(), sender->GetRenderer()->Get1DTrans());
@@ -292,7 +292,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 }
 
 void MainWindow::RenderWindowClosing(RenderWindow* sender) {
-	m_MasterController.DebugOut()->Message("MainWindow::RenderWindowClosing","ACK that %s it now closing", sender->GetDatasetName().toStdString().c_str());
+	m_MasterController.DebugOut()->Message("MainWindow::RenderWindowClosing","ACK that %s is now closing", sender->GetDatasetName().toStdString().c_str());
 
 	QList<QListWidgetItem*> l = listWidget_Lock->findItems(sender->GetWindowID(),  Qt::MatchExactly);
 	assert(l.size() == 1); // if l.size() != 1 something went wrong during the creation of the list
@@ -535,4 +535,15 @@ void MainWindow::OpenRecentFile()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
 	if (action) LoadDataset(action->data().toString());
+}
+
+void MainWindow::ClearDebugWin() {
+	listWidget_3->clear();
+}
+
+void MainWindow::SetDebugViewMask() {
+	m_DebugOut->m_bShowErrors = checkBox_ShowDebugErrors->isChecked();
+	m_DebugOut->m_bShowWarnings = checkBox_ShowDebugWarnings->isChecked();
+	m_DebugOut->m_bShowMessages = checkBox_ShowDebugMessages->isChecked();
+	m_DebugOut->m_bShowOther = checkBox_ShowDebugOther->isChecked();
 }
