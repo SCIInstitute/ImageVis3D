@@ -6,6 +6,7 @@ using namespace std;
 
 Q2DTransferFunction::Q2DTransferFunction(QWidget *parent) :
 	QWidget(parent),
+	m_pTrans(NULL),
 	m_iPaintmode(Q2DT_PAINT_NONE),
 	m_iActiveSwatchIndex(-1),
 	m_bBackdropCacheUptodate(false),
@@ -40,12 +41,14 @@ QSize Q2DTransferFunction::sizeHint() const
 	return QSize(400, 400);
 }
 
-void Q2DTransferFunction::SetHistogram(const Histogram2D& vHistrogram) {
+void Q2DTransferFunction::SetData(const Histogram2D* vHistrogram, TransferFunction2D* pTrans) {
+	if (pTrans == NULL) return;
+
 	// resize the histogram vector
-	m_vHistrogram.Resize(vHistrogram.GetSize());
+	m_vHistrogram.Resize(vHistrogram->GetSize());
 	
 	// also resize the transferfunction
-	m_Trans.Resize(m_vHistrogram);
+	m_pTrans = pTrans;
 
 	// force the draw routine to recompute the backdrop cache
 	m_bBackdropCacheUptodate = false;
@@ -55,19 +58,18 @@ void Q2DTransferFunction::SetHistogram(const Histogram2D& vHistrogram) {
 
 	// rescale the histogram to the [0..1] range
 	// first find min and max ...
-	unsigned int iMax = vHistrogram.GetLinear(0);
+	unsigned int iMax = vHistrogram->GetLinear(0);
 	unsigned int iMin = iMax;
 	for (size_t i = 0;i<m_vHistrogram.GetSize().area();i++) {
-		if (vHistrogram.GetLinear(i) > iMax) iMax = vHistrogram.GetLinear(i);
-		if (vHistrogram.GetLinear(i) < iMin) iMin = vHistrogram.GetLinear(i);
-
-		m_Trans.pColorData.GetLinear(i) = FLOATVECTOR4(0,0,0,0);
+		unsigned int iVal = vHistrogram->GetLinear(i);
+		if (iVal > iMax) iMax = iVal;
+		if (iVal < iMin) iMin = iVal;
 	}
 
 	// ... than rescale
 	float fDiff = float(iMax)-float(iMin);
 	for (size_t i = 0;i<m_vHistrogram.GetSize().area();i++)
-		m_vHistrogram.SetLinear(i, (float(vHistrogram.GetLinear(i)) - float(iMin)) / fDiff);
+		m_vHistrogram.SetLinear(i, (float(vHistrogram->GetLinear(i)) - float(iMin)) / fDiff);
 
 
 	// debug
@@ -85,7 +87,7 @@ void Q2DTransferFunction::SetHistogram(const Histogram2D& vHistrogram) {
 		mySwatch.pGradientStops.push_back(GradientStop(0.5f,FLOATVECTOR4(1,0,0,1)));
 		mySwatch.pGradientStops.push_back(GradientStop(1.0f,FLOATVECTOR4(0,0,0,0)));
 		
-		m_Trans.m_Swatches.push_back(mySwatch);
+		m_pTrans->m_Swatches.push_back(mySwatch);
 	}
 	{
 		TFPolygon mySwatch;
@@ -101,7 +103,7 @@ void Q2DTransferFunction::SetHistogram(const Histogram2D& vHistrogram) {
 		mySwatch.pGradientStops.push_back(GradientStop(0.5f,FLOATVECTOR4(1,1,1,0.0f)));
 		mySwatch.pGradientStops.push_back(GradientStop(1.0f,FLOATVECTOR4(0,0,1,1)));
 
-		m_Trans.m_Swatches.push_back(mySwatch);
+		m_pTrans->m_Swatches.push_back(mySwatch);
 	}
 
 
@@ -121,8 +123,7 @@ void Q2DTransferFunction::DrawBorder(QPainter& painter) {
 }
 
 void Q2DTransferFunction::DrawHistogram(QPainter& painter, float fScale) {
-	// nothing todo if the histogram is empty
-	if (m_vHistrogram.GetSize().area() == 0) return;
+	if (m_pTrans == NULL) return;
 
 	// convert the histogram into an image
 	// define the bitmap ...
@@ -149,7 +150,7 @@ INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
 }
 
 void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
-	if (m_vHistrogram.GetSize().area() == 0) return;
+	if (m_pTrans == NULL) return;
 
 	painter.setRenderHint(painter.Antialiasing, true);
 	painter.translate(+0.5, +0.5);  // TODO: check if we need this
@@ -162,8 +163,8 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 	QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
 
 	// render swatches
-	for (size_t i = 0;i<m_Trans.m_Swatches.size();i++) {
-		TFPolygon& currentSwatch = m_Trans.m_Swatches[i];
+	for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
+		TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
 		
 		std::vector<QPoint> pointList(currentSwatch.pPoints.size());
 		for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {		
@@ -206,6 +207,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 }
 
 void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
+	if (m_pTrans == NULL) return;
 	// call superclass method
 	QWidget::mousePressEvent(event);
 	// clear the "last position" index
@@ -213,6 +215,7 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
 }
 
 void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
+	if (m_pTrans == NULL) return;
 	// call superclass method
 	QWidget::mouseReleaseEvent(event);
 	// clear the "last position" index
@@ -220,6 +223,7 @@ void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
+	if (m_pTrans == NULL) return;
 	// call superclass method
 	QWidget::mouseMoveEvent(event);
 
@@ -229,7 +233,7 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	// compute some grid dimensions
 	unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
 	unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
-	unsigned int iVectorSize = m_Trans.pColorData.size();
+	unsigned int iVectorSize = m_pTrans->pColorData.size();
 
 	// compute position in color array
 	int iCurrentIndex = int((float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth));
@@ -269,28 +273,28 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	if (m_iPaintmode & Q2DT_PAINT_RED) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex][0] = _fValueMin;
+			m_pTrans->pColorData[iIndex][0] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q2DT_PAINT_GREEN) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex][1] = _fValueMin;
+			m_pTrans->pColorData[iIndex][1] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q2DT_PAINT_BLUE) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex][2] = _fValueMin;
+			m_pTrans->pColorData[iIndex][2] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q2DT_PAINT_ALPHA) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_Trans.pColorData[iIndex][3] = _fValueMin;
+			m_pTrans->pColorData[iIndex][3] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
@@ -368,7 +372,7 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 
 bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
 	// hand the load call over to the TransferFunction1D class
-	if( m_Trans.Load(strFilename.toStdString()) ) {
+	if( m_pTrans->Load(strFilename.toStdString()) ) {
 		update();
 		return true;
 	} else return false;
@@ -376,5 +380,5 @@ bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
 
 bool Q2DTransferFunction::SaveToFile(const QString& strFilename) {
 	// hand the save call over to the TransferFunction1D class
-	return m_Trans.Save(strFilename.toStdString());
+	return m_pTrans->Save(strFilename.toStdString());
 }

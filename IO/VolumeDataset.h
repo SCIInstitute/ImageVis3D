@@ -42,15 +42,43 @@
 #define VOLUMEDATASET_H
 
 #include <string>
+#include "TransferFunction1D.h"
+#include "TransferFunction2D.h"
+
+
+class VolumeDatasetInfo {
+	public:
+		VolumeDatasetInfo(unsigned int iBitWidth) :
+			m_iBitWidth(iBitWidth)
+		{}
+
+		unsigned int GetBitwith() const {return m_iBitWidth;}
+	private:
+		unsigned int m_iBitWidth;
+};
 
 class VolumeDataset {
 public:
 	VolumeDataset(const std::string& strFilename);
+	~VolumeDataset();
+
 	bool IsLoaded() const;
 	std::string Filename() const {return m_strFilename;}
 
+	const Histogram1D* Get1DHistogramm() const {return m_pHist1D;}
+	const Histogram2D* Get2DHistogramm() const {return m_pHist2D;}
+
+	const VolumeDatasetInfo* GetInfo() const {return m_pVolumeDatasetInfo;}
+
 private:	
-	std::string m_strFilename;
+	std::string			m_strFilename;
+	VolumeDatasetInfo*	m_pVolumeDatasetInfo;
+	Histogram1D*		m_pHist1D;
+	Histogram2D*		m_pHist2D;
+
+	void LoadDataset();
+	void ComputeHistogramms();
+
 };
 
 #endif // VOLUMEDATASET_H

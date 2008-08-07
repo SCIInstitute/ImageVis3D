@@ -18,11 +18,13 @@ using namespace std;
 MainWindow::MainWindow(MasterController& masterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
 	QMainWindow(parent, flags),
 	m_MasterController(masterController),
-	m_strCurrentWorkspaceFilename("")
+	m_strCurrentWorkspaceFilename(""),
+	m_ActiveRenderWin(NULL)
 {
 	setupUi(this);
 
 	m_DebugOut = new QTOut(listWidget_3);
+	m_MasterController.SetDebugOut(m_DebugOut);
 
 	SetupWorkspaceMenu();
 
@@ -30,11 +32,12 @@ MainWindow::MainWindow(MasterController& masterController, QWidget* parent /* = 
 	LoadWorkspace("Default.wsp", true);
 	
 	UpdateMRUActions();
-	UpdateMenus();
+	UpdateMenus();	
 }
 
 MainWindow::~MainWindow()
 {
+	m_MasterController.RemoveDebugOut(m_DebugOut);
 	delete m_DebugOut;
 }
 
@@ -181,7 +184,6 @@ bool MainWindow::LoadWorkspace(QString strFilename, bool bSilentFail, bool bRetr
 		}
 	}
 
-
 	if (!bSilentFail && !bOK) {
 		QString msg = tr("Error reading workspace file %1").arg(strFilename);
 		QMessageBox::warning(this, tr("Error"), msg);
@@ -223,7 +225,7 @@ bool MainWindow::ApplyWorkspace() {
 // ******************************************
 
 void MainWindow::CloneCurrentView() {
-	 RenderWindow *renderWin = CreateNewRenderWindow(GetActiveRenderWindow()->GetDataset());
+	 RenderWindow *renderWin = CreateNewRenderWindow(GetActiveRenderWindow()->GetDatasetName());
 	 renderWin->show();
 }
 
@@ -264,14 +266,47 @@ void MainWindow::LoadDirectory() {
 
 
 RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
- {
-	 static unsigned int iCounter = 0;
-	 
-	 RenderWindow *renderWin = new RenderWindow(m_MasterController, dataset, listWidget_Lock, iCounter++, m_glShareWidget, this);
-     mdiArea->addSubWindow(renderWin);
+{
+	static unsigned int iCounter = 0;
 
-     return renderWin;
- }
+	RenderWindow *renderWin = new RenderWindow(m_MasterController, dataset, iCounter++, m_glShareWidget, this);
+	mdiArea->addSubWindow(renderWin);
+	listWidget_Lock->addItem(renderWin->GetWindowID());
+
+	connect(renderWin, SIGNAL(WindowActive(RenderWindow*)), this, SLOT(RenderWindowActive(RenderWindow*)));
+	connect(renderWin, SIGNAL(WindowClosing(RenderWindow*)), this, SLOT(RenderWindowClosing(RenderWindow*)));
+
+	return renderWin;
+}
+
+void MainWindow::RenderWindowActive(RenderWindow* sender) {
+	if (m_ActiveRenderWin != sender) {
+		m_MasterController.DebugOut()->Message("MainWindow::RenderWindowActive","ACK that %s it now active", sender->GetDatasetName().toStdString().c_str());
+		m_ActiveRenderWin = sender;
+
+		m_1DTransferFunction->SetData(sender->GetRenderer()->GetDataSet()->Get1DHistogramm(), sender->GetRenderer()->Get1DTrans());
+		m_1DTransferFunction->update();
+		m_2DTransferFunction->SetData(sender->GetRenderer()->GetDataSet()->Get2DHistogramm(), sender->GetRenderer()->Get2DTrans());
+		m_2DTransferFunction->update();
+	}
+}
+
+void MainWindow::RenderWindowClosing(RenderWindow* sender) {
+	m_MasterController.DebugOut()->Message("MainWindow::RenderWindowClosing","ACK that %s it now closing", sender->GetDatasetName().toStdString().c_str());
+
+	QList<QListWidgetItem*> l = listWidget_Lock->findItems(sender->GetWindowID(),  Qt::MatchExactly);
+	assert(l.size() == 1); // if l.size() != 1 something went wrong during the creation of the list
+	delete l[0];
+
+	m_ActiveRenderWin = NULL;
+	disconnect(sender, SIGNAL(WindowActive(RenderWindow*)), this, SLOT(RenderWindowActive(RenderWindow*)));
+	disconnect(sender, SIGNAL(WindowClosing(RenderWindow*)), this, SLOT(RenderWindowClosing(RenderWindow*)));
+
+	m_1DTransferFunction->SetData(NULL, NULL);
+	m_1DTransferFunction->update();
+	m_2DTransferFunction->SetData(NULL, NULL);
+	m_2DTransferFunction->update();
+}
 
 
 void MainWindow::ToggleRenderWindowView1x3() {
@@ -356,8 +391,6 @@ void MainWindow::Transfer1DRadioClicked() {
 	checkBox_Alpha->setChecked(iRadioState==2);
 
 	m_1DTransferFunction->SetPaintmode(Q1DT_PAINT_RED | Q1DT_PAINT_GREEN | Q1DT_PAINT_BLUE | ((iRadioState==2) ? Q1DT_PAINT_ALPHA : Q1DT_PAINT_NONE));
-
-
 }
 
 void MainWindow::Use1DTrans() {
@@ -483,18 +516,6 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
 	Use2DTrans();
 
-	// DEBUG CODE
-	// generate a random 1D histogram
-	Histogram1D v1DHistrogram(4096);
-	for (size_t i = 0;i<v1DHistrogram.GetSize();i++) v1DHistrogram.Set(i, (unsigned int)(i+(rand()*10) / RAND_MAX));
-	m_1DTransferFunction->SetData(v1DHistrogram, NULL);
-	// generate a random 2D histogram
-	Histogram2D v2DHistrogram(VECTOR2<size_t>(100,200));
-	for (size_t y = 0;y<v2DHistrogram.GetSize().y;y++)
-		for (size_t x = 0;x<v2DHistrogram.GetSize().x;x++) 
-			v2DHistrogram.Set(x,y,(unsigned int)(x+(rand()*10) / RAND_MAX)*(unsigned int)(y+(rand()*10) / RAND_MAX));
-	m_2DTransferFunction->SetHistogram(v2DHistrogram);
-	// END DEBUG CODE
 
 	for (unsigned int i = 0; i < ms_iMaxRecentFiles; ++i) {
 		m_recentFileActs[i] = new QAction(this);

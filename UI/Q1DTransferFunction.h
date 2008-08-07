@@ -20,7 +20,7 @@ class Q1DTransferFunction : public QWidget
 	public:
 		Q1DTransferFunction(QWidget *parent=0);
 		virtual ~Q1DTransferFunction(void);
-		void SetData(const Histogram1D& vHistrogram, TransferFunction1D* Trans);
+		void SetData(const Histogram1D* vHistrogram, TransferFunction1D* Trans);
 		void SetPaintmode(unsigned int iPaintmode) {if (iPaintmode < Q1DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
 
 	public slots:

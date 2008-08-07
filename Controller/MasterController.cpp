@@ -16,23 +16,37 @@ MasterController::~MasterController() {
 	m_v2DTrans.resize(0);
 
 	delete m_pGPUMemMan;
+	if (m_bStartDebugOut) delete m_pDebugOut;
 }
 
 void MasterController::SetDebugOut(AbstrDebugOut* debugOut) {
 	if (debugOut != NULL) {
-		m_pDebugOut->printf("MasterController::SetDebugOut: Disconnecting from debug out");
+		m_pDebugOut->Message("MasterController::SetDebugOut","Disconnecting from this debug out");
 		if (m_bStartDebugOut ) {
 			delete m_pDebugOut;
 			m_bStartDebugOut = false;
 		}
 		m_pDebugOut = debugOut;
-		m_pDebugOut->printf("MasterController::SetDebugOut: Connected to debug out");
+		m_pDebugOut->Message("MasterController::SetDebugOut","Connected to this debug out");
 	}
 }
 
+void MasterController::RemoveDebugOut(AbstrDebugOut* debugOut) {
+	if (debugOut == m_pDebugOut) {
+		m_pDebugOut->Message("MasterController::RemoveDebugOut","Disconnecting from this debug out");
+		if (m_bStartDebugOut) delete m_pDebugOut;
+		m_pDebugOut = new ConsoleOut();
+		m_bStartDebugOut = true;
+		m_pDebugOut->Message("MasterController::RemoveDebugOut","Connected to this debug out");
+	} else {
+		m_pDebugOut->Warning("MasterController::RemoveDebugOut","Not Connected the debug out in question (anymore), doing nothing");
+	}
+}
+
+
 AbstrRenderer* MasterController::RequestNewVolumerenderer(VolumeRenderer eRendererType) {
 
-	m_pDebugOut->printf("MasterController::RequestNewVolumerenderer");
+	m_pDebugOut->Message("MasterController::RequestNewVolumerenderer","");
 
 	switch (eRendererType) {
 		case OPENGL_SBVR : {

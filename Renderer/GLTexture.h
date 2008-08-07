@@ -27,7 +27,7 @@
 */
 
 /**
-	\file		ConsoleOut.h
+	\file		GLTexture.h
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
@@ -38,19 +38,23 @@
 
 #pragma once
 
-#ifndef CONSOLEOUT_H
-#define CONSOLEOUT_H
+#ifndef GLTEXTURE_H
+#define GLTEXTURE_H
 
-#include "AbstrDebugOut.h"
+#include "GLinclude.h"
 
-class ConsoleOut : public AbstrDebugOut{
+class GLTexture {
 	public:
-		ConsoleOut();
-		~ConsoleOut();
-		virtual void printf(const char* format, ...);
-		virtual void Message(const char* source, const char* format, ...);
-		virtual void Warning(const char* source, const char* format, ...);
-		virtual void Error(const char* source, const char* format, ...);
+		GLTexture() : m_iGLID(-1) {}
+		virtual ~GLTexture();
+
+		virtual void Delete();
+		virtual void SetData(const GLvoid *pixels) = 0;
+		virtual void Bind() = 0;
+		GLuint GetGLID() {return m_iGLID;}
+
+	protected:
+		GLuint				m_iGLID;
 };
 
-#endif // CONSOLEOUT_H
+#endif // GLTEXTURE_H

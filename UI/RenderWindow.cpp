@@ -4,19 +4,20 @@
 #include <QtOpenGL/QtOpenGL>
 #include <assert.h>
 
-RenderWindow::RenderWindow(MasterController& masterController, QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QGLWidget* glShareWidget, QWidget* parent, Qt::WindowFlags flags) :
+RenderWindow::RenderWindow(MasterController& masterController, QString dataset, unsigned int iCounter, QGLWidget* glShareWidget, QWidget* parent, Qt::WindowFlags flags) :
 	QGLWidget(parent, glShareWidget, flags),
 	m_Renderer((GPUSBVR*)masterController.RequestNewVolumerenderer(OPENGL_SBVR)),
 	m_MasterController(masterController),
-	m_strDataset(dataset),
-	m_listWidget_Lock(listWidget_Lock)
+	m_strDataset(dataset)
 {	
 	m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
 	setWindowTitle(m_strID);
-	m_listWidget_Lock->addItem(m_strID);
 
 	m_Renderer->LoadDataset(m_strDataset.toStdString());
 	m_Renderer->SetCurrentView(0);
+
+
+	this->setFocusPolicy(Qt::StrongFocus);
 
 	xRot = 0;
 }
@@ -107,7 +108,14 @@ void RenderWindow::ToggleRenderWindowViewSingle() {
 void RenderWindow::closeEvent(QCloseEvent *event) {
 	QGLWidget::closeEvent(event);
 
-	QList<QListWidgetItem*> l = m_listWidget_Lock->findItems(m_strID,  Qt::MatchExactly);
-	assert(l.size() == 1); // if l.size() != 1 something went wrong during the creation of the list
-	delete l[0];
+	emit WindowClosing(this);
+}
+
+void RenderWindow::focusInEvent ( QFocusEvent * event ) {
+	// call superclass method
+	QGLWidget::focusInEvent(event);
+
+	if (event->gotFocus()) {
+		emit WindowActive(this);
+	}
 }

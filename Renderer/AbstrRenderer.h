@@ -46,7 +46,8 @@
 #include "../IO/VolumeDataset.h"
 #include "../IO/TransferFunction1D.h"
 #include "../IO/TransferFunction2D.h"
-
+#include "../Renderer/GLTexture1D.h"
+#include "../Renderer/GLTexture2D.h"
 
 class MasterController;
 
@@ -73,7 +74,9 @@ class AbstrRenderer {
 		MasterController*	m_pMasterController;
 		VolumeDataset*		m_pDataset;
 		TransferFunction1D* m_p1DTrans;
+		GLTexture1D*		m_p1DTransTex;
 		TransferFunction2D* m_p2DTrans;
+		GLTexture2D*		m_p2DTransTex;
 		ERenderMode			m_eRenderMode;
 };
 

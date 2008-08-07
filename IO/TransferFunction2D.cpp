@@ -157,7 +157,7 @@ void TFPolygon::Load(ifstream& file) {
 }
 
 void TFPolygon::Save(ofstream& file) {
-	file << pPoints.size() << " ";
+	file << pPoints.size() << endl;
 
 	for(unsigned int i=0;i<pPoints.size();++i){
 		for(unsigned int j=0;j<2;++j){
@@ -172,7 +172,7 @@ void TFPolygon::Save(ofstream& file) {
 	file << pGradientStops.size() << " ";
 
 	for(unsigned int i=0;i<pGradientStops.size();++i){
-		file << pGradientStops[i].first << " ";
+		file << pGradientStops[i].first << endl;
 		for(unsigned int j=0;j<4;++j){
 			file << pGradientStops[i].second[j] << " ";
 		}

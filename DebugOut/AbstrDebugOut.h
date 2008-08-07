@@ -43,8 +43,17 @@
 
 class AbstrDebugOut {
 	public:
+		AbstrDebugOut() : m_bShowMessages(true), m_bShowWarnings(true), m_bShowErrors(true), m_bShowOther(true) {}
 		virtual ~AbstrDebugOut() {}
 		virtual void printf(const char* format, ...) = 0;
+		virtual void Message(const char* source, const char* format, ...) = 0;
+		virtual void Warning(const char* source, const char* format, ...) = 0;
+		virtual void Error(const char* source, const char* format, ...) = 0;
+
+		bool m_bShowMessages;
+		bool m_bShowWarnings;
+		bool m_bShowErrors;
+		bool m_bShowOther;
 };
 
 #endif // ABSTRDEBUGOUT_H

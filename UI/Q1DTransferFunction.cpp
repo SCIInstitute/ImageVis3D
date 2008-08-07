@@ -36,11 +36,11 @@ Q1DTransferFunction::~Q1DTransferFunction(void)
 	delete m_pBackdropCache;
 }
 
-void Q1DTransferFunction::SetData(const Histogram1D& vHistrogram, TransferFunction1D* pTrans) {
-	if (m_pTrans == NULL) return;
+void Q1DTransferFunction::SetData(const Histogram1D* vHistrogram, TransferFunction1D* pTrans) {
+	if (pTrans == NULL) return;
 
 	// store histogram
-	m_vHistrogram.Resize(vHistrogram.GetSize());
+	m_vHistrogram.Resize(vHistrogram->GetSize());
 	
 	// store transfer function
 	m_pTrans = pTrans;
@@ -53,19 +53,18 @@ void Q1DTransferFunction::SetData(const Histogram1D& vHistrogram, TransferFuncti
 
 	// rescale the histogram to the [0..1] range
 	// first find min and max ...
-	unsigned int iMax = vHistrogram.GetLinear(0); 
+	unsigned int iMax = vHistrogram->GetLinear(0); 
 	unsigned int iMin = iMax;
 	for (size_t i = 0;i<m_vHistrogram.GetSize();i++) {
-		if (vHistrogram.GetLinear(i) > iMax) iMax = vHistrogram.GetLinear(i);
-		if (vHistrogram.GetLinear(i) < iMin) iMin = vHistrogram.GetLinear(i);
-
-		m_pTrans->pColorData[i] = FLOATVECTOR4(0,0,0,0);
+		unsigned int iVal = vHistrogram->GetLinear(i);
+		if (iVal > iMax) iMax = iVal;
+		if (iVal < iMin) iMin = iVal;
 	}
 
 	// ... than rescale
 	float fDiff = float(iMax)-float(iMin);
 	for (size_t i = 0;i<m_vHistrogram.GetSize();i++)
-		m_vHistrogram.SetLinear(i, (float(vHistrogram.GetLinear(i)) - float(iMin)) / fDiff);
+		m_vHistrogram.SetLinear(i, (float(vHistrogram->GetLinear(i)) - float(iMin)) / fDiff);
 }
 
 void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
@@ -272,6 +271,8 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 
 	// redraw this widget
 	update();
+
+	// TODO send message to update the GLtexture
 }
 
 void Q1DTransferFunction::SetColor(bool bIsEnabled) {

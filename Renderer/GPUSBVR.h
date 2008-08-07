@@ -43,6 +43,7 @@
 
 #include "AbstrRenderer.h"
 #include "../Renderer/GPUMemMan.h"
+#include "../Renderer/GLTexture2D.h"
 
 class GPUSBVR : public AbstrRenderer {
 	public:
@@ -59,7 +60,7 @@ class GPUSBVR : public AbstrRenderer {
 		int GetCurrentView() {return m_iCurrentView;}
 
 	protected:
-		GLuint m_IDTex[3];
+		GLTexture2D* m_IDTex[3];
 		int m_iCurrentView;
 		int m_xRot;
 };

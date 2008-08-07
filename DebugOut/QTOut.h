@@ -50,8 +50,15 @@ class QTOut : public AbstrDebugOut{
 		virtual ~QTOut();
 
 		virtual void printf(const char* format, ...);
+		virtual void Message(const char* source, const char* format, ...);
+		virtual void Warning(const char* source, const char* format, ...);
+		virtual void Error(const char* source, const char* format, ...);
+
 	private:
 		QListWidget *m_listWidget;
+
+		void _printf(const char* format, ...);
+
 };
 
 #endif // QTOut_H

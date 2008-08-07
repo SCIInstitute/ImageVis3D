@@ -27,7 +27,7 @@
 */
 
 /**
-	\file		ConsoleOut.h
+	\file		GLInclude.h
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
@@ -35,22 +35,19 @@
 	\date		August 2008
 */
 
-
 #pragma once
 
-#ifndef CONSOLEOUT_H
-#define CONSOLEOUT_H
+#ifndef GLINCLUDE_H
+#define GLINCLUDE_H
 
-#include "AbstrDebugOut.h"
+#ifdef WIN32
+	#include <windows.h>
+#endif
 
-class ConsoleOut : public AbstrDebugOut{
-	public:
-		ConsoleOut();
-		~ConsoleOut();
-		virtual void printf(const char* format, ...);
-		virtual void Message(const char* source, const char* format, ...);
-		virtual void Warning(const char* source, const char* format, ...);
-		virtual void Error(const char* source, const char* format, ...);
-};
+#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+	#include <OpenGL/gl.h>
+#else
+	#include <GL/gl.h>
+#endif
 
-#endif // CONSOLEOUT_H
+#endif // GLINCLUDE_H

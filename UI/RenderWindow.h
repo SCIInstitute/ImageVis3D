@@ -12,12 +12,14 @@ class RenderWindow : public QGLWidget
 {
 	Q_OBJECT
 	public:
-		RenderWindow(MasterController& masterController, QString dataset, QListWidget *listWidget_Lock, unsigned int iCounter, QGLWidget* glWidget, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+		RenderWindow(MasterController& masterController, QString dataset, unsigned int iCounter, QGLWidget* glWidget, QWidget* parent = 0, Qt::WindowFlags flags = 0);
 		virtual ~RenderWindow();
 
-		QString GetDataset() {return m_strDataset;}
+		QString GetDatasetName() {return m_strDataset;}
+		QString GetWindowID() {return m_strID;}
 		QSize minimumSizeHint() const;
 		QSize sizeHint() const;
+		AbstrRenderer* GetRenderer() {return m_Renderer;}
 
 	public slots:
 		void ToggleRenderWindowView1x3();
@@ -26,14 +28,17 @@ class RenderWindow : public QGLWidget
 
 	signals:
 		void RenderWindowViewChanged(int iViewID);
+		void WindowActive(RenderWindow* sender);
+		void WindowClosing(RenderWindow* sender);
 
 	protected:
-		void initializeGL();
-		void paintGL();
-		void resizeGL(int width, int height);
-		void mousePressEvent(QMouseEvent *event);
-		void mouseMoveEvent(QMouseEvent *event);
-		void closeEvent(QCloseEvent *event);
+		virtual void initializeGL();
+		virtual void paintGL();
+		virtual void resizeGL(int width, int height);
+		virtual void mousePressEvent(QMouseEvent *event);
+		virtual void mouseMoveEvent(QMouseEvent *event);
+		virtual void closeEvent(QCloseEvent *event);
+		virtual void focusInEvent(QFocusEvent * event);
 
 	private:
 		GPUSBVR*				m_Renderer;
@@ -45,7 +50,6 @@ class RenderWindow : public QGLWidget
 		
 		QString m_strDataset;
 		QString m_strID;
-		QListWidget *m_listWidget_Lock;
 
 };
 

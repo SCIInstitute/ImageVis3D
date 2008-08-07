@@ -849,6 +849,34 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Renderer\GLInclude.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\GLTexture.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\GLTexture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\GLTexture1D.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\GLTexture1D.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\GLTexture2D.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\GLTexture2D.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Renderer\GPUMemMan.cpp"
 				>
 			</File>

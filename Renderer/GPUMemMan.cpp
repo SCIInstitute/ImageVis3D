@@ -1,6 +1,7 @@
 #include "GPUMemMan.h"
 #include "../IO/Images/BMPLoader.h"
 #include "../Controller/MasterController.h"
+#include "GLinclude.h"
 
 using namespace std;
 
@@ -55,42 +56,36 @@ void GPUMemMan::FreeDataset(VolumeDataset* pVolumeDataset, AbstrRenderer* reques
 	m_MasterController->DebugOut()->Warning("GPUMemMan::FreeDataset","Dataset %s not found or not being used by requester", pVolumeDataset->Filename().c_str());
 }
 
-GLuint GPUMemMan::Load2DTextureFromFile(const std::string& strFilename) {
+GLTexture2D* GPUMemMan::Load2DTextureFromFile(const std::string& strFilename) {
 	for (SimpleTextureListIter i = m_vpSimpleTextures.begin();i<m_vpSimpleTextures.end();i++) {
 		if (i->strFilename == strFilename) {
 			m_MasterController->DebugOut()->Message("GPUMemMan::Load2DTextureFromFile","Reusing %s", strFilename.c_str());
 			i->iAccessCounter++;
-			return i->iGLID;
+			return i->pTexture;
 		}
 	}
 
 	TextureImage image;
 	if (!BMPLoader::Load(strFilename, &image)) {
 		m_MasterController->DebugOut()->Error("GPUMemMan::Load2DTextureFromFile","Unable to load file %s", strFilename.c_str());
-		return -1;
+		return NULL;
 	}
 	m_MasterController->DebugOut()->Message("GPUMemMan::Load2DTextureFromFile","Loading %s", strFilename.c_str());
 
-	GLuint iGLID;
-	glGenTextures(1,&iGLID);
-    glBindTexture(GL_TEXTURE_2D,iGLID);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8,image.width,image.height,0, GL_RGB, GL_UNSIGNED_BYTE, image.data);
-
+	GLTexture2D* tex = new GLTexture2D(image.width,image.height, GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE, image.data, GL_LINEAR, GL_LINEAR);
 	delete [] image.data;
 
-	m_vpSimpleTextures.push_back(SimpleTextureListElem(1,iGLID,strFilename));
-	return iGLID;
+	m_vpSimpleTextures.push_back(SimpleTextureListElem(1,tex,strFilename));
+	return tex;
 }
 
 
-void GPUMemMan::FreeTexture(GLuint iTexture) {
+void GPUMemMan::FreeTexture(GLTexture2D* pTexture) {
 	for (SimpleTextureListIter i = m_vpSimpleTextures.begin();i<m_vpSimpleTextures.end();i++) {
-		if (i->iGLID == iTexture) {
+		if (i->pTexture == pTexture) {
 			i->iAccessCounter--;
 			if (i->iAccessCounter == 0) {
-				glDeleteTextures(1,&iTexture);
+				i->pTexture->Delete();
 				m_vpSimpleTextures.erase(i);
 			}
 			break;
@@ -99,41 +94,44 @@ void GPUMemMan::FreeTexture(GLuint iTexture) {
 }
 
 
-void GPUMemMan::GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, TransferFunction1D** transferFunc, GLuint* iGLID) {
+void GPUMemMan::GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, TransferFunction1D** transferFunc, GLTexture1D** tex) {
 	m_MasterController->DebugOut()->Message("GPUMemMan::GetEmpty1DTrans","Creating new empty 1D transfer function");
 	*transferFunc = new TransferFunction1D(iSize);
+	*tex = new GLTexture1D(iSize, GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE);
 
-
-	// TODO create 1D texture of size iSize
-
-	m_vpTrans1DList.push_back(Trans1DListElem(dataset, requester));
+	m_vpTrans1DList.push_back(Trans1DListElem(*transferFunc, *tex, requester));
 }
 
-void GPUMemMan::Get1DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction1D** transferFunc, GLuint* iGLID) {
-
+void GPUMemMan::Get1DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction1D** transferFunc, GLTexture1D** tex) {
+	// TODO
 }
 
-bool GPUMemMan::Access1DTrans(GLuint iGLID, AbstrRenderer* requester) {
-
+GLTexture1D* GPUMemMan::Access1DTrans(TransferFunction1D* transferFunc, AbstrRenderer* requester) {
+	// TODO
+	return NULL;
 }
 
-void GPUMemMan::Free1DTrans(GLuint iGLID, AbstrRenderer* requester) {
-
+void GPUMemMan::Free1DTrans(TransferFunction1D* transferFunc, AbstrRenderer* requester) {
+	// TODO
 }
 
-void GPUMemMan::GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* requester, TransferFunction2D** transferFunc, GLuint* iGLID) {
+void GPUMemMan::GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* requester, TransferFunction2D** transferFunc, GLTexture2D** tex) {
+	m_MasterController->DebugOut()->Message("GPUMemMan::GetEmpty2DTrans","Creating new empty 2D transfer function");
+	*transferFunc = new TransferFunction2D(iSize);
+	*tex = new GLTexture2D(GLuint(iSize.x), GLuint(iSize.y), GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE);
 
+	m_vpTrans2DList.push_back(Trans2DListElem(*transferFunc, *tex, requester));
 }
 
-void GPUMemMan::Get2DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction2D** transferFunc, GLuint* iGLID) {
-
+void GPUMemMan::Get2DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction2D** transferFunc, GLTexture2D** tex) {
+	// TODO
 }
 
-bool GPUMemMan::Access2DTrans(GLuint iGLID, AbstrRenderer* requester) {
-
+GLTexture2D* GPUMemMan::Access2DTrans(TransferFunction2D* transferFunc, AbstrRenderer* requester) {
+	// TODO
+	return NULL;
 }
 
-void GPUMemMan::Free2DTrans(GLuint iGLID, AbstrRenderer* requester) {
-
+void GPUMemMan::Free2DTrans(TransferFunction2D* transferFunc, AbstrRenderer* requester) {
+	// TODO
 }
-

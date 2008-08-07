@@ -58,6 +58,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void EditToolsLocks();
 		void EditFiltersLocks();
 
+		void RenderWindowActive(RenderWindow* sender);
+		void RenderWindowClosing(RenderWindow* sender);
+
 
 	private :
 		MasterController&		m_MasterController;
@@ -66,6 +69,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		Q2DTransferFunction*	m_2DTransferFunction;
 		QGLWidget*				m_glShareWidget;
 		QTOut*					m_DebugOut;
+		RenderWindow*			m_ActiveRenderWin;
 
 		RenderWindow* CreateNewRenderWindow(QString dataset);
 		RenderWindow* GetActiveRenderWindow();

@@ -35,7 +35,6 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
-
 #include <QtGui/QApplication>
 #include "UI/ImageVis3D.h"
 #include "Controller/MasterController.h"
@@ -46,7 +45,6 @@ int main(int argc, char* argv[])
 
 	QApplication app( argc, argv );
 	MainWindow mainWindow(masterController, 0, Qt::Window);
-	masterController.SetDebugOut(mainWindow.GetDebugOut());
 
 	mainWindow.show();
 	return app.exec();

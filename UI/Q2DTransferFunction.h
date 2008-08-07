@@ -20,7 +20,7 @@ class Q2DTransferFunction : public QWidget
 	public:
 		Q2DTransferFunction(QWidget *parent=0);
 		virtual ~Q2DTransferFunction(void);
-		void SetHistogram(const Histogram2D& m_vHistrogram);
+		void SetData(const Histogram2D* vHistrogram, TransferFunction2D* pTrans);
 		void SetPaintmode(unsigned int iPaintmode) {if (iPaintmode < Q2DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
 
 		QSize minimumSizeHint() const;
@@ -46,9 +46,9 @@ class Q2DTransferFunction : public QWidget
 
 	private:
 		// states
-		NormalizedHistogram2D m_vHistrogram;
+		NormalizedHistogram2D	m_vHistrogram;
+		TransferFunction2D*		m_pTrans;
 		unsigned int m_iPaintmode;
-		TransferFunction2D m_Trans;
 		int m_iActiveSwatchIndex;
 
 		// cached image of the backdrop

@@ -35,46 +35,30 @@
 	\date		August 2008
 */
 
-
 #pragma once
 
 #ifndef GLTEXTURE1D_H
 #define GLTEXTURE1D_H
 
-#include <string>
+#include "GLTexture.h"
 
-#include "../IO/VolumeDataset.h"
-#include "../IO/TransferFunction1D.h"
-#include "../IO/TransferFunction2D.h"
-
-
-class MasterController;
-
-enum ERenderMode {
-	RM_1DTRANS = 0,
-	RM_2DTRANS,
-//	RM_ISOSURFACE,
-	RM_INVALID
-};
-
-class GLTexture1D {
+class GLTexture1D : public GLTexture {
 	public:
-		virtual ~GLTexture1D();
-		bool LoadDataset(const std::string& strFilename);
+		GLTexture1D(GLuint iSize, GLint internalformat, GLenum format, GLenum type, 
+					const GLvoid *pixels = NULL,
+					GLint iMagFilter = GL_NEAREST, 
+					GLint iMinFilter = GL_NEAREST,
+					GLint wrap = GL_CLAMP);
+		virtual ~GLTexture1D() {}
 
-		VolumeDataset*		GetDataSet() {return m_pDataset;}
-		TransferFunction1D* Get1DTrans() {return m_p1DTrans;}
-		TransferFunction2D* Get2DTrans() {return m_p2DTrans;}
-		void Set1DTrans(TransferFunction1D* p1DTrans) {m_p1DTrans = p1DTrans;}
-		void Set2DTrans(TransferFunction2D* p2DTrans) {m_p2DTrans = p2DTrans;}
-		void SetRendermode(ERenderMode eRenderMode) {m_eRenderMode = eRenderMode;}
-
+		virtual void Bind() {glBindTexture(GL_TEXTURE_1D, m_iGLID);}
+		virtual void SetData(const GLvoid *pixels);
 	protected:
-		MasterController*	m_pMasterController;
-		VolumeDataset*		m_pDataset;
-		TransferFunction1D* m_p1DTrans;
-		TransferFunction2D* m_p2DTrans;
-		ERenderMode			m_eRenderMode;
+		GLuint m_iSize;
+		GLint  m_internalformat;
+		GLenum m_format;
+		GLenum m_type;
+
 };
 
 #endif // GLTEXTURE1D_H
