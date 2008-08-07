@@ -3,7 +3,7 @@
 	
 GLTexture::~GLTexture() {
 	// TODO: I think we cannot call glDeleteTextures here as we are not guaranteed to be in the right context, ned to check this thougth
-	assert(m_iGLID == -1);
+	assert(m_iGLID == (unsigned int)(-1));
 }
 
 void GLTexture::Delete() {
