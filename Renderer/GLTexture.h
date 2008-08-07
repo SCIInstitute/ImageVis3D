@@ -41,7 +41,7 @@
 #ifndef GLTEXTURE_H
 #define GLTEXTURE_H
 
-#include "GLinclude.h"
+#include "GLInclude.h"
 
 class GLTexture {
 	public:
