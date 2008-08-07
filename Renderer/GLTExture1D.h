@@ -27,7 +27,7 @@
 */
 
 /**
-	\file		AbstrRenderer.h
+	\file		GLTexture1D.h
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
@@ -38,8 +38,8 @@
 
 #pragma once
 
-#ifndef ABSTRRENDERER_H
-#define ABSTRRENDERER_H
+#ifndef GLTEXTURE1D_H
+#define GLTEXTURE1D_H
 
 #include <string>
 
@@ -57,9 +57,9 @@ enum ERenderMode {
 	RM_INVALID
 };
 
-class AbstrRenderer {
+class GLTexture1D {
 	public:
-		virtual ~AbstrRenderer();
+		virtual ~GLTexture1D();
 		bool LoadDataset(const std::string& strFilename);
 
 		VolumeDataset*		GetDataSet() {return m_pDataset;}
@@ -77,4 +77,4 @@ class AbstrRenderer {
 		ERenderMode			m_eRenderMode;
 };
 
-#endif // ABSTRRENDERER_H
+#endif // GLTEXTURE1D_H

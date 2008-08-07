@@ -35,7 +35,6 @@
 	\date		August 2008
 */
 
-
 #pragma once
 
 #ifndef GPUMEMMAN_H
@@ -51,17 +50,31 @@
 	#include <GL/gl.h>
 #endif
 
-
-// TODO: realize include GL for other platforms
-
 #include <deque>
 #include <string>
+#include "../Renderer/AbstrRenderer.h"
 #include "../IO/VolumeDataset.h"
+#include "../IO/TransferFunction1D.h"
+#include "../IO/TransferFunction2D.h"
 
-typedef std::pair<unsigned int, VolumeDataset*> VolDataListElem;
+typedef std::deque< AbstrRenderer* > AbstrRendererList;
+typedef AbstrRendererList::iterator AbstrRendererListIter;
+
+// volume datasets
+struct VolDataListElem {
+	VolDataListElem(VolumeDataset* _pVolumeDataset, AbstrRenderer* pUser) :
+		pVolumeDataset(_pVolumeDataset) 
+	{
+		qpUser.push_back(pUser);
+	}
+
+	VolumeDataset*	pVolumeDataset;
+	AbstrRendererList qpUser;
+};
 typedef std::deque<VolDataListElem> VolDataList;
 typedef VolDataList::iterator VolDataListIter;
 
+// simple textures
 struct SimpleTextureListElem {
 	SimpleTextureListElem(unsigned int _iAccessCounter, GLuint _iGLID, std::string _strFilename) :
 		iAccessCounter(_iAccessCounter), 
@@ -76,6 +89,39 @@ struct SimpleTextureListElem {
 typedef std::deque<SimpleTextureListElem> SimpleTextureList;
 typedef SimpleTextureList::iterator SimpleTextureListIter;
 
+// 1D transfer functions
+struct Trans1DListElem {
+	Trans1DListElem(TransferFunction1D* _pTransferFunction1D, GLuint _iGLID, AbstrRenderer* pUser) :
+		pTransferFunction1D(_pTransferFunction1D),
+		iGLID(_iGLID)
+	{
+		qpUser.push_back(pUser);
+	}
+
+	TransferFunction1D*	pTransferFunction1D;
+	GLuint				iGLID;
+	AbstrRendererList	qpUser;
+};
+typedef std::deque<Trans1DListElem> Trans1DList;
+typedef Trans1DList::iterator Trans1DListIter;
+
+// 2D transfer functions
+struct Trans2DListElem {
+	Trans2DListElem(TransferFunction2D* _pTransferFunction2D, GLuint _iGLID, AbstrRenderer* pUser) :
+		pTransferFunction2D(_pTransferFunction2D),
+		iGLID(_iGLID)
+	{
+		qpUser.push_back(pUser);
+	}
+
+	TransferFunction2D*	pTransferFunction2D;
+	GLuint				iGLID;
+	AbstrRendererList	qpUser;
+};
+typedef std::deque<Trans2DListElem> Trans2DList;
+typedef Trans2DList::iterator Trans2DListIter;
+
+
 class MasterController;
 
 class GPUMemMan {
@@ -83,8 +129,18 @@ class GPUMemMan {
 		GPUMemMan(MasterController* masterController);
 		virtual ~GPUMemMan();
 
-		VolumeDataset* LoadDataset(const std::string& strFilename);
-		void FreeDataset(VolumeDataset* pVolumeDataset);
+		VolumeDataset* LoadDataset(const std::string& strFilename, AbstrRenderer* requester);
+		void FreeDataset(VolumeDataset* pVolumeDataset, AbstrRenderer* requester);
+
+		void GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, TransferFunction1D** transferFunc, GLuint* iGLID);
+		void Get1DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction1D** transferFunc, GLuint* iGLID);
+		bool Access1DTrans(GLuint iGLID, AbstrRenderer* requester);
+		void Free1DTrans(GLuint iGLID, AbstrRenderer* requester);
+
+		void GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* requester, TransferFunction2D** transferFunc, GLuint* iGLID);
+		void Get2DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction2D** transferFunc, GLuint* iGLID);
+		bool Access2DTrans(GLuint iGLID, AbstrRenderer* requester);
+		void Free2DTrans(GLuint iGLID, AbstrRenderer* requester);
 
 		GLuint Load2DTextureFromFile(const std::string& strFilename);
 		void FreeTexture(GLuint iTexture);
@@ -92,6 +148,8 @@ class GPUMemMan {
 	private:
 		VolDataList			m_vpVolumeDatasets;
 		SimpleTextureList   m_vpSimpleTextures;
+		Trans1DList			m_vpTrans1DList;
+		Trans2DList			m_vpTrans2DList;
 		MasterController*	m_MasterController;
 };
 

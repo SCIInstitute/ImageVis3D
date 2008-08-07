@@ -9,6 +9,9 @@ GPUSBVR::GPUSBVR(MasterController* pMasterController) :
 	m_iCurrentView(0)
 {
 	m_pMasterController = pMasterController;
+
+
+
 }
 
 GPUSBVR::~GPUSBVR() {
@@ -17,7 +20,7 @@ GPUSBVR::~GPUSBVR() {
 
 void GPUSBVR::Initialize() {
 
-	m_pMasterController->DebugOut()->printf("GPUSBVR::Initialize");
+	m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","");
 
 	glClearColor(1,0,0,0);
 	glShadeModel(GL_SMOOTH);
@@ -27,23 +30,23 @@ void GPUSBVR::Initialize() {
 	
 	m_IDTex[0] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1x3.bmp").c_str());
 	if (m_IDTex[0] == -1) {
-		m_pMasterController->DebugOut()->printf("GPUSBVR::Initialize: First Image load failed");		
+		m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","First Image load failed");		
 		m_IDTex[0] = 0;
 	}
 	m_IDTex[1] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin2x2.bmp").c_str());
 	if (m_IDTex[1] == -1) {
-		m_pMasterController->DebugOut()->printf("GPUSBVR::Initialize: Second Image load failed");		
+		m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","Second Image load failed");		
 		m_IDTex[1] = 0;
 	}
 	m_IDTex[2] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1.bmp").c_str());
 	if (m_IDTex[2] == -1) {
-		m_pMasterController->DebugOut()->printf("GPUSBVR::Initialize: Third Image load failed");		
+		m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","Third Image load failed");		
 		m_IDTex[2] = 0;
 	}
 }
 
 void GPUSBVR::Paint() {
-	m_pMasterController->DebugOut()->printf("GPUSBVR::Paint");
+//	m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","");
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -66,7 +69,7 @@ void GPUSBVR::Paint() {
 }
 
 void GPUSBVR::Resize(int width, int height) {
-	m_pMasterController->DebugOut()->printf("GPUSBVR::Resize");
+	m_pMasterController->DebugOut()->Message("GPUSBVR::Resize","");
 
 	int side = std::min(width, height);
 	glViewport((width - side) / 2, (height - side) / 2, side, side);
