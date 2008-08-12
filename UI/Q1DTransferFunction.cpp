@@ -1,18 +1,29 @@
 #include "Q1DTransferFunction.h"
+
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QPainter>
 
-Q1DTransferFunction::Q1DTransferFunction(QWidget *parent) :
+#include <Controller/MasterController.h>
+#include <Basics/MathTools.h>
+
+
+Q1DTransferFunction::Q1DTransferFunction(MasterController& masterController, QWidget *parent) :
 	QWidget(parent),
 	m_pTrans(NULL),
 	m_iPaintmode(Q1DT_PAINT_NONE),
+	m_MasterController(masterController), 
 	m_bBackdropCacheUptodate(false),
 	m_iCachedHeight(0),
 	m_iCachedWidth(0),
 	m_pBackdropCache(NULL),
+	m_pPreviewBack(NULL),
+	m_pPreviewColor(NULL),
 	// borders, may be changed arbitrarily
 	m_iLeftBorder(20),
 	m_iBottomBorder(20),
+	m_iTopPreviewHeight(30),
+	m_iTopPreviewDist(10),
 	// automatically computed borders
 	m_iRightBorder(0),
 	m_iTopBorder(0),
@@ -34,6 +45,8 @@ Q1DTransferFunction::~Q1DTransferFunction(void)
 {
 	// delete the backdrop cache pixmap
 	delete m_pBackdropCache;
+	delete m_pPreviewBack;
+	delete m_pPreviewColor;
 }
 
 void Q1DTransferFunction::SetData(const Histogram1D* vHistrogram, TransferFunction1D* pTrans) {
@@ -42,6 +55,9 @@ void Q1DTransferFunction::SetData(const Histogram1D* vHistrogram, TransferFuncti
 
 	// store histogram
 	m_vHistrogram.Resize(vHistrogram->GetSize());
+
+	delete m_pPreviewColor;
+	m_pPreviewColor = new QImage(vHistrogram->GetSize(),1, QImage::Format_ARGB32);
 	
 	// force the draw routine to recompute the backdrop cache
 	m_bBackdropCacheUptodate = false;
@@ -67,12 +83,12 @@ void Q1DTransferFunction::SetData(const Histogram1D* vHistrogram, TransferFuncti
 
 void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
 	// adjust left and bottom border so that the marker count can be met
-	m_iRightBorder   = (width()-(m_iLeftBorder+2))   %m_iMarkersX;
-	m_iTopBorder     = (height()-(m_iBottomBorder+2))%m_iMarkersY;
+	m_iRightBorder   = (width()-(m_iLeftBorder+2))                        %m_iMarkersX;
+	m_iTopBorder     = (height()-(m_iBottomBorder+2+m_iTopPreviewHeight+m_iTopPreviewDist)) %m_iMarkersY + m_iTopPreviewHeight+m_iTopPreviewDist;
 
 	// compute the actual marker spaceing
 	unsigned int iMarkerSpacingX = (width()-(m_iLeftBorder+2))/m_iMarkersX;
-	unsigned int iMarkerSpacingY = (height()-(m_iBottomBorder+2))/m_iMarkersY;
+	unsigned int iMarkerSpacingY = (height()-(m_iBottomBorder+2+m_iTopBorder))/m_iMarkersY;
 
 	// draw background
 	painter.setBrush(m_colorBack);
@@ -82,7 +98,7 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
 	// draw grid borders
 	QPen borderPen(m_colorBorder, 1, Qt::SolidLine);
 	painter.setPen(borderPen);
-	QRect borderRect(m_iLeftBorder,m_iTopBorder, width()-(m_iLeftBorder+2+m_iRightBorder), height()-(m_iTopBorder+m_iBottomBorder+2));
+	QRect borderRect(m_iLeftBorder, m_iTopBorder, width()-(m_iLeftBorder+2+m_iRightBorder), height()-(m_iTopBorder+m_iBottomBorder+2));
 	painter.drawRect(borderRect);
 
 	// draw Y axis markers
@@ -169,6 +185,19 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 		painter.drawPolyline(&pointList[0], pointList.size());
 	}
 
+
+	// draw preview bar
+	
+	for (unsigned int x = 0;x<m_vHistrogram.GetSize();x++) {
+		m_pPreviewColor->setPixel(x,0,qRgba(m_pTrans->pColorData[x][0]*255,
+											m_pTrans->pColorData[x][1]*255,
+											m_pTrans->pColorData[x][2]*255,
+											m_pTrans->pColorData[x][3]*255));
+	}
+
+	QRect prevRect(m_iLeftBorder+1, m_iTopBorder-(m_iTopPreviewHeight+m_iTopPreviewDist),width()-(m_iLeftBorder+3+m_iRightBorder),m_iTopPreviewHeight);
+	painter.drawImage(prevRect,*m_pPreviewBack);
+	painter.drawImage(prevRect,*m_pPreviewColor);
 }
 
 void Q1DTransferFunction::mousePressEvent(QMouseEvent *event) {
@@ -321,6 +350,22 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 	// as drawing the histogram can become quite expensive we'll cache it in an image and only redraw if needed
 	if (!m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
 		
+		int w = MathTools::MakeMultiple<int>(width()-(m_iLeftBorder+3+m_iRightBorder), 8);
+		int h = MathTools::MakeMultiple<int>(m_iTopPreviewHeight, 8);
+
+		delete m_pPreviewBack;
+		m_pPreviewBack = new QImage(w,h,QImage::Format_RGB32);
+		unsigned int iCheckerboard[2] = {qRgb(128,128,128), qRgb(0,0,0)};
+		int iCurrent = 0;
+		for (int y = 0;y<h;y++) {
+			int iLastCurrent = iCurrent;
+			for (int x = 0;x<w;x++) {
+				if (x%8 == 0) iCurrent = 1-iCurrent;
+				m_pPreviewBack->setPixel(x,y,iCheckerboard[iCurrent]);
+			}
+			iCurrent = (y != 0 && y%8 == 0) ? 1-iLastCurrent : iLastCurrent;
+		}
+
 		// delete the old pixmap an create a new one if the size has changed
 		if ((unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
 			delete m_pBackdropCache;
@@ -354,6 +399,7 @@ bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
 	// hand the load call over to the TransferFunction1D class
 	if( m_pTrans->Load(strFilename.toStdString()) ) {
 		update();
+		m_MasterController.MemMan()->Changed1DTrans(NULL, m_pTrans);
 		return true;
 	} else return false;
 }

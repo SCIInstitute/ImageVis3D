@@ -13,12 +13,14 @@
 #define Q2DT_PAINT_ALPHA 8
 #define Q2DT_PAINT_UNDEF 16
 
+class MasterController;
+
 class Q2DTransferFunction : public QWidget
 {
 	Q_OBJECT
 
 	public:
-		Q2DTransferFunction(QWidget *parent=0);
+		Q2DTransferFunction(MasterController& masterController, QWidget *parent=0);
 		virtual ~Q2DTransferFunction(void);
 		void SetData(const Histogram2D* vHistrogram, TransferFunction2D* pTrans);
 		void SetPaintmode(unsigned int iPaintmode) {if (iPaintmode < Q2DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
@@ -50,6 +52,7 @@ class Q2DTransferFunction : public QWidget
 		TransferFunction2D*		m_pTrans;
 		unsigned int m_iPaintmode;
 		int m_iActiveSwatchIndex;
+		MasterController& m_MasterController;
 
 		// cached image of the backdrop
 		bool		 m_bBackdropCacheUptodate;

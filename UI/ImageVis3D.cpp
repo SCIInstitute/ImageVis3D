@@ -1,6 +1,7 @@
 #include "ImageVis3D.h"
 #include "BrowseData.h"
 
+#include <QtCore/QTimer>
 #include <QtGui/QMdiSubWindow>
 #include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
@@ -32,7 +33,11 @@ MainWindow::MainWindow(MasterController& masterController, QWidget* parent /* = 
 	LoadWorkspace("Default.wsp", true);
 	
 	UpdateMRUActions();
-	UpdateMenus();	
+	UpdateMenus();
+
+	QTimer *timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(CheckForRedraw()));
+	timer->start(20);
 }
 
 MainWindow::~MainWindow()
@@ -288,6 +293,15 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 		m_1DTransferFunction->update();
 		m_2DTransferFunction->SetData(sender->GetRenderer()->GetDataSet()->Get2DHistogramm(), sender->GetRenderer()->Get2DTrans());
 		m_2DTransferFunction->update();
+
+		ERenderMode e = m_ActiveRenderWin->GetRenderer()->GetRendermode();
+
+		switch (e) {
+			case RM_1DTRANS    : Use1DTrans(); break;
+			case RM_2DTRANS    : Use2DTrans(); break;
+			case RM_ISOSURFACE : UseIso(); break;
+			default : m_MasterController.DebugOut()->Error("MainWindow::RenderWindowActive","unknown rendermode from %s", sender->GetDatasetName().toStdString().c_str()); break;
+		}
 	}
 }
 
@@ -330,6 +344,13 @@ RenderWindow* MainWindow::GetActiveRenderWindow()
 		return qobject_cast<RenderWindow*>(activeSubWindow->widget());
 	else
 		return NULL;
+}
+
+void MainWindow::CheckForRedraw() {
+	for (int i = 0;i<mdiArea->subWindowList().size();i++) {
+		QWidget* w = mdiArea->subWindowList().at(i)->widget();			
+		qobject_cast<RenderWindow*>(w)->CheckForRedraw();
+	}
 }
 
 void MainWindow::UpdateMenus() {
@@ -405,6 +426,8 @@ void MainWindow::Use1DTrans() {
 	m_1DTransferFunction->setEnabled(true);
 	m_2DTransferFunction->setEnabled(false);
 	// todo disable iso controlls
+
+	if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(RM_1DTRANS);
 }
 
 void MainWindow::Use2DTrans() {
@@ -418,7 +441,10 @@ void MainWindow::Use2DTrans() {
 
 	m_1DTransferFunction->setEnabled(false);
 	m_2DTransferFunction->setEnabled(true);
+
 	// todo disable iso controlls
+
+	if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(RM_2DTRANS);
 }
 
 void MainWindow::UseIso() {
@@ -433,6 +459,7 @@ void MainWindow::UseIso() {
 	m_1DTransferFunction->setEnabled(false);
 	m_2DTransferFunction->setEnabled(false);
 	// todo enable iso controlls
+	if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(RM_ISOSURFACE);
 }
 
 
@@ -509,13 +536,12 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
 	Ui_MainWindow::setupUi(MainWindow);
 
-    m_1DTransferFunction = new Q1DTransferFunction(dockWidgetContents_6);
+    m_1DTransferFunction = new Q1DTransferFunction(m_MasterController, dockWidgetContents_6);
 	horizontalLayout_13->addWidget(m_1DTransferFunction);
-	m_2DTransferFunction = new Q2DTransferFunction(frame_5);
+	m_2DTransferFunction = new Q2DTransferFunction(m_MasterController, frame_5);
 	verticalLayout_11->addWidget(m_2DTransferFunction);
 
 	Use2DTrans();
-
 
 	for (unsigned int i = 0; i < ms_iMaxRecentFiles; ++i) {
 		m_recentFileActs[i] = new QAction(this);

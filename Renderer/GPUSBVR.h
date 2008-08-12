@@ -42,7 +42,7 @@
 #define GPUSBVR_H
 
 #include "AbstrRenderer.h"
-#include "../Renderer/GPUMemMan.h"
+#include "../Renderer/GPUMemMan/GPUMemMan.h"
 #include "../Renderer/GLTexture2D.h"
 
 class GPUSBVR : public AbstrRenderer {
@@ -55,6 +55,13 @@ class GPUSBVR : public AbstrRenderer {
 		void Resize(int width, int height);
 		void Cleanup();
 
+		virtual void Set1DTrans(TransferFunction1D* p1DTrans);
+		virtual void Set2DTrans(TransferFunction2D* p2DTrans);
+		virtual void Changed1DTrans();
+		virtual void Changed2DTrans();
+
+		void CheckForRedraw();
+
 		void SetRotation(int xRot) {m_xRot = xRot;}
 		void SetCurrentView(int iCurrentView) {m_iCurrentView = iCurrentView;}
 		int GetCurrentView() {return m_iCurrentView;}
@@ -63,6 +70,7 @@ class GPUSBVR : public AbstrRenderer {
 		GLTexture2D* m_IDTex[3];
 		int m_iCurrentView;
 		int m_xRot;
+		bool m_bDelayedCompleteRedraw;
 };
 
 #endif // GPUSBVR_H

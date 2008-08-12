@@ -54,23 +54,30 @@ class MasterController;
 enum ERenderMode {
 	RM_1DTRANS = 0,
 	RM_2DTRANS,
-//	RM_ISOSURFACE,
+	RM_ISOSURFACE,
 	RM_INVALID
 };
 
 class AbstrRenderer {
 	public:
+		AbstrRenderer() : m_bRedraw(true), m_bCompleteRedraw(true) {}
 		virtual ~AbstrRenderer();
 		bool LoadDataset(const std::string& strFilename);
 
 		VolumeDataset*		GetDataSet() {return m_pDataset;}
 		TransferFunction1D* Get1DTrans() {return m_p1DTrans;}
 		TransferFunction2D* Get2DTrans() {return m_p2DTrans;}
-		void Set1DTrans(TransferFunction1D* p1DTrans) {m_p1DTrans = p1DTrans;}
-		void Set2DTrans(TransferFunction2D* p2DTrans) {m_p2DTrans = p2DTrans;}
-		void SetRendermode(ERenderMode eRenderMode) {m_eRenderMode = eRenderMode;}
+		
+		ERenderMode GetRendermode() {return m_eRenderMode;}
+		virtual void SetRendermode(ERenderMode eRenderMode);
+		virtual void Set1DTrans(TransferFunction1D* p1DTrans) {m_p1DTrans = p1DTrans;}
+		virtual void Set2DTrans(TransferFunction2D* p2DTrans) {m_p2DTrans = p2DTrans;}
+		virtual void Changed1DTrans() = NULL;
+		virtual void Changed2DTrans() = NULL;
 
 	protected:
+		bool				m_bRedraw;
+		bool				m_bCompleteRedraw;
 		MasterController*	m_pMasterController;
 		VolumeDataset*		m_pDataset;
 		TransferFunction1D* m_p1DTrans;

@@ -13,12 +13,14 @@
 #define Q1DT_PAINT_ALPHA 8
 #define Q1DT_PAINT_UNDEF 16
 
+class MasterController;
+
 class Q1DTransferFunction : public QWidget
 {
 	Q_OBJECT
 
 	public:
-		Q1DTransferFunction(QWidget *parent=0);
+		Q1DTransferFunction(MasterController& masterController, QWidget *parent=0);
 		virtual ~Q1DTransferFunction(void);
 		void SetData(const Histogram1D* vHistrogram, TransferFunction1D* Trans);
 		void SetPaintmode(unsigned int iPaintmode) {if (iPaintmode < Q1DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
@@ -39,16 +41,21 @@ class Q1DTransferFunction : public QWidget
 		NormalizedHistogram1D m_vHistrogram;
 		TransferFunction1D* m_pTrans;
 		unsigned int m_iPaintmode;
+		MasterController& m_MasterController;
 
 		// cached image of the backdrop
 		bool		 m_bBackdropCacheUptodate;
 		unsigned int m_iCachedHeight;
 		unsigned int m_iCachedWidth;
 		QPixmap*	 m_pBackdropCache;
+		QImage*		 m_pPreviewBack;
+		QImage*		 m_pPreviewColor;
 
 		// borders, may be changed in the constructor 
 		unsigned int m_iLeftBorder;
 		unsigned int m_iBottomBorder;
+		unsigned int m_iTopPreviewHeight;
+		unsigned int m_iTopPreviewDist;
 
 		// automatically computed borders (computed by DrawCoordinateSystem)
 		unsigned int m_iRightBorder;

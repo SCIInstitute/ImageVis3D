@@ -126,3 +126,8 @@ void RenderWindow::focusInEvent ( QFocusEvent * event ) {
 		emit WindowActive(this);
 	}
 }
+
+void RenderWindow::CheckForRedraw() {
+	makeCurrent();
+	m_Renderer->CheckForRedraw();
+}

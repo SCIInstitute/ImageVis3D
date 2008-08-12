@@ -1,14 +1,16 @@
 #include "Q2DTransferFunction.h"
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
+#include "../Controller/MasterController.h"
 
 using namespace std;
 
-Q2DTransferFunction::Q2DTransferFunction(QWidget *parent) :
+Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWidget *parent) :
 	QWidget(parent),
 	m_pTrans(NULL),
 	m_iPaintmode(Q2DT_PAINT_NONE),
 	m_iActiveSwatchIndex(-1),
+	m_MasterController(masterController),
 	m_bBackdropCacheUptodate(false),
 	m_iCachedHeight(0),
 	m_iCachedWidth(0),
@@ -343,6 +345,7 @@ bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
 	// hand the load call over to the TransferFunction1D class
 	if( m_pTrans->Load(strFilename.toStdString()) ) {
 		update();
+		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
 		return true;
 	} else return false;
 }

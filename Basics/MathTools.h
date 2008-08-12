@@ -62,6 +62,8 @@ namespace MathTools {
 
 	template<class T> inline T sign(T v){return T((v > T(0)) - (v < T(0)));}
 
+	template<class T> inline T MakeMultiple(T v, T m){return v + (((v%m) == T(0)) ? T(0) : m-(v%m));}
+
 };
 
 #endif // MATHTOOLS_H

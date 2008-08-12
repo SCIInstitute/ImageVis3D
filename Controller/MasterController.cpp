@@ -64,5 +64,5 @@ void MasterController::ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer) {
 			return;
 		}
 	}
-	m_pDebugOut->Warning("MasterController::ReleaseVolumerenderer","requested volume rendere not found");
+	m_pDebugOut->Warning("MasterController::ReleaseVolumerenderer","requested volume renderer not found");
 }

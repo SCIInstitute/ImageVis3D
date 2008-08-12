@@ -64,6 +64,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void ClearDebugWin();
 		void SetDebugViewMask();
 
+		void CheckForRedraw();
+
 	private :
 		MasterController&		m_MasterController;
 		QString					m_strCurrentWorkspaceFilename;
@@ -92,7 +94,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void setupUi(QMainWindow *MainWindow);
 		
 		void LoadDataset(QString fileName);
-		
+
 };
 
 #endif // IMAGEVIS3D_H

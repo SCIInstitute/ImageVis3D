@@ -20,6 +20,8 @@ class RenderWindow : public QGLWidget
 		QSize minimumSizeHint() const;
 		QSize sizeHint() const;
 		AbstrRenderer* GetRenderer() {return m_Renderer;}
+		void CheckForRedraw();
+		void SetRendermode(ERenderMode eRenderMode) {makeCurrent(); m_Renderer->SetRendermode(eRenderMode);}
 
 	public slots:
 		void ToggleRenderWindowView1x3();

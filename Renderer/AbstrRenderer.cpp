@@ -26,3 +26,12 @@ bool AbstrRenderer::LoadDataset(const string& strFilename) {
 AbstrRenderer::~AbstrRenderer() {
 	m_pMasterController->MemMan()->FreeDataset(m_pDataset, this);
 }
+
+void AbstrRenderer::SetRendermode(ERenderMode eRenderMode) 
+{
+	if (m_eRenderMode != eRenderMode) {
+		m_eRenderMode = eRenderMode; 
+		m_bRedraw = true;
+		m_bCompleteRedraw = true;
+	}	
+}

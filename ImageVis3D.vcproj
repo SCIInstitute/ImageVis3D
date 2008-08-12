@@ -877,14 +877,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Renderer\GPUMemMan.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Renderer\GPUMemMan.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Renderer\GPUSBVR.cpp"
 				>
 			</File>
@@ -892,6 +884,18 @@
 				RelativePath=".\Renderer\GPUSBVR.h"
 				>
 			</File>
+			<Filter
+				Name="GPUMemMan"
+				>
+				<File
+					RelativePath=".\Renderer\GPUMemMan\GPUMemMan.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GPUMemMan\GPUMemMan.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="DebugOut"

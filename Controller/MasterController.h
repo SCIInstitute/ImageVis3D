@@ -48,7 +48,7 @@
 #include "../DebugOut/AbstrDebugOut.h"
 #include "../DebugOut/ConsoleOut.h"
 
-#include "../Renderer/GPUMemMan.h"
+#include "../Renderer/GPUMemMan/GPUMemMan.h"
 #include "../Renderer/AbstrRenderer.h"
 #include "../Renderer/GPUSBVR.h"
 

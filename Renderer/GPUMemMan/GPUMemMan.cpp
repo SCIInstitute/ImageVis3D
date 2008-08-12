@@ -1,7 +1,7 @@
 #include "GPUMemMan.h"
-#include "../IO/Images/BMPLoader.h"
-#include "../Controller/MasterController.h"
-#include "GLInclude.h"
+#include "../../IO/Images/BMPLoader.h"
+#include "../../Controller/MasterController.h"
+#include "../GLInclude.h"
 
 using namespace std;
 
@@ -15,6 +15,7 @@ GPUMemMan::~GPUMemMan() {
 
 }
 
+// ******************** Datasets
 
 VolumeDataset* GPUMemMan::LoadDataset(const std::string& strFilename, AbstrRenderer* requester) {
 	for (VolDataListIter i = m_vpVolumeDatasets.begin();i<m_vpVolumeDatasets.end();i++) {
@@ -54,6 +55,8 @@ void GPUMemMan::FreeDataset(VolumeDataset* pVolumeDataset, AbstrRenderer* reques
 	}
 	m_MasterController->DebugOut()->Warning("GPUMemMan::FreeDataset","Dataset %s not found or not being used by requester", pVolumeDataset->Filename().c_str());
 }
+
+// ******************** Simple Textures
 
 GLTexture2D* GPUMemMan::Load2DTextureFromFile(const std::string& strFilename) {
 	for (SimpleTextureListIter i = m_vpSimpleTextures.begin();i<m_vpSimpleTextures.end();i++) {
@@ -96,6 +99,19 @@ void GPUMemMan::FreeTexture(GLTexture2D* pTexture) {
 	m_MasterController->DebugOut()->Warning("GPUMemMan::FreeTexture","Texture not found");
 }
 
+// ******************** 1D Trans
+
+void GPUMemMan::Changed1DTrans(AbstrRenderer* requester, TransferFunction1D* pTransferFunction1D) {
+	m_MasterController->DebugOut()->Message("GPUMemMan::Changed1DTrans","Sending change notification for 1D transfer function");
+
+	for (Trans1DListIter i = m_vpTrans1DList.begin();i<m_vpTrans1DList.end();i++) {
+		if (i->pTransferFunction1D == pTransferFunction1D) {
+			for (AbstrRendererListIter j = i->qpUser.begin();j<i->qpUser.end();j++) {
+				if (*j != requester) (*j)->Changed1DTrans();
+			}
+		}
+	}
+}
 
 void GPUMemMan::GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, TransferFunction1D** transferFunc, GLTexture1D** tex) {
 	m_MasterController->DebugOut()->Message("GPUMemMan::GetEmpty1DTrans","Creating new empty 1D transfer function");
@@ -116,6 +132,21 @@ GLTexture1D* GPUMemMan::Access1DTrans(TransferFunction1D* transferFunc, AbstrRen
 
 void GPUMemMan::Free1DTrans(TransferFunction1D* transferFunc, AbstrRenderer* requester) {
 	// TODO
+}
+
+
+// ******************** 2D Trans
+
+void GPUMemMan::Changed2DTrans(AbstrRenderer* requester, TransferFunction2D* pTransferFunction2D) {
+	m_MasterController->DebugOut()->Message("GPUMemMan::Changed1DTrans","Sending change notification for 1D transfer function");
+
+	for (Trans2DListIter i = m_vpTrans2DList.begin();i<m_vpTrans2DList.end();i++) {
+		if (i->pTransferFunction2D == pTransferFunction2D) {
+			for (AbstrRendererListIter j = i->qpUser.begin();j<i->qpUser.end();j++) {
+				if (*j != requester) (*j)->Changed2DTrans();
+			}
+		}
+	}
 }
 
 void GPUMemMan::GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* requester, TransferFunction2D** transferFunc, GLTexture2D** tex) {
