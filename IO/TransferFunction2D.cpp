@@ -55,18 +55,22 @@ TransferFunction2D::~TransferFunction2D(void)
 
 void TransferFunction2D::Resize(const VECTOR2<size_t>& iSize) {
 	pColorData.Resize(iSize);
+	m_Trans1D.Resize(iSize.x);
+	m_Trans1D.Clear();
 }
 
 bool TransferFunction2D::Load(const std::string& filename) {
+	return Load(filename, pColorData.GetSize());
+}
+
+bool TransferFunction2D::Load(const std::string& filename, const VECTOR2<size_t>& iSize) {
 	ifstream file(filename.c_str());
 
 	if (!file.is_open()) return false;
-
-	// load gridsize
-	VECTOR2<size_t> iSize;
-	file >> iSize.x;
-	file >> iSize.y;
 	pColorData.Resize(iSize);
+
+	// load 1D Trans
+	m_Trans1D.Load(file, iSize.x);
 
 	// load swatch count
 	unsigned int iSwatchCount;
@@ -76,6 +80,7 @@ bool TransferFunction2D::Load(const std::string& filename) {
 	// load Swatches
 	for (unsigned int i = 0;i<m_Swatches.size();i++) m_Swatches[i].Load(file);
 
+	file.close();
 
 	return true;
 }
@@ -85,14 +90,16 @@ bool TransferFunction2D::Save(const std::string& filename) {
 
 	if (!file.is_open()) return false;
 
-	// save gridsize
-	file << pColorData.GetSize().x << " " << pColorData.GetSize().y << endl;
+	// save 1D Trans
+	m_Trans1D.Save(file);
 
 	// save swatch count
 	file << m_Swatches.size() << endl;
 
 	// save Swatches
 	for (unsigned int i = 0;i<m_Swatches.size();i++) m_Swatches[i].Save(file);
+
+	file.close();
 
 	return true;
 }
@@ -177,6 +184,5 @@ void TFPolygon::Save(ofstream& file) {
 			file << pGradientStops[i].second[j] << " ";
 		}
 		file << endl;
-	}
-
+	}	
 }

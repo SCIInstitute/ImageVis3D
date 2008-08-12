@@ -65,18 +65,65 @@ void MainWindow::Save1DTrans(){
 	}
 }
 
+void MainWindow::Copy1DTransTo2DTrans() {
+	m_2DTransferFunction->Set1DTrans(m_1DTransferFunction->GetTrans());
+}
+
+void MainWindow::SwatchesChanged() {
+	listWidget_Swatches->clear();
+	
+	for (size_t i = 0;i<m_2DTransferFunction->GetSwatchCount();i++) {
+		size_t iSize = m_2DTransferFunction->GetSwatchSize(i);
+
+		QString msg;
+		switch (iSize) {
+			case  3  : msg = "Triangle";		break;
+			case  4  : msg = "Quadrilateral";	break;
+			case  5  : msg = "Pentagon";		break;
+			case  6  : msg = "Hexagon";			break;
+			case  7  : msg = "Heptagon";		break;
+			case  8  : msg = "Octagon";			break;
+			case  9  : msg = "Nonagon";			break;
+			case 10  : msg = "Decagon";			break;
+			case 11  : msg = "Hendecagon";		break;
+			case 12  : msg = "Dodecagon";		break;
+			case 13  : msg = "Triskaidecagon";	break;
+			case 14  : msg = "Tetrakaidecagon";	break;
+			case 15  : msg = "Pendedecagon";	break;
+			case 16  : msg = "Hexdecagon";		break;
+			case 17  : msg = "Heptdecagon";		break;
+			case 18  : msg = "Octdecagon";		break;
+			case 19  : msg = "Enneadecagon";	break;
+			case 20  : msg = "Icosagon";		break;
+			// at this point I am getting bored ...
+			default : msg = tr("%1 - gon").arg(iSize); break;
+		}
+
+		listWidget_Swatches->addItem( msg );
+	}
+
+	int iCurrent = m_2DTransferFunction->GetActiveSwatchIndex();
+	listWidget_Swatches->setCurrentRow(iCurrent);
+
+	UpdateSwatchButtons();
+}
+
+void MainWindow::UpdateSwatchButtons() {
+	int iCurrent = m_2DTransferFunction->GetActiveSwatchIndex();
+
+	pushButton_DelPoly->setEnabled(iCurrent >= 0);
+	pushButton_UpPoly->setEnabled(iCurrent > 0);
+	pushButton_DownPoly->setEnabled(iCurrent < int(m_2DTransferFunction->GetSwatchCount())-1);
+}
+
 void MainWindow::Load2DTrans(){
 	QString fileName = QFileDialog::getOpenFileName(this, "Load 2D Transferfunction", ".", "2D Transferfunction File (*.2dt)");
-	if (fileName != "") {
-		m_2DTransferFunction->LoadFromFile(fileName);
-	}
+	if (fileName != "") m_2DTransferFunction->LoadFromFile(fileName);
 }
 
 void MainWindow::Save2DTrans(){
 	QString fileName = QFileDialog::getSaveFileName(this, "Save 2D Transferfunction", ".", "2D Transferfunction File (*.2dt)");
-	if (fileName != "") {
-		m_2DTransferFunction->SaveToFile(fileName);
-	}
+	if (fileName != "")	m_2DTransferFunction->SaveToFile(fileName);
 }
 
 // ******************************************
@@ -542,6 +589,15 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 	verticalLayout_11->addWidget(m_2DTransferFunction);
 
 	Use2DTrans();
+
+	connect(m_2DTransferFunction, SIGNAL(SwatchChange()), this, SLOT(SwatchesChanged()));
+	connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)), m_2DTransferFunction, SLOT(SetActiveSwatch(int)));
+	connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)), this, SLOT(UpdateSwatchButtons()));
+
+	connect(pushButton_AddPoly,  SIGNAL(clicked()), m_2DTransferFunction, SLOT(AddSwatch()));
+	connect(pushButton_DelPoly,  SIGNAL(clicked()), m_2DTransferFunction, SLOT(DeleteSwatch()));
+	connect(pushButton_UpPoly,   SIGNAL(clicked()), m_2DTransferFunction, SLOT(UpSwatch()));
+	connect(pushButton_DownPoly, SIGNAL(clicked()), m_2DTransferFunction, SLOT(DownSwatch()));
 
 	for (unsigned int i = 0; i < ms_iMaxRecentFiles; ++i) {
 		m_recentFileActs[i] = new QAction(this);

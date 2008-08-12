@@ -55,15 +55,22 @@ public:
 	~TransferFunction1D(void);
 	
 	void Resize(size_t iSize);
+	void Resample(size_t iTargetSize);
 
 	bool Load(const std::string& filename);
+	bool Load(const std::string& filename, size_t iTargetSize);
+	bool Load(std::ifstream& file);
+	bool Load(std::ifstream& file, size_t iTargetSize);
 	bool Save(const std::string& filename);
+	bool Save(std::ofstream& file);
+
+	void Clear();
 
 	void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
 	void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
 	void GetFloatArray(float** pfData);
 
-	std::vector< FLOATVECTOR4 > pColorData;
+	std::vector< FLOATVECTOR4 > vColorData;
 
 };
 

@@ -50,8 +50,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void SaveDataset();
 		void Load1DTrans();
 		void Save1DTrans();
+		void Copy1DTransTo2DTrans();
 		void Load2DTrans();
 		void Save2DTrans();
+		void SwatchesChanged();
 
 		void EditViewLocks();
 		void EditRenderLocks();
@@ -65,6 +67,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void SetDebugViewMask();
 
 		void CheckForRedraw();
+		void UpdateSwatchButtons();
+
 
 	private :
 		MasterController&		m_MasterController;
@@ -94,7 +98,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void setupUi(QMainWindow *MainWindow);
 		
 		void LoadDataset(QString fileName);
-
 };
 
 #endif // IMAGEVIS3D_H

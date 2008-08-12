@@ -3,6 +3,20 @@
 
 using namespace std;
 
+AbstrRenderer::AbstrRenderer() : 
+	m_bRedraw(true), 
+	m_bCompleteRedraw(true), 
+	m_eRenderMode(RM_1DTRANS), 
+	m_pMasterController(NULL),
+	m_pDataset(NULL),
+	m_p1DTrans(NULL),
+	m_p1DTransTex(NULL),
+	m_p2DTrans(NULL),
+	m_p2DTransTex(NULL)
+{
+}
+
+
 bool AbstrRenderer::LoadDataset(const string& strFilename) {
 	if (m_pMasterController == NULL) return false;
 	if (m_pMasterController->MemMan() == NULL) {

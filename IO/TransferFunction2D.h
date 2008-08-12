@@ -46,6 +46,8 @@
 #include <Basics/Vectors.h>
 #include <Basics/Grids.h>
 
+#include "TransferFunction1D.h"
+
 typedef Grid2D<unsigned int> Histogram2D;
 typedef Grid2D<float> NormalizedHistogram2D;
 typedef Grid2D<FLOATVECTOR4> ColorData2D;
@@ -77,6 +79,7 @@ public:
 	void Resize(const VECTOR2<size_t>& iSize);
 
 	bool Load(const std::string& filename);
+	bool Load(const std::string& filename, const VECTOR2<size_t>& iSize);
 	bool Save(const std::string& filename);
 
 	void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
@@ -85,6 +88,7 @@ public:
 
 	ColorData2D pColorData;
 	std::vector< TFPolygon > m_Swatches;
+	TransferFunction1D m_Trans1D;
 };
 
 #endif // TRANSFERFUNCTION2D

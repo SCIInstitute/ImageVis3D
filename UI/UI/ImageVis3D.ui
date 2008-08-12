@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1203</width>
-    <height>1608</height>
+    <height>1655</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -141,7 +141,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1587</y>
+     <y>1634</y>
      <width>1203</width>
      <height>21</height>
     </rect>
@@ -334,9 +334,9 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>379</width>
+          <x>16</x>
+          <y>56</y>
+          <width>360</width>
           <height>240</height>
          </rect>
         </property>
@@ -436,9 +436,9 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>379</width>
+          <x>16</x>
+          <y>56</y>
+          <width>360</width>
           <height>240</height>
          </rect>
         </property>
@@ -627,9 +627,9 @@
        <widget class="QWidget" name="tab_6" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>379</width>
+          <x>16</x>
+          <y>56</y>
+          <width>360</width>
           <height>240</height>
          </rect>
         </property>
@@ -1150,9 +1150,9 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>379</width>
+          <x>16</x>
+          <y>56</y>
+          <width>360</width>
           <height>71</height>
          </rect>
         </property>
@@ -1255,9 +1255,9 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>379</width>
+          <x>16</x>
+          <y>56</y>
+          <width>360</width>
           <height>71</height>
          </rect>
         </property>
@@ -1715,8 +1715,8 @@
     <rect>
      <x>0</x>
      <y>1217</y>
-     <width>677</width>
-     <height>370</height>
+     <width>609</width>
+     <height>417</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1736,8 +1736,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>677</width>
-      <height>348</height>
+      <width>609</width>
+      <height>395</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_13" >
@@ -1941,6 +1941,19 @@
           </property>
          </spacer>
         </item>
+        <item row="6" column="0" >
+         <widget class="QPushButton" name="pushButton_CopyTo2D" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>Copy to 2D</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
@@ -1950,10 +1963,10 @@
   <widget class="QDockWidget" name="dockWidget_2DTrans" >
    <property name="geometry" >
     <rect>
-     <x>681</x>
+     <x>613</x>
      <y>1217</y>
-     <width>522</width>
-     <height>370</height>
+     <width>590</width>
+     <height>417</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1976,8 +1989,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>522</width>
-      <height>348</height>
+      <width>590</width>
+      <height>395</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_11" >
@@ -2093,13 +2106,86 @@
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="listWidget_2" >
+         <widget class="QListWidget" name="listWidget_Swatches" >
           <property name="sizePolicy" >
            <sizepolicy vsizetype="Expanding" hsizetype="Minimum" >
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_14" >
+          <property name="frameShape" >
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow" >
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_14" >
+           <item>
+            <widget class="QPushButton" name="pushButton_AddPoly" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Add</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_DelPoly" >
+             <property name="enabled" >
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Delete</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_UpPoly" >
+             <property name="enabled" >
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Up</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_DownPoly" >
+             <property name="enabled" >
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Down</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
@@ -3676,6 +3762,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_CopyTo2D</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Copy1DTransTo2DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>337</x>
+     <y>1584</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>813</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -3708,5 +3810,10 @@
   <slot>EditFiltersLocks()</slot>
   <slot>ClearDebugWin()</slot>
   <slot>SetDebugViewMask()</slot>
+  <slot>Copy1DTransTo2DTrans()</slot>
+  <slot>AddSwatch()</slot>
+  <slot>DeleteSwatch()</slot>
+  <slot>UpSwatch()</slot>
+  <slot>DownSwatch()</slot>
  </slots>
 </ui>

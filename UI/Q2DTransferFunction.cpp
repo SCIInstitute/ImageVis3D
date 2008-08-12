@@ -2,6 +2,15 @@
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
 #include "../Controller/MasterController.h"
+#include <limits>
+
+#ifdef max
+	#undef max
+#endif
+
+#ifdef min
+	#undef min
+#endif
 
 using namespace std;
 
@@ -21,8 +30,10 @@ Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWi
 	m_iSwatchBorderSize(5),
 
 	// mouse motion
-	m_iLastIndex(-1),
-	m_fLastValue(0)
+	m_iPointSelIndex(-1),
+	m_iGradSelIndex(-1),
+	m_vMousePressPos(0,0),
+	m_bDragging(false)
 {
 	SetColor(isEnabled());
 }
@@ -112,6 +123,11 @@ INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
 					  int(m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.y*(height()-m_iBorderSize-m_iSwatchBorderSize)));
 }
 
+FLOATVECTOR2 Q2DTransferFunction::Abs2Rel(INTVECTOR2 vCoord) {
+	return FLOATVECTOR2((float(vCoord.x)-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f)/float(width()-m_iBorderSize-m_iSwatchBorderSize),
+					    (float(vCoord.y)-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f)/float(height()-m_iBorderSize-m_iSwatchBorderSize));
+}
+
 void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 	if (m_pTrans == NULL) return;
 
@@ -124,6 +140,8 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 	QPen borderPen(m_colorSwatchBorder,       m_iSwatchBorderSize, Qt::SolidLine);
 	QPen circlePen(m_colorSwatchBorderCircle, m_iSwatchBorderSize, Qt::SolidLine);
 	QPen gradCircePen(m_colorSwatchGradCircle, m_iSwatchBorderSize/2, Qt::SolidLine);
+	QPen circlePenSel(m_colorSwatchBorderCircleSel, m_iSwatchBorderSize, Qt::SolidLine);
+	QPen gradCircePenSel(m_colorSwatchGradCircleSel, m_iSwatchBorderSize/2, Qt::SolidLine);
 
 	QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
 
@@ -154,37 +172,138 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 		painter.setBrush(Qt::NoBrush);
 
 		if (m_iActiveSwatchIndex == int(i)) {
-			painter.setPen(circlePen);
 			painter.setBrush(solidBrush);
 			for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {		
+				if (m_iPointSelIndex == j) painter.setPen(circlePenSel); else painter.setPen(circlePen);
 				painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
 			}
 
 			painter.setBrush(Qt::NoBrush);
-			painter.setPen(gradCircePen);
+			if (m_iGradSelIndex== 0) painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
 			INTVECTOR2 vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[0])-m_iSwatchBorderSize;
 			painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
 			vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[1])-m_iSwatchBorderSize;
+			if (m_iGradSelIndex== 1) painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
 			painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);			
 		}
 	}
 	painter.setRenderHint(painter.Antialiasing, false);
 }
 
+#include <basics/console.h>
+
 void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
 	if (m_pTrans == NULL) return;
 	// call superclass method
 	QWidget::mousePressEvent(event);
-	// clear the "last position" index
-	m_iLastIndex = -1;
+
+	if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex<int(m_pTrans->m_Swatches.size())) {
+		m_vMousePressPos = INTVECTOR2(event->x(), event->y());
+		TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+
+		// left mouse drags points around
+		if (event->button() == Qt::LeftButton) {
+
+			m_bDragging = true;
+
+			m_iPointSelIndex = -1;
+			m_iGradSelIndex = -1;
+
+			// find closest corner point
+			float fMinDist = std::numeric_limits<float>::max();
+			for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
+				INTVECTOR2 point = Rel2Abs(currentSwatch.pPoints[j]);
+
+				float fDist = sqrt( float(m_vMousePressPos.x-point.x)*float(m_vMousePressPos.x-point.x) +  float(m_vMousePressPos.y-point.y)*float(m_vMousePressPos.y-point.y) );
+
+				if (fMinDist > fDist) {
+					fMinDist = fDist;
+					m_iPointSelIndex = j;
+					m_iGradSelIndex = -1;
+				}
+			}
+
+			// find closest gradient coord
+			for (size_t j = 0;j<2;j++) {
+				INTVECTOR2 point = Rel2Abs(currentSwatch.pGradientCoords[j]);
+
+				float fDist = sqrt( float(m_vMousePressPos.x-point.x)*float(m_vMousePressPos.x-point.x) +  float(m_vMousePressPos.y-point.y)*float(m_vMousePressPos.y-point.y) );
+
+				if (fMinDist > fDist) {
+					fMinDist = fDist;
+					m_iPointSelIndex = -1;
+					m_iGradSelIndex = j;
+				}
+			}
+
+		}
+
+		// right mouse removes / adds points
+		if (event->button() == Qt::RightButton) {
+
+			FLOATVECTOR2 vfP = Abs2Rel(m_vMousePressPos);
+
+			// find closest edge and compute the point on that edge
+			float fMinDist = std::numeric_limits<float>::max();
+			FLOATVECTOR2 vfInserCoord;
+			int iInsertIndex = -1;
+
+			for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
+				FLOATVECTOR2 A = currentSwatch.pPoints[j];
+				FLOATVECTOR2 B = currentSwatch.pPoints[(j+1)%currentSwatch.pPoints.size()];
+
+				// check if we are deleting a point				
+				if (currentSwatch.pPoints.size() > 3) {
+					INTVECTOR2 vPixelDist = Rel2Abs(vfP-A);
+					if ( sqrt( float(vPixelDist.x*vPixelDist.x+vPixelDist.y*vPixelDist.y)) <= m_iSwatchBorderSize*3) {
+						currentSwatch.pPoints.erase(currentSwatch.pPoints.begin()+j);
+						iInsertIndex = -1;
+						emit SwatchChange();
+						break;
+					}
+				}
+
+
+				FLOATVECTOR2 C = vfP - A;		// Vector from a to Point
+				float d = (B - A).length();		// Length of the line segment
+				FLOATVECTOR2 V = (B - A)/d;		// Unit Vector from A to B
+				float t = V^C;					// Intersection point Distance from A
+
+				float fDist;
+				if (t >= 0 && t <= d) 
+					fDist = (vfP-(A + V*t)).length(); 
+				else 
+					fDist = std::numeric_limits<float>::max();
+
+
+				if (fDist < fMinDist) {
+					fMinDist = fDist;
+					vfInserCoord = vfP;
+					iInsertIndex = j+1;
+				}
+
+			}
+
+			if (iInsertIndex >= 0) {
+				currentSwatch.pPoints.insert(currentSwatch.pPoints.begin()+iInsertIndex, vfInserCoord);
+				emit SwatchChange();
+			}
+		}
+		update();
+	}
 }
 
 void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
 	if (m_pTrans == NULL) return;
 	// call superclass method
 	QWidget::mouseReleaseEvent(event);
-	// clear the "last position" index
-	m_iLastIndex = -1;
+
+	m_bDragging = false;
+	m_iPointSelIndex = -1;
+	m_iGradSelIndex = -1;
+
+	m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+	update();
 }
 
 void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
@@ -192,82 +311,27 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	// call superclass method
 	QWidget::mouseMoveEvent(event);
 
-/*	// exit if nothing is to be painted
-	if (m_iPaintmode == Q2DT_PAINT_NONE) return;
 
-	// compute some grid dimensions
-	unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
-	unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
-	unsigned int iVectorSize = m_pTrans->pColorData.size();
+	if (m_bDragging) {
 
-	// compute position in color array
-	int iCurrentIndex = int((float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth));
-	iCurrentIndex = std::min<int>(iVectorSize-1, std::max<int>(0,iCurrentIndex));
+		INTVECTOR2 vMouseCurrentPos(event->x(), event->y());
 
-	// compute actual color value 
-	float fValue = (float(m_iTopBorder)+float(iGridHeight)-float(event->y()))/float(iGridHeight);
-	fValue	  = std::min<float>(1.0f, std::max<float>(0.0f,fValue));
+		FLOATVECTOR2 vfPressPos = Abs2Rel(m_vMousePressPos);
+		FLOATVECTOR2 vfCurrentPos = Abs2Rel(vMouseCurrentPos);
 
-	// find out the range to change
-	if (m_iLastIndex == -1) {
-		m_iLastIndex = iCurrentIndex;
-		m_fLastValue = fValue;
-	}
-	
-	int iIndexMin, iIndexMax;
-	float fValueMin, fValueInc;
-
-	if (m_iLastIndex < iCurrentIndex) {
-		iIndexMin = m_iLastIndex;
-		iIndexMax = iCurrentIndex;
-
-		fValueMin = m_fLastValue;
-		fValueInc = -(fValue-m_fLastValue)/(m_iLastIndex-iCurrentIndex);
-	} else {
-		iIndexMin = iCurrentIndex;
-		iIndexMax = m_iLastIndex;
-
-		fValueMin = fValue;
-		fValueInc = -(fValue-m_fLastValue)/(m_iLastIndex-iCurrentIndex);
-	}
-
-	m_iLastIndex = iCurrentIndex;
-	m_fLastValue = fValue;
-
-	// update transfer function
-	if (m_iPaintmode & Q2DT_PAINT_RED) {
-		float _fValueMin = fValueMin;
-		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_pTrans->pColorData[iIndex][0] = _fValueMin;
-			_fValueMin += fValueInc;
+		FLOATVECTOR2 vfDelta = vfCurrentPos-vfPressPos;
+		
+		TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+		if (m_iPointSelIndex >= 0)  {
+			currentSwatch.pPoints[m_iPointSelIndex] += vfDelta;
+		} else {
+			currentSwatch.pGradientCoords[m_iGradSelIndex] += vfDelta;
 		}
-	}
-	if (m_iPaintmode & Q2DT_PAINT_GREEN) {
-		float _fValueMin = fValueMin;
-		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_pTrans->pColorData[iIndex][1] = _fValueMin;
-			_fValueMin += fValueInc;
-		}
-	}
-	if (m_iPaintmode & Q2DT_PAINT_BLUE) {
-		float _fValueMin = fValueMin;
-		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_pTrans->pColorData[iIndex][2] = _fValueMin;
-			_fValueMin += fValueInc;
-		}
-	}
-	if (m_iPaintmode & Q2DT_PAINT_ALPHA) {
-		float _fValueMin = fValueMin;
-		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_pTrans->pColorData[iIndex][3] = _fValueMin;
-			_fValueMin += fValueInc;
-		}
-	}
 
-	// redraw this widget
-	update();
+		m_vMousePressPos = vMouseCurrentPos;
 
-	*/
+		update();
+	}
 }
 
 void Q2DTransferFunction::SetColor(bool bIsEnabled) {
@@ -278,6 +342,8 @@ void Q2DTransferFunction::SetColor(bool bIsEnabled) {
 			m_colorSwatchBorder = QColor(255, 0, 0);
 			m_colorSwatchBorderCircle = QColor(255, 255, 0);
 			m_colorSwatchGradCircle = QColor(0, 255, 0);
+			m_colorSwatchGradCircleSel = QColor(255, 255, 255);
+			m_colorSwatchBorderCircleSel = QColor(255, 255, 255);
 		} else {
 			m_colorHistogram = QColor(55,55,55);
 			m_colorBack = QColor(Qt::black);
@@ -285,6 +351,8 @@ void Q2DTransferFunction::SetColor(bool bIsEnabled) {
 			m_colorSwatchBorder = QColor(100, 50, 50);
 			m_colorSwatchBorderCircle = QColor(100, 100, 50);
 			m_colorSwatchGradCircle = QColor(50, 100, 50);
+			m_colorSwatchGradCircleSel = m_colorSwatchGradCircle;
+			m_colorSwatchBorderCircleSel = m_colorSwatchBorderCircle;
 		}
 }
 
@@ -297,6 +365,21 @@ void Q2DTransferFunction::changeEvent(QEvent * event) {
 		m_bBackdropCacheUptodate = false;
 		update();
 	}
+}
+
+
+void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
+	QImage image1DTrans(m_pTrans->m_Trans1D.vColorData.size(),1, QImage::Format_ARGB32);
+
+	for (unsigned int x = 0;x<m_pTrans->m_Trans1D.vColorData.size();x++) {
+		image1DTrans.setPixel(x,0,qRgba(m_pTrans->m_Trans1D.vColorData[x][0]*255,
+									   m_pTrans->m_Trans1D.vColorData[x][1]*255,
+									   m_pTrans->m_Trans1D.vColorData[x][2]*255,
+									   m_pTrans->m_Trans1D.vColorData[x][3]*255));
+	}
+
+	QRect imageRect(m_iBorderSize/2, m_iBorderSize/2, width()-m_iBorderSize, height()-m_iBorderSize);
+	painter.drawImage(imageRect,image1DTrans);
 }
 
 void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
@@ -325,6 +408,8 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 		DrawBorder(image_painter);
 		DrawHistogram(image_painter);
 
+		Draw1DTrans(image_painter);
+
 		// update change detection states
 		m_bBackdropCacheUptodate = true;
 		m_iCachedHeight = height();
@@ -344,8 +429,11 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
 	// hand the load call over to the TransferFunction1D class
 	if( m_pTrans->Load(strFilename.toStdString()) ) {
+		m_iActiveSwatchIndex = 0;
+		m_bBackdropCacheUptodate = false;
 		update();
 		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+		emit SwatchChange();
 		return true;
 	} else return false;
 }
@@ -353,4 +441,72 @@ bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
 bool Q2DTransferFunction::SaveToFile(const QString& strFilename) {
 	// hand the save call over to the TransferFunction1D class
 	return m_pTrans->Save(strFilename.toStdString());
+}
+
+
+void Q2DTransferFunction::Set1DTrans(const TransferFunction1D* p1DTrans) {
+	m_pTrans->m_Trans1D = TransferFunction1D(*p1DTrans);
+	m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+	m_iActiveSwatchIndex = 0;
+	m_bBackdropCacheUptodate = false;
+	update();
+}
+
+void Q2DTransferFunction::SetActiveSwatch(const int iActiveSwatch) {
+	if (iActiveSwatch == -1 && m_pTrans->m_Swatches.size() > 0) return;
+	m_iActiveSwatchIndex = iActiveSwatch;
+	update();
+}
+
+void Q2DTransferFunction::AddSwatch() {	
+	TFPolygon newSwatch;
+
+	newSwatch.pPoints.push_back(FLOATVECTOR2(0,0));
+	newSwatch.pPoints.push_back(FLOATVECTOR2(0,1));
+	newSwatch.pPoints.push_back(FLOATVECTOR2(1,1));
+	newSwatch.pPoints.push_back(FLOATVECTOR2(1,0));
+
+	newSwatch.pGradientCoords[0] = FLOATVECTOR2(0,0.5);
+	newSwatch.pGradientCoords[1] = FLOATVECTOR2(1,0.5);
+
+	GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),g2(0.5f,FLOATVECTOR4(1,1,1,1)),g3(1,FLOATVECTOR4(0,0,0,0));
+	newSwatch.pGradientStops.push_back(g1);
+	newSwatch.pGradientStops.push_back(g2);
+	newSwatch.pGradientStops.push_back(g3);
+
+	m_pTrans->m_Swatches.push_back(newSwatch);
+	m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
+	emit SwatchChange();
+}
+
+void Q2DTransferFunction::DeleteSwatch(){
+	if (m_iActiveSwatchIndex != -1) {
+		m_pTrans->m_Swatches.erase(m_pTrans->m_Swatches.begin()+m_iActiveSwatchIndex);
+		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+
+		m_iActiveSwatchIndex = min(m_iActiveSwatchIndex, int(m_pTrans->m_Swatches.size()-1));
+		emit SwatchChange();
+	}
+}
+
+void Q2DTransferFunction::UpSwatch(){
+	if (m_iActiveSwatchIndex > 0) {
+		TFPolygon tmp = m_pTrans->m_Swatches[m_iActiveSwatchIndex-1];
+		m_pTrans->m_Swatches[m_iActiveSwatchIndex-1] = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+		m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
+		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+		m_iActiveSwatchIndex--;
+		emit SwatchChange();
+	}
+}
+
+void Q2DTransferFunction::DownSwatch(){
+	if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex < int(m_pTrans->m_Swatches.size()-1)) {
+		TFPolygon tmp = m_pTrans->m_Swatches[m_iActiveSwatchIndex+1];
+		m_pTrans->m_Swatches[m_iActiveSwatchIndex+1] = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+		m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
+		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+		m_iActiveSwatchIndex++;
+		emit SwatchChange();
+	}
 }

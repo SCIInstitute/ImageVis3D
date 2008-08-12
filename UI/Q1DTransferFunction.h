@@ -24,6 +24,7 @@ class Q1DTransferFunction : public QWidget
 		virtual ~Q1DTransferFunction(void);
 		void SetData(const Histogram1D* vHistrogram, TransferFunction1D* Trans);
 		void SetPaintmode(unsigned int iPaintmode) {if (iPaintmode < Q1DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
+		const TransferFunction1D* GetTrans() {return m_pTrans;}
 
 	public slots:
 		bool LoadFromFile(const QString& strFilename);
@@ -90,6 +91,9 @@ class Q1DTransferFunction : public QWidget
 		void DrawCoordinateSystem(QPainter& painter);
 		void DrawHistogram(QPainter& painter);
 		void DrawFunctionPlots(QPainter& painter);
+
+		void PreparePreviewData();
+		void RedrawPreviewBarBack();
 };
 
 

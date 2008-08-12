@@ -49,18 +49,21 @@ Q1DTransferFunction::~Q1DTransferFunction(void)
 	delete m_pPreviewColor;
 }
 
+void Q1DTransferFunction::PreparePreviewData() {
+	delete m_pPreviewColor;
+	m_pPreviewColor = new QImage(m_vHistrogram.GetSize(),1, QImage::Format_ARGB32);
+	m_bBackdropCacheUptodate = false;
+}
+
 void Q1DTransferFunction::SetData(const Histogram1D* vHistrogram, TransferFunction1D* pTrans) {
 	m_pTrans = pTrans;
 	if (m_pTrans == NULL) return;
 
 	// store histogram
 	m_vHistrogram.Resize(vHistrogram->GetSize());
-
-	delete m_pPreviewColor;
-	m_pPreviewColor = new QImage(vHistrogram->GetSize(),1, QImage::Format_ARGB32);
 	
-	// force the draw routine to recompute the backdrop cache
-	m_bBackdropCacheUptodate = false;
+	// resize the preview bar and force the draw routine to recompute the backdrop cache
+	PreparePreviewData();
 
 	// if the histogram is empty we are done
 	if (m_vHistrogram.GetSize() == 0)  return;
@@ -160,7 +163,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 	unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
 
 	// draw the tranfer function as one larger polyline
-	std::vector<QPointF> pointList(m_pTrans->pColorData.size());
+	std::vector<QPointF> pointList(m_pTrans->vColorData.size());
 	QPen penCurve(m_colorBorder, 1, Qt::SolidLine);
 	
 	// for every component
@@ -177,7 +180,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 		// define the polyline
 		for (size_t i = 0;i<pointList.size();i++) {
 			pointList[i]= QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(pointList.size()-1),
-						          m_iTopBorder+iGridHeight-m_pTrans->pColorData[i][j]*iGridHeight);
+						          m_iTopBorder+iGridHeight-m_pTrans->vColorData[i][j]*iGridHeight);
 		}
 
 		// draw the polyline
@@ -187,12 +190,11 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 
 
 	// draw preview bar
-	
 	for (unsigned int x = 0;x<m_vHistrogram.GetSize();x++) {
-		m_pPreviewColor->setPixel(x,0,qRgba(m_pTrans->pColorData[x][0]*255,
-											m_pTrans->pColorData[x][1]*255,
-											m_pTrans->pColorData[x][2]*255,
-											m_pTrans->pColorData[x][3]*255));
+		m_pPreviewColor->setPixel(x,0,qRgba(m_pTrans->vColorData[x][0]*255,
+											m_pTrans->vColorData[x][1]*255,
+											m_pTrans->vColorData[x][2]*255,
+											m_pTrans->vColorData[x][3]*255));
 	}
 
 	QRect prevRect(m_iLeftBorder+1, m_iTopBorder-(m_iTopPreviewHeight+m_iTopPreviewDist),width()-(m_iLeftBorder+3+m_iRightBorder),m_iTopPreviewHeight);
@@ -230,7 +232,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	// compute some grid dimensions
 	unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
 	unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
-	unsigned int iVectorSize = m_pTrans->pColorData.size();
+	unsigned int iVectorSize = m_pTrans->vColorData.size();
 
 	// compute position in color array
 	int iCurrentIndex = int((float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth));
@@ -270,28 +272,28 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	if (m_iPaintmode & Q1DT_PAINT_RED) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_pTrans->pColorData[iIndex][0] = _fValueMin;
+			m_pTrans->vColorData[iIndex][0] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_GREEN) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_pTrans->pColorData[iIndex][1] = _fValueMin;
+			m_pTrans->vColorData[iIndex][1] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_BLUE) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_pTrans->pColorData[iIndex][2] = _fValueMin;
+			m_pTrans->vColorData[iIndex][2] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
 	if (m_iPaintmode & Q1DT_PAINT_ALPHA) {
 		float _fValueMin = fValueMin;
 		for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-			m_pTrans->pColorData[iIndex][3] = _fValueMin;
+			m_pTrans->vColorData[iIndex][3] = _fValueMin;
 			_fValueMin += fValueInc;
 		}
 	}
@@ -337,6 +339,25 @@ void Q1DTransferFunction::changeEvent(QEvent * event) {
 	}
 }
 
+
+void Q1DTransferFunction::RedrawPreviewBarBack() {
+	int w = MathTools::MakeMultiple<int>(width()-(m_iLeftBorder+3+m_iRightBorder), 8);
+	int h = MathTools::MakeMultiple<int>(m_iTopPreviewHeight, 8);
+
+	delete m_pPreviewBack;
+	m_pPreviewBack = new QImage(w,h,QImage::Format_RGB32);
+	unsigned int iCheckerboard[2] = {qRgb(128,128,128), qRgb(0,0,0)};
+	int iCurrent = 0;
+	for (int y = 0;y<h;y++) {
+		int iLastCurrent = iCurrent;
+		for (int x = 0;x<w;x++) {
+			if (x%8 == 0) iCurrent = 1-iCurrent;
+			m_pPreviewBack->setPixel(x,y,iCheckerboard[iCurrent]);
+		}
+		iCurrent = (y != 0 && y%8 == 0) ? 1-iLastCurrent : iLastCurrent;
+	}
+}
+
 void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 	// call superclass method
 	QWidget::paintEvent(event);
@@ -349,22 +370,8 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 
 	// as drawing the histogram can become quite expensive we'll cache it in an image and only redraw if needed
 	if (!m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
-		
-		int w = MathTools::MakeMultiple<int>(width()-(m_iLeftBorder+3+m_iRightBorder), 8);
-		int h = MathTools::MakeMultiple<int>(m_iTopPreviewHeight, 8);
 
-		delete m_pPreviewBack;
-		m_pPreviewBack = new QImage(w,h,QImage::Format_RGB32);
-		unsigned int iCheckerboard[2] = {qRgb(128,128,128), qRgb(0,0,0)};
-		int iCurrent = 0;
-		for (int y = 0;y<h;y++) {
-			int iLastCurrent = iCurrent;
-			for (int x = 0;x<w;x++) {
-				if (x%8 == 0) iCurrent = 1-iCurrent;
-				m_pPreviewBack->setPixel(x,y,iCheckerboard[iCurrent]);
-			}
-			iCurrent = (y != 0 && y%8 == 0) ? 1-iLastCurrent : iLastCurrent;
-		}
+		RedrawPreviewBarBack();
 
 		// delete the old pixmap an create a new one if the size has changed
 		if ((unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
@@ -397,7 +404,10 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 
 bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
 	// hand the load call over to the TransferFunction1D class
-	if( m_pTrans->Load(strFilename.toStdString()) ) {
+	size_t iSize = m_pTrans->vColorData.size();
+
+	if( m_pTrans->Load(strFilename.toStdString(), iSize) ) {
+		PreparePreviewData();
 		update();
 		m_MasterController.MemMan()->Changed1DTrans(NULL, m_pTrans);
 		return true;

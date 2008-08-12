@@ -60,7 +60,7 @@ enum ERenderMode {
 
 class AbstrRenderer {
 	public:
-		AbstrRenderer() : m_bRedraw(true), m_bCompleteRedraw(true) {}
+		AbstrRenderer();
 		virtual ~AbstrRenderer();
 		bool LoadDataset(const std::string& strFilename);
 
@@ -78,13 +78,13 @@ class AbstrRenderer {
 	protected:
 		bool				m_bRedraw;
 		bool				m_bCompleteRedraw;
+		ERenderMode			m_eRenderMode;
 		MasterController*	m_pMasterController;
 		VolumeDataset*		m_pDataset;
 		TransferFunction1D* m_p1DTrans;
 		GLTexture1D*		m_p1DTransTex;
 		TransferFunction2D* m_p2DTrans;
 		GLTexture2D*		m_p2DTransTex;
-		ERenderMode			m_eRenderMode;
 };
 
 #endif // ABSTRRENDERER_H
