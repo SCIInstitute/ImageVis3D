@@ -138,7 +138,7 @@ void GPUMemMan::Free1DTrans(TransferFunction1D* transferFunc, AbstrRenderer* req
 // ******************** 2D Trans
 
 void GPUMemMan::Changed2DTrans(AbstrRenderer* requester, TransferFunction2D* pTransferFunction2D) {
-	m_MasterController->DebugOut()->Message("GPUMemMan::Changed1DTrans","Sending change notification for 1D transfer function");
+	m_MasterController->DebugOut()->Message("GPUMemMan::Changed2DTrans","Sending change notification for 2D transfer function");
 
 	for (Trans2DListIter i = m_vpTrans2DList.begin();i<m_vpTrans2DList.end();i++) {
 		if (i->pTransferFunction2D == pTransferFunction2D) {

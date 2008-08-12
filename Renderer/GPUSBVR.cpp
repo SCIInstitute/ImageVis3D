@@ -126,13 +126,23 @@ void GPUSBVR::Set2DTrans(TransferFunction2D* p2DTrans) {
 }
 
 void GPUSBVR::Changed1DTrans() {
-	m_bRedraw = true;
-	m_bCompleteRedraw = true;
+	if (m_eRenderMode != RM_1DTRANS) {
+		m_pMasterController->DebugOut()->Message("GPUSBVR::Changed1DTrans","not using the 1D transferfunction at the moment, ignoring message");
+	} else {
+		m_pMasterController->DebugOut()->Message("GPUSBVR::Changed1DTrans","complete redraw scheduled");
+		m_bRedraw = true;
+		m_bCompleteRedraw = true;
+	}
 }
 
 void GPUSBVR::Changed2DTrans() {
-	m_bRedraw = true;
-	m_bCompleteRedraw = true;
+	if (m_eRenderMode != RM_2DTRANS) {
+		m_pMasterController->DebugOut()->Message("GPUSBVR::Changed2DTrans","not using the 2D transferfunction at the moment, ignoring message");
+	} else {
+		m_pMasterController->DebugOut()->Message("GPUSBVR::Changed2DTrans","complete redraw scheduled");
+		m_bRedraw = true;
+		m_bCompleteRedraw = true;
+	}
 }
 
 

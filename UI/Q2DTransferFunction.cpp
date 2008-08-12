@@ -475,16 +475,18 @@ void Q2DTransferFunction::AddSwatch() {
 	newSwatch.pGradientStops.push_back(g3);
 
 	m_pTrans->m_Swatches.push_back(newSwatch);
+
 	m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
+	m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
 	emit SwatchChange();
 }
 
 void Q2DTransferFunction::DeleteSwatch(){
 	if (m_iActiveSwatchIndex != -1) {
 		m_pTrans->m_Swatches.erase(m_pTrans->m_Swatches.begin()+m_iActiveSwatchIndex);
-		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
-
+		
 		m_iActiveSwatchIndex = min(m_iActiveSwatchIndex, int(m_pTrans->m_Swatches.size()-1));
+		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
 		emit SwatchChange();
 	}
 }
@@ -494,8 +496,9 @@ void Q2DTransferFunction::UpSwatch(){
 		TFPolygon tmp = m_pTrans->m_Swatches[m_iActiveSwatchIndex-1];
 		m_pTrans->m_Swatches[m_iActiveSwatchIndex-1] = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
 		m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
-		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+
 		m_iActiveSwatchIndex--;
+		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
 		emit SwatchChange();
 	}
 }
@@ -505,8 +508,9 @@ void Q2DTransferFunction::DownSwatch(){
 		TFPolygon tmp = m_pTrans->m_Swatches[m_iActiveSwatchIndex+1];
 		m_pTrans->m_Swatches[m_iActiveSwatchIndex+1] = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
 		m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
-		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+		
 		m_iActiveSwatchIndex++;
+		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
 		emit SwatchChange();
 	}
 }
