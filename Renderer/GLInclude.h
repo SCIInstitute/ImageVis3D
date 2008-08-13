@@ -31,7 +31,6 @@
 	\author		Jens Krueger
 				SCI Institute
 				University of Utah
-	\version	1.0
 	\date		August 2008
 */
 
