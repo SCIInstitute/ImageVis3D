@@ -122,6 +122,7 @@ void MainWindow::UpdateSwatchButtons() {
 }
 
 void MainWindow::UpdateGradientBox() {
+	int iCurrent = listWidget_Gradient->currentRow();
 	listWidget_Gradient->clear();
 
 	if (m_2DTransferFunction->GetActiveSwatchIndex() > -1) {
@@ -131,6 +132,9 @@ void MainWindow::UpdateGradientBox() {
 			QString msg = tr("Stop at %1").arg(s.first);
 			listWidget_Gradient->addItem( msg );
 		}
+
+		listWidget_Gradient->setCurrentRow(min<int>(iCurrent, m_2DTransferFunction->GetGradientCount()));
+		
 	}
 
 
