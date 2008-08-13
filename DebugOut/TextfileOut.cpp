@@ -41,6 +41,8 @@
 	#include <windows.h>
 #endif
 
+#include <stdarg.h>
+
 #include <fstream>
 using namespace std;
 
