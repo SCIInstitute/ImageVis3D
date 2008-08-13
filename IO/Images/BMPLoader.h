@@ -56,10 +56,10 @@ class BMPLoader {
 		static bool Load(const std::string& strFilename, TextureImage *texture) {
 			FILE *file;
 			unsigned short int bfType;
-			long int bfOffBits;
+			int bfOffBits;
 			short int biPlanes;
 			short int biBitCount;
-			long int biSizeImage;
+			int biSizeImage;
 			int i;
 			unsigned char temp;
 			// make sure file exists.
@@ -72,7 +72,7 @@ class BMPLoader {
 			// skip file size and reserved fields of bitmap file header
 			fseek(file, 8, SEEK_CUR);
 			// get the position of the actual bitmap data
-			if (!fread(&bfOffBits, sizeof(long int), 1, file)) return false; // File could not be read
+			if (!fread(&bfOffBits, sizeof(int), 1, file)) return false; // File could not be read
 			fseek(file, 4, SEEK_CUR);                       // skip size of bitmap info header    
 			fread(&texture->width, sizeof(int), 1, file);   // get the width of the bitmap    
 			fread(&texture->height, sizeof(int), 1, file);  // get the height of the bitmap  

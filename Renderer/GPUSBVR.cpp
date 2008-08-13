@@ -49,7 +49,7 @@ void GPUSBVR::Paint() {
 		glTranslated(0.0, 0.0, -10.0);
 		glRotated(m_xRot / 16.0, 1.0, 0.0, 0.0);
 
-		m_IDTex[m_iCurrentView]->Bind();
+		if (m_IDTex[m_iCurrentView] != NULL) m_IDTex[m_iCurrentView]->Bind();
 
 		// just do some stuff to simulate a slow draw call
 		for (unsigned int i = 0;i<10000;i++) {
@@ -73,7 +73,7 @@ void GPUSBVR::Paint() {
 		glTranslated(0.0, 0.0, -10.0);
 		glRotated(m_xRot / 16.0, 1.0, 0.0, 0.0);
 
-		m_IDTex[m_iCurrentView]->Bind();
+		if (m_IDTex[m_iCurrentView] != NULL) m_IDTex[m_iCurrentView]->Bind();
 
 		glBegin(GL_QUADS);
 			glColor4d(1,1,1,1);
