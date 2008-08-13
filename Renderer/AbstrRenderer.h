@@ -72,8 +72,8 @@ class AbstrRenderer {
 		virtual void SetRendermode(ERenderMode eRenderMode);
 		virtual void Set1DTrans(TransferFunction1D* p1DTrans) {m_p1DTrans = p1DTrans;}
 		virtual void Set2DTrans(TransferFunction2D* p2DTrans) {m_p2DTrans = p2DTrans;}
-		virtual void Changed1DTrans() = NULL;
-		virtual void Changed2DTrans() = NULL;
+		virtual void Changed1DTrans() = 0;
+		virtual void Changed2DTrans() = 0;
 
 	protected:
 		bool				m_bRedraw;
