@@ -68,6 +68,13 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
 		void CheckForRedraw();
 		void UpdateSwatchButtons();
+		
+		void AddGradient();
+		void DeleteGradient();
+		void UpdateGradientButtons();
+		void UpdateGradientBox();
+		void ChooseGradientColor();
+		void ChooseGradientOpacity();
 
 
 	private :

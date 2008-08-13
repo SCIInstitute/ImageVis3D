@@ -6,6 +6,8 @@
 #include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
 #include <QtGui/QMessageBox>
+#include <QtGui/QInputDialog>
+#include <QtGui/QColorDialog>
 
 #include "PleaseWait.h"
 
@@ -106,6 +108,7 @@ void MainWindow::SwatchesChanged() {
 	listWidget_Swatches->setCurrentRow(iCurrent);
 
 	UpdateSwatchButtons();
+	UpdateGradientBox();
 }
 
 void MainWindow::UpdateSwatchButtons() {
@@ -114,7 +117,69 @@ void MainWindow::UpdateSwatchButtons() {
 	pushButton_DelPoly->setEnabled(iCurrent >= 0);
 	pushButton_UpPoly->setEnabled(iCurrent > 0);
 	pushButton_DownPoly->setEnabled(iCurrent < int(m_2DTransferFunction->GetSwatchCount())-1);
+
+	UpdateGradientBox();
 }
+
+void MainWindow::UpdateGradientBox() {
+	listWidget_Gradient->clear();
+
+	if (m_2DTransferFunction->GetActiveSwatchIndex() > -1) {
+	
+		for (size_t i = 0;i<m_2DTransferFunction->GetGradientCount();i++) {
+			GradientStop s =  m_2DTransferFunction->GetGradient(i);
+			QString msg = tr("Stop at %1").arg(s.first);
+			listWidget_Gradient->addItem( msg );
+		}
+	}
+
+	UpdateGradientButtons();
+}
+
+void MainWindow::UpdateGradientButtons() {
+
+	pushButton_AddStop->setEnabled(m_2DTransferFunction->GetActiveSwatchIndex() != -1);
+
+	int iCurrent = listWidget_Gradient->currentRow();
+	pushButton_DelStop->setEnabled(iCurrent >= 0);
+	frame_ChooseColor->setEnabled(iCurrent >= 0);
+}
+
+
+void MainWindow::AddGradient() {
+	bool ok;
+	float f = float(QInputDialog::getDouble(this, tr("Select Gradient Stop"), tr("Stop at:"), 0.5, 0, 1, 3, &ok));
+
+	if (!ok) return;
+
+	GradientStop s(f, FLOATVECTOR4(1,1,1,1));
+	m_2DTransferFunction->AddGradient(s);
+
+	UpdateGradientBox();
+}
+
+void MainWindow::ChooseGradientColor() {
+	GradientStop s =  m_2DTransferFunction->GetGradient(listWidget_Gradient->currentRow());
+
+	QColor color = QColorDialog::getColor(Qt::green, this);
+	s.second[0] = color.red()/255.0f;
+	s.second[1] = color.green()/255.0f;
+	s.second[2] = color.blue()/255.0f;
+
+	m_2DTransferFunction->SetGradient(listWidget_Gradient->currentRow(),s);
+}
+
+void MainWindow::ChooseGradientOpacity() {
+	GradientStop s =  m_2DTransferFunction->GetGradient(listWidget_Gradient->currentRow());
+	s.second[3] = horizontalSlider_Opacity->value()/100.0f;
+	m_2DTransferFunction->SetGradient(listWidget_Gradient->currentRow(),s);
+}
+
+void MainWindow::DeleteGradient() {
+	m_2DTransferFunction->DeleteGradient(listWidget_Gradient->currentRow());
+	UpdateGradientBox();
+}
+
 
 void MainWindow::Load2DTrans(){
 	QString fileName = QFileDialog::getOpenFileName(this, "Load 2D Transferfunction", ".", "2D Transferfunction File (*.2dt)");
@@ -593,6 +658,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 	connect(m_2DTransferFunction, SIGNAL(SwatchChange()), this, SLOT(SwatchesChanged()));
 	connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)), m_2DTransferFunction, SLOT(SetActiveSwatch(int)));
 	connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)), this, SLOT(UpdateSwatchButtons()));
+	connect(listWidget_Gradient, SIGNAL(currentRowChanged(int)), this, SLOT(UpdateGradientButtons()));	
 
 	connect(pushButton_AddPoly,  SIGNAL(clicked()), m_2DTransferFunction, SLOT(AddSwatch()));
 	connect(pushButton_DelPoly,  SIGNAL(clicked()), m_2DTransferFunction, SLOT(DeleteSwatch()));

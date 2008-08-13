@@ -34,6 +34,12 @@ class Q2DTransferFunction : public QWidget
 		size_t GetSwatchCount() {return m_pTrans->m_Swatches.size();}
 		size_t GetSwatchSize(unsigned int i) {return m_pTrans->m_Swatches[i].pPoints.size();}
 
+		size_t GetGradientCount() {return m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.size();}
+		GradientStop GetGradient(unsigned int i) {return m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops[i];}
+		void AddGradient(GradientStop stop);
+		void DeleteGradient(unsigned int i);
+		void SetGradient(unsigned int i, GradientStop stop);
+
 	public slots:
 		void SetActiveSwatch(const int iActiveSwatch);
 		void AddSwatch();

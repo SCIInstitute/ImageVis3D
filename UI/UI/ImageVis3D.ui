@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1203</width>
-    <height>1655</height>
+    <height>1853</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -34,9 +34,9 @@
    <property name="geometry" >
     <rect>
      <x>388</x>
-     <y>22</y>
+     <y>34</y>
      <width>617</width>
-     <height>1191</height>
+     <height>1338</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7" >
@@ -141,7 +141,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1634</y>
+     <y>1832</y>
      <width>1203</width>
      <height>21</height>
     </rect>
@@ -151,7 +151,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>22</y>
+     <y>34</y>
      <width>384</width>
      <height>307</height>
     </rect>
@@ -334,8 +334,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>0</x>
+          <y>0</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -436,8 +436,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>0</x>
+          <y>0</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -627,8 +627,8 @@
        <widget class="QWidget" name="tab_6" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>0</x>
+          <y>0</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -866,9 +866,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>22</y>
+     <y>34</y>
      <width>194</width>
-     <height>456</height>
+     <height>513</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -883,7 +883,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>434</height>
+      <height>491</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1088,7 +1088,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>333</y>
+     <y>345</y>
      <width>384</width>
      <height>167</height>
     </rect>
@@ -1150,8 +1150,8 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>0</x>
+          <y>0</y>
           <width>360</width>
           <height>71</height>
          </rect>
@@ -1255,8 +1255,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>0</x>
+          <y>0</y>
           <width>360</width>
           <height>71</height>
          </rect>
@@ -1443,9 +1443,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>482</y>
+     <y>551</y>
      <width>194</width>
-     <height>389</height>
+     <height>437</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1466,7 +1466,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>367</height>
+      <height>415</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1645,9 +1645,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>504</y>
+     <y>516</y>
      <width>384</width>
-     <height>142</height>
+     <height>202</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -1674,7 +1674,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>120</height>
+      <height>180</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2" >
@@ -1714,9 +1714,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1217</y>
-     <width>609</width>
-     <height>417</height>
+     <y>1376</y>
+     <width>586</width>
+     <height>456</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1736,8 +1736,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>609</width>
-      <height>395</height>
+      <width>586</width>
+      <height>434</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_13" >
@@ -1759,156 +1759,6 @@
         <property name="margin" >
          <number>0</number>
         </property>
-        <item row="2" column="0" >
-         <widget class="QGroupBox" name="groupBox_6" >
-          <property name="title" >
-           <string>Color Components</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_8" >
-           <item>
-            <widget class="QCheckBox" name="checkBox_Red" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>18</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Red</string>
-             </property>
-             <property name="checked" >
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBox_Green" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>18</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Green</string>
-             </property>
-             <property name="checked" >
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBox_Blue" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>18</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Blue</string>
-             </property>
-             <property name="checked" >
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBox_Alpha" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>18</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Alpha</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="3" column="0" >
-         <widget class="QGroupBox" name="groupBox_7" >
-          <property name="title" >
-           <string>Groups</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_9" >
-           <item>
-            <widget class="QRadioButton" name="radioButton_User" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>18</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>User</string>
-             </property>
-             <property name="checked" >
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_Luminance" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>18</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Luminance</string>
-             </property>
-             <property name="checked" >
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_Intensity" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>18</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Intensity</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="4" column="0" >
-         <widget class="QPushButton" name="pushButton_Load1DTrans" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Load</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0" >
-         <widget class="QPushButton" name="pushButton_Save1DTrans" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Save</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="0" >
          <widget class="QCheckBox" name="checkBox_Use1DTrans" >
           <property name="enabled" >
@@ -1941,17 +1791,182 @@
           </property>
          </spacer>
         </item>
-        <item row="6" column="0" >
-         <widget class="QPushButton" name="pushButton_CopyTo2D" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
+        <item row="4" column="0" >
+         <widget class="QFrame" name="frame_1DTransEdit" >
+          <property name="frameShape" >
+           <enum>QFrame::NoFrame</enum>
           </property>
-          <property name="text" >
-           <string>Copy to 2D</string>
+          <property name="frameShadow" >
+           <enum>QFrame::Raised</enum>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_23" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QGroupBox" name="groupBox_6" >
+             <property name="title" >
+              <string>Color Components</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_8" >
+              <item>
+               <widget class="QCheckBox" name="checkBox_Red" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>18</height>
+                 </size>
+                </property>
+                <property name="text" >
+                 <string>Red</string>
+                </property>
+                <property name="checked" >
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="checkBox_Green" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>18</height>
+                 </size>
+                </property>
+                <property name="text" >
+                 <string>Green</string>
+                </property>
+                <property name="checked" >
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="checkBox_Blue" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>18</height>
+                 </size>
+                </property>
+                <property name="text" >
+                 <string>Blue</string>
+                </property>
+                <property name="checked" >
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="checkBox_Alpha" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>18</height>
+                 </size>
+                </property>
+                <property name="text" >
+                 <string>Alpha</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_7" >
+             <property name="title" >
+              <string>Groups</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_9" >
+              <item>
+               <widget class="QRadioButton" name="radioButton_User" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>18</height>
+                 </size>
+                </property>
+                <property name="text" >
+                 <string>User</string>
+                </property>
+                <property name="checked" >
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_Luminance" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>18</height>
+                 </size>
+                </property>
+                <property name="text" >
+                 <string>Luminance</string>
+                </property>
+                <property name="checked" >
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_Intensity" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>18</height>
+                 </size>
+                </property>
+                <property name="text" >
+                 <string>Intensity</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_Load1DTrans" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Load</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_Save1DTrans" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Save</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_CopyTo2D" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="text" >
+              <string>Copy to 2D</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -1963,10 +1978,10 @@
   <widget class="QDockWidget" name="dockWidget_2DTrans" >
    <property name="geometry" >
     <rect>
-     <x>613</x>
-     <y>1217</y>
-     <width>590</width>
-     <height>417</height>
+     <x>590</x>
+     <y>1376</y>
+     <width>613</width>
+     <height>456</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1989,8 +2004,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>590</width>
-      <height>395</height>
+      <width>613</width>
+      <height>434</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_11" >
@@ -2009,6 +2024,12 @@
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_12" >
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <property name="margin" >
+         <number>9</number>
+        </property>
         <item>
          <widget class="QCheckBox" name="checkBox_Use2DTrans" >
           <property name="minimumSize" >
@@ -2023,204 +2044,394 @@
          </widget>
         </item>
         <item>
-         <widget class="QFrame" name="frame_3" >
+         <widget class="QFrame" name="frame_2DTransEdit" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
           <property name="frameShape" >
            <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow" >
            <enum>QFrame::Raised</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_5" >
-           <property name="margin" >
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QPushButton" name="pushButton_ColorChooser" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>23</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Choose Color</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_8" >
-             <property name="text" >
-              <string>Opacity</string>
-             </property>
-             <property name="buddy" >
-              <cstring>horizontalSlider</cstring>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSlider" name="horizontalSlider" >
+          <layout class="QGridLayout" name="gridLayout_8" >
+           <item row="6" column="0" >
+            <widget class="QFrame" name="frame_Gradient" >
              <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+              <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="maximum" >
-              <number>100</number>
+             <property name="frameShape" >
+              <enum>QFrame::NoFrame</enum>
              </property>
-             <property name="value" >
-              <number>80</number>
+             <property name="frameShadow" >
+              <enum>QFrame::Raised</enum>
              </property>
-             <property name="orientation" >
-              <enum>Qt::Horizontal</enum>
-             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_22" >
+              <property name="margin" >
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_Gradient" >
+                <property name="sizePolicy" >
+                 <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize" >
+                 <size>
+                  <width>16777215</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="text" >
+                 <string>Gradient</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame_3" >
+                <property name="sizePolicy" >
+                 <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize" >
+                 <size>
+                  <width>16777215</width>
+                  <height>60</height>
+                 </size>
+                </property>
+                <property name="frameShape" >
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow" >
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_14" >
+                 <property name="margin" >
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QListWidget" name="listWidget_Gradient" >
+                   <property name="sizePolicy" >
+                    <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize" >
+                    <size>
+                     <width>0</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize" >
+                    <size>
+                     <width>16777215</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_16" >
+                   <property name="maximumSize" >
+                    <size>
+                     <width>16777215</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="frameShape" >
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <property name="frameShadow" >
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_20" >
+                    <property name="margin" >
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_AddStop" >
+                      <property name="minimumSize" >
+                       <size>
+                        <width>0</width>
+                        <height>23</height>
+                       </size>
+                      </property>
+                      <property name="text" >
+                       <string>Add</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_DelStop" >
+                      <property name="enabled" >
+                       <bool>false</bool>
+                      </property>
+                      <property name="minimumSize" >
+                       <size>
+                        <width>0</width>
+                        <height>23</height>
+                       </size>
+                      </property>
+                      <property name="text" >
+                       <string>Delete</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame_ChooseColor" >
+                <property name="enabled" >
+                 <bool>false</bool>
+                </property>
+                <property name="frameShape" >
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="frameShadow" >
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_5" >
+                 <property name="margin" >
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_ColorChooser" >
+                   <property name="minimumSize" >
+                    <size>
+                     <width>0</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="text" >
+                    <string>Choose Color</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_Opacity" >
+                   <property name="sizePolicy" >
+                    <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize" >
+                    <size>
+                     <width>0</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="text" >
+                    <string>Opacity:</string>
+                   </property>
+                   <property name="buddy" >
+                    <cstring>horizontalSlider_Opacity</cstring>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSlider" name="horizontalSlider_Opacity" >
+                   <property name="sizePolicy" >
+                    <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="maximum" >
+                    <number>100</number>
+                   </property>
+                   <property name="value" >
+                    <number>80</number>
+                   </property>
+                   <property name="orientation" >
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
-           <item>
-            <widget class="QSpinBox" name="spinBox_2" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>20</height>
-              </size>
+           <item row="4" column="0" >
+            <widget class="QFrame" name="frame_Polygons" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Expanding" hsizetype="Minimum" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="readOnly" >
-              <bool>true</bool>
+             <property name="frameShape" >
+              <enum>QFrame::NoFrame</enum>
              </property>
-             <property name="specialValueText" >
-              <string>80</string>
+             <property name="frameShadow" >
+              <enum>QFrame::Raised</enum>
              </property>
-             <property name="accelerated" >
-              <bool>false</bool>
-             </property>
+             <layout class="QGridLayout" name="gridLayout_10" >
+              <property name="horizontalSpacing" >
+               <number>0</number>
+              </property>
+              <property name="margin" >
+               <number>0</number>
+              </property>
+              <item row="0" column="0" >
+               <widget class="QLabel" name="label_10" >
+                <property name="text" >
+                 <string>Polygons</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" >
+               <widget class="QListWidget" name="listWidget_Swatches" >
+                <property name="sizePolicy" >
+                 <sizepolicy vsizetype="Expanding" hsizetype="Minimum" >
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1" >
+               <widget class="QFrame" name="frame_14" >
+                <property name="frameShape" >
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="frameShadow" >
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_21" >
+                 <item>
+                  <widget class="QPushButton" name="pushButton_AddPoly" >
+                   <property name="minimumSize" >
+                    <size>
+                     <width>0</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="text" >
+                    <string>Add</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_DelPoly" >
+                   <property name="enabled" >
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize" >
+                    <size>
+                     <width>0</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="text" >
+                    <string>Delete</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_UpPoly" >
+                   <property name="enabled" >
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize" >
+                    <size>
+                     <width>0</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="text" >
+                    <string>Up</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_DownPoly" >
+                   <property name="enabled" >
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize" >
+                    <size>
+                     <width>0</width>
+                     <height>23</height>
+                    </size>
+                   </property>
+                   <property name="text" >
+                    <string>Down</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_10" >
+                   <property name="orientation" >
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0" >
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_2" >
-          <property name="text" >
-           <string>Polygons</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QListWidget" name="listWidget_Swatches" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Expanding" hsizetype="Minimum" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_14" >
-          <property name="frameShape" >
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow" >
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_14" >
-           <item>
-            <widget class="QPushButton" name="pushButton_AddPoly" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>23</height>
-              </size>
+           <item row="7" column="0" >
+            <widget class="QFrame" name="frame_12" >
+             <property name="frameShape" >
+              <enum>QFrame::NoFrame</enum>
              </property>
-             <property name="text" >
-              <string>Add</string>
+             <property name="frameShadow" >
+              <enum>QFrame::Raised</enum>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_DelPoly" >
-             <property name="enabled" >
-              <bool>false</bool>
-             </property>
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>23</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Delete</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_UpPoly" >
-             <property name="enabled" >
-              <bool>false</bool>
-             </property>
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>23</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Up</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_DownPoly" >
-             <property name="enabled" >
-              <bool>false</bool>
-             </property>
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>23</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Down</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_12" >
-          <property name="frameShape" >
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow" >
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_6" >
-           <item>
-            <widget class="QPushButton" name="pushButton_Load2DTrans" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>23</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Load</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_Save2DTrans" >
-             <property name="minimumSize" >
-              <size>
-               <width>0</width>
-               <height>23</height>
-              </size>
-             </property>
-             <property name="text" >
-              <string>Save</string>
-             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_6" >
+              <property name="margin" >
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="pushButton_Load2DTrans" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>23</height>
+                 </size>
+                </property>
+                <property name="text" >
+                 <string>Load</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_Save2DTrans" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>23</height>
+                 </size>
+                </property>
+                <property name="text" >
+                 <string>Save</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>
@@ -2260,9 +2471,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>875</y>
+     <y>992</y>
      <width>194</width>
-     <height>338</height>
+     <height>380</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2277,7 +2488,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>316</height>
+      <height>358</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
@@ -2415,9 +2626,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>650</y>
+     <y>722</y>
      <width>384</width>
-     <height>274</height>
+     <height>303</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2432,7 +2643,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>252</height>
+      <height>281</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_17" >
@@ -2535,9 +2746,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>928</y>
+     <y>1029</y>
      <width>384</width>
-     <height>92</height>
+     <height>102</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2552,7 +2763,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>70</height>
+      <height>80</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_16" >
@@ -2614,9 +2825,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1024</y>
+     <y>1135</y>
      <width>384</width>
-     <height>189</height>
+     <height>237</height>
     </rect>
    </property>
    <property name="floating" >
@@ -2634,7 +2845,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>167</height>
+      <height>215</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_19" >
@@ -2783,6 +2994,25 @@
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QToolBar" name="toolBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>22</y>
+     <width>1203</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
   </widget>
   <action name="actionLoadDataset" >
    <property name="text" >
@@ -2977,10 +3207,7 @@
   <tabstop>radioButton_User</tabstop>
   <tabstop>radioButton_Luminance</tabstop>
   <tabstop>radioButton_Intensity</tabstop>
-  <tabstop>pushButton_Load1DTrans</tabstop>
-  <tabstop>pushButton_Save1DTrans</tabstop>
-  <tabstop>horizontalSlider</tabstop>
-  <tabstop>spinBox_2</tabstop>
+  <tabstop>horizontalSlider_Opacity</tabstop>
   <tabstop>checkBox_Use2DTrans</tabstop>
   <tabstop>radioButton</tabstop>
   <tabstop>radioButton_2</tabstop>
@@ -3151,22 +3378,6 @@
     <hint type="destinationlabel" >
      <x>366</x>
      <y>502</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>spinBox_2</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>718</x>
-     <y>1335</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>766</x>
-     <y>1336</y>
     </hint>
    </hints>
   </connection>
@@ -3507,22 +3718,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>spinBox_2</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>742</x>
-     <y>1318</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>675</x>
-     <y>1323</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>radioButton_ViewLock</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
@@ -3778,6 +3973,118 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>checkBox_Use2DTrans</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frame_2DTransEdit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>789</x>
+     <y>1356</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>789</x>
+     <y>1554</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_Use1DTrans</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frame_1DTransEdit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>292</x>
+     <y>1416</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>292</x>
+     <y>1663</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_AddStop</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>AddGradient()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>922</x>
+     <y>1701</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>926</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_DelStop</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>DeleteGradient()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>922</x>
+     <y>1732</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>926</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_Use2DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>UpdateGradientBox()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>791</x>
+     <y>1424</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>926</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ColorChooser</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ChooseGradientColor()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>690</x>
+     <y>1764</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>926</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_Opacity</sender>
+   <signal>actionTriggered(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ChooseGradientOpacity()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>891</x>
+     <y>1764</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>926</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -3811,9 +4118,10 @@
   <slot>ClearDebugWin()</slot>
   <slot>SetDebugViewMask()</slot>
   <slot>Copy1DTransTo2DTrans()</slot>
-  <slot>AddSwatch()</slot>
-  <slot>DeleteSwatch()</slot>
-  <slot>UpSwatch()</slot>
-  <slot>DownSwatch()</slot>
+  <slot>AddGradient()</slot>
+  <slot>DeleteGradient()</slot>
+  <slot>UpdateGradientBox()</slot>
+  <slot>ChooseGradientColor()</slot>
+  <slot>ChooseGradientOpacity()</slot>
  </slots>
 </ui>

@@ -81,9 +81,6 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistrogram, TransferFuncti
 	float fDiff = float(iMax)-float(iMin);
 	for (size_t i = 0;i<m_vHistrogram.GetSize().area();i++)
 		m_vHistrogram.SetLinear(i, (float(vHistrogram->GetLinear(i)) - float(iMin)) / fDiff);
-
-
-	m_iActiveSwatchIndex = 0; // DEBUG
 }
 
 void Q2DTransferFunction::DrawBorder(QPainter& painter) {
@@ -189,8 +186,6 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 	}
 	painter.setRenderHint(painter.Antialiasing, false);
 }
-
-#include <basics/console.h>
 
 void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
 	if (m_pTrans == NULL) return;
@@ -310,7 +305,6 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 	if (m_pTrans == NULL) return;
 	// call superclass method
 	QWidget::mouseMoveEvent(event);
-
 
 	if (m_bDragging) {
 
@@ -513,4 +507,29 @@ void Q2DTransferFunction::DownSwatch(){
 		m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
 		emit SwatchChange();
 	}
+}
+
+
+void Q2DTransferFunction::AddGradient(GradientStop stop) {
+	for (std::vector< GradientStop >::iterator i = m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.begin();i<m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.end();i++) {
+		if (i->first > stop.first) {
+			m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.insert(i, stop);
+			return;
+		}
+	}
+	m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.push_back(stop);
+	m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+	update();
+}
+
+void Q2DTransferFunction::DeleteGradient(unsigned int i) {
+	m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.erase(m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.begin()+i);
+	m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+	update();
+}
+
+void Q2DTransferFunction::SetGradient(unsigned int i, GradientStop stop) {
+	m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops[i] = stop;
+	m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+	update();
 }
