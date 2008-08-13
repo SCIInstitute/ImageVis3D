@@ -35,6 +35,7 @@ HEADERS += Basics/Grids.h \
            IO/Images/BMPLoader.h \
            Controller/MasterController.h \
            DebugOut/AbstrDebugOut.h \
+           DebugOut/TextfileOut.h \
            DebugOut/QTOut.h \
            DebugOut/ConsoleOut.h \
            Renderer/GLInclude.h \
@@ -61,6 +62,7 @@ SOURCES += Basics/SysTools.cpp \
            IO/VolumeDataset.cpp \
            IO/DICOM/DICOMParser.cpp \
            Controller/MasterController.cpp \
+           DebugOut/TextfileOut.cpp \
            DebugOut/QTOut.cpp \
            DebugOut/ConsoleOut.cpp \
            Renderer/GLTexture.cpp \
