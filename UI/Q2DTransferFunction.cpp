@@ -171,7 +171,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 		if (m_iActiveSwatchIndex == int(i)) {
 			painter.setBrush(solidBrush);
 			for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {		
-				if (m_iPointSelIndex == j) painter.setPen(circlePenSel); else painter.setPen(circlePen);
+				if (m_iPointSelIndex == int(j)) painter.setPen(circlePenSel); else painter.setPen(circlePen);
 				painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
 			}
 

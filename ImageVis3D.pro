@@ -43,7 +43,7 @@ HEADERS += Basics/Grids.h \
            Renderer/GLTexture2D.h \
            Renderer/AbstrRenderer.h \
            Renderer/GPUSBVR.h \
-           Renderer/GPUMemMan.h
+           Renderer/GPUMemMan/GPUMemMan.h
 
 
 FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui
@@ -68,5 +68,5 @@ SOURCES += Basics/SysTools.cpp \
            Renderer/GLTexture2D.cpp \
            Renderer/AbstrRenderer.cpp \
            Renderer/GPUSBVR.cpp \
-           Renderer/GPUMemMan.cpp \
+           Renderer/GPUMemMan/GPUMemMan.cpp \
            main.cpp
