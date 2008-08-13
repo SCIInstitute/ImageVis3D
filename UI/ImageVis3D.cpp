@@ -156,6 +156,9 @@ void MainWindow::UpdateGradientButtons() {
 		pushButton_ColorChooser->setStyleSheet( strStyle );
   
 		horizontalSlider_Opacity->setValue(int(s.second[3]*100));
+	} else {
+		pushButton_ColorChooser->setStyleSheet( "" );
+		horizontalSlider_Opacity->setValue(0);
 	}
 }
 
@@ -678,6 +681,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 	connect(listWidget_Gradient, SIGNAL(currentRowChanged(int)), this, SLOT(UpdateGradientButtons()));	
 
 	connect(pushButton_AddPoly,  SIGNAL(clicked()), m_2DTransferFunction, SLOT(AddSwatch()));
+	connect(pushButton_AddCircle,SIGNAL(clicked()), m_2DTransferFunction, SLOT(AddCircleSwatch()));
 	connect(pushButton_DelPoly,  SIGNAL(clicked()), m_2DTransferFunction, SLOT(DeleteSwatch()));
 	connect(pushButton_UpPoly,   SIGNAL(clicked()), m_2DTransferFunction, SLOT(UpSwatch()));
 	connect(pushButton_DownPoly, SIGNAL(clicked()), m_2DTransferFunction, SLOT(DownSwatch()));

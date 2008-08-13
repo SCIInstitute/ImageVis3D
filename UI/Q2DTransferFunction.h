@@ -16,6 +16,13 @@
 
 class MasterController;
 
+enum EDragMode {
+	DRM_MOVE,
+	DRM_ROTATE,
+	DRM_SCALE,
+	DRM_NONE
+};
+
 class Q2DTransferFunction : public QWidget
 {
 	Q_OBJECT
@@ -43,6 +50,7 @@ class Q2DTransferFunction : public QWidget
 	public slots:
 		void SetActiveSwatch(const int iActiveSwatch);
 		void AddSwatch();
+		void AddCircleSwatch();
 		void DeleteSwatch();
 		void UpSwatch();
 		void DownSwatch();
@@ -91,10 +99,12 @@ class Q2DTransferFunction : public QWidget
 		void SetColor(bool bIsEnabled);
 
 		// mouse motion handling
-		int m_iPointSelIndex;
-		int m_iGradSelIndex;
-		INTVECTOR2 m_vMousePressPos;
-		bool m_bDragging;
+		int			m_iPointSelIndex;
+		int			m_iGradSelIndex;
+		INTVECTOR2	m_vMousePressPos;
+		bool		m_bDragging;
+		bool		m_bDraggingAll;
+		EDragMode	m_eDragMode;
 
 		// drawing routines
 		void DrawBorder(QPainter& painter);
@@ -105,6 +115,7 @@ class Q2DTransferFunction : public QWidget
 		// helper
 		INTVECTOR2   Rel2Abs(FLOATVECTOR2 vfCoord);
 		FLOATVECTOR2 Abs2Rel(INTVECTOR2   vCoord);
+		FLOATVECTOR2 Rotate(FLOATVECTOR2 point, float angle, FLOATVECTOR2 center, FLOATVECTOR2 rescale);
 };
 
 
