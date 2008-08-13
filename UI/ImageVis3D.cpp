@@ -133,6 +133,7 @@ void MainWindow::UpdateGradientBox() {
 		}
 	}
 
+
 	UpdateGradientButtons();
 }
 
@@ -143,8 +144,16 @@ void MainWindow::UpdateGradientButtons() {
 	int iCurrent = listWidget_Gradient->currentRow();
 	pushButton_DelStop->setEnabled(iCurrent >= 0);
 	frame_ChooseColor->setEnabled(iCurrent >= 0);
-}
 
+	if (iCurrent >= 0) {
+
+		GradientStop s =  m_2DTransferFunction->GetGradient(listWidget_Gradient->currentRow());
+		QString strStyle = tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(int(s.second[0]*255)).arg(int(s.second[1]*255)).arg(int(s.second[2]*255)).arg(int((1-s.second[0])*255)).arg(int((1-s.second[1])*255)).arg(int((1-s.second[2])*255));
+		pushButton_ColorChooser->setStyleSheet( strStyle );
+  
+		horizontalSlider_Opacity->setValue(int(s.second[3]*100));
+	}
+}
 
 void MainWindow::AddGradient() {
 	bool ok;
@@ -161,12 +170,16 @@ void MainWindow::AddGradient() {
 void MainWindow::ChooseGradientColor() {
 	GradientStop s =  m_2DTransferFunction->GetGradient(listWidget_Gradient->currentRow());
 
+
 	QColor color = QColorDialog::getColor(Qt::green, this);
 	s.second[0] = color.red()/255.0f;
 	s.second[1] = color.green()/255.0f;
 	s.second[2] = color.blue()/255.0f;
 
+
 	m_2DTransferFunction->SetGradient(listWidget_Gradient->currentRow(),s);
+
+	UpdateGradientButtons();
 }
 
 void MainWindow::ChooseGradientOpacity() {
