@@ -366,10 +366,10 @@ void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
 	QImage image1DTrans(m_pTrans->m_Trans1D.vColorData.size(),1, QImage::Format_ARGB32);
 
 	for (unsigned int x = 0;x<m_pTrans->m_Trans1D.vColorData.size();x++) {
-		image1DTrans.setPixel(x,0,qRgba(m_pTrans->m_Trans1D.vColorData[x][0]*255,
-									   m_pTrans->m_Trans1D.vColorData[x][1]*255,
-									   m_pTrans->m_Trans1D.vColorData[x][2]*255,
-									   m_pTrans->m_Trans1D.vColorData[x][3]*255));
+		image1DTrans.setPixel(x,0,qRgba(int(m_pTrans->m_Trans1D.vColorData[x][0]*255),
+									   int(m_pTrans->m_Trans1D.vColorData[x][1]*255),
+									   int(m_pTrans->m_Trans1D.vColorData[x][2]*255),
+									   int(m_pTrans->m_Trans1D.vColorData[x][3]*255)));
 	}
 
 	QRect imageRect(m_iBorderSize/2, m_iBorderSize/2, width()-m_iBorderSize, height()-m_iBorderSize);
