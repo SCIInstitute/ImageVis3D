@@ -64,7 +64,7 @@ class MasterController {
 		AbstrRenderer* RequestNewVolumerenderer(VolumeRenderer eRendererType);
 		void ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer);
 		
-		void SetDebugOut(AbstrDebugOut* debugOut);
+		void SetDebugOut(AbstrDebugOut* debugOut, bool bDeleteOnExit = false);
 		void RemoveDebugOut(AbstrDebugOut* debugOut);
 
 		AbstrDebugOut* DebugOut() {return m_pDebugOut;}
@@ -73,7 +73,7 @@ class MasterController {
 	private:
 		GPUMemMan*     m_pGPUMemMan;
 		AbstrDebugOut* m_pDebugOut;
-		bool		   m_bStartDebugOut;	
+		bool		   m_bDeleteDebugOutOnExit;	
 
 		AbstrRendererList					m_vVolumeRenderer;
 };

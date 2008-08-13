@@ -36,15 +36,35 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include <QtGui/QApplication>
-#include "UI/ImageVis3D.h"
-#include "Controller/MasterController.h"
+#include <UI/ImageVis3D.h>
+#include <Controller/MasterController.h>
+
+#include <Basics/SysTools.h>
+#include <DebugOut/TextfileOut.h>
 
 int main(int argc, char* argv[])
 {
+	SysTools::CmdLineParams parameters(argc, argv);
+
+	std::string strLogFileName;
+	bool bUseLogFile = parameters.GetValue("LOG",strLogFileName);
+	int iLogLevel = 0;
+	parameters.GetValue("LOGLEVEL",iLogLevel);
+
 	MasterController masterController;
 
 	QApplication app( argc, argv );
 	MainWindow mainWindow(masterController, 0, Qt::Window);
+	
+	if (bUseLogFile) {
+		TextfileOut* textout = new TextfileOut(strLogFileName);
+		// remark: fall through on purpose
+		switch (iLogLevel) {
+			case 0 : textout->m_bShowWarnings = false;
+			case 1 : textout->m_bShowMessages = false; break;
+		}
+		masterController.SetDebugOut(textout, true);
+	}
 
 	mainWindow.show();
 	return app.exec();

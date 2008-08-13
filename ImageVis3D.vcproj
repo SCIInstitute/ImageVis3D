@@ -920,6 +920,14 @@
 				RelativePath=".\DebugOut\QTOut.h"
 				>
 			</File>
+			<File
+				RelativePath=".\DebugOut\TextfileOut.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DebugOut\TextfileOut.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\main.cpp"

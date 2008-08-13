@@ -39,7 +39,7 @@
 
 MasterController::MasterController() :
 	m_pDebugOut(new ConsoleOut()),
-	m_bStartDebugOut(true)
+	m_bDeleteDebugOutOnExit(true)
 {
 	m_pGPUMemMan = new GPUMemMan(this);
 }
@@ -49,27 +49,25 @@ MasterController::~MasterController() {
 	m_vVolumeRenderer.resize(0);
 
 	delete m_pGPUMemMan;
-	if (m_bStartDebugOut) delete m_pDebugOut;
+	if (m_bDeleteDebugOutOnExit) delete m_pDebugOut;
 }
 
-void MasterController::SetDebugOut(AbstrDebugOut* debugOut) {
+void MasterController::SetDebugOut(AbstrDebugOut* debugOut, bool bDeleteOnExit) {
 	if (debugOut != NULL) {
 		m_pDebugOut->Message("MasterController::SetDebugOut","Disconnecting from this debug out");
-		if (m_bStartDebugOut ) {
-			delete m_pDebugOut;
-			m_bStartDebugOut = false;
-		}
+		if (m_bDeleteDebugOutOnExit ) delete m_pDebugOut;
+		m_bDeleteDebugOutOnExit = bDeleteOnExit;
 		m_pDebugOut = debugOut;
 		m_pDebugOut->Message("MasterController::SetDebugOut","Connected to this debug out");
-	}
+	} else m_pDebugOut->Warning("MasterController::SetDebugOut","New debug is a NULL pointer, keeping old debug out");
 }
 
 void MasterController::RemoveDebugOut(AbstrDebugOut* debugOut) {
 	if (debugOut == m_pDebugOut) {
 		m_pDebugOut->Message("MasterController::RemoveDebugOut","Disconnecting from this debug out");
-		if (m_bStartDebugOut) delete m_pDebugOut;
+		if (m_bDeleteDebugOutOnExit) delete m_pDebugOut;
 		m_pDebugOut = new ConsoleOut();
-		m_bStartDebugOut = true;
+		m_bDeleteDebugOutOnExit = true;
 		m_pDebugOut->Message("MasterController::RemoveDebugOut","Connected to this debug out");
 	} else {
 		m_pDebugOut->Warning("MasterController::RemoveDebugOut","Not Connected the debug out in question (anymore), doing nothing");
