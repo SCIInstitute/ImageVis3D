@@ -191,10 +191,10 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 
 	// draw preview bar
 	for (unsigned int x = 0;x<m_vHistrogram.GetSize();x++) {
-		m_pPreviewColor->setPixel(x,0,qRgba(m_pTrans->vColorData[x][0]*255,
-											m_pTrans->vColorData[x][1]*255,
-											m_pTrans->vColorData[x][2]*255,
-											m_pTrans->vColorData[x][3]*255));
+		m_pPreviewColor->setPixel(x,0,qRgba(int(m_pTrans->vColorData[x][0]*255),
+											int(m_pTrans->vColorData[x][1]*255),
+											int(m_pTrans->vColorData[x][2]*255),
+											int(m_pTrans->vColorData[x][3]*255)));
 	}
 
 	QRect prevRect(m_iLeftBorder+1, m_iTopBorder-(m_iTopPreviewHeight+m_iTopPreviewDist),width()-(m_iLeftBorder+3+m_iRightBorder),m_iTopPreviewHeight);
