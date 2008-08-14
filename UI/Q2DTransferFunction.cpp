@@ -548,7 +548,6 @@ bool Q2DTransferFunction::SaveToFile(const QString& strFilename) {
 void Q2DTransferFunction::Set1DTrans(const TransferFunction1D* p1DTrans) {
 	m_pTrans->m_Trans1D = TransferFunction1D(*p1DTrans);
 	m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
-	m_iActiveSwatchIndex = 0;
 	m_bBackdropCacheUptodate = false;
 	update();
 }
