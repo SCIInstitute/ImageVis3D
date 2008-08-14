@@ -34,9 +34,9 @@
    <property name="geometry" >
     <rect>
      <x>388</x>
-     <y>34</y>
+     <y>22</y>
      <width>617</width>
-     <height>1327</height>
+     <height>1339</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7" >
@@ -151,9 +151,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>34</y>
+     <y>22</y>
      <width>384</width>
-     <height>307</height>
+     <height>310</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -183,7 +183,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>285</height>
+      <height>288</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout" >
@@ -207,7 +207,7 @@
           <x>0</x>
           <y>0</y>
           <width>360</width>
-          <height>240</height>
+          <height>243</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -334,8 +334,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>16</x>
+          <y>56</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -436,8 +436,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>16</x>
+          <y>56</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -627,8 +627,8 @@
        <widget class="QWidget" name="tab_6" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>16</x>
+          <y>56</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -866,9 +866,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>34</y>
+     <y>22</y>
      <width>194</width>
-     <height>509</height>
+     <height>513</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -883,7 +883,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>487</height>
+      <height>491</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1088,9 +1088,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>345</y>
+     <y>336</y>
      <width>384</width>
-     <height>167</height>
+     <height>168</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -1111,7 +1111,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>145</height>
+      <height>146</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4" >
@@ -1150,8 +1150,8 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>16</x>
+          <y>56</y>
           <width>360</width>
           <height>71</height>
          </rect>
@@ -1255,8 +1255,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>16</x>
+          <y>56</y>
           <width>360</width>
           <height>71</height>
          </rect>
@@ -1331,7 +1331,7 @@
           <x>0</x>
           <y>0</y>
           <width>360</width>
-          <height>71</height>
+          <height>72</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1443,9 +1443,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>547</y>
+     <y>539</y>
      <width>194</width>
-     <height>433</height>
+     <height>439</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1466,7 +1466,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>411</height>
+      <height>417</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1645,9 +1645,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>516</y>
+     <y>508</y>
      <width>384</width>
-     <height>199</height>
+     <height>201</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -1674,7 +1674,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>177</height>
+      <height>179</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2" >
@@ -2484,9 +2484,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>984</y>
+     <y>982</y>
      <width>194</width>
-     <height>377</height>
+     <height>379</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2501,7 +2501,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>355</height>
+      <height>357</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
@@ -2639,9 +2639,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>719</y>
+     <y>713</y>
      <width>384</width>
-     <height>299</height>
+     <height>302</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2656,7 +2656,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>277</height>
+      <height>280</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_17" >
@@ -2759,9 +2759,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1022</y>
+     <y>1019</y>
      <width>384</width>
-     <height>101</height>
+     <height>102</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2776,7 +2776,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>79</height>
+      <height>80</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_16" >
@@ -2838,9 +2838,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1127</y>
+     <y>1125</y>
      <width>384</width>
-     <height>234</height>
+     <height>236</height>
     </rect>
    </property>
    <property name="floating" >
@@ -2858,7 +2858,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>212</height>
+      <height>214</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_19" >
@@ -3007,25 +3007,6 @@
      </item>
     </layout>
    </widget>
-  </widget>
-  <widget class="QToolBar" name="toolBar" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>22</y>
-     <width>1203</width>
-     <height>12</height>
-    </rect>
-   </property>
-   <property name="windowTitle" >
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea" >
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak" >
-    <bool>false</bool>
-   </attribute>
   </widget>
   <action name="actionLoadDataset" >
    <property name="text" >

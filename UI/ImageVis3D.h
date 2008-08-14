@@ -71,6 +71,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 		void Use1DTrans();
 		void Use2DTrans();
 		void UseIso();
+		void DisableAllTrans();
 
 		bool LoadWorkspace();
 		bool SaveWorkspace();

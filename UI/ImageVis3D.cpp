@@ -489,6 +489,8 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 	m_1DTransferFunction->update();
 	m_2DTransferFunction->SetData(NULL, NULL);
 	m_2DTransferFunction->update();
+
+	DisableAllTrans();
 }
 
 
@@ -583,7 +585,23 @@ void MainWindow::Transfer1DRadioClicked() {
 	m_1DTransferFunction->SetPaintmode(Q1DT_PAINT_RED | Q1DT_PAINT_GREEN | Q1DT_PAINT_BLUE | ((iRadioState==2) ? Q1DT_PAINT_ALPHA : Q1DT_PAINT_NONE));
 }
 
+void MainWindow::DisableAllTrans() {
+	checkBox_Use2DTrans->setChecked(false);
+	checkBox_Use2DTrans->setEnabled(false);
+	checkBox_UseIso->setChecked(false);
+	checkBox_UseIso->setEnabled(false);
+	checkBox_Use1DTrans->setEnabled(false);
+	checkBox_Use1DTrans->setChecked(false);
+	radioButton_1DTrans->setChecked(false);
+
+	m_1DTransferFunction->setEnabled(false);
+	m_2DTransferFunction->setEnabled(false);
+	// todo disable iso controlls
+}
+
 void MainWindow::Use1DTrans() {
+	if (!m_ActiveRenderWin) return;
+
 	checkBox_Use2DTrans->setChecked(false);
 	checkBox_Use2DTrans->setEnabled(true);
 	checkBox_UseIso->setChecked(false);
@@ -600,6 +618,8 @@ void MainWindow::Use1DTrans() {
 }
 
 void MainWindow::Use2DTrans() {
+	if (!m_ActiveRenderWin) return;
+
 	checkBox_Use1DTrans->setChecked(false);
 	checkBox_Use1DTrans->setEnabled(true);
 	checkBox_UseIso->setChecked(false);
@@ -610,13 +630,14 @@ void MainWindow::Use2DTrans() {
 
 	m_1DTransferFunction->setEnabled(false);
 	m_2DTransferFunction->setEnabled(true);
-
 	// todo disable iso controlls
 
 	if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(RM_2DTRANS);
 }
 
 void MainWindow::UseIso() {
+	if (!m_ActiveRenderWin) return;
+
 	checkBox_Use2DTrans->setChecked(false);
 	checkBox_Use2DTrans->setEnabled(true);
 	checkBox_Use1DTrans->setChecked(false);
@@ -734,7 +755,10 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 	m_glShareWidget = new QGLWidget(this);
 	this->horizontalLayout->addWidget(m_glShareWidget);
 
-	LoadDataset("DEBUG");
+
+	DisableAllTrans();
+
+	//	LoadDataset("DEBUG");
 }
 
 void MainWindow::OpenRecentFile()
