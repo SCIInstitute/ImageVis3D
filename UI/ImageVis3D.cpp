@@ -71,7 +71,7 @@ MainWindow::MainWindow(MasterController& masterController, QWidget* parent /* = 
 
   LoadGeometry("Default.geo", true);
   LoadWorkspace("Default.wsp", true);
-	
+  
   UpdateMRUActions();
   UpdateMenus();
 
@@ -111,30 +111,30 @@ void MainWindow::Copy1DTransTo2DTrans() {
 
 void MainWindow::SwatchesChanged() {
   listWidget_Swatches->clear();
-	
+  
   for (size_t i = 0;i<m_2DTransferFunction->GetSwatchCount();i++) {
     size_t iSize = m_2DTransferFunction->GetSwatchSize(i);
 
     QString msg;
     switch (iSize) {
-    case  3  : msg = "Triangle";	break;
-    case  4  : msg = "Quadrilateral";	break;
-    case  5  : msg = "Pentagon";	break;
-    case  6  : msg = "Hexagon";		break;
-    case  7  : msg = "Heptagon";	break;
-    case  8  : msg = "Octagon";		break;
-    case  9  : msg = "Nonagon";		break;
-    case 10  : msg = "Decagon";		break;
-    case 11  : msg = "Hendecagon";	break;
-    case 12  : msg = "Dodecagon";	break;
-    case 13  : msg = "Triskaidecagon";	break;
-    case 14  : msg = "Tetrakaidecagon";	break;
-    case 15  : msg = "Pendedecagon";	break;
-    case 16  : msg = "Hexdecagon";	break;
-    case 17  : msg = "Heptdecagon";	break;
-    case 18  : msg = "Octdecagon";	break;
-    case 19  : msg = "Enneadecagon";	break;
-    case 20  : msg = "Icosagon";	break;
+    case  3  : msg = "Triangle";  break;
+    case  4  : msg = "Quadrilateral";  break;
+    case  5  : msg = "Pentagon";  break;
+    case  6  : msg = "Hexagon";    break;
+    case  7  : msg = "Heptagon";  break;
+    case  8  : msg = "Octagon";    break;
+    case  9  : msg = "Nonagon";    break;
+    case 10  : msg = "Decagon";    break;
+    case 11  : msg = "Hendecagon";  break;
+    case 12  : msg = "Dodecagon";  break;
+    case 13  : msg = "Triskaidecagon";  break;
+    case 14  : msg = "Tetrakaidecagon";  break;
+    case 15  : msg = "Pendedecagon";  break;
+    case 16  : msg = "Hexdecagon";  break;
+    case 17  : msg = "Heptdecagon";  break;
+    case 18  : msg = "Octdecagon";  break;
+    case 19  : msg = "Enneadecagon";  break;
+    case 20  : msg = "Icosagon";  break;
       // at this point I am getting bored ...
     default : msg = tr("%1 - gon").arg(iSize); break;
     }
@@ -164,7 +164,7 @@ void MainWindow::UpdateGradientBox() {
   listWidget_Gradient->clear();
 
   if (m_2DTransferFunction->GetActiveSwatchIndex() > -1) {
-	
+  
     for (size_t i = 0;i<m_2DTransferFunction->GetGradientCount();i++) {
       GradientStop s =  m_2DTransferFunction->GetGradient(i);
       QString msg = tr("Stop at %1").arg(s.first);
@@ -172,7 +172,7 @@ void MainWindow::UpdateGradientBox() {
     }
 
     listWidget_Gradient->setCurrentRow(min<int>(iCurrent, m_2DTransferFunction->GetGradientCount()));
-		
+    
   }
 
 
@@ -246,7 +246,7 @@ void MainWindow::Load2DTrans(){
 
 void MainWindow::Save2DTrans(){
   QString fileName = QFileDialog::getSaveFileName(this, "Save 2D Transferfunction", ".", "2D Transferfunction File (*.2dt)");
-  if (fileName != "")	m_2DTransferFunction->SaveToFile(fileName);
+  if (fileName != "")  m_2DTransferFunction->SaveToFile(fileName);
 }
 
 // ******************************************
@@ -381,7 +381,7 @@ bool MainWindow::SaveWorkspace(QString strFilename) {
 
   settings.beginGroup("Geometry");
   settings.setValue("DockGeometry", this->saveState() ); 
-  settings.endGroup(); 	
+  settings.endGroup();   
 
   return true;
 }
@@ -430,7 +430,7 @@ void MainWindow::LoadDirectory() {
 
     if (browseDataDialog.DataFound()) {
       if (browseDataDialog.exec() == QDialog::Accepted) {
-	LoadDataset(browseDataDialog.GetFileName());
+  LoadDataset(browseDataDialog.GetFileName());
       }
     } else {
       QString msg = tr("Error no valid DICOM files in directory %1 found.").arg(directoryName);
@@ -491,7 +491,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   m_2DTransferFunction->SetData(NULL, NULL);
   m_2DTransferFunction->update();
 
-	DisableAllTrans();
+  DisableAllTrans();
 }
 
 
@@ -520,7 +520,7 @@ RenderWindow* MainWindow::GetActiveRenderWindow()
 
 void MainWindow::CheckForRedraw() {
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {
-    QWidget* w = mdiArea->subWindowList().at(i)->widget();			
+    QWidget* w = mdiArea->subWindowList().at(i)->widget();      
     qobject_cast<RenderWindow*>(w)->CheckForRedraw();
   }
 }
@@ -546,7 +546,7 @@ void MainWindow::UpdateMenus() {
   actionInvert_Selection->setEnabled(bHasMdiChild);
   actionStastistcs->setEnabled(bHasMdiChild);
   actionUndo->setEnabled(bHasMdiChild);
-  actionRedo->setEnabled(bHasMdiChild);	
+  actionRedo->setEnabled(bHasMdiChild);  
 }
 
 // ******************************************
@@ -606,34 +606,34 @@ void MainWindow::Transfer1DRadioClicked() {
   if (iRadioState == 0) return;
 
   // apply iRadioState
-  checkBox_Red->setChecked(true);	
-  checkBox_Green->setChecked(true);	
-  checkBox_Blue->setChecked(true);	
+  checkBox_Red->setChecked(true);  
+  checkBox_Green->setChecked(true);  
+  checkBox_Blue->setChecked(true);  
   checkBox_Alpha->setChecked(iRadioState==2);
 
   unsigned int iPaintMode = (Q1DTransferFunction::PAINT_RED |
-			     Q1DTransferFunction::PAINT_GREEN |
-			     Q1DTransferFunction::PAINT_BLUE |
-			     ((iRadioState==2) ?
-			      Q1DTransferFunction::PAINT_ALPHA :
-			      Q1DTransferFunction::PAINT_NONE) );
+           Q1DTransferFunction::PAINT_GREEN |
+           Q1DTransferFunction::PAINT_BLUE |
+           ((iRadioState==2) ?
+            Q1DTransferFunction::PAINT_ALPHA :
+            Q1DTransferFunction::PAINT_NONE) );
 
   m_1DTransferFunction->
     SetPaintMode( (Q1DTransferFunction::paintMode ) iPaintMode);
 }
 
 void MainWindow::DisableAllTrans() {
-	checkBox_Use2DTrans->setChecked(false);
-	checkBox_Use2DTrans->setEnabled(false);
-	checkBox_UseIso->setChecked(false);
-	checkBox_UseIso->setEnabled(false);
-	checkBox_Use1DTrans->setEnabled(false);
-	checkBox_Use1DTrans->setChecked(false);
-	radioButton_1DTrans->setChecked(false);
+  checkBox_Use2DTrans->setChecked(false);
+  checkBox_Use2DTrans->setEnabled(false);
+  checkBox_UseIso->setChecked(false);
+  checkBox_UseIso->setEnabled(false);
+  checkBox_Use1DTrans->setEnabled(false);
+  checkBox_Use1DTrans->setChecked(false);
+  radioButton_1DTrans->setChecked(false);
 
-	m_1DTransferFunction->setEnabled(false);
-	m_2DTransferFunction->setEnabled(false);
-	// todo disable iso controlls
+  m_1DTransferFunction->setEnabled(false);
+  m_2DTransferFunction->setEnabled(false);
+  // todo disable iso controlls
 }
 
 void MainWindow::Use1DTrans() {
@@ -695,7 +695,7 @@ void MainWindow::UseIso() {
 // ******************************************
  
 void MainWindow::EditViewLocks() {
-  pushButton_RelativeLock->setEnabled(true);	
+  pushButton_RelativeLock->setEnabled(true);  
 }
 
 void MainWindow::EditRenderLocks() {
@@ -773,7 +773,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   connect(m_2DTransferFunction, SIGNAL(SwatchChange()), this, SLOT(SwatchesChanged()));
   connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)), m_2DTransferFunction, SLOT(SetActiveSwatch(int)));
   connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)), this, SLOT(UpdateSwatchButtons()));
-  connect(listWidget_Gradient, SIGNAL(currentRowChanged(int)), this, SLOT(UpdateGradientButtons()));	
+  connect(listWidget_Gradient, SIGNAL(currentRowChanged(int)), this, SLOT(UpdateGradientButtons()));  
 
   connect(pushButton_AddPoly,  SIGNAL(clicked()), m_2DTransferFunction, SLOT(AddSwatch()));
   connect(pushButton_AddCircle,SIGNAL(clicked()), m_2DTransferFunction, SLOT(AddCircleSwatch()));
@@ -794,7 +794,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
   DisableAllTrans();
 
-//	LoadDataset("DEBUG");
+//  LoadDataset("DEBUG");
 }
 
 void MainWindow::OpenRecentFile()

@@ -849,34 +849,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Renderer\GLInclude.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Renderer\GLTexture.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Renderer\GLTexture.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Renderer\GLTexture1D.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Renderer\GLTexture1D.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Renderer\GLTexture2D.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Renderer\GLTexture2D.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Renderer\GPUSBVR.cpp"
 				>
 			</File>
@@ -893,6 +865,50 @@
 				</File>
 				<File
 					RelativePath=".\Renderer\GPUMemMan\GPUMemMan.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="OpenGLObjects"
+				>
+				<File
+					RelativePath=".\Renderer\GLInclude.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLTexture.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLTexture.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLTexture1D.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLTexture1D.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLTexture2D.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLTexture2D.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="GLEW"
+				>
+				<File
+					RelativePath=".\Renderer\GLEW\glew.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLEW\wglew.h"
 					>
 				</File>
 			</Filter>

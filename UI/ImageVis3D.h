@@ -53,7 +53,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 public:
   MainWindow(MasterController& masterController, QWidget* parent = 0, Qt::WindowFlags flags = 0);
   virtual ~MainWindow();
-	
+  
   QTOut* GetDebugOut() {return m_DebugOut;}
 
 protected slots:
@@ -73,7 +73,7 @@ protected slots:
   void Use1DTrans();
   void Use2DTrans();
   void UseIso();
-		void DisableAllTrans();
+    void DisableAllTrans();
 
   bool LoadWorkspace();
   bool SaveWorkspace();
@@ -108,7 +108,7 @@ protected slots:
 
   void CheckForRedraw();
   void UpdateSwatchButtons();
-		
+    
   void AddGradient();
   void DeleteGradient();
   void UpdateGradientButtons();
@@ -118,13 +118,13 @@ protected slots:
 
 
 private :
-  MasterController&	m_MasterController;
-  QString		m_strCurrentWorkspaceFilename;
-  Q1DTransferFunction*	m_1DTransferFunction;
-  Q2DTransferFunction*	m_2DTransferFunction;
-  QGLWidget*		m_glShareWidget;
-  QTOut*		m_DebugOut;
-  RenderWindow*		m_ActiveRenderWin;
+  MasterController&  m_MasterController;
+  QString    m_strCurrentWorkspaceFilename;
+  Q1DTransferFunction*  m_1DTransferFunction;
+  Q2DTransferFunction*  m_2DTransferFunction;
+  QGLWidget*    m_glShareWidget;
+  QTOut*    m_DebugOut;
+  RenderWindow*    m_ActiveRenderWin;
 
   RenderWindow* CreateNewRenderWindow(QString dataset);
   RenderWindow* GetActiveRenderWindow();
@@ -143,7 +143,7 @@ private :
   void AddFileToMRUList(const QString &fileName);
 
   void setupUi(QMainWindow *MainWindow);
-		
+    
   void LoadDataset(QString fileName);
   };
 

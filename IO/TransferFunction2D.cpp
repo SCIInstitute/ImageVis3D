@@ -27,12 +27,12 @@
 */
 
 /**
-	\file		TransferFunction2D.cpp
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		July 2008
+  \file    TransferFunction2D.cpp
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    July 2008
 */
 
 #include "TransferFunction2D.h"
@@ -41,12 +41,12 @@ using namespace std;
 
 TransferFunction2D::TransferFunction2D()
 {
-	Resize(VECTOR2<size_t>(0,0));
+  Resize(VECTOR2<size_t>(0,0));
 }
 
 TransferFunction2D::TransferFunction2D(const VECTOR2<size_t>& iSize)
 {
-	Resize(iSize);
+  Resize(iSize);
 }
 
 TransferFunction2D::~TransferFunction2D(void)
@@ -54,135 +54,135 @@ TransferFunction2D::~TransferFunction2D(void)
 }
 
 void TransferFunction2D::Resize(const VECTOR2<size_t>& iSize) {
-	pColorData.Resize(iSize);
-	m_Trans1D.Resize(iSize.x);
-	m_Trans1D.Clear();
+  pColorData.Resize(iSize);
+  m_Trans1D.Resize(iSize.x);
+  m_Trans1D.Clear();
 }
 
 bool TransferFunction2D::Load(const std::string& filename) {
-	return Load(filename, pColorData.GetSize());
+  return Load(filename, pColorData.GetSize());
 }
 
 bool TransferFunction2D::Load(const std::string& filename, const VECTOR2<size_t>& iSize) {
-	ifstream file(filename.c_str());
+  ifstream file(filename.c_str());
 
-	if (!file.is_open()) return false;
-	pColorData.Resize(iSize);
+  if (!file.is_open()) return false;
+  pColorData.Resize(iSize);
 
-	// load 1D Trans
-	m_Trans1D.Load(file, iSize.x);
+  // load 1D Trans
+  m_Trans1D.Load(file, iSize.x);
 
-	// load swatch count
-	unsigned int iSwatchCount;
-	file >> iSwatchCount;
-	m_Swatches.resize(iSwatchCount);
+  // load swatch count
+  unsigned int iSwatchCount;
+  file >> iSwatchCount;
+  m_Swatches.resize(iSwatchCount);
 
-	// load Swatches
-	for (unsigned int i = 0;i<m_Swatches.size();i++) m_Swatches[i].Load(file);
+  // load Swatches
+  for (unsigned int i = 0;i<m_Swatches.size();i++) m_Swatches[i].Load(file);
 
-	file.close();
+  file.close();
 
-	return true;
+  return true;
 }
 
 bool TransferFunction2D::Save(const std::string& filename) {
-	ofstream file(filename.c_str());
+  ofstream file(filename.c_str());
 
-	if (!file.is_open()) return false;
+  if (!file.is_open()) return false;
 
-	// save 1D Trans
-	m_Trans1D.Save(file);
+  // save 1D Trans
+  m_Trans1D.Save(file);
 
-	// save swatch count
-	file << m_Swatches.size() << endl;
+  // save swatch count
+  file << m_Swatches.size() << endl;
 
-	// save Swatches
-	for (unsigned int i = 0;i<m_Swatches.size();i++) m_Swatches[i].Save(file);
+  // save Swatches
+  for (unsigned int i = 0;i<m_Swatches.size();i++) m_Swatches[i].Save(file);
 
-	file.close();
+  file.close();
 
-	return true;
+  return true;
 }
 
 void TransferFunction2D::GetByteArray(unsigned char** pcData, unsigned char cUsedRange) {
-	if (*pcData == NULL) *pcData = new unsigned char[pColorData.GetSize().area()];
+  if (*pcData == NULL) *pcData = new unsigned char[pColorData.GetSize().area()];
 
-	unsigned char *pcDataIterator = *pcData;
-	FLOATVECTOR4  *piSourceIterator = pColorData.GetDataPointer();
-	for (unsigned int i = 0;i<pColorData.GetSize().area();i++) {
-		*pcDataIterator++ = (unsigned char)((*piSourceIterator)[0]*cUsedRange);
-		*pcDataIterator++ = (unsigned char)((*piSourceIterator)[1]*cUsedRange);
-		*pcDataIterator++ = (unsigned char)((*piSourceIterator)[2]*cUsedRange);
-		*pcDataIterator++ = (unsigned char)((*piSourceIterator)[3]*cUsedRange);
-		piSourceIterator++;
-	}
+  unsigned char *pcDataIterator = *pcData;
+  FLOATVECTOR4  *piSourceIterator = pColorData.GetDataPointer();
+  for (unsigned int i = 0;i<pColorData.GetSize().area();i++) {
+    *pcDataIterator++ = (unsigned char)((*piSourceIterator)[0]*cUsedRange);
+    *pcDataIterator++ = (unsigned char)((*piSourceIterator)[1]*cUsedRange);
+    *pcDataIterator++ = (unsigned char)((*piSourceIterator)[2]*cUsedRange);
+    *pcDataIterator++ = (unsigned char)((*piSourceIterator)[3]*cUsedRange);
+    piSourceIterator++;
+  }
 }
 
 void TransferFunction2D::GetShortArray(unsigned short** psData, unsigned short sUsedRange) {
-	if (*psData == NULL) *psData = new unsigned short[pColorData.GetSize().area()];
+  if (*psData == NULL) *psData = new unsigned short[pColorData.GetSize().area()];
 
-	unsigned short *psDataIterator = *psData;
-	FLOATVECTOR4  *piSourceIterator = pColorData.GetDataPointer();
-	for (unsigned int i = 0;i<pColorData.GetSize().area();i++) {
-		*psDataIterator++ = (unsigned short)((*piSourceIterator)[0]*sUsedRange);
-		*psDataIterator++ = (unsigned short)((*piSourceIterator)[1]*sUsedRange);
-		*psDataIterator++ = (unsigned short)((*piSourceIterator)[2]*sUsedRange);
-		*psDataIterator++ = (unsigned short)((*piSourceIterator)[3]*sUsedRange);
-		piSourceIterator++;
-	}
+  unsigned short *psDataIterator = *psData;
+  FLOATVECTOR4  *piSourceIterator = pColorData.GetDataPointer();
+  for (unsigned int i = 0;i<pColorData.GetSize().area();i++) {
+    *psDataIterator++ = (unsigned short)((*piSourceIterator)[0]*sUsedRange);
+    *psDataIterator++ = (unsigned short)((*piSourceIterator)[1]*sUsedRange);
+    *psDataIterator++ = (unsigned short)((*piSourceIterator)[2]*sUsedRange);
+    *psDataIterator++ = (unsigned short)((*piSourceIterator)[3]*sUsedRange);
+    piSourceIterator++;
+  }
 }
 
 void TransferFunction2D::GetFloatArray(float** pfData) {
-	if (*pfData == NULL) *pfData = new float[4*pColorData.GetSize().area()];
-	memcpy(*pfData, pColorData.GetDataPointer(), 4*sizeof(float)*pColorData.GetSize().area());
+  if (*pfData == NULL) *pfData = new float[4*pColorData.GetSize().area()];
+  memcpy(*pfData, pColorData.GetDataPointer(), 4*sizeof(float)*pColorData.GetSize().area());
 }
 
 
 void TFPolygon::Load(ifstream& file) {
-	unsigned int iSize;
-	file >> iSize;
-	pPoints.resize(iSize);
+  unsigned int iSize;
+  file >> iSize;
+  pPoints.resize(iSize);
 
-	for(unsigned int i=0;i<pPoints.size();++i){
-		for(unsigned int j=0;j<2;++j){
-			file >> pPoints[i][j];
-		}
-	}
+  for(unsigned int i=0;i<pPoints.size();++i){
+    for(unsigned int j=0;j<2;++j){
+      file >> pPoints[i][j];
+    }
+  }
 
-	file >> pGradientCoords[0][0] >> pGradientCoords[0][1];
-	file >> pGradientCoords[1][0] >> pGradientCoords[1][1];
+  file >> pGradientCoords[0][0] >> pGradientCoords[0][1];
+  file >> pGradientCoords[1][0] >> pGradientCoords[1][1];
 
-	file >> iSize;
-	pGradientStops.resize(iSize);
-	for(unsigned int i=0;i<pGradientStops.size();++i){
-		file >> pGradientStops[i].first;
-		for(unsigned int j=0;j<4;++j){
-			file >> pGradientStops[i].second[j];
-		}
-	}
+  file >> iSize;
+  pGradientStops.resize(iSize);
+  for(unsigned int i=0;i<pGradientStops.size();++i){
+    file >> pGradientStops[i].first;
+    for(unsigned int j=0;j<4;++j){
+      file >> pGradientStops[i].second[j];
+    }
+  }
 
 }
 
 void TFPolygon::Save(ofstream& file) {
-	file << pPoints.size() << endl;
+  file << pPoints.size() << endl;
 
-	for(unsigned int i=0;i<pPoints.size();++i){
-		for(unsigned int j=0;j<2;++j){
-			file << pPoints[i][j] << " ";
-		}
-		file << endl;
-	}
+  for(unsigned int i=0;i<pPoints.size();++i){
+    for(unsigned int j=0;j<2;++j){
+      file << pPoints[i][j] << " ";
+    }
+    file << endl;
+  }
 
-	file << pGradientCoords[0][0] << " " << pGradientCoords[0][1] << " ";
-	file << pGradientCoords[1][0] << " " << pGradientCoords[1][1];
-	file << endl;
-	file << pGradientStops.size() << endl;
+  file << pGradientCoords[0][0] << " " << pGradientCoords[0][1] << " ";
+  file << pGradientCoords[1][0] << " " << pGradientCoords[1][1];
+  file << endl;
+  file << pGradientStops.size() << endl;
 
-	for(unsigned int i=0;i<pGradientStops.size();++i){
-		file << pGradientStops[i].first << "  ";
-		for(unsigned int j=0;j<4;++j){
-			file << pGradientStops[i].second[j] << " ";
-		}
-		file << endl;
-	}	
+  for(unsigned int i=0;i<pGradientStops.size();++i){
+    file << pGradientStops[i].first << "  ";
+    for(unsigned int j=0;j<4;++j){
+      file << pGradientStops[i].second[j] << " ";
+    }
+    file << endl;
+  }  
 }

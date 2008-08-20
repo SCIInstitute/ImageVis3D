@@ -27,12 +27,12 @@
 */
 
 /**
-	\file		VolumeDataset.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		August 2008
+  \file    VolumeDataset.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    August 2008
 */
 
 
@@ -47,37 +47,37 @@
 
 
 class VolumeDatasetInfo {
-	public:
-		VolumeDatasetInfo(unsigned int iBitWidth) :
-			m_iBitWidth(iBitWidth)
-		{}
+  public:
+    VolumeDatasetInfo(unsigned int iBitWidth) :
+      m_iBitWidth(iBitWidth)
+    {}
 
-		unsigned int GetBitwith() const {return m_iBitWidth;}
-	private:
-		unsigned int m_iBitWidth;
+    unsigned int GetBitwith() const {return m_iBitWidth;}
+  private:
+    unsigned int m_iBitWidth;
 };
 
 class VolumeDataset {
 public:
-	VolumeDataset(const std::string& strFilename);
-	~VolumeDataset();
+  VolumeDataset(const std::string& strFilename);
+  ~VolumeDataset();
 
-	bool IsLoaded() const;
-	std::string Filename() const {return m_strFilename;}
+  bool IsLoaded() const;
+  std::string Filename() const {return m_strFilename;}
 
-	const Histogram1D* Get1DHistogramm() const {return m_pHist1D;}
-	const Histogram2D* Get2DHistogramm() const {return m_pHist2D;}
+  const Histogram1D* Get1DHistogramm() const {return m_pHist1D;}
+  const Histogram2D* Get2DHistogramm() const {return m_pHist2D;}
 
-	const VolumeDatasetInfo* GetInfo() const {return m_pVolumeDatasetInfo;}
+  const VolumeDatasetInfo* GetInfo() const {return m_pVolumeDatasetInfo;}
 
-private:	
-	std::string			m_strFilename;
-	VolumeDatasetInfo*	m_pVolumeDatasetInfo;
-	Histogram1D*		m_pHist1D;
-	Histogram2D*		m_pHist2D;
+private:  
+  std::string      m_strFilename;
+  VolumeDatasetInfo*  m_pVolumeDatasetInfo;
+  Histogram1D*    m_pHist1D;
+  Histogram2D*    m_pHist2D;
 
-	void LoadDataset();
-	void ComputeHistogramms();
+  void LoadDataset();
+  void ComputeHistogramms();
 
 };
 

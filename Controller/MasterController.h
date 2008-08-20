@@ -27,12 +27,12 @@
 */
 
 /**
-	\file		MasterController.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		August 2008
+  \file    MasterController.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    August 2008
 */
 
 
@@ -53,29 +53,29 @@
 #include "../Renderer/GPUSBVR.h"
 
 enum VolumeRenderer {
-	OPENGL_SBVR = 0
+  OPENGL_SBVR = 0
 };
 
 class MasterController {
-	public:
-		MasterController();
-		virtual ~MasterController();
+  public:
+    MasterController();
+    virtual ~MasterController();
 
-		AbstrRenderer* RequestNewVolumerenderer(VolumeRenderer eRendererType);
-		void ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer);
-		
-		void SetDebugOut(AbstrDebugOut* debugOut, bool bDeleteOnExit = false);
-		void RemoveDebugOut(AbstrDebugOut* debugOut);
+    AbstrRenderer* RequestNewVolumerenderer(VolumeRenderer eRendererType);
+    void ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer);
+    
+    void SetDebugOut(AbstrDebugOut* debugOut, bool bDeleteOnExit = false);
+    void RemoveDebugOut(AbstrDebugOut* debugOut);
 
-		AbstrDebugOut* DebugOut() {return m_pDebugOut;}
-		GPUMemMan*	   MemMan() {return m_pGPUMemMan;}
-		
-	private:
-		GPUMemMan*     m_pGPUMemMan;
-		AbstrDebugOut* m_pDebugOut;
-		bool		   m_bDeleteDebugOutOnExit;	
+    AbstrDebugOut* DebugOut() {return m_pDebugOut;}
+    GPUMemMan*     MemMan() {return m_pGPUMemMan;}
+    
+  private:
+    GPUMemMan*     m_pGPUMemMan;
+    AbstrDebugOut* m_pDebugOut;
+    bool       m_bDeleteDebugOutOnExit;  
 
-		AbstrRendererList					m_vVolumeRenderer;
+    AbstrRendererList          m_vVolumeRenderer;
 };
 
 #endif // MASTERCONTROLLER_H

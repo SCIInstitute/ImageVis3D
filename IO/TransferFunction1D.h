@@ -27,12 +27,12 @@
 */
 
 /**
-	\file		TransferFunction1D.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		July 2008
+  \file    TransferFunction1D.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    July 2008
 */
 
 #pragma once
@@ -51,26 +51,26 @@ typedef Grid1D<float> NormalizedHistogram1D;
 class TransferFunction1D
 {
 public:
-	TransferFunction1D(size_t iSize = 0);
-	~TransferFunction1D(void);
-	
-	void Resize(size_t iSize);
-	void Resample(size_t iTargetSize);
+  TransferFunction1D(size_t iSize = 0);
+  ~TransferFunction1D(void);
+  
+  void Resize(size_t iSize);
+  void Resample(size_t iTargetSize);
 
-	bool Load(const std::string& filename);
-	bool Load(const std::string& filename, size_t iTargetSize);
-	bool Load(std::ifstream& file);
-	bool Load(std::ifstream& file, size_t iTargetSize);
-	bool Save(const std::string& filename);
-	bool Save(std::ofstream& file);
+  bool Load(const std::string& filename);
+  bool Load(const std::string& filename, size_t iTargetSize);
+  bool Load(std::ifstream& file);
+  bool Load(std::ifstream& file, size_t iTargetSize);
+  bool Save(const std::string& filename);
+  bool Save(std::ofstream& file);
 
-	void Clear();
+  void Clear();
 
-	void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
-	void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
-	void GetFloatArray(float** pfData);
+  void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
+  void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
+  void GetFloatArray(float** pfData);
 
-	std::vector< FLOATVECTOR4 > vColorData;
+  std::vector< FLOATVECTOR4 > vColorData;
 
 };
 

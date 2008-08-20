@@ -27,12 +27,12 @@
 */
 
 /**
-	\file		GPUSBVR.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		August 2008
+  \file    GPUSBVR.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    August 2008
 */
 
 
@@ -46,31 +46,31 @@
 #include "../Renderer/GLTexture2D.h"
 
 class GPUSBVR : public AbstrRenderer {
-	public:
-		GPUSBVR(MasterController* pMasterController);
-		virtual ~GPUSBVR();
+  public:
+    GPUSBVR(MasterController* pMasterController);
+    virtual ~GPUSBVR();
 
-		void Initialize();
-		void Paint();
-		void Resize(int width, int height);
-		void Cleanup();
+    void Initialize();
+    void Paint();
+    void Resize(int width, int height);
+    void Cleanup();
 
-		virtual void Set1DTrans(TransferFunction1D* p1DTrans);
-		virtual void Set2DTrans(TransferFunction2D* p2DTrans);
-		virtual void Changed1DTrans();
-		virtual void Changed2DTrans();
+    virtual void Set1DTrans(TransferFunction1D* p1DTrans);
+    virtual void Set2DTrans(TransferFunction2D* p2DTrans);
+    virtual void Changed1DTrans();
+    virtual void Changed2DTrans();
 
-		void CheckForRedraw();
+    void CheckForRedraw();
 
-		void SetRotation(int xRot) {m_xRot = xRot;}
-		void SetCurrentView(int iCurrentView) {m_iCurrentView = iCurrentView;}
-		int GetCurrentView() {return m_iCurrentView;}
+    void SetRotation(int xRot) {m_xRot = xRot;}
+    void SetCurrentView(int iCurrentView) {m_iCurrentView = iCurrentView;}
+    int GetCurrentView() {return m_iCurrentView;}
 
-	protected:
-		GLTexture2D* m_IDTex[3];
-		int m_iCurrentView;
-		int m_xRot;
-		bool m_bDelayedCompleteRedraw;
+  protected:
+    GLTexture2D* m_IDTex[3];
+    int m_iCurrentView;
+    int m_xRot;
+    bool m_bDelayedCompleteRedraw;
 };
 
 #endif // GPUSBVR_H

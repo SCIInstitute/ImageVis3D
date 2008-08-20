@@ -27,13 +27,13 @@
 */
 
 /**
-	\file		Console.h
-	\author		Thomas Schiwietz
-				Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		July 2008
+  \file    Console.h
+  \author    Thomas Schiwietz
+        Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    July 2008
 */
 
 #pragma once
@@ -45,152 +45,152 @@
 #include <stdarg.h>
 
 #ifdef WIN32
-	#pragma warning(disable:4505)
+  #pragma warning(disable:4505)
 #else
-	#include <iostream>
+  #include <iostream>
 #endif
 
 namespace Console {
-	#ifdef WIN32
-		#include <windows.h>
+  #ifdef WIN32
+    #include <windows.h>
 
-		static void printf(const WCHAR* format, ...)
-		{
-			// output string
-			WCHAR buff[16384];
-	       
-			// arguments
-			va_list args;
-			va_start(args, format);
+    static void printf(const WCHAR* format, ...)
+    {
+      // output string
+      WCHAR buff[16384];
+         
+      // arguments
+      va_list args;
+      va_start(args, format);
 
-			// build string
-			_vsnwprintf_s( buff, 16384, sizeof(buff), format, args);
+      // build string
+      _vsnwprintf_s( buff, 16384, sizeof(buff), format, args);
 
-			// conver to unicode
-			OutputDebugStringW(buff);
-		}
+      // conver to unicode
+      OutputDebugStringW(buff);
+    }
 
-		static void printfd(const WCHAR* format, ...)
-		{
-			#ifdef _DEBUG
-					// output string
-					WCHAR buff[16384];
-			       
-					// arguments
-					va_list args;
-					va_start(args, format);
+    static void printfd(const WCHAR* format, ...)
+    {
+      #ifdef _DEBUG
+          // output string
+          WCHAR buff[16384];
+             
+          // arguments
+          va_list args;
+          va_start(args, format);
 
-					// build string
-					_vsnwprintf_s( buff, 16384, sizeof(buff), format, args);
+          // build string
+          _vsnwprintf_s( buff, 16384, sizeof(buff), format, args);
 
-					// conver to unicode
-					OutputDebugStringW(buff);
-			#else
-				UNREFERENCED_PARAMETER(format);
-			#endif
-		}
+          // conver to unicode
+          OutputDebugStringW(buff);
+      #else
+        UNREFERENCED_PARAMETER(format);
+      #endif
+    }
 
 
-		static void printf(const CHAR* format, ...)
-		{
-			// output string
-			CHAR buff[16384];
-	       
-			// arguments
-			va_list args;
-			va_start(args, format);
+    static void printf(const CHAR* format, ...)
+    {
+      // output string
+      CHAR buff[16384];
+         
+      // arguments
+      va_list args;
+      va_start(args, format);
 
-			// build string
-			_vsnprintf_s( buff, 16384, sizeof(buff), format, args);
+      // build string
+      _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
 
-			// conver to unicode
-			OutputDebugStringA(buff);
-		}
+      // conver to unicode
+      OutputDebugStringA(buff);
+    }
 
-		static void printfd(const CHAR* format, ...)
-		{
-			#ifdef _DEBUG
-					// output string
-					CHAR buff[16384];
-			       
-					// arguments
-					va_list args;
-					va_start(args, format);
+    static void printfd(const CHAR* format, ...)
+    {
+      #ifdef _DEBUG
+          // output string
+          CHAR buff[16384];
+             
+          // arguments
+          va_list args;
+          va_start(args, format);
 
-					// build string
-					_vsnprintf_s( buff, 16384, sizeof(buff), format, args);
+          // build string
+          _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
 
-					// conver to unicode
-					OutputDebugStringA(buff);
-			#else
-				UNREFERENCED_PARAMETER(format);
-			#endif
-		}
+          // conver to unicode
+          OutputDebugStringA(buff);
+      #else
+        UNREFERENCED_PARAMETER(format);
+      #endif
+    }
 #else
 
-		#include <wchar.h>
-		#include <string>
+    #include <wchar.h>
+    #include <string>
 
-		static void printf(const wchar_t* format, ...)
-		{
-			// output string
-			wchar_t buff[16384];
-	       
-			// arguments
-			va_list args;
-			va_start(args, format);
+    static void printf(const wchar_t* format, ...)
+    {
+      // output string
+      wchar_t buff[16384];
+         
+      // arguments
+      va_list args;
+      va_start(args, format);
 
-			vswprintf( buff, sizeof(buff), format, args);
-			std::cout << buff;
-		}
+      vswprintf( buff, sizeof(buff), format, args);
+      std::cout << buff;
+    }
 
-		#ifdef _DEBUG
-			static void printfd(const wchar_t* format, ...)
-			{
-					// output string
-					wchar_t buff[16384];
-			       
-					// arguments
-					va_list args;
-					va_start(args, format);
+    #ifdef _DEBUG
+      static void printfd(const wchar_t* format, ...)
+      {
+          // output string
+          wchar_t buff[16384];
+             
+          // arguments
+          va_list args;
+          va_start(args, format);
 
-					vswprintf( buff, sizeof(buff), format, args);
-					cout << buff;
-			}
-		#else
-			static void printfd(const wchar_t*, ...) {}
-		#endif
+          vswprintf( buff, sizeof(buff), format, args);
+          cout << buff;
+      }
+    #else
+      static void printfd(const wchar_t*, ...) {}
+    #endif
 
 
-		static void printf(const char* format, ...)
-		{
-			// output string
-			char buff[16384];
-	       
-			// arguments
-			va_list args;
-			va_start(args, format);
+    static void printf(const char* format, ...)
+    {
+      // output string
+      char buff[16384];
+         
+      // arguments
+      va_list args;
+      va_start(args, format);
 
-			vsnprintf( buff, sizeof(buff), format, args);
+      vsnprintf( buff, sizeof(buff), format, args);
             std::cout << buff;
-		}
+    }
 
-		#ifdef _DEBUG
-			static void printfd(const char* format, ...)
-			{
-					// output string
-					char buff[16384];
-			       
-					// arguments
-					va_list args;
-					va_start(args, format);
+    #ifdef _DEBUG
+      static void printfd(const char* format, ...)
+      {
+          // output string
+          char buff[16384];
+             
+          // arguments
+          va_list args;
+          va_start(args, format);
 
-					vsnprintf( buff, sizeof(buff), format, args);
-					std::cout << buff;
-			}
-		#else
-		static void printfd(const char*, ...) {}
-		#endif
+          vsnprintf( buff, sizeof(buff), format, args);
+          std::cout << buff;
+      }
+    #else
+    static void printfd(const char*, ...) {}
+    #endif
 
 
 #endif

@@ -98,13 +98,13 @@ void Q1DTransferFunction::PreparePreviewData() {
 }
 
 void Q1DTransferFunction::SetData(const Histogram1D* vHistrogram,
-				  TransferFunction1D* pTrans) {
+          TransferFunction1D* pTrans) {
   m_pTrans = pTrans;
   if (m_pTrans == NULL) return;
 
   // store histogram
   m_vHistrogram.Resize(vHistrogram->GetSize());
-	
+  
   // resize the preview bar and force the draw routine to recompute the backdrop cache
   PreparePreviewData();
 
@@ -188,7 +188,7 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
   std::vector<QPointF> pointList;
   pointList.push_back(QPointF(m_iLeftBorder+1, iGridHeight-m_iBottomBorder));
   for (size_t i = 0;i<m_vHistrogram.GetSize();i++) 
-    pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistrogram.GetSize()-1), m_iTopBorder+iGridHeight-m_vHistrogram.Get(i)*iGridHeight));	
+    pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistrogram.GetSize()-1), m_iTopBorder+iGridHeight-m_vHistrogram.Get(i)*iGridHeight));  
   pointList.push_back(QPointF(m_iLeftBorder+iGridWidth, m_iTopBorder+iGridHeight));
   pointList.push_back(QPointF(m_iLeftBorder+1, m_iTopBorder+iGridHeight));
 
@@ -208,7 +208,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
   // draw the tranfer function as one larger polyline
   std::vector<QPointF> pointList(m_pTrans->vColorData.size());
   QPen penCurve(m_colorBorder, 1, Qt::SolidLine);
-	
+  
   // for every component
   for (unsigned int j = 0;j<4;j++) {
 
@@ -223,7 +223,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
     // define the polyline
     for (size_t i = 0;i<pointList.size();i++) {
       pointList[i]= QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(pointList.size()-1),
-			    m_iTopBorder+iGridHeight-m_pTrans->vColorData[i][j]*iGridHeight);
+          m_iTopBorder+iGridHeight-m_pTrans->vColorData[i][j]*iGridHeight);
     }
 
     // draw the polyline
@@ -235,9 +235,9 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
   // draw preview bar
   for (unsigned int x = 0;x<m_vHistrogram.GetSize();x++) {
     m_pPreviewColor->setPixel(x,0,qRgba(int(m_pTrans->vColorData[x][0]*255),
-					int(m_pTrans->vColorData[x][1]*255),
-					int(m_pTrans->vColorData[x][2]*255),
-					int(m_pTrans->vColorData[x][3]*255)));
+          int(m_pTrans->vColorData[x][1]*255),
+          int(m_pTrans->vColorData[x][2]*255),
+          int(m_pTrans->vColorData[x][3]*255)));
   }
 
   QRect prevRect(m_iLeftBorder+1, m_iTopBorder-(m_iTopPreviewHeight+m_iTopPreviewDist),width()-(m_iLeftBorder+3+m_iRightBorder),m_iTopPreviewHeight);
@@ -287,14 +287,14 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 
   // compute actual color value 
   float fValue = (float(m_iTopBorder)+float(iGridHeight)-float(event->y()))/float(iGridHeight);
-  fValue	  = std::min<float>(1.0f, std::max<float>(0.0f,fValue));
+  fValue    = std::min<float>(1.0f, std::max<float>(0.0f,fValue));
 
   // find out the range to change
   if (m_iLastIndex == -1) {
     m_iLastIndex = iCurrentIndex;
     m_fLastValue = fValue;
   }
-	
+  
   int iIndexMin, iIndexMax;
   float fValueMin, fValueInc;
 

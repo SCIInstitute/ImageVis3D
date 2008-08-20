@@ -27,60 +27,60 @@
 */
 
 /**
-	\file		MathTools.cpp
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.1
-	\date		July 2008
+  \file    MathTools.cpp
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.1
+  \date    July 2008
 */
 
 #include "MathTools.h"
 #include <math.h>
 
 unsigned int MathTools::Log(unsigned int value, unsigned int base) {
-	return (unsigned int)(log(float(value)) / log(float(base)));
+  return (unsigned int)(log(float(value)) / log(float(base)));
 }
 
 float MathTools::Log(float value, float base) {
-	return log(value) / log(base);
+  return log(value) / log(base);
 }
 
 unsigned int MathTools::Pow(unsigned int base, unsigned int exponent) {
-	return (unsigned int)(0.5f+pow(float(base), float(exponent)));
+  return (unsigned int)(0.5f+pow(float(base), float(exponent)));
 }
 
 UINT64 MathTools::Pow(UINT64 base, UINT64 exponent) {
-	return (UINT64)(0.5+pow(double(base), double(exponent)));
+  return (UINT64)(0.5+pow(double(base), double(exponent)));
 }
 
 unsigned int MathTools::Log2(unsigned int n) {
-	int iLog=0;
-	while( n>>=1 ) iLog++;
-	return iLog;
+  int iLog=0;
+  while( n>>=1 ) iLog++;
+  return iLog;
 }
 
 unsigned int MathTools::Pow2(unsigned int e) {
-	return 1<<e;
+  return 1<<e;
 }
 
 
 UINT64 MathTools::Log2(UINT64 n) {
-	int iLog=0;
-	while( n>>=1 ) iLog++;
-	return iLog;
+  int iLog=0;
+  while( n>>=1 ) iLog++;
+  return iLog;
 }
 
 UINT64 MathTools::Pow2(UINT64 e) {
 #ifdef WIN32
-	return 1i64<<e;
+  return 1i64<<e;
 #else
-	return 1<<e;
+  return 1<<e;
 #endif
 }
 
 unsigned int MathTools::GaussianSum(unsigned int n) {
-	return n*(n+1)/2;
+  return n*(n+1)/2;
 }
 
 bool MathTools::IsPow2(unsigned int n) { 

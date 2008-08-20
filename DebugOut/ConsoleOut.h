@@ -27,12 +27,12 @@
 */
 
 /**
-	\file		ConsoleOut.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		August 2008
+  \file    ConsoleOut.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    August 2008
 */
 
 
@@ -44,13 +44,13 @@
 #include "AbstrDebugOut.h"
 
 class ConsoleOut : public AbstrDebugOut{
-	public:
-		ConsoleOut();
-		~ConsoleOut();
-		virtual void printf(const char* format, ...);
-		virtual void Message(const char* source, const char* format, ...);
-		virtual void Warning(const char* source, const char* format, ...);
-		virtual void Error(const char* source, const char* format, ...);
+  public:
+    ConsoleOut();
+    ~ConsoleOut();
+    virtual void printf(const char* format, ...);
+    virtual void Message(const char* source, const char* format, ...);
+    virtual void Warning(const char* source, const char* format, ...);
+    virtual void Error(const char* source, const char* format, ...);
 };
 
 #endif // CONSOLEOUT_H

@@ -27,11 +27,11 @@
 */
 
 /**
-	\file		GLTexture2D.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\date		August 2008
+  \file    GLTexture2D.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \date    August 2008
 */
 
 
@@ -43,23 +43,23 @@
 #include "GLTexture.h"
 
 class GLTexture2D : public GLTexture {
-	public:
-		GLTexture2D(GLuint iSizeX, GLuint iSizeY, GLint internalformat, GLenum format, GLenum type, 
-					const GLvoid *pixels = 0,
-					GLint iMagFilter = GL_NEAREST, 
-					GLint iMinFilter = GL_NEAREST,
-					GLint wrapX = GL_CLAMP,
-					GLint wrapY = GL_CLAMP);
-		virtual ~GLTexture2D() {}
-		
-		virtual void Bind() {glBindTexture(GL_TEXTURE_2D, m_iGLID);}
-		virtual void SetData(const GLvoid *pixels);
-	protected:
-		GLuint m_iSizeX;
-		GLuint m_iSizeY;
-		GLint  m_internalformat;
-		GLenum m_format;
-		GLenum m_type;
+  public:
+    GLTexture2D(GLuint iSizeX, GLuint iSizeY, GLint internalformat, GLenum format, GLenum type, 
+          const GLvoid *pixels = 0,
+          GLint iMagFilter = GL_NEAREST, 
+          GLint iMinFilter = GL_NEAREST,
+          GLint wrapX = GL_CLAMP,
+          GLint wrapY = GL_CLAMP);
+    virtual ~GLTexture2D() {}
+    
+    virtual void Bind() {glBindTexture(GL_TEXTURE_2D, m_iGLID);}
+    virtual void SetData(const GLvoid *pixels);
+  protected:
+    GLuint m_iSizeX;
+    GLuint m_iSizeY;
+    GLint  m_internalformat;
+    GLenum m_format;
+    GLenum m_type;
 
 };
 

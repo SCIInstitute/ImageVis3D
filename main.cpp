@@ -44,28 +44,28 @@
 
 int main(int argc, char* argv[])
 {
-	SysTools::CmdLineParams parameters(argc, argv);
+  SysTools::CmdLineParams parameters(argc, argv);
 
-	std::string strLogFileName;
-	bool bUseLogFile = parameters.GetValue("LOG",strLogFileName);
-	int iLogLevel = 0;
-	parameters.GetValue("LOGLEVEL",iLogLevel);
+  std::string strLogFileName;
+  bool bUseLogFile = parameters.GetValue("LOG",strLogFileName);
+  int iLogLevel = 0;
+  parameters.GetValue("LOGLEVEL",iLogLevel);
 
-	MasterController masterController;
+  MasterController masterController;
 
-	QApplication app( argc, argv );
-	MainWindow mainWindow(masterController, 0, Qt::Window);
-	
-	if (bUseLogFile) {
-		TextfileOut* textout = new TextfileOut(strLogFileName);
-		// remark: fall through on purpose
-		switch (iLogLevel) {
-			case 0 : textout->m_bShowWarnings = false;
-			case 1 : textout->m_bShowMessages = false; break;
-		}
-		masterController.SetDebugOut(textout, true);
-	}
+  QApplication app( argc, argv );
+  MainWindow mainWindow(masterController, 0, Qt::Window);
+  
+  if (bUseLogFile) {
+    TextfileOut* textout = new TextfileOut(strLogFileName);
+    // remark: fall through on purpose
+    switch (iLogLevel) {
+      case 0 : textout->m_bShowWarnings = false;
+      case 1 : textout->m_bShowMessages = false; break;
+    }
+    masterController.SetDebugOut(textout, true);
+  }
 
-	mainWindow.show();
-	return app.exec();
+  mainWindow.show();
+  return app.exec();
 }

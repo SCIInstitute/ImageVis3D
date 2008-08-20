@@ -27,12 +27,12 @@
 */
 
 /**
-	\file		TextfileOut.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		August 2008
+  \file    TextfileOut.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    August 2008
 */
 
 
@@ -45,15 +45,15 @@
 #include <string>
 
 class TextfileOut : public AbstrDebugOut{
-	public:
-		TextfileOut(std::string strFilename="logfile.txt");
-		~TextfileOut();
-		virtual void printf(const char* format, ...);
-		virtual void Message(const char* source, const char* format, ...);
-		virtual void Warning(const char* source, const char* format, ...);
-		virtual void Error(const char* source, const char* format, ...);
-	private:
-		std::string m_strFilename;
+  public:
+    TextfileOut(std::string strFilename="logfile.txt");
+    ~TextfileOut();
+    virtual void printf(const char* format, ...);
+    virtual void Message(const char* source, const char* format, ...);
+    virtual void Warning(const char* source, const char* format, ...);
+    virtual void Error(const char* source, const char* format, ...);
+  private:
+    std::string m_strFilename;
 };
 
 #endif // TextfileOut_H

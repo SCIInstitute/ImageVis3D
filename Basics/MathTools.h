@@ -27,12 +27,12 @@
 */
 
 /**
-	\file		MathTools.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.1
-	\date		July 2008
+  \file    MathTools.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.1
+  \date    July 2008
 */
 
 #pragma once
@@ -41,28 +41,28 @@
 #define MATHTOOLS_H
 
 #ifdef _WIN32
-	typedef unsigned __int64 UINT64;
+  typedef unsigned __int64 UINT64;
 #else
-	typedef unsigned long long UINT64;
+  typedef unsigned long long UINT64;
 #endif
 
 namespace MathTools {
-	unsigned int Log(unsigned int value, unsigned int base);
-	float Log(float value, float base);
-	unsigned int Pow(unsigned int base, unsigned int exponent);
-	UINT64 Pow(UINT64 base, UINT64 exponent);
+  unsigned int Log(unsigned int value, unsigned int base);
+  float Log(float value, float base);
+  unsigned int Pow(unsigned int base, unsigned int exponent);
+  UINT64 Pow(UINT64 base, UINT64 exponent);
 
-	unsigned int Log2(unsigned int n);
-	unsigned int Pow2(unsigned int e);
-	UINT64 Log2(UINT64 n);
-	UINT64 Pow2(UINT64 e);	
-	unsigned int GaussianSum(unsigned int n);
-	bool IsPow2(unsigned int n);
-	unsigned int NextPow2(unsigned int n, bool bReturn_ID_on_Pow2=true);
+  unsigned int Log2(unsigned int n);
+  unsigned int Pow2(unsigned int e);
+  UINT64 Log2(UINT64 n);
+  UINT64 Pow2(UINT64 e);  
+  unsigned int GaussianSum(unsigned int n);
+  bool IsPow2(unsigned int n);
+  unsigned int NextPow2(unsigned int n, bool bReturn_ID_on_Pow2=true);
 
-	template<class T> inline T sign(T v){return T((v > T(0)) - (v < T(0)));}
+  template<class T> inline T sign(T v){return T((v > T(0)) - (v < T(0)));}
 
-	template<class T> inline T MakeMultiple(T v, T m){return v + (((v%m) == T(0)) ? T(0) : m-(v%m));}
+  template<class T> inline T MakeMultiple(T v, T m){return v + (((v%m) == T(0)) ? T(0) : m-(v%m));}
 
 };
 

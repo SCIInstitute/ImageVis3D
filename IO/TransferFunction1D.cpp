@@ -27,12 +27,12 @@
 */
 
 /**
-	\file		TransferFunction1D.cpp
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		July 2008
+  \file    TransferFunction1D.cpp
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    July 2008
 */
 
 #include "TransferFunction1D.h"
@@ -42,7 +42,7 @@ using namespace std;
 
 TransferFunction1D::TransferFunction1D(size_t iSize)
 {
-	Resize(iSize);
+  Resize(iSize);
 }
 
 TransferFunction1D::~TransferFunction1D(void)
@@ -50,142 +50,142 @@ TransferFunction1D::~TransferFunction1D(void)
 }
 
 void TransferFunction1D::Resize(size_t iSize) {
-	vColorData.resize(iSize);
+  vColorData.resize(iSize);
 }
 
 void TransferFunction1D::Clear() {
-	for (size_t i = 0;i<vColorData.size();i++) vColorData[i] = FLOATVECTOR4(0,0,0,0);
+  for (size_t i = 0;i<vColorData.size();i++) vColorData[i] = FLOATVECTOR4(0,0,0,0);
 }
 
 void TransferFunction1D::Resample(size_t iTargetSize) {
-	size_t iSourceSize = vColorData.size();
+  size_t iSourceSize = vColorData.size();
 
-	if (iTargetSize == iSourceSize) return;
+  if (iTargetSize == iSourceSize) return;
 
-	vector< FLOATVECTOR4 > vTmpColorData(iTargetSize);
+  vector< FLOATVECTOR4 > vTmpColorData(iTargetSize);
 
-	if (iTargetSize < iSourceSize) {
-		// downsample
-		size_t iFrom = 0;
-		for (size_t i = 0;i<vTmpColorData.size();i++) {
+  if (iTargetSize < iSourceSize) {
+    // downsample
+    size_t iFrom = 0;
+    for (size_t i = 0;i<vTmpColorData.size();i++) {
 
-			size_t iTo = iFrom + iSourceSize/iTargetSize;
+      size_t iTo = iFrom + iSourceSize/iTargetSize;
 
-			vTmpColorData[i] = 0;
-			for (size_t j = iFrom;j<iTo;j++) {
-				vTmpColorData[i] += vColorData[j];
-			}
-			vTmpColorData[i] /= float(iTo-iFrom);
+      vTmpColorData[i] = 0;
+      for (size_t j = iFrom;j<iTo;j++) {
+        vTmpColorData[i] += vColorData[j];
+      }
+      vTmpColorData[i] /= float(iTo-iFrom);
 
-			iTargetSize -= 1;
-			iSourceSize -= iTo-iFrom;
+      iTargetSize -= 1;
+      iSourceSize -= iTo-iFrom;
 
-			iFrom = iTo;
-		}
-	} else {
-		// upsample
-		for (size_t i = 0;i<vTmpColorData.size();i++) {
-			float fPos = float(i) * float(iSourceSize-1)/float(iTargetSize);
-			size_t iFloor = size_t(floor(fPos));
-			size_t iCeil  = std::min(iFloor+1, vColorData.size()-1);
-			float fInterp = fPos - float(iFloor);
+      iFrom = iTo;
+    }
+  } else {
+    // upsample
+    for (size_t i = 0;i<vTmpColorData.size();i++) {
+      float fPos = float(i) * float(iSourceSize-1)/float(iTargetSize);
+      size_t iFloor = size_t(floor(fPos));
+      size_t iCeil  = std::min(iFloor+1, vColorData.size()-1);
+      float fInterp = fPos - float(iFloor);
 
-			vTmpColorData[i] = vColorData[iFloor] * (1-fInterp) + vColorData[iCeil] * fInterp;
-		}
+      vTmpColorData[i] = vColorData[iFloor] * (1-fInterp) + vColorData[iCeil] * fInterp;
+    }
 
-	}
+  }
 
-	vColorData = vTmpColorData;
+  vColorData = vTmpColorData;
 }
 
 bool TransferFunction1D::Load(const std::string& filename, size_t iTargetSize) {
-	if (!Load(filename)) {
-		return false;
-	} else {
-		Resample(iTargetSize);
-		return true;
-	}
+  if (!Load(filename)) {
+    return false;
+  } else {
+    Resample(iTargetSize);
+    return true;
+  }
 }
 
 
 bool TransferFunction1D::Load(const std::string& filename) {
-	ifstream file(filename.c_str());
-	if (!Load(file)) return false;
-	file.close();
-	return true;
+  ifstream file(filename.c_str());
+  if (!Load(file)) return false;
+  file.close();
+  return true;
 }
 
 bool TransferFunction1D::Load(ifstream& file, size_t iTargetSize) {
-	if (!Load(file)) {
-		return false;
-	} else {
-		Resample(iTargetSize);
-		return true;
-	}
+  if (!Load(file)) {
+    return false;
+  } else {
+    Resample(iTargetSize);
+    return true;
+  }
 }
 
 bool TransferFunction1D::Save(const std::string& filename) {
-	ofstream file(filename.c_str());
-	if (!Save(file)) return false;
-	file.close();
-	return true;
+  ofstream file(filename.c_str());
+  if (!Save(file)) return false;
+  file.close();
+  return true;
 }
 
 bool TransferFunction1D::Load(ifstream& file) {
-	unsigned int iSize;
-	file >> iSize;
-	vColorData.resize(iSize);
+  unsigned int iSize;
+  file >> iSize;
+  vColorData.resize(iSize);
 
-	for(unsigned int i=0;i<vColorData.size();++i){
-		for(unsigned int j=0;j<4;++j){
-			file >> vColorData[i][j];
-		}
-	}
-	return true;
+  for(unsigned int i=0;i<vColorData.size();++i){
+    for(unsigned int j=0;j<4;++j){
+      file >> vColorData[i][j];
+    }
+  }
+  return true;
 }
 
 
 bool TransferFunction1D::Save(ofstream& file) {
-	if (!file.is_open()) return false;
+  if (!file.is_open()) return false;
 
-	file << vColorData.size() << endl;
+  file << vColorData.size() << endl;
 
-	for(unsigned int i=0;i<vColorData.size();++i){
-		for(unsigned int j=0;j<4;++j){
-			file << vColorData[i][j] << " ";
-		}
-		file << endl;
-	}
+  for(unsigned int i=0;i<vColorData.size();++i){
+    for(unsigned int j=0;j<4;++j){
+      file << vColorData[i][j] << " ";
+    }
+    file << endl;
+  }
 
-	return true;
+  return true;
 }
 
 
 void TransferFunction1D::GetByteArray(unsigned char** pcData, unsigned char cUsedRange) {
-	if (*pcData == NULL) *pcData = new unsigned char[vColorData.size()];
+  if (*pcData == NULL) *pcData = new unsigned char[vColorData.size()];
 
-	unsigned char *pcDataIterator = *pcData;
-	for (unsigned int i = 0;i<vColorData.size();i++) {
-		*pcDataIterator++ = (unsigned char)(vColorData[i][0]*cUsedRange);
-		*pcDataIterator++ = (unsigned char)(vColorData[i][1]*cUsedRange);
-		*pcDataIterator++ = (unsigned char)(vColorData[i][2]*cUsedRange);
-		*pcDataIterator++ = (unsigned char)(vColorData[i][3]*cUsedRange);
-	}
+  unsigned char *pcDataIterator = *pcData;
+  for (unsigned int i = 0;i<vColorData.size();i++) {
+    *pcDataIterator++ = (unsigned char)(vColorData[i][0]*cUsedRange);
+    *pcDataIterator++ = (unsigned char)(vColorData[i][1]*cUsedRange);
+    *pcDataIterator++ = (unsigned char)(vColorData[i][2]*cUsedRange);
+    *pcDataIterator++ = (unsigned char)(vColorData[i][3]*cUsedRange);
+  }
 }
 
 void TransferFunction1D::GetShortArray(unsigned short** psData, unsigned short sUsedRange) {
-	if (*psData == NULL) *psData = new unsigned short[vColorData.size()];
+  if (*psData == NULL) *psData = new unsigned short[vColorData.size()];
 
-	unsigned short *psDataIterator = *psData;
-	for (unsigned int i = 0;i<vColorData.size();i++) {
-		*psDataIterator++ = (unsigned short)(vColorData[i][0]*sUsedRange);
-		*psDataIterator++ = (unsigned short)(vColorData[i][1]*sUsedRange);
-		*psDataIterator++ = (unsigned short)(vColorData[i][2]*sUsedRange);
-		*psDataIterator++ = (unsigned short)(vColorData[i][3]*sUsedRange);
-	}
+  unsigned short *psDataIterator = *psData;
+  for (unsigned int i = 0;i<vColorData.size();i++) {
+    *psDataIterator++ = (unsigned short)(vColorData[i][0]*sUsedRange);
+    *psDataIterator++ = (unsigned short)(vColorData[i][1]*sUsedRange);
+    *psDataIterator++ = (unsigned short)(vColorData[i][2]*sUsedRange);
+    *psDataIterator++ = (unsigned short)(vColorData[i][3]*sUsedRange);
+  }
 }
 
 void TransferFunction1D::GetFloatArray(float** pfData) {
-	if (*pfData == NULL) *pfData = new float[4*vColorData.size()];
-	memcpy(*pfData, &pfData[0], sizeof(float)*4*vColorData.size());
+  if (*pfData == NULL) *pfData = new float[4*vColorData.size()];
+  memcpy(*pfData, &pfData[0], sizeof(float)*4*vColorData.size());
 }

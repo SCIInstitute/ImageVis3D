@@ -27,11 +27,11 @@
 */
 
 /**
-	\file		GLTexture.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\date		August 2008
+  \file    GLTexture.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \date    August 2008
 */
 
 
@@ -43,17 +43,17 @@
 #include "GLInclude.h"
 
 class GLTexture {
-	public:
-		GLTexture() : m_iGLID(-1) {}
-		virtual ~GLTexture();
+  public:
+    GLTexture() : m_iGLID(-1) {}
+    virtual ~GLTexture();
 
-		virtual void Delete();
-		virtual void SetData(const GLvoid *pixels) = 0;
-		virtual void Bind() = 0;
-		GLuint GetGLID() {return m_iGLID;}
+    virtual void Delete();
+    virtual void SetData(const GLvoid *pixels) = 0;
+    virtual void Bind() = 0;
+    GLuint GetGLID() {return m_iGLID;}
 
-	protected:
-		GLuint				m_iGLID;
+  protected:
+    GLuint        m_iGLID;
 };
 
 #endif // GLTEXTURE_H

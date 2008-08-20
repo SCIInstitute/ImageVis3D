@@ -27,12 +27,12 @@
 */
 
 /**
-	\file		QTOut.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		August 2008
+  \file    QTOut.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    August 2008
 */
 
 
@@ -45,19 +45,19 @@
 #include <QtGui/QListWidget>
 
 class QTOut : public AbstrDebugOut{
-	public:
-		QTOut(QListWidget *listWidget);
-		virtual ~QTOut();
+  public:
+    QTOut(QListWidget *listWidget);
+    virtual ~QTOut();
 
-		virtual void printf(const char* format, ...);
-		virtual void Message(const char* source, const char* format, ...);
-		virtual void Warning(const char* source, const char* format, ...);
-		virtual void Error(const char* source, const char* format, ...);
+    virtual void printf(const char* format, ...);
+    virtual void Message(const char* source, const char* format, ...);
+    virtual void Warning(const char* source, const char* format, ...);
+    virtual void Error(const char* source, const char* format, ...);
 
-	private:
-		QListWidget *m_listWidget;
+  private:
+    QListWidget *m_listWidget;
 
-		void _printf(const char* format, ...);
+    void _printf(const char* format, ...);
 
 };
 

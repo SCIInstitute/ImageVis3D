@@ -52,7 +52,7 @@ class Q1DTransferFunction : public QWidget
 public:
 
   enum paintMode { PAINT_NONE=0, PAINT_RED=1, PAINT_GREEN=2,
-		   PAINT_BLUE=4, PAINT_ALPHA=8, PAINT_UNDEF=16 };
+       PAINT_BLUE=4, PAINT_ALPHA=8, PAINT_UNDEF=16 };
 
   enum executionMode { UNKNOWN=0, CONTINUOUS=1, ONRELEASE=2, MANUAL=4 };
 
@@ -95,12 +95,12 @@ private:
   unsigned int m_iExecutionMode;
 
   // cached image of the backdrop
-  bool		 m_bBackdropCacheUptodate;
+  bool     m_bBackdropCacheUptodate;
   unsigned int m_iCachedHeight;
   unsigned int m_iCachedWidth;
-  QPixmap*	 m_pBackdropCache;
-  QImage*	 m_pPreviewBack;
-  QImage*	 m_pPreviewColor;
+  QPixmap*   m_pBackdropCache;
+  QImage*   m_pPreviewBack;
+  QImage*   m_pPreviewColor;
 
   // borders, may be changed in the constructor 
   unsigned int m_iLeftBorder;

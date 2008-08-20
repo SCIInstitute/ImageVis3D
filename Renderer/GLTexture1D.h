@@ -27,11 +27,11 @@
 */
 
 /**
-	\file		GLTexture1D.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\date		August 2008
+  \file    GLTexture1D.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \date    August 2008
 */
 
 #pragma once
@@ -42,21 +42,21 @@
 #include "GLTexture.h"
 
 class GLTexture1D : public GLTexture {
-	public:
-		GLTexture1D(GLuint iSize, GLint internalformat, GLenum format, GLenum type, 
-					const GLvoid *pixels = 0,
-					GLint iMagFilter = GL_NEAREST, 
-					GLint iMinFilter = GL_NEAREST,
-					GLint wrap = GL_CLAMP);
-		virtual ~GLTexture1D() {}
+  public:
+    GLTexture1D(GLuint iSize, GLint internalformat, GLenum format, GLenum type, 
+          const GLvoid *pixels = 0,
+          GLint iMagFilter = GL_NEAREST, 
+          GLint iMinFilter = GL_NEAREST,
+          GLint wrap = GL_CLAMP);
+    virtual ~GLTexture1D() {}
 
-		virtual void Bind() {glBindTexture(GL_TEXTURE_1D, m_iGLID);}
-		virtual void SetData(const GLvoid *pixels);
-	protected:
-		GLuint m_iSize;
-		GLint  m_internalformat;
-		GLenum m_format;
-		GLenum m_type;
+    virtual void Bind() {glBindTexture(GL_TEXTURE_1D, m_iGLID);}
+    virtual void SetData(const GLvoid *pixels);
+  protected:
+    GLuint m_iSize;
+    GLint  m_internalformat;
+    GLenum m_format;
+    GLenum m_type;
 
 };
 

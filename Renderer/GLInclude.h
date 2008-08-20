@@ -27,11 +27,11 @@
 */
 
 /**
-	\file		GLInclude.h
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\date		August 2008
+  \file    GLInclude.h
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \date    August 2008
 */
 
 #pragma once
@@ -40,13 +40,13 @@
 #define GLINCLUDE_H
 
 #ifdef WIN32
-	#include <windows.h>
+  #include <windows.h>
 #endif
 
 #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
-	#include <OpenGL/gl.h>
+  #include <OpenGL/gl.h>
 #else
-	#include <GL/gl.h>
+  #include <GL/gl.h>
 #endif
 
 #endif // GLINCLUDE_H

@@ -27,18 +27,18 @@
 */
 
 /**
-	\file		TextfileOut.cpp
-	\author		Jens Krueger
-				SCI Institute
-				University of Utah
-	\version	1.0
-	\date		August 2008
+  \file    TextfileOut.cpp
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    August 2008
 */
 
 #include "TextfileOut.h"
 
 #ifdef WIN32
-	#include <windows.h>
+  #include <windows.h>
 #endif
 
 #include <stdarg.h>
@@ -47,70 +47,70 @@
 using namespace std;
 
 TextfileOut::TextfileOut(std::string strFilename) :
-	m_strFilename(strFilename)
+  m_strFilename(strFilename)
 {
-	this->printf("MESSAGE (TextfileOut::~TextfileOut:): Starting up");
+  this->printf("MESSAGE (TextfileOut::~TextfileOut:): Starting up");
 }
 
 TextfileOut::~TextfileOut() {
-	this->printf("MESSAGE (TextfileOut::~TextfileOut:): Shutting down\n\n\n");
+  this->printf("MESSAGE (TextfileOut::~TextfileOut:): Shutting down\n\n\n");
 }
 
 void TextfileOut::printf(const char* format, ...)
 {
-	if (!m_bShowOther) return;
+  if (!m_bShowOther) return;
 
-	char buff[16384];
-	va_list args;
-	va_start(args, format);
+  char buff[16384];
+  va_list args;
+  va_start(args, format);
 #ifdef WIN32
-	_vsnprintf_s( buff, 16384, sizeof(buff), format, args);
+  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
 #else
-	vsnprintf( buff, sizeof(buff), format, args);
+  vsnprintf( buff, sizeof(buff), format, args);
 #endif
 
-	ofstream fs;
-	fs.open(m_strFilename.c_str(),  ios_base::app);
-	if (fs.fail()) return;
-	fs << buff << endl;
-	fs.close();
+  ofstream fs;
+  fs.open(m_strFilename.c_str(),  ios_base::app);
+  if (fs.fail()) return;
+  fs << buff << endl;
+  fs.close();
 }
 
 void TextfileOut::Message(const char* source, const char* format, ...) {
-	if (!m_bShowMessages) return;
-	char buff[16384];
-	va_list args;
-	va_start(args, format);
+  if (!m_bShowMessages) return;
+  char buff[16384];
+  va_list args;
+  va_start(args, format);
 #ifdef WIN32
-	_vsnprintf_s( buff, 16384, sizeof(buff), format, args);
+  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
 #else
-	vsnprintf( buff, sizeof(buff), format, args);
+  vsnprintf( buff, sizeof(buff), format, args);
 #endif
-	this->printf("MESSAGE (%s): %s",source, buff);
+  this->printf("MESSAGE (%s): %s",source, buff);
 }
 
 void TextfileOut::Warning(const char* source, const char* format, ...) {
-	if (!m_bShowWarnings) return;
-	char buff[16384];
-	va_list args;
-	va_start(args, format);
+  if (!m_bShowWarnings) return;
+  char buff[16384];
+  va_list args;
+  va_start(args, format);
 #ifdef WIN32
-	_vsnprintf_s( buff, 16384, sizeof(buff), format, args);
+  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
 #else
-	vsnprintf( buff, sizeof(buff), format, args);
+  vsnprintf( buff, sizeof(buff), format, args);
 #endif
-	this->printf("WARNING (%s): %s",source, buff);
+  this->printf("WARNING (%s): %s",source, buff);
 }
 
 void TextfileOut::Error(const char* source, const char* format, ...) {
-	if (!m_bShowErrors) return;
-	char buff[16384];
-	va_list args;
-	va_start(args, format);
+  if (!m_bShowErrors) return;
+  char buff[16384];
+  va_list args;
+  va_start(args, format);
 #ifdef WIN32
-	_vsnprintf_s( buff, 16384, sizeof(buff), format, args);
+  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
 #else
-	vsnprintf( buff, sizeof(buff), format, args);
+  vsnprintf( buff, sizeof(buff), format, args);
 #endif
-	this->printf("ERROR (%s): %s",source, buff);
+  this->printf("ERROR (%s): %s",source, buff);
 }
