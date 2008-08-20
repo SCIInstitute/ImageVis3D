@@ -794,6 +794,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   this->horizontalLayout->addWidget(m_glShareWidget);
 
   DisableAllTrans();
+  GetDebugViewMask();
 
 //  LoadDataset("DEBUG");
 }
@@ -813,4 +814,11 @@ void MainWindow::SetDebugViewMask() {
   m_DebugOut->m_bShowWarnings = checkBox_ShowDebugWarnings->isChecked();
   m_DebugOut->m_bShowMessages = checkBox_ShowDebugMessages->isChecked();
   m_DebugOut->m_bShowOther = checkBox_ShowDebugOther->isChecked();
+}
+
+void MainWindow::GetDebugViewMask() {
+  checkBox_ShowDebugErrors->setChecked(m_DebugOut->m_bShowErrors);
+  checkBox_ShowDebugWarnings->setChecked(m_DebugOut->m_bShowWarnings);
+  checkBox_ShowDebugMessages->setChecked(m_DebugOut->m_bShowMessages);
+  checkBox_ShowDebugOther->setChecked(m_DebugOut->m_bShowOther);
 }

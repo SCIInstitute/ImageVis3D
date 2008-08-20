@@ -144,6 +144,7 @@ private :
   void AddFileToMRUList(const QString &fileName);
 
   void setupUi(QMainWindow *MainWindow);
+  void GetDebugViewMask();
     
   void LoadDataset(QString fileName);
   };

@@ -907,14 +907,6 @@
 			<Filter
 				Name="GLEW"
 				>
-				<File
-					RelativePath=".\3rdPary\GLEW\include\glew.h"
-					>
-				</File>
-				<File
-					RelativePath=".\3rdPary\GLEW\include\wglew.h"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter
