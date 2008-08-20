@@ -571,6 +571,7 @@ void MainWindow::Transfer1DSetExecution() {
   else {
     m_1DTransferFunction->SetExecutionMode( Q1DTransferFunction::UNKNOWN );
   }
+  pushButton_Update1DTrans->setEnabled(radioButton_1DTransManual->isChecked());
 }
 
 void MainWindow::Transfer1DApplyFunction() {

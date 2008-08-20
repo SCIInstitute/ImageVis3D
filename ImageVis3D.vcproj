@@ -904,11 +904,11 @@
 				Name="GLEW"
 				>
 				<File
-					RelativePath=".\Renderer\GLEW\glew.h"
+					RelativePath=".\3rdPary\GLEW\inlude\glew.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Renderer\GLEW\wglew.h"
+					RelativePath=".\3rdPary\GLEW\inlude\wglew.h"
 					>
 				</File>
 			</Filter>
