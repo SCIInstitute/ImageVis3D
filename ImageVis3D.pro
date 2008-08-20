@@ -38,8 +38,8 @@ HEADERS += Basics/Grids.h \
            DebugOut/TextfileOut.h \
            DebugOut/QTOut.h \
            DebugOut/ConsoleOut.h \
-           3rdPary/GLEW/include/GLEW/glew.h \
-           3rdPary/GLEW/include/GLEW/glxew.h \
+           3rdParty/GLEW/include/GLEW/glew.h \
+           3rdParty/GLEW/include/GLEW/glxew.h \
            Renderer/GLInclude.h \
            Renderer/GLTexture.h \
            Renderer/GLTexture1D.h \
