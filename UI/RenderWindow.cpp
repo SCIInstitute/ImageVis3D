@@ -75,6 +75,21 @@ QSize RenderWindow::sizeHint() const
 
 void RenderWindow::initializeGL()
 {
+  static bool bFirstTime = true;
+  if (bFirstTime) {
+    int err = glewInit();
+    if (err != GLEW_OK) {
+      m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "Error initializing GLEW: %s",glewGetErrorString(err));
+    } else {
+      const GLubyte *vendor=glGetString(GL_VENDOR);
+      const GLubyte *renderer=glGetString(GL_RENDERER);
+      const GLubyte *version=glGetString(GL_VERSION);
+      m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "Starting up GL! Running on a %s %s with OpenGL version %s",vendor, renderer, version);
+    }
+
+    bFirstTime = false;
+  }
+
   if (m_Renderer != NULL) m_Renderer->Initialize();
 }
 

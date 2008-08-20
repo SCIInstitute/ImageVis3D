@@ -64,9 +64,6 @@ MainWindow::MainWindow(MasterController& masterController, QWidget* parent /* = 
 {
   setupUi(this);
 
-  m_DebugOut = new QTOut(listWidget_3);
-  m_MasterController.SetDebugOut(m_DebugOut);
-
   SetupWorkspaceMenu();
 
   LoadGeometry("Default.geo", true);
@@ -794,6 +791,9 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   this->horizontalLayout->addWidget(m_glShareWidget);
 
   DisableAllTrans();
+
+  m_DebugOut = new QTOut(listWidget_3);
+  m_MasterController.SetDebugOut(m_DebugOut);
   GetDebugViewMask();
 
 //  LoadDataset("DEBUG");

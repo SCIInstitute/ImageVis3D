@@ -70,9 +70,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib  glew32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(QTDIR)lib"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;;3rdParty\GLEW\lib\Windows"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -148,9 +148,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib QtOpenGLd4.lib qtmaind.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib  glew32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(QTDIR)lib"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;;3rdParty\GLEW\lib\Windows"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="17"
@@ -226,9 +226,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib glew32.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(QTDIR)lib"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;;3rdParty\GLEW\lib\Windows"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -307,9 +307,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib glew32.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(QTDIR)lib"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;;3rdParty\GLEW\lib\Windows"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -907,6 +907,14 @@
 			<Filter
 				Name="GLEW"
 				>
+				<File
+					RelativePath=".\3rdParty\GLEW\include\glew.h"
+					>
+				</File>
+				<File
+					RelativePath=".\3rdParty\GLEW\include\wglew.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
