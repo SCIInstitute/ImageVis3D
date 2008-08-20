@@ -408,6 +408,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ImageVis3D.pro"
+				>
+			</File>
+			<File
 				RelativePath=".\RenderWin1.bmp"
 				>
 			</File>
@@ -904,11 +908,11 @@
 				Name="GLEW"
 				>
 				<File
-					RelativePath=".\3rdPary\GLEW\inlude\glew.h"
+					RelativePath=".\3rdPary\GLEW\include\glew.h"
 					>
 				</File>
 				<File
-					RelativePath=".\3rdPary\GLEW\inlude\wglew.h"
+					RelativePath=".\3rdPary\GLEW\include\wglew.h"
 					>
 				</File>
 			</Filter>

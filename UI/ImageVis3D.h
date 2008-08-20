@@ -40,11 +40,12 @@
 #ifndef IMAGEVIS3D_H
 #define IMAGEVIS3D_H
 
+#include "Controller/MasterController.h"
+
 #include "AutoGen/ui_ImageVis3D.h"
 #include "RenderWindow.h"
 #include "Q1DTransferFunction.h"
 #include "Q2DTransferFunction.h"
-#include "Controller/MasterController.h"
 #include "DebugOut/QTOut.h"
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow

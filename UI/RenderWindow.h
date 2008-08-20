@@ -40,10 +40,11 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
+#include "Controller/MasterController.h"
+
 #include <QtGui/QListWidget>
 #include <QtOpenGL/QGLWidget>
 
-#include "Controller/MasterController.h"
 
 class RenderWindow : public QGLWidget
 {
