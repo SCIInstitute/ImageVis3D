@@ -54,6 +54,8 @@ public:
   TransferFunction1D(size_t iSize = 0);
   ~TransferFunction1D(void);
   
+  void SetDefault();
+
   void Resize(size_t iSize);
   void Resample(size_t iTargetSize);
 

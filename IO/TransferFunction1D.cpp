@@ -53,8 +53,17 @@ void TransferFunction1D::Resize(size_t iSize) {
   vColorData.resize(iSize);
 }
 
+void TransferFunction1D::SetDefault() {
+  for (size_t i = 0;i<vColorData.size();i++) {
+    float val = (float) i / (float) vColorData.size();
+
+    vColorData[i] = FLOATVECTOR4(val,val,val,1.0);
+  }
+}
+
 void TransferFunction1D::Clear() {
-  for (size_t i = 0;i<vColorData.size();i++) vColorData[i] = FLOATVECTOR4(0,0,0,0);
+  for (size_t i = 0;i<vColorData.size();i++)
+    vColorData[i] = FLOATVECTOR4(0,0,0,0);
 }
 
 void TransferFunction1D::Resample(size_t iTargetSize) {

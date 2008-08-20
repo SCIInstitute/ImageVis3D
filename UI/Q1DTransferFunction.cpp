@@ -102,6 +102,8 @@ void Q1DTransferFunction::SetData(const Histogram1D* vHistrogram,
   m_pTrans = pTrans;
   if (m_pTrans == NULL) return;
 
+  m_pTrans->SetDefault();
+
   // store histogram
   m_vHistrogram.Resize(vHistrogram->GetSize());
   
