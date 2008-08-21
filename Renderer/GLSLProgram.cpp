@@ -15,8 +15,6 @@
 #include <windows.h>
 #include "../Controller/MasterController.h"
 
-#include "GLSLProgram.inl"
-
 bool GLSLProgram::m_bGlewInitialized=false;    ///< GL Extension Wrangler (glew) is initialized on first instantiation
 
 /**
@@ -662,9 +660,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,bool x, bool y, bool 
 #endif
 
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformVector(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",bool,...) - Unknown type\n"); 
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformVector","Unknown type for %s.",name); 
       break;
   }
 #ifdef GLSL_DEBUG
@@ -730,9 +726,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,int x,int y,int z,int
 #endif
 
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformVector(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",int,...) - Unknown type\n"); 
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformVector","Unknown type for %s.",name); 
       break;
   }  
 #ifdef GLSL_DEBUG
@@ -799,9 +793,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,const float *v) const
 #endif
 
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformVector(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",float*) - Unknown type\n"); 
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformVector","Unknown type for %s.",name); 
       break;
   }
 #ifdef GLSL_DEBUG
@@ -864,9 +856,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,const int *i) const {
     case GL_FLOAT_VEC4:          glUniform4f(iLocation,float(i[0]),float(i[1]),float(i[2]),float(i[3])); break;
 #endif
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformVector(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",int*) - Unknown type\n");
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformVector","Unknown type for %s.",name); 
       break;
   }
 #ifdef GLSL_DEBUG
@@ -920,9 +910,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,const bool *b) const 
     case GL_FLOAT_VEC4:          glUniform4f(iLocation,(b[0] ? 1.0f : 0.0f),(b[1] ? 1.0f : 0.0f),(b[2] ? 1.0f : 0.0f),(b[3] ? 1.0f : 0.0f)); break;
 #endif
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformVector(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",bool*) - Unknown type\n");
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformVector","Unknown type for %s.",name); 
       break;
   }
 #ifdef GLSL_DEBUG
@@ -967,10 +955,8 @@ inline void GLSLProgram::SetUniformMatrix(const char *name,const float *m,bool b
     case GL_FLOAT_MAT3:          glUniformMatrix3fv(iLocation,1,bTranspose,m); break;
     case GL_FLOAT_MAT4:          glUniformMatrix4fv(iLocation,1,bTranspose,m); break;
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformMatrix(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",float*,bool) - Unknown type\n");
-    break;
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformMatrix","Unknown type for %s.",name); 
+      break;
   }
 #ifdef GLSL_DEBUG
   CheckGLError("SetUniformMatrix(%s,float*,bool)",name);
@@ -1027,9 +1013,7 @@ inline void GLSLProgram::SetUniformMatrix(const char *name,const int *m, bool bT
       glUniformMatrix4fv(iLocation,1,bTranspose,M); 
       break;
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformMatrix(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",int*,bool) - Unknown type\n"); 
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformMatrix","Unknown type for %s.",name); 
       break;
   }
 #ifdef GLSL_DEBUG
@@ -1085,9 +1069,7 @@ inline void GLSLProgram::SetUniformMatrix(const char *name,const bool *m, bool b
       glUniformMatrix4fv(iLocation,1,bTranspose,M); 
       break;
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformMatrix(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",bool*,bool) - Unknown type\n"); 
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformMatrix","Unknown type for %s.",name); 
       break;
   }
 #ifdef GLSL_DEBUG
@@ -1180,9 +1162,7 @@ inline void GLSLProgram::SetUniformArray(const char *name,const float *a) const 
 #endif
 
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformArray(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",float*) - Unknown type\n");
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformArray","Unknown type for %s.",name); 
       break;
   }
 #ifdef GLSL_DEBUG
@@ -1272,9 +1252,7 @@ inline void GLSLProgram::SetUniformArray(const char *name,const int   *a) const 
 #endif
 
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformArray(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",int*) - Unknown type\n");
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformArray","Unknown type for %s.",name); 
       break;
   }
 #ifdef GLSL_DEBUG
@@ -1395,9 +1373,7 @@ inline void GLSLProgram::SetUniformArray(const char *name,const bool  *a) const 
 #endif
 
     default: 
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::SetUniformArray(");
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",name);
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",",bool*) - Unknown type\n");
+      m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformArray","Unknown type for %s.",name); 
       break;
   }
 #ifdef GLSL_DEBUG

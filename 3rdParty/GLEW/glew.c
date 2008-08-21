@@ -29,8 +29,6 @@
 ** THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define GLEW_STATIC
-
 #include "glew.h"
 #if defined(_WIN32)
 #pragma warning(disable:4217)

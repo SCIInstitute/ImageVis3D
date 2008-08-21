@@ -167,7 +167,7 @@ public:
   #endif
 
   // OpenGL
-  #ifdef __TUM3D_HAVE_GL
+  #ifdef __GL_H__
     void glVertex() {
       glVertex2f(GLfloat(x),GLfloat(y));
     }
@@ -283,7 +283,7 @@ public:
   #endif
 
   // OpenGL
-  #ifdef __TUM3D_HAVE_GL
+  #ifdef __GL_H__
     void glVertex() {
       glVertex3f(GLfloat(x),GLfloat(y),GLfloat(z));
     }
@@ -409,7 +409,7 @@ public:
   #endif
 
   // OpenGL
-  #ifdef __TUM3D_HAVE_GL
+  #ifdef __GL_H__
     void glVertex() {
       glVertex4f(GLfloat(x),GLfloat(y),GLfloat(z),GLfloat(w));
     }
@@ -670,7 +670,7 @@ public:
   #endif
 
   // OpenGL
-  #ifdef __TUM3D_HAVE_GL
+  #ifdef __GL_H__
     void getProjection() {
       float P[16];
       glGetFloatv(GL_PROJECTION_MATRIX,P);
@@ -1040,7 +1040,7 @@ public:
   #endif
 
   // OpenGL
-  #ifdef __TUM3D_HAVE_GL
+  #ifdef __GL_H__
 
     void BuildLookAt(const FLOATVECTOR3 eye, const FLOATVECTOR3 center, const FLOATVECTOR3 up) {
       FLOATVECTOR3 F = center-eye;  

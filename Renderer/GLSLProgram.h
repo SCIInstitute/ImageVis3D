@@ -44,9 +44,9 @@
 #endif
 #ifdef _WIN32
   #ifdef GLSL_DEBUG
-    #pragma message("    [GLSLProgram] DEBUG ON.\n")
+    #pragma message("    [GLSLProgram.h] DEBUG ON.\n")
   #else
-    #pragma message("    [GLSLProgram] DEBUG OFF.\n")
+    #pragma message("    [GLSLProgram.h] DEBUG OFF.\n")
   #endif
 #endif
 

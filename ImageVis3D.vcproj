@@ -880,6 +880,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Renderer\GLSLProgram.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLSLProgram.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Renderer\GLTexture.cpp"
 					>
 				</File>
