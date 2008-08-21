@@ -84,8 +84,10 @@ void RenderWindow::initializeGL()
       const GLubyte *vendor=glGetString(GL_VENDOR);
       const GLubyte *renderer=glGetString(GL_RENDERER);
       const GLubyte *version=glGetString(GL_VERSION);
-      m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "Starting up GL! Running on a %s %s with OpenGL version %s",vendor, renderer, version);
+      m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Starting up GL! Running on a %s %s with OpenGL version %s",vendor, renderer, version);
     }
+
+
 
     bFirstTime = false;
   }

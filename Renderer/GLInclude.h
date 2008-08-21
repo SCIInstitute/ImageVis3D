@@ -45,7 +45,7 @@
   #include <3rdParty/GLEW/include/wglew.h>
   #include <windows.h>
 #else
-  #include <3rdParty/GLEW/include/glxew.h>
+  // #include <3rdParty/GLEW/include/glxew.h>
 #endif
 
 #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
