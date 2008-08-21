@@ -15,7 +15,7 @@
 #include <windows.h>
 #include "../Controller/MasterController.h"
 
-bool GLSLProgram::m_bGlewInitialized=false;    ///< GL Extension Wrangler (glew) is initialized on first instantiation
+bool GLSLProgram::m_bGlewInitialized=true;    ///< GL Extension Wrangler (glew) is initialized on first instantiation
 
 /**
  * Default Constructor.
@@ -47,7 +47,9 @@ GLSLProgram::GLSLProgram(MasterController* pMasterController) :
  */
 GLSLProgram::GLSLProgram(const GLSLProgram &other) {
 
-  m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::GLSLProgram(const GLSLProgram &other) - calling the copy constructor is _slow_\n");
+  m_pMasterController = other.m_pMasterController;
+
+  m_pMasterController->DebugOut()->Message("GLSLProgram::GLSLProgram","calling the copy constructor is _slow_");
 
   m_bInitialized = other.m_bInitialized;
   m_bEnabled     = false;  
@@ -56,7 +58,7 @@ GLSLProgram::GLSLProgram(const GLSLProgram &other) {
   GLint iNumAttachedShaders;
   glGetProgramiv(other.m_hProgram,GL_ATTACHED_SHADERS,&iNumAttachedShaders);
   if (iNumAttachedShaders==0) {
-    m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::GLSLProgram(const GLSLProgram &other) - Error copying vertex shader.\n");
+    m_pMasterController->DebugOut()->Error("GLSLProgram::GLSLProgram","Error copying vertex shader.");
     m_bInitialized=false;
     return;
   }
@@ -151,25 +153,23 @@ GLSLProgram::operator GLuint(void) const {
  */
 void GLSLProgram::Initialize(void) {
   if (!m_bGlewInitialized) {
-    if (GLEW_OK!=glewInit()) m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::Initialize() - GLEW initialization failed!\n");    
-    if (GLEW_VERSION_2_0) m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","OpenGL 2.0 supported\n");
+    if (GLEW_OK!=glewInit()) m_pMasterController->DebugOut()->Error("GLSLProgram::Initialize","GLEW initialization failed!");    
+    if (GLEW_VERSION_2_0) m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","OpenGL 2.0 supported");
     else { // check for ARB extensions
-      if (glewGetExtension("GL_ARB_shader_objects")) m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","ARB_shader_objects supported.\n");
+      if (glewGetExtension("GL_ARB_shader_objects")) m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shader_objects supported.");
       else {
-        m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","ARB_shader_objects not supported!\n");
-        exit(255);
+        m_pMasterController->DebugOut()->Error("GLSLProgram::Initialize","ARB_shader_objects not supported!");
       }
-      if (glewGetExtension("GL_ARB_shading_language_100")) m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","ARB_shading_language_100 supported.\n");
+      if (glewGetExtension("GL_ARB_shading_language_100")) m_pMasterController->DebugOut()->Error("GLSLProgram::Initialize","ARB_shading_language_100 supported.");
       else {
-        m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","ARB_shading_language_100 not supported!\n");
-        exit(255);
+        m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shading_language_100 not supported!");
       }
     }
     m_bGlewInitialized=true;
   }
-#ifdef GLSL_DEBUG  // Anti-Joachim Tactics...
+#ifdef GLSL_DEBUG  // just in case someone wants to handle GLEW himself (by setting the static var to true) but failed to do so properly
   else {
-    if (glMultiTexCoord2f==NULL) m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","GLSLProgram::Initialize() - GLEW must be initialized. Set CShader::m_bGlewInitialized = false in Shader.cpp\n");
+    if (glMultiTexCoord2f==NULL) m_pMasterController->DebugOut()->Error("GLSLProgram::Initialize","GLEW must be initialized. Set GLSLProgram::m_bGlewInitialized = false in GLSLProgram.cpp if you want this class to do it for you");
   }
 #endif
 }
@@ -198,18 +198,16 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
   GLuint hFS=0;
   bool bVSSuccess=true;  // fixed function pipeline is always working
   if (VSFile!=NULL) {
-    m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","\nVERTEX SHADER:\n");
+    m_pMasterController->DebugOut()->Message("GLSLProgram::Load","\nVERTEX SHADER:");
     hVS=LoadShader(VSFile,GL_VERTEX_SHADER,src);
-    if (hVS!=0) m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","OK.\n");
+    if (hVS!=0) m_pMasterController->DebugOut()->Message("GLSLProgram::Load","OK.");
     else {
       bVSSuccess=false;
       if (src==GLSLPROGRAM_DISK) {
-        m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","ERROR IN: ");
-        m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",VSFile);
-        m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","\n");
+        m_pMasterController->DebugOut()->Error("GLSLProgram::Load","ERROR IN: %s");
       }
       else {
-        m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","---------- ERROR -----------\n");
+        m_pMasterController->DebugOut()->Error("GLSLProgram::Load","---------- ERROR -----------");
         int iPos=0;
         int iLine=1;
         char chLine[32];
@@ -219,9 +217,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
           if (chVerbose[i]=='\n') {
             chVerbose[i]='\0';
             sprintf(chLine,"(%.4i) ",iLine++);
-            m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",chLine);
-            m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",&chVerbose[iPos]);
-            m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","\n");
+            m_pMasterController->DebugOut()->Message("GLSLProgram::Load %s %s",chLine,&chVerbose[iPos]);
             iPos=i+1;
           }
         }
@@ -231,18 +227,16 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
   }
   bool bFSSuccess=true;  // fixed function pipeline is always working
   if (FSFile!=NULL) {
-    m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","\nFRAGMENT SHADER:\n");
+    m_pMasterController->DebugOut()->Message("GLSLProgram::Load","\nFRAGMENT SHADER:");
     hFS=LoadShader(FSFile,GL_FRAGMENT_SHADER,src);
-    if (hFS!=0) m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","OK.\n");
+    if (hFS!=0) m_pMasterController->DebugOut()->Message("GLSLProgram::Load","OK.");
     else {
       bFSSuccess=false;
       if (src==GLSLPROGRAM_DISK) {
-        m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","ERROR IN: ");
-        m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",FSFile);
-        m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","\n");
+        m_pMasterController->DebugOut()->Message("GLSLProgram::Load","ERROR IN: %s",FSFile);
       }
       else {
-        m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","---------- ERROR -----------\n");
+        m_pMasterController->DebugOut()->Error("GLSLProgram::Load","---------- ERROR -----------");
         int iPos=0;
         int iLine=1;
         char chLine[32];
@@ -252,9 +246,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
           if (chVerbose[i]=='\n') {
             chVerbose[i]='\0';
             sprintf(chLine,"(%.4i) ",iLine++);
-            m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",chLine);
-            m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",&chVerbose[iPos]);
-            m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","\n");
+            m_pMasterController->DebugOut()->Error("GLSLProgram::Load %s %s",chLine, &chVerbose[iPos]);
             iPos=i+1;
           }
         }
@@ -269,7 +261,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
   if (hFS) glAttachShader(m_hProgram,hFS);
 
   // link the program together
-  m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","\nPROGRAM OBJECT: \n");
+  m_pMasterController->DebugOut()->Message("GLSLProgram::Load","\nPROGRAM OBJECT: ");
   if (bVSSuccess && bFSSuccess) {
     glLinkProgram(m_hProgram);
 
@@ -288,7 +280,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
       return;
     }
     else {
-      m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","OK.\n\n");
+      m_pMasterController->DebugOut()->Message("GLSLProgram::Load","OK.");
       m_bInitialized=true;
     }
   }
@@ -298,9 +290,9 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
     glDeleteProgram(m_hProgram);
     m_hProgram=0;
     m_bInitialized=false;
-    if (!bVSSuccess && !bFSSuccess) m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","Error in vertex and fragment shaders\n");
-    else if (!bVSSuccess) m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","Error in vertex shader\n");
-    else if (!bFSSuccess) m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","Error in fragment shader\n");
+    if (!bVSSuccess && !bFSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in vertex and fragment shaders");
+    else if (!bVSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in vertex shader");
+    else if (!bFSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in fragment shader");
   }
 }
 
@@ -313,7 +305,6 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
  * \param bProgram - if true, hObject is a program object, otherwise it is a shader object.
  * \return true: InfoLogARB non-empty and GLSLPROGRAM_STRICT defined OR only warning, false otherwise
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
- * \see m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",)
  * \date Aug.2004
  */
 bool GLSLProgram::WriteInfoLog(GLuint hObject, bool bProgram) {
@@ -333,8 +324,7 @@ bool GLSLProgram::WriteInfoLog(GLuint hObject, bool bProgram) {
       glGetShaderInfoLog(hObject,iLength,&iLength,pcLogInfo);
       bAtMostWarnings=glIsShader(hObject);
     }
-    m_pMasterController->DebugOut()->Message("GLSLProgram::TODO",pcLogInfo);
-    m_pMasterController->DebugOut()->Message("GLSLProgram::TODO","\n");
+    m_pMasterController->DebugOut()->Message("GLSLProgram::WriteInfoLog",pcLogInfo);
     delete[] pcLogInfo;  
 #ifdef GLSLPROGRAM_STRICT
     return true;
@@ -372,7 +362,7 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
     case GLSLPROGRAM_DISK:
       fptr=fopen(ShaderDesc,"rb");
       if (!fptr) {
-        m_pMasterController->DebugOut()->Error("GLSLProgram::LoadShader","GLSLProgram::LoadShader() - File %s not found!",ShaderDesc);
+        m_pMasterController->DebugOut()->Error("GLSLProgram::LoadShader","File %s not found!",ShaderDesc);
         return 0;
       }
       if (fseek(fptr,0,SEEK_END)) {
@@ -443,7 +433,7 @@ void GLSLProgram::Enable(void) {
     glUseProgram(m_hProgram);
     if (!CheckGLError("Enable()")) m_bEnabled=true;
   }
-  else m_pMasterController->DebugOut()->Error("GLSLProgram::Enable","No program loaded!\n");
+  else m_pMasterController->DebugOut()->Error("GLSLProgram::Enable","No program loaded!");
 }
 
 
@@ -463,7 +453,7 @@ void GLSLProgram::Disable(void) {
     glUseProgram(0);
     if (!CheckGLError("Disable()")) m_bEnabled=false;
   }
-  else m_pMasterController->DebugOut()->Error("GLSLProgram::Disable","No program loaded!\n");
+  else m_pMasterController->DebugOut()->Error("GLSLProgram::Disable","No program loaded!");
 }
 
 

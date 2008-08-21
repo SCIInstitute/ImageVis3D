@@ -114,15 +114,15 @@ public:
 
 private:
   void    Initialize(void);
-  GLuint    LoadShader(const char*,GLenum,GLSLPROGRAM_SOURCE src);
+  GLuint  LoadShader(const char*,GLenum,GLSLPROGRAM_SOURCE src);
   bool    WriteInfoLog(GLuint,bool);
-  bool        CheckGLError(const char *pcError=NULL,const char *pcAdditional=NULL) const;
-  bool    m_bInitialized;
-  bool    m_bEnabled;
-  GLuint    m_hProgram;  
-  static bool m_bGlewInitialized;
+  bool    CheckGLError(const char *pcError=NULL,const char *pcAdditional=NULL) const;
+  MasterController*   m_pMasterController;
+  bool                m_bInitialized;
+  bool                m_bEnabled;
+  GLuint              m_hProgram;  
+  static bool         m_bGlewInitialized;
 
-  MasterController*  m_pMasterController;
 
 };
 
