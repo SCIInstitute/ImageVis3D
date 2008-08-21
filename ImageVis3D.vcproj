@@ -876,6 +876,14 @@
 				Name="OpenGLObjects"
 				>
 				<File
+					RelativePath=".\Renderer\GLFBOTex.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLFBOTex.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Renderer\GLInclude.h"
 					>
 				</File>

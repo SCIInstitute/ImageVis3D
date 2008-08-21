@@ -44,29 +44,35 @@
 
 int main(int argc, char* argv[])
 {
+  // get command line paramers 
   SysTools::CmdLineParams parameters(argc, argv);
 
+  // start a logfile debug out if requested
   std::string strLogFileName;
   bool bUseLogFile = parameters.GetValue("LOG",strLogFileName);
   int iLogLevel = 0;
   parameters.GetValue("LOGLEVEL",iLogLevel);
 
+  // create the master controller
   MasterController masterController;
 
+  // create the QT window
   QApplication app( argc, argv );
   MainWindow mainWindow(masterController, 0, Qt::Window);
   
+  // if using a logfile set this
   if (bUseLogFile) {
     TextfileOut* textout = new TextfileOut(strLogFileName);
-    // remark: fall through on purpose
-    switch (iLogLevel) {
+    switch (iLogLevel) { // remark: fall through on purpose
       case 0 : textout->m_bShowWarnings = false;
       case 1 : textout->m_bShowMessages = false; break;
     }
     masterController.SetDebugOut(textout, true);
   }
 
+  // open the QT window
   mainWindow.show();
 
+  // execute the QT messageing loop
   return app.exec();
 }
