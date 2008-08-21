@@ -41,8 +41,8 @@ HEADERS += Basics/Grids.h \
            DebugOut/TextfileOut.h \
            DebugOut/QTOut.h \
            DebugOut/ConsoleOut.h \
-           3rdParty/GLEW/include/glew.h \
-           3rdParty/GLEW/include/glxew.h \
+           3rdParty/GLEW/glew.h \
+           3rdParty/GLEW/glxew.h \
            Renderer/GLInclude.h \
            Renderer/GLTexture.h \
            Renderer/GLTexture1D.h \
@@ -54,7 +54,8 @@ HEADERS += Basics/Grids.h \
 
 FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui
 
-SOURCES += Basics/SysTools.cpp \
+SOURCES += 3rdParty/GLEW/glew.c \
+           Basics/SysTools.cpp \
            UI/BrowseData.cpp \
            UI/ImageVis3D.cpp \
            UI/PleaseWait.cpp \
