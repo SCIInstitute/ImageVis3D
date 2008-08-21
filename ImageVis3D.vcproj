@@ -148,9 +148,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib  glew32.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;;3rdParty\GLEW\lib\Windows"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="17"
@@ -226,9 +226,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib glew32.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;;3rdParty\GLEW\lib\Windows"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -307,9 +307,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib glew32.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;;3rdParty\GLEW\lib\Windows"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
