@@ -45,7 +45,7 @@
   #include <3rdParty/GLEW/wglew.h>
   #include <windows.h>
 #else
-  #include <3rdParty/GLEW/glxew.h>
+  // #include <3rdParty/GLEW/glxew.h> // glxew and QT do not really like each other
 #endif
 
 #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
