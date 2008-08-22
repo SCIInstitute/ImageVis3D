@@ -389,6 +389,10 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="UVF"
+				>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Ressource Files"
