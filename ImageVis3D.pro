@@ -52,6 +52,7 @@ HEADERS += Basics/Grids.h \
 FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui
 
 SOURCES += 3rdParty/GLEW/glew.c \
+           Basics/SystemInfo.cpp \
            Basics/SysTools.cpp \
            UI/BrowseData.cpp \
            UI/ImageVis3D.cpp \
