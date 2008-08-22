@@ -28,9 +28,9 @@
 
 /**
   \file    GPUMemMan.h
-  \author    Jens Krueger
-        SCI Institute
-        University of Utah
+  \author  Jens Krueger
+           SCI Institute
+           University of Utah
   \date    August 2008
 */
 
@@ -47,6 +47,7 @@
 #include "../../IO/VolumeDataset.h"
 #include "../../IO/TransferFunction1D.h"
 #include "../../IO/TransferFunction2D.h"
+#include <Basics/SystemInfo.h>
 
 typedef std::deque< AbstrRenderer* > AbstrRendererList;
 typedef AbstrRendererList::iterator AbstrRendererListIter;
@@ -137,12 +138,20 @@ class GPUMemMan {
     GLTexture2D* Load2DTextureFromFile(const std::string& strFilename);
     void FreeTexture(GLTexture2D* pTexture);
 
+    // system statistics
+    UINT64 GetCPUMem() {return m_SystemInfo.m_iCPUMemSize;}
+    UINT64 GetGPUMem() {return m_SystemInfo.m_iGPUMemSize;}
+    unsigned int GetBitWithMem() {return m_SystemInfo.m_iProgrammBitWith;}
+    unsigned int GetNumCPUs() {return m_SystemInfo.m_iNumberofCPUs;}
+
+
   private:
-    VolDataList      m_vpVolumeDatasets;
-    SimpleTextureList   m_vpSimpleTextures;
-    Trans1DList      m_vpTrans1DList;
-    Trans2DList      m_vpTrans2DList;
-    MasterController*  m_MasterController;
+    SystemInfo        m_SystemInfo;
+    VolDataList       m_vpVolumeDatasets;
+    SimpleTextureList m_vpSimpleTextures;
+    Trans1DList       m_vpTrans1DList;
+    Trans2DList       m_vpTrans2DList;
+    MasterController* m_MasterController;
 };
 
 #endif // GPUMEMMAN_H

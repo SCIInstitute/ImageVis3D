@@ -72,7 +72,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib32&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -228,7 +228,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib32&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -309,7 +309,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(QTDIR)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib64&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -814,6 +814,14 @@
 			</File>
 			<File
 				RelativePath=".\Basics\MemMappedFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\SystemInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\SystemInfo.h"
 				>
 			</File>
 			<File

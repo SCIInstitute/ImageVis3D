@@ -57,7 +57,7 @@ QDataRadioButton::QDataRadioButton(DICOMStackInfo stack, const QString &text, QW
 void QDataRadioButton::leaveEvent ( QEvent * event ) {
   QRadioButton::leaveEvent(event);
 
-  SetStackImage(m_stackInfo.m_Elements.size()/2);
+  SetStackImage(int(m_stackInfo.m_Elements.size()/2));
 }
 
 void QDataRadioButton::mouseMoveEvent(QMouseEvent *event){
@@ -118,7 +118,7 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
 void QDataRadioButton::SetupInfo() {
   setMouseTracking(true); 
 
-  unsigned iElemCount = m_stackInfo.m_Elements.size();
+  size_t iElemCount = m_stackInfo.m_Elements.size();
 
   QString desc = tr(" %1 \n Acquired at %2 %3 using %4\n Size: %5 x %6 x %7\n")
     .arg(m_stackInfo.m_strDesc.c_str())
@@ -131,5 +131,5 @@ void QDataRadioButton::SetupInfo() {
 
   setText(desc);
 
-  SetStackImage(iElemCount/2);
+  SetStackImage(uint(iElemCount/2));
 }

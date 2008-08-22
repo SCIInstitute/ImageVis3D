@@ -151,7 +151,7 @@ void GPUMemMan::Changed1DTrans(AbstrRenderer* requester, TransferFunction1D* pTr
 void GPUMemMan::GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, TransferFunction1D** transferFunc, GLTexture1D** tex) {
   m_MasterController->DebugOut()->Message("GPUMemMan::GetEmpty1DTrans","Creating new empty 1D transfer function");
   *transferFunc = new TransferFunction1D(iSize);
-  *tex = new GLTexture1D(iSize, GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE);
+  *tex = new GLTexture1D(GLuint(iSize), GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE);
 
   m_vpTrans1DList.push_back(Trans1DListElem(*transferFunc, *tex, requester));
 }

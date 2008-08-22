@@ -138,13 +138,15 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter, float fScale) {
 
   // convert the histogram into an image
   // define the bitmap ...
-  QImage image(QSize(m_vHistrogram.GetSize().x, m_vHistrogram.GetSize().y), QImage::Format_RGB32);
+  QImage image(QSize(int(m_vHistrogram.GetSize().x), int(m_vHistrogram.GetSize().y)), QImage::Format_RGB32);
   for (size_t y = 0;y<m_vHistrogram.GetSize().y;y++) 
     for (size_t x = 0;x<m_vHistrogram.GetSize().x;x++) {
       float value = min(1.0f, fScale*m_vHistrogram.Get(x,y));
-      image.setPixel(x,y,qRgb(int(m_colorBack.red()*(1.0f-value)   + m_colorHistogram.red()*value),
-                            int(m_colorBack.green()*(1.0f-value) + m_colorHistogram.green()*value),
-                  int(m_colorBack.blue()*(1.0f-value)  + m_colorHistogram.blue()*value)));
+      image.setPixel(int(x),
+                     int(y),
+                     qRgb(int(m_colorBack.red()  * (1.0f-value) + m_colorHistogram.red()  * value),
+                          int(m_colorBack.green()* (1.0f-value) + m_colorHistogram.green()* value),
+                          int(m_colorBack.blue() * (1.0f-value) + m_colorHistogram.blue() * value)));
     }
 
   // ... draw it
@@ -205,7 +207,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 
     painter.setPen(borderPen);
     painter.setBrush(linearBrush);
-    painter.drawPolygon(&pointList[0], currentSwatch.pPoints.size());
+    painter.drawPolygon(&pointList[0], int(currentSwatch.pPoints.size()));
     painter.setBrush(Qt::NoBrush);
 
     if (m_iActiveSwatchIndex == int(i)) {
@@ -269,7 +271,7 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
 
         if (fMinDist > fDist) {
           fMinDist = fDist;
-          m_iPointSelIndex = j;
+          m_iPointSelIndex = int(j);
           m_iGradSelIndex = -1;
         }
       }
@@ -283,7 +285,7 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
         if (fMinDist > fDist) {
           fMinDist = fDist;
           m_iPointSelIndex = -1;
-          m_iGradSelIndex = j;
+          m_iGradSelIndex = int(j);
         }
       }
 
@@ -330,7 +332,7 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
         if (fDist < fMinDist) {
           fMinDist = fDist;
           vfInserCoord = vfP;
-          iInsertIndex = j+1;
+          iInsertIndex = int(j+1);
         }
 
       }
@@ -470,7 +472,7 @@ void Q2DTransferFunction::changeEvent(QEvent * event) {
 
 
 void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
-  QImage image1DTrans(m_pTrans->m_Trans1D.vColorData.size(),1, QImage::Format_ARGB32);
+  QImage image1DTrans(int(m_pTrans->m_Trans1D.vColorData.size()),1, QImage::Format_ARGB32);
 
   for (unsigned int x = 0;x<m_pTrans->m_Trans1D.vColorData.size();x++) {
     image1DTrans.setPixel(x,0,qRgba(int(m_pTrans->m_Trans1D.vColorData[x][0]*255),

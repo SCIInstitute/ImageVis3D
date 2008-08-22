@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    MemMappedFile.h
+  \file    MemMappedFile.cpp
   \author    Jens Krueger
         SCI Institute
         University of Utah

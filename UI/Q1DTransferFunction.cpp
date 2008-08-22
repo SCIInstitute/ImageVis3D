@@ -93,7 +93,7 @@ Q1DTransferFunction::~Q1DTransferFunction(void)
 
 void Q1DTransferFunction::PreparePreviewData() {
   delete m_pPreviewColor;
-  m_pPreviewColor = new QImage(m_vHistrogram.GetSize(),1, QImage::Format_ARGB32);
+  m_pPreviewColor = new QImage(int(m_vHistrogram.GetSize()),1, QImage::Format_ARGB32);
   m_bBackdropCacheUptodate = false;
 }
 
@@ -197,7 +197,7 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
   // ... draw it
   painter.setPen(Qt::NoPen);
   painter.setBrush(m_colorHistogram);
-  painter.drawPolygon(&pointList[0], pointList.size());
+  painter.drawPolygon(&pointList[0], int(pointList.size()));
 }
 
 void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
@@ -230,7 +230,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 
     // draw the polyline
     painter.setPen(penCurve);
-    painter.drawPolyline(&pointList[0], pointList.size());
+    painter.drawPolyline(&pointList[0], int(pointList.size()));
   }
 
 
@@ -281,7 +281,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
   // compute some grid dimensions
   unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
   unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
-  unsigned int iVectorSize = m_pTrans->vColorData.size();
+  unsigned int iVectorSize = uint(m_pTrans->vColorData.size());
 
   // compute position in color array
   int iCurrentIndex = int((float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth));

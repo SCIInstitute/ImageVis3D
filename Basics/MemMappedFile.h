@@ -102,4 +102,4 @@ private:
 
 };
 
-#endif // MEMMAPPEDFILE__H
+#endif // MEMMAPPEDFILE_H

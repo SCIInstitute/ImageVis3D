@@ -110,7 +110,7 @@ void MainWindow::SwatchesChanged() {
   listWidget_Swatches->clear();
   
   for (size_t i = 0;i<m_2DTransferFunction->GetSwatchCount();i++) {
-    size_t iSize = m_2DTransferFunction->GetSwatchSize(i);
+    size_t iSize = m_2DTransferFunction->GetSwatchSize(uint(i));
 
     QString msg;
     switch (iSize) {
@@ -163,12 +163,12 @@ void MainWindow::UpdateGradientBox() {
   if (m_2DTransferFunction->GetActiveSwatchIndex() > -1) {
   
     for (size_t i = 0;i<m_2DTransferFunction->GetGradientCount();i++) {
-      GradientStop s =  m_2DTransferFunction->GetGradient(i);
+      GradientStop s =  m_2DTransferFunction->GetGradient(uint(i));
       QString msg = tr("Stop at %1").arg(s.first);
       listWidget_Gradient->addItem( msg );
     }
 
-    listWidget_Gradient->setCurrentRow(min<int>(iCurrent, m_2DTransferFunction->GetGradientCount()));
+    listWidget_Gradient->setCurrentRow(min<int>(iCurrent, int(m_2DTransferFunction->GetGradientCount())));
     
   }
 
