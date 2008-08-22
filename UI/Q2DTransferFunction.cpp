@@ -94,7 +94,8 @@ QSize Q2DTransferFunction::sizeHint() const
   return QSize(400, 400);
 }
 
-void Q2DTransferFunction::SetData(const Histogram2D* vHistrogram, TransferFunction2D* pTrans) {
+void Q2DTransferFunction::SetData(const Histogram2D* vHistrogram,
+				  TransferFunction2D* pTrans) {
   m_pTrans = pTrans;
   if (m_pTrans == NULL) return;
 
@@ -143,28 +144,41 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter, float fScale) {
     for (size_t x = 0;x<m_vHistrogram.GetSize().x;x++) {
       float value = min(1.0f, fScale*m_vHistrogram.Get(x,y));
       image.setPixel(int(x),
-                     int(y),
-                     qRgb(int(m_colorBack.red()  * (1.0f-value) + m_colorHistogram.red()  * value),
-                          int(m_colorBack.green()* (1.0f-value) + m_colorHistogram.green()* value),
-                          int(m_colorBack.blue() * (1.0f-value) + m_colorHistogram.blue() * value)));
+		     int(y),
+		     qRgb(int(m_colorBack.red()  * (1.0f-value) +
+			      m_colorHistogram.red()  * value),
+                          int(m_colorBack.green()* (1.0f-value) +
+			      m_colorHistogram.green()* value),
+                          int(m_colorBack.blue() * (1.0f-value) +
+			      m_colorHistogram.blue() * value)));
     }
 
   // ... draw it
-    QRectF target(m_iBorderSize/2, m_iBorderSize/2, width()-m_iBorderSize, height()-m_iBorderSize);
-    QRectF source(0.0, 0.0, m_vHistrogram.GetSize().x, m_vHistrogram.GetSize().y);
+  QRectF target(m_iBorderSize/2, m_iBorderSize/2,
+		width()-m_iBorderSize, height()-m_iBorderSize);
+  QRectF source(0.0, 0.0,
+		m_vHistrogram.GetSize().x, m_vHistrogram.GetSize().y);
   painter.drawImage( target, image, source );
 }
 
 
 
 INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
-  return INTVECTOR2(int(m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x*(width()-m_iBorderSize-m_iSwatchBorderSize)),
-            int(m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.y*(height()-m_iBorderSize-m_iSwatchBorderSize)));
+  return INTVECTOR2(int(m_iSwatchBorderSize/2+
+			m_iBorderSize/2+vfCoord.x*
+			(width()-m_iBorderSize-m_iSwatchBorderSize)),
+		    int(m_iSwatchBorderSize/2+
+			m_iBorderSize/2+vfCoord.y*
+			(height()-m_iBorderSize-m_iSwatchBorderSize)));
 }
 
 FLOATVECTOR2 Q2DTransferFunction::Abs2Rel(INTVECTOR2 vCoord) {
-  return FLOATVECTOR2((float(vCoord.x)-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f)/float(width()-m_iBorderSize-m_iSwatchBorderSize),
-              (float(vCoord.y)-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f)/float(height()-m_iBorderSize-m_iSwatchBorderSize));
+  return FLOATVECTOR2((float(vCoord.x)-m_iSwatchBorderSize/2.0f+
+		       m_iBorderSize/2.0f)/
+		      float(width()-m_iBorderSize-m_iSwatchBorderSize),
+		      (float(vCoord.y)-m_iSwatchBorderSize/2.0f+
+		       m_iBorderSize/2.0f)/
+		      float(height()-m_iBorderSize-m_iSwatchBorderSize));
 }
 
 void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
@@ -554,13 +568,13 @@ void Q2DTransferFunction::Set1DTrans(const TransferFunction1D* p1DTrans) {
   update();
 }
 
-void Q2DTransferFunction::SetActiveSwatch(const int iActiveSwatch) {
+void Q2DTransferFunction::Transfer2DSetActiveSwatch(const int iActiveSwatch) {
   if (iActiveSwatch == -1 && m_pTrans->m_Swatches.size() > 0) return;
   m_iActiveSwatchIndex = iActiveSwatch;
   update();
 }
 
-void Q2DTransferFunction::AddCircleSwatch() {  
+void Q2DTransferFunction::Transfer2DAddCircleSwatch() {  
   TFPolygon newSwatch;
 
 
@@ -586,7 +600,7 @@ void Q2DTransferFunction::AddCircleSwatch() {
   emit SwatchChange();
 }
 
-void Q2DTransferFunction::AddSwatch() {  
+void Q2DTransferFunction::Transfer2DAddSwatch() {  
   TFPolygon newSwatch;
 
   newSwatch.pPoints.push_back(FLOATVECTOR2(0,0));
@@ -609,7 +623,7 @@ void Q2DTransferFunction::AddSwatch() {
   emit SwatchChange();
 }
 
-void Q2DTransferFunction::DeleteSwatch(){
+void Q2DTransferFunction::Transfer2DDeleteSwatch(){
   if (m_iActiveSwatchIndex != -1) {
     m_pTrans->m_Swatches.erase(m_pTrans->m_Swatches.begin()+m_iActiveSwatchIndex);
     
@@ -619,7 +633,7 @@ void Q2DTransferFunction::DeleteSwatch(){
   }
 }
 
-void Q2DTransferFunction::UpSwatch(){
+void Q2DTransferFunction::Transfer2DUpSwatch(){
   if (m_iActiveSwatchIndex > 0) {
     TFPolygon tmp = m_pTrans->m_Swatches[m_iActiveSwatchIndex-1];
     m_pTrans->m_Swatches[m_iActiveSwatchIndex-1] = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
@@ -631,7 +645,7 @@ void Q2DTransferFunction::UpSwatch(){
   }
 }
 
-void Q2DTransferFunction::DownSwatch(){
+void Q2DTransferFunction::Transfer2DDownSwatch(){
   if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex < int(m_pTrans->m_Swatches.size()-1)) {
     TFPolygon tmp = m_pTrans->m_Swatches[m_iActiveSwatchIndex+1];
     m_pTrans->m_Swatches[m_iActiveSwatchIndex+1] = m_pTrans->m_Swatches[m_iActiveSwatchIndex];

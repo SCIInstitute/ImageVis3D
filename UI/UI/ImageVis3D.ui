@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1203</width>
-    <height>1909</height>
+    <height>1915</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -33,10 +33,10 @@
   <widget class="QWidget" name="centralwidget" >
    <property name="geometry" >
     <rect>
-     <x>388</x>
-     <y>22</y>
-     <width>617</width>
-     <height>1344</height>
+     <x>417</x>
+     <y>24</y>
+     <width>574</width>
+     <height>1315</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7" >
@@ -51,7 +51,7 @@
      <x>0</x>
      <y>0</y>
      <width>1203</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File" >
@@ -141,9 +141,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1888</y>
+     <y>1893</y>
      <width>1203</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -151,9 +151,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>22</y>
-     <width>384</width>
-     <height>307</height>
+     <y>24</y>
+     <width>411</width>
+     <height>308</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -181,8 +181,8 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>384</width>
+      <y>23</y>
+      <width>411</width>
       <height>285</height>
      </rect>
     </property>
@@ -204,8 +204,8 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>0</x>
+          <y>0</y>
           <width>389</width>
           <height>241</height>
          </rect>
@@ -334,8 +334,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>0</x>
+          <y>0</y>
           <width>389</width>
           <height>241</height>
          </rect>
@@ -436,8 +436,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>0</x>
+          <y>0</y>
           <width>389</width>
           <height>241</height>
          </rect>
@@ -629,8 +629,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>360</width>
-          <height>240</height>
+          <width>389</width>
+          <height>241</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -865,10 +865,10 @@
   <widget class="QDockWidget" name="dockWidget_Recorder" >
    <property name="geometry" >
     <rect>
-     <x>1009</x>
-     <y>22</y>
-     <width>194</width>
-     <height>515</height>
+     <x>997</x>
+     <y>24</y>
+     <width>206</width>
+     <height>505</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -881,9 +881,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>194</width>
-      <height>493</height>
+      <y>23</y>
+      <width>206</width>
+      <height>482</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1088,9 +1088,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>333</y>
-     <width>384</width>
-     <height>219</height>
+     <y>338</y>
+     <width>411</width>
+     <height>237</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -1109,9 +1109,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>384</width>
-      <height>197</height>
+      <y>23</y>
+      <width>411</width>
+      <height>214</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_4" >
@@ -1139,15 +1139,15 @@
         </size>
        </property>
        <property name="currentIndex" >
-        <number>1</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>0</x>
+          <y>0</y>
           <width>389</width>
-          <height>66</height>
+          <height>72</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1225,6 +1225,19 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="1" >
+          <spacer name="verticalSpacer_4" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </widget>
        <widget class="QWidget" name="tab_2" >
@@ -1232,8 +1245,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>360</width>
-          <height>65</height>
+          <width>389</width>
+          <height>72</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1297,10 +1310,10 @@
        <widget class="QWidget" name="Seite" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>0</x>
+          <y>0</y>
           <width>389</width>
-          <height>66</height>
+          <height>72</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1375,6 +1388,19 @@
            </property>
           </spacer>
          </item>
+         <item row="2" column="1" >
+          <spacer name="verticalSpacer_5" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </widget>
       </widget>
@@ -1418,10 +1444,10 @@
   <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="geometry" >
     <rect>
-     <x>1009</x>
-     <y>541</y>
-     <width>194</width>
-     <height>440</height>
+     <x>997</x>
+     <y>535</y>
+     <width>206</width>
+     <height>409</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1440,9 +1466,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>194</width>
-      <height>418</height>
+      <y>23</y>
+      <width>206</width>
+      <height>386</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1621,9 +1647,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>556</y>
-     <width>384</width>
-     <height>191</height>
+     <y>581</y>
+     <width>411</width>
+     <height>145</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -1648,9 +1674,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>384</width>
-      <height>169</height>
+      <y>23</y>
+      <width>411</width>
+      <height>122</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2" >
@@ -1690,9 +1716,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1370</y>
-     <width>586</width>
-     <height>518</height>
+     <y>1345</y>
+     <width>581</width>
+     <height>548</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1711,9 +1737,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>586</width>
-      <height>496</height>
+      <y>23</y>
+      <width>581</width>
+      <height>525</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_13" >
@@ -1921,12 +1947,12 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_Update1DTrans" >
+               <widget class="QPushButton" name="pushButton_Apply1DTrans" >
                 <property name="enabled" >
                  <bool>false</bool>
                 </property>
                 <property name="text" >
-                 <string>Update</string>
+                 <string>Apply</string>
                 </property>
                </widget>
               </item>
@@ -1984,10 +2010,10 @@
   <widget class="QDockWidget" name="dockWidget_2DTrans" >
    <property name="geometry" >
     <rect>
-     <x>590</x>
-     <y>1370</y>
-     <width>613</width>
-     <height>518</height>
+     <x>587</x>
+     <y>1345</y>
+     <width>616</width>
+     <height>548</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -2009,9 +2035,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>613</width>
-      <height>496</height>
+      <y>23</y>
+      <width>616</width>
+      <height>525</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_11" >
@@ -2489,10 +2515,10 @@
   <widget class="QDockWidget" name="dockWidget_RenderOptions" >
    <property name="geometry" >
     <rect>
-     <x>1009</x>
-     <y>985</y>
-     <width>194</width>
-     <height>381</height>
+     <x>997</x>
+     <y>950</y>
+     <width>206</width>
+     <height>389</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2505,9 +2531,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>194</width>
-      <height>359</height>
+      <y>23</y>
+      <width>206</width>
+      <height>366</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
@@ -2645,9 +2671,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>751</y>
-     <width>384</width>
-     <height>286</height>
+     <y>732</y>
+     <width>411</width>
+     <height>302</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2660,9 +2686,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>384</width>
-      <height>264</height>
+      <y>23</y>
+      <width>411</width>
+      <height>279</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_17" >
@@ -2765,9 +2791,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1041</y>
-     <width>384</width>
-     <height>97</height>
+     <y>1040</y>
+     <width>411</width>
+     <height>101</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2780,9 +2806,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>384</width>
-      <height>75</height>
+      <y>23</y>
+      <width>411</width>
+      <height>78</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_16" >
@@ -2844,9 +2870,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1142</y>
-     <width>384</width>
-     <height>224</height>
+     <y>1147</y>
+     <width>411</width>
+     <height>192</height>
     </rect>
    </property>
    <property name="floating" >
@@ -2862,9 +2888,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
-      <width>384</width>
-      <height>202</height>
+      <y>23</y>
+      <width>411</width>
+      <height>169</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_19" >
@@ -3468,7 +3494,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>217</x>
-     <y>1373</y>
+     <y>1379</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3483,8 +3509,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>606</x>
-     <y>1380</y>
+     <x>612</x>
+     <y>1386</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3560,11 +3586,11 @@
    <sender>pushButton_Load1DTrans</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Load1DTrans()</slot>
+   <slot>Transfer1DLoad()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>208</x>
-     <y>1795</y>
+     <y>1823</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3576,11 +3602,11 @@
    <sender>pushButton_Save1DTrans</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Save1DTrans()</slot>
+   <slot>Transfer1DSave()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>208</x>
-     <y>1824</y>
+     <y>1852</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3592,11 +3618,11 @@
    <sender>pushButton_Load2DTrans</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Load2DTrans()</slot>
+   <slot>Transfer2DLoad()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>615</x>
-     <y>1834</y>
+     <x>630</x>
+     <y>1865</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3608,11 +3634,11 @@
    <sender>pushButton_Save2DTrans</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Save2DTrans()</slot>
+   <slot>Transfer2DSave()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>968</x>
-     <y>1834</y>
+     <x>967</x>
+     <y>1865</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3627,12 +3653,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>39</x>
-     <y>1097</y>
+     <x>41</x>
+     <y>1103</y>
     </hint>
     <hint type="destinationlabel" >
      <x>399</x>
-     <y>1092</y>
+     <y>1098</y>
     </hint>
    </hints>
   </connection>
@@ -3644,11 +3670,11 @@
    <hints>
     <hint type="sourcelabel" >
      <x>399</x>
-     <y>1092</y>
+     <y>1098</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>79</x>
-     <y>1097</y>
+     <x>81</x>
+     <y>1103</y>
     </hint>
    </hints>
   </connection>
@@ -3660,7 +3686,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>136</x>
-     <y>1066</y>
+     <y>1072</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3675,8 +3701,8 @@
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1114</x>
-     <y>1127</y>
+     <x>1113</x>
+     <y>1131</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3691,8 +3717,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1114</x>
-     <y>1155</y>
+     <x>1113</x>
+     <y>1175</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3707,8 +3733,8 @@
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1114</x>
-     <y>1183</y>
+     <x>1113</x>
+     <y>1208</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3723,8 +3749,8 @@
    <slot>EditViewLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>148</x>
-     <y>785</y>
+     <x>159</x>
+     <y>793</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3739,8 +3765,8 @@
    <slot>EditRenderLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>148</x>
-     <y>813</y>
+     <x>159</x>
+     <y>840</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3784,11 +3810,11 @@
    <sender>checkBox_Red</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer1DCBClicked()</slot>
+   <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>219</x>
-     <y>1424</y>
+     <x>230</x>
+     <y>1447</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3800,11 +3826,11 @@
    <sender>checkBox_Green</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer1DCBClicked()</slot>
+   <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>219</x>
-     <y>1448</y>
+     <x>230</x>
+     <y>1471</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3816,11 +3842,11 @@
    <sender>checkBox_Blue</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer1DCBClicked()</slot>
+   <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>219</x>
-     <y>1472</y>
+     <x>230</x>
+     <y>1495</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3832,11 +3858,11 @@
    <sender>checkBox_Alpha</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer1DCBClicked()</slot>
+   <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>219</x>
-     <y>1496</y>
+     <x>230</x>
+     <y>1519</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3848,11 +3874,11 @@
    <sender>radioButton_Intensity</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer1DRadioClicked()</slot>
+   <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>219</x>
-     <y>1606</y>
+     <x>230</x>
+     <y>1629</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3864,11 +3890,11 @@
    <sender>radioButton_Luminance</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer1DRadioClicked()</slot>
+   <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>219</x>
-     <y>1582</y>
+     <x>230</x>
+     <y>1605</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3884,7 +3910,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>392</x>
-     <y>1182</y>
+     <y>1196</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3899,8 +3925,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>58</x>
-     <y>1182</y>
+     <x>67</x>
+     <y>1196</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3916,7 +3942,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>246</x>
-     <y>1182</y>
+     <y>1196</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3932,7 +3958,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>158</x>
-     <y>1182</y>
+     <y>1196</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3948,7 +3974,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>306</x>
-     <y>1182</y>
+     <y>1196</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3960,7 +3986,7 @@
    <sender>pushButton_CopyTo2D</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Copy1DTransTo2DTrans()</slot>
+   <slot>Transfer1DCopyTo2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>337</x>
@@ -3979,8 +4005,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>796</x>
-     <y>1380</y>
+     <x>802</x>
+     <y>1386</y>
     </hint>
     <hint type="destinationlabel" >
      <x>789</x>
@@ -4008,11 +4034,11 @@
    <sender>pushButton_AddStop</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>AddGradient()</slot>
+   <slot>Transfer2DAddGradient()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>966</x>
-     <y>1765</y>
+     <x>965</x>
+     <y>1771</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4024,11 +4050,11 @@
    <sender>pushButton_DelStop</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>DeleteGradient()</slot>
+   <slot>Transfer2DDeleteGradient()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>966</x>
-     <y>1796</y>
+     <x>965</x>
+     <y>1802</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4040,7 +4066,7 @@
    <sender>checkBox_Use2DTrans</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>UpdateGradientBox()</slot>
+   <slot>Transfer2DUpdateGradientBox()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>798</x>
@@ -4056,7 +4082,7 @@
    <sender>pushButton_ColorChooser</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>ChooseGradientColor()</slot>
+   <slot>Transfer2DChooseGradientColor()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>706</x>
@@ -4072,11 +4098,11 @@
    <sender>horizontalSlider_Opacity</sender>
    <signal>actionTriggered(int)</signal>
    <receiver>MainWindow</receiver>
-   <slot>ChooseGradientOpacity()</slot>
+   <slot>Transfer2DChooseGradientOpacity()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>968</x>
-     <y>1823</y>
+     <x>967</x>
+     <y>1829</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4085,7 +4111,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_Update1DTrans</sender>
+   <sender>pushButton_Apply1DTrans</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>Transfer1DApplyFunction()</slot>
@@ -4107,8 +4133,8 @@
    <slot>Transfer1DSetExecution()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>287</x>
-     <y>1668</y>
+     <x>298</x>
+     <y>1695</y>
     </hint>
     <hint type="destinationlabel" >
      <x>685</x>
@@ -4148,6 +4174,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>radioButton_User</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Transfer1DSetGroups()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>245</x>
+     <y>1570</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>415</x>
+     <y>1262</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -4156,8 +4198,6 @@
   <slot>ToggleRenderWindowView2x2()</slot>
   <slot>ToggleRenderWindowViewSingle()</slot>
   <slot>CloneCurrentView()</slot>
-  <slot>Transfer1DCBClicked()</slot>
-  <slot>Transfer1DRadioClicked()</slot>
   <slot>LoadWorkspace()</slot>
   <slot>SaveWorkspace()</slot>
   <slot>ApplyWorkspace()</slot>
@@ -4169,10 +4209,6 @@
   <slot>ClearMRUList()</slot>
   <slot>UpdateMenus()</slot>
   <slot>SaveDataset()</slot>
-  <slot>Save1DTrans()</slot>
-  <slot>Load1DTrans()</slot>
-  <slot>Save2DTrans()</slot>
-  <slot>Load2DTrans()</slot>
   <slot>UseIso()</slot>
   <slot>EditViewLocks()</slot>
   <slot>EditRenderLocks()</slot>
@@ -4180,13 +4216,19 @@
   <slot>EditFiltersLocks()</slot>
   <slot>ClearDebugWin()</slot>
   <slot>SetDebugViewMask()</slot>
-  <slot>Copy1DTransTo2DTrans()</slot>
-  <slot>AddGradient()</slot>
-  <slot>DeleteGradient()</slot>
-  <slot>UpdateGradientBox()</slot>
-  <slot>ChooseGradientColor()</slot>
-  <slot>ChooseGradientOpacity()</slot>
-  <slot>Transfer1DApplyFunction()</slot>
+  <slot>Transfer1DSetColors()</slot>
+  <slot>Transfer1DSetGroups()</slot>
   <slot>Transfer1DSetExecution()</slot>
+  <slot>Transfer1DApplyFunction()</slot>
+  <slot>Transfer1DSave()</slot>
+  <slot>Transfer1DLoad()</slot>
+  <slot>Transfer1DCopyTo2DTrans()</slot>
+  <slot>Transfer2DAddGradient()</slot>
+  <slot>Transfer2DDeleteGradient()</slot>
+  <slot>Transfer2DChooseGradientColor()</slot>
+  <slot>Transfer2DChooseGradientOpacity()</slot>
+  <slot>Transfer2DUpdateGradientBox()</slot>
+  <slot>Transfer2DSave()</slot>
+  <slot>Transfer2DLoad()</slot>
  </slots>
 </ui>

@@ -51,8 +51,12 @@
 class MainWindow : public QMainWindow, protected Ui_MainWindow
 {
   Q_OBJECT
+
 public:
-  MainWindow(MasterController& masterController, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+  MainWindow(MasterController& masterController,
+	     QWidget* parent = 0,
+	     Qt::WindowFlags flags = 0);
+
   virtual ~MainWindow();
   
   QTOut* GetDebugOut() {return m_DebugOut;}
@@ -66,15 +70,30 @@ protected slots:
   void ToggleRenderWindowView2x2();
   void ToggleRenderWindowViewSingle();
 
-  void Transfer1DSetExecution();
-  void Transfer1DApplyFunction();
-  void Transfer1DCBClicked();
-  void Transfer1DRadioClicked();
-
   void Use1DTrans();
   void Use2DTrans();
   void UseIso();
-    void DisableAllTrans();
+  void DisableAllTrans();
+
+  void Transfer1DSetColors();
+  void Transfer1DSetGroups();
+  void Transfer1DSetExecution();
+  void Transfer1DApplyFunction();
+  void Transfer1DLoad();
+  void Transfer1DSave();
+  void Transfer1DCopyTo2DTrans();
+
+  void Transfer2DAddGradient();
+  void Transfer2DDeleteGradient();
+  void Transfer2DChooseGradientColor();
+  void Transfer2DChooseGradientOpacity();
+  void Transfer2DLoad();
+  void Transfer2DSave();
+
+  void Transfer2DSwatchesChanged();
+  void Transfer2DUpdateSwatchButtons();
+  void Transfer2DUpdateGradientBox();
+  void Transfer2DUpdateGradientButtons();
 
   bool LoadWorkspace();
   bool SaveWorkspace();
@@ -89,12 +108,6 @@ protected slots:
   void UpdateMenus();
 
   void SaveDataset();
-  void Load1DTrans();
-  void Save1DTrans();
-  void Copy1DTransTo2DTrans();
-  void Load2DTrans();
-  void Save2DTrans();
-  void SwatchesChanged();
 
   void EditViewLocks();
   void EditRenderLocks();
@@ -108,45 +121,47 @@ protected slots:
   void SetDebugViewMask();
 
   void CheckForRedraw();
-  void UpdateSwatchButtons();
-    
-  void AddGradient();
-  void DeleteGradient();
-  void UpdateGradientButtons();
-  void UpdateGradientBox();
-  void ChooseGradientColor();
-  void ChooseGradientOpacity();
 
+protected:    
 
 private :
-  MasterController&  m_MasterController;
-  QString    m_strCurrentWorkspaceFilename;
+  MasterController&     m_MasterController;
+  QString               m_strCurrentWorkspaceFilename;
   Q1DTransferFunction*  m_1DTransferFunction;
   Q2DTransferFunction*  m_2DTransferFunction;
-  QGLWidget*    m_glShareWidget;
-  QTOut*    m_DebugOut;
-  RenderWindow*    m_ActiveRenderWin;
+  QGLWidget*            m_glShareWidget;
+  QTOut*                m_DebugOut;
+  RenderWindow*         m_ActiveRenderWin;
 
   RenderWindow* CreateNewRenderWindow(QString dataset);
   RenderWindow* GetActiveRenderWindow();
 
   void SetupWorkspaceMenu();
-  bool LoadWorkspace(QString strFilename, bool bSilentFail = false, bool bRetryResource = true);
+  bool LoadWorkspace(QString strFilename,
+		     bool bSilentFail = false,
+		     bool bRetryResource = true);
+
   bool SaveWorkspace(QString strFilename);
 
-  bool LoadGeometry(QString strFilename, bool bSilentFail = false, bool bRetryResource = true);
+  bool LoadGeometry(QString strFilename,
+		    bool bSilentFail = false,
+		    bool bRetryResource = true);
+
   bool SaveGeometry(QString strFilename);
 
-  QString strippedName(const QString &fullFileName);
   static const unsigned int ms_iMaxRecentFiles = 5;
   QAction *m_recentFileActs[ms_iMaxRecentFiles];
+
+  void setupUi(QMainWindow *MainWindow);
+
   void UpdateMRUActions();
   void AddFileToMRUList(const QString &fileName);
 
-  void setupUi(QMainWindow *MainWindow);
   void GetDebugViewMask();
     
   void LoadDataset(QString fileName);
-  };
+
+  QString strippedName(const QString &fullFileName);
+};
 
 #endif // IMAGEVIS3D_H
