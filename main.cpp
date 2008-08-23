@@ -42,8 +42,28 @@
 #include <Basics/SysTools.h>
 #include <DebugOut/TextfileOut.h>
 
+/*
+#ifdef _WIN32
+	// CRT's memory leak detection on windows
+	#if defined(DEBUG) || defined(_DEBUG)
+		#include <crtdbg.h>
+	#endif
+#endif
+*/
+
 int main(int argc, char* argv[])
 {
+	
+  /*
+  // Enable run-time memory check for debug builds on windows
+	#ifdef _WIN32
+		#if defined(DEBUG) | defined(_DEBUG)
+			_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+		#endif
+	#endif
+  */
+
+
   // get command line paramers 
   SysTools::CmdLineParams parameters(argc, argv);
 
