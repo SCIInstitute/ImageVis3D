@@ -95,6 +95,8 @@ protected slots:
   void Transfer2DUpdateGradientBox();
   void Transfer2DUpdateGradientButtons();
 
+  void FilterImage();
+
   bool LoadWorkspace();
   bool SaveWorkspace();
   bool ApplyWorkspace();

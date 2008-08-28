@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1203</width>
-    <height>1915</height>
+    <height>1965</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -36,7 +36,7 @@
      <x>417</x>
      <y>24</y>
      <width>574</width>
-     <height>1315</height>
+     <height>1365</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7" >
@@ -141,7 +141,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1893</y>
+     <y>1943</y>
      <width>1203</width>
      <height>22</height>
     </rect>
@@ -868,7 +868,7 @@
      <x>997</x>
      <y>24</y>
      <width>206</width>
-     <height>505</height>
+     <height>524</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -883,7 +883,7 @@
       <x>0</x>
       <y>23</y>
       <width>206</width>
-      <height>482</height>
+      <height>501</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1116,7 +1116,7 @@
     </property>
     <layout class="QGridLayout" name="gridLayout_4" >
      <item row="0" column="0" >
-      <widget class="QTabWidget" name="tabWidged_Filters" >
+      <widget class="QTabWidget" name="tabWidget_Filter" >
        <property name="enabled" >
         <bool>true</bool>
        </property>
@@ -1160,12 +1160,12 @@
             <string>Ignore Bins:</string>
            </property>
            <property name="buddy" >
-            <cstring>spinBox_8</cstring>
+            <cstring>spinBox_FilterHistoBins</cstring>
            </property>
           </widget>
          </item>
          <item row="0" column="1" >
-          <widget class="QSpinBox" name="spinBox_8" >
+          <widget class="QSpinBox" name="spinBox_FilterHistoBins" >
            <property name="minimumSize" >
             <size>
              <width>0</width>
@@ -1202,12 +1202,12 @@
             <string>Alpha:</string>
            </property>
            <property name="buddy" >
-            <cstring>spinBox_9</cstring>
+            <cstring>spinBox_FilterHistoAlpha</cstring>
            </property>
           </widget>
          </item>
          <item row="1" column="1" >
-          <widget class="QSpinBox" name="spinBox_9" >
+          <widget class="QSpinBox" name="spinBox_FilterHistoAlpha" >
            <property name="minimumSize" >
             <size>
              <width>0</width>
@@ -1259,12 +1259,12 @@
             <string>Radius:</string>
            </property>
            <property name="buddy" >
-            <cstring>spinBox_12</cstring>
+            <cstring>spinBox_FilterMedianRadius</cstring>
            </property>
           </widget>
          </item>
          <item row="0" column="1" >
-          <widget class="QSpinBox" name="spinBox_12" >
+          <widget class="QSpinBox" name="spinBox_FilterMedianRadius" >
            <property name="minimumSize" >
             <size>
              <width>0</width>
@@ -1326,12 +1326,12 @@
             <string>Variance:</string>
            </property>
            <property name="buddy" >
-            <cstring>spinBox_10</cstring>
+            <cstring>spinBox_FilterGaussianVariance</cstring>
            </property>
           </widget>
          </item>
          <item row="0" column="1" >
-          <widget class="QSpinBox" name="spinBox_10" >
+          <widget class="QSpinBox" name="spinBox_FilterGaussianVariance" >
            <property name="minimumSize" >
             <size>
              <width>0</width>
@@ -1352,12 +1352,12 @@
             <string>Kernel:</string>
            </property>
            <property name="buddy" >
-            <cstring>spinBox_11</cstring>
+            <cstring>spinBox_FilterGaussianKernel</cstring>
            </property>
           </widget>
          </item>
          <item row="1" column="1" >
-          <widget class="QSpinBox" name="spinBox_11" >
+          <widget class="QSpinBox" name="spinBox_FilterGaussianKernel" >
            <property name="minimumSize" >
             <size>
              <width>0</width>
@@ -1445,9 +1445,9 @@
    <property name="geometry" >
     <rect>
      <x>997</x>
-     <y>535</y>
+     <y>554</y>
      <width>206</width>
-     <height>409</height>
+     <height>425</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1468,7 +1468,7 @@
       <x>0</x>
       <y>23</y>
       <width>206</width>
-      <height>386</height>
+      <height>402</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1716,7 +1716,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1345</y>
+     <y>1395</y>
      <width>581</width>
      <height>548</height>
     </rect>
@@ -2011,7 +2011,7 @@
    <property name="geometry" >
     <rect>
      <x>587</x>
-     <y>1345</y>
+     <y>1395</y>
      <width>616</width>
      <height>548</height>
     </rect>
@@ -2516,9 +2516,9 @@
    <property name="geometry" >
     <rect>
      <x>997</x>
-     <y>950</y>
+     <y>985</y>
      <width>206</width>
-     <height>389</height>
+     <height>404</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2533,7 +2533,7 @@
       <x>0</x>
       <y>23</y>
       <width>206</width>
-      <height>366</height>
+      <height>381</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
@@ -2673,7 +2673,7 @@
      <x>0</x>
      <y>732</y>
      <width>411</width>
-     <height>302</height>
+     <height>352</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2688,7 +2688,7 @@
       <x>0</x>
       <y>23</y>
       <width>411</width>
-      <height>279</height>
+      <height>329</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_17" >
@@ -2763,7 +2763,7 @@
         <item>
          <widget class="QPushButton" name="pushButton_RelativeLock" >
           <property name="text" >
-           <string>Realative</string>
+           <string>Relative</string>
           </property>
          </widget>
         </item>
@@ -2791,7 +2791,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1040</y>
+     <y>1090</y>
      <width>411</width>
      <height>101</height>
     </rect>
@@ -2870,7 +2870,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1147</y>
+     <y>1197</y>
      <width>411</width>
      <height>192</height>
     </rect>
@@ -3217,11 +3217,11 @@
   <tabstop>pushButton_11</tabstop>
   <tabstop>pushButton_12</tabstop>
   <tabstop>pushButton_13</tabstop>
-  <tabstop>spinBox_8</tabstop>
-  <tabstop>spinBox_9</tabstop>
-  <tabstop>spinBox_12</tabstop>
-  <tabstop>spinBox_10</tabstop>
-  <tabstop>spinBox_11</tabstop>
+  <tabstop>spinBox_FilterHistoBins</tabstop>
+  <tabstop>spinBox_FilterHistoAlpha</tabstop>
+  <tabstop>spinBox_FilterMedianRadius</tabstop>
+  <tabstop>spinBox_FilterGaussianVariance</tabstop>
+  <tabstop>spinBox_FilterGaussianKernel</tabstop>
   <tabstop>listWidget</tabstop>
   <tabstop>pushButton_Undo</tabstop>
   <tabstop>pushButton_Redo</tabstop>
@@ -4190,6 +4190,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>FilterImage()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>162</x>
+     <y>554</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>419</x>
+     <y>505</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -4230,5 +4246,6 @@
   <slot>Transfer2DUpdateGradientBox()</slot>
   <slot>Transfer2DSave()</slot>
   <slot>Transfer2DLoad()</slot>
+  <slot>FilterImage()</slot>
  </slots>
 </ui>

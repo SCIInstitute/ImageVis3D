@@ -50,7 +50,13 @@ class RenderWindow : public QGLWidget
 {
   Q_OBJECT  
   public:
-    RenderWindow(MasterController& masterController, QString dataset, unsigned int iCounter, QGLWidget* glWidget, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    RenderWindow(MasterController& masterController,
+		 QString dataset,
+		 unsigned int iCounter,
+		 QGLWidget* glWidget,
+		 QWidget* parent = 0,
+		 Qt::WindowFlags flags = 0);
+
     virtual ~RenderWindow();
 
     QString GetDatasetName() {return m_strDataset;}
@@ -59,7 +65,9 @@ class RenderWindow : public QGLWidget
     QSize sizeHint() const;
     AbstrRenderer* GetRenderer() {return m_Renderer;}
     void CheckForRedraw();
-    void SetRendermode(ERenderMode eRenderMode) {makeCurrent(); m_Renderer->SetRendermode(eRenderMode);}
+    void SetRendermode(ERenderMode eRenderMode) {
+      makeCurrent();
+      m_Renderer->SetRendermode(eRenderMode); }
 
   public slots:
     void ToggleRenderWindowView1x3();
@@ -82,8 +90,8 @@ class RenderWindow : public QGLWidget
     virtual void Cleanup();
 
   private:
-    GPUSBVR*        m_Renderer;
-    MasterController&    m_MasterController;
+    GPUSBVR*          m_Renderer;
+    MasterController& m_MasterController;
     
     void normalizeAngle(int *angle);
     int xRot;
@@ -91,7 +99,6 @@ class RenderWindow : public QGLWidget
     
     QString m_strDataset;
     QString m_strID;
-
 };
 
 #endif // RENDERWINDOW_H

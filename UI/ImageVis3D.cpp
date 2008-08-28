@@ -389,6 +389,7 @@ void MainWindow::CloneCurrentView() {
   renderWin->show();
 }
 
+// ARS - TODO Need to be able to CreateNewRenderWindow based on memory only
 
 RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 {
@@ -410,6 +411,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
 
 void MainWindow::RenderWindowActive(RenderWindow* sender) {
+
   if (m_ActiveRenderWin != sender) {
     m_MasterController.DebugOut()->
       Message("MainWindow::RenderWindowActive",
@@ -1003,4 +1005,68 @@ void MainWindow::GetDebugViewMask() {
 QString MainWindow::strippedName(const QString &fullFileName)
 {
   return QFileInfo(fullFileName).fileName();
+}
+
+
+// ******************************************
+// Filtering
+// ******************************************
+
+void MainWindow::FilterImage() {
+
+  if (!m_ActiveRenderWin) return;
+
+  // Get theactive tab
+  int tab = tabWidget_Filter->currentIndex();
+
+  int var0 = 0;
+  int var1 = 0;
+
+  switch( tab ) {
+
+  case 0: // Histogram
+    var0 = spinBox_FilterHistoBins->value();
+    var1 = spinBox_FilterHistoAlpha->value();
+    break;
+
+  case 1: // Median
+    var0 = spinBox_FilterMedianRadius->value();
+    break;
+
+  case 2: // Gaussian
+    var0 = spinBox_FilterGaussianVariance->value();
+    var1 = spinBox_FilterGaussianKernel->value();
+    break;
+
+  case -1:
+  default:
+    return;
+  }
+
+  m_MasterController.DebugOut()->
+    Message("MainWindow::FilterImage",
+	    "Performing filter %d on %s.", tab, 
+	    m_ActiveRenderWin->GetDatasetName().toStdString().c_str() );
+
+  QString fileName = m_ActiveRenderWin->GetDatasetName();
+
+  // ARS - TODO this should return a pointer to memory.
+  m_MasterController.Filter( m_ActiveRenderWin->GetDatasetName().toStdString(),
+			     tab,
+			     &var0, &var1 );
+
+
+  // ARS - TODO Need to be able to a CreateNewRenderWindow based on memory
+  if( radioButton_FilterUpdate->isChecked() ) {
+
+    RenderWindow *renderWin = CreateNewRenderWindow(fileName);
+    renderWin->show();
+
+  } else { // if( radioButton_FilterCreate->isChecked() )
+
+    RenderWindowClosing( m_ActiveRenderWin );
+
+    RenderWindow *renderWin = CreateNewRenderWindow(fileName);
+    renderWin->show();
+  }
 }

@@ -26,14 +26,13 @@
    DEALINGS IN THE SOFTWARE.
 */
 
-/**
-  \file    MasterController.h
-  \author    Jens Krueger
-        SCI Institute
-        University of Utah
-  \version  1.0
-  \date    August 2008
-*/
+//!    File   : ImageVis3D.cpp
+//!    Author : Jens Krueger
+//!             SCI Institute
+//!             University of Utah
+//!    Date   : July 2008
+//
+//!    Copyright (C) 2008 SCI Institute
 
 
 #pragma once
@@ -42,6 +41,7 @@
 #define MASTERCONTROLLER_H
 
 #include <vector>
+#include <string>
 #include "../IO/TransferFunction1D.h"
 #include "../IO/TransferFunction2D.h"
 
@@ -56,26 +56,33 @@ enum VolumeRenderer {
   OPENGL_SBVR = 0
 };
 
+
 class MasterController {
-  public:
-    MasterController();
-    virtual ~MasterController();
+public:
+  MasterController();
+  virtual ~MasterController();
 
-    AbstrRenderer* RequestNewVolumerenderer(VolumeRenderer eRendererType);
-    void ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer);
+  AbstrRenderer* RequestNewVolumerenderer(VolumeRenderer eRendererType);
+  void ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer);
     
-    void SetDebugOut(AbstrDebugOut* debugOut, bool bDeleteOnExit = false);
-    void RemoveDebugOut(AbstrDebugOut* debugOut);
+  void SetDebugOut(AbstrDebugOut* debugOut, bool bDeleteOnExit = false);
+  void RemoveDebugOut(AbstrDebugOut* debugOut);
 
-    AbstrDebugOut* DebugOut() {return m_pDebugOut;}
-    GPUMemMan*     MemMan() {return m_pGPUMemMan;}
+  AbstrDebugOut* DebugOut() {return m_pDebugOut;}
+  GPUMemMan*     MemMan() {return m_pGPUMemMan;}
+
+  // ARS - TODO this should return a pointer to memory.
+  void Filter( std::string datasetName,
+	       unsigned int filter,
+	       void *var0 = 0, void *var1 = 0,
+	       void *var2 = 0, void *var3 = 0 ) {};
     
-  private:
-    GPUMemMan*     m_pGPUMemMan;
-    AbstrDebugOut* m_pDebugOut;
-    bool       m_bDeleteDebugOutOnExit;  
+private:
+  GPUMemMan*     m_pGPUMemMan;
+  AbstrDebugOut* m_pDebugOut;
+  bool           m_bDeleteDebugOutOnExit;  
 
-    AbstrRendererList          m_vVolumeRenderer;
+  AbstrRendererList m_vVolumeRenderer;
 };
 
 #endif // MASTERCONTROLLER_H

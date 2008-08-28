@@ -26,14 +26,14 @@
    DEALINGS IN THE SOFTWARE.
 */
 
-/**
-  \file    MasterController.cpp
-  \author    Jens Krueger
-        SCI Institute
-        University of Utah
-  \version  1.0
-  \date    August 2008
-*/
+//!    File   : ImageVis3D.cpp
+//!    Author : Jens Krueger
+//!             SCI Institute
+//!             University of Utah
+//!    Date   : July 2008
+//
+//!    Copyright (C) 2008 SCI Institute
+
 
 #include "MasterController.h"
 
@@ -44,60 +44,98 @@ MasterController::MasterController() :
   m_pGPUMemMan = new GPUMemMan(this);
 }
 
+
 MasterController::~MasterController() {
-  for (AbstrRendererListIter i = m_vVolumeRenderer.begin();i<m_vVolumeRenderer.end();i++) delete (*i);
+
+  for (AbstrRendererListIter i = m_vVolumeRenderer.begin();
+       i<m_vVolumeRenderer.end();
+       ++i)
+    delete (*i);
+
   m_vVolumeRenderer.resize(0);
 
   delete m_pGPUMemMan;
-  if (m_bDeleteDebugOutOnExit) delete m_pDebugOut;
+
+  if (m_bDeleteDebugOutOnExit)
+    delete m_pDebugOut;
 }
 
-void MasterController::SetDebugOut(AbstrDebugOut* debugOut, bool bDeleteOnExit) {
+
+void MasterController::SetDebugOut(AbstrDebugOut* debugOut,
+				   bool bDeleteOnExit) {
   if (debugOut != NULL) {
-    m_pDebugOut->Message("MasterController::SetDebugOut","Disconnecting from this debug out");
-    if (m_bDeleteDebugOutOnExit ) delete m_pDebugOut;
-    m_bDeleteDebugOutOnExit = bDeleteOnExit;
-    m_pDebugOut = debugOut;
-    m_pDebugOut->Message("MasterController::SetDebugOut","Connected to this debug out");
-  } else m_pDebugOut->Warning("MasterController::SetDebugOut","New debug is a NULL pointer, keeping old debug out");
-}
+    m_pDebugOut->Message("MasterController::SetDebugOut",
+			 "Disconnecting from this debug out");
+    if (m_bDeleteDebugOutOnExit )
+      delete m_pDebugOut;
 
-void MasterController::RemoveDebugOut(AbstrDebugOut* debugOut) {
-  if (debugOut == m_pDebugOut) {
-    m_pDebugOut->Message("MasterController::RemoveDebugOut","Disconnecting from this debug out");
-    if (m_bDeleteDebugOutOnExit) delete m_pDebugOut;
-    m_pDebugOut = new ConsoleOut();
-    m_bDeleteDebugOutOnExit = true;
-    m_pDebugOut->Message("MasterController::RemoveDebugOut","Connected to this debug out");
+    m_bDeleteDebugOutOnExit = bDeleteOnExit;
+
+    m_pDebugOut = debugOut;
+    m_pDebugOut->Message("MasterController::SetDebugOut",
+			 "Connected to this debug out");
+
   } else {
-    m_pDebugOut->Warning("MasterController::RemoveDebugOut","Not Connected the debug out in question (anymore), doing nothing");
+    m_pDebugOut->Warning("MasterController::SetDebugOut",
+			 "New debug is a NULL pointer, keeping old debug out");
   }
 }
 
 
-AbstrRenderer* MasterController::RequestNewVolumerenderer(VolumeRenderer eRendererType) {
+void MasterController::RemoveDebugOut(AbstrDebugOut* debugOut) {
+
+  if (debugOut == m_pDebugOut) {
+    m_pDebugOut->Message("MasterController::RemoveDebugOut",
+			 "Disconnecting from this debug out");
+    if (m_bDeleteDebugOutOnExit)
+      delete m_pDebugOut;
+
+    m_pDebugOut = new ConsoleOut();
+
+    m_bDeleteDebugOutOnExit = true;
+    m_pDebugOut->Message("MasterController::RemoveDebugOut",
+			 "Connected to this debug out");
+
+  } else {
+    m_pDebugOut->Warning("MasterController::RemoveDebugOut",
+			 "Not Connected the debug out in question (anymore), doing nothing");
+  }
+}
+
+
+AbstrRenderer* MasterController::
+RequestNewVolumerenderer(VolumeRenderer eRendererType) {
 
   m_pDebugOut->Message("MasterController::RequestNewVolumerenderer","");
 
   switch (eRendererType) {
-    case OPENGL_SBVR : {
-                m_vVolumeRenderer.push_back(new GPUSBVR(this));
-                return m_vVolumeRenderer[m_vVolumeRenderer.size()-1];
-               }
-    default : return NULL;
+
+  case OPENGL_SBVR :
+    m_vVolumeRenderer.push_back(new GPUSBVR(this));
+    return m_vVolumeRenderer[m_vVolumeRenderer.size()-1];
+
+  default :
+    return NULL;
   };
 }
 
 
 void MasterController::ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer) {
 
-  for (AbstrRendererListIter i = m_vVolumeRenderer.begin();i<m_vVolumeRenderer.end();i++) {
+  for (AbstrRendererListIter i = m_vVolumeRenderer.begin();
+       i<m_vVolumeRenderer.end();
+       ++i) {
+
     if (*i == pVolumeRenderer) {
-      m_pDebugOut->Message("MasterController::ReleaseVolumerenderer","Deleting volume renderer");
+      m_pDebugOut->Message("MasterController::ReleaseVolumerenderer",
+			   "Deleting volume renderer");
       delete pVolumeRenderer;
+
       m_vVolumeRenderer.erase(i);
       return;
     }
   }
-  m_pDebugOut->Warning("MasterController::ReleaseVolumerenderer","requested volume renderer not found");
+
+  m_pDebugOut->Warning("MasterController::ReleaseVolumerenderer",
+		       "requested volume renderer not found");
 }
