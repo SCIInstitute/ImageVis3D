@@ -22,6 +22,8 @@ QT               += opengl
 HEADERS += Basics/Grids.h \
            Basics/SysTools.h \
            Basics/Vectors.h \
+           Basics/Checksums/MD5.h \
+           Basics/Checksums/crc32.h \
            UI/BrowseData.h \
            UI/ImageVis3D.h \
            UI/PleaseWait.h \
@@ -33,6 +35,14 @@ HEADERS += Basics/Grids.h \
            IO/Transferfunction2D.h \
            IO/VolumeDataset.h \
            IO/Images/BMPLoader.h \
+           IO/UVF/DataBlock.h \
+           IO/UVF/GlobalHeader.h \
+           IO/UVF/KeyValuePairDataBlock.h \
+           IO/UVF/LargeRAWFile.h \
+           IO/UVF/RasterDataBlock.h \
+           IO/UVF/UVF.h \
+           IO/UVF/UVFBasic.h \
+           IO/UVF/UVFTables.h \
            Controller/MasterController.h \
            DebugOut/AbstrDebugOut.h \
            DebugOut/TextfileOut.h \
@@ -54,6 +64,7 @@ FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui
 SOURCES += 3rdParty/GLEW/glew.c \
            Basics/SystemInfo.cpp \
            Basics/SysTools.cpp \
+           Basics/Checksums/MD5.cpp \
            UI/BrowseData.cpp \
            UI/ImageVis3D.cpp \
            UI/PleaseWait.cpp \
@@ -65,6 +76,13 @@ SOURCES += 3rdParty/GLEW/glew.c \
            IO/Transferfunction2D.cpp \
            IO/VolumeDataset.cpp \
            IO/DICOM/DICOMParser.cpp \
+           IO/UVF/DataBlock.cpp \
+           IO/UVF/GlobalHeader.cpp \
+           IO/UVF/KeyValuePairDataBlock.cpp \
+           IO/UVF/LargeRAWFile.cpp \
+           IO/UVF/RasterDataBlock.cpp \
+           IO/UVF/UVF.cpp \
+           IO/UVF/UVFTables.cpp \           
            Controller/MasterController.cpp \
            DebugOut/TextfileOut.cpp \
            DebugOut/QTOut.cpp \

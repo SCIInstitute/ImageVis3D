@@ -392,6 +392,66 @@
 			<Filter
 				Name="UVF"
 				>
+				<File
+					RelativePath=".\IO\UVF\DataBlock.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\DataBlock.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\GlobalHeader.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\GlobalHeader.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\KeyValuePairDataBlock.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\KeyValuePairDataBlock.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\LargeRAWFile.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\LargeRAWFile.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\RasterDataBlock.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\RasterDataBlock.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\UVF.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\UVF.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\UVFBasic.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\UVFTables.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\UVFTables.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -840,6 +900,22 @@
 				RelativePath=".\Basics\Vectors.h"
 				>
 			</File>
+			<Filter
+				Name="Checksums"
+				>
+				<File
+					RelativePath=".\Basics\Checksums\crc32.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Basics\Checksums\MD5.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Basics\Checksums\MD5.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Controller"
