@@ -22,6 +22,7 @@ QT               += opengl
 HEADERS += Basics/Grids.h \
            Basics/SysTools.h \
            Basics/Vectors.h \
+           Basics/MathTools.h \
            Basics/Checksums/MD5.h \
            Basics/Checksums/crc32.h \
            UI/BrowseData.h \
@@ -64,6 +65,7 @@ FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui
 SOURCES += 3rdParty/GLEW/glew.c \
            Basics/SystemInfo.cpp \
            Basics/SysTools.cpp \
+           Basics/MathTools.cpp \           
            Basics/Checksums/MD5.cpp \
            UI/BrowseData.cpp \
            UI/ImageVis3D.cpp \
