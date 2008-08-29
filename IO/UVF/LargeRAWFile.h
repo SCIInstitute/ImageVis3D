@@ -64,29 +64,29 @@ public:
 
   template<class T> void ReadData(T& value, bool bIsBigEndian) {
     ReadRAW((unsigned char*)&value, sizeof(T));
-	  if (EndianConvert::IsBigEndian() != bIsBigEndian && sizeof(T) > 1) EndianConvert::Swap<T>(value);
+	  if (EndianConvert::IsBigEndian() != bIsBigEndian) EndianConvert::Swap<T>(value);
   }
 
   template<class T> void WriteData(const T& value, bool bIsBigEndian) {
 	  if (EndianConvert::IsBigEndian() != bIsBigEndian) EndianConvert::Swap<T>(value);
     WriteRAW((unsigned char*)&value, sizeof(T));
-	  if (EndianConvert::IsBigEndian() != bIsBigEndian && sizeof(T) > 1) EndianConvert::Swap<T>(value);
+	  if (EndianConvert::IsBigEndian() != bIsBigEndian) EndianConvert::Swap<T>(value);
   }
 
   template<class T> void ReadData(std::vector<T> &value, UINT64 count, bool bIsBigEndian) {
 	  if (count == 0) return;
 	  value.resize(size_t(count));
     ReadRAW( (unsigned char*)&value[0], sizeof(T)*size_t(count));
-	  if (EndianConvert::IsBigEndian() != bIsBigEndian && sizeof(T) > 1) for (size_t i = 0;i<count;i++) EndianConvert::Swap<T>(value[i]);
+	  if (EndianConvert::IsBigEndian() != bIsBigEndian) for (size_t i = 0;i<count;i++) EndianConvert::Swap<T>(value[i]);
   }
 
   template<class T> void WriteData(const std::vector<T> &value, bool bIsBigEndian) {
     UINT64 count = value.size();
 
     if (count == 0) return;
-	  if (EndianConvert::IsBigEndian() != bIsBigEndian && sizeof(T) > 1) for (size_t i = 0;i<count;i++) EndianConvert::Swap<T>(value[i]);
+	  if (EndianConvert::IsBigEndian() != bIsBigEndian) for (size_t i = 0;i<count;i++) EndianConvert::Swap<T>(value[i]);
     WriteRAW((unsigned char*)&value[0], sizeof(T)*size_t(count));
-	  if (EndianConvert::IsBigEndian() != bIsBigEndian && sizeof(T) > 1) for (size_t i = 0;i<count;i++) EndianConvert::Swap<T>(value[i]);
+	  if (EndianConvert::IsBigEndian() != bIsBigEndian) for (size_t i = 0;i<count;i++) EndianConvert::Swap<T>(value[i]);
   }
 
   void ReadData(std::string &value, UINT64 count) {

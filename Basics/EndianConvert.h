@@ -102,7 +102,7 @@ namespace EndianConvert {
   #endif
     char c;
     uSwapSpace.t=x;
-    for (size_t i=0; i<(sizeof(TYPE)>>1); i++) {
+    for (int i=0; i<(int)(sizeof(TYPE)>>1); i++) {
       c=uSwapSpace.c[i];
       uSwapSpace.c[i]=uSwapSpace.c[sizeof(TYPE)-i-1];
       uSwapSpace.c[sizeof(TYPE)-i-1]=c;
