@@ -37,7 +37,7 @@ UINT64 GlobalHeader::GetDataPos() {
 }
 
 void GlobalHeader::GetHeaderFromFile(LargeRAWFile* pStreamFile) {
-	pStreamFile->ReadData(bIsBigEndian, bIsBigEndian);
+	pStreamFile->ReadData(bIsBigEndian, false);
 	pStreamFile->ReadData(ulFileVersion, bIsBigEndian);
 	UINT64 uintSem;
 	pStreamFile->ReadData(uintSem, bIsBigEndian);	
