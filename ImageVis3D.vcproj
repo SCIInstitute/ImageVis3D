@@ -452,6 +452,10 @@
 					RelativePath=".\IO\UVF\UVFTables.h"
 					>
 				</File>
+				<Filter
+					Name="Converters"
+					>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
