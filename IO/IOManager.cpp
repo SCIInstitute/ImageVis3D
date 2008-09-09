@@ -62,7 +62,10 @@ vector<FileStackInfo*> IOManager::ScanDirectory(std::string strDirectory) {
   DICOMParser p;
   p.GetDirInfo(strDirectory);
 
-  m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found %i DICOM stacks", p.m_FileStacks.size());
+  if (p.m_FileStacks.size() == 1)
+    m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found a single DICOM stack");
+  else
+    m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found %i DICOM stacks", p.m_FileStacks.size());
 
   for (unsigned int iStackID = 0;iStackID < p.m_FileStacks.size();iStackID++) {    
     FileStackInfo* f = new FileStackInfo(p.m_FileStacks[iStackID]);
