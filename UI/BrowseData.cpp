@@ -60,15 +60,16 @@ BrowseData::BrowseData(QDialog* pleaseWaitDialog, QString strDir, QWidget* paren
 void BrowseData::showEvent ( QShowEvent * ) {
 }
 
+#include <IO/DICOM/DICOMParser.h>
 
 bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 {
   DICOMParser p;
   p.GetDirInfo(m_strDir.toStdString());
 
-  for (unsigned int iStackID = 0;iStackID < p.m_DICOMstacks.size();iStackID++) {
+  for (unsigned int iStackID = 0;iStackID < p.m_FileStacks.size();iStackID++) {
     QDataRadioButton *pDICOMElement;
-    pDICOMElement = new QDataRadioButton(p.m_DICOMstacks[iStackID],frame);
+    pDICOMElement = new QDataRadioButton(p.m_FileStacks[iStackID],frame);
     pDICOMElement->setMinimumSize(QSize(0, 80));
     pDICOMElement->setChecked(iStackID==0);
     pDICOMElement->setIconSize(QSize(80, 80));
@@ -77,6 +78,6 @@ bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 
   if (pleaseWaitDialog != NULL) pleaseWaitDialog->close();
 
-  return p.m_DICOMstacks.size() > 0;
+  return p.m_FileStacks.size() > 0;
 }
 

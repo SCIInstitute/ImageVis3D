@@ -41,18 +41,18 @@
 #define QDATARADIOBUTTON
 
 #include <QtGui/QRadioButton>
-#include "IO/DICOM/DICOMParser.h"
+#include "IO/DirectoryParser.h"
 
 class QDataRadioButton : public QRadioButton
 {
 public:
-  QDataRadioButton(DICOMStackInfo stack, QWidget *parent=0);
-    QDataRadioButton(DICOMStackInfo stack, const QString &text, QWidget *parent=0);
+  QDataRadioButton(FileStackInfo* stack, QWidget *parent=0);
+  QDataRadioButton(FileStackInfo* stack, const QString &text, QWidget *parent=0);
   virtual ~QDataRadioButton() {}
 
 protected:
   unsigned int m_iCurrentImage;
-  DICOMStackInfo m_stackInfo;
+  FileStackInfo m_stackInfo;
 
   virtual void leaveEvent ( QEvent * event );
   virtual void mouseMoveEvent(QMouseEvent *event);

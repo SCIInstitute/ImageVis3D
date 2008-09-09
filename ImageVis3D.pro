@@ -69,6 +69,10 @@ SOURCES += 3rdParty/GLEW/glew.c \
            Basics/Checksums/MD5.cpp \
            UI/BrowseData.cpp \
            UI/ImageVis3D.cpp \
+           UI/ImageVis3D_1DTransferFunction.cpp \
+           UI/ImageVis3D_2DTransferFunction.cpp \
+           UI/ImageVis3D_FileHandling.cpp \
+           UI/ImageVis3D_WindowHandling.cpp \
            UI/PleaseWait.cpp \
            UI/Q1DTransferFunction.cpp \
            UI/Q2DTransferFunction.cpp \

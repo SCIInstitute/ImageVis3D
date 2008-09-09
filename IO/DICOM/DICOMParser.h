@@ -41,6 +41,7 @@
 #ifndef DICOMPARSER_H
 #define DICOMPARSER_H
 
+#include <IO/DirectoryParser.h>
 
 // if the following define is set, the DICOM parser putputs detailed parsing information
 // be carfull with this option it may create a huge amount of output
@@ -54,25 +55,14 @@
 #include <Basics/Vectors.h>
 #include <Basics/EndianConvert.h>
 
-class SimpleDICOMFileInfo {
+class SimpleDICOMFileInfo : public SimpleFileInfo {
 public:
   SimpleDICOMFileInfo();
   SimpleDICOMFileInfo(const std::string& strFileName);
   SimpleDICOMFileInfo(const std::wstring& wstrFileName);
-  SimpleDICOMFileInfo(const SimpleDICOMFileInfo& info);
+  SimpleDICOMFileInfo(const SimpleDICOMFileInfo* info);
 
-  std::string  m_strFileName;
-  std::wstring m_wstrFileName;
-  unsigned int m_iImageIndex;
   FLOATVECTOR3 m_fvPatientPosition; // this data is needed to fix aspect ratio which is brocken in many DICOM files, idiots
-
-  unsigned int  GetDataSize();
-  bool GetData(void** pData);
-  bool GetData(void* pData, unsigned int iLength, unsigned int iOffset=0);
-
-protected:
-  unsigned int m_iOffsetToData;
-  unsigned int m_iDataSize;  
 };
 
 class DICOMFileInfo : public SimpleDICOMFileInfo {
@@ -88,36 +78,28 @@ public:
   unsigned int m_iAllocated;
   unsigned int m_iStored;
   unsigned int m_iComponentCount;
-  bool     m_bIsBigEndian;
-  std::string   m_strAcquDate;
-  std::string   m_strAcquTime;
-  std::string   m_strModality;
-  std::string   m_strDesc;
+  bool         m_bIsBigEndian;
+  std::string  m_strAcquDate;
+  std::string  m_strAcquTime;
+  std::string  m_strModality;
+  std::string  m_strDesc;
 
   void SetOffsetToData(const unsigned int iOffset);
 };
 
 
-class DICOMStackInfo {
+class DICOMStackInfo : public FileStackInfo {
 public:
   
   DICOMStackInfo();
-  DICOMStackInfo(const DICOMFileInfo& info);
-  bool Match(const DICOMFileInfo& info);
-
-  std::vector<SimpleDICOMFileInfo>  m_Elements;
+  DICOMStackInfo(const DICOMFileInfo* info);
+  virtual ~DICOMStackInfo() {}
+  bool Match(const DICOMFileInfo* info);
 
   unsigned int m_iSeries;
-  UINTVECTOR3  m_ivSize;
-  FLOATVECTOR3 m_fvfAspect;
-  unsigned int m_iAllocated;
-  unsigned int m_iStored;
-  unsigned int m_iComponentCount;
-  bool     m_bIsBigEndian;
-  std::string   m_strAcquDate;
-  std::string   m_strAcquTime;
-  std::string   m_strModality;
-  std::string   m_strDesc;
+  std::string  m_strAcquDate;
+  std::string  m_strAcquTime;
+  std::string  m_strModality;
 };
 
 enum DICOM_eType {
@@ -152,16 +134,14 @@ enum DICOM_eType {
 };
 
 
-class DICOMParser
+class DICOMParser : public DirectoryParser
 {
 public:
   DICOMParser(void);
   ~DICOMParser(void);
 
-  void GetDirInfo(std::string  strDirectory);
-  void GetDirInfo(std::wstring wstrDirectory);
-
-  std::vector<DICOMStackInfo> m_DICOMstacks;
+  virtual void GetDirInfo(std::string  strDirectory);
+  virtual void GetDirInfo(std::wstring wstrDirectory);
 
   static bool GetDICOMFileInfo(const std::string& fileName, DICOMFileInfo& info);
 protected:

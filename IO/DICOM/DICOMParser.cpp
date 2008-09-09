@@ -87,9 +87,12 @@ DICOMParser::~DICOMParser(void)
 {
 }
 
-bool StacksSmaller ( DICOMStackInfo elem1, DICOMStackInfo elem2 )
+bool StacksSmaller ( FileStackInfo* pElem1, FileStackInfo* pElem2 )
 {
-  return elem1.m_iSeries < elem2.m_iSeries;
+  DICOMStackInfo* elem1 = (DICOMStackInfo*)pElem1;
+  DICOMStackInfo* elem2 = (DICOMStackInfo*)pElem2;
+
+  return elem1->m_iSeries < elem2->m_iSeries;
 }
 
 
@@ -104,30 +107,33 @@ void DICOMParser::GetDirInfo(string  strDirectory) {
   }
 
   // sort results into stacks
-  m_DICOMstacks.clear();
+  for (unsigned int i = 0; i<m_FileStacks.size(); i++) delete m_FileStacks[i];
+  m_FileStacks.clear();
+
 
   for (unsigned int i = 0; i<fileInfos.size(); i++) {
     bool bFoundMatch = false;
-    for (unsigned int j = 0; j<m_DICOMstacks.size(); j++) {
-      if (m_DICOMstacks[j].Match(fileInfos[i])) {
+    for (unsigned int j = 0; j<m_FileStacks.size(); j++) {
+      if (((DICOMStackInfo*)m_FileStacks[j])->Match(&fileInfos[i])) {
         bFoundMatch = true;
         break;
       }
     }  
     if (!bFoundMatch) {
-      DICOMStackInfo newStack(fileInfos[i]);
-      m_DICOMstacks.push_back(newStack);
+      DICOMStackInfo* newStack = new DICOMStackInfo(&fileInfos[i]);
+      m_FileStacks.push_back(newStack);
     }
   }
 
   // sort stacks by sequence number
-  sort( m_DICOMstacks.begin( ), m_DICOMstacks.end( ), StacksSmaller );
+  sort( m_FileStacks.begin( ), m_FileStacks.end( ), StacksSmaller );
 
   // fix Z aspect ratio - which is broken in many DICOMs - using the patient position
-  for (unsigned int i = 0; i<m_DICOMstacks.size(); i++) {
-    if (m_DICOMstacks[i].m_Elements.size() < 2) continue;    
-    float fZDistance = fabs(m_DICOMstacks[i].m_Elements[1].m_fvPatientPosition.z - m_DICOMstacks[i].m_Elements[0].m_fvPatientPosition.z);
-    if (fZDistance != 0) m_DICOMstacks[i].m_fvfAspect.z = fZDistance;
+  for (unsigned int i = 0; i<m_FileStacks.size(); i++) {
+    if (m_FileStacks[i]->m_Elements.size() < 2) continue;    
+    float fZDistance = fabs(((SimpleDICOMFileInfo*)m_FileStacks[i]->m_Elements[1])->m_fvPatientPosition.z - 
+                            ((SimpleDICOMFileInfo*)m_FileStacks[i]->m_Elements[0])->m_fvPatientPosition.z);
+    if (fZDistance != 0) m_FileStacks[i]->m_fvfAspect.z = fZDistance;
   }
 }
 
@@ -703,66 +709,28 @@ bool DICOMParser::GetDICOMFileInfo(const string& strFilename, DICOMFileInfo& inf
 
 /*************************************************************************************/
 
-SimpleDICOMFileInfo::SimpleDICOMFileInfo(const std::string& strFileName) :   
-  m_strFileName(strFileName),
-  m_iImageIndex(0),
-  m_fvPatientPosition(0,0,0),
-  m_iOffsetToData(0),
-  m_iDataSize(0)
+SimpleDICOMFileInfo::SimpleDICOMFileInfo(const std::string& strFileName) :
+  SimpleFileInfo(strFileName),
+  m_fvPatientPosition(0,0,0)
 {
-  m_wstrFileName = wstring(strFileName.begin(),strFileName.end());  
 }
 
 SimpleDICOMFileInfo::SimpleDICOMFileInfo(const std::wstring& wstrFileName) :   
-  m_wstrFileName(wstrFileName),
-  m_iImageIndex(0),
-  m_fvPatientPosition(0,0,0),
-  m_iOffsetToData(0),
-  m_iDataSize(0)
+  SimpleFileInfo(wstrFileName),
+  m_fvPatientPosition(0,0,0)
 {
-  m_strFileName = string(wstrFileName.begin(),wstrFileName.end());  
 }
 
 SimpleDICOMFileInfo::SimpleDICOMFileInfo() :   
-  m_strFileName(""),
-  m_wstrFileName(L""),
-  m_iImageIndex(0),
-  m_fvPatientPosition(0,0,0),
-  m_iOffsetToData(0),
-  m_iDataSize(0)
-{}
-
-SimpleDICOMFileInfo::SimpleDICOMFileInfo(const SimpleDICOMFileInfo& other) :
-  m_strFileName(other.m_strFileName),
-  m_wstrFileName(other.m_wstrFileName),
-  m_iImageIndex(other.m_iImageIndex),
-  m_fvPatientPosition(other.m_fvPatientPosition),
-  m_iOffsetToData(other.m_iOffsetToData),
-  m_iDataSize(other.m_iDataSize)
+  SimpleFileInfo(),
+  m_fvPatientPosition(0,0,0)
 {
-}
+  }
 
-unsigned int SimpleDICOMFileInfo::GetDataSize() {
-  return m_iDataSize;// m_iComponentCount*m_ivSize.volume()*m_iAllocated/8;
-}
-
-bool SimpleDICOMFileInfo::GetData(void* pData, unsigned int iLength, unsigned int iOffset) {
-  ifstream fs;
-  fs.open(m_strFileName.c_str(),fstream::binary);
-  if (fs.fail()) return false;
-
-  fs.seekg(m_iOffsetToData+iOffset, ios_base::cur);
-    fs.read((char*)pData, iLength);
-
-    fs.close();
-    return true;
-}
-
-bool SimpleDICOMFileInfo::GetData(void** pData) {
-  if (*pData == NULL) *pData = (void*)new char[GetDataSize()];
-
-  memset(*pData, 0, GetDataSize());
-  return GetData(*pData, GetDataSize(), 0);
+SimpleDICOMFileInfo::SimpleDICOMFileInfo(const SimpleDICOMFileInfo* other) :
+  SimpleFileInfo(other), 
+  m_fvPatientPosition(other->m_fvPatientPosition)
+{
 }
 
 /*************************************************************************************/
@@ -821,52 +789,45 @@ void DICOMFileInfo::SetOffsetToData(const unsigned int iOffset) {
 /*************************************************************************************/
 
 DICOMStackInfo::DICOMStackInfo() :
+  FileStackInfo(),
   m_iSeries(0),
-  m_ivSize(0,0,0),
-  m_fvfAspect(1,1,1),
-  m_iAllocated(0),
-  m_iStored(0),
-  m_iComponentCount(1),
-  m_bIsBigEndian(false)
+  m_strAcquDate(""),
+  m_strAcquTime(""),
+  m_strModality("")
 {}
 
-DICOMStackInfo::DICOMStackInfo(const DICOMFileInfo& fileInfo) :
-  m_iSeries(fileInfo.m_iSeries),
-  m_ivSize(fileInfo.m_ivSize),
-  m_fvfAspect(fileInfo.m_fvfAspect),
-  m_iAllocated(fileInfo.m_iAllocated),
-  m_iStored(fileInfo.m_iStored),
-  m_iComponentCount(fileInfo.m_iComponentCount),
-  m_bIsBigEndian(fileInfo.m_bIsBigEndian),
-  m_strAcquDate(fileInfo.m_strAcquDate),
-  m_strAcquTime(fileInfo.m_strAcquTime),
-  m_strModality(fileInfo.m_strModality),
-  m_strDesc(fileInfo.m_strDesc)
+DICOMStackInfo::DICOMStackInfo(const DICOMFileInfo* fileInfo) :
+  FileStackInfo(fileInfo->m_ivSize, fileInfo->m_fvfAspect, fileInfo->m_iAllocated, fileInfo->m_iStored,
+                fileInfo->m_iComponentCount, fileInfo->m_bIsBigEndian, fileInfo->m_strDesc),
+  m_iSeries(fileInfo->m_iSeries),
+  m_strAcquDate(fileInfo->m_strAcquDate),
+  m_strAcquTime(fileInfo->m_strAcquTime),
+  m_strModality(fileInfo->m_strModality)
 {
-  m_Elements.clear();
-  m_Elements.push_back(SimpleDICOMFileInfo(fileInfo));
+  m_Elements.push_back(new SimpleDICOMFileInfo(fileInfo));
 }
 
-bool DICOMStackInfo::Match(const DICOMFileInfo& info) {
-  if (m_iSeries     == info.m_iSeries &&
-    m_ivSize     == info.m_ivSize &&
-    m_iAllocated   == info.m_iAllocated &&
-    m_iStored     == info.m_iStored &&
-    m_iComponentCount == info.m_iComponentCount &&
-    m_fvfAspect     == info.m_fvfAspect &&
-    m_bIsBigEndian == info.m_bIsBigEndian &&
-    m_strAcquDate  == info.m_strAcquDate &&
-    //m_strAcquTime  == info.m_strAcquTime &&
-    m_strModality  == info.m_strModality &&
-    m_strDesc     == info.m_strDesc) {
+bool DICOMStackInfo::Match(const DICOMFileInfo* info) {
+  if (m_iSeries       == info->m_iSeries &&
+    m_ivSize          == info->m_ivSize &&
+    m_iAllocated      == info->m_iAllocated &&
+    m_iStored         == info->m_iStored &&
+    m_iComponentCount == info->m_iComponentCount &&
+    m_fvfAspect       == info->m_fvfAspect &&
+    m_bIsBigEndian    == info->m_bIsBigEndian &&
+    m_strAcquDate     == info->m_strAcquDate &&
+    //m_strAcquTime   == info->m_strAcquTime &&
+    m_strModality     == info->m_strModality &&
+    m_strDesc         == info->m_strDesc) {
 
-    std::vector<SimpleDICOMFileInfo>::iterator iter;
+
+    std::vector<SimpleFileInfo*>::iterator iter;
 
     for (iter = m_Elements.begin(); iter < m_Elements.end(); iter++) {
-      if (iter->m_iImageIndex > info.m_iImageIndex) break;
+      if ((*iter)->m_iImageIndex > info->m_iImageIndex) break;
     }
 
-    m_Elements.insert(iter,SimpleDICOMFileInfo(info));
+    m_Elements.insert(iter,new SimpleDICOMFileInfo(info));
 
     return true;
   } else return false;

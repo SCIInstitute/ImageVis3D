@@ -60,7 +60,6 @@ class BrowseData : public QDialog, protected Ui_BrowseData
     QString m_strDir;
     QString m_strFilename;
 
-
     bool FillTable(QDialog* pleaseWaitDialog);
 
     virtual void showEvent ( QShowEvent * event );

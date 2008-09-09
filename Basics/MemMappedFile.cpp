@@ -46,6 +46,7 @@ using namespace std;
 #include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
+#include <memory.h>
 
 #ifdef _WIN32
   #include <process.h>

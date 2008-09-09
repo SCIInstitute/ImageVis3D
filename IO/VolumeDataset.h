@@ -71,10 +71,10 @@ public:
   const VolumeDatasetInfo* GetInfo() const {return m_pVolumeDatasetInfo;}
 
 private:  
-  std::string      m_strFilename;
+  std::string         m_strFilename;
   VolumeDatasetInfo*  m_pVolumeDatasetInfo;
-  Histogram1D*    m_pHist1D;
-  Histogram2D*    m_pHist2D;
+  Histogram1D*        m_pHist1D;
+  Histogram2D*        m_pHist2D;
 
   void LoadDataset();
   void ComputeHistogramms();

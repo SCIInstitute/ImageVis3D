@@ -1,4 +1,5 @@
 #include "MD5.h"
+#include <memory.h>
 
 #define MD5_INIT_STATE_0 0x67452301
 #define MD5_INIT_STATE_1 0xefcdab89

@@ -346,6 +346,22 @@
 			Name="IO"
 			>
 			<File
+				RelativePath=".\IO\DirectoryParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IO\DirectoryParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IO\IOManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IO\IOManager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\IO\TransferFunction1D.cpp"
 				>
 			</File>
@@ -604,54 +620,6 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\UI\ImageVis3D.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\UI\ImageVis3D.h"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath=".\UI\PleaseWait.cpp"
 					>
 				</File>
@@ -851,6 +819,74 @@
 						/>
 					</FileConfiguration>
 				</File>
+				<Filter
+					Name="MainWindow"
+					>
+					<File
+						RelativePath=".\UI\ImageVis3D.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\UI\ImageVis3D.h"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\UI\ImageVis3D_1DTransferFunction.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\UI\ImageVis3D_2DTransferFunction.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\UI\ImageVis3D_FileHandling.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\UI\ImageVis3D_WindowHandling.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

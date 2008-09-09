@@ -38,17 +38,17 @@
 #include "QDataRadioButton.h"
 #include <QtGui/QMouseEvent>
 
-QDataRadioButton::QDataRadioButton(DICOMStackInfo stack, QWidget *parent) : 
+QDataRadioButton::QDataRadioButton(FileStackInfo* stack, QWidget *parent) : 
   QRadioButton(parent), 
   m_iCurrentImage((unsigned int)(-1)),  
   m_stackInfo(stack) 
 {
-    SetupInfo();
+  SetupInfo();
 }
-QDataRadioButton::QDataRadioButton(DICOMStackInfo stack, const QString &text, QWidget *parent) :
+QDataRadioButton::QDataRadioButton(FileStackInfo* stack, const QString &text, QWidget *parent) :
   QRadioButton(text, parent), 
   m_iCurrentImage((unsigned int)(-1)),  
-  m_stackInfo(stack) 
+  m_stackInfo(stack)
 {
   SetupInfo();
 }
@@ -78,7 +78,7 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
   QImage image(m_stackInfo.m_ivSize.x, m_stackInfo.m_ivSize.y, QImage::Format_RGB32);
 
   void* pData = NULL;
-  m_stackInfo.m_Elements[i].GetData(&pData);
+  m_stackInfo.m_Elements[i]->GetData(&pData);
 
   if (m_stackInfo.m_iComponentCount == 1) {
     switch (m_stackInfo.m_iAllocated) {
@@ -120,11 +120,8 @@ void QDataRadioButton::SetupInfo() {
 
   size_t iElemCount = m_stackInfo.m_Elements.size();
 
-  QString desc = tr(" %1 \n Acquired at %2 %3 using %4\n Size: %5 x %6 x %7\n")
+  QString desc = tr(" %1 \n Size: %2 x %3 x %4\n")
     .arg(m_stackInfo.m_strDesc.c_str())
-    .arg(m_stackInfo.m_strAcquDate.c_str())
-    .arg(m_stackInfo.m_strAcquTime.c_str())
-    .arg(m_stackInfo.m_strModality.c_str())
     .arg(m_stackInfo.m_ivSize.x)
     .arg(m_stackInfo.m_ivSize.y)
     .arg(m_stackInfo.m_ivSize.z*iElemCount);
