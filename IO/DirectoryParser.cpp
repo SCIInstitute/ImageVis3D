@@ -40,6 +40,7 @@
 #include <sys/stat.h>
 #include <Basics/SysTools.h>
 #include <algorithm>
+#include <memory.h>
 
 
 using namespace std;
