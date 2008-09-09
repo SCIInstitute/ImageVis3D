@@ -36,6 +36,7 @@ HEADERS += Basics/Grids.h \
            IO/Transferfunction1D.h \
            IO/Transferfunction2D.h \
            IO/VolumeDataset.h \
+           IO/IOManager.h \          
            IO/Images/BMPLoader.h \
            IO/UVF/DataBlock.h \
            IO/UVF/GlobalHeader.h \
@@ -82,7 +83,8 @@ SOURCES += 3rdParty/GLEW/glew.c \
            IO/Transferfunction1D.cpp \
            IO/Transferfunction2D.cpp \
            IO/VolumeDataset.cpp \
-           IO/DirectoryParser.cpp \          
+           IO/IOManager.cpp \
+           IO/DirectoryParser.cpp \
            IO/DICOM/DICOMParser.cpp \
            IO/UVF/DataBlock.cpp \
            IO/UVF/GlobalHeader.cpp \
