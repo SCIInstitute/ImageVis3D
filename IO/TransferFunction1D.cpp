@@ -37,6 +37,7 @@
 
 #include "TransferFunction1D.h"
 #include <fstream>
+#include <memory.h>
 
 using namespace std;
 

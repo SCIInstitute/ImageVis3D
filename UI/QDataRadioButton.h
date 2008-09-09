@@ -41,7 +41,7 @@
 #define QDATARADIOBUTTON
 
 #include <QtGui/QRadioButton>
-#include "IO/DirectoryParser.h"
+#include <IO/DirectoryParser.h>
 
 class QDataRadioButton : public QRadioButton
 {
