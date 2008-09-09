@@ -35,7 +35,7 @@
 */
 
 #include "VolumeDataset.h"
-
+#include <cstdlib> 
 
 VolumeDataset::VolumeDataset(const std::string& strFilename) : 
   m_strFilename(strFilename),
