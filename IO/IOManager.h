@@ -61,7 +61,7 @@ public:
   VolumeDataset* LoadDataset(std::string strFilename, AbstrRenderer* requester);
 
 private:  
-    MasterController* m_MasterController;
+    MasterController* m_pMasterController;
 
 };
 

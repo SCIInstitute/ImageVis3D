@@ -41,9 +41,11 @@
 #include <QtCore/QFileInfo>
 #include <QtGui/QMessageBox>
 
+using namespace std;
 
-BrowseData::BrowseData(QDialog* pleaseWaitDialog, QString strDir, QWidget* parent, Qt::WindowFlags flags) : 
+BrowseData::BrowseData(MasterController& masterController, QDialog* pleaseWaitDialog, QString strDir, QWidget* parent, Qt::WindowFlags flags) : 
   QDialog(parent, flags),
+  m_MasterController(masterController),
   m_bDataFound(false),
   m_strDir(strDir),
   m_strFilename("")
@@ -60,16 +62,13 @@ BrowseData::BrowseData(QDialog* pleaseWaitDialog, QString strDir, QWidget* paren
 void BrowseData::showEvent ( QShowEvent * ) {
 }
 
-#include <IO/DICOM/DICOMParser.h>
-
 bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 {
-  DICOMParser p;
-  p.GetDirInfo(m_strDir.toStdString());
+  vector<FileStackInfo*> dirInfo = m_MasterController.IOMan()->ScanDirectory(m_strDir.toStdString());
 
-  for (unsigned int iStackID = 0;iStackID < p.m_FileStacks.size();iStackID++) {
+  for (unsigned int iStackID = 0;iStackID < dirInfo.size();iStackID++) {
     QDataRadioButton *pDICOMElement;
-    pDICOMElement = new QDataRadioButton(p.m_FileStacks[iStackID],frame);
+    pDICOMElement = new QDataRadioButton(dirInfo[iStackID],frame);
     pDICOMElement->setMinimumSize(QSize(0, 80));
     pDICOMElement->setChecked(iStackID==0);
     pDICOMElement->setIconSize(QSize(80, 80));
@@ -78,6 +77,6 @@ bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 
   if (pleaseWaitDialog != NULL) pleaseWaitDialog->close();
 
-  return p.m_FileStacks.size() > 0;
+  return dirInfo.size() > 0;
 }
 

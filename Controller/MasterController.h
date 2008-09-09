@@ -42,6 +42,7 @@
 
 #include <vector>
 #include <string>
+#include "../IO/IOManager.h"
 #include "../IO/TransferFunction1D.h"
 #include "../IO/TransferFunction2D.h"
 
@@ -70,6 +71,7 @@ public:
 
   AbstrDebugOut* DebugOut() {return m_pDebugOut;}
   GPUMemMan*     MemMan() {return m_pGPUMemMan;}
+  IOManager*     IOMan() {return m_pIOManager;}
 
   // ARS - TODO this should return a pointer to memory.
   void Filter( std::string datasetName,
@@ -79,6 +81,7 @@ public:
     
 private:
   GPUMemMan*     m_pGPUMemMan;
+  IOManager*     m_pIOManager;
   AbstrDebugOut* m_pDebugOut;
   bool           m_bDeleteDebugOutOnExit;  
 

@@ -42,7 +42,7 @@ MasterController::MasterController() :
   m_bDeleteDebugOutOnExit(true)
 {
   m_pGPUMemMan = new GPUMemMan(this);
-  m_pGPUMemMan = new GPUMemMan(this);
+  m_pIOManager = new IOManager(this);
 }
 
 

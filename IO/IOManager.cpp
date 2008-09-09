@@ -37,11 +37,12 @@
 #include "IOManager.h"
 #include <Controller/MasterController.h>
 #include <IO/DICOM/DICOMParser.h>
+#include <sstream>
 
 using namespace std;
 
 IOManager::IOManager(MasterController* masterController) :
-  m_MasterController(masterController)
+  m_pMasterController(masterController)
 {
 
 }
@@ -52,31 +53,49 @@ IOManager::~IOManager()
 }
 
 vector<FileStackInfo*> IOManager::ScanDirectory(std::string strDirectory) {
+
+  m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","Scanning directory %s", strDirectory.c_str());
+
   std::vector<FileStackInfo*> fileStacks;
 
   // right now we scan the directory only for DICOM files but in the future other image scanners will be added
   DICOMParser p;
   p.GetDirInfo(strDirectory);
 
+  m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found %i DICOM stacks", p.m_FileStacks.size());
+
   for (unsigned int iStackID = 0;iStackID < p.m_FileStacks.size();iStackID++) {    
-    FileStackInfo* f = new FileStackInfo(*p.m_FileStacks[iStackID]);
+    FileStackInfo* f = new FileStackInfo(p.m_FileStacks[iStackID]);
 
-     //TODO
+    DICOMStackInfo* d = (DICOMStackInfo*)p.m_FileStacks[iStackID];
 
+    stringstream s;
+    s << "DICOM Stack: " << f->m_strDesc;
+    f->m_strDesc = s.str();
 
     fileStacks.push_back(f);
   }
+
+  // TODO: add other image parsers here
+
+  m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  scan complete");
 
   return fileStacks;
 }
 
 
 bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTargetFilename) {
+  m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","Converting stack of images to %s", strTargetFilename.c_str());
+
+
   // TODO
   return true;
 }
 
 bool IOManager::ConvertDataset(const std::string& strFilename, const std::string& strTargetFilename) {
+  m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","Converting stack dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
+
+
   // TODO
   return true;
 }
@@ -92,5 +111,5 @@ VolumeDataset* IOManager::ConvertDataset(const std::string& strFilename, const s
 }
 
 VolumeDataset* IOManager::LoadDataset(std::string strFilename, AbstrRenderer* requester) {
-  return m_MasterController->MemMan()->LoadDataset(strFilename, requester);
+  return m_pMasterController->MemMan()->LoadDataset(strFilename, requester);
 }

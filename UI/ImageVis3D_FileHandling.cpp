@@ -83,10 +83,10 @@ void MainWindow::LoadDirectory() {
     QFileDialog::getExistingDirectory(this, "Load Dataset from Directory");
 
   if (!directoryName.isEmpty()) {
-    pleaseWait.SetText("Scanning directory for DICOM files, please wait  ...");
+    pleaseWait.SetText("Scanning directory for files, please wait  ...");
 
     QString fileName;
-    BrowseData browseDataDialog((QDialog*)&pleaseWait,directoryName, this);
+    BrowseData browseDataDialog(m_MasterController, (QDialog*)&pleaseWait,directoryName, this);
 
     if (browseDataDialog.DataFound()) {
       if (browseDataDialog.exec() == QDialog::Accepted) {
@@ -94,7 +94,7 @@ void MainWindow::LoadDirectory() {
       }
     } else {
       QString msg =
-	      tr("Error no valid DICOM files in directory %1 found.").arg(directoryName);
+	      tr("Error no valid files in directory %1 found.").arg(directoryName);
       QMessageBox::information(this, tr("Problem"), msg);
     }
   }

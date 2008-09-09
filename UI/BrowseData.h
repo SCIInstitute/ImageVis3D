@@ -43,12 +43,14 @@
 
 #include "RenderWindow.h"
 #include "AutoGen/ui_BrowseData.h"
+#include "Controller/MasterController.h"
+
 
 class BrowseData : public QDialog, protected Ui_BrowseData
 {
   Q_OBJECT
   public:
-    BrowseData(QDialog* pleaseWaitDialog, QString strDir, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    BrowseData(MasterController& pMasterController, QDialog* pleaseWaitDialog, QString strDir, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~BrowseData() {}
 
     QString GetFileName() {return m_strFilename;}
@@ -56,9 +58,10 @@ class BrowseData : public QDialog, protected Ui_BrowseData
     bool DataFound() {return m_bDataFound;}
 
   private:
-    bool  m_bDataFound;
-    QString m_strDir;
-    QString m_strFilename;
+    MasterController&  m_MasterController;
+    bool               m_bDataFound;
+    QString            m_strDir;
+    QString            m_strFilename;
 
     bool FillTable(QDialog* pleaseWaitDialog);
 
