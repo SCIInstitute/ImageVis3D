@@ -36,6 +36,7 @@
 */
 
 #include "TransferFunction2D.h"
+#include <memory.h>
 
 using namespace std;
 
