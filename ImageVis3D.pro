@@ -32,6 +32,7 @@ HEADERS += Basics/Grids.h \
            UI/Q2DTransferFunction.h \
            UI/QDataRadioButton.h \
            UI/RenderWindow.h \
+           IO/DirectoryParser.h \
            IO/Transferfunction1D.h \
            IO/Transferfunction2D.h \
            IO/VolumeDataset.h \
@@ -81,6 +82,7 @@ SOURCES += 3rdParty/GLEW/glew.c \
            IO/Transferfunction1D.cpp \
            IO/Transferfunction2D.cpp \
            IO/VolumeDataset.cpp \
+           IO/DirectoryParser.cpp \          
            IO/DICOM/DICOMParser.cpp \
            IO/UVF/DataBlock.cpp \
            IO/UVF/GlobalHeader.cpp \
