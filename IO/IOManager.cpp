@@ -94,8 +94,8 @@ bool IOManager::ConvertDATDataset(const std::string& strFilename, const std::str
   m_pMasterController->DebugOut()->Message("IOManager::ConvertDATDataset","Converting DAT dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
 
   unsigned int	TypeID;
-  UINT64			  iComponentSize;
-  UINT64			  iComponentCount;
+  UINT64			  iComponentSize=8;
+  UINT64			  iComponentCount=1;
   UINTVECTOR3		vVolumeSize;
   FLOATVECTOR3	vVolumeAspect;
   string        strRAWFile;
