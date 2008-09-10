@@ -32,7 +32,7 @@
         SCI Institute
         University of Utah
   \version  1.2
-  \date    July 2008
+  \date    September 2008
 */
 
 #include "DICOMParser.h"
@@ -798,7 +798,7 @@ DICOMStackInfo::DICOMStackInfo() :
 
 DICOMStackInfo::DICOMStackInfo(const DICOMFileInfo* fileInfo) :
   FileStackInfo(fileInfo->m_ivSize, fileInfo->m_fvfAspect, fileInfo->m_iAllocated, fileInfo->m_iStored,
-                fileInfo->m_iComponentCount, fileInfo->m_bIsBigEndian, fileInfo->m_strDesc),
+                fileInfo->m_iComponentCount, fileInfo->m_bIsBigEndian, fileInfo->m_strDesc, "DICOM"),
   m_iSeries(fileInfo->m_iSeries),
   m_strAcquDate(fileInfo->m_strAcquDate),
   m_strAcquTime(fileInfo->m_strAcquTime),
@@ -806,6 +806,28 @@ DICOMStackInfo::DICOMStackInfo(const DICOMFileInfo* fileInfo) :
 {
   m_Elements.push_back(new SimpleDICOMFileInfo(fileInfo));
 }
+
+DICOMStackInfo::DICOMStackInfo(const DICOMStackInfo* other) :
+  m_iSeries(other->m_iSeries),
+  m_strAcquDate(other->m_strAcquDate),
+  m_strAcquTime(other->m_strAcquTime),
+  m_strModality(other->m_strModality)
+{
+  m_ivSize          = other->m_ivSize;
+  m_fvfAspect       = other->m_fvfAspect;
+  m_iAllocated      = other->m_iAllocated;
+  m_iStored         = other->m_iStored;
+  m_iComponentCount = other->m_iComponentCount;
+  m_bIsBigEndian    = other->m_bIsBigEndian;
+  m_strDesc         = other->m_strDesc;
+  m_strFileType     = other->m_strFileType;
+
+  for (unsigned int i=0;i<other->m_Elements.size();i++) {
+    SimpleDICOMFileInfo* e = new SimpleDICOMFileInfo((SimpleDICOMFileInfo*)other->m_Elements[i]);
+    m_Elements.push_back(e);
+  }
+}
+
 
 bool DICOMStackInfo::Match(const DICOMFileInfo* info) {
   if (m_iSeries       == info->m_iSeries &&
@@ -819,7 +841,6 @@ bool DICOMStackInfo::Match(const DICOMFileInfo* info) {
     //m_strAcquTime   == info->m_strAcquTime &&
     m_strModality     == info->m_strModality &&
     m_strDesc         == info->m_strDesc) {
-
 
     std::vector<SimpleFileInfo*>::iterator iter;
 

@@ -32,7 +32,7 @@
         SCI Institute
         University of Utah
   \version  1.2
-  \date    July 2008
+  \date    September 2008
 */
 
 
@@ -93,6 +93,7 @@ public:
   
   DICOMStackInfo();
   DICOMStackInfo(const DICOMFileInfo* info);
+  DICOMStackInfo(const DICOMStackInfo* other);
   virtual ~DICOMStackInfo() {}
   bool Match(const DICOMFileInfo* info);
 

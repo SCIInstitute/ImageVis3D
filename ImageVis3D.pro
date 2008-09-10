@@ -33,6 +33,7 @@ HEADERS += Basics/Grids.h \
            UI/QDataRadioButton.h \
            UI/RenderWindow.h \
            IO/DirectoryParser.h \
+           IO/KeyValueFileParser.h \
            IO/Transferfunction1D.h \
            IO/Transferfunction2D.h \
            IO/VolumeDataset.h \
@@ -80,6 +81,7 @@ SOURCES += 3rdParty/GLEW/glew.c \
            UI/Q2DTransferFunction.cpp \
            UI/QDataRadioButton.cpp \
            UI/RenderWindow.cpp \
+           IO/KeyValueFileParser.cpp \           
            IO/Transferfunction1D.cpp \
            IO/Transferfunction2D.cpp \
            IO/VolumeDataset.cpp \

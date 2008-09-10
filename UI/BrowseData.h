@@ -31,7 +31,7 @@
 //!    Author : Jens Krueger
 //!             SCI Institute
 //!             University of Utah
-//!    Date   : July 2008
+//!    Date   : September 2008
 //
 //!    Copyright (C) 2008 SCI Institute
 
@@ -44,27 +44,31 @@
 #include "RenderWindow.h"
 #include "AutoGen/ui_BrowseData.h"
 #include "Controller/MasterController.h"
-
+#include "QDataRadioButton.h"
 
 class BrowseData : public QDialog, protected Ui_BrowseData
 {
   Q_OBJECT
   public:
     BrowseData(MasterController& pMasterController, QDialog* pleaseWaitDialog, QString strDir, QWidget* parent = 0, Qt::WindowFlags flags = 0);
-    virtual ~BrowseData() {}
-
-    QString GetFileName() {return m_strFilename;}
+    virtual ~BrowseData();
 
     bool DataFound() {return m_bDataFound;}
 
+    FileStackInfo* GetStackInfo() {return m_dirInfo[m_iSelected];}
+
+  protected slots:
+    virtual void accept();
+
   private:
-    MasterController&  m_MasterController;
-    bool               m_bDataFound;
-    QString            m_strDir;
-    QString            m_strFilename;
+    MasterController&              m_MasterController;
+    bool                           m_bDataFound;
+    QString                        m_strDir;
+    std::vector<QDataRadioButton*> m_vRadioButtons;
+    std::vector<FileStackInfo*>    m_dirInfo;
+    size_t                         m_iSelected;
 
     bool FillTable(QDialog* pleaseWaitDialog);
-
     virtual void showEvent ( QShowEvent * event );
 };
 

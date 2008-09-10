@@ -362,6 +362,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\IO\KeyValueFileParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IO\KeyValueFileParser.h"
+				>
+			</File>
+			<File
 				RelativePath=".\IO\TransferFunction1D.cpp"
 				>
 			</File>

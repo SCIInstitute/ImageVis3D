@@ -45,6 +45,8 @@
 #include <Renderer/AbstrRenderer.h>
 #include <IO/DirectoryParser.h>
 
+#define BRICKSIZE 256
+#define BRICKOVERLAP 4
 
 class MasterController;
 
@@ -61,7 +63,13 @@ public:
   VolumeDataset* LoadDataset(std::string strFilename, AbstrRenderer* requester);
 
 private:  
-    MasterController* m_pMasterController;
+  MasterController* m_pMasterController;
+
+  bool ConvertDATDataset(const std::string& strFilename, const std::string& strTargetFilename);
+  bool ConvertRAWDataset(const std::string& strFilename, const std::string& strTargetFilename,
+				                 UINT64 iComponentSize, UINT64 iComponentCount,
+				                 UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect);
+
 
 };
 

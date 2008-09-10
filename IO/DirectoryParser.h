@@ -31,7 +31,7 @@
   \author  Jens Krueger
            SCI Institute
            University of Utah
-  \date    July 2008
+  \date    September 2008
 */
 
 
@@ -72,7 +72,7 @@ public:
   FileStackInfo();
   FileStackInfo(const FileStackInfo* other);
   FileStackInfo(UINTVECTOR3 ivSize, FLOATVECTOR3 fvfAspect, unsigned int iAllocated, unsigned int iStored,
-                unsigned int iComponentCount, bool bIsBigEndian, const std::string& strDesc);
+                unsigned int iComponentCount, bool bIsBigEndian, const std::string& strDesc, const std::string& strFileType);
   virtual ~FileStackInfo();
 
   std::vector<SimpleFileInfo*>  m_Elements;
@@ -84,6 +84,7 @@ public:
   unsigned int m_iComponentCount;
   bool         m_bIsBigEndian;
   std::string  m_strDesc;
+  std::string  m_strFileType;
 };
 
 

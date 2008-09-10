@@ -31,13 +31,12 @@
 //!    Author : Jens Krueger
 //!             SCI Institute
 //!             University of Utah
-//!    Date   : July 2008
+//!    Date   : September 2008
 //
 //!    Copyright (C) 2008 SCI Institute
 
 #include "BrowseData.h"
 
-#include "QDataRadioButton.h"
 #include <QtCore/QFileInfo>
 #include <QtGui/QMessageBox>
 
@@ -48,35 +47,53 @@ BrowseData::BrowseData(MasterController& masterController, QDialog* pleaseWaitDi
   m_MasterController(masterController),
   m_bDataFound(false),
   m_strDir(strDir),
-  m_strFilename("")
+  m_iSelected(0)
 {
   setupUi(this);
-
   m_bDataFound = FillTable(pleaseWaitDialog);
-
-  // TODO: add actions to set the correct filename
-  m_strFilename = "DICOM Dataset";
 }
 
+BrowseData::~BrowseData() {
+  for (size_t iStackID = 0;iStackID < m_dirInfo.size();iStackID++) {
+    delete m_dirInfo[iStackID];
+  }
+}
 
 void BrowseData::showEvent ( QShowEvent * ) {
 }
 
+
+void BrowseData::accept() {
+  // find out which dataset is selcted
+  for (size_t i = 0;i < m_vRadioButtons.size();i++) {
+    if (m_vRadioButtons[i]->isChecked()) {
+      m_iSelected = i;
+      break;
+    }
+  }
+
+  QDialog::accept();
+}
+
+
 bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 {
-  vector<FileStackInfo*> dirInfo = m_MasterController.IOMan()->ScanDirectory(m_strDir.toStdString());
+  m_dirInfo = m_MasterController.IOMan()->ScanDirectory(m_strDir.toStdString());
+  
+  m_vRadioButtons.clear();
 
-  for (unsigned int iStackID = 0;iStackID < dirInfo.size();iStackID++) {
-    QDataRadioButton *pDICOMElement;
-    pDICOMElement = new QDataRadioButton(dirInfo[iStackID],frame);
-    pDICOMElement->setMinimumSize(QSize(0, 80));
-    pDICOMElement->setChecked(iStackID==0);
-    pDICOMElement->setIconSize(QSize(80, 80));
-    verticalLayout_DICOM->addWidget(pDICOMElement);
+  for (size_t iStackID = 0;iStackID < m_dirInfo.size();iStackID++) {
+    QDataRadioButton *pStackElement;
+    pStackElement = new QDataRadioButton(m_dirInfo[iStackID],frame);
+    pStackElement->setMinimumSize(QSize(0, 80));
+    pStackElement->setChecked(iStackID==0);
+    pStackElement->setIconSize(QSize(80, 80));
+    verticalLayout_DICOM->addWidget(pStackElement);
+    m_vRadioButtons.push_back(pStackElement);
   }
 
   if (pleaseWaitDialog != NULL) pleaseWaitDialog->close();
 
-  return dirInfo.size() > 0;
+  return m_dirInfo.size() > 0;
 }
 

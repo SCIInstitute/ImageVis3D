@@ -30,7 +30,7 @@
 //!    Author : Jens Krueger
 //!             SCI Institute
 //!             University of Utah
-//!    Date   : July 2008
+//!    Date   : September 2008
 //
 //!    Copyright (C) 2008 SCI Institute
 

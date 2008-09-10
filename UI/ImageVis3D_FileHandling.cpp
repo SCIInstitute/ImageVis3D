@@ -31,7 +31,7 @@
 //!    Author : Jens Krueger
 //!             SCI Institute
 //!             University of Utah
-//!    Date   : July 2008
+//!    Date   : September 2008
 //
 //!    Copyright (C) 2008 SCI Institute
 
@@ -60,9 +60,15 @@ using namespace std;
 // ******************************************
 
 void MainWindow::LoadDataset() {
+  QFileDialog::Options options;
+#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+  options | = QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
   LoadDataset(QFileDialog::getOpenFileName(this,
 					   "Load Dataset", ".",
-					   "All known Files (*.dat *.nrrd *.uvf);;QVis Data (*.dat);;Nearly Raw Raster Data (*.nrrd);;Universal Volume Format (*.uvf)"));
+					   "All known Files (*.dat *.nrrd *.uvf);;QVis Data (*.dat);;Nearly Raw Raster Data (*.nrrd);;Universal Volume Format (*.uvf)",&selectedFilter, options));
 }
 
 
@@ -78,7 +84,6 @@ void MainWindow::LoadDataset(QString fileName) {
 
 void MainWindow::LoadDirectory() {
   PleaseWaitDialog pleaseWait(this);
-
   QString directoryName =
     QFileDialog::getExistingDirectory(this, "Load Dataset from Directory");
 
@@ -90,7 +95,25 @@ void MainWindow::LoadDirectory() {
 
     if (browseDataDialog.DataFound()) {
       if (browseDataDialog.exec() == QDialog::Accepted) {
-        LoadDataset(browseDataDialog.GetFileName());
+
+        QFileDialog::Options options;
+      #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+        options | = QFileDialog::DontUseNativeDialog;
+      #endif
+        QString selectedFilter;
+
+        QString fileName =
+          QFileDialog::getSaveFileName(this, "Select filename for converted data",
+				       ".",
+				       "Universal Volume Format (*.uvf)",&selectedFilter, options);
+
+        if (fileName.isEmpty()) return;
+
+        pleaseWait.SetText("Converting, please wait  ...");
+        m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), fileName.toStdString());
+      
+        // TODO load converted dataset
+
       }
     } else {
       QString msg =
@@ -102,8 +125,14 @@ void MainWindow::LoadDirectory() {
 
 
 void MainWindow::SaveDataset() {
+  QFileDialog::Options options;
+#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+  options | = QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
   QString fileName =
     QFileDialog::getSaveFileName(this, "Save Current Dataset",
 				 ".",
-				 "Nearly Raw Raster Data (*.nrrd);;QVis Data (*.dat);;Universal Volume Format (*.uvf)");
+				 "Universal Volume Format (*.uvf)",&selectedFilter, options);
 }

@@ -27,53 +27,74 @@
 */
 
 /**
-  \file    TransferFunction1D.h
+  \file    KeyValueFileParser.h
   \author    Jens Krueger
         SCI Institute
         University of Utah
-  \version  1.0
   \date    September 2008
 */
 
 #pragma once
 
-#ifndef TRANSFERFUNCTION1D
-#define TRANSFERFUNCTION1D
+#ifndef KEYVALUEFILEPARSER_H
+#define KEYVALUEFILEPARSER_H
 
-#include <string>
+#ifdef _WIN32
+	#pragma warning (disable : 4995)
+#endif
 #include <vector>
+#include <string>
+#ifdef _WIN32
+	#pragma warning (default : 4995)
+#endif
+
 #include <Basics/Vectors.h>
-#include <Basics/Grids.h>
 
-typedef Grid1D<unsigned int> Histogram1D;
-typedef Grid1D<float> NormalizedHistogram1D;
-
-class TransferFunction1D
-{
+class KeyValPair {
 public:
-  TransferFunction1D(size_t iSize = 0);
-  ~TransferFunction1D(void);
-  
-  void SetDefault();
+	
+	KeyValPair();
+	KeyValPair(const std::string& key, const std::string& value);
+	KeyValPair(const std::wstring& key, const std::wstring& value);
 
-  void Resize(size_t iSize);
-  void Resample(size_t iTargetSize);
+	// keys
+	std::string		strKey;
+	std::wstring	wstrKey;
+	std::string		strKeyUpper;
+	std::wstring	wstrKeyUpper;
 
-  bool Load(const std::string& filename);
-  bool Load(const std::string& filename, size_t iTargetSize);
-  bool Load(std::ifstream& file);
-  bool Load(std::ifstream& file, size_t iTargetSize);
-  bool Save(const std::string& filename);
-  bool Save(std::ofstream& file);
-
-  void Clear();
-
-  void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
-  void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
-  void GetFloatArray(float** pfData);
-
-  std::vector< FLOATVECTOR4 > vColorData;
-
+	// values
+	std::string		strValue;
+	std::wstring	wstrValue;
+	std::string		strValueUpper;
+	std::wstring	wstrValueUpper;
+	unsigned int	uiValue;
+	int				iValue;
+	float			fValue;
+	INTVECTOR3		viValue;
+	UINTVECTOR3		vuiValue;
+	FLOATVECTOR3	vfValue;
 };
 
-#endif // TRANSFERFUNCTION1D
+
+class KeyValueFileParser
+{
+public:
+	KeyValueFileParser(const std::string& strFilename);
+	KeyValueFileParser(const std::wstring& wstrFilename);
+
+	~KeyValueFileParser(void);
+
+	KeyValPair* GetData(const std::string&  strKey, const bool bCaseSensitive=false);
+	KeyValPair* GetData(const std::wstring& wstrKey, const bool bCaseSensitive=false); 
+
+	bool FileReadable() const {return m_bFileReadable;}
+
+protected:
+	std::vector<KeyValPair> m_vecTokens;
+	bool m_bFileReadable;
+
+	bool ParseFile(std::wstring wstrFilename);
+};
+
+#endif // KEYVALUEFILEPARSER_H
