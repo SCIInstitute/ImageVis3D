@@ -44,25 +44,36 @@
 #include <string>
 #include "TransferFunction1D.h"
 #include "TransferFunction2D.h"
+#include <IO/UVF/UVF.h>
 
+
+class VolumeDataset;
+class MasterController;
 
 class VolumeDatasetInfo {
   public:
-    VolumeDatasetInfo(unsigned int iBitWidth) :
-      m_iBitWidth(iBitWidth)
-    {}
+    VolumeDatasetInfo() {}
 
-    unsigned int GetBitwith() const {return m_iBitWidth;}
+    UINT64 GetBitwith() const {return m_ulBitwith;}
+    UINT64 GetComponentCount() const {return m_ulComponentCount;}
+
   private:
-    unsigned int m_iBitWidth;
+    std::vector<UINT64> m_ulDomainSize;
+	  std::vector<UINT64> m_ulBrickSize;
+	  std::vector<UINT64> m_ulBrickOverlap;
+	  UINT64 m_ulLODLevelCount;
+  	UINT64 m_ulBitwith;
+    UINT64 m_ulComponentCount;
+
+    friend VolumeDataset;
 };
 
 class VolumeDataset {
 public:
-  VolumeDataset(const std::string& strFilename);
+  VolumeDataset(const std::string& strFilename, bool bVerify, MasterController* pMasterController);
   ~VolumeDataset();
 
-  bool IsLoaded() const;
+  bool IsOpen() const {return m_bIsOpen;}
   std::string Filename() const {return m_strFilename;}
 
   const Histogram1D* Get1DHistogramm() const {return m_pHist1D;}
@@ -70,13 +81,19 @@ public:
 
   const VolumeDatasetInfo* GetInfo() const {return m_pVolumeDatasetInfo;}
 
-private:  
+
+private:
+  MasterController*   m_pMasterController;
+  RasterDataBlock*    m_pVolumeDataBlock;
+  UVF*                m_pDatasetFile;
+
+  bool                m_bIsOpen;
   std::string         m_strFilename;
   VolumeDatasetInfo*  m_pVolumeDatasetInfo;
   Histogram1D*        m_pHist1D;
   Histogram2D*        m_pHist2D;
 
-  void LoadDataset();
+  bool Open(bool bVerify);
   void ComputeHistogramms();
 
 };

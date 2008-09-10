@@ -62,8 +62,8 @@ VolumeDataset* GPUMemMan::LoadDataset(const std::string& strFilename, AbstrRende
   }
 
   m_MasterController->DebugOut()->Message("GPUMemMan::LoadDataset","Loading %s", strFilename.c_str());
-  VolumeDataset* dataset = new VolumeDataset(strFilename);
-  if (dataset->IsLoaded()) {
+  VolumeDataset* dataset = new VolumeDataset(strFilename, false, m_MasterController);  // PRECONDITION: we assume that the file has been verified before
+  if (dataset->IsOpen()) {
     m_vpVolumeDatasets.push_back(VolDataListElem(dataset, requester));
     return dataset;
   } else return NULL;
