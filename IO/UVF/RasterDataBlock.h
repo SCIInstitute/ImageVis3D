@@ -103,7 +103,8 @@ public:
 	void SetTypeToFloat(UVFTables::ElementSemanticTable semantic);
 	void SetTypeToDouble(UVFTables::ElementSemanticTable semantic);
 
-	void GetDataPointer(unsigned char** vData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const;
+	bool GetData(unsigned char** pData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const;
+  bool SetData(unsigned char* pData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
 
 	const std::vector<UINT64>& GetBrickCount(const std::vector<UINT64>& vLOD) const {return m_vBrickCount[size_t(PermutationToIndex(vLOD, ulLODLevelCount))];}
 	const std::vector<UINT64>& GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {UINT64 iLODIndex = PermutationToIndex(vLOD, ulLODLevelCount);return m_vBrickSizes[size_t(iLODIndex)][size_t(PermutationToIndex(vBrick, m_vBrickCount[size_t(iLODIndex)]))];}

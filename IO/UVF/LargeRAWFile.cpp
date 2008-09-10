@@ -6,12 +6,14 @@ using namespace std;
 
 LargeRAWFile::LargeRAWFile(string strFilename) :
   m_strFilename(strFilename),
-  m_bIsOpen(false)
+  m_bIsOpen(false),
+  m_bWritable(false)
 {
 }
 
 LargeRAWFile::LargeRAWFile(wstring wstrFilename) :
-  m_bIsOpen(false)
+  m_bIsOpen(false),
+  m_bWritable(false)
 {
   string strFilename(wstrFilename.begin(), wstrFilename.end());
   m_strFilename = strFilename;
@@ -49,6 +51,9 @@ bool LargeRAWFile::Open(bool bReadWrite) {
     m_StreamFile = fopen(m_strFilename.c_str(), (bReadWrite) ? "w+b" : "rb");
     m_bIsOpen = m_StreamFile != NULL;
   #endif
+
+  m_bWritable = (m_bIsOpen) ? bReadWrite : false;
+
   return m_bIsOpen;
 }
 

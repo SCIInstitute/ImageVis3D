@@ -928,8 +928,8 @@ void RasterDataBlock::CleanupTemp() {
 }
 
 
-void RasterDataBlock::GetDataPointer(unsigned char** pData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {
-  if (m_pStreamFile == NULL || m_vLODOffsets.size() == 0) return;
+bool RasterDataBlock::GetData(unsigned char** pData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {
+  if (m_pStreamFile == NULL || m_vLODOffsets.size() == 0) return false;
 
 	UINT64 iOffset = GetLocalDataPointerOffset(vLOD, vBrick)/8;
 
@@ -948,4 +948,30 @@ void RasterDataBlock::GetDataPointer(unsigned char** pData, const std::vector<UI
   // copy data from file
   m_pStreamFile->SeekPos(iOffset);
   m_pStreamFile->ReadRAW((*pData), iSize);
+
+  return true;
+}
+
+
+bool RasterDataBlock::SetData(unsigned char* pData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) {
+  if (m_pStreamFile == NULL || !m_pStreamFile->IsWritable() || m_vLODOffsets.size() == 0) return false;
+
+	UINT64 iOffset = GetLocalDataPointerOffset(vLOD, vBrick)/8;
+
+	// add global offset
+	iOffset += m_iOffset;
+
+	// add size of header
+	iOffset += DataBlock::GetOffsetToNextBlock() + ComputeHeaderSize();
+
+  // new - memory if needed
+  vector<UINT64> vSize = GetBrickSize(vLOD,vBrick);
+  UINT64 iSize = ComputeElementSize()/8;
+  for (size_t i = 0;i<vSize.size();i++) iSize *= vSize[i];
+
+  // copy data from file
+  m_pStreamFile->SeekPos(iOffset);
+  m_pStreamFile->WriteRAW(pData, iSize);
+
+  return true;
 }

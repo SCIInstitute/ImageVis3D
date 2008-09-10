@@ -39,6 +39,7 @@ public:
 
   bool Open(bool bReadWrite);
   bool IsOpen() { return m_bIsOpen;}
+  bool IsWritable() { return m_bWritable;}
   bool Create(UINT64 iInitialSize=0);
   void Close();
   void Delete();
@@ -105,6 +106,7 @@ protected:
 	FILETYPE      m_StreamFile;
   std::string   m_strFilename;
   bool          m_bIsOpen;
+  bool          m_bWritable;
 
 };
 
