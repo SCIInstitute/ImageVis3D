@@ -29,8 +29,6 @@ public:
 	bool Open(bool bVerify=true, bool bReadWrite=false, std::string* pstrProblem = NULL);
 	void Close();
 
-	bool VerifyChecksum(std::string* pstrProblem = NULL);
-
 	const GlobalHeader& GetGlobalHeader() const {return m_GlobalHeader;}
 	UINT64 GetDataBlockCount() const {return UINT64(m_DataBlocks.size());}
 	const DataBlock* GetDataBlock(UINT64 index) const {return m_DataBlocks[size_t(index)];}
@@ -40,6 +38,7 @@ public:
 	bool AddDataBlock(DataBlock& dataBlock, UINT64 iSizeofData);
 	bool Create();
 
+  static bool IsUVFFile(std::wstring wstrFilename, bool& bChecksumFail);
 
 protected:
   bool			      m_bFileIsLoaded;
@@ -51,8 +50,8 @@ protected:
 
 	bool ParseGlobalHeader(bool bVerify, std::string* pstrProblem = NULL);
 	void ParseDataBlocks();
-	
-	std::vector<unsigned char> ComputeChecksum(UVFTables::ChecksumSemanticTable eChecksumSemanticsEntry);
+	static bool VerifyChecksum(LargeRAWFile& streamFile, GlobalHeader& globalHeader, std::string* pstrProblem = NULL);	
+	static std::vector<unsigned char> ComputeChecksum(LargeRAWFile& streamFile, UVFTables::ChecksumSemanticTable eChecksumSemanticsEntry);
 
 	// file creation routines
 	UINT64 ComputeNewFileSize();

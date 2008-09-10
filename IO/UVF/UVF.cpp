@@ -24,6 +24,39 @@ UVF::~UVF(void)
 	Close();
 }
 
+bool UVF::IsUVFFile(std::wstring wstrFilename, bool& bChecksumFail) {
+
+  LargeRAWFile streamFile(wstrFilename);
+
+  if (!streamFile.Open(false)) {
+    bChecksumFail = false;
+    return false;
+  }
+
+  if (streamFile.GetCurrentSize() < GlobalHeader::GetMinSize() + 8) {
+    bChecksumFail = false;
+    streamFile.Close();
+    return false;
+  }
+
+  unsigned char pData[8];
+  streamFile.ReadRAW(pData, 8);
+
+  if (pData[0] != 'U' || pData[1] != 'V' || pData[2] != 'F' || pData[3] != '-' || pData[4] != 'D' || pData[5] != 'A' || pData[6] != 'T' || pData[7] != 'A') {
+    bChecksumFail = false;
+    streamFile.Close();
+    return false;
+  }
+	
+	GlobalHeader g;
+  g.GetHeaderFromFile(&streamFile);
+
+  bChecksumFail = !VerifyChecksum(streamFile, g);
+  streamFile.Close();
+	
+	return true;
+}
+
 bool UVF::Open(bool bVerify, bool bReadWrite, std::string* pstrProblem) {
 	if (m_bFileIsLoaded) return true;
 
@@ -58,7 +91,7 @@ void UVF::Close() {
 
 bool UVF::ParseGlobalHeader(bool bVerify, std::string* pstrProblem) {
   if (m_streamFile.GetCurrentSize() < GlobalHeader::GetMinSize() + 8) {
-    (*pstrProblem) = "file to small to be a UVF file";
+    if (pstrProblem!=NULL) (*pstrProblem) = "file to small to be a UVF file";
     return false;
   }
 
@@ -66,24 +99,24 @@ bool UVF::ParseGlobalHeader(bool bVerify, std::string* pstrProblem) {
   m_streamFile.ReadRAW(pData, 8);
 
   if (pData[0] != 'U' || pData[1] != 'V' || pData[2] != 'F' || pData[3] != '-' || pData[4] != 'D' || pData[5] != 'A' || pData[6] != 'T' || pData[7] != 'A') {
-    (*pstrProblem) = "file magic not found";
+    if (pstrProblem!=NULL) (*pstrProblem) = "file magic not found";
     return false;
   }
 	
 	m_GlobalHeader.GetHeaderFromFile(&m_streamFile);
 	
-	return !bVerify || VerifyChecksum(pstrProblem);
+	return !bVerify || VerifyChecksum(m_streamFile, m_GlobalHeader, pstrProblem);
 }
 
 
-vector<unsigned char> UVF::ComputeChecksum(ChecksumSemanticTable eChecksumSemanticsEntry) {
+vector<unsigned char> UVF::ComputeChecksum(LargeRAWFile& streamFile, ChecksumSemanticTable eChecksumSemanticsEntry) {
 	vector<unsigned char> checkSum;
 
 	UINT64 iOffset    = 33+UVFTables::ChecksumElemLength(eChecksumSemanticsEntry);
-  UINT64 iFileSize  = m_streamFile.GetCurrentSize();
+  UINT64 iFileSize  = streamFile.GetCurrentSize();
 	UINT64 iSize      = iFileSize-iOffset;
 
-  m_streamFile.SeekPos(iOffset);
+  streamFile.SeekPos(iOffset);
 
   unsigned char *ucBlock=new unsigned char[1<<20];
 	switch (eChecksumSemanticsEntry) {
@@ -92,12 +125,12 @@ vector<unsigned char> UVF::ComputeChecksum(ChecksumSemanticTable eChecksumSemant
               UINT64 iBlocks=iFileSize>>20;
 	            unsigned long dwCRC32=0xFFFFFFFF;
 	            for (UINT64 i=0; i<iBlocks; i++) {
-		            m_streamFile.ReadRAW(ucBlock,1<<20);
+		            streamFile.ReadRAW(ucBlock,1<<20);
 		            crc.chunk(ucBlock,1<<20,dwCRC32);
 	            }
 
 	            size_t iLengthLastChunk=size_t(iFileSize-(iBlocks<<20));
-              m_streamFile.ReadRAW(ucBlock,iLengthLastChunk);
+              streamFile.ReadRAW(ucBlock,iLengthLastChunk);
 	            crc.chunk(ucBlock,iLengthLastChunk,dwCRC32);
 	            dwCRC32^=0xFFFFFFFF;
 
@@ -116,7 +149,7 @@ vector<unsigned char> UVF::ComputeChecksum(ChecksumSemanticTable eChecksumSemant
 							{
 								iBlockSize = UINT(min(iSize,UINT64(1<<20)));
 
-                m_streamFile.ReadRAW(ucBlock,iBlockSize);
+                streamFile.ReadRAW(ucBlock,iBlockSize);
 								md5.Update(ucBlock, iBlockSize, iError);
 								iSize   -= iBlockSize;
 							}
@@ -129,20 +162,20 @@ vector<unsigned char> UVF::ComputeChecksum(ChecksumSemanticTable eChecksumSemant
 	}
   delete [] ucBlock;
 
-  m_streamFile.SeekStart();
+  streamFile.SeekStart();
 	return checkSum;
 }
 
 
-bool UVF::VerifyChecksum(std::string* pstrProblem) {
-	vector<unsigned char> vecActualCheckSum = ComputeChecksum(m_GlobalHeader.ulChecksumSemanticsEntry);
+bool UVF::VerifyChecksum(LargeRAWFile& streamFile, GlobalHeader& globalHeader, std::string* pstrProblem) {
+	vector<unsigned char> vecActualCheckSum = ComputeChecksum(streamFile, globalHeader.ulChecksumSemanticsEntry);
 
-	if (vecActualCheckSum.size() != m_GlobalHeader.vcChecksum.size()) {
+	if (vecActualCheckSum.size() != globalHeader.vcChecksum.size()) {
 		if (pstrProblem != NULL)  {
 			stringstream s;
 			string strActual = "", strFile = "";
 			for (size_t i = 0;i<vecActualCheckSum.size();i++) strActual += vecActualCheckSum[i];
-			for (size_t i = 0;i<m_GlobalHeader.vcChecksum.size();i++) strFile += m_GlobalHeader.vcChecksum[i];
+			for (size_t i = 0;i<globalHeader.vcChecksum.size();i++) strFile += globalHeader.vcChecksum[i];
 
 			s << "UVF::VerifyChecksum: checksum mismatch (stage 1). Should be " << strActual << " but is " << strFile << ".";
 			*pstrProblem = s.str();
@@ -151,12 +184,12 @@ bool UVF::VerifyChecksum(std::string* pstrProblem) {
 	}
 
 	for (size_t i = 0;i<vecActualCheckSum.size();i++) 
-		if (vecActualCheckSum[i] != m_GlobalHeader.vcChecksum[i]) {			
+		if (vecActualCheckSum[i] != globalHeader.vcChecksum[i]) {			
 			if (pstrProblem != NULL)  {
 				stringstream s;
 				string strActual = "", strFile = "";
 				for (size_t j = 0;j<vecActualCheckSum.size();j++) strActual += vecActualCheckSum[j];
-				for (size_t j = 0;j<m_GlobalHeader.vcChecksum.size();j++) strFile += m_GlobalHeader.vcChecksum[j];
+				for (size_t j = 0;j<globalHeader.vcChecksum.size();j++) strFile += globalHeader.vcChecksum[j];
 
 				s << "UVF::VerifyChecksum: checksum mismatch (stage 2). Should be " << strActual << " but is " << strFile << ".";
 				*pstrProblem = s.str();
@@ -191,7 +224,7 @@ void UVF::ParseDataBlocks() {
 
 void UVF::UpdateChecksum() {
   if (m_GlobalHeader.ulChecksumSemanticsEntry == CS_NONE) return;
-	m_GlobalHeader.UpdateChecksum(ComputeChecksum(m_GlobalHeader.ulChecksumSemanticsEntry), &m_streamFile);
+	m_GlobalHeader.UpdateChecksum(ComputeChecksum(m_streamFile, m_GlobalHeader.ulChecksumSemanticsEntry), &m_streamFile);
 }
 
 bool UVF::SetGlobalHeader(const GlobalHeader& globalHeader) {
@@ -261,7 +294,4 @@ bool UVF::Create() {
 	}else {
 		return false;
 	}
-
 }
-
-

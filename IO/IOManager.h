@@ -44,6 +44,7 @@
 #include <string>
 #include <Renderer/AbstrRenderer.h>
 #include <IO/DirectoryParser.h>
+#include <IO/UVF/UVF.h>
 
 #define BRICKSIZE 256
 #define BRICKOVERLAP 4
@@ -61,6 +62,7 @@ public:
   VolumeDataset* ConvertDataset(FileStackInfo* pStack, const std::string& strTargetFilename, AbstrRenderer* requester);
   VolumeDataset* ConvertDataset(const std::string& strFilename, const std::string& strTargetFilename, AbstrRenderer* requester);
   VolumeDataset* LoadDataset(std::string strFilename, AbstrRenderer* requester);
+  bool NeedsConversion(std::string strFilename, bool& bChecksumFail);
 
 private:  
   MasterController* m_pMasterController;
@@ -68,7 +70,8 @@ private:
   bool ConvertDATDataset(const std::string& strFilename, const std::string& strTargetFilename);
   bool ConvertRAWDataset(const std::string& strFilename, const std::string& strTargetFilename,
 				                 UINT64 iComponentSize, UINT64 iComponentCount,
-				                 UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect);
+				                 UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect,
+                         std::string strDesc, std::string strSource="", UVFTables::ElementSemanticTable eType=UVFTables::ES_UNDEFINED);
 
 
 };

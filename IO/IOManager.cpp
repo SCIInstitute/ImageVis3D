@@ -37,7 +37,6 @@
 #include "IOManager.h"
 #include <Controller/MasterController.h>
 #include <IO/DICOM/DICOMParser.h>
-#include <IO/UVF/UVF.h>
 #include <IO/KeyValueFileParser.h>
 #include <Basics/SysTools.h>
 #include <sstream>
@@ -143,14 +142,15 @@ bool IOManager::ConvertDATDataset(const std::string& strFilename, const std::str
 
 	  strRAWFile = SysTools::GetPath(strFilename) + strRAWFile;
 
-    return ConvertRAWDataset(strRAWFile, strTargetFilename, iComponentSize, iComponentCount, vVolumeSize,vVolumeAspect);
+    return ConvertRAWDataset(strRAWFile, strTargetFilename, iComponentSize, iComponentCount, 
+                             vVolumeSize, vVolumeAspect, "Qvis data", SysTools::GetFilename(strFilename));
 
   } else return false;
 }
 
 bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::string& strTargetFilename,
 				                         UINT64	iComponentSize, UINT64 iComponentCount,
-				                         UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect)
+                                 UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect, string strDesc, string strSource, UVFTables::ElementSemanticTable eType)
 {
   m_pMasterController->DebugOut()->Message("IOManager::ConvertRAWDataset","Converting RAW dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
 
@@ -165,7 +165,13 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 	wstring wstrUVFName(strTargetFilename.begin(), strTargetFilename.end());
 	UVF uvfFile(wstrUVFName);
 
-	UINT iLodLevelCount = MathTools::Log2(vVolumeSize.maxVal());
+	UINT64 iLodLevelCount = 1;
+  UINT iMaxVal = vVolumeSize.maxVal();
+
+  while (iMaxVal > BRICKSIZE) {
+    iMaxVal /= 2;
+    iLodLevelCount++;
+  }
 
 	GlobalHeader uvfGlobalHeader;
 	uvfGlobalHeader.ulChecksumSemanticsEntry = UVFTables::CS_MD5;
@@ -173,7 +179,11 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 
 	RasterDataBlock dataVolume;
 
-	dataVolume.strBlockID = "Volume Converted by ImageVis3D";
+  if (strSource == "") 
+    dataVolume.strBlockID = (strDesc!="") ? strDesc + "volume converted by ImageVis3D" : "Volume converted by ImageVis3D";
+  else
+    dataVolume.strBlockID = (strDesc!="") ? strDesc + " volume converted from " + strSource + " by ImageVis3D" : "Volume converted from " + strSource + " by ImageVis3D";
+
 	dataVolume.ulCompressionScheme = UVFTables::COS_NONE;
 	dataVolume.ulDomainSemantics.push_back(UVFTables::DS_X);
 	dataVolume.ulDomainSemantics.push_back(UVFTables::DS_Y);
@@ -195,7 +205,6 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 
 	vector<UVFTables::ElementSemanticTable> vSem;
 
-	// TODO: evaluate the actual modality data in the DICOM stack
 	switch (iComponentCount) {
 		case 3 : vSem.push_back(UVFTables::ES_RED);
 				 vSem.push_back(UVFTables::ES_GREEN);
@@ -204,14 +213,13 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 				 vSem.push_back(UVFTables::ES_GREEN);
 				 vSem.push_back(UVFTables::ES_BLUE); 
 				 vSem.push_back(UVFTables::ES_ALPHA); break;
-		default : for (uint i = 0;i<iComponentCount;i++) vSem.push_back(UVFTables::ES_UNDEFINED);
+		default : for (uint i = 0;i<iComponentCount;i++) vSem.push_back(eType);
 	}
 
-	// TODO: again, evaluate actual entries from DICOM file
 	dataVolume.SetTypeToVector(iComponentSize/iComponentCount, 
-							   iComponentSize == 32 ? 23 : iComponentSize/iComponentCount,
-							   iComponentSize == 32, 
-							   vSem);
+							               iComponentSize == 32 ? 23 : iComponentSize/iComponentCount,
+							               iComponentSize == 32, 
+							               vSem);
 	
 	dataVolume.ulBrickSize.push_back(BRICKSIZE);
 	dataVolume.ulBrickSize.push_back(BRICKSIZE);
@@ -268,6 +276,8 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 	}
 
 /*
+  // TODO: maybe add information from the source file to the UVF, like DICOM desc etc.
+
   KeyValuePairDataBlock testPairs;
 	testPairs.AddPair("SOURCE","DICOM");
 	testPairs.AddPair("CONVERTED BY","DICOM2UVF V1.0");
@@ -351,7 +361,13 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
 
 		UINTVECTOR3 iSize = pDICOMStack->m_ivSize;
 		iSize.z *= (unsigned int)pDICOMStack->m_Elements.size();
-    bool result = ConvertRAWDataset(strTempMergeFilename, strTargetFilename, pDICOMStack->m_iAllocated, pDICOMStack->m_iComponentCount, iSize, pDICOMStack->m_fvfAspect);
+
+    // TODO: evaluate pDICOMStack->m_strModality
+
+    bool result = ConvertRAWDataset(strTempMergeFilename, strTargetFilename, pDICOMStack->m_iAllocated, 
+                                    pDICOMStack->m_iComponentCount, iSize, pDICOMStack->m_fvfAspect, 
+                                    "DICOM stack", SysTools::GetFilename(pDICOMStack->m_Elements[0]->m_strFileName)
+                                    + " to " + SysTools::GetFilename(pDICOMStack->m_Elements[pDICOMStack->m_Elements.size()-1]->m_strFileName));
 
     if( remove(strTempMergeFilename.c_str()) != 0 ) {
       m_pMasterController->DebugOut()->Warning("IOManager::ConvertDataset","Unable to remove temp file %s", strTempMergeFilename.c_str());
@@ -390,4 +406,9 @@ VolumeDataset* IOManager::ConvertDataset(const std::string& strFilename, const s
 
 VolumeDataset* IOManager::LoadDataset(std::string strFilename, AbstrRenderer* requester) {
   return m_pMasterController->MemMan()->LoadDataset(strFilename, requester);
+}
+
+bool IOManager::NeedsConversion(std::string strFilename, bool& bChecksumFail) {
+  wstring wstrFilename(strFilename.begin(), strFilename.end());
+  return !UVF::IsUVFFile(wstrFilename, bChecksumFail);
 }

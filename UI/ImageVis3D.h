@@ -164,6 +164,7 @@ private :
   void LoadDataset(QString fileName);
 
   QString strippedName(const QString &fullFileName);
+  QString GetConvFilename(QString fileName);
 };
 
 #endif // IMAGEVIS3D_H

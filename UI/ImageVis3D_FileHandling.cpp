@@ -72,8 +72,52 @@ void MainWindow::LoadDataset() {
 }
 
 
+QString MainWindow::GetConvFilename(QString fileName) {
+    QFileDialog::Options options;
+    #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+      options | = QFileDialog::DontUseNativeDialog;
+    #endif
+    QString selectedFilter;
+
+    QString targetFileName =
+      QFileDialog::getSaveFileName(this, "Select filename for converted data",
+           ".",
+           "Universal Volume Format (*.uvf)",&selectedFilter, options);
+
+    return targetFileName;
+}
+
 void MainWindow::LoadDataset(QString fileName) {
+  PleaseWaitDialog pleaseWait(this);
+
   if (!fileName.isEmpty()) {
+
+    bool bChecksumFail;
+    if (m_MasterController.IOMan()->NeedsConversion(fileName.toStdString(), bChecksumFail)) {
+
+      QString targetFileName = GetConvFilename(fileName);
+      if (targetFileName.isEmpty()) return;
+      pleaseWait.SetText("Converting, please wait  ...");
+      if (!m_MasterController.IOMan()->ConvertDataset(fileName.toStdString(), targetFileName.toStdString())) {
+        QString strText =
+  	      tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFileName);
+
+        QMessageBox::critical(this, "Conversion Error", strText);
+        m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());        
+      }      
+      fileName = targetFileName;
+    } else {
+      if (bChecksumFail) {
+        QString strText =
+  	      tr("File %1 appears to be a broken UVF file since the header looks ok but the chcksum does not match.").arg(fileName);
+
+        QMessageBox::critical(this, "Load Error", strText);
+        m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());        
+        return;
+      }
+    }
+
+
     RenderWindow *renderWin = CreateNewRenderWindow(fileName);
     renderWin->show();
 
@@ -102,18 +146,21 @@ void MainWindow::LoadDirectory() {
       #endif
         QString selectedFilter;
 
-        QString fileName =
-          QFileDialog::getSaveFileName(this, "Select filename for converted data",
-				       ".",
-				       "Universal Volume Format (*.uvf)",&selectedFilter, options);
-
-        if (fileName.isEmpty()) return;
+        QString targetFileName = GetConvFilename(fileName);
+        if (targetFileName.isEmpty()) return;
 
         pleaseWait.SetText("Converting, please wait  ...");
-        m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), fileName.toStdString());
-      
-        // TODO load converted dataset
+        if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFileName.toStdString())) {
+          QString strText =
+  	        tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFileName);
 
+          QMessageBox::critical(this, "Conversion Error", strText);
+          m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", strText.toStdString().c_str());        
+        }      
+      
+        RenderWindow *renderWin = CreateNewRenderWindow(targetFileName);
+        renderWin->show();
+        AddFileToMRUList(fileName);
       }
     } else {
       QString msg =
