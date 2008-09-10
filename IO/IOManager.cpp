@@ -166,7 +166,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 	UVF uvfFile(wstrUVFName);
 
 	UINT64 iLodLevelCount = 1;
-  UINT iMaxVal = vVolumeSize.maxVal();
+  unsigned int iMaxVal = vVolumeSize.maxVal();
 
   while (iMaxVal > BRICKSIZE) {
     iMaxVal /= 2;
@@ -262,7 +262,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 
 	string strProblemDesc;
 	if (!dataVolume.Verify(&strProblemDesc)) {
-    m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Verify failed with the following reason: %s", strProblemDesc); 
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Verify failed with the following reason: %s", strProblemDesc.c_str()); 
     uvfFile.Close(); 
     SourceData.Close();
 		return false;
