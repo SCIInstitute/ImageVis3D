@@ -65,7 +65,7 @@ class VolumeDatasetInfo {
   	UINT64 m_ulBitwith;
     UINT64 m_ulComponentCount;
 
-    friend VolumeDataset;
+    friend class VolumeDataset;
 };
 
 class VolumeDataset {
