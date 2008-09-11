@@ -47,7 +47,7 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   m_MasterController(masterController),
   m_strDataset(dataset),
   m_vLastRot(0,0),
-  lastPos(0,0),
+  m_vLastPos(0,0),
   m_vWinDim(0,0)
 {  
   m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
@@ -110,7 +110,7 @@ void RenderWindow::resizeGL(int width, int height)
 
 void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
-  lastPos = event->pos();
+  m_vLastPos = event->pos();
 
   if (event->buttons() & Qt::RightButton) {
     if (m_Renderer != NULL) m_Renderer->SetCurrentView((m_Renderer->GetCurrentView()+1) %3);
@@ -130,7 +130,7 @@ float scale(int max, float w) {
 
 void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 {
-  INTVECTOR2 vDelta (event->x() - lastPos.x(), event->y() - lastPos.y());
+  INTVECTOR2 vDelta (event->x() - m_vLastPos.x(), event->y() - m_vLastPos.y());
 
   if (event->buttons() & Qt::LeftButton) {
 
@@ -142,7 +142,7 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
       updateGL();
     }
   }
-  lastPos = event->pos();
+  m_vLastPos = event->pos();
 }
 
 void RenderWindow::ToggleRenderWindowView1x3() {
