@@ -72,7 +72,7 @@ void MainWindow::LoadDataset() {
 }
 
 
-QString MainWindow::GetConvFilename(QString fileName) {
+QString MainWindow::GetConvFilename() {
     QFileDialog::Options options;
     #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
       options | = QFileDialog::DontUseNativeDialog;
@@ -95,7 +95,7 @@ void MainWindow::LoadDataset(QString fileName) {
     bool bChecksumFail;
     if (m_MasterController.IOMan()->NeedsConversion(fileName.toStdString(), bChecksumFail)) {
 
-      QString targetFileName = GetConvFilename(fileName);
+      QString targetFileName = GetConvFilename();
       if (targetFileName.isEmpty()) return;
       pleaseWait.SetText("Converting, please wait  ...");
       if (!m_MasterController.IOMan()->ConvertDataset(fileName.toStdString(), targetFileName.toStdString())) {
@@ -146,7 +146,7 @@ void MainWindow::LoadDirectory() {
       #endif
         QString selectedFilter;
 
-        QString targetFileName = GetConvFilename(fileName);
+        QString targetFileName = GetConvFilename();
         if (targetFileName.isEmpty()) return;
 
         pleaseWait.SetText("Converting, please wait  ...");
