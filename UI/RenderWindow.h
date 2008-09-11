@@ -96,9 +96,9 @@ class RenderWindow : public QGLWidget
     QString m_strDataset;
     QString m_strID;
 
-    UINTVECTOR2  m_vWinDim;
-    QPoint m_vLastPos;
     FLOATVECTOR2 m_vLastRot;
+    QPoint m_vLastPos;
+    UINTVECTOR2  m_vWinDim;
 };
 
 #endif // RENDERWINDOW_H
