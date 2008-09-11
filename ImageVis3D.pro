@@ -62,8 +62,8 @@ HEADERS += Basics/Grids.h \
            Renderer/GLTexture3D.h \
            Renderer/AbstrRenderer.h \
            Renderer/GPUSBVR.h \
-           Renderer/GPUMemMan/GPUMemMan.h
-
+           Renderer/GPUMemMan/GPUMemMan.h \
+           Renderer/SBVRGeogen.h
 
 FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui
 
@@ -109,4 +109,5 @@ SOURCES += 3rdParty/GLEW/glew.c \
            Renderer/AbstrRenderer.cpp \
            Renderer/GPUSBVR.cpp \
            Renderer/GPUMemMan/GPUMemMan.cpp \
+           Renderer/SBVRGeogen.cpp \           
            main.cpp
