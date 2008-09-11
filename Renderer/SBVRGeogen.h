@@ -37,7 +37,7 @@
 #pragma once
 
 #include <vector>
-#include <Basics/vectors.h>
+#include <Basics/Vectors.h>
 
 class POS3TEX3_VERTEX
 {
