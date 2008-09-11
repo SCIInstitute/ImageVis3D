@@ -43,6 +43,7 @@ MasterController::MasterController() :
 {
   m_pGPUMemMan = new GPUMemMan(this);
   m_pIOManager = new IOManager(this);
+  m_pSystemInfo = new SystemInfo();
 }
 
 
@@ -56,9 +57,9 @@ MasterController::~MasterController() {
   m_vVolumeRenderer.resize(0);
 
   delete m_pGPUMemMan;
+  delete m_pSystemInfo;
 
-  if (m_bDeleteDebugOutOnExit)
-    delete m_pDebugOut;
+  if (m_bDeleteDebugOutOnExit) delete m_pDebugOut;
 }
 
 
@@ -98,7 +99,7 @@ void MasterController::RemoveDebugOut(AbstrDebugOut* debugOut) {
 			 "Connected to this debug out");
 
   } else {
-    m_pDebugOut->Warning("MasterController::RemoveDebugOut",
+    m_pDebugOut->Message("MasterController::RemoveDebugOut",
 			 "Not Connected the debug out in question (anymore), doing nothing");
   }
 }

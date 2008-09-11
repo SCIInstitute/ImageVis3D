@@ -52,12 +52,14 @@ HEADERS += Basics/Grids.h \
            DebugOut/TextfileOut.h \
            DebugOut/QTOut.h \
            DebugOut/ConsoleOut.h \
+           DebugOut/MultiplexOut.h \
            3rdParty/GLEW/glew.h \
            3rdParty/GLEW/glxew.h \
            Renderer/GLInclude.h \
            Renderer/GLTexture.h \
            Renderer/GLTexture1D.h \
            Renderer/GLTexture2D.h \
+           Renderer/GLTexture3D.h \
            Renderer/AbstrRenderer.h \
            Renderer/GPUSBVR.h \
            Renderer/GPUMemMan/GPUMemMan.h
@@ -99,9 +101,11 @@ SOURCES += 3rdParty/GLEW/glew.c \
            DebugOut/TextfileOut.cpp \
            DebugOut/QTOut.cpp \
            DebugOut/ConsoleOut.cpp \
+           DebugOut/MultiplexOut.cpp \          
            Renderer/GLTexture.cpp \
            Renderer/GLTexture1D.cpp \
            Renderer/GLTexture2D.cpp \
+           Renderer/GLTexture3D.cpp \
            Renderer/AbstrRenderer.cpp \
            Renderer/GPUSBVR.cpp \
            Renderer/GPUMemMan/GPUMemMan.cpp \

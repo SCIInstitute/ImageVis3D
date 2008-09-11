@@ -46,6 +46,10 @@ TransferFunction1D::TransferFunction1D(size_t iSize)
   Resize(iSize);
 }
 
+TransferFunction1D::TransferFunction1D(const std::string& filename) {
+  Load(filename);
+}
+
 TransferFunction1D::~TransferFunction1D(void)
 {
 }

@@ -108,10 +108,21 @@ public:
 
 	const std::vector<UINT64>& GetBrickCount(const std::vector<UINT64>& vLOD) const {return m_vBrickCount[size_t(PermutationToIndex(vLOD, ulLODLevelCount))];}
 	const std::vector<UINT64>& GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {UINT64 iLODIndex = PermutationToIndex(vLOD, ulLODLevelCount);return m_vBrickSizes[size_t(iLODIndex)][size_t(PermutationToIndex(vBrick, m_vBrickCount[size_t(iLODIndex)]))];}
+	const std::vector<UINT64>& GetSmallestBrickSize() const {
+      std::vector<UINT64> vSmallestLOD = ulLODLevelCount;
+      for (size_t i = 0;i<vSmallestLOD.size();i++) vSmallestLOD[i] -= 1; // convert "size" to "maxindex"
+      
+      std::vector<UINT64> vFirstBrick(GetBrickCount(vSmallestLOD).size());
+      for (size_t i = 0;i<vFirstBrick.size();i++) vFirstBrick[i] = 0; // get the size of the first brick
+
+      return GetBrickSize(vSmallestLOD, vFirstBrick);
+  }
+
 
 	void FlatDataToBrickedLOD(const void* pSourceData, const std::string& strTempFile = "tempFile.tmp", void (*combineFunc)(std::vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut) = CombineAverage<char>);
   void FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const std::string& strTempFile = "tempFile.tmp", void (*combineFunc)(std::vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut) = CombineAverage<char>);
 	void AllocateTemp(const std::string& strTempFile, bool bBuildOffsetTables=false);
+
 
 protected:
 	LargeRAWFile* m_pTempFile;

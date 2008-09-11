@@ -27,58 +27,33 @@
 */
 
 /**
-  \file    GPUSBVR.h
+  \file    MultiplexOut.h
   \author    Jens Krueger
         SCI Institute
         University of Utah
   \version  1.0
-  \date    August 2008
+  \date    September 2008
 */
 
 
 #pragma once
 
-#ifndef GPUSBVR_H
-#define GPUSBVR_H
+#ifndef MULTIPLEXOUT_H
+#define MULTIPLEXOUT_H
 
-#include <Renderer/AbstrRenderer.h>
-#include <Renderer/GPUMemMan/GPUMemMan.h>
-#include <Renderer/SBVRGeogen.h>
+#include "AbstrDebugOut.h"
+#include <vector>
 
-class GPUSBVR : public AbstrRenderer {
+class MultiplexOut : public AbstrDebugOut{
   public:
-    GPUSBVR(MasterController* pMasterController);
-    virtual ~GPUSBVR();
-
-    void Initialize();
-    void Paint();
-    void Resize(int width, int height);
-    void Cleanup();
-
-    virtual void Set1DTrans(TransferFunction1D* p1DTrans);
-    virtual void Set2DTrans(TransferFunction2D* p2DTrans);
-    virtual void Changed1DTrans();
-    virtual void Changed2DTrans();
-
-    void SetWireFrame(bool bRenderWireframe) {m_bRenderWireframe = bRenderWireframe;}
-    bool GetWireFrame() {return m_bRenderWireframe;}
-    void CheckForRedraw();
-
-    void SetRotation(FLOATVECTOR2 vRot) {m_vRot = vRot;}
-    void SetCurrentView(int iCurrentView) {m_iCurrentView = iCurrentView;}
-    int GetCurrentView() {return m_iCurrentView;}
-
-  protected:
-    FLOATMATRIX4 m_matModelView;
-    SBVRGeogen  m_SBVRGeogen;
-    GLTexture2D* m_IDTex[3];
-    int m_iCurrentView;
-    FLOATVECTOR2 m_vRot;
-    bool m_bDelayedCompleteRedraw;
-    bool m_bRenderWireframe;
-
-    void DrawLogo();
-    void UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
+    MultiplexOut(std::vector<AbstrDebugOut*> debugger);
+    ~MultiplexOut();
+    virtual void printf(const char* format, ...);
+    virtual void Message(const char* source, const char* format, ...);
+    virtual void Warning(const char* source, const char* format, ...);
+    virtual void Error(const char* source, const char* format, ...);
+  private:
+    std::vector<AbstrDebugOut*> m_debugger;
 };
 
-#endif // GPUSBVR_H
+#endif // MULTIPLEXOUT_H

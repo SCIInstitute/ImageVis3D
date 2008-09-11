@@ -38,8 +38,8 @@
 
 #pragma once
 
-#ifndef TextfileOut_H
-#define TextfileOut_H
+#ifndef TEXTFILEOUT_H
+#define TEXTFILEOUT_H
 
 #include "AbstrDebugOut.h"
 #include <string>
@@ -56,4 +56,4 @@ class TextfileOut : public AbstrDebugOut{
     std::string m_strFilename;
 };
 
-#endif // TextfileOut_H
+#endif // TEXTFILEOUT_H

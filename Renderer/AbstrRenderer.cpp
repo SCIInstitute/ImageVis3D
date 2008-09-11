@@ -71,11 +71,16 @@ bool AbstrRenderer::LoadDataset(const string& strFilename) {
   m_pMasterController->MemMan()->GetEmpty1DTrans(1<<m_pDataset->GetInfo()->GetBitwith(), this, &m_p1DTrans, &m_p1DTransTex);
   m_pMasterController->MemMan()->GetEmpty2DTrans(VECTOR2<size_t>(1<<m_pDataset->GetInfo()->GetBitwith(), 256), this, &m_p2DTrans, &m_p2DTransTex);  // TODO: decide: always 8bit gradient ?
 
+  m_pMasterController->DebugOut()->Message("AbstrRenderer::LoadDataset","Load successful, initializing renderer!");
+
   return true;
 }
 
 AbstrRenderer::~AbstrRenderer() {
   m_pMasterController->MemMan()->FreeDataset(m_pDataset, this);
+  m_pMasterController->MemMan()->Free1DTrans(m_p1DTrans, this);
+  m_pMasterController->MemMan()->Free2DTrans(m_p2DTrans, this);
+
 }
 
 void AbstrRenderer::SetRendermode(ERenderMode eRenderMode) 

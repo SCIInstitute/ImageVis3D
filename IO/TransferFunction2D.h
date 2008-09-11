@@ -72,6 +72,7 @@ class TransferFunction2D
 public:
   TransferFunction2D();
   TransferFunction2D(const VECTOR2<size_t>& iSize);
+  TransferFunction2D(const std::string& filename);
   ~TransferFunction2D(void);
   
   void Resize(const Histogram2D& hist) {Resize(hist.GetSize());}
@@ -79,16 +80,19 @@ public:
   void Resize(const VECTOR2<size_t>& iSize);
 
   bool Load(const std::string& filename);
-  bool Load(const std::string& filename, const VECTOR2<size_t>& iSize);
   bool Save(const std::string& filename);
 
   void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
   void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
   void GetFloatArray(float** pfData);
 
-  ColorData2D pColorData;
   std::vector< TFPolygon > m_Swatches;
   TransferFunction1D m_Trans1D;
+
+  const VECTOR2<size_t> GetSize() const {return m_iSize;}
+protected:
+  VECTOR2<size_t> m_iSize;
+  ColorData2D* RenderTransferFunction();
 };
 
 #endif // TRANSFERFUNCTION2D

@@ -92,13 +92,13 @@ class RenderWindow : public QGLWidget
   private:
     GPUSBVR*          m_Renderer;
     MasterController& m_MasterController;
-    
-    void normalizeAngle(int *angle);
-    int xRot;
-    QPoint lastPos;
-    
+       
     QString m_strDataset;
     QString m_strID;
+
+    UINTVECTOR2  m_vWinDim;
+    FLOATVECTOR2 m_vLastRot;
+    QPoint lastPos;
 };
 
 #endif // RENDERWINDOW_H

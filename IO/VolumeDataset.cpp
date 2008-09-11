@@ -35,9 +35,11 @@
 */
 
 #include "VolumeDataset.h"
+#include "IOManager.h"  // for the size defines
 #include <Controller/MasterController.h>
 #include <cstdlib> 
-#include <string> 
+#include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -108,6 +110,19 @@ bool VolumeDataset::Open(bool bVerify)
         continue;
       }
 
+      // check if the data's smallest LOD level is not larger than our bricksize
+      // TODO: if this fails we may want to convert the dataset
+      std::vector<UINT64> vSmallLODBrick = pVolumeDataBlock->GetSmallestBrickSize();
+      bool bToFewLODLevels = false;
+      for (size_t i = 0;i<vSmallLODBrick.size();i++) {
+        if (vSmallLODBrick[i] > BRICKSIZE) {
+          m_pMasterController->DebugOut()->Message("VolumeDataset::Open","Raster data block with insufficient LOD levels found in UVF file, skipping.");
+          bToFewLODLevels = true;
+          break;
+        }
+      }
+      if (bToFewLODLevels) continue;
+
       if (iRasterBlockIndex != UINT64(-1)) {
         m_pMasterController->DebugOut()->Warning("VolumeDataset::Open","Multiple volume blocks found using last block.");
       }
@@ -122,21 +137,31 @@ bool VolumeDataset::Open(bool bVerify)
     return false;
   }
 
+  m_pMasterController->DebugOut()->Message("VolumeDataset::Open","Open successfully found a suitable data block in the UVF file, analysing data...");
+
   m_pVolumeDataBlock = (RasterDataBlock*)m_pDatasetFile->GetDataBlock(iRasterBlockIndex);
+  m_pVolumeDatasetInfo = new VolumeDatasetInfo(m_pVolumeDataBlock);
 
-  m_pVolumeDatasetInfo = new VolumeDatasetInfo();
+  stringstream sStreamDomain, sStreamBrick;
 
-  m_pVolumeDatasetInfo->m_ulDomainSize    = m_pVolumeDataBlock->ulDomainSize;
-  m_pVolumeDatasetInfo->m_ulBrickSize     = m_pVolumeDataBlock->ulBrickSize;
-	m_pVolumeDatasetInfo->m_ulBrickOverlap  = m_pVolumeDataBlock->ulBrickOverlap;
-  m_pVolumeDatasetInfo->m_ulLODLevelCount = m_pVolumeDataBlock->ulLODLevelCount[0];  // we checked above that ulLODGroups[0..2] are all the same
+  for (size_t i = 0;i<m_pVolumeDatasetInfo->GetDomainSize().size();i++) {
+    if (i == 0)
+      sStreamDomain << m_pVolumeDatasetInfo->GetDomainSize()[i];
+    else
+      sStreamDomain << " x " << m_pVolumeDatasetInfo->GetDomainSize()[i];
+  }
 
-  // TODO: change this if we want to support color data
-  m_pVolumeDatasetInfo->m_ulBitwith        = m_pVolumeDataBlock->ulElementBitSize[0][0];
-  m_pVolumeDatasetInfo->m_ulComponentCount = 1;
+  std::vector<UINT64> vSmallLODBrick = m_pVolumeDataBlock->GetSmallestBrickSize();
+  for (size_t i = 0;i<vSmallLODBrick.size();i++) {
+    if (i == 0)
+      sStreamBrick << vSmallLODBrick[i];
+    else
+      sStreamBrick << " x " << vSmallLODBrick[i];
+  }
 
-  // TODO: transfer brick layout per LOD level 
-
+  m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  Size %s", sStreamDomain.str().c_str());
+  m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  %i Bit, %i components", m_pVolumeDatasetInfo->GetBitwith(), m_pVolumeDatasetInfo->GetComponentCount());
+  m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  LOD down to %s found", sStreamBrick.str().c_str());
 
   return true;
 }
@@ -153,4 +178,30 @@ void VolumeDataset::ComputeHistogramms()
     for (size_t x = 0;x<m_pHist2D->GetSize().x;x++) 
       m_pHist2D->Set(x,y,(unsigned int)(x+(rand()*10) / RAND_MAX)*(unsigned int)(y+(rand()*10) / RAND_MAX));
   // END DEBUG CODE
+}
+
+
+UINTVECTOR3 VolumeDataset::GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) {
+  UINTVECTOR3 vSize;
+  vector<UINT64> vSizeUVF = m_pVolumeDatasetInfo->GetBrickSize(vLOD, vBrick);
+
+  // TODO: this code assumes that x,y,z are the first coords in the dataset which does not have to be, so better check this at load time
+  vSize[0] = (unsigned int)(vSizeUVF[0]);
+  vSize[1] = (unsigned int)(vSizeUVF[1]);
+  vSize[2] = (unsigned int)(vSizeUVF[2]);
+
+  return vSize;
+}
+
+void VolumeDataset::GetBrickCenterAndExtension(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick, FLOATVECTOR3& vCenter, FLOATVECTOR3& vExtension) {
+  vector<UINT64> iBrickCount = m_pVolumeDatasetInfo->GetBrickCount(vLOD);
+
+  // TODO
+  vCenter[0] = 0;
+  vCenter[1] = 0;
+  vCenter[2] = 0;
+
+  vExtension[0] = 1;
+  vExtension[1] = 1;
+  vExtension[2] = 1;
 }

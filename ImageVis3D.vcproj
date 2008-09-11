@@ -988,14 +988,6 @@
 				RelativePath=".\Renderer\AbstrRenderer.h"
 				>
 			</File>
-			<File
-				RelativePath=".\Renderer\GPUSBVR.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Renderer\GPUSBVR.h"
-				>
-			</File>
 			<Filter
 				Name="GPUMemMan"
 				>
@@ -1055,6 +1047,14 @@
 					RelativePath=".\Renderer\GLTexture2D.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Renderer\GLTexture3D.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLTexture3D.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="GLEW"
@@ -1076,6 +1076,26 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="SBVR"
+				>
+				<File
+					RelativePath=".\Renderer\GPUSBVR.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GPUSBVR.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\SBVRGeogen.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\SBVRGeogen.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="DebugOut"
@@ -1090,6 +1110,14 @@
 			</File>
 			<File
 				RelativePath=".\DebugOut\ConsoleOut.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DebugOut\MultiplexOut.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DebugOut\MultiplexOut.h"
 				>
 			</File>
 			<File

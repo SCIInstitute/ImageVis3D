@@ -50,20 +50,42 @@
 class VolumeDataset;
 class MasterController;
 
+// this is just a wrapper around the UVF data to hide the actuall implementation in case we want to replace it some time
 class VolumeDatasetInfo {
   public:
-    VolumeDatasetInfo() {}
+    VolumeDatasetInfo() : m_pVolumeDataBlock(NULL) {}
 
-    UINT64 GetBitwith() const {return m_ulBitwith;}
-    UINT64 GetComponentCount() const {return m_ulComponentCount;}
+  	const std::vector<UINT64>& GetBrickCount(const std::vector<UINT64>& vLOD) const {
+      return m_pVolumeDataBlock->GetBrickCount(vLOD);
+    }
+    const std::vector<UINT64>& GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {
+      return m_pVolumeDataBlock->GetBrickSize(vLOD, vBrick);
+    }
+    const std::vector<UINT64> GetDomainSize() const {
+      return m_pVolumeDataBlock->ulDomainSize;
+    }
+    const std::vector<UINT64> GetBrickSize() const {
+      return m_pVolumeDataBlock->ulBrickSize;
+    }
+    const std::vector<UINT64> GetBrickOverlapSize() const {
+      return m_pVolumeDataBlock->ulBrickOverlap;
+    }    
+    const std::vector<UINT64> GetLODLevelCount() const {
+      return m_pVolumeDataBlock->ulLODLevelCount;
+    }
+
+    // TODO: change this if we want to support color data
+    const UINT64 GetBitwith() const {
+      return m_pVolumeDataBlock->ulElementBitSize[0][0];
+    }
+    const UINT64 GetComponentCount() const {
+      return 1;
+    }
+
 
   private:
-    std::vector<UINT64> m_ulDomainSize;
-	  std::vector<UINT64> m_ulBrickSize;
-	  std::vector<UINT64> m_ulBrickOverlap;
-	  UINT64 m_ulLODLevelCount;
-  	UINT64 m_ulBitwith;
-    UINT64 m_ulComponentCount;
+    VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock) : m_pVolumeDataBlock(pVolumeDataBlock) {}
+    RasterDataBlock*    m_pVolumeDataBlock;
 
     friend class VolumeDataset;
 };
@@ -81,6 +103,8 @@ public:
 
   const VolumeDatasetInfo* GetInfo() const {return m_pVolumeDatasetInfo;}
 
+  UINTVECTOR3 GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
+  void GetBrickCenterAndExtension(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick, FLOATVECTOR3& vCenter, FLOATVECTOR3& vExtension);
 
 private:
   MasterController*   m_pMasterController;

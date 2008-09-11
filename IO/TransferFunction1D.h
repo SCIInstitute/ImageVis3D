@@ -52,6 +52,7 @@ class TransferFunction1D
 {
 public:
   TransferFunction1D(size_t iSize = 0);
+  TransferFunction1D(const std::string& filename);
   ~TransferFunction1D(void);
   
   void SetDefault();

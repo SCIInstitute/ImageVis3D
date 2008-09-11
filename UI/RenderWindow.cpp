@@ -45,7 +45,10 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   QGLWidget(parent, glShareWidget, flags),
   m_Renderer((GPUSBVR*)masterController.RequestNewVolumerenderer(OPENGL_SBVR)),
   m_MasterController(masterController),
-  m_strDataset(dataset)
+  m_strDataset(dataset),
+  m_vLastRot(0,0),
+  lastPos(0,0),
+  m_vWinDim(0,0)
 {  
   m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
   setWindowTitle(m_strID);
@@ -55,7 +58,6 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
 
   this->setFocusPolicy(Qt::StrongFocus);
 
-  xRot = 0;
 }
 
 RenderWindow::~RenderWindow()
@@ -102,6 +104,7 @@ void RenderWindow::paintGL()
 
 void RenderWindow::resizeGL(int width, int height)
 {
+  m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
   if (m_Renderer != NULL) m_Renderer->Resize(width, height);
 }
 
@@ -116,27 +119,30 @@ void RenderWindow::mousePressEvent(QMouseEvent *event)
   }
 }
 
+
+float scale(int max, float w) {
+	if (w < 0) {
+		return w-(((int)w/max)-1)*max;
+	} else {
+		return w-((int)w/max)*max;
+	}
+}
+
 void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 {
-  // int dx = event->x() - lastPos.x();
-  int dy = event->y() - lastPos.y();
+  INTVECTOR2 vDelta (event->x() - lastPos.x(), event->y() - lastPos.y());
 
   if (event->buttons() & Qt::LeftButton) {
-    int angle = xRot + 8 * dy;
-    normalizeAngle(&angle);
-    if (angle != xRot) {
-      xRot = angle;
-      if (m_Renderer != NULL) m_Renderer->SetRotation(xRot);
+
+    FLOATVECTOR2 currentRot(scale(2*3.1415f,m_vLastRot.x+2*3.1415f*(vDelta.x)/m_vWinDim.x), scale(2*3.1415f,m_vLastRot.y+2*3.1415f*(vDelta.y)/m_vWinDim.y));
+
+    if (m_vLastRot != currentRot) {
+      m_vLastRot = currentRot;
+      if (m_Renderer != NULL) m_Renderer->SetRotation(currentRot);
       updateGL();
     }
   }
   lastPos = event->pos();
-}
-
-void RenderWindow::normalizeAngle(int *angle)
-{
-  while (*angle < 0) *angle += 360 * 16;
-  while (*angle > 360 * 16) *angle -= 360 * 16;
 }
 
 void RenderWindow::ToggleRenderWindowView1x3() {

@@ -70,8 +70,9 @@ public:
   void RemoveDebugOut(AbstrDebugOut* debugOut);
 
   AbstrDebugOut* DebugOut() {return m_pDebugOut;}
-  GPUMemMan*     MemMan() {return m_pGPUMemMan;}
-  IOManager*     IOMan() {return m_pIOManager;}
+  GPUMemMan*     MemMan()   {return m_pGPUMemMan;}
+  IOManager*     IOMan()    {return m_pIOManager;}
+  SystemInfo*    SysInfo()  {return m_pSystemInfo;}
 
   // ARS - TODO this should return a pointer to memory.
   void Filter( std::string datasetName,
@@ -80,6 +81,7 @@ public:
 	       void *var2 = 0, void *var3 = 0 ) {};
     
 private:
+  SystemInfo*    m_pSystemInfo;
   GPUMemMan*     m_pGPUMemMan;
   IOManager*     m_pIOManager;
   AbstrDebugOut* m_pDebugOut;

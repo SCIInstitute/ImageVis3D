@@ -41,12 +41,13 @@
 
 #include <deque>
 #include <string>
-#include "../AbstrRenderer.h"
-#include "../GLTexture1D.h"
-#include "../GLTexture2D.h"
-#include "../../IO/VolumeDataset.h"
-#include "../../IO/TransferFunction1D.h"
-#include "../../IO/TransferFunction2D.h"
+#include <Renderer//AbstrRenderer.h>
+#include <Renderer/GLTexture1D.h>
+#include <Renderer/GLTexture2D.h>
+#include <Renderer/GLTexture3D.h>
+#include <IO/VolumeDataset.h>
+#include <IO//TransferFunction1D.h>
+#include <IO//TransferFunction2D.h>
 #include <Basics/SystemInfo.h>
 
 typedef std::deque< AbstrRenderer* > AbstrRendererList;
@@ -124,29 +125,31 @@ class GPUMemMan {
     void FreeDataset(VolumeDataset* pVolumeDataset, AbstrRenderer* requester);
 
     void Changed1DTrans(AbstrRenderer* requester, TransferFunction1D* pTransferFunction1D);
-    void GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, TransferFunction1D** transferFunc, GLTexture1D** tex);
-    void Get1DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction1D** transferFunc, GLTexture1D** tex);
-    GLTexture1D* Access1DTrans(TransferFunction1D* transferFunc, AbstrRenderer* requester);
-    void Free1DTrans(TransferFunction1D* transferFunc, AbstrRenderer* requester);
+    void GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, TransferFunction1D** ppTransferFunction1D, GLTexture1D** tex);
+    void Get1DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction1D** ppTransferFunction1D, GLTexture1D** tex);
+    GLTexture1D* Access1DTrans(TransferFunction1D* pTransferFunction1D, AbstrRenderer* requester);
+    void Free1DTrans(TransferFunction1D* pTransferFunction1D, AbstrRenderer* requester);
 
     void Changed2DTrans(AbstrRenderer* requester, TransferFunction2D* pTransferFunction2D);
-    void GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* requester, TransferFunction2D** transferFunc, GLTexture2D** tex);
-    void Get2DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction2D** transferFunc, GLTexture2D** tex);
-    GLTexture2D* Access2DTrans(TransferFunction2D* transferFunc, AbstrRenderer* requester);
-    void Free2DTrans(TransferFunction2D* transferFunc, AbstrRenderer* requester);
+    void GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* requester, TransferFunction2D** ppTransferFunction2D, GLTexture2D** tex);
+    void Get2DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction2D** ppTransferFunction2D, GLTexture2D** tex);
+    GLTexture2D* Access2DTrans(TransferFunction2D* pTransferFunction2D, AbstrRenderer* requester);
+    void Free2DTrans(TransferFunction2D* pTransferFunction2D, AbstrRenderer* requester);
 
     GLTexture2D* Load2DTextureFromFile(const std::string& strFilename);
     void FreeTexture(GLTexture2D* pTexture);
 
+    GLTexture3D* Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
+
     // system statistics
-    UINT64 GetCPUMem() {return m_SystemInfo.m_iCPUMemSize;}
-    UINT64 GetGPUMem() {return m_SystemInfo.m_iGPUMemSize;}
-    unsigned int GetBitWithMem() {return m_SystemInfo.m_iProgrammBitWith;}
-    unsigned int GetNumCPUs() {return m_SystemInfo.m_iNumberofCPUs;}
+    const UINT64 GetCPUMem() const {return m_SystemInfo->m_iCPUMemSize;}
+    const UINT64 GetGPUMem() const {return m_SystemInfo->m_iGPUMemSize;}
+    const unsigned int GetBitWithMem() const {return m_SystemInfo->m_iProgrammBitWith;}
+    const unsigned int GetNumCPUs() const {return m_SystemInfo->m_iNumberofCPUs;}
 
 
   private:
-    SystemInfo        m_SystemInfo;
+    SystemInfo*       m_SystemInfo;
     VolDataList       m_vpVolumeDatasets;
     SimpleTextureList m_vpSimpleTextures;
     Trans1DList       m_vpTrans1DList;

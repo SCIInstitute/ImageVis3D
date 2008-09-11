@@ -43,8 +43,9 @@
 
 GPUSBVR::GPUSBVR(MasterController* pMasterController) :
   m_iCurrentView(0),
-  m_xRot(0),
-  m_bDelayedCompleteRedraw(false)
+  m_vRot(0,0),
+  m_bDelayedCompleteRedraw(false),
+  m_bRenderWireframe(false)
 {
   m_pMasterController = pMasterController;
 }
@@ -57,7 +58,7 @@ void GPUSBVR::Initialize() {
 
   m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","");
 
-  glClearColor(1,0,0,0);
+  glClearColor(0.2f,0.2f,0.2f,0);
   glShadeModel(GL_SMOOTH);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_TEXTURE_2D);
@@ -77,33 +78,110 @@ void GPUSBVR::Initialize() {
   }
 }
 
-void GPUSBVR::Paint() {
-  if (m_bCompleteRedraw) {
-    m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Complete Redraw");
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void GPUSBVR::UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) {
+
+  UINTVECTOR3  vSize = m_pDataset->GetBrickSize(vLOD, vBrick);
+  FLOATVECTOR3 vCenter, vExtension;
+  m_pDataset->GetBrickCenterAndExtension(vLOD, vBrick, vCenter, vExtension);
+
+  // TODO: transfer brick offsets to m_SBVRGeogen
+  m_SBVRGeogen.SetVolumeData(vExtension, vSize);
+  
+}
+
+void GPUSBVR::DrawLogo() {
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
     glLoadIdentity();
-    glTranslated(0.0, 0.0, -10.0);
-    glRotated(m_xRot / 16.0, 1.0, 0.0, 0.0);
+    glOrtho(-0.5, +0.5, +0.5, -0.5, 0.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
 
     if (m_IDTex[m_iCurrentView] != NULL) m_IDTex[m_iCurrentView]->Bind();
+    glDisable(GL_TEXTURE_3D);
+    glEnable(GL_TEXTURE_2D);
+
+    glBegin(GL_QUADS);
+      glColor4d(1,1,1,1);
+      glTexCoord2d(0,0);
+      glVertex3d(0.2,  0.4, -0.5);
+      glTexCoord2d(1,0);
+      glVertex3d( 0.4,  0.4, -0.5);
+      glTexCoord2d(1,1);
+      glVertex3d( 0.4, 0.2, -0.5);
+      glTexCoord2d(0,1);
+      glVertex3d(0.2, 0.2, -0.5);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
+
+
+void GPUSBVR::Paint() {
+  if (true || m_bCompleteRedraw) {
+    m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Complete Redraw");
+
+    // DEBUG: just render the smallest brick for a start
+    std::vector<UINT64> vSmallestLOD = m_pDataset->GetInfo()->GetLODLevelCount();
+    for (size_t i = 0;i<vSmallestLOD.size();i++) vSmallestLOD[i] -= 1;   
+    std::vector<UINT64> vFirstBrick(m_pDataset->GetInfo()->GetBrickCount(vSmallestLOD).size());
+    for (size_t i = 0;i<vFirstBrick.size();i++) vFirstBrick[i] = 0;
+    UpdateGeoGen(vSmallestLOD, vFirstBrick);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    DrawLogo();
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    FLOATMATRIX4 trans, rotx, roty;
+    trans.Translation(0,0,-4);
+    rotx.RotationAxis(FLOATVECTOR3(0,1,0),m_vRot.x);
+    roty.RotationAxis(FLOATVECTOR3(1,0,0),m_vRot.y);
+    m_matModelView = trans*rotx*roty;
+
+    //m_matModelView.setModelview();
+    m_SBVRGeogen.SetTransformation(m_matModelView);
+
+  	//glEnable(GL_BLEND);
+	  //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // switch to wireframe
+    if (m_bRenderWireframe) {
+      // TODO save state
+	    glDisable(GL_CULL_FACE);
+	    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+	    glEdgeFlag(true);
+    }
+
+    //m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vSmallestLOD, vFirstBrick)->Bind();
+    glEnable(GL_TEXTURE_3D);
 
     // just do some stuff to simulate a slow draw call
-    for (unsigned int i = 0;i<10000;i++) {
-      glBegin(GL_QUADS);
-        glColor4d(1,1,1,1);
-        glTexCoord2d(0,0);
-        glVertex3d(-0.5,  0.5, 0.0);
-        glTexCoord2d(1,0);
-        glVertex3d( 0.5,  0.5, 0.0);
-        glTexCoord2d(1,1);
-        glVertex3d( 0.5, -0.5, 0.0);
-        glTexCoord2d(0,1);
-        glVertex3d(-0.5, -0.5, 0.0);
-      glEnd();
+    glBegin(GL_TRIANGLES);
+      glColor4f(1,1,1,1);
+
+      for (size_t i = 0;i<m_SBVRGeogen.m_vSliceTriangles.size();i++) {
+        glTexCoord3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vTex);
+        glVertex3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vPos);
+      }
+    glEnd();
+
+    if (m_bRenderWireframe) {
+      // TODO: restore state
     }
+
   } else {
-    m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Quick Redraw");
+/*    m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Quick Redraw");
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -123,6 +201,7 @@ void GPUSBVR::Paint() {
       glTexCoord2d(0,1);
       glVertex3d(-0.5, -0.5, 0.0);
     glEnd();
+    */
   }
 
   m_bCompleteRedraw = false;
@@ -132,13 +211,16 @@ void GPUSBVR::Paint() {
 void GPUSBVR::Resize(int width, int height) {
   m_pMasterController->DebugOut()->Message("GPUSBVR::Resize","");
 
-  int side = std::min(width, height);
-  glViewport((width - side) / 2, (height - side) / 2, side, side);
+//  int side = std::min(width, height);
+//  glViewport((width - side) / 2, (height - side) / 2, side, side);
 
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0);
-  glMatrixMode(GL_MODELVIEW);
+  float aspect=(float)width/(float)height;
+	glViewport(0,0,width,height);
+	glMatrixMode(GL_PROJECTION);		
+	glLoadIdentity();
+	gluPerspective(50.0,aspect,0.2,100.0); 	// Set Projection. Arguments are FOV (in degrees), aspect-ratio, near-plane, far-plane.
+	glMatrixMode(GL_MODELVIEW);
+
 
   m_bDelayedCompleteRedraw = true;
 }

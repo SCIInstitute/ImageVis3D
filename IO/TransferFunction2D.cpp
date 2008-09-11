@@ -40,14 +40,22 @@
 
 using namespace std;
 
-TransferFunction2D::TransferFunction2D()
+TransferFunction2D::TransferFunction2D() :
+  m_iSize(0,0)
 {
-  Resize(VECTOR2<size_t>(0,0));
+  Resize(m_iSize);
 }
 
-TransferFunction2D::TransferFunction2D(const VECTOR2<size_t>& iSize)
+TransferFunction2D::TransferFunction2D(const std::string& filename):
+  m_iSize(0,0)
 {
-  Resize(iSize);
+  Load(filename);
+}
+
+TransferFunction2D::TransferFunction2D(const VECTOR2<size_t>& iSize):
+  m_iSize(iSize)
+{
+  Resize(m_iSize);
 }
 
 TransferFunction2D::~TransferFunction2D(void)
@@ -55,23 +63,22 @@ TransferFunction2D::~TransferFunction2D(void)
 }
 
 void TransferFunction2D::Resize(const VECTOR2<size_t>& iSize) {
-  pColorData.Resize(iSize);
+  m_iSize = iSize;
   m_Trans1D.Resize(iSize.x);
   m_Trans1D.Clear();
 }
 
-bool TransferFunction2D::Load(const std::string& filename) {
-  return Load(filename, pColorData.GetSize());
-}
 
-bool TransferFunction2D::Load(const std::string& filename, const VECTOR2<size_t>& iSize) {
+bool TransferFunction2D::Load(const std::string& filename) {
   ifstream file(filename.c_str());
 
   if (!file.is_open()) return false;
-  pColorData.Resize(iSize);
+
+  // load size
+  file >> m_iSize.x >> m_iSize.y;
 
   // load 1D Trans
-  m_Trans1D.Load(file, iSize.x);
+  m_Trans1D.Load(file, m_iSize.x);
 
   // load swatch count
   unsigned int iSwatchCount;
@@ -91,6 +98,9 @@ bool TransferFunction2D::Save(const std::string& filename) {
 
   if (!file.is_open()) return false;
 
+  // save size
+  file << m_iSize.x << " " << m_iSize.y << endl;
+
   // save 1D Trans
   m_Trans1D.Save(file);
 
@@ -106,36 +116,52 @@ bool TransferFunction2D::Save(const std::string& filename) {
 }
 
 void TransferFunction2D::GetByteArray(unsigned char** pcData, unsigned char cUsedRange) {
-  if (*pcData == NULL) *pcData = new unsigned char[pColorData.GetSize().area()];
+  if (*pcData == NULL) *pcData = new unsigned char[m_iSize.area()];
 
+  ColorData2D* pColorData = RenderTransferFunction();
   unsigned char *pcDataIterator = *pcData;
-  FLOATVECTOR4  *piSourceIterator = pColorData.GetDataPointer();
-  for (unsigned int i = 0;i<pColorData.GetSize().area();i++) {
+  FLOATVECTOR4  *piSourceIterator = pColorData->GetDataPointer();
+  for (unsigned int i = 0;i<pColorData->GetSize().area();i++) {
     *pcDataIterator++ = (unsigned char)((*piSourceIterator)[0]*cUsedRange);
     *pcDataIterator++ = (unsigned char)((*piSourceIterator)[1]*cUsedRange);
     *pcDataIterator++ = (unsigned char)((*piSourceIterator)[2]*cUsedRange);
     *pcDataIterator++ = (unsigned char)((*piSourceIterator)[3]*cUsedRange);
     piSourceIterator++;
   }
+  delete pColorData;
 }
 
 void TransferFunction2D::GetShortArray(unsigned short** psData, unsigned short sUsedRange) {
-  if (*psData == NULL) *psData = new unsigned short[pColorData.GetSize().area()];
+  if (*psData == NULL) *psData = new unsigned short[m_iSize.area()];
 
+  ColorData2D* pColorData = RenderTransferFunction();
   unsigned short *psDataIterator = *psData;
-  FLOATVECTOR4  *piSourceIterator = pColorData.GetDataPointer();
-  for (unsigned int i = 0;i<pColorData.GetSize().area();i++) {
+  FLOATVECTOR4  *piSourceIterator = pColorData->GetDataPointer();
+  for (unsigned int i = 0;i<pColorData->GetSize().area();i++) {
     *psDataIterator++ = (unsigned short)((*piSourceIterator)[0]*sUsedRange);
     *psDataIterator++ = (unsigned short)((*piSourceIterator)[1]*sUsedRange);
     *psDataIterator++ = (unsigned short)((*piSourceIterator)[2]*sUsedRange);
     *psDataIterator++ = (unsigned short)((*piSourceIterator)[3]*sUsedRange);
     piSourceIterator++;
   }
+  delete pColorData;
 }
 
 void TransferFunction2D::GetFloatArray(float** pfData) {
-  if (*pfData == NULL) *pfData = new float[4*pColorData.GetSize().area()];
-  memcpy(*pfData, pColorData.GetDataPointer(), 4*sizeof(float)*pColorData.GetSize().area());
+  if (*pfData == NULL) *pfData = new float[4*m_iSize.area()];
+
+  ColorData2D* pColorData = RenderTransferFunction();
+  memcpy(*pfData, pColorData->GetDataPointer(), 4*sizeof(float)*m_iSize.area());
+  delete pColorData;
+}
+
+
+ColorData2D* TransferFunction2D::RenderTransferFunction() {
+  ColorData2D* pColorData = new ColorData2D(m_iSize);
+
+  // TODO
+
+  return pColorData;
 }
 
 
