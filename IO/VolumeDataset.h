@@ -75,10 +75,10 @@ class VolumeDatasetInfo {
     }
 
     // TODO: change this if we want to support color data
-    const UINT64 GetBitwith() const {
+    UINT64 GetBitwith() const {
       return m_pVolumeDataBlock->ulElementBitSize[0][0];
     }
-    const UINT64 GetComponentCount() const {
+    UINT64 GetComponentCount() const {
       return 1;
     }
 

@@ -142,10 +142,10 @@ class GPUMemMan {
     GLTexture3D* Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
 
     // system statistics
-    const UINT64 GetCPUMem() const {return m_SystemInfo->m_iCPUMemSize;}
-    const UINT64 GetGPUMem() const {return m_SystemInfo->m_iGPUMemSize;}
-    const unsigned int GetBitWithMem() const {return m_SystemInfo->m_iProgrammBitWith;}
-    const unsigned int GetNumCPUs() const {return m_SystemInfo->m_iNumberofCPUs;}
+    UINT64 GetCPUMem() const {return m_SystemInfo->m_iCPUMemSize;}
+    UINT64 GetGPUMem() const {return m_SystemInfo->m_iGPUMemSize;}
+    unsigned int GetBitWithMem() const {return m_SystemInfo->m_iProgrammBitWith;}
+    unsigned int GetNumCPUs() const {return m_SystemInfo->m_iNumberofCPUs;}
 
 
   private:
