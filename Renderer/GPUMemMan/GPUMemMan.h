@@ -149,12 +149,12 @@ class GPUMemMan {
 
 
   private:
-    SystemInfo*       m_SystemInfo;
     VolDataList       m_vpVolumeDatasets;
     SimpleTextureList m_vpSimpleTextures;
     Trans1DList       m_vpTrans1DList;
     Trans2DList       m_vpTrans2DList;
     MasterController* m_MasterController;
+    SystemInfo*       m_SystemInfo;
 };
 
 #endif // GPUMEMMAN_H
