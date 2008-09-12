@@ -55,7 +55,7 @@ GLTexture3D::GLTexture3D(GLuint iSizeX, GLuint iSizeY, GLuint iSizeZ, GLint inte
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, wrapZ);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, iMagFilter);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, iMinFilter);
-  glTexImage2D(GL_TEXTURE_3D, 0, m_internalformat, m_iSizeX, m_iSizeY, 0, m_format, m_type, pixels);
+  glTexImage3D(GL_TEXTURE_3D, 0, m_internalformat, m_iSizeX, m_iSizeY,m_iSizeZ, 0, m_format, m_type, pixels);
 }
 
 void GLTexture3D::SetData(const GLvoid *pixels) {

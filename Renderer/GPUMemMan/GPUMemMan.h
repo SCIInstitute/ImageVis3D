@@ -114,6 +114,115 @@ struct Trans2DListElem {
 typedef std::deque<Trans2DListElem> Trans2DList;
 typedef Trans2DList::iterator Trans2DListIter;
 
+
+// 3D textures
+struct Texture3DListElem {
+  Texture3DListElem(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick) :
+    pData(NULL),
+    pTexture(NULL),
+    pDataset(_pDataset),
+    vLOD(_vLOD),
+    vBrick(_vBrick)
+  {
+     CreateTexture();
+  }
+
+  ~Texture3DListElem() {
+      FreeData();
+      FreeTexture();
+  }
+
+  bool Match(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick) {
+    if (_pDataset != pDataset || _vLOD.size() != vLOD.size() || _vBrick.size() != vBrick.size()) return false;
+
+    for (size_t i = 0;i<vLOD.size();i++)   if (vLOD[i] != _vLOD[i]) return false;
+    for (size_t i = 0;i<vBrick.size();i++) if (vBrick[i] != _vBrick[i]) return false;
+
+    return true;
+  }
+
+
+  bool LoadData() {
+    FreeData();
+    return pDataset->GetBrick(&pData, vLOD, vBrick);
+  }
+
+  void  FreeData() {
+    delete [] pData;
+    pData = NULL;
+  }
+
+  bool CreateTexture() {
+    FreeTexture();
+    if (pData == NULL) {
+      if (!LoadData()) return false;
+    }
+
+    const std::vector<UINT64> vSize = pDataset->GetInfo()->GetBrickSize(vLOD, vBrick);
+
+    UINT64 iBitWidth  = pDataset->GetInfo()->GetBitwith();
+    UINT64 iCompCount = pDataset->GetInfo()->GetComponentCount();
+
+    GLint glInternalformat;
+    GLenum glFormat;
+    GLenum glType;
+
+    switch (iCompCount) {
+      case 1 : glFormat = GL_LUMINANCE; break;
+      case 3 : glFormat = GL_RGB; break;
+      case 4 : glFormat = GL_RGBA; break;
+      default : return false;
+    }
+
+    if (iBitWidth == 8) {
+        glType = GL_UNSIGNED_BYTE;
+      
+        switch (iCompCount) {
+          case 1 : glInternalformat = GL_LUMINANCE8; break;
+          case 3 : glInternalformat = GL_RGB8; break;
+          case 4 : glInternalformat = GL_RGBA8; break;
+          default : return false;
+        }
+    } else {
+      if (iBitWidth == 16) {
+        glType = GL_UNSIGNED_SHORT;
+        switch (iCompCount) {
+          case 1 : glInternalformat = GL_LUMINANCE16; break;
+          case 3 : glInternalformat = GL_RGB16; break;
+          case 4 : glInternalformat = GL_RGBA16; break;
+          default : return false;
+        }
+
+      } else {
+          return false;
+      }
+    }
+
+
+    pTexture = new GLTexture3D(GLuint(vSize[0]), GLuint(vSize[1]), GLuint(vSize[2]), glInternalformat, glFormat, glType, pData);
+
+    return true;
+  }
+
+  void  FreeTexture() {
+    if (pTexture != NULL) {
+      pTexture->Delete();
+      delete pTexture;
+    }
+    pTexture = NULL;
+  }
+
+
+  unsigned char*      pData;
+  GLTexture3D*        pTexture;
+  VolumeDataset*      pDataset;
+  std::vector<UINT64> vLOD;
+  std::vector<UINT64> vBrick;
+};
+typedef std::deque<Texture3DListElem*> Texture3DList;
+typedef Texture3DList::iterator Texture3DListIter;
+
+
 class MasterController;
 
 class GPUMemMan {
@@ -153,6 +262,7 @@ class GPUMemMan {
     SimpleTextureList m_vpSimpleTextures;
     Trans1DList       m_vpTrans1DList;
     Trans2DList       m_vpTrans2DList;
+    Texture3DList     m_vpTex3DList;
     MasterController* m_MasterController;
     SystemInfo*       m_SystemInfo;
 };

@@ -64,6 +64,8 @@ GPUMemMan::~GPUMemMan() {
     m_MasterController->DebugOut()->Warning("GPUMemMan::~GPUMemMan","Detected unfreed 2D Transferfunction.");
   }
 
+  for (Texture3DListIter i = m_vpTex3DList.begin();i<m_vpTex3DList.end();i++) delete (*i);
+  m_vpTex3DList.clear();
 }
 
 // ******************** Datasets
@@ -285,5 +287,20 @@ void GPUMemMan::Free2DTrans(TransferFunction2D* pTransferFunction2D, AbstrRender
 // ******************** 3D Textures
 
 GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) {
-  return NULL;
+  for (Texture3DListIter i = m_vpTex3DList.begin();i<m_vpTex3DList.end();i++) {
+    if ((*i)->Match(pDataset, vLOD, vBrick)) {
+      m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Reusing 3D texture");
+      return (*i)->pTexture;
+    }
+  }
+
+
+  // TODO: add code here to release textures/memory if we run out of free GPU/CPU mem
+
+  m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Creating new texture");
+
+  Texture3DListElem* pNewBrick = new Texture3DListElem(pDataset, vLOD, vBrick);
+
+  m_vpTex3DList.push_back(pNewBrick);
+  return (*(m_vpTex3DList.end()-1))->pTexture;
 }

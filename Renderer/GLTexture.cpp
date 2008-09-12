@@ -38,7 +38,7 @@
 #include <cassert>
   
 GLTexture::~GLTexture() {
-  // TODO: I think we cannot call glDeleteTextures here as we are not guaranteed to be in the right context, ned to check this thougth
+  // TODO: I think we cannot call glDeleteTextures here as we are not guaranteed to be in the right context, need to check this thougth
   assert(m_iGLID == (unsigned int)(-1));
 }
 

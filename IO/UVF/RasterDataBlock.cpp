@@ -928,7 +928,7 @@ void RasterDataBlock::CleanupTemp() {
 }
 
 
-bool RasterDataBlock::GetData(unsigned char** pData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {
+bool RasterDataBlock::GetData(unsigned char** ppData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {
   if (m_pStreamFile == NULL || m_vLODOffsets.size() == 0) return false;
 
 	UINT64 iOffset = GetLocalDataPointerOffset(vLOD, vBrick)/8;
@@ -943,11 +943,11 @@ bool RasterDataBlock::GetData(unsigned char** pData, const std::vector<UINT64>& 
   vector<UINT64> vSize = GetBrickSize(vLOD,vBrick);
   UINT64 iSize = ComputeElementSize()/8;
   for (size_t i = 0;i<vSize.size();i++) iSize *= vSize[i];
-  if (*pData == NULL) *pData = new unsigned char[size_t(iSize)];
+  if (*ppData == NULL) *ppData = new unsigned char[size_t(iSize)];
 
   // copy data from file
   m_pStreamFile->SeekPos(iOffset);
-  m_pStreamFile->ReadRAW((*pData), iSize);
+  m_pStreamFile->ReadRAW((*ppData), iSize);
 
   return true;
 }

@@ -152,8 +152,8 @@ void GPUSBVR::Paint() {
     //m_matModelView.setModelview();
     m_SBVRGeogen.SetTransformation(m_matModelView);
 
-  	//glEnable(GL_BLEND);
-	  //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  	glEnable(GL_BLEND);
+	  glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 
     // switch to wireframe
     if (m_bRenderWireframe) {
@@ -163,10 +163,12 @@ void GPUSBVR::Paint() {
 	    glEdgeFlag(true);
     }
 
-    //m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vSmallestLOD, vFirstBrick)->Bind();
+    GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vSmallestLOD, vFirstBrick);
+
+    t->Bind();
+
     glEnable(GL_TEXTURE_3D);
 
-    // just do some stuff to simulate a slow draw call
     glBegin(GL_TRIANGLES);
       glColor4f(1,1,1,1);
 
@@ -175,6 +177,8 @@ void GPUSBVR::Paint() {
         glVertex3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vPos);
       }
     glEnd();
+
+    glDisable(GL_BLEND);
 
     if (m_bRenderWireframe) {
       // TODO: restore state
