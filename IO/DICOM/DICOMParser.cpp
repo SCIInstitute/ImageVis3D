@@ -704,7 +704,7 @@ bool DICOMParser::GetDICOMFileInfo(const string& strFilename, DICOMFileInfo& inf
 
   fileDICOM.close();
 
-  return true;
+  return info.m_ivSize.volume() != 0;
 }
 
 /*************************************************************************************/
