@@ -109,7 +109,7 @@ void MainWindow::LoadDataset(QString fileName) {
     } else {
       if (bChecksumFail) {
         QString strText =
-  	      tr("File %1 appears to be a broken UVF file since the header looks ok but the chcksum does not match.").arg(fileName);
+  	      tr("File %1 appears to be a broken UVF file since the header looks ok but the checksum does not match.").arg(fileName);
 
         QMessageBox::critical(this, "Load Error", strText);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());        

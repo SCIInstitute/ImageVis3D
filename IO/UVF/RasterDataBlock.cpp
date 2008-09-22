@@ -673,14 +673,20 @@ void RasterDataBlock::SubSample(LargeRAWFile* pSourceFile, LargeRAWFile* pTarget
       if (i==0) {
           pSourceData = new unsigned char[size_t(iSourceWindowSize*iElementSize)];
           pTargetData = new unsigned char[size_t(iTargetWindowSize*iElementSize)];
-
       } else {
         pTargetFile->WriteRAW(pTargetData, iTargetWindowSize*iElementSize);
       }
-      UINT64 iFilePos = pSourceFile->GetPos();
-      pSourceFile->SeekPos(iSourcePos*iElementSize);  // save and restore position for inplace subsampling
-      pSourceFile->ReadRAW(pSourceData, iSourceWindowSize*iElementSize);
-      pSourceFile->SeekPos(iFilePos);
+
+      if (pSourceFile == pTargetFile) {
+        UINT64 iFilePos = pSourceFile->GetPos();   // save and later restore position for inplace subsampling
+        pSourceFile->SeekPos(iSourcePos*iElementSize); 
+        pSourceFile->ReadRAW(pSourceData, iSourceWindowSize*iElementSize);
+        pSourceFile->SeekPos(iFilePos);
+      } else {
+        pSourceFile->SeekPos(iSourcePos*iElementSize);
+        pSourceFile->ReadRAW(pSourceData, iSourceWindowSize*iElementSize);
+      }
+
       iWindowSourcePos = 0;
       iWindowTargetPos = 0;
     }
@@ -881,7 +887,7 @@ void RasterDataBlock::FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const std:
         iTargetOffset += vBrickPermutation[j][0] * uiBytesPerElement;
 
 				iPosTargetArray += vBrickPermutation[j][0];
-				if (iPosTargetArray % vBrickPrefixProd[1] == 0) iSourceOffset += vReducedDomainSize[1] * uiBytesPerElement;
+				if (iPosTargetArray % vBrickPrefixProd[1] == 0) iSourceOffset += vReducedDomainSize[0] * uiBytesPerElement;
 
 				for (size_t l = 2;l<vReducedDomainSize.size();l++)
 					if (iPosTargetArray % vBrickPrefixProd[l] == 0) {

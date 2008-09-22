@@ -237,17 +237,17 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 
 	switch (iComponentSize) {
 		case 8 :	switch (iComponentCount) {
-						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<char,1>); break;
-						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<char,2>); break;
-						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<char,3>); break;
-						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<char,4>); break;
+						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,1>); break;
+						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,2>); break;
+						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,3>); break;
+						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,4>); break;
 						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", iComponentCount, iComponentSize); uvfFile.Close(); SourceData.Close(); return false;
 					} break;
 		case 16 :		switch (iComponentCount) {
-						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<short,1>); break;
-						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<short,2>); break;
-						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<short,3>); break;
-						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<short,4>); break;
+						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,1>); break;
+						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,2>); break;
+						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,3>); break;
+						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,4>); break;
 						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", iComponentCount, iComponentSize); uvfFile.Close(); SourceData.Close(); return false;
 					} break;
 		case 32 :	switch (iComponentCount) {
@@ -337,6 +337,7 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
 				}
 			}
 
+      // HACK: this code assumes 3 component data is always 3*char
 			if (pDICOMStack->m_iComponentCount == 3) {
 				unsigned int iRGBADataSize = (iDataSize / 3 ) * 4;
 				
