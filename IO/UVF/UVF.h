@@ -16,6 +16,8 @@
 
 #include "RasterDataBlock.h"
 #include "KeyValuePairDataBlock.h"
+#include "Histogram1DDataBlock.h"
+#include "Histogram2DDataBlock.h"
 
 
 class UVF
@@ -31,11 +33,11 @@ public:
 
 	const GlobalHeader& GetGlobalHeader() const {return m_GlobalHeader;}
 	UINT64 GetDataBlockCount() const {return UINT64(m_DataBlocks.size());}
-	const DataBlock* GetDataBlock(UINT64 index) const {return m_DataBlocks[size_t(index)];}
+	const DataBlock* GetDataBlock(UINT64 index) const {return m_DataBlocks[size_t(index)].first;}
 
 	// file creation routines
 	bool SetGlobalHeader(const GlobalHeader& GlobalHeader);
-	bool AddDataBlock(DataBlock& dataBlock, UINT64 iSizeofData);
+	bool AddDataBlock(DataBlock* dataBlock, UINT64 iSizeofData, bool bUseSourcePointer=false);
 	bool Create();
 
   static bool IsUVFFile(std::wstring wstrFilename, bool& bChecksumFail);
@@ -46,7 +48,7 @@ protected:
   LargeRAWFile    m_streamFile;
 
 	GlobalHeader m_GlobalHeader;
-	std::vector<DataBlock*> m_DataBlocks;
+  std::vector< std::pair<DataBlock*,bool> > m_DataBlocks;
 
 	bool ParseGlobalHeader(bool bVerify, std::string* pstrProblem = NULL);
 	void ParseDataBlocks();

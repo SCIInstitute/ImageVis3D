@@ -587,6 +587,22 @@ void RasterDataBlock::SetTypeToUShort(ElementSemanticTable semantic) {
 	SetTypeToScalar(16,16,false,semantic);
 }
 
+void RasterDataBlock::SetTypeToInt32(ElementSemanticTable semantic) {
+	SetTypeToScalar(32,31,true,semantic);
+}
+
+void RasterDataBlock::SetTypeToInt64(ElementSemanticTable semantic) {
+	SetTypeToScalar(64,63,true,semantic);
+}
+
+void RasterDataBlock::SetTypeToUInt32(ElementSemanticTable semantic) {
+	SetTypeToScalar(32,32,false,semantic);
+}
+
+void RasterDataBlock::SetTypeToUInt64(ElementSemanticTable semantic) {
+	SetTypeToScalar(64,64,false,semantic);
+}
+
 void RasterDataBlock::SetTypeToFloat(ElementSemanticTable semantic) {
 	SetTypeToScalar(32,23,true,semantic);
 }
@@ -935,15 +951,21 @@ void RasterDataBlock::CleanupTemp() {
 
 
 bool RasterDataBlock::GetData(unsigned char** ppData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {
-  if (m_pStreamFile == NULL || m_vLODOffsets.size() == 0) return false;
+  if (m_pTempFile == NULL && m_pStreamFile == NULL) return false;
+  if (m_vLODOffsets.size() == 0) return false;
 
-	UINT64 iOffset = GetLocalDataPointerOffset(vLOD, vBrick)/8;
+  LargeRAWFile*  pStreamFile;
+ 	UINT64 iOffset = GetLocalDataPointerOffset(vLOD, vBrick)/8;
 
-	// add global offset
-	iOffset += m_iOffset;
-
-	// add size of header
-	iOffset += DataBlock::GetOffsetToNextBlock() + ComputeHeaderSize();
+  if (m_pStreamFile != NULL) {
+	  // add global offset
+	  iOffset += m_iOffset;
+	  // add size of header
+	  iOffset += DataBlock::GetOffsetToNextBlock() + ComputeHeaderSize();
+    pStreamFile = m_pStreamFile;
+  } else {
+    pStreamFile = m_pTempFile;
+  }
 
   // new - memory if needed
   vector<UINT64> vSize = GetBrickSize(vLOD,vBrick);
@@ -951,9 +973,10 @@ bool RasterDataBlock::GetData(unsigned char** ppData, const std::vector<UINT64>&
   for (size_t i = 0;i<vSize.size();i++) iSize *= vSize[i];
   if (*ppData == NULL) *ppData = new unsigned char[size_t(iSize)];
 
+
   // copy data from file
-  m_pStreamFile->SeekPos(iOffset);
-  m_pStreamFile->ReadRAW((*ppData), iSize);
+  pStreamFile->SeekPos(iOffset);
+  pStreamFile->ReadRAW((*ppData), iSize);
 
   return true;
 }

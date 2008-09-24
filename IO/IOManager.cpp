@@ -268,12 +268,30 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 		return false;
 	}
 
-	if (!uvfFile.AddDataBlock(dataVolume,dataVolume.ComputeDataSize())) {
+	if (!uvfFile.AddDataBlock(&dataVolume,dataVolume.ComputeDataSize(), true)) {
     m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","AddDataBlock failed!"); 
     uvfFile.Close(); 
     SourceData.Close();
 		return false;
 	}
+
+ 	Histogram1DDataBlock Histogram1D;
+  if (!Histogram1D.Compute(&dataVolume)) {
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Computation of 1D Histogram failed!"); 
+    uvfFile.Close(); 
+    SourceData.Close();
+		return false;
+  }
+  Histogram2DDataBlock Histogram2D;
+  if (!Histogram2D.Compute(&dataVolume)) {
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Computation of 2D Histogram failed!"); 
+    uvfFile.Close(); 
+    SourceData.Close();
+		return false;
+  }
+
+	uvfFile.AddDataBlock(&Histogram1D,Histogram1D.ComputeDataSize());
+	uvfFile.AddDataBlock(&Histogram2D,Histogram2D.ComputeDataSize());
 
 /*
   // TODO: maybe add information from the source file to the UVF, like DICOM desc etc.

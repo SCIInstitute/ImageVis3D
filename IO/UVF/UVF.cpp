@@ -84,7 +84,7 @@ void UVF::Close() {
   	m_bFileIsLoaded = false;
   }
 
-	for (size_t i = 0;i<m_DataBlocks.size();i++) delete m_DataBlocks[i];
+  for (size_t i = 0;i<m_DataBlocks.size();i++) if (m_DataBlocks[i].second) delete m_DataBlocks[i].first;
 	m_DataBlocks.resize(0);
 }
 
@@ -215,9 +215,9 @@ void UVF::ParseDataBlocks() {
 
 		iOffset += d->GetOffsetToNextBlock();
 
-		m_DataBlocks.push_back(d);
+    m_DataBlocks.push_back(pair<DataBlock*,bool>(d,true));
 
-	} while (m_DataBlocks[m_DataBlocks.size()-1]->ulOffsetToNextDataBlock != 0);
+	} while (m_DataBlocks[m_DataBlocks.size()-1].first->ulOffsetToNextDataBlock != 0);
 }
 
 // ********************** file creation routines
@@ -245,13 +245,14 @@ bool UVF::SetGlobalHeader(const GlobalHeader& globalHeader) {
 	return true;
 }
 
-bool UVF::AddDataBlock(DataBlock& dataBlock, UINT64 iSizeofData) {
+bool UVF::AddDataBlock(DataBlock* dataBlock, UINT64 iSizeofData, bool bUseSourcePointer) {
 
-	if (!dataBlock.Verify(iSizeofData)) return false;
+	if (!dataBlock->Verify(iSizeofData)) return false;
 
-	DataBlock* d = dataBlock.Clone();
+  DataBlock* d;
+  if (bUseSourcePointer) d = dataBlock; else d = dataBlock->Clone();
 	d->ulOffsetToNextDataBlock = d->GetOffsetToNextBlock();
-	m_DataBlocks.push_back(d);
+	m_DataBlocks.push_back(pair<DataBlock*,bool>(d,!bUseSourcePointer));
 
 	return true;
 }
@@ -259,7 +260,7 @@ bool UVF::AddDataBlock(DataBlock& dataBlock, UINT64 iSizeofData) {
 UINT64 UVF::ComputeNewFileSize() {
 	UINT64 iFileSize = m_GlobalHeader.GetDataPos();
 	for (size_t i = 0;i<m_DataBlocks.size();i++) 
-		iFileSize += m_DataBlocks[i]->GetOffsetToNextBlock();
+		iFileSize += m_DataBlocks[i].first->GetOffsetToNextBlock();
 	return iFileSize;
 }
 
@@ -288,7 +289,7 @@ bool UVF::Create() {
     
 		UINT64 iOffset = m_GlobalHeader.GetDataPos();
 	  for (size_t i = 0;i<m_DataBlocks.size();i++)
-		  	iOffset += m_DataBlocks[i]->CopyToFile(&m_streamFile, iOffset, m_GlobalHeader.bIsBigEndian, i == m_DataBlocks.size()-1);
+		  	iOffset += m_DataBlocks[i].first->CopyToFile(&m_streamFile, iOffset, m_GlobalHeader.bIsBigEndian, i == m_DataBlocks.size()-1);
 
 		return true;
 	}else {

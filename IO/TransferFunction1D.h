@@ -56,6 +56,7 @@ public:
   ~TransferFunction1D(void);
   
   void SetDefault();
+  void SetDefault(size_t iSaturationPoint);
 
   void Resize(size_t iSize);
   void Resample(size_t iTargetSize);

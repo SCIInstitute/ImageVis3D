@@ -98,8 +98,8 @@ public:
   bool IsOpen() const {return m_bIsOpen;}
   std::string Filename() const {return m_strFilename;}
 
-  const Histogram1D* Get1DHistogramm() const {return m_pHist1D;}
-  const Histogram2D* Get2DHistogramm() const {return m_pHist2D;}
+  const Histogram1D* Get1DHistogram() const {return m_pHist1D;}
+  const Histogram2D* Get2DHistogram() const {return m_pHist2D;}
 
   const VolumeDatasetInfo* GetInfo() const {return m_pVolumeDatasetInfo;}
 
@@ -110,6 +110,8 @@ public:
 private:
   MasterController*   m_pMasterController;
   RasterDataBlock*    m_pVolumeDataBlock;
+  Histogram1DDataBlock*    m_pHist1DDataBlock;
+  Histogram2DDataBlock*    m_pHist2DDataBlock;
   UVF*                m_pDatasetFile;
 
   bool                m_bIsOpen;
@@ -119,7 +121,6 @@ private:
   Histogram2D*        m_pHist2D;
 
   bool Open(bool bVerify);
-  void ComputeHistogramms();
 
 };
 

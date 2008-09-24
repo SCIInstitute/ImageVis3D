@@ -29,7 +29,6 @@ namespace UVFTables {
 
 	enum CompressionSemanticTable {
 		COS_NONE = 0,
-//		COS_VOLUMEBLOCK,		// TODO: integrate volume block compression into the rasterdatablock, in particular the "compute size" methods are influenced by this
 		COS_UNKNOWN
 	};
 
@@ -39,6 +38,8 @@ namespace UVFTables {
 		BS_NDIM_TRANSFER_FUNC,
 		BS_PREVIEW_IMAGE,
 		BS_KEY_VALUE_PAIRS,
+		BS_1D_Histogram,
+		BS_2D_Histogram,
 		BS_UNKNOWN
 	};
 

@@ -61,6 +61,9 @@ template<class T, UINT64 iVecLength> void CombineAverage(std::vector<UINT64> vSo
 		pDataOut[v+iTarget*iVecLength] = T(temp[v]);
 }
 
+class Histogram1DDataBlock;
+class Histogram2DDataBlock;
+
 class RasterDataBlock : public DataBlock {
 public:
 	RasterDataBlock();
@@ -91,7 +94,7 @@ public:
 	virtual UINT64 ComputeDataSize(std::string* pstrProblem = NULL) const ;
 	virtual UINT64 ComputeHeaderSize() const;
 
-	bool SetBlockSemantic(UVFTables::BlockSemanticTable bs);
+	virtual bool SetBlockSemantic(UVFTables::BlockSemanticTable bs);
 
 	// CONVENIANCE FUNCTIONS
 	void SetScaleOnlyTransformation(const std::vector<double>& vScale);
@@ -102,20 +105,29 @@ public:
 	void SetTypeToUShort(UVFTables::ElementSemanticTable semantic);
 	void SetTypeToFloat(UVFTables::ElementSemanticTable semantic);
 	void SetTypeToDouble(UVFTables::ElementSemanticTable semantic);
+  void SetTypeToInt32(UVFTables::ElementSemanticTable semantic);
+  void SetTypeToInt64(UVFTables::ElementSemanticTable semantic);
+  void SetTypeToUInt32(UVFTables::ElementSemanticTable semantic);
+  void SetTypeToUInt64(UVFTables::ElementSemanticTable semantic);
+
 
 	bool GetData(unsigned char** ppData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const;
   bool SetData(unsigned char* pData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
 
 	const std::vector<UINT64>& GetBrickCount(const std::vector<UINT64>& vLOD) const {return m_vBrickCount[size_t(PermutationToIndex(vLOD, ulLODLevelCount))];}
 	const std::vector<UINT64>& GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {UINT64 iLODIndex = PermutationToIndex(vLOD, ulLODLevelCount);return m_vBrickSizes[size_t(iLODIndex)][size_t(PermutationToIndex(vBrick, m_vBrickCount[size_t(iLODIndex)]))];}
-	const std::vector<UINT64>& GetSmallestBrickSize() const {
-      std::vector<UINT64> vSmallestLOD = ulLODLevelCount;
-      for (size_t i = 0;i<vSmallestLOD.size();i++) vSmallestLOD[i] -= 1; // convert "size" to "maxindex"
-      
-      std::vector<UINT64> vFirstBrick(GetBrickCount(vSmallestLOD).size());
-      for (size_t i = 0;i<vFirstBrick.size();i++) vFirstBrick[i] = 0; // get the size of the first brick
 
-      return GetBrickSize(vSmallestLOD, vFirstBrick);
+	const std::vector<UINT64> GetSmallestBrickIndex() const {
+    std::vector<UINT64> vSmallestLOD = ulLODLevelCount;
+    for (size_t i = 0;i<vSmallestLOD.size();i++) vSmallestLOD[i] -= 1; // convert "size" to "maxindex"      
+    return vSmallestLOD;
+  }
+
+  const std::vector<UINT64>& GetSmallestBrickSize() const {
+    std::vector<UINT64> vSmallestLOD = GetSmallestBrickIndex();
+    std::vector<UINT64> vFirstBrick(GetBrickCount(vSmallestLOD).size());
+    for (size_t i = 0;i<vFirstBrick.size();i++) vFirstBrick[i] = 0; // get the size of the first brick
+    return GetBrickSize(vSmallestLOD, vFirstBrick);
   }
 
 
@@ -143,6 +155,8 @@ protected:
 
 
 	friend class UVF;
+  friend class Histogram1DDataBlock;
+  friend class Histogram2DDataBlock;
 
 	// CONVENIANCE FUNCTION HELPERS
 	std::vector<UINT64> m_vLODOffsets;

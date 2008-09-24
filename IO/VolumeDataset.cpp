@@ -46,6 +46,8 @@ using namespace std;
 VolumeDataset::VolumeDataset(const std::string& strFilename, bool bVerify, MasterController* pMasterController) : 
   m_pMasterController(pMasterController),
   m_pVolumeDataBlock(NULL),
+  m_pHist1DDataBlock(NULL),
+  m_pHist2DDataBlock(NULL),
   m_pDatasetFile(NULL),
   m_bIsOpen(false),
   m_strFilename(strFilename),
@@ -54,7 +56,6 @@ VolumeDataset::VolumeDataset(const std::string& strFilename, bool bVerify, Maste
   m_pHist2D(NULL)
 {
   Open(bVerify);
-  ComputeHistogramms();
 }
 
 VolumeDataset::~VolumeDataset()
@@ -62,7 +63,6 @@ VolumeDataset::~VolumeDataset()
   delete m_pHist1D;
   delete m_pHist2D;
   delete m_pVolumeDatasetInfo;
-
 
   if (m_pDatasetFile != NULL) {
      m_pDatasetFile->Close();
@@ -82,6 +82,18 @@ bool VolumeDataset::Open(bool bVerify)
 
   UINT64 iRasterBlockIndex = UINT64(-1);
   for (size_t iBlocks = 0;iBlocks<m_pDatasetFile->GetDataBlockCount();iBlocks++) {
+    if (m_pDatasetFile->GetDataBlock(iBlocks)->GetBlockSemantic() == UVFTables::BS_1D_Histogram) {
+      if (m_pHist1DDataBlock != NULL) {
+        m_pMasterController->DebugOut()->Warning("VolumeDataset::Open","Multiple 1D Histograms found using last block.");
+      }
+      m_pHist1DDataBlock = (Histogram1DDataBlock*)m_pDatasetFile->GetDataBlock(iBlocks);
+    } else
+    if (m_pDatasetFile->GetDataBlock(iBlocks)->GetBlockSemantic() == UVFTables::BS_2D_Histogram) {
+      if (m_pHist2DDataBlock != NULL) {
+        m_pMasterController->DebugOut()->Warning("VolumeDataset::Open","Multiple 2D Histograms found using last block.");
+      }
+      m_pHist2DDataBlock = (Histogram2DDataBlock*)m_pDatasetFile->GetDataBlock(iBlocks);
+    } else
     if (m_pDatasetFile->GetDataBlock(iBlocks)->GetBlockSemantic() == UVFTables::BS_REG_NDIM_GRID) {
       RasterDataBlock* pVolumeDataBlock = (RasterDataBlock*)m_pDatasetFile->GetDataBlock(iBlocks);
 
@@ -159,6 +171,33 @@ bool VolumeDataset::Open(bool bVerify)
       sStreamBrick << " x " << vSmallLODBrick[i];
   }
 
+  m_pHist1D = new Histogram1D(1<<m_pVolumeDatasetInfo->GetBitwith());
+  if (m_pHist1DDataBlock != NULL) {
+    const vector<UINT64>& vHist1D = m_pHist1DDataBlock->GetHistogram();
+    for (size_t i = 0;i<m_pHist1D->GetSize();i++) {
+      m_pHist1D->Set(i, (unsigned int)vHist1D[i]);
+    }
+  } else {
+    // generate a zero 1D histogram if none is found in the file
+    for (size_t i = 0;i<m_pHist1D->GetSize();i++) {
+      m_pHist1D->Set(i, 0);
+    }
+  }
+
+  m_pHist2D = new Histogram2D(VECTOR2<size_t>(1<<m_pVolumeDatasetInfo->GetBitwith(),256)); 
+  if (m_pHist2DDataBlock != NULL) {
+    const vector< vector<UINT64> >& vHist2D = m_pHist2DDataBlock->GetHistogram();
+    for (size_t y = 0;y<m_pHist2D->GetSize().y;y++)
+      for (size_t x = 0;x<m_pHist2D->GetSize().x;x++) 
+        m_pHist2D->Set(x,y,(unsigned int)vHist2D[y][x]);
+  } else {
+    // generate a zero 2D histogram if none is found in the file
+    for (size_t y = 0;y<m_pHist2D->GetSize().y;y++)
+      for (size_t x = 0;x<m_pHist2D->GetSize().x;x++) 
+        m_pHist2D->Set(x,y,0);
+  }
+
+
   m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  Size %s", sStreamDomain.str().c_str());
   m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  %i Bit, %i components", m_pVolumeDatasetInfo->GetBitwith(), m_pVolumeDatasetInfo->GetComponentCount());
   m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  LOD down to %s found", sStreamBrick.str().c_str());
@@ -166,19 +205,6 @@ bool VolumeDataset::Open(bool bVerify)
   return true;
 }
 
-void VolumeDataset::ComputeHistogramms() 
-{
-  // DEBUG CODE
-  // generate a random 1D histogram
-  m_pHist1D = new Histogram1D(1<<m_pVolumeDatasetInfo->GetBitwith());
-  for (size_t i = 0;i<m_pHist1D->GetSize();i++) m_pHist1D->Set(i, (unsigned int)(i+(rand()*10) / RAND_MAX));
-  // generate a random 2D histogram
-  m_pHist2D = new Histogram2D(VECTOR2<size_t>(1<<m_pVolumeDatasetInfo->GetBitwith(),256));  // TODO: decide: always 8bit gradient ?
-  for (size_t y = 0;y<m_pHist2D->GetSize().y;y++)
-    for (size_t x = 0;x<m_pHist2D->GetSize().x;x++) 
-      m_pHist2D->Set(x,y,(unsigned int)(x+(rand()*10) / RAND_MAX)*(unsigned int)(y+(rand()*10) / RAND_MAX));
-  // END DEBUG CODE
-}
 
 
 UINTVECTOR3 VolumeDataset::GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) {
