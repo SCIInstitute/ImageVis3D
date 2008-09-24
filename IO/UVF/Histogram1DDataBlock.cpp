@@ -48,7 +48,7 @@ bool Histogram1DDataBlock::Compute(RasterDataBlock* source) {
   //       this should be changed to a more general approach
   vector<UINT64> vSmallestLOD = source->GetSmallestBrickIndex();
   const vector<UINT64>& vBricks = source->GetBrickCount(vSmallestLOD);
-  for (UINT i = 0;i<vBricks.size();i++) if (vBricks[i] != 1) return false;
+  for (unsigned int i = 0;i<vBricks.size();i++) if (vBricks[i] != 1) return false;
   
 	strBlockID = "1D Histogram for datablock " + source->strBlockID;
 	ulCompressionScheme = UVFTables::COS_NONE;

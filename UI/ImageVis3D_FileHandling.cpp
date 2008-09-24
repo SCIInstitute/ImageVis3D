@@ -62,7 +62,7 @@ using namespace std;
 void MainWindow::LoadDataset() {
   QFileDialog::Options options;
 #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
-  options | = QFileDialog::DontUseNativeDialog;
+  options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;
 
@@ -75,7 +75,7 @@ void MainWindow::LoadDataset() {
 QString MainWindow::GetConvFilename() {
     QFileDialog::Options options;
     #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
-      options | = QFileDialog::DontUseNativeDialog;
+      options |= QFileDialog::DontUseNativeDialog;
     #endif
     QString selectedFilter;
 
@@ -138,7 +138,7 @@ void MainWindow::LoadDirectory() {
 
         QFileDialog::Options options;
       #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
-        options | = QFileDialog::DontUseNativeDialog;
+        options |= QFileDialog::DontUseNativeDialog;
       #endif
         QString selectedFilter;
 
@@ -170,7 +170,7 @@ void MainWindow::LoadDirectory() {
 void MainWindow::SaveDataset() {
   QFileDialog::Options options;
 #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
-  options | = QFileDialog::DontUseNativeDialog;
+  options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;
 

@@ -1,5 +1,21 @@
 // !$*UTF8*$!
 {
+	03A6212F10E1DAE678AC1C70 /* Grids.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1859, 2632}}";
+			sepNavSelRange = "{3616, 42}";
+			sepNavVisRange = "{2682, 1965}";
+			sepNavWindowFrame = "{{15, 195}, {1739, 978}}";
+		};
+	};
+	0D1B69ACD7171EF0792527BC /* ImageVis3D_FileHandling.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1859, 2646}}";
+			sepNavSelRange = "{2155, 0}";
+			sepNavVisRange = "{1492, 1552}";
+			sepNavWindowFrame = "{{38, 174}, {1739, 978}}";
+		};
+	};
 	1AFF5E40DBA2AB863E40B0E0 /* Transferfunction1D.h */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {984, 1036}}";
@@ -11,7 +27,7 @@
 	1D830425BF351FAA1C7C054A /* ImageVis3D */ = {
 		activeExec = 0;
 		executables = (
-			566E46630E27B8BA007FF895 /* ImageVis3D */,
+			56C0FF640E89BF870022F83A /* ImageVis3D */,
 		);
 	};
 	2D35139F03183DA58A907984 /* RenderWindow.cpp */ = {
@@ -22,6 +38,13 @@
 			sepNavWindowFrame = "{{61, 153}, {1739, 978}}";
 		};
 	};
+	35EEAD83B47D913489333138 /* MasterController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1859, 1246}}";
+			sepNavSelRange = "{2564, 46}";
+			sepNavVisRange = "{1444, 1368}";
+		};
+	};
 	42C4A4D153B2B116249852FE /* ImageVis3D.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1859, 6664}}";
@@ -29,50 +52,12 @@
 			sepNavVisRange = "{4466, 1555}";
 		};
 	};
-	561A36060E27E1AA0014EC08 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "error: conversion from ‘QByteArray’ to non-scalar type ‘std::basic_string<char, std::char_traits<char>, std::allocator<char> >’ requested";
-		fRef = 42C4A4D153B2B116249852FE /* ImageVis3D.cpp */;
-		rLen = 1;
-		rLoc = 87;
-		rType = 1;
-	};
-	561A36070E27E1AA0014EC08 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 42C4A4D153B2B116249852FE /* ImageVis3D.cpp */;
-		name = "ImageVis3D.cpp: 162";
-		rLen = 0;
-		rLoc = 5140;
-		rType = 0;
-		vrLen = 1555;
-		vrLoc = 4466;
-	};
-	566E46630E27B8BA007FF895 /* ImageVis3D */ = {
-		isa = PBXExecutable;
-		activeArgIndices = (
-		);
-		argumentStrings = (
-		);
-		autoAttachOnCrash = 1;
-		breakpointsEnabled = 0;
-		configStateDict = {
-		};
-		customDataFormattersEnabled = 1;
-		debuggerPlugin = GDBDebugging;
-		disassemblyDisplayState = 0;
-		dylibVariantSuffix = "";
-		enableDebugStr = 1;
-		environmentEntries = (
-		);
-		executableSystemSymbolLevel = 0;
-		executableUserSymbolLevel = 0;
-		libgmallocEnabled = 0;
-		name = ImageVis3D;
-		savedGlobals = {
-		};
-		sourceDirectories = (
-		);
-		variableFormatDictionary = {
+	4A39709595253CF1F5C25274 /* Histogram1DDataBlock.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1859, 2156}}";
+			sepNavSelRange = "{1867, 0}";
+			sepNavVisRange = "{0, 2048}";
+			sepNavWindowFrame = "{{61, 153}, {1739, 978}}";
 		};
 	};
 	566E46870E27B96E007FF895 /* Q1DTransferFunction.cpp:247 */ = {
@@ -91,6 +76,83 @@
 		location = ImageVis3D;
 		modificationTime = 237484663.813711;
 		state = 2;
+	};
+	56C0FF640E89BF870022F83A /* ImageVis3D */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = ImageVis3D;
+		sourceDirectories = (
+		);
+	};
+	56C0FF6F0E89BFD70022F83A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: no match for ‘operator<’ in ‘y < ((const Grid2D<T>*)this)->Grid2D<T>::m_iSize’";
+		fRef = 03A6212F10E1DAE678AC1C70 /* Grids.h */;
+		rLen = 1;
+		rLoc = 110;
+		rType = 1;
+	};
+	56C0FF700E89BFD70022F83A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 03A6212F10E1DAE678AC1C70 /* Grids.h */;
+		name = "Grids.h: 111";
+		rLen = 42;
+		rLoc = 3616;
+		rType = 0;
+		vrLen = 1965;
+		vrLoc = 2682;
+	};
+	56C0FF780E89C0120022F83A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: expected primary-expression before ‘=’ token";
+		fRef = 0D1B69ACD7171EF0792527BC /* ImageVis3D_FileHandling.cpp */;
+		rLen = 1;
+		rLoc = 64;
+		rType = 1;
+	};
+	56C0FF790E89C0120022F83A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 0D1B69ACD7171EF0792527BC /* ImageVis3D_FileHandling.cpp */;
+		name = "ImageVis3D_FileHandling.cpp: 65";
+		rLen = 0;
+		rLoc = 2155;
+		rType = 0;
+		vrLen = 1552;
+		vrLoc = 1492;
+	};
+	56C0FF7D0E89C03C0022F83A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "error: ‘UINT’ was not declared in this scope";
+		fRef = 4A39709595253CF1F5C25274 /* Histogram1DDataBlock.cpp */;
+		rLen = 1;
+		rLoc = 50;
+		rType = 1;
+	};
+	56C0FF7E0E89C03C0022F83A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 4A39709595253CF1F5C25274 /* Histogram1DDataBlock.cpp */;
+		name = "Histogram1DDataBlock.cpp: 51";
+		rLen = 0;
+		rLoc = 1867;
+		rType = 0;
+		vrLen = 2048;
+		vrLoc = 0;
 	};
 	56FBC5720E26914A0095419D /* Source Control */ = {
 		isa = PBXSourceControlManager;
@@ -111,10 +173,18 @@
 			sepNavWindowFrame = "{{96, 179}, {1739, 978}}";
 		};
 	};
+	5AC0772431568BACAD4559FF /* Histogram2DDataBlock.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1680, 3682}}";
+			sepNavSelRange = "{2327, 0}";
+			sepNavVisRange = "{764, 2655}";
+			sepNavWindowFrame = "{{84, 132}, {1739, 978}}";
+		};
+	};
 	91B15E841AA80083484172DE /* Project object */ = {
 		activeArchitecture = i386;
 		activeBuildConfigurationName = Release;
-		activeExecutable = 566E46630E27B8BA007FF895 /* ImageVis3D */;
+		activeExecutable = 56C0FF640E89BF870022F83A /* ImageVis3D */;
 		activeTarget = 1D830425BF351FAA1C7C054A /* ImageVis3D */;
 		addToTargets = (
 			1D830425BF351FAA1C7C054A /* ImageVis3D */,
@@ -124,7 +194,7 @@
 		);
 		codeSenseManager = 56FBC5730E26914A0095419D /* Code sense */;
 		executables = (
-			566E46630E27B8BA007FF895 /* ImageVis3D */,
+			56C0FF640E89BF870022F83A /* ImageVis3D */,
 		);
 		perUserDictionary = {
 			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA1AED706398EBD00589147" = {
@@ -233,16 +303,28 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 237494536;
-			PBXWorkspaceStateSaveDate = 237494536;
+			PBXPerProjectTemplateStateSaveDate = 243908487;
+			PBXWorkspaceStateSaveDate = 243908487;
 		};
 		perUserProjectItems = {
-			561A36060E27E1AA0014EC08 /* PBXTextBookmark */ = 561A36060E27E1AA0014EC08 /* PBXTextBookmark */;
-			561A36070E27E1AA0014EC08 /* PBXTextBookmark */ = 561A36070E27E1AA0014EC08 /* PBXTextBookmark */;
+			56C0FF6F0E89BFD70022F83A /* PBXTextBookmark */ = 56C0FF6F0E89BFD70022F83A /* PBXTextBookmark */;
+			56C0FF700E89BFD70022F83A /* PBXTextBookmark */ = 56C0FF700E89BFD70022F83A /* PBXTextBookmark */;
+			56C0FF780E89C0120022F83A /* PBXTextBookmark */ = 56C0FF780E89C0120022F83A /* PBXTextBookmark */;
+			56C0FF790E89C0120022F83A /* PBXTextBookmark */ = 56C0FF790E89C0120022F83A /* PBXTextBookmark */;
+			56C0FF7D0E89C03C0022F83A /* PBXTextBookmark */ = 56C0FF7D0E89C03C0022F83A /* PBXTextBookmark */;
+			56C0FF7E0E89C03C0022F83A /* PBXTextBookmark */ = 56C0FF7E0E89C03C0022F83A /* PBXTextBookmark */;
 		};
 		sourceControlManager = 56FBC5720E26914A0095419D /* Source Control */;
 		userBuildSettings = {
 			SYMROOT = /Users/krueger/Documents/Projects/ImageVis3D/Build/OSX;
+		};
+	};
+	A7E49D07EB8069678D8AC7A1 /* AbstrRenderer.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1680, 1232}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{186, 2474}";
+			sepNavWindowFrame = "{{15, 195}, {1739, 978}}";
 		};
 	};
 	C0995966BBDD7BA1E8FBF1B6 /* Q1DTransferFunction.h */ = {
