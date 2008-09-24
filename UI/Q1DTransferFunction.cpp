@@ -93,40 +93,40 @@ Q1DTransferFunction::~Q1DTransferFunction(void)
 
 void Q1DTransferFunction::PreparePreviewData() {
   delete m_pPreviewColor;
-  m_pPreviewColor = new QImage(int(m_vHistrogram.GetSize()),1, QImage::Format_ARGB32);
+  m_pPreviewColor = new QImage(int(m_vHistogram.GetSize()),1, QImage::Format_ARGB32);
   m_bBackdropCacheUptodate = false;
 }
 
-void Q1DTransferFunction::SetData(const Histogram1D* vHistrogram,
+void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
           TransferFunction1D* pTrans) {
   m_pTrans = pTrans;
   if (m_pTrans == NULL) return;
 
-  m_pTrans->SetDefault();
+  // resize internal histogram, we only consider histogram values to the maximum entry that is non-zero
+  m_vHistogram.Resize(vHistogram->GetFilledSize());
 
-  // store histogram
-  m_vHistrogram.Resize(vHistrogram->GetSize());
-  
+  m_pTrans->SetDefault(m_vHistogram.GetSize()-1);
+
   // resize the preview bar and force the draw routine to recompute the backdrop cache
   PreparePreviewData();
 
   // if the histogram is empty we are done
-  if (m_vHistrogram.GetSize() == 0)  return;
+  if (m_vHistogram.GetSize() == 0)  return;
 
   // rescale the histogram to the [0..1] range
   // first find min and max ...
-  unsigned int iMax = vHistrogram->GetLinear(0); 
+  unsigned int iMax = vHistogram->GetLinear(0); 
   unsigned int iMin = iMax;
-  for (size_t i = 0;i<m_vHistrogram.GetSize();i++) {
-    unsigned int iVal = vHistrogram->GetLinear(i);
+  for (size_t i = 0;i<m_vHistogram.GetSize();i++) {
+    unsigned int iVal = vHistogram->GetLinear(i);
     if (iVal > iMax) iMax = iVal;
     if (iVal < iMin) iMin = iVal;
   }
 
   // ... than rescale
   float fDiff = float(iMax)-float(iMin);
-  for (size_t i = 0;i<m_vHistrogram.GetSize();i++)
-    m_vHistrogram.SetLinear(i, (float(vHistrogram->GetLinear(i)) - float(iMin)) / fDiff);
+  for (size_t i = 0;i<m_vHistogram.GetSize();i++)
+    m_vHistogram.SetLinear(i, (float(vHistogram->GetLinear(i)) - float(iMin)) / fDiff);
 }
 
 void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
@@ -189,8 +189,8 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
   // define the polygon ...
   std::vector<QPointF> pointList;
   pointList.push_back(QPointF(m_iLeftBorder+1, iGridHeight-m_iBottomBorder));
-  for (size_t i = 0;i<m_vHistrogram.GetSize();i++) 
-    pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistrogram.GetSize()-1), m_iTopBorder+iGridHeight-m_vHistrogram.Get(i)*iGridHeight));  
+  for (size_t i = 0;i<m_vHistogram.GetSize();i++) 
+    pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1), m_iTopBorder+iGridHeight-m_vHistogram.Get(i)*iGridHeight));  
   pointList.push_back(QPointF(m_iLeftBorder+iGridWidth, m_iTopBorder+iGridHeight));
   pointList.push_back(QPointF(m_iLeftBorder+1, m_iTopBorder+iGridHeight));
 
@@ -208,7 +208,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
   unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
 
   // draw the tranfer function as one larger polyline
-  std::vector<QPointF> pointList(m_pTrans->vColorData.size());
+  std::vector<QPointF> pointList(m_vHistogram.GetSize());
   QPen penCurve(m_colorBorder, 1, Qt::SolidLine);
   
   // for every component
@@ -235,7 +235,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 
 
   // draw preview bar
-  for (unsigned int x = 0;x<m_vHistrogram.GetSize();x++) {
+  for (unsigned int x = 0;x<m_vHistogram.GetSize();x++) {
     m_pPreviewColor->setPixel(x,0,qRgba(int(m_pTrans->vColorData[x][0]*255),
           int(m_pTrans->vColorData[x][1]*255),
           int(m_pTrans->vColorData[x][2]*255),
@@ -281,7 +281,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
   // compute some grid dimensions
   unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
   unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
-  unsigned int iVectorSize = uint(m_pTrans->vColorData.size());
+  unsigned int iVectorSize = uint(m_vHistogram.GetSize());
 
   // compute position in color array
   int iCurrentIndex = int((float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth));

@@ -433,6 +433,22 @@
 					>
 				</File>
 				<File
+					RelativePath=".\IO\UVF\Histogram1DDataBlock.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\Histogram1DDataBlock.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\Histogram2DDataBlock.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\Histogram2DDataBlock.h"
+					>
+				</File>
+				<File
 					RelativePath=".\IO\UVF\KeyValuePairDataBlock.cpp"
 					>
 				</File>
@@ -476,10 +492,6 @@
 					RelativePath=".\IO\UVF\UVFTables.h"
 					>
 				</File>
-				<Filter
-					Name="Converters"
-					>
-				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

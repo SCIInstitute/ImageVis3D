@@ -67,7 +67,7 @@ class Q2DTransferFunction : public QWidget
 public:
   Q2DTransferFunction(MasterController& masterController, QWidget *parent=0);
   virtual ~Q2DTransferFunction(void);
-  void SetData(const Histogram2D* vHistrogram, TransferFunction2D* pTrans);
+  void SetData(const Histogram2D* vHistogram, TransferFunction2D* pTrans);
   void SetPaintmode(unsigned int iPaintmode) {
     if (iPaintmode < Q2DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
   void Set1DTrans(const TransferFunction1D* p1DTrans);
@@ -113,7 +113,7 @@ protected:
 
 private:
   // states
-  NormalizedHistogram2D  m_vHistrogram;
+  NormalizedHistogram2D  m_vHistogram;
   TransferFunction2D*    m_pTrans;
   unsigned int      m_iPaintmode;
   int            m_iActiveSwatchIndex;

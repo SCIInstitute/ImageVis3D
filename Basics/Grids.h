@@ -66,6 +66,14 @@ template <class T> class Grid1D : public GridnD<T> {
     }
     virtual ~Grid1D<T>() {}
 
+    size_t GetFilledSize() const {
+      size_t iSize = 0;
+      for (size_t i = 0;i<m_iSize;i++) {
+        if (this->m_pData[i] != 0) iSize = i;
+      }
+      return iSize+1;
+    }
+
     size_t GetSize() const {return m_iSize;}
     void Resize(const size_t& iSize) {
       delete [] this->m_pData; 
@@ -97,6 +105,19 @@ template <class T> class Grid2D : public GridnD<T> {
       memcpy(this->m_pData, other->m_pData, sizeof(T)*m_iSize.area());
     }
     virtual ~Grid2D<T>() {}
+
+    VECTOR2<size_t> GetFilledSize() const {
+      VECTOR2<size_t> vSize(0,0);
+      for (size_t y = 0;y<m_iSize;y++) {
+        for (size_t x = vSize.x;x<m_iSize;x++) {
+          if (this->Get(x,y) != 0) {
+            vSize.x = x;
+            vSize.y = y;
+          }
+        }
+      }
+    }
+
 
     VECTOR2<size_t> GetSize() const {return m_iSize;}
     void Resize(const VECTOR2<size_t>& iSize) {

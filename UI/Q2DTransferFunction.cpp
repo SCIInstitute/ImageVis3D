@@ -94,34 +94,33 @@ QSize Q2DTransferFunction::sizeHint() const
   return QSize(400, 400);
 }
 
-void Q2DTransferFunction::SetData(const Histogram2D* vHistrogram,
-				  TransferFunction2D* pTrans) {
+void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunction2D* pTrans) {
   m_pTrans = pTrans;
   if (m_pTrans == NULL) return;
 
   // resize the histogram vector
-  m_vHistrogram.Resize(vHistrogram->GetSize());
+  m_vHistogram.Resize(vHistogram->GetSize());
   
   // force the draw routine to recompute the backdrop cache
   m_bBackdropCacheUptodate = false;
 
   // if the histogram is empty we are done
-  if (m_vHistrogram.GetSize().area() == 0)  return;
+  if (m_vHistogram.GetSize().area() == 0)  return;
 
   // rescale the histogram to the [0..1] range
   // first find min and max ...
-  unsigned int iMax = vHistrogram->GetLinear(0);
+  unsigned int iMax = vHistogram->GetLinear(0);
   unsigned int iMin = iMax;
-  for (size_t i = 0;i<m_vHistrogram.GetSize().area();i++) {
-    unsigned int iVal = vHistrogram->GetLinear(i);
+  for (size_t i = 0;i<m_vHistogram.GetSize().area();i++) {
+    unsigned int iVal = vHistogram->GetLinear(i);
     if (iVal > iMax) iMax = iVal;
     if (iVal < iMin) iMin = iVal;
   }
 
   // ... than rescale
   float fDiff = float(iMax)-float(iMin);
-  for (size_t i = 0;i<m_vHistrogram.GetSize().area();i++)
-    m_vHistrogram.SetLinear(i, (float(vHistrogram->GetLinear(i)) - float(iMin)) / fDiff);
+  for (size_t i = 0;i<m_vHistogram.GetSize().area();i++)
+    m_vHistogram.SetLinear(i, (float(vHistogram->GetLinear(i)) - float(iMin)) * 10000.0f/ fDiff);
 }
 
 void Q2DTransferFunction::DrawBorder(QPainter& painter) {
@@ -139,10 +138,10 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter, float fScale) {
 
   // convert the histogram into an image
   // define the bitmap ...
-  QImage image(QSize(int(m_vHistrogram.GetSize().x), int(m_vHistrogram.GetSize().y)), QImage::Format_RGB32);
-  for (size_t y = 0;y<m_vHistrogram.GetSize().y;y++) 
-    for (size_t x = 0;x<m_vHistrogram.GetSize().x;x++) {
-      float value = min(1.0f, fScale*m_vHistrogram.Get(x,y));
+  QImage image(QSize(int(m_vHistogram.GetSize().x), int(m_vHistogram.GetSize().y)), QImage::Format_RGB32);
+  for (size_t y = 0;y<m_vHistogram.GetSize().y;y++) 
+    for (size_t x = 0;x<m_vHistogram.GetSize().x;x++) {
+      float value = min(1.0f, fScale*m_vHistogram.Get(x,y));
       image.setPixel(int(x),
 		     int(y),
 		     qRgb(int(m_colorBack.red()  * (1.0f-value) +
@@ -157,7 +156,7 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter, float fScale) {
   QRectF target(m_iBorderSize/2, m_iBorderSize/2,
 		width()-m_iBorderSize, height()-m_iBorderSize);
   QRectF source(0.0, 0.0,
-		m_vHistrogram.GetSize().x, m_vHistrogram.GetSize().y);
+		m_vHistogram.GetSize().x, m_vHistogram.GetSize().y);
   painter.drawImage( target, image, source );
 }
 

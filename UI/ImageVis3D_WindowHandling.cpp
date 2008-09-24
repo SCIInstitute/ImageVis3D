@@ -325,11 +325,11 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     m_ActiveRenderWin = sender;
 
     m_1DTransferFunction->
-      SetData(sender->GetRenderer()->GetDataSet()->Get1DHistogramm(),
+      SetData(sender->GetRenderer()->GetDataSet()->Get1DHistogram(),
 	      sender->GetRenderer()->Get1DTrans());
     m_1DTransferFunction->update();
     m_2DTransferFunction->
-      SetData(sender->GetRenderer()->GetDataSet()->Get2DHistogramm(),
+      SetData(sender->GetRenderer()->GetDataSet()->Get2DHistogram(),
 	      sender->GetRenderer()->Get2DTrans());
     m_2DTransferFunction->update();
 

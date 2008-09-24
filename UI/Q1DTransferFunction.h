@@ -60,7 +60,7 @@ public:
   Q1DTransferFunction(MasterController& masterController, QWidget *parent=0);
   virtual ~Q1DTransferFunction(void);
 
-  void SetData(const Histogram1D* vHistrogram, TransferFunction1D* Trans);
+  void SetData(const Histogram1D* vHistogram, TransferFunction1D* Trans);
 
   const TransferFunction1D* GetTrans() {return m_pTrans;}
 
@@ -88,7 +88,7 @@ private:
   // states
   MasterController& m_MasterController;
 
-  NormalizedHistogram1D m_vHistrogram;
+  NormalizedHistogram1D m_vHistogram;
   TransferFunction1D* m_pTrans;
 
   unsigned int m_iPaintMode;

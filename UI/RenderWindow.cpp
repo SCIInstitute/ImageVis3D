@@ -89,8 +89,6 @@ void RenderWindow::initializeGL()
       m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Starting up GL! Running on a %s %s with OpenGL version %s",vendor, renderer, version);
     }
 
-
-
     bFirstTime = false;
   }
 

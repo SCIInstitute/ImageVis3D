@@ -99,24 +99,20 @@ void MainWindow::LoadDataset(QString fileName) {
       if (targetFileName.isEmpty()) return;
       pleaseWait.SetText("Converting, please wait  ...");
       if (!m_MasterController.IOMan()->ConvertDataset(fileName.toStdString(), targetFileName.toStdString())) {
-        QString strText =
-  	      tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFileName);
-
+        QString strText = tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFileName);
+        m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
         QMessageBox::critical(this, "Conversion Error", strText);
-        m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());        
+        return;
       }      
       fileName = targetFileName;
     } else {
       if (bChecksumFail) {
-        QString strText =
-  	      tr("File %1 appears to be a broken UVF file since the header looks ok but the checksum does not match.").arg(fileName);
-
-        QMessageBox::critical(this, "Load Error", strText);
+        QString strText = tr("File %1 appears to be a broken UVF file since the header looks ok but the checksum does not match.").arg(fileName);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());        
+        QMessageBox::critical(this, "Load Error", strText);
         return;
       }
     }
-
 
     RenderWindow *renderWin = CreateNewRenderWindow(fileName);
     renderWin->show();
