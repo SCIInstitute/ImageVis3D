@@ -47,6 +47,8 @@ HEADERS += Basics/Grids.h \
            IO/UVF/UVF.h \
            IO/UVF/UVFBasic.h \
            IO/UVF/UVFTables.h \
+           IO/UVF/Histogram1DDataBlock.h \
+           IO/UVF/Histogram2DDataBlock.h \
            Controller/MasterController.h \
            DebugOut/AbstrDebugOut.h \
            DebugOut/TextfileOut.h \
@@ -96,7 +98,9 @@ SOURCES += 3rdParty/GLEW/glew.c \
            IO/UVF/LargeRAWFile.cpp \
            IO/UVF/RasterDataBlock.cpp \
            IO/UVF/UVF.cpp \
-           IO/UVF/UVFTables.cpp \           
+           IO/UVF/UVFTables.cpp \
+           IO/UVF/Histogram1DDataBlock.cpp \
+           IO/UVF/Histogram2DDataBlock.cpp \                     
            Controller/MasterController.cpp \
            DebugOut/TextfileOut.cpp \
            DebugOut/QTOut.cpp \
