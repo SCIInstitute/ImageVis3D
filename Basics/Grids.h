@@ -108,8 +108,8 @@ template <class T> class Grid2D : public GridnD<T> {
 
     VECTOR2<size_t> GetFilledSize() const {
       VECTOR2<size_t> vSize(0,0);
-      for (size_t y = 0;y<m_iSize;y++) {
-        for (size_t x = vSize.x;x<m_iSize;x++) {
+      for (size_t y = 0;y<m_iSize.y;y++) {
+        for (size_t x = vSize.x;x<m_iSize.x;x++) {
           if (this->Get(x,y) != 0) {
             vSize.x = x;
             vSize.y = y;
