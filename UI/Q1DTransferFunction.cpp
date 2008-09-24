@@ -50,11 +50,9 @@ using namespace std;
 
 
 Q1DTransferFunction::Q1DTransferFunction(MasterController& masterController, QWidget *parent) :
-  QWidget(parent),
-  m_MasterController(masterController), 
+  QTransferFunction(masterController, parent),
   m_pTrans(NULL),
   m_iPaintMode(PAINT_NONE),
-  m_iExecutionMode(CONTINUOUS),
   m_bBackdropCacheUptodate(false),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
@@ -265,8 +263,7 @@ void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   m_iLastIndex = -1;
 
   // send message to update the GLtexture
-  if( m_iExecutionMode == ONRELEASE )
-    ApplyFunction();
+  if( m_eExecutionMode == ONRELEASE )ApplyFunction();
 }
 
 void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
@@ -351,14 +348,13 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
   update();
 
   // send message to update the GLtexture
-  if( m_iExecutionMode == CONTINUOUS )
-    ApplyFunction();
+  if( m_eExecutionMode == CONTINUOUS ) ApplyFunction();
 }
 
 void Q1DTransferFunction::ApplyFunction() {
-  // TODO send message to update the GLtexture
-  //  cerr << "TODO send message to update the GLtexture" << endl;
-  };
+  // send message to update the GLtexture
+  m_MasterController.MemMan()->Changed1DTrans(NULL, m_pTrans);
+}
 
 void Q1DTransferFunction::SetColor(bool bIsEnabled) {
   if (bIsEnabled) {
@@ -465,7 +461,7 @@ bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
   if( m_pTrans->Load(strFilename.toStdString(), iSize) ) {
     PreparePreviewData();
     update();
-    m_MasterController.MemMan()->Changed1DTrans(NULL, m_pTrans);
+    ApplyFunction();
     return true;
   } else return false;
 }

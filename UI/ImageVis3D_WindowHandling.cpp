@@ -133,12 +133,12 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   Ui_MainWindow::setupUi(MainWindow);
 
   m_1DTransferFunction =
-    new Q1DTransferFunction(m_MasterController, dockWidgetContents_6);
-  horizontalLayout_13->addWidget(m_1DTransferFunction);
+    new Q1DTransferFunction(m_MasterController, frame_1DTrans);
+  verticalLayout_1DTrans->addWidget(m_1DTransferFunction);
 
   m_2DTransferFunction =
-    new Q2DTransferFunction(m_MasterController, frame_5);
-  verticalLayout_11->addWidget(m_2DTransferFunction);
+    new Q2DTransferFunction(m_MasterController, frame_2DTrans);
+  verticalLayout_2DTrans->addWidget(m_2DTransferFunction);
 
   Use2DTrans();
 

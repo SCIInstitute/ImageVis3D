@@ -116,6 +116,7 @@ template <class T> class Grid2D : public GridnD<T> {
           }
         }
       }
+      return vSize;
     }
 
 

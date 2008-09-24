@@ -555,6 +555,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UI\AutoGen\moc_QTransferFunction.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\UI\AutoGen\moc_RenderWindow.cpp"
 					>
 				</File>
@@ -790,6 +794,54 @@
 				<File
 					RelativePath=".\UI\QDataRadioButton.h"
 					>
+				</File>
+				<File
+					RelativePath=".\UI\QTransferFunction.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\QTransferFunction.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\UI\RenderWindow.cpp"

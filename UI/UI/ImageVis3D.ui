@@ -36,7 +36,7 @@
      <x>388</x>
      <y>22</y>
      <width>617</width>
-     <height>1400</height>
+     <height>1451</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7" >
@@ -204,10 +204,10 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>389</width>
-          <height>241</height>
+          <x>0</x>
+          <y>0</y>
+          <width>360</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -334,10 +334,10 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>389</width>
-          <height>241</height>
+          <x>0</x>
+          <y>0</y>
+          <width>360</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -436,10 +436,10 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>389</width>
-          <height>241</height>
+          <x>0</x>
+          <y>0</y>
+          <width>360</width>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -868,7 +868,7 @@
      <x>1009</x>
      <y>22</y>
      <width>194</width>
-     <height>536</height>
+     <height>491</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -883,7 +883,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>514</height>
+      <height>469</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1144,10 +1144,10 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>389</width>
-          <height>72</height>
+          <x>0</x>
+          <y>0</y>
+          <width>360</width>
+          <height>71</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1243,10 +1243,10 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
-          <width>389</width>
-          <height>72</height>
+          <x>0</x>
+          <y>0</y>
+          <width>360</width>
+          <height>71</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1445,9 +1445,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>562</y>
+     <y>517</y>
      <width>194</width>
-     <height>459</height>
+     <height>420</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1468,7 +1468,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>437</height>
+      <height>398</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1649,7 +1649,7 @@
      <x>0</x>
      <y>562</y>
      <width>384</width>
-     <height>203</height>
+     <height>215</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -1676,7 +1676,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>181</height>
+      <height>193</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2" >
@@ -1716,9 +1716,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1426</y>
-     <width>586</width>
-     <height>518</height>
+     <y>1477</y>
+     <width>568</width>
+     <height>467</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1738,8 +1738,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>586</width>
-      <height>496</height>
+      <width>568</width>
+      <height>445</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_13" >
@@ -1798,6 +1798,12 @@
               <string>Color Components</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8" >
+              <property name="spacing" >
+               <number>5</number>
+              </property>
+              <property name="margin" >
+               <number>8</number>
+              </property>
               <item>
                <widget class="QCheckBox" name="checkBox_Red" >
                 <property name="minimumSize" >
@@ -1868,6 +1874,12 @@
               <string>Groups</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9" >
+              <property name="spacing" >
+               <number>5</number>
+              </property>
+              <property name="margin" >
+               <number>8</number>
+              </property>
               <item>
                <widget class="QRadioButton" name="radioButton_User" >
                 <property name="minimumSize" >
@@ -1910,49 +1922,6 @@
                 </property>
                 <property name="text" >
                  <string>Intensity</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_5" >
-             <property name="title" >
-              <string>Execution</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_4" >
-              <item>
-               <widget class="QRadioButton" name="radioButton_1DTransContinuous" >
-                <property name="text" >
-                 <string>Continuous</string>
-                </property>
-                <property name="checked" >
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="radioButton_1DTransOnRelease" >
-                <property name="text" >
-                 <string>On Release</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="radioButton_1DTransManual" >
-                <property name="text" >
-                 <string>Manual</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pushButton_Apply1DTrans" >
-                <property name="enabled" >
-                 <bool>false</bool>
-                </property>
-                <property name="text" >
-                 <string>Apply</string>
                 </property>
                </widget>
               </item>
@@ -2004,16 +1973,59 @@
        </layout>
       </widget>
      </item>
+     <item>
+      <widget class="QFrame" name="frame_1DTrans" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="frameShape" >
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow" >
+        <enum>QFrame::Plain</enum>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_1DTrans" >
+        <property name="spacing" >
+         <number>0</number>
+        </property>
+        <property name="margin" >
+         <number>0</number>
+        </property>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="verticalSlider_1DTransHistScale" >
+       <property name="minimumSize" >
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>20</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_2DTrans" >
    <property name="geometry" >
     <rect>
-     <x>590</x>
-     <y>1426</y>
-     <width>613</width>
-     <height>518</height>
+     <x>572</x>
+     <y>1477</y>
+     <width>631</width>
+     <height>467</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -2036,8 +2048,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>613</width>
-      <height>496</height>
+      <width>631</width>
+      <height>445</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_11" >
@@ -2486,7 +2498,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="frame_5" >
+      <widget class="QFrame" name="frame_2DTrans" >
        <property name="sizePolicy" >
         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
          <horstretch>0</horstretch>
@@ -2499,7 +2511,7 @@
        <property name="frameShadow" >
         <enum>QFrame::Raised</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_11" >
+       <layout class="QVBoxLayout" name="verticalLayout_2DTrans" >
         <property name="spacing" >
          <number>9</number>
         </property>
@@ -2509,6 +2521,25 @@
        </layout>
       </widget>
      </item>
+     <item>
+      <widget class="QSlider" name="verticalSlider_2DTransHistScale" >
+       <property name="minimumSize" >
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>20</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -2516,9 +2547,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>1025</y>
+     <y>941</y>
      <width>194</width>
-     <height>397</height>
+     <height>532</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2533,7 +2564,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>375</height>
+      <height>510</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
@@ -2544,7 +2575,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_14" >
         <property name="spacing" >
-         <number>6</number>
+         <number>3</number>
         </property>
         <property name="margin" >
          <number>9</number>
@@ -2601,7 +2632,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_15" >
         <property name="spacing" >
-         <number>6</number>
+         <number>3</number>
         </property>
         <property name="margin" >
          <number>9</number>
@@ -2648,6 +2679,55 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_5" >
+          <property name="title" >
+           <string>Execution</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4" >
+           <property name="spacing" >
+            <number>3</number>
+           </property>
+           <property name="margin" >
+            <number>8</number>
+           </property>
+           <item>
+            <widget class="QRadioButton" name="radioButton_UpdateContinuous" >
+             <property name="text" >
+              <string>Continuous</string>
+             </property>
+             <property name="checked" >
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_UpdateOnRelease" >
+             <property name="text" >
+              <string>On Release</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_UpdateManual" >
+             <property name="text" >
+              <string>Manual</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_ApplyUpdate" >
+             <property name="enabled" >
+              <bool>false</bool>
+             </property>
+             <property name="text" >
+              <string>Apply</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
@@ -2671,9 +2751,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>769</y>
+     <y>781</y>
      <width>384</width>
-     <height>304</height>
+     <height>323</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2688,7 +2768,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>282</height>
+      <height>301</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_17" >
@@ -2791,9 +2871,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1077</y>
+     <y>1108</y>
      <width>384</width>
-     <height>103</height>
+     <height>108</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2808,7 +2888,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>81</height>
+      <height>86</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_16" >
@@ -2870,9 +2950,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1184</y>
+     <y>1220</y>
      <width>384</width>
-     <height>238</height>
+     <height>253</height>
     </rect>
    </property>
    <property name="floating" >
@@ -2890,7 +2970,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>216</height>
+      <height>231</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_19" >
@@ -4111,10 +4191,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_Apply1DTrans</sender>
+   <sender>pushButton_ApplyUpdate</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer1DApplyFunction()</slot>
+   <slot>ApplyUpdate()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>299</x>
@@ -4127,10 +4207,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>radioButton_1DTransContinuous</sender>
+   <sender>radioButton_UpdateContinuous</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer1DSetExecution()</slot>
+   <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>298</x>
@@ -4143,10 +4223,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>radioButton_1DTransOnRelease</sender>
+   <sender>radioButton_UpdateOnRelease</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer1DSetExecution()</slot>
+   <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>251</x>
@@ -4159,10 +4239,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>radioButton_1DTransManual</sender>
+   <sender>radioButton_UpdateManual</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer1DSetExecution()</slot>
+   <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>271</x>
@@ -4234,8 +4314,8 @@
   <slot>SetDebugViewMask()</slot>
   <slot>Transfer1DSetColors()</slot>
   <slot>Transfer1DSetGroups()</slot>
-  <slot>Transfer1DSetExecution()</slot>
-  <slot>Transfer1DApplyFunction()</slot>
+  <slot>SetUpdateMode()</slot>
+  <slot>ApplyUpdate()</slot>
   <slot>Transfer1DSave()</slot>
   <slot>Transfer1DLoad()</slot>
   <slot>Transfer1DCopyTo2DTrans()</slot>

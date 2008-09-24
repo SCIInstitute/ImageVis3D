@@ -53,11 +53,10 @@
 using namespace std;
 
 Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWidget *parent) :
-  QWidget(parent),
+  QTransferFunction(masterController, parent),
   m_pTrans(NULL),
   m_iPaintmode(Q2DT_PAINT_NONE),
   m_iActiveSwatchIndex(-1),
-  m_MasterController(masterController),
   m_bBackdropCacheUptodate(false),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
@@ -99,7 +98,7 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunctio
   if (m_pTrans == NULL) return;
 
   // resize the histogram vector
-  m_vHistogram.Resize(vHistogram->GetSize());
+  m_vHistogram.Resize(vHistogram->GetFilledSize());
   
   // force the draw routine to recompute the backdrop cache
   m_bBackdropCacheUptodate = false;
@@ -369,9 +368,17 @@ void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   m_iPointSelIndex = -1;
   m_iGradSelIndex = -1;
 
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
   update();
+
+  // send message to update the GLtexture
+  if( m_eExecutionMode == ONRELEASE ) ApplyFunction();
 }
+
+void Q2DTransferFunction::ApplyFunction() {
+  // send message to update the GLtexture
+  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+}
+
 
 FLOATVECTOR2 Q2DTransferFunction::Rotate(FLOATVECTOR2 point, float angle, FLOATVECTOR2 center, FLOATVECTOR2 rescale) {
   FLOATVECTOR2 temp, newpoint;
@@ -447,6 +454,9 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
     m_vMousePressPos = vMouseCurrentPos;
 
     update();
+
+    // send message to update the GLtexture
+    if( m_eExecutionMode == CONTINUOUS ) ApplyFunction();
   }
 }
 
@@ -485,13 +495,15 @@ void Q2DTransferFunction::changeEvent(QEvent * event) {
 
 
 void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
-  QImage image1DTrans(int(m_pTrans->m_Trans1D.vColorData.size()),1, QImage::Format_ARGB32);
+  UINT64 iSize = min(m_vHistogram.GetSize().y,  m_pTrans->m_Trans1D.vColorData.size());
 
-  for (unsigned int x = 0;x<m_pTrans->m_Trans1D.vColorData.size();x++) {
-    image1DTrans.setPixel(x,0,qRgba(int(m_pTrans->m_Trans1D.vColorData[x][0]*255),
-                     int(m_pTrans->m_Trans1D.vColorData[x][1]*255),
-                     int(m_pTrans->m_Trans1D.vColorData[x][2]*255),
-                     int(m_pTrans->m_Trans1D.vColorData[x][3]*255)));
+  QImage image1DTrans(1, int(iSize), QImage::Format_ARGB32);
+
+  for (unsigned int i = 0;i<iSize;i++) {
+    image1DTrans.setPixel(0,i,qRgba(int(m_pTrans->m_Trans1D.vColorData[i][0]*255),
+                     int(m_pTrans->m_Trans1D.vColorData[i][1]*255),
+                     int(m_pTrans->m_Trans1D.vColorData[i][2]*255),
+                     int(m_pTrans->m_Trans1D.vColorData[i][3]*255)));
   }
 
   QRect imageRect(m_iBorderSize/2, m_iBorderSize/2, width()-m_iBorderSize, height()-m_iBorderSize);

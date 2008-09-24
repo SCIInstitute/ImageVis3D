@@ -40,23 +40,19 @@
 #ifndef Q1DTRANSFERFUNCTION
 #define Q1DTRANSFERFUNCTION
 
-#include <QtGui/QWidget>
+#include "QTransferFunction.h"
 #include <IO/TransferFunction1D.h>
 
 class MasterController;
 
-class Q1DTransferFunction : public QWidget
+class Q1DTransferFunction : public QTransferFunction
 {
   Q_OBJECT
-
 public:
 
   enum paintMode { PAINT_NONE=0, PAINT_RED=1, PAINT_GREEN=2,
        PAINT_BLUE=4, PAINT_ALPHA=8, PAINT_UNDEF=16 };
 
-  enum executionMode { UNKNOWN=0, CONTINUOUS=1, ONRELEASE=2, MANUAL=4 };
-
-public:
   Q1DTransferFunction(MasterController& masterController, QWidget *parent=0);
   virtual ~Q1DTransferFunction(void);
 
@@ -65,13 +61,10 @@ public:
   const TransferFunction1D* GetTrans() {return m_pTrans;}
 
   void SetPaintMode(paintMode iPaintMode) {
-    if (iPaintMode < PAINT_UNDEF) m_iPaintMode = iPaintMode;};
-
-  void SetExecutionMode(executionMode iExecutionMode) {
-    m_iExecutionMode = iExecutionMode;
+    if (iPaintMode < PAINT_UNDEF) m_iPaintMode = iPaintMode;
   }
 
-  void ApplyFunction();
+  virtual void ApplyFunction();
 
 public slots:
   bool LoadFromFile(const QString& strFilename);
@@ -85,14 +78,9 @@ protected:
   virtual void changeEvent(QEvent * event);
 
 private:
-  // states
-  MasterController& m_MasterController;
-
   NormalizedHistogram1D m_vHistogram;
   TransferFunction1D* m_pTrans;
-
   unsigned int m_iPaintMode;
-  unsigned int m_iExecutionMode;
 
   // cached image of the backdrop
   bool     m_bBackdropCacheUptodate;

@@ -40,7 +40,7 @@
 #ifndef Q2DTRANSFERFUNCTION
 #define Q2DTRANSFERFUNCTION
 
-#include <QtGui/QWidget>
+#include "QTransferFunction.h"
 #include <IO/TransferFunction1D.h>
 #include <IO/TransferFunction2D.h>
 
@@ -60,7 +60,7 @@ enum EDragMode {
   DRM_NONE
 };
 
-class Q2DTransferFunction : public QWidget
+class Q2DTransferFunction : public QTransferFunction
 {
   Q_OBJECT
 
@@ -90,6 +90,8 @@ public:
   void DeleteGradient(unsigned int i);
   void SetGradient(unsigned int i, GradientStop stop);
 
+  virtual void ApplyFunction();
+
 public slots:
   void Transfer2DSetActiveSwatch(const int iActiveSwatch);
   void Transfer2DAddSwatch();
@@ -117,7 +119,6 @@ private:
   TransferFunction2D*    m_pTrans;
   unsigned int      m_iPaintmode;
   int            m_iActiveSwatchIndex;
-  MasterController&    m_MasterController;
 
   // cached image of the backdrop
   bool     m_bBackdropCacheUptodate;

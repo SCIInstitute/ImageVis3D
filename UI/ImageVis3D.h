@@ -77,8 +77,6 @@ protected slots:
 
   void Transfer1DSetColors();
   void Transfer1DSetGroups();
-  void Transfer1DSetExecution();
-  void Transfer1DApplyFunction();
   void Transfer1DLoad();
   void Transfer1DSave();
   void Transfer1DCopyTo2DTrans();
@@ -89,6 +87,9 @@ protected slots:
   void Transfer2DChooseGradientOpacity();
   void Transfer2DLoad();
   void Transfer2DSave();
+
+  void SetUpdateMode();
+  void ApplyUpdate();
 
   void Transfer2DSwatchesChanged();
   void Transfer2DUpdateSwatchButtons();

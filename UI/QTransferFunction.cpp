@@ -27,39 +27,22 @@
 */
 
 
-//!    File   : QDataRadioButton.h
+//!    File   : QTransferFunction.cpp
 //!    Author : Jens Krueger
 //!             SCI Institute
 //!             University of Utah
-//!    Date   : September 2008
+//!    Date   : July 2008
 //
 //!    Copyright (C) 2008 SCI Institute
 
-#pragma once
+#include "QTransferFunction.h"
+#include <Controller/MasterController.h>
 
-#ifndef QDATARADIOBUTTON_H
-#define QDATARADIOBUTTON_H
+using namespace std;
 
-#include <QtGui/QRadioButton>
-#include <IO/DirectoryParser.h>
-
-class QDataRadioButton : public QRadioButton
+QTransferFunction::QTransferFunction(MasterController& masterController, QWidget *parent) :
+  QWidget(parent),
+  m_MasterController(masterController), 
+  m_eExecutionMode(CONTINUOUS)
 {
-public:
-  QDataRadioButton(FileStackInfo* stack, QWidget *parent=0);
-  QDataRadioButton(FileStackInfo* stack, const QString &text, QWidget *parent=0);
-  virtual ~QDataRadioButton() {}
-
-protected:
-  unsigned int m_iCurrentImage;
-  FileStackInfo m_stackInfo;
-
-  virtual void leaveEvent ( QEvent * event );
-  virtual void mouseMoveEvent(QMouseEvent *event);
-
-  void SetupInfo();
-  void SetStackImage(unsigned int i);
-
-};
-
-#endif // QDATARADIOBUTTON_H
+}

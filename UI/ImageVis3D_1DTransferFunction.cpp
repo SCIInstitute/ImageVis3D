@@ -110,25 +110,28 @@ void MainWindow::Transfer1DSetGroups() {
     SetPaintMode( (Q1DTransferFunction::paintMode ) iPaintMode);
 }
 
-void MainWindow::Transfer1DSetExecution() {
-  if( radioButton_1DTransContinuous->isChecked() ) {
-    m_1DTransferFunction->SetExecutionMode( Q1DTransferFunction::CONTINUOUS );
-
-  } else if( radioButton_1DTransOnRelease->isChecked() ) {
-    m_1DTransferFunction->SetExecutionMode( Q1DTransferFunction::ONRELEASE );
-
-  } else if( radioButton_1DTransManual->isChecked() ) {
-    m_1DTransferFunction->SetExecutionMode( Q1DTransferFunction::MANUAL );
+void MainWindow::SetUpdateMode() {
+  if( radioButton_UpdateContinuous->isChecked() ) {
+    m_1DTransferFunction->SetExecutionMode( QTransferFunction::CONTINUOUS );
+    m_2DTransferFunction->SetExecutionMode( QTransferFunction::CONTINUOUS );
+  } else if( radioButton_UpdateOnRelease->isChecked() ) {
+    m_1DTransferFunction->SetExecutionMode( QTransferFunction::ONRELEASE );
+    m_2DTransferFunction->SetExecutionMode( QTransferFunction::ONRELEASE );
+  } else if( radioButton_UpdateManual->isChecked() ) {
+    m_1DTransferFunction->SetExecutionMode( QTransferFunction::MANUAL );
+    m_2DTransferFunction->SetExecutionMode( QTransferFunction::MANUAL );
   }
   else {
-    m_1DTransferFunction->SetExecutionMode( Q1DTransferFunction::UNKNOWN );
+    m_1DTransferFunction->SetExecutionMode( QTransferFunction::UNKNOWN );
+    m_2DTransferFunction->SetExecutionMode( QTransferFunction::UNKNOWN );
   }
 
-  pushButton_Apply1DTrans->setEnabled(radioButton_1DTransManual->isChecked());
+  pushButton_ApplyUpdate->setEnabled(radioButton_UpdateManual->isChecked());
 }
 
-void MainWindow::Transfer1DApplyFunction() {
-  m_1DTransferFunction->ApplyFunction();
+void MainWindow::ApplyUpdate() {
+  if (radioButton_1DTrans->isChecked()) m_1DTransferFunction->ApplyFunction();
+  if (radioButton_2DTrans->isChecked()) m_2DTransferFunction->ApplyFunction();
 }
 
 void MainWindow::Transfer1DLoad() {

@@ -28,6 +28,7 @@ HEADERS += Basics/Grids.h \
            UI/BrowseData.h \
            UI/ImageVis3D.h \
            UI/PleaseWait.h \
+           UI/QTransferFunction.h \
            UI/Q1DTransferFunction.h \
            UI/Q2DTransferFunction.h \
            UI/QDataRadioButton.h \
@@ -81,6 +82,7 @@ SOURCES += 3rdParty/GLEW/glew.c \
            UI/ImageVis3D_FileHandling.cpp \
            UI/ImageVis3D_WindowHandling.cpp \
            UI/PleaseWait.cpp \
+           UI/QTransferFunction.cpp \
            UI/Q1DTransferFunction.cpp \
            UI/Q2DTransferFunction.cpp \
            UI/QDataRadioButton.cpp \
