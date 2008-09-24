@@ -120,7 +120,7 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunctio
   // ... than rescale
   float fDiff = float(iMax)-float(iMin);
   for (size_t i = 0;i<m_vHistogram.GetSize().area();i++)
-    m_vHistogram.SetLinear(i, (float(vHistogram->GetLinear(i)) - float(iMin)) * 10000.0f/ fDiff);
+    m_vHistogram.SetLinear(i, (float(vHistogram->GetLinear(i)) - float(iMin)) / fDiff);
 }
 
 void Q2DTransferFunction::DrawBorder(QPainter& painter) {
@@ -141,7 +141,7 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter, float fScale) {
   QImage image(QSize(int(m_vHistogram.GetSize().x), int(m_vHistogram.GetSize().y)), QImage::Format_RGB32);
   for (size_t y = 0;y<m_vHistogram.GetSize().y;y++) 
     for (size_t x = 0;x<m_vHistogram.GetSize().x;x++) {
-      float value = min(1.0f, fScale*m_vHistogram.Get(x,y));
+      float value = min(1.0f, fScale*m_vHistogram.Get(x,m_vHistogram.GetSize().y-(y+1)));
       image.setPixel(int(x),
 		     int(y),
 		     qRgb(int(m_colorBack.red()  * (1.0f-value) +
