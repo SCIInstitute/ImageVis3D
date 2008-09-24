@@ -83,7 +83,6 @@ private:
   unsigned int m_iPaintMode;
 
   // cached image of the backdrop
-  bool     m_bBackdropCacheUptodate;
   unsigned int m_iCachedHeight;
   unsigned int m_iCachedWidth;
   QPixmap*   m_pBackdropCache;

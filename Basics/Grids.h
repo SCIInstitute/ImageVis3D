@@ -69,9 +69,9 @@ template <class T> class Grid1D : public GridnD<T> {
     size_t GetFilledSize() const {
       size_t iSize = 0;
       for (size_t i = 0;i<m_iSize;i++) {
-        if (this->m_pData[i] != 0) iSize = i;
+        if (this->m_pData[i] != 0) iSize = i+1;
       }
-      return iSize+1;
+      return iSize;
     }
 
     size_t GetSize() const {return m_iSize;}
@@ -109,10 +109,10 @@ template <class T> class Grid2D : public GridnD<T> {
     VECTOR2<size_t> GetFilledSize() const {
       VECTOR2<size_t> vSize(0,0);
       for (size_t y = 0;y<m_iSize.y;y++) {
-        for (size_t x = vSize.x;x<m_iSize.x;x++) {
+        for (size_t x = 0;x<m_iSize.x;x++) {
           if (this->Get(x,y) != 0) {
-            vSize.x = x;
-            vSize.y = y;
+            if ((x+1) > vSize.x) vSize.x = x+1;
+            vSize.y = y+1;
           }
         }
       }

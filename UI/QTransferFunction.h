@@ -59,11 +59,28 @@ public:
     m_eExecutionMode = iExecutionMode;
   }
 
+public slots:
+  virtual void SetHistogtramScale(int iScale) {
+    SetHistogtramScale(float(iScale));
+  }
+
+  virtual void SetHistogtramScale(float fScale) {
+    m_fHistfScale = fScale;
+    m_bBackdropCacheUptodate = false;
+    update();
+  }
+
+  float GetHistogtramScale() {
+    return m_fHistfScale;
+  }
+
   virtual void ApplyFunction() = 0;
 
 protected:
   MasterController& m_MasterController;
-  executionMode m_eExecutionMode;
+  executionMode     m_eExecutionMode;
+  float             m_fHistfScale;
+  bool              m_bBackdropCacheUptodate;
 };
 
 

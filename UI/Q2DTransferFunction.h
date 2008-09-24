@@ -103,7 +103,7 @@ public slots:
   bool LoadFromFile(const QString& strFilename);
   bool SaveToFile(const QString& strFilename);
 
-  signals:
+signals:
   void SwatchChange();
   
 protected:
@@ -121,7 +121,6 @@ private:
   int            m_iActiveSwatchIndex;
 
   // cached image of the backdrop
-  bool     m_bBackdropCacheUptodate;
   unsigned int m_iCachedHeight;
   unsigned int m_iCachedWidth;
   QPixmap*   m_pBackdropCache;
@@ -152,7 +151,7 @@ private:
 
   // drawing routines
   void DrawBorder(QPainter& painter);
-  void DrawHistogram(QPainter& painter, float fScale=1.0f);
+  void DrawHistogram(QPainter& painter);
   void DrawSwatches(QPainter& painter);
   void Draw1DTrans(QPainter& painter);
 

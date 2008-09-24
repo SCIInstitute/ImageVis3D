@@ -136,19 +136,19 @@ void LargeRAWFile::SeekPos(UINT64 iPos){
   #endif
 }
 
-void LargeRAWFile::ReadRAW(unsigned char* pData, UINT64 iCount){
+size_t LargeRAWFile::ReadRAW(unsigned char* pData, UINT64 iCount){
   #ifdef _WIN32
-    _read(m_StreamFile,pData,(unsigned int)(iCount));
+    return _read(m_StreamFile,pData,(unsigned int)(iCount));
   #else
-    fread(pData,1,iCount,m_StreamFile);
+    return fread(pData,1,iCount,m_StreamFile);
   #endif
 }
 
-void LargeRAWFile::WriteRAW(const unsigned char* pData, UINT64 iCount){
+size_t LargeRAWFile::WriteRAW(const unsigned char* pData, UINT64 iCount){
   #ifdef _WIN32
-    _write(m_StreamFile,pData,(unsigned int)(iCount));
+    return _write(m_StreamFile,pData,(unsigned int)(iCount));
   #else
-    fwrite(pData,1,iCount,m_StreamFile);
+    return fwrite(pData,1,iCount,m_StreamFile);
   #endif
 }
 

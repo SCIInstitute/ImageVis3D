@@ -132,6 +132,9 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
   Ui_MainWindow::setupUi(MainWindow);
 
+  QString qstrTitle = tr("%1 Version: %2").arg(windowTitle()).arg(IV3D_VERSION);
+  setWindowTitle(qstrTitle);
+
   m_1DTransferFunction =
     new Q1DTransferFunction(m_MasterController, frame_1DTrans);
   verticalLayout_1DTrans->addWidget(m_1DTransferFunction);
@@ -141,6 +144,11 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   verticalLayout_2DTrans->addWidget(m_2DTransferFunction);
 
   Use2DTrans();
+
+  connect(verticalSlider_2DTransHistScale, SIGNAL(valueChanged(int)),
+	  m_2DTransferFunction, SLOT(SetHistogtramScale(int)));
+  connect(verticalSlider_1DTransHistScale, SIGNAL(valueChanged(int)),
+	  m_1DTransferFunction, SLOT(SetHistogtramScale(int)));
 
   connect(m_2DTransferFunction, SIGNAL(SwatchChange()),
 	  this, SLOT(Transfer2DSwatchesChanged()));

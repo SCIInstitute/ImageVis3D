@@ -40,6 +40,8 @@
 #ifndef IMAGEVIS3D_H
 #define IMAGEVIS3D_H
 
+#define IV3D_VERSION "0.01 alpha"
+
 #include "Controller/MasterController.h"
 
 #include "AutoGen/ui_ImageVis3D.h"

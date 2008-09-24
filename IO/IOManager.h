@@ -69,8 +69,8 @@ private:
 
   bool ConvertDATDataset(const std::string& strFilename, const std::string& strTargetFilename);
   bool ConvertRAWDataset(const std::string& strFilename, const std::string& strTargetFilename,
-				                 UINT64 iComponentSize, UINT64 iComponentCount,
-				                 UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect,
+				                 UINT64 iComponentSize, UINT64 iComponentCount, bool bConvertEndianness,
+				                 UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect, 
                          std::string strDesc, std::string strSource="", UVFTables::ElementSemanticTable eType=UVFTables::ES_UNDEFINED);
 
 

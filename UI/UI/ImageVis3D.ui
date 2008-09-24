@@ -19,7 +19,7 @@
    <bool>false</bool>
   </property>
   <property name="windowTitle" >
-   <string>ImageVis3 Prerelease</string>
+   <string>ImageVis3D</string>
   </property>
   <property name="toolButtonStyle" >
    <enum>Qt::ToolButtonIconOnly</enum>
@@ -204,8 +204,8 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -334,8 +334,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -436,8 +436,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -868,7 +868,7 @@
      <x>1009</x>
      <y>22</y>
      <width>194</width>
-     <height>491</height>
+     <height>502</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -883,7 +883,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>469</height>
+      <height>480</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1138,14 +1138,17 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="contextMenuPolicy" >
+        <enum>Qt::DefaultContextMenu</enum>
+       </property>
        <property name="currentIndex" >
         <number>2</number>
        </property>
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>360</width>
           <height>71</height>
          </rect>
@@ -1243,8 +1246,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>360</width>
           <height>71</height>
          </rect>
@@ -1445,9 +1448,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>517</y>
+     <y>528</y>
      <width>194</width>
-     <height>420</height>
+     <height>430</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1468,7 +1471,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>398</height>
+      <height>408</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -2011,6 +2014,9 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="maximum" >
+        <number>2000</number>
+       </property>
        <property name="orientation" >
         <enum>Qt::Vertical</enum>
        </property>
@@ -2535,6 +2541,9 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="maximum" >
+        <number>2000</number>
+       </property>
        <property name="orientation" >
         <enum>Qt::Vertical</enum>
        </property>
@@ -2547,9 +2556,9 @@
    <property name="geometry" >
     <rect>
      <x>1009</x>
-     <y>941</y>
+     <y>962</y>
      <width>194</width>
-     <height>532</height>
+     <height>511</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2564,7 +2573,7 @@
       <x>0</x>
       <y>22</y>
       <width>194</width>
-      <height>510</height>
+      <height>489</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >

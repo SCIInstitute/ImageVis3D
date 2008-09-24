@@ -50,8 +50,8 @@ public:
   UINT64 SeekEnd();
   UINT64 GetPos();
   void SeekPos(UINT64 iPos);
-  void ReadRAW(unsigned char* pData, UINT64 iCount);
-  void WriteRAW(const unsigned char* pData, UINT64 iCount);
+  size_t ReadRAW(unsigned char* pData, UINT64 iCount);
+  size_t WriteRAW(const unsigned char* pData, UINT64 iCount);
   
   template<class T> void Read(const T* pData, UINT64 iCount, UINT64 iPos, UINT64 iOffset) {
     SeekPos(iOffset+sizeof(T)*iPos);

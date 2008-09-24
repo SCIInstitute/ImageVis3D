@@ -18,10 +18,10 @@ Histogram2DDataBlock::Histogram2DDataBlock(const Histogram2DDataBlock &other) :
 Histogram2DDataBlock::Histogram2DDataBlock(LargeRAWFile* pStreamFile, UINT64 iOffset, bool bIsBigEndian) :
   RasterDataBlock(pStreamFile, iOffset, bIsBigEndian) 
 {
-  m_vHistData.resize(ulDomainSize[1]);
-  vector<UINT64> tmp(ulDomainSize[0]);
-  for (UINT64 i = 0;i<ulDomainSize[1];i++) {
-    pStreamFile->ReadRAW((unsigned char*)&tmp[0], ulDomainSize[0]*sizeof(UINT64));
+  m_vHistData.resize(ulDomainSize[0]);
+  vector<UINT64> tmp(ulDomainSize[1]);
+  for (UINT64 i = 0;i<ulDomainSize[0];i++) {
+    pStreamFile->ReadRAW((unsigned char*)&tmp[0], ulDomainSize[1]*sizeof(UINT64));
     m_vHistData[i] = tmp;
   }
 
@@ -38,10 +38,10 @@ DataBlock* Histogram2DDataBlock::Clone() {
 
 UINT64 Histogram2DDataBlock::GetHeaderFromFile(LargeRAWFile* pStreamFile, UINT64 iOffset, bool bIsBigEndian) {
   iOffset = RasterDataBlock::GetHeaderFromFile(pStreamFile, iOffset, bIsBigEndian);
-  m_vHistData.resize(ulDomainSize[1]);
-  vector<UINT64> tmp(ulDomainSize[0]);
-  for (UINT64 i = 0;i<ulDomainSize[1];i++) {
-    pStreamFile->ReadRAW((unsigned char*)&tmp[0], ulDomainSize[0]*sizeof(UINT64));
+  m_vHistData.resize(ulDomainSize[0]);
+  vector<UINT64> tmp(ulDomainSize[1]);
+  for (UINT64 i = 0;i<ulDomainSize[0];i++) {
+    pStreamFile->ReadRAW((unsigned char*)&tmp[0], ulDomainSize[1]*sizeof(UINT64));
     m_vHistData[i] = tmp;
   }
   return iOffset;
@@ -64,33 +64,15 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   if (source->ulDomainSize.size() < 3 || source->ulDomainSemantics[0] != UVFTables::DS_X ||
       source->ulDomainSemantics[1] != UVFTables::DS_Y || source->ulDomainSemantics[2] != UVFTables::DS_Z) return false;
 
-	strBlockID = "2D Histogram for datablock " + source->strBlockID;
-	ulCompressionScheme = UVFTables::COS_NONE;
-	ulDomainSemantics.push_back(UVFTables::DS_X);
-	ulDomainSemantics.push_back(UVFTables::DS_Y);
+  UINT64 iValueRange = 1<<(source->ulElementBitSize[0][0]);
 
-  UINT64 iHistSize = 1<<(source->ulElementBitSize[0][0]);
-  m_vHistData.resize(256);
-  for (UINT64 i = 0;i<256;i++) {
-    m_vHistData[i].resize(iHistSize);
-    for (UINT64 j = 0;j<iHistSize;j++) {
-      m_vHistData[i][j] = 0;
+  std::vector< std::vector<UINT64> > vTmpHist(iValueRange);
+  for (UINT64 i = 0;i<iValueRange;i++) {
+    vTmpHist[i].resize(256);
+    for (UINT64 j = 0;j<256;j++) {
+      vTmpHist[i][j] = 0;
     }
   }
-
-	ulDomainSize.push_back(256);
-  ulDomainSize.push_back(iHistSize);
-	ulLODDecFactor.push_back(2);
-	ulLODDecFactor.push_back(2);
-	ulLODGroups.push_back(0);
-  ulLODGroups.push_back(0);
-	ulLODLevelCount.push_back(1);
-  SetTypeToUInt64(UVFTables::ES_UNKNOWN);
-	ulBrickSize.push_back(iHistSize);
-  ulBrickSize.push_back(256);
-	ulBrickOverlap.push_back(1);
-  ulBrickOverlap.push_back(1);
-	SetIdentityTransformation();
 
   unsigned char *pcSourceData = NULL;
 
@@ -144,7 +126,7 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
                                    float(pcSourceData[iFront]-pcSourceData[iBack]));
 
           unsigned char iGardientMagnitudeIndex = (unsigned char)(vGradient.length()/fMaxGrad*255);
-          m_vHistData[iGardientMagnitudeIndex][pcSourceData[iCenter]]++;
+          vTmpHist[pcSourceData[iCenter]][iGardientMagnitudeIndex]++;
         }
       }
     }
@@ -188,7 +170,7 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
                                      float(psSourceData[iFront]-psSourceData[iBack]));
 
             unsigned char iGardientMagnitudeIndex = (unsigned char)(vGradient.length()/fMaxGrad*255);
-            m_vHistData[iGardientMagnitudeIndex][psSourceData[iCenter]]++;
+            vTmpHist[psSourceData[iCenter]][iGardientMagnitudeIndex]++;
           }
         }
       }
@@ -199,6 +181,45 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   }
 
   delete [] pcSourceData;
+
+  size_t iSize = 0;
+  for (size_t x = iSize;x<iValueRange;x++) {
+    for (size_t y = 0;y<256;y++) {
+      if (vTmpHist[x][y] != 0) iSize = x+1;
+    }
+  }
+  iValueRange = iSize;
+
+
+  m_vHistData.resize(iValueRange);
+  for (UINT64 i = 0;i<iValueRange;i++) {
+    m_vHistData[i].resize(256);
+    for (UINT64 j = 0;j<256;j++) {
+      m_vHistData[i][j] = vTmpHist[i][j];
+    }
+  }
+
+
+  // set raster data block information
+	strBlockID = "2D Histogram for datablock " + source->strBlockID;
+	ulCompressionScheme = UVFTables::COS_NONE;
+	ulDomainSemantics.push_back(UVFTables::DS_X);
+	ulDomainSemantics.push_back(UVFTables::DS_Y);
+  ulDomainSize.push_back(m_vHistData.size());
+  ulDomainSize.push_back(m_vHistData[0].size());
+	ulLODDecFactor.push_back(2);
+	ulLODDecFactor.push_back(2);
+	ulLODGroups.push_back(0);
+  ulLODGroups.push_back(0);
+	ulLODLevelCount.push_back(1);
+  SetTypeToUInt64(UVFTables::ES_UNKNOWN);
+	ulBrickSize.push_back(m_vHistData.size());
+  ulBrickSize.push_back(m_vHistData[0].size());
+	ulBrickOverlap.push_back(1);
+  ulBrickOverlap.push_back(1);
+	SetIdentityTransformation();
+
+
   return true;
 }
 
@@ -248,9 +269,9 @@ UINT64 Histogram2DDataBlock::CopyToFile(LargeRAWFile* pStreamFile, UINT64 iOffse
 
   pStreamFile->SeekPos( pStreamFile->GetPos() + ulOffsetToDataBlock);
   vector<UINT64> tmp;
-  for (size_t i = 0;i<ulDomainSize[1];i++) {
+  for (size_t i = 0;i<ulDomainSize[0];i++) {
     tmp = m_vHistData[i];
-    pStreamFile->WriteRAW((unsigned char*)&tmp[0], ulDomainSize[0]*sizeof(UINT64));
+    pStreamFile->WriteRAW((unsigned char*)&tmp[0], ulDomainSize[1]*sizeof(UINT64));
   }
 
 	return pStreamFile->GetPos() - iOffset;  

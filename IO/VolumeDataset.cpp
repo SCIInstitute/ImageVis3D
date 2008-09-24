@@ -171,32 +171,39 @@ bool VolumeDataset::Open(bool bVerify)
       sStreamBrick << " x " << vSmallLODBrick[i];
   }
 
-  m_pHist1D = new Histogram1D(1<<m_pVolumeDatasetInfo->GetBitwith());
+  m_pHist1D = NULL;
   if (m_pHist1DDataBlock != NULL) {
     const vector<UINT64>& vHist1D = m_pHist1DDataBlock->GetHistogram();
+    m_pHist1D = new Histogram1D(vHist1D.size());
     for (size_t i = 0;i<m_pHist1D->GetSize();i++) {
       m_pHist1D->Set(i, (unsigned int)vHist1D[i]);
     }
   } else {
-    // generate a zero 1D histogram if none is found in the file
+    // generate a zero 1D histogram (max 4k) if none is found in the file
+    m_pHist1D = new Histogram1D(min(4096, 1<<m_pVolumeDatasetInfo->GetBitwith()));
     for (size_t i = 0;i<m_pHist1D->GetSize();i++) {
       m_pHist1D->Set(i, 0);
     }
   }
 
-  m_pHist2D = new Histogram2D(VECTOR2<size_t>(1<<m_pVolumeDatasetInfo->GetBitwith(),256)); 
+  m_pHist2D = NULL;
   if (m_pHist2DDataBlock != NULL) {
     const vector< vector<UINT64> >& vHist2D = m_pHist2DDataBlock->GetHistogram();
+
+    VECTOR2<size_t> vSize(vHist2D.size(),vHist2D[0].size());
+
+    m_pHist2D = new Histogram2D(vSize);
     for (size_t y = 0;y<m_pHist2D->GetSize().y;y++)
       for (size_t x = 0;x<m_pHist2D->GetSize().x;x++) 
-        m_pHist2D->Set(x,y,(unsigned int)vHist2D[y][x]);
+        m_pHist2D->Set(x,y,(unsigned int)vHist2D[x][y]);
+
   } else {
-    // generate a zero 2D histogram if none is found in the file
+    // generate a zero 2D histogram (max 4k) if none is found in the file
+    m_pHist2D = new Histogram2D(VECTOR2<size_t>(256,min(4096, 1<<m_pVolumeDatasetInfo->GetBitwith())));
     for (size_t y = 0;y<m_pHist2D->GetSize().y;y++)
       for (size_t x = 0;x<m_pHist2D->GetSize().x;x++) 
         m_pHist2D->Set(x,y,0);
   }
-
 
   m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  Size %s", sStreamDomain.str().c_str());
   m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  %i Bit, %i components", m_pVolumeDatasetInfo->GetBitwith(), m_pVolumeDatasetInfo->GetComponentCount());

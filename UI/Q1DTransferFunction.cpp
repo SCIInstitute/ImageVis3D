@@ -53,7 +53,6 @@ Q1DTransferFunction::Q1DTransferFunction(MasterController& masterController, QWi
   QTransferFunction(masterController, parent),
   m_pTrans(NULL),
   m_iPaintMode(PAINT_NONE),
-  m_bBackdropCacheUptodate(false),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
   m_pBackdropCache(NULL),
@@ -177,6 +176,7 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
 }
 
 void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
+
   if (m_pTrans == NULL) return;
 
   // compute some grid dimensions
@@ -187,8 +187,11 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
   // define the polygon ...
   std::vector<QPointF> pointList;
   pointList.push_back(QPointF(m_iLeftBorder+1, iGridHeight-m_iBottomBorder));
-  for (size_t i = 0;i<m_vHistogram.GetSize();i++) 
-    pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1), m_iTopBorder+iGridHeight-m_vHistogram.Get(i)*iGridHeight));  
+  for (size_t i = 0;i<m_vHistogram.GetSize();i++) {
+    float value = min(1.0f, pow(m_vHistogram.Get(i),1.0f/(1+(m_fHistfScale-1)/100.0f)));
+    pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1), 
+                                m_iTopBorder+iGridHeight-value*iGridHeight));  
+  }
   pointList.push_back(QPointF(m_iLeftBorder+iGridWidth, m_iTopBorder+iGridHeight));
   pointList.push_back(QPointF(m_iLeftBorder+1, m_iTopBorder+iGridHeight));
 

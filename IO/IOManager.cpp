@@ -142,23 +142,98 @@ bool IOManager::ConvertDATDataset(const std::string& strFilename, const std::str
 
 	  strRAWFile = SysTools::GetPath(strFilename) + strRAWFile;
 
-    return ConvertRAWDataset(strRAWFile, strTargetFilename, iComponentSize, iComponentCount, 
+    // TODO: detect big endian DAT/RAW combinations and set the conversion parameter accordingly instead of always converting if the machine is big endian 
+    return ConvertRAWDataset(strRAWFile, strTargetFilename, iComponentSize, iComponentCount, EndianConvert::IsBigEndian(),
                              vVolumeSize, vVolumeAspect, "Qvis data", SysTools::GetFilename(strFilename));
 
   } else return false;
 }
 
 bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::string& strTargetFilename,
-				                         UINT64	iComponentSize, UINT64 iComponentCount,
+				                         UINT64	iComponentSize, UINT64 iComponentCount, bool bConvertEndianness,
                                  UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect, string strDesc, string strSource, UVFTables::ElementSemanticTable eType)
 {
+  if (iComponentSize < 16) bConvertEndianness = false; // catch silly user input
+
   m_pMasterController->DebugOut()->Message("IOManager::ConvertRAWDataset","Converting RAW dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
 
-  LargeRAWFile SourceData(strFilename);
+  string strSourceFilename;
+  string tmpFilename = SysTools::GetPath(strTargetFilename)+SysTools::GetFilename(strFilename)+".endianess";
+  if (bConvertEndianness) {
+    m_pMasterController->DebugOut()->Message("IOManager::ConvertRAWDataset","Performaing endianess conversion of RAW dataset %s to %s", strFilename.c_str(), tmpFilename.c_str());
+
+    if (iComponentSize != 16 && iComponentSize != 32 && iComponentSize != 64) {
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unable to endian convert anything but 16bit, 32bit, or 64bit values (requested %i)", iComponentSize);
+      return false;
+    }
+
+
+    LargeRAWFile WrongEndianData(strFilename);
+    WrongEndianData.Open(false);
+
+    if (!WrongEndianData.IsOpen()) {
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unable to open source file %s", strFilename.c_str());
+      return false;
+    }
+
+    LargeRAWFile ConvEndianData(tmpFilename);
+    ConvEndianData.Create();
+
+    if (!ConvEndianData.IsOpen()) {
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unable to open temp file %s for endianess conversion", tmpFilename.c_str());
+      WrongEndianData.Close();
+      return false;
+    }
+
+    UINT64 ulFileLength = WrongEndianData.GetCurrentSize();
+    size_t iBufferSize = min(size_t(ulFileLength),BRICKSIZE*BRICKSIZE*BRICKSIZE*iComponentSize/8); // this must fit into memory otherwise other subsystems would break
+    UINT64 ulBufferConverted = 0;
+
+    unsigned char* pBuffer = new unsigned char[iBufferSize];
+
+    while (ulBufferConverted < ulFileLength) {
+
+      size_t iBytesRead = WrongEndianData.ReadRAW(pBuffer, iBufferSize);
+
+      switch (iComponentSize) {
+        case 16 : for (size_t i = 0;i<iBytesRead;i+=2) 
+                    EndianConvert::Swap<unsigned short>((unsigned short*)(pBuffer+i)); 
+                  break;
+        case 32 : for (size_t i = 0;i<iBytesRead;i+=4) 
+                    EndianConvert::Swap<float>((float*)(pBuffer+i)); 
+                  break;
+        case 64 : for (size_t i = 0;i<iBytesRead;i+=8) 
+                    EndianConvert::Swap<double>((double*)(pBuffer+i)); 
+                  break;
+      }
+
+      size_t iBytesWritten = ConvEndianData.WriteRAW(pBuffer, iBytesRead);
+
+      if (iBytesRead != iBytesWritten)  {
+        m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Read/Write error converting endianess from %s to %s", strFilename.c_str(), tmpFilename.c_str());
+        WrongEndianData.Close();
+        ConvEndianData.Close();
+        remove(tmpFilename.c_str());
+        delete [] pBuffer;
+        return false;
+      }
+
+      ulBufferConverted += UINT64(iBytesWritten);
+    }
+
+    delete [] pBuffer;
+
+    WrongEndianData.Close();
+    ConvEndianData.Close();
+    strSourceFilename = tmpFilename;
+  } else strSourceFilename = strFilename;
+
+
+  LargeRAWFile SourceData(strSourceFilename);
   SourceData.Open(false);
 
   if (!SourceData.IsOpen()) {
-    m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unable to open source file %s", strFilename.c_str());
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unable to open source file %s", strSourceFilename.c_str());
     return false;
   }
 
@@ -174,6 +249,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
   }
 
 	GlobalHeader uvfGlobalHeader;
+  uvfGlobalHeader.bIsBigEndian = EndianConvert::IsBigEndian();
 	uvfGlobalHeader.ulChecksumSemanticsEntry = UVFTables::CS_MD5;
 	uvfFile.SetGlobalHeader(uvfGlobalHeader);
 
@@ -265,6 +341,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
     m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Verify failed with the following reason: %s", strProblemDesc.c_str()); 
     uvfFile.Close(); 
     SourceData.Close();
+    if (bConvertEndianness) remove(tmpFilename.c_str());
 		return false;
 	}
 
@@ -272,6 +349,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
     m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","AddDataBlock failed!"); 
     uvfFile.Close(); 
     SourceData.Close();
+    if (bConvertEndianness) remove(tmpFilename.c_str());
 		return false;
 	}
 
@@ -280,6 +358,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
     m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Computation of 1D Histogram failed!"); 
     uvfFile.Close(); 
     SourceData.Close();
+    if (bConvertEndianness) remove(tmpFilename.c_str());
 		return false;
   }
   Histogram2DDataBlock Histogram2D;
@@ -287,6 +366,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
     m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Computation of 2D Histogram failed!"); 
     uvfFile.Close(); 
     SourceData.Close();
+    if (bConvertEndianness) remove(tmpFilename.c_str());
 		return false;
   }
 
@@ -306,6 +386,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 	uvfFile.Create();
 	SourceData.Close();
 	uvfFile.Close();
+  if (bConvertEndianness) remove(tmpFilename.c_str());
 
   return true;
 }
@@ -384,7 +465,9 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
     // TODO: evaluate pDICOMStack->m_strModality
 
     bool result = ConvertRAWDataset(strTempMergeFilename, strTargetFilename, pDICOMStack->m_iAllocated, 
-                                    pDICOMStack->m_iComponentCount, iSize, pDICOMStack->m_fvfAspect, 
+                                    pDICOMStack->m_iComponentCount, 
+                                    pDICOMStack->m_bIsBigEndian != EndianConvert::IsBigEndian(),
+                                    iSize, pDICOMStack->m_fvfAspect, 
                                     "DICOM stack", SysTools::GetFilename(pDICOMStack->m_Elements[0]->m_strFileName)
                                     + " to " + SysTools::GetFilename(pDICOMStack->m_Elements[pDICOMStack->m_Elements.size()-1]->m_strFileName));
 

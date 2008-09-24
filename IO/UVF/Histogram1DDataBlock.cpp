@@ -50,26 +50,14 @@ bool Histogram1DDataBlock::Compute(RasterDataBlock* source) {
   const vector<UINT64>& vBricks = source->GetBrickCount(vSmallestLOD);
   for (unsigned int i = 0;i<vBricks.size();i++) if (vBricks[i] != 1) return false;
   
-	strBlockID = "1D Histogram for datablock " + source->strBlockID;
-	ulCompressionScheme = UVFTables::COS_NONE;
-	ulDomainSemantics.push_back(UVFTables::DS_X);
+  // create temp histogram 
+  UINT64 iValueRange = 1<<(source->ulElementBitSize[0][0]);
+  vector<UINT64> vTmpHist(iValueRange);
+  if (vTmpHist.size() != iValueRange) return false;
+  for (UINT64 i = 0;i<iValueRange;i++) vTmpHist[i] = 0;
 
-  UINT64 iHistSize = 1<<(source->ulElementBitSize[0][0]);
-  m_vHistData.resize(iHistSize);
-  if (m_vHistData.size() != iHistSize) return false;
-  for (UINT64 i = 0;i<iHistSize;i++) m_vHistData[i] = 0;
-
-	ulDomainSize.push_back(iHistSize);
-	ulLODDecFactor.push_back(2);
-	ulLODGroups.push_back(0);
-	ulLODLevelCount.push_back(1);
-  SetTypeToUInt64(UVFTables::ES_UNKNOWN);
-	ulBrickSize.push_back(iHistSize);
-	ulBrickOverlap.push_back(1);
-	SetIdentityTransformation();
-
+  // find smalest brick in hirarchy
   unsigned char *pcSourceData = NULL;
-
   vector<UINT64> vLOD = source->GetSmallestBrickIndex();
   vector<UINT64> vOneAndOnly;
   for (size_t i = 0;i<vBricks.size();i++) vOneAndOnly.push_back(0);
@@ -83,21 +71,44 @@ bool Histogram1DDataBlock::Compute(RasterDataBlock* source) {
   // TODO: right now only 8 and 16 bit integer data is supported this should be changed to a more general approach
   if (source->ulElementBitSize[0][0] == 8) {
     for (UINT64 i = 0;i<iDataSize;i++) {
-       m_vHistData[pcSourceData[i]]++;
+       vTmpHist[pcSourceData[i]]++;
     }
   } else {
     if (source->ulElementBitSize[0][0] == 16) {
       unsigned short *psSourceData = (unsigned short*)pcSourceData;
       for (UINT64 i = 0;i<iDataSize;i++) {
-        m_vHistData[psSourceData[i]]++;
+        vTmpHist[psSourceData[i]]++;
       }
     } else {
       delete [] pcSourceData;
       return false;
     }
   }
-
   delete [] pcSourceData;
+
+  // find maximum non zero entry
+  size_t iSize = 0;
+  for (size_t i = 0;i<iValueRange;i++) if (vTmpHist[i] != 0) iSize = i+1;
+  iValueRange = iSize;
+  
+  // copy non zero elements in temp histogram to histogram
+  m_vHistData.resize(iValueRange);
+  if (m_vHistData.size() != iValueRange) return false;
+  for (UINT64 i = 0;i<iValueRange;i++) m_vHistData[i] = vTmpHist[i];
+
+  // set raster data block information
+  strBlockID = "1D Histogram for datablock " + source->strBlockID;
+	ulCompressionScheme = UVFTables::COS_NONE;
+	ulDomainSemantics.push_back(UVFTables::DS_X);
+  ulDomainSize.push_back(iValueRange);
+	ulLODDecFactor.push_back(2);
+	ulLODGroups.push_back(0);
+	ulLODLevelCount.push_back(1);
+  SetTypeToUInt64(UVFTables::ES_UNKNOWN);
+	ulBrickSize.push_back(iValueRange);
+	ulBrickOverlap.push_back(1);
+	SetIdentityTransformation();
+
   return true;
 }
 

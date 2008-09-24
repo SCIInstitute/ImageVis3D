@@ -43,6 +43,8 @@ using namespace std;
 QTransferFunction::QTransferFunction(MasterController& masterController, QWidget *parent) :
   QWidget(parent),
   m_MasterController(masterController), 
-  m_eExecutionMode(CONTINUOUS)
+  m_eExecutionMode(CONTINUOUS),
+  m_fHistfScale(1.0f),
+  m_bBackdropCacheUptodate(false)
 {
 }
