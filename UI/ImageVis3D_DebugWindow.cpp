@@ -76,7 +76,7 @@ void MainWindow::ParseAndExecuteDebugCommand() {
   if (ParseCommand(strCommand)) 
     m_DebugOut->printf("OK");
   else
-    m_DebugOut->printf("Input \"%s\" not understood, try \"help\"!", strCommand);
+    m_DebugOut->printf("Input \"%s\" not understood, try \"help\"!", strCommand.c_str());
 
   m_DebugOut->m_bShowMessages = bTemp;
   lineEdit_DebugCommand->clear();
