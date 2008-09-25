@@ -53,6 +53,8 @@
 #include <string>
 #include <Basics/SysTools.h>
 
+#include <DebugOut/MultiplexOut.h>
+
 using namespace std;
 
 
@@ -82,7 +84,14 @@ MainWindow::MainWindow(MasterController& masterController,
 
 MainWindow::~MainWindow()
 {
-  m_MasterController.RemoveDebugOut(m_DebugOut);
+  if (m_DebugOut == m_MasterController.DebugOut()) {
+    m_MasterController.RemoveDebugOut(m_DebugOut);
+  } else {
+
+    // if the debugger was replaced by a multiplexer (for instance for file logging) remove it from the multiplexer
+    MultiplexOut* p = dynamic_cast<MultiplexOut*>(m_MasterController.DebugOut());
+    if (p != NULL) p->RemoveDebugOut(m_DebugOut);      
+  }
   delete m_DebugOut;
 }
 
@@ -186,32 +195,6 @@ void MainWindow::EditToolsLocks() {
 void MainWindow::EditFiltersLocks() {
   pushButton_RelativeLock->setEnabled(false);
 }
-
-// ******************************************
-// Debug Window
-// ******************************************
-
-void MainWindow::ClearDebugWin() {
-  listWidget_3->clear();
-}
-
-
-void MainWindow::SetDebugViewMask() {
-  m_DebugOut->m_bShowErrors = checkBox_ShowDebugErrors->isChecked();
-  m_DebugOut->m_bShowWarnings = checkBox_ShowDebugWarnings->isChecked();
-  m_DebugOut->m_bShowMessages = checkBox_ShowDebugMessages->isChecked();
-  m_DebugOut->m_bShowOther = checkBox_ShowDebugOther->isChecked();
-}
-
-
-void MainWindow::GetDebugViewMask() {
-  checkBox_ShowDebugErrors->setChecked(m_DebugOut->m_bShowErrors);
-  checkBox_ShowDebugWarnings->setChecked(m_DebugOut->m_bShowWarnings);
-  checkBox_ShowDebugMessages->setChecked(m_DebugOut->m_bShowMessages);
-  checkBox_ShowDebugOther->setChecked(m_DebugOut->m_bShowOther);
-}
-
-
 
 // ******************************************
 // Filtering

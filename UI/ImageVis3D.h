@@ -123,6 +123,7 @@ protected slots:
   void RenderWindowClosing(RenderWindow* sender);
 
   void ClearDebugWin();
+  void ParseAndExecuteDebugCommand();
   void SetDebugViewMask();
 
   void CheckForRedraw();
@@ -168,6 +169,8 @@ private :
 
   QString strippedName(const QString &fullFileName);
   QString GetConvFilename();
+
+  bool ParseCommand(std::string strCommand);
 };
 
 #endif // IMAGEVIS3D_H

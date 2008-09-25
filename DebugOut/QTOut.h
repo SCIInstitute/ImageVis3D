@@ -44,6 +44,8 @@
 #include "AbstrDebugOut.h"
 #include <QtGui/QListWidget>
 
+#include <deque>
+
 class QTOut : public AbstrDebugOut{
   public:
     QTOut(QListWidget *listWidget);
@@ -54,8 +56,26 @@ class QTOut : public AbstrDebugOut{
     virtual void Warning(const char* source, const char* format, ...);
     virtual void Error(const char* source, const char* format, ...);
 
+    virtual void PrintErrorList();
+    virtual void PrintWarningList();
+    virtual void PrintMessageList();
+    virtual void ClearErrorList()   {m_strErrorList.clear();}
+    virtual void ClearWarningList() {m_strWarningList.clear();}
+    virtual void ClearMessageList() {m_strMessageList.clear();}
+    virtual void SetListRecordingErrors(bool bRecord)   {m_bRecordLists[0] = bRecord;}
+    virtual void SetListRecordingWarnings(bool bRecord) {m_bRecordLists[1] = bRecord;}
+    virtual void SetListRecordingMessages(bool bRecord) {m_bRecordLists[2] = bRecord;}
+    virtual bool GetListRecordingErrors()   {return m_bRecordLists[0];}
+    virtual bool GetListRecordingWarnings() {return m_bRecordLists[1];}
+    virtual bool GetListRecordingMessages() {return m_bRecordLists[2];}
+
   private:
     QListWidget *m_listWidget;
+
+    bool                      m_bRecordLists[3];
+    std::deque< std::string > m_strErrorList;
+    std::deque< std::string > m_strWarningList;
+    std::deque< std::string > m_strMessageList;
 
     void _printf(const char* format, ...);
 

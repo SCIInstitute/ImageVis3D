@@ -70,6 +70,7 @@ public:
   void RemoveDebugOut(AbstrDebugOut* debugOut);
 
   AbstrDebugOut* DebugOut() {return m_pDebugOut;}
+  bool           DoDeleteDebugOut() {return m_bDeleteDebugOutOnExit;}
   GPUMemMan*     MemMan()   {return m_pGPUMemMan;}
   IOManager*     IOMan()    {return m_pIOManager;}
   SystemInfo*    SysInfo()  {return m_pSystemInfo;}

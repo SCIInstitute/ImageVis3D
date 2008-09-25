@@ -27,7 +27,7 @@
 */
 
 
-//!    File   : ImageVis3D.cpp
+//!    File   : ImageVis3D_1DTransferFunction.cpp
 //!    Author : Jens Krueger
 //!             SCI Institute
 //!             University of Utah

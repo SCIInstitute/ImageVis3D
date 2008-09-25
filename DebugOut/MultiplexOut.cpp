@@ -46,15 +46,43 @@
 #include <fstream>
 using namespace std;
 
-MultiplexOut::MultiplexOut(std::vector<AbstrDebugOut*> debugger) :
-  m_debugger(debugger)
-{
-  this->printf("MESSAGE (MultiplexOut::~MultiplexOut:): Starting up");
+MultiplexOut::~MultiplexOut() {
+  for (size_t i = 0;i<m_vpDebugger.size();i++) {
+    if (m_vbDeleteOnExit[i]) {
+      m_vpDebugger[i]->printf("MESSAGE (MultiplexOut::~MultiplexOut:): Shutting down");
+      delete m_vpDebugger[i];
+    }
+  }
 }
 
-MultiplexOut::~MultiplexOut() {
-  this->printf("MESSAGE (MultiplexOut::~MultiplexOut:): Shutting down\n\n\n");
+void MultiplexOut::AddDebugOut(AbstrDebugOut* pDebugger, bool bDeleteOnExit) {
+  m_vpDebugger.push_back(pDebugger);
+  m_vbDeleteOnExit.push_back(bDeleteOnExit);
+  pDebugger->Message("MultiplexOut::AddDebugOut","Operating as part of a multiplexed debug out now.");
 }
+
+void MultiplexOut::RemoveDebugOut(AbstrDebugOut* pDebugger) {
+  size_t iFound = size_t(-1);
+  for (size_t i = 0;i<m_vpDebugger.size();i++) {
+    if (m_vpDebugger[i] == pDebugger) {
+      iFound = i;
+      break;     
+    } else {
+      // recursivley check for occurences of pDebugger
+      MultiplexOut* p = dynamic_cast<MultiplexOut*>(m_vpDebugger[i]);
+      if (p != NULL) p->RemoveDebugOut(pDebugger);
+    }
+  }
+
+  if (iFound != size_t(-1)) {
+    if (m_vbDeleteOnExit[iFound]) delete m_vpDebugger[iFound];
+
+    m_vpDebugger.erase(m_vpDebugger.begin()+iFound);
+    m_vbDeleteOnExit.erase(m_vbDeleteOnExit.begin()+iFound);
+  }
+
+}
+
 
 void MultiplexOut::printf(const char* format, ...)
 {
@@ -67,7 +95,7 @@ void MultiplexOut::printf(const char* format, ...)
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
 
-  for (size_t i = 0;i<m_debugger.size();i++) m_debugger[i]->printf(buff);
+  for (size_t i = 0;i<m_vpDebugger.size();i++) m_vpDebugger[i]->printf(buff);
 }
 
 void MultiplexOut::Message(const char* source, const char* format, ...) {
@@ -80,7 +108,7 @@ void MultiplexOut::Message(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-  for (size_t i = 0;i<m_debugger.size();i++) m_debugger[i]->Message(source,buff);
+  for (size_t i = 0;i<m_vpDebugger.size();i++) m_vpDebugger[i]->Message(source,buff);
 }
 
 void MultiplexOut::Warning(const char* source, const char* format, ...) {
@@ -93,7 +121,7 @@ void MultiplexOut::Warning(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-  for (size_t i = 0;i<m_debugger.size();i++) m_debugger[i]->Warning(source,buff);
+  for (size_t i = 0;i<m_vpDebugger.size();i++) m_vpDebugger[i]->Warning(source,buff);
 }
 
 void MultiplexOut::Error(const char* source, const char* format, ...) {
@@ -106,5 +134,5 @@ void MultiplexOut::Error(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-  for (size_t i = 0;i<m_debugger.size();i++) m_debugger[i]->Error(source,buff);
+  for (size_t i = 0;i<m_vpDebugger.size();i++) m_vpDebugger[i]->Error(source,buff);
 }

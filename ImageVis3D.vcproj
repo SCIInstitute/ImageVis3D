@@ -951,6 +951,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\UI\ImageVis3D_DebugWindow.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\UI\ImageVis3D_FileHandling.cpp"
 						>
 					</File>

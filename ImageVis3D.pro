@@ -81,6 +81,7 @@ SOURCES += 3rdParty/GLEW/glew.c \
            UI/ImageVis3D_2DTransferFunction.cpp \
            UI/ImageVis3D_FileHandling.cpp \
            UI/ImageVis3D_WindowHandling.cpp \
+           UI/ImageVis3D_DebugWindow.cpp \
            UI/PleaseWait.cpp \
            UI/QTransferFunction.cpp \
            UI/Q1DTransferFunction.cpp \

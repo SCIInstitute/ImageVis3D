@@ -46,14 +46,19 @@
 
 class MultiplexOut : public AbstrDebugOut{
   public:
-    MultiplexOut(std::vector<AbstrDebugOut*> debugger);
+    MultiplexOut() {}
     ~MultiplexOut();
+    
+    void AddDebugOut(AbstrDebugOut* pDebugger, bool bDeleteOnExit);
+    void RemoveDebugOut(AbstrDebugOut* pDebugger);
+
     virtual void printf(const char* format, ...);
     virtual void Message(const char* source, const char* format, ...);
     virtual void Warning(const char* source, const char* format, ...);
     virtual void Error(const char* source, const char* format, ...);
   private:
-    std::vector<AbstrDebugOut*> m_debugger;
+    std::vector<AbstrDebugOut*> m_vpDebugger;
+    std::vector<bool>           m_vbDeleteOnExit;
 };
 
 #endif // MULTIPLEXOUT_H

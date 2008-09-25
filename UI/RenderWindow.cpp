@@ -57,7 +57,6 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   m_Renderer->SetCurrentView(0);
 
   this->setFocusPolicy(Qt::StrongFocus);
-
 }
 
 RenderWindow::~RenderWindow()

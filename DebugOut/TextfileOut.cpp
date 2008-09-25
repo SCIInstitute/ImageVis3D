@@ -49,7 +49,7 @@ using namespace std;
 TextfileOut::TextfileOut(std::string strFilename) :
   m_strFilename(strFilename)
 {
-  this->printf("MESSAGE (TextfileOut::~TextfileOut:): Starting up");
+  this->printf("MESSAGE (TextfileOut::TextfileOut:): Starting up");
 }
 
 TextfileOut::~TextfileOut() {

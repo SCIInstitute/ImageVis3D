@@ -41,6 +41,7 @@
 
 #include <Basics/SysTools.h>
 #include <DebugOut/TextfileOut.h>
+#include <DebugOut/MultiplexOut.h>
 
 /*
 #ifdef _WIN32
@@ -87,7 +88,15 @@ int main(int argc, char* argv[])
       case 0 : textout->m_bShowWarnings = false;
       case 1 : textout->m_bShowMessages = false; break;
     }
-    masterController.SetDebugOut(textout, true);
+
+    AbstrDebugOut* pOldDebug       = masterController.DebugOut();
+    bool           bDeleteOldDebug = masterController.DoDeleteDebugOut();
+
+    MultiplexOut* pMultiOut = new MultiplexOut();
+    masterController.SetDebugOut(pMultiOut, true);
+
+    pMultiOut->AddDebugOut(textout, true);
+    pMultiOut->AddDebugOut(pOldDebug, bDeleteOldDebug);
   }
 
   // open the QT window
