@@ -59,7 +59,7 @@ class SBVRGeogen
 {
 public:
 	SBVRGeogen(void);
-	~SBVRGeogen(void);
+	virtual ~SBVRGeogen(void);
 
 	virtual void SetTransformation(const FLOATMATRIX4& matTransform);
 	virtual void SetVolumeData(	const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize) {m_vAspect = vAspect; m_vSize = vSize;  InitBBOX(); }
