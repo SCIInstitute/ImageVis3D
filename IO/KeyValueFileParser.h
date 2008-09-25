@@ -80,8 +80,8 @@ public:
 class KeyValueFileParser
 {
 public:
-	KeyValueFileParser(const std::string& strFilename);
-	KeyValueFileParser(const std::wstring& wstrFilename);
+	KeyValueFileParser(const std::string& strFilename, char cToken = ':');
+	KeyValueFileParser(const std::wstring& wstrFilename, wchar_t cToken = ':');
 
 	~KeyValueFileParser(void);
 
@@ -94,7 +94,7 @@ protected:
 	std::vector<KeyValPair> m_vecTokens;
 	bool m_bFileReadable;
 
-	bool ParseFile(std::wstring wstrFilename);
+  bool ParseFile(std::wstring wstrFilename, wchar_t cToken);
 };
 
 #endif // KEYVALUEFILEPARSER_H

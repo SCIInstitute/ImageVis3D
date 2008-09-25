@@ -107,15 +107,15 @@ KeyValPair::KeyValPair(const wstring& key, const wstring& value) :
 }
 
 
-KeyValueFileParser::KeyValueFileParser(const string& strFilename)
+KeyValueFileParser::KeyValueFileParser(const string& strFilename, char cToken)
 {
 	wstring wstrFilename(strFilename.begin(), strFilename.end());
-	m_bFileReadable = ParseFile(wstrFilename);
+	m_bFileReadable = ParseFile(wstrFilename,wchar_t(cToken));
 }
 
-KeyValueFileParser::KeyValueFileParser(const wstring& wstrFilename)
+KeyValueFileParser::KeyValueFileParser(const wstring& wstrFilename, wchar_t cToken)
 {
-	m_bFileReadable = ParseFile(wstrFilename);
+	m_bFileReadable = ParseFile(wstrFilename,cToken);
 }
 
 KeyValueFileParser::~KeyValueFileParser()
@@ -145,7 +145,7 @@ KeyValPair* KeyValueFileParser::GetData(const wstring& wstrKey, const bool bCase
 }
 
 
-bool KeyValueFileParser::ParseFile(wstring wstrFilename) {
+bool KeyValueFileParser::ParseFile(wstring wstrFilename, wchar_t cToken) {
 	wstring line;
 
 	string strFilename(wstrFilename.begin(), wstrFilename.end());
@@ -159,12 +159,12 @@ bool KeyValueFileParser::ParseFile(wstring wstrFilename) {
 			SysTools::RemoveLeadingWhitespace(line);
 
 			if (line[0] == '#') continue;				// skip comments
-			if (line.find_first_of(':') == string::npos) continue;  // skip invalid lines
+			if (line.find_first_of(cToken) == string::npos) continue;  // skip invalid lines
 
-			wstring strKey = line.substr(0, line.find_first_of(':'));
+			wstring strKey = line.substr(0, line.find_first_of(cToken));
 			SysTools::RemoveTailingWhitespace(strKey);
 
-			line = line.substr(line.find_first_of(':')+1, line.length());
+			line = line.substr(line.find_first_of(cToken)+1, line.length());
 			SysTools::RemoveLeadingWhitespace(line);
 			SysTools::RemoveTailingWhitespace(line);
 

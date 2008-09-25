@@ -68,7 +68,7 @@ void MainWindow::LoadDataset() {
 
   LoadDataset(QFileDialog::getOpenFileName(this,
 					   "Load Dataset", ".",
-					   "All known Files (*.dat *.nrrd *.uvf);;QVis Data (*.dat);;Nearly Raw Raster Data (*.nrrd);;Universal Volume Format (*.uvf)",&selectedFilter, options));
+					   "All known Files (*.uvf *.nhdr *.dat);;Universal Volume Format (*.uvf);;Nearly Raw Raster Data (*.nhdr);;QVis Data (*.dat)",&selectedFilter, options));
 }
 
 

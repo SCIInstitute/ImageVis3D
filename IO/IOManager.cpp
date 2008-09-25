@@ -88,14 +88,124 @@ vector<FileStackInfo*> IOManager::ScanDirectory(std::string strDirectory) {
   return fileStacks;
 }
 
+bool IOManager::ConvertNHDRDataset(const std::string& strFilename, const std::string& strTargetFilename) 
+{
+  m_pMasterController->DebugOut()->Message("IOManager::ConvertNHDRDataset","Converting NRHD dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
+
+  UINT64			  iComponentSize=8;
+  UINT64			  iComponentCount=1;
+  bool          bSigned=false;
+  bool          bBigEndian=false;
+  UINTVECTOR3		vVolumeSize;
+  FLOATVECTOR3	vVolumeAspect(1,1,1);
+  string        strRAWFile;
+
+  KeyValueFileParser parser(strFilename);
+
+  if (!parser.FileReadable()) {
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open NRHD dataset %s", strFilename.c_str());
+    return false;
+  }
+
+  KeyValPair* kvpType = parser.GetData("TYPE");
+  if (kvpType == NULL) {
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open find token \"type\" in file %s", strFilename.c_str());
+	  return false;
+  } else {
+	  if (kvpType->strValueUpper == "SIGNED CHAR" || kvpType->strValueUpper == "INT8" || kvpType->strValueUpper == "INT8_T") {
+		  bSigned = true;
+      iComponentSize = 8;
+	  } else if (kvpType->strValueUpper == "UCHAR" || kvpType->strValueUpper == "UNSIGNED CHAR" ||  kvpType->strValueUpper == "UINT8" || kvpType->strValueUpper == "UINT8_T") {
+		  bSigned = false;
+      iComponentSize = 8;
+	  } else if (kvpType->strValueUpper == "SHORT" || kvpType->strValueUpper == "SHORT INT" ||  kvpType->strValueUpper == "SIGNED SHORT" || kvpType->strValueUpper == "SIGNED SHORT INT" || kvpType->strValueUpper == "INT16" || kvpType->strValueUpper == "INT16_T") {
+		  bSigned = true;
+		  iComponentSize = 16;
+	  } else if (kvpType->strValueUpper == "USHORT" || kvpType->strValueUpper == "UNSIGNED SHORT" || kvpType->strValueUpper == "UNSIGNED SHORT INT" || kvpType->strValueUpper == "UINT16" || kvpType->strValueUpper == "UINT16_T") {
+		  bSigned = false;
+		  iComponentSize = 16;
+	  } else if (kvpType->strValueUpper == "INT" || kvpType->strValueUpper == "SIGNED INT" || kvpType->strValueUpper == "INT32" || kvpType->strValueUpper == "INT32_T") {
+		  bSigned = true;
+		  iComponentSize = 32;
+	  } else if (kvpType->strValueUpper == "UINT" || kvpType->strValueUpper == "UNSIGNED INT" || kvpType->strValueUpper == "UINT32" || kvpType->strValueUpper == "UINT32_T") {
+		  bSigned = false;
+		  iComponentSize = 32;
+	  } else if (kvpType->strValueUpper == "LONGLONG" || kvpType->strValueUpper == "LONG LONG" || kvpType->strValueUpper == "LONG LONG INT" || kvpType->strValueUpper == "SIGNED LONG LONG" || kvpType->strValueUpper == "SIGNED LONG LONG INT" || kvpType->strValueUpper == "INT64" || kvpType->strValueUpper == "INT64_T") {
+		  bSigned = true;
+		  iComponentSize = 64;
+	  } else if (kvpType->strValueUpper == "ULONGLONG" || kvpType->strValueUpper == "UNSIGNED LONG LONG" || kvpType->strValueUpper == "UNSIGNED LONG LONG INT" || kvpType->strValueUpper == "UINT64" || kvpType->strValueUpper == "UINT64_T") {
+		  bSigned = true;
+		  iComponentSize = 64;
+	  } else if (kvpType->strValueUpper == "FLOAT") {
+		  bSigned = true;
+		  iComponentSize = 32;
+	  } else if (kvpType->strValueUpper == "DOUBLE") {
+		  bSigned = true;
+		  iComponentSize = 64;
+	  } else {
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Unsupported \"type\" in file %s", strFilename.c_str());
+	    return false;
+    }
+  }
+
+  KeyValPair* kvpDim = parser.GetData("DIMENSION");
+  if (kvpDim == NULL) {
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open find token \"dimension\" in file %s", strFilename.c_str());
+	  return false;
+  } else {
+    if (kvpDim->iValue != 3)  {
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Only 3D nhdr are supported at the moment");
+	    return false;
+     }
+  }
+
+  KeyValPair* kvpSizes = parser.GetData("SIZES");
+  if (kvpSizes == NULL) {
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open find token \"sizes\" in file %s", strFilename.c_str());
+	  return false;
+  } else {
+    vVolumeSize = kvpSizes->vuiValue;
+  }
+
+  KeyValPair* kvpDataFile = parser.GetData("DATA FILE");
+  if (kvpDataFile == NULL) {
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open find token \"data file\" in file %s", strFilename.c_str());
+	  return false;
+  } else {
+    strRAWFile = SysTools::GetPath(strFilename) + kvpDataFile->strValue;
+  }
+  
+  KeyValPair* kvpEncoding = parser.GetData("ENCODING");
+  if (kvpEncoding == NULL) {
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open find token \"encoding\" in file %s", strFilename.c_str());
+	  return false;
+  } else {
+    if (kvpEncoding->strValueUpper != "RAW")  {
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Only raw encodings are supported at the moment.");
+	    return false;
+     }
+  }
+
+  KeyValPair* kvpSpacings = parser.GetData("SPACINGS");
+  if (kvpSpacings != NULL) {
+    vVolumeAspect = kvpSpacings->vfValue;
+  }
+
+  KeyValPair* kvpEndian = parser.GetData("ENDIAN");
+  if (kvpEndian != NULL && kvpEndian->strValueUpper == "BIG") bBigEndian = true;
+
+  return ConvertRAWDataset(strRAWFile, strTargetFilename, iComponentSize, iComponentCount, bSigned, bBigEndian != EndianConvert::IsBigEndian(),
+                           vVolumeSize, vVolumeAspect, "NRRD data", SysTools::GetFilename(strFilename));
+
+}
 
 bool IOManager::ConvertDATDataset(const std::string& strFilename, const std::string& strTargetFilename)
 {
   m_pMasterController->DebugOut()->Message("IOManager::ConvertDATDataset","Converting DAT dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
 
-  unsigned int	TypeID;
   UINT64			  iComponentSize=8;
   UINT64			  iComponentCount=1;
+  bool          bSigned=false;
   UINTVECTOR3		vVolumeSize;
   FLOATVECTOR3	vVolumeAspect;
   string        strRAWFile;
@@ -103,24 +213,24 @@ bool IOManager::ConvertDATDataset(const std::string& strFilename, const std::str
   KeyValueFileParser parser(strFilename);
 
   if (parser.FileReadable())  {
-	  KeyValPair* format         = parser.GetData("FORMAT");
+	  KeyValPair* format = parser.GetData("FORMAT");
 	  if (format == NULL) 
 		  return false;
 	  else {
 		  if (format->strValueUpper == "UCHAR" || format->strValueUpper == "BYTE") {
-			  TypeID = 0;
+  		  bSigned = false;
 			  iComponentSize = 8;
 			  iComponentCount = 1;
 		  } else if (format->strValueUpper == "USHORT") {
-			  TypeID = 1;
+  		  bSigned = false;
 			  iComponentSize = 16;
 			  iComponentCount = 1;
 		  } else if (format->strValueUpper == "UCHAR4") {
-			  TypeID = 2;
+  		  bSigned = false;
 			  iComponentSize = 32;
 			  iComponentCount = 4;
 		  } else if (format->strValueUpper == "FLOAT") {
-			  TypeID = 3;
+  		  bSigned = true;
 			  iComponentSize = 32;
 			  iComponentCount = 1;
 		  }
@@ -143,14 +253,14 @@ bool IOManager::ConvertDATDataset(const std::string& strFilename, const std::str
 	  strRAWFile = SysTools::GetPath(strFilename) + strRAWFile;
 
     // TODO: detect big endian DAT/RAW combinations and set the conversion parameter accordingly instead of always converting if the machine is big endian 
-    return ConvertRAWDataset(strRAWFile, strTargetFilename, iComponentSize, iComponentCount, EndianConvert::IsBigEndian(),
+    return ConvertRAWDataset(strRAWFile, strTargetFilename, iComponentSize, iComponentCount, bSigned, EndianConvert::IsBigEndian(),
                              vVolumeSize, vVolumeAspect, "Qvis data", SysTools::GetFilename(strFilename));
 
   } else return false;
 }
 
 bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::string& strTargetFilename,
-				                         UINT64	iComponentSize, UINT64 iComponentCount, bool bConvertEndianness,
+				                         UINT64	iComponentSize, UINT64 iComponentCount, bool bSigned, bool bConvertEndianness,
                                  UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect, string strDesc, string strSource, UVFTables::ElementSemanticTable eType)
 {
   if (iComponentSize < 16) bConvertEndianness = false; // catch silly user input
@@ -294,7 +404,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 
 	dataVolume.SetTypeToVector(iComponentSize/iComponentCount, 
 							               iComponentSize == 32 ? 23 : iComponentSize/iComponentCount,
-							               iComponentSize == 32, 
+							               bSigned, 
 							               vSem);
 	
 	dataVolume.ulBrickSize.push_back(BRICKSIZE);
@@ -466,6 +576,7 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
 
     bool result = ConvertRAWDataset(strTempMergeFilename, strTargetFilename, pDICOMStack->m_iAllocated, 
                                     pDICOMStack->m_iComponentCount, 
+                                    false,
                                     pDICOMStack->m_bIsBigEndian != EndianConvert::IsBigEndian(),
                                     iSize, pDICOMStack->m_fvfAspect, 
                                     "DICOM stack", SysTools::GetFilename(pDICOMStack->m_Elements[0]->m_strFileName)
@@ -490,10 +601,15 @@ bool IOManager::ConvertDataset(const std::string& strFilename, const std::string
   if (SysTools::ToLowerCase(SysTools::GetExt(strFilename)) == "dat") {
     m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Detected QVis DAT file forwarding to DAT converter.");
     return ConvertDATDataset(strFilename, strTargetFilename);
-  } else {
-    // TODO: more converters here
-    return false;
   }
+
+  if (SysTools::ToLowerCase(SysTools::GetExt(strFilename)) == "nhdr") {
+    m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Detected NRRD header file forwarding to NHDR converter.");
+    return ConvertNHDRDataset(strFilename, strTargetFilename);
+  } 
+
+  // TODO: more converters here
+  return false;  
 }
 
 VolumeDataset* IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTargetFilename, AbstrRenderer* requester) {
