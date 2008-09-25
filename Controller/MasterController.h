@@ -75,13 +75,11 @@ public:
   IOManager*     IOMan()    {return m_pIOManager;}
   SystemInfo*    SysInfo()  {return m_pSystemInfo;}
 
-  /*
   // ARS - TODO this should return a pointer to memory.
   void Filter( std::string datasetName,
 	       unsigned int filter,
 	       void *var0 = 0, void *var1 = 0,
-	       void *var2 = 0, void *var3 = 0 ) {};
-    */
+	       void *var2 = 0, void *var3 = 0 );
 
 private:
   SystemInfo*    m_pSystemInfo;

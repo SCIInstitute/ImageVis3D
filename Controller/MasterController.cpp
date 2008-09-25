@@ -141,3 +141,8 @@ void MasterController::ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer) {
   m_pDebugOut->Warning("MasterController::ReleaseVolumerenderer",
 		       "requested volume renderer not found");
 }
+
+
+void MasterController::Filter( std::string , unsigned int , 
+                              void*, void *, void *, void * ) {
+};
