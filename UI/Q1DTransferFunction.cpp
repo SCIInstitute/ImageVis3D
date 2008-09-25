@@ -188,7 +188,7 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
   std::vector<QPointF> pointList;
   pointList.push_back(QPointF(m_iLeftBorder+1, iGridHeight-m_iBottomBorder));
   for (size_t i = 0;i<m_vHistogram.GetSize();i++) {
-    float value = min(1.0f, pow(m_vHistogram.Get(i),1.0f/(1+(m_fHistfScale-1)/100.0f)));
+    float value = min<float>(1.0f, pow(m_vHistogram.Get(i),1.0f/(1+(m_fHistfScale-1)/100.0f)));
     pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1), 
                                 m_iTopBorder+iGridHeight-value*iGridHeight));  
   }

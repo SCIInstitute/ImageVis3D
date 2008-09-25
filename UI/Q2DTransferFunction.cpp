@@ -139,7 +139,7 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
   QImage image(QSize(int(m_vHistogram.GetSize().x), int(m_vHistogram.GetSize().y)), QImage::Format_RGB32);
   for (size_t y = 0;y<m_vHistogram.GetSize().y;y++) 
     for (size_t x = 0;x<m_vHistogram.GetSize().x;x++) {
-      float value = min(1.0f, pow(m_vHistogram.Get(x,y),1.0f/(1+(m_fHistfScale-1)/100.0f)));
+      float value = min<float>(1.0f, pow(m_vHistogram.Get(x,y),1.0f/(1+(m_fHistfScale-1)/100.0f)));
       image.setPixel(int(x),
 		     int(m_vHistogram.GetSize().y-(y+1)),
 		     qRgb(int(m_colorBack.red()  * (1.0f-value) +
@@ -494,7 +494,7 @@ void Q2DTransferFunction::changeEvent(QEvent * event) {
 
 
 void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
-  UINT64 iSize = min(m_vHistogram.GetSize().y,  m_pTrans->m_Trans1D.vColorData.size());
+  UINT64 iSize = min<UINT64>(m_vHistogram.GetSize().y,  m_pTrans->m_Trans1D.vColorData.size());
 
   QImage image1DTrans(1, int(iSize), QImage::Format_ARGB32);
 
@@ -637,7 +637,7 @@ void Q2DTransferFunction::Transfer2DDeleteSwatch(){
   if (m_iActiveSwatchIndex != -1) {
     m_pTrans->m_Swatches.erase(m_pTrans->m_Swatches.begin()+m_iActiveSwatchIndex);
     
-    m_iActiveSwatchIndex = min(m_iActiveSwatchIndex, int(m_pTrans->m_Swatches.size()-1));
+    m_iActiveSwatchIndex = min<int>(m_iActiveSwatchIndex, int(m_pTrans->m_Swatches.size()-1));
     m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
     emit SwatchChange();
   }
