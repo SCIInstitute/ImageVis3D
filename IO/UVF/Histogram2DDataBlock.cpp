@@ -89,17 +89,17 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   // TODO: right now only 8 and 16 bit integer data is supported this should be changed to a more general approach
   float fMaxGrad = 0.0f;
   if (source->ulElementBitSize[0][0] == 8) {
-    for (UINT64 z = 1;z<source->ulDomainSize[2]-1;z++) {
-      for (UINT64 y = 1;y<source->ulDomainSize[1]-1;y++) {
-        for (UINT64 x = 1;x<source->ulDomainSize[0]-1;x++) {
+    for (UINT64 z = 1;z<vSize[2]-1;z++) {
+      for (UINT64 y = 1;y<vSize[1]-1;y++) {
+        for (UINT64 x = 1;x<vSize[0]-1;x++) {
 
-          size_t iCenter = x+source->ulDomainSize[0]*y+source->ulDomainSize[0]*source->ulDomainSize[1]*z;
+          size_t iCenter = x+vSize[0]*y+vSize[0]*vSize[1]*z;
           size_t iLeft   = iCenter-1;
           size_t iRight  = iCenter+1;
-          size_t iTop    = iCenter-source->ulDomainSize[0];
-          size_t iBottom = iCenter+source->ulDomainSize[0];
-          size_t iFront  = iCenter-source->ulDomainSize[0]*source->ulDomainSize[1];
-          size_t iBack   = iCenter+source->ulDomainSize[0]*source->ulDomainSize[1];
+          size_t iTop    = iCenter-vSize[0];
+          size_t iBottom = iCenter+vSize[0];
+          size_t iFront  = iCenter-vSize[0]*vSize[1];
+          size_t iBack   = iCenter+vSize[0]*vSize[1];
 
           FLOATVECTOR3   vGradient(float(pcSourceData[iLeft]-pcSourceData[iRight]),
                                    float(pcSourceData[iTop]-pcSourceData[iBottom]),
@@ -109,17 +109,17 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
         }
       }
     }
-    for (UINT64 z = 1;z<source->ulDomainSize[2]-1;z++) {
-      for (UINT64 y = 1;y<source->ulDomainSize[1]-1;y++) {
-        for (UINT64 x = 1;x<source->ulDomainSize[0]-1;x++) {
+    for (UINT64 z = 1;z<vSize[2]-1;z++) {
+      for (UINT64 y = 1;y<vSize[1]-1;y++) {
+        for (UINT64 x = 1;x<vSize[0]-1;x++) {
 
-          size_t iCenter = x+source->ulDomainSize[0]*y+source->ulDomainSize[0]*source->ulDomainSize[1]*z;
+          size_t iCenter = x+vSize[0]*y+vSize[0]*vSize[1]*z;
           size_t iLeft   = iCenter-1;
           size_t iRight  = iCenter+1;
-          size_t iTop    = iCenter-source->ulDomainSize[0];
-          size_t iBottom = iCenter+source->ulDomainSize[0];
-          size_t iFront  = iCenter-source->ulDomainSize[0]*source->ulDomainSize[1];
-          size_t iBack   = iCenter+source->ulDomainSize[0]*source->ulDomainSize[1];
+          size_t iTop    = iCenter-vSize[0];
+          size_t iBottom = iCenter+vSize[0];
+          size_t iFront  = iCenter-vSize[0]*vSize[1];
+          size_t iBack   = iCenter+vSize[0]*vSize[1];
 
           FLOATVECTOR3   vGradient(float(pcSourceData[iLeft]-pcSourceData[iRight]),
                                    float(pcSourceData[iTop]-pcSourceData[iBottom]),
@@ -133,17 +133,17 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   } else {
     if (source->ulElementBitSize[0][0] == 16) {
       unsigned short *psSourceData = (unsigned short*)pcSourceData;
-      for (UINT64 z = 1;z<source->ulDomainSize[2]-1;z++) {
-        for (UINT64 y = 1;y<source->ulDomainSize[1]-1;y++) {
-          for (UINT64 x = 1;x<source->ulDomainSize[0]-1;x++) {
+      for (UINT64 z = 1;z<vSize[2]-1;z++) {
+        for (UINT64 y = 1;y<vSize[1]-1;y++) {
+          for (UINT64 x = 1;x<vSize[0]-1;x++) {
 
-            size_t iCenter = x+source->ulDomainSize[0]*y+source->ulDomainSize[0]*source->ulDomainSize[1]*z;
+            size_t iCenter = x+vSize[0]*y+vSize[0]*vSize[1]*z;
             size_t iLeft   = iCenter-1;
             size_t iRight  = iCenter+1;
-            size_t iTop    = iCenter-source->ulDomainSize[0];
-            size_t iBottom = iCenter+source->ulDomainSize[0];
-            size_t iFront  = iCenter-source->ulDomainSize[0]*source->ulDomainSize[1];
-            size_t iBack   = iCenter+source->ulDomainSize[0]*source->ulDomainSize[1];
+            size_t iTop    = iCenter-vSize[0];
+            size_t iBottom = iCenter+vSize[0];
+            size_t iFront  = iCenter-vSize[0]*vSize[1];
+            size_t iBack   = iCenter+vSize[0]*vSize[1];
 
             FLOATVECTOR3   vGradient(float(psSourceData[iLeft]-psSourceData[iRight]),
                                      float(psSourceData[iTop]-psSourceData[iBottom]),
@@ -153,17 +153,17 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
           }
         }
       }
-      for (UINT64 z = 1;z<source->ulDomainSize[2]-1;z++) {
-        for (UINT64 y = 1;y<source->ulDomainSize[1]-1;y++) {
-          for (UINT64 x = 1;x<source->ulDomainSize[0]-1;x++) {
+      for (UINT64 z = 1;z<vSize[2]-1;z++) {
+        for (UINT64 y = 1;y<vSize[1]-1;y++) {
+          for (UINT64 x = 1;x<vSize[0]-1;x++) {
 
-            size_t iCenter = x+source->ulDomainSize[0]*y+source->ulDomainSize[0]*source->ulDomainSize[1]*z;
+            size_t iCenter = x+vSize[0]*y+vSize[0]*vSize[1]*z;
             size_t iLeft   = iCenter-1;
             size_t iRight  = iCenter+1;
-            size_t iTop    = iCenter-source->ulDomainSize[0];
-            size_t iBottom = iCenter+source->ulDomainSize[0];
-            size_t iFront  = iCenter-source->ulDomainSize[0]*source->ulDomainSize[1];
-            size_t iBack   = iCenter+source->ulDomainSize[0]*source->ulDomainSize[1];
+            size_t iTop    = iCenter-vSize[0];
+            size_t iBottom = iCenter+vSize[0];
+            size_t iFront  = iCenter-vSize[0]*vSize[1];
+            size_t iBack   = iCenter+vSize[0]*vSize[1];
 
             FLOATVECTOR3   vGradient(float(psSourceData[iLeft]-psSourceData[iRight]),
                                      float(psSourceData[iTop]-psSourceData[iBottom]),
