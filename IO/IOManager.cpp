@@ -92,6 +92,8 @@ bool IOManager::ConvertNHDRDataset(const std::string& strFilename, const std::st
 {
   m_pMasterController->DebugOut()->Message("IOManager::ConvertNHDRDataset","Converting NRHD dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
 
+ // TODO : Check Magic value in NRRD File
+
   UINT64			  iComponentSize=8;
   UINT64			  iComponentCount=1;
   bool          bSigned=false;
