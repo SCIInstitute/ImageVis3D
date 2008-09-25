@@ -1,5 +1,5 @@
 #include "Histogram2DDataBlock.h"
-#include <Basics/vectors.h>
+#include <Basics/Vectors.h>
 
 #include <memory.h>
 using namespace std;
