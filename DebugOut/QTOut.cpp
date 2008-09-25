@@ -53,7 +53,6 @@ QTOut::QTOut(QListWidget *listWidget) :
   m_bRecordLists[0] = false;
   m_bRecordLists[1] = false;
   m_bRecordLists[2] = false;
-  m_bRecordLists[3] = false;
 }
 
 QTOut::~QTOut() {
