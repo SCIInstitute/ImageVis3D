@@ -92,8 +92,25 @@ bool IOManager::ConvertNHDRDataset(const std::string& strFilename, const std::st
 {
   m_pMasterController->DebugOut()->Message("IOManager::ConvertNHDRDataset","Converting NRHD dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
 
- // TODO : Check Magic value in NRRD File
+  // Check Magic value in NRRD File first
+	ifstream fileData(strFilename.c_str());	
+  string strFirstLine;
 
+	if (fileData.is_open())
+	{
+		getline (fileData,strFirstLine);
+    if (strFirstLine.substr(0,7) != "NRRD000") {
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","The file %s is not a NRRD file (missing magic)", strFilename.c_str());
+      return false;
+    }
+  } else {
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open NRHD file %s", strFilename.c_str());
+    return false;
+  }
+  fileData.close();
+
+
+  // read data
   UINT64			  iComponentSize=8;
   UINT64			  iComponentCount=1;
   bool          bSigned=false;
@@ -105,7 +122,7 @@ bool IOManager::ConvertNHDRDataset(const std::string& strFilename, const std::st
   KeyValueFileParser parser(strFilename);
 
   if (!parser.FileReadable()) {
-    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open NRHD dataset %s", strFilename.c_str());
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open NRHD file %s", strFilename.c_str());
     return false;
   }
 
