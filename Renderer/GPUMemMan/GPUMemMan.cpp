@@ -42,7 +42,9 @@ using namespace std;
 
 GPUMemMan::GPUMemMan(MasterController* masterController) :
   m_MasterController(masterController),
-  m_SystemInfo(masterController->SysInfo())
+  m_SystemInfo(masterController->SysInfo()),
+  m_iAllocatedGPUMemory(0),
+  m_iAllocatedCPUMemory(0)
 {
 
 }
@@ -132,6 +134,9 @@ GLTexture2D* GPUMemMan::Load2DTextureFromFile(const std::string& strFilename) {
 
   GLTexture2D* tex = new GLTexture2D(image.width,image.height, GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE, image.data, GL_LINEAR, GL_LINEAR);
   delete [] image.data;
+  
+  m_iAllocatedGPUMemory += tex->GetCPUSize();
+  m_iAllocatedCPUMemory += tex->GetGPUSize();
 
   m_vpSimpleTextures.push_back(SimpleTextureListElem(1,tex,strFilename));
   return tex;
@@ -144,6 +149,10 @@ void GPUMemMan::FreeTexture(GLTexture2D* pTexture) {
       i->iAccessCounter--;
       if (i->iAccessCounter == 0) {
         m_MasterController->DebugOut()->Message("GPUMemMan::FreeTexture","Deleted texture %s", i->strFilename.c_str());
+
+        m_iAllocatedGPUMemory += i->pTexture->GetCPUSize();
+        m_iAllocatedCPUMemory += i->pTexture->GetGPUSize();
+
         i->pTexture->Delete();
         m_vpSimpleTextures.erase(i);
       } else {
@@ -294,13 +303,15 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
     }
   }
 
-
   // TODO: add code here to release textures/memory if we run out of free GPU/CPU mem
 
   m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Creating new texture");
 
-  Texture3DListElem* pNewBrick = new Texture3DListElem(pDataset, vLOD, vBrick);
+  Texture3DListElem* pNew3DTex = new Texture3DListElem(pDataset, vLOD, vBrick);
 
-  m_vpTex3DList.push_back(pNewBrick);
+  m_iAllocatedGPUMemory += pNew3DTex->pTexture->GetCPUSize();
+  m_iAllocatedCPUMemory += pNew3DTex->pTexture->GetGPUSize();
+
+  m_vpTex3DList.push_back(pNew3DTex);
   return (*(m_vpTex3DList.end()-1))->pTexture;
 }

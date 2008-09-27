@@ -55,6 +55,10 @@ class GLTexture3D : public GLTexture {
     
     virtual void Bind() {glBindTexture(GL_TEXTURE_3D, m_iGLID);}
     virtual void SetData(const GLvoid *pixels);
+
+    virtual UINT64 GetCPUSize() {return 0;}  // TODO
+    virtual UINT64 GetGPUSize() {return 0;}  // TODO
+
   protected:
     GLuint m_iSizeX;
     GLuint m_iSizeY;

@@ -59,6 +59,7 @@ HEADERS += Basics/Grids.h \
            3rdParty/GLEW/glew.h \
            3rdParty/GLEW/glxew.h \
            Renderer/GLInclude.h \
+           Renderer/GLObject.h \
            Renderer/GLTexture.h \
            Renderer/GLTexture1D.h \
            Renderer/GLTexture2D.h \

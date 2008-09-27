@@ -253,9 +253,10 @@ class GPUMemMan {
     // system statistics
     UINT64 GetCPUMem() const {return m_SystemInfo->m_iCPUMemSize;}
     UINT64 GetGPUMem() const {return m_SystemInfo->m_iGPUMemSize;}
+    UINT64 GetAllocatedCPUMem() const {return m_iAllocatedCPUMemory;}
+    UINT64 GetAllocatedGPUMem() const {return m_iAllocatedGPUMemory;}
     unsigned int GetBitWithMem() const {return m_SystemInfo->m_iProgrammBitWith;}
     unsigned int GetNumCPUs() const {return m_SystemInfo->m_iNumberofCPUs;}
-
 
   private:
     VolDataList       m_vpVolumeDatasets;
@@ -265,6 +266,9 @@ class GPUMemMan {
     Texture3DList     m_vpTex3DList;
     MasterController* m_MasterController;
     SystemInfo*       m_SystemInfo;
+
+    UINT64            m_iAllocatedGPUMemory;
+    UINT64            m_iAllocatedCPUMemory;
 };
 
 #endif // GPUMEMMAN_H

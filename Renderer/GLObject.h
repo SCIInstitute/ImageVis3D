@@ -27,33 +27,26 @@
 */
 
 /**
-  \file    GLTexture.h
+  \file    GLObject.h
   \author    Jens Krueger
         SCI Institute
         University of Utah
-  \date    August 2008
+  \date    September 2008
 */
 
 
 #pragma once
 
-#ifndef GLTEXTURE_H
-#define GLTEXTURE_H
+#ifndef GLOBJECT_H
+#define GLOBJECT_H
 
-#include "GLObject.h"
+#include "GLInclude.h"
+#include <Basics/MathTools.h>  // for UINT64
 
-class GLTexture : public GLObject {
-  public:
-    GLTexture() : m_iGLID(-1) {}
-    virtual ~GLTexture();
-
-    virtual void Delete();
-    virtual void SetData(const GLvoid *pixels) = 0;
-    virtual void Bind() = 0;
-    GLuint GetGLID() {return m_iGLID;}
-
-  protected:
-    GLuint        m_iGLID;
+class GLObject {
+public:
+    virtual UINT64 GetCPUSize() = 0;
+    virtual UINT64 GetGPUSize() = 0;
 };
 
-#endif // GLTEXTURE_H
+#endif // GLOBJECT_H

@@ -41,9 +41,9 @@ MasterController::MasterController() :
   m_pDebugOut(new ConsoleOut()),
   m_bDeleteDebugOutOnExit(true)
 {
-  m_pGPUMemMan = new GPUMemMan(this);
-  m_pIOManager = new IOManager(this);
   m_pSystemInfo = new SystemInfo();
+  m_pIOManager = new IOManager(this);
+  m_pGPUMemMan = new GPUMemMan(this);
 }
 
 

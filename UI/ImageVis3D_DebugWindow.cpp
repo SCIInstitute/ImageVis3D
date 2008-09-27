@@ -90,6 +90,7 @@ bool MainWindow::ParseCommand(string strCommand) {
     m_DebugOut->printf("\"help\"             : this help screen");
     m_DebugOut->printf("\"clear\"            : clear this window");
     m_DebugOut->printf("\"getglinfo\"        : print information about the supported OpenGL extension");
+    m_DebugOut->printf("\"getsysinfo\"       : print information about the system and the mem usage");
     m_DebugOut->printf("\"toggleerrorlog\"   : toggle recording of errors");
     m_DebugOut->printf("\"togglewarninglog\" : toggle recording of warnings");
     m_DebugOut->printf("\"togglemessagelog\" : toggle recording of messages");
@@ -181,6 +182,19 @@ bool MainWindow::ParseCommand(string strCommand) {
         extensions++;
       }
     }
+    return true;
+  }
+  if (strCommand == "getsysinfo") {
+    m_DebugOut->printf("CPU Mem: %llu MB", m_MasterController.MemMan()->GetCPUMem()/(1024*1024));
+    m_DebugOut->printf("    Used: %llu Bytes", m_MasterController.MemMan()->GetAllocatedCPUMem());
+    if (m_MasterController.MemMan()->GetAllocatedCPUMem() < m_MasterController.MemMan()->GetCPUMem() ) m_DebugOut->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetCPUMem()-m_MasterController.MemMan()->GetAllocatedCPUMem())/(1024*1024));
+
+    m_DebugOut->printf("GPU Mem: %llu MB", m_MasterController.MemMan()->GetGPUMem()/(1024*1024));
+    m_DebugOut->printf("    Used: %llu Bytes", m_MasterController.MemMan()->GetAllocatedGPUMem());
+    if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() ) m_DebugOut->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024));
+
+    m_DebugOut->printf("BitWith: %i", m_MasterController.MemMan()->GetBitWithMem());
+
     return true;
   }
   return false;

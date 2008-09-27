@@ -44,6 +44,7 @@
 #include <Renderer/AbstrRenderer.h>
 #include <Renderer/GPUMemMan/GPUMemMan.h>
 #include <Renderer/SBVRGeogen.h>
+#include <Renderer/GLFBOTex.h>
 
 class GPUSBVR : public AbstrRenderer {
   public:
@@ -69,13 +70,14 @@ class GPUSBVR : public AbstrRenderer {
     int GetCurrentView() {return m_iCurrentView;}
 
   protected:
-    FLOATMATRIX4 m_matModelView;
-    SBVRGeogen  m_SBVRGeogen;
-    GLTexture2D* m_IDTex[3];
-    int m_iCurrentView;
-    FLOATVECTOR2 m_vRot;
-    bool m_bDelayedCompleteRedraw;
-    bool m_bRenderWireframe;
+    FLOATMATRIX4  m_matModelView;
+    SBVRGeogen    m_SBVRGeogen;
+    GLTexture2D*  m_IDTex[3];
+    int           m_iCurrentView;
+    FLOATVECTOR2  m_vRot;
+    bool          m_bDelayedCompleteRedraw;
+    bool          m_bRenderWireframe;
+    GLFBOTex*     m_pFBO3DImage;
 
     void DrawLogo();
     void UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);

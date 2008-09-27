@@ -63,7 +63,7 @@ typedef enum {
   GLSLPROGRAM_STRING
 } GLSLPROGRAM_SOURCE;
 
-#include "GLInclude.h"
+#include "GLObject.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,7 +81,7 @@ class MasterController;
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date November 2005
  */
-class GLSLProgram {
+class GLSLProgram : public GLObject {
 public:
   GLSLProgram(MasterController* pMasterController);                                             ///< Standard Constructor.
   GLSLProgram(const GLSLProgram &other);                                                        ///< Copy Constructor
@@ -111,6 +111,9 @@ public:
   inline void SetUniformArray(const char *name,const float *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
   inline void SetUniformArray(const char *name,const int   *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
   inline void SetUniformArray(const char *name,const bool  *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
+
+  virtual UINT64 GetCPUSize() {return 0;}  // assume zero CPU memeory cost for shaders to avoid any memory manager from paging out shaders
+  virtual UINT64 GetGPUSize() {return 0;}  // assume zero GPU memeory cost for shaders to avoid any memory manager from paging out shaders
 
 private:
   void    Initialize(void);

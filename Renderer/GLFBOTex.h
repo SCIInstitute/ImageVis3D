@@ -12,11 +12,11 @@
 
 #include <assert.h>
 #include <stdlib.h>
-#include "GLInclude.h"
+#include "GLObject.h"
 
 class MasterController;
 
-class GLFBOTex {
+class GLFBOTex : public GLObject {
 public:
 	GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, bool bHaveDepth=false, int iNumBuffers=1);
 	virtual ~GLFBOTex(void);
@@ -26,6 +26,10 @@ public:
 	inline virtual void FinishRead(int iBuffer=0);
 	inline virtual operator GLuint(void) { return m_hTexture[0]; }
 	inline virtual operator GLuint*(void) { return m_hTexture; }
+
+  virtual UINT64 GetCPUSize() {return 0;}  // TODO
+  virtual UINT64 GetGPUSize() {return 0;}  // TODO
+
 private:
 	bool			CheckFBO(const char* method);
 	void			initFBO(void);

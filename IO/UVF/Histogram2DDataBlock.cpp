@@ -18,9 +18,9 @@ Histogram2DDataBlock::Histogram2DDataBlock(const Histogram2DDataBlock &other) :
 Histogram2DDataBlock::Histogram2DDataBlock(LargeRAWFile* pStreamFile, UINT64 iOffset, bool bIsBigEndian) :
   RasterDataBlock(pStreamFile, iOffset, bIsBigEndian) 
 {
-  m_vHistData.resize(ulDomainSize[0]);
-  vector<UINT64> tmp(ulDomainSize[1]);
-  for (UINT64 i = 0;i<ulDomainSize[0];i++) {
+  m_vHistData.resize(size_t(ulDomainSize[0]));
+  vector<UINT64> tmp((size_t)ulDomainSize[1]);
+  for (size_t i = 0;i<size_t(ulDomainSize[0]);i++) {
     pStreamFile->ReadRAW((unsigned char*)&tmp[0], ulDomainSize[1]*sizeof(UINT64));
     m_vHistData[i] = tmp;
   }
@@ -38,9 +38,9 @@ DataBlock* Histogram2DDataBlock::Clone() {
 
 UINT64 Histogram2DDataBlock::GetHeaderFromFile(LargeRAWFile* pStreamFile, UINT64 iOffset, bool bIsBigEndian) {
   iOffset = RasterDataBlock::GetHeaderFromFile(pStreamFile, iOffset, bIsBigEndian);
-  m_vHistData.resize(ulDomainSize[0]);
-  vector<UINT64> tmp(ulDomainSize[1]);
-  for (UINT64 i = 0;i<ulDomainSize[0];i++) {
+  m_vHistData.resize(size_t(ulDomainSize[0]));
+  vector<UINT64> tmp((size_t)ulDomainSize[1]);
+  for (size_t i = 0;i<size_t(ulDomainSize[0]);i++) {
     pStreamFile->ReadRAW((unsigned char*)&tmp[0], ulDomainSize[1]*sizeof(UINT64));
     m_vHistData[i] = tmp;
   }
@@ -64,12 +64,12 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   if (source->ulDomainSize.size() < 3 || source->ulDomainSemantics[0] != UVFTables::DS_X ||
       source->ulDomainSemantics[1] != UVFTables::DS_Y || source->ulDomainSemantics[2] != UVFTables::DS_Z) return false;
 
-  UINT64 iValueRange = 1<<(source->ulElementBitSize[0][0]);
+  size_t iValueRange = size_t(1<<(source->ulElementBitSize[0][0]));
 
   std::vector< std::vector<UINT64> > vTmpHist(iValueRange);
-  for (UINT64 i = 0;i<iValueRange;i++) {
+  for (size_t i = 0;i<iValueRange;i++) {
     vTmpHist[i].resize(256);
-    for (UINT64 j = 0;j<256;j++) {
+    for (size_t j = 0;j<256;j++) {
       vTmpHist[i][j] = 0;
     }
   }
@@ -81,7 +81,7 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   for (size_t i = 0;i<vBricks.size();i++) vOneAndOnly.push_back(0);
   if (!source->GetData(&pcSourceData, vLOD, vOneAndOnly)) return false;
 
-  vector<UINT64> vSize  = source->GetSmallestBrickSize();
+  vector<UINT64> vSize = source->GetSmallestBrickSize();
 
   UINT64 iDataSize = 1;
   for (size_t i = 0;i<vSize.size();i++) iDataSize*=vSize[i];
@@ -89,17 +89,17 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   // TODO: right now only 8 and 16 bit integer data is supported this should be changed to a more general approach
   float fMaxGrad = 0.0f;
   if (source->ulElementBitSize[0][0] == 8) {
-    for (UINT64 z = 1;z<vSize[2]-1;z++) {
-      for (UINT64 y = 1;y<vSize[1]-1;y++) {
-        for (UINT64 x = 1;x<vSize[0]-1;x++) {
+    for (size_t z = 1;z<size_t(vSize[2]-1);z++) {
+      for (size_t y = 1;y<size_t(vSize[1]-1);y++) {
+        for (size_t x = 1;x<size_t(vSize[0]-1);x++) {
 
-          size_t iCenter = x+vSize[0]*y+vSize[0]*vSize[1]*z;
+          size_t iCenter = x+size_t(vSize[0])*y+size_t(vSize[0])*size_t(vSize[1])*z;
           size_t iLeft   = iCenter-1;
           size_t iRight  = iCenter+1;
-          size_t iTop    = iCenter-vSize[0];
-          size_t iBottom = iCenter+vSize[0];
-          size_t iFront  = iCenter-vSize[0]*vSize[1];
-          size_t iBack   = iCenter+vSize[0]*vSize[1];
+          size_t iTop    = iCenter-size_t(vSize[0]);
+          size_t iBottom = iCenter+size_t(vSize[0]);
+          size_t iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);
+          size_t iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);
 
           FLOATVECTOR3   vGradient(float(pcSourceData[iLeft]-pcSourceData[iRight]),
                                    float(pcSourceData[iTop]-pcSourceData[iBottom]),
@@ -109,17 +109,17 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
         }
       }
     }
-    for (UINT64 z = 1;z<vSize[2]-1;z++) {
-      for (UINT64 y = 1;y<vSize[1]-1;y++) {
-        for (UINT64 x = 1;x<vSize[0]-1;x++) {
+    for (size_t z = 1;z<size_t(vSize[2]-1);z++) {
+      for (size_t y = 1;y<size_t(vSize[1]-1);y++) {
+        for (size_t x = 1;x<size_t(vSize[0]-1);x++) {
 
-          size_t iCenter = x+vSize[0]*y+vSize[0]*vSize[1]*z;
+          size_t iCenter = x+size_t(vSize[0])*y+size_t(vSize[0])*size_t(vSize[1])*z;
           size_t iLeft   = iCenter-1;
           size_t iRight  = iCenter+1;
-          size_t iTop    = iCenter-vSize[0];
-          size_t iBottom = iCenter+vSize[0];
-          size_t iFront  = iCenter-vSize[0]*vSize[1];
-          size_t iBack   = iCenter+vSize[0]*vSize[1];
+          size_t iTop    = iCenter-size_t(vSize[0]);
+          size_t iBottom = iCenter+size_t(vSize[0]);
+          size_t iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);
+          size_t iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);
 
           FLOATVECTOR3   vGradient(float(pcSourceData[iLeft]-pcSourceData[iRight]),
                                    float(pcSourceData[iTop]-pcSourceData[iBottom]),
@@ -133,18 +133,18 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   } else {
     if (source->ulElementBitSize[0][0] == 16) {
       unsigned short *psSourceData = (unsigned short*)pcSourceData;
-      for (UINT64 z = 1;z<vSize[2]-1;z++) {
-        for (UINT64 y = 1;y<vSize[1]-1;y++) {
-          for (UINT64 x = 1;x<vSize[0]-1;x++) {
+      for (size_t z = 1;z<size_t(vSize[2]-1);z++) {
+        for (size_t y = 1;y<size_t(vSize[1]-1);y++) {
+          for (size_t x = 1;x<size_t(vSize[0]-1);x++) {
 
-            size_t iCenter = x+vSize[0]*y+vSize[0]*vSize[1]*z;
+            size_t iCenter = x+size_t(vSize[0])*y+size_t(vSize[0])*size_t(vSize[1])*z;
             size_t iLeft   = iCenter-1;
             size_t iRight  = iCenter+1;
-            size_t iTop    = iCenter-vSize[0];
-            size_t iBottom = iCenter+vSize[0];
-            size_t iFront  = iCenter-vSize[0]*vSize[1];
-            size_t iBack   = iCenter+vSize[0]*vSize[1];
-
+            size_t iTop    = iCenter-size_t(vSize[0]);
+            size_t iBottom = iCenter+size_t(vSize[0]);
+            size_t iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);
+            size_t iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);
+ 
             FLOATVECTOR3   vGradient(float(psSourceData[iLeft]-psSourceData[iRight]),
                                      float(psSourceData[iTop]-psSourceData[iBottom]),
                                      float(psSourceData[iFront]-psSourceData[iBack]));
@@ -153,17 +153,17 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
           }
         }
       }
-      for (UINT64 z = 1;z<vSize[2]-1;z++) {
-        for (UINT64 y = 1;y<vSize[1]-1;y++) {
-          for (UINT64 x = 1;x<vSize[0]-1;x++) {
+      for (size_t z = 1;z<size_t(vSize[2]-1);z++) {
+        for (size_t y = 1;y<size_t(vSize[1]-1);y++) {
+          for (size_t x = 1;x<size_t(vSize[0]-1);x++) {
 
-            size_t iCenter = x+vSize[0]*y+vSize[0]*vSize[1]*z;
+            size_t iCenter = x+size_t(vSize[0])*y+size_t(vSize[0])*size_t(vSize[1])*z;
             size_t iLeft   = iCenter-1;
             size_t iRight  = iCenter+1;
-            size_t iTop    = iCenter-vSize[0];
-            size_t iBottom = iCenter+vSize[0];
-            size_t iFront  = iCenter-vSize[0]*vSize[1];
-            size_t iBack   = iCenter+vSize[0]*vSize[1];
+            size_t iTop    = iCenter-size_t(vSize[0]);
+            size_t iBottom = iCenter+size_t(vSize[0]);
+            size_t iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);
+            size_t iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);
 
             FLOATVECTOR3   vGradient(float(psSourceData[iLeft]-psSourceData[iRight]),
                                      float(psSourceData[iTop]-psSourceData[iBottom]),
@@ -192,13 +192,12 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
 
 
   m_vHistData.resize(iValueRange);
-  for (UINT64 i = 0;i<iValueRange;i++) {
+  for (size_t i = 0;i<iValueRange;i++) {
     m_vHistData[i].resize(256);
-    for (UINT64 j = 0;j<256;j++) {
+    for (size_t j = 0;j<256;j++) {
       m_vHistData[i][j] = vTmpHist[i][j];
     }
   }
-
 
   // set raster data block information
 	strBlockID = "2D Histogram for datablock " + source->strBlockID;
