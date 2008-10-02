@@ -31,6 +31,7 @@ public:
   virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
 
 private:
+  MasterController    *m_pMasterController;
   unsigned int        m_iSizePerElement;
   GLuint              m_iSizeX;
   GLuint              m_iSizeY;
@@ -38,7 +39,6 @@ private:
   bool			CheckFBO(const char* method);
 	void			initFBO(void);
 	void			initTextures(GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat);
-  MasterController    *m_pMasterController;
 	GLuint			        *m_hTexture;
 	GLuint			        m_hDepthBuffer;
 	static GLuint	      m_hFBO;
