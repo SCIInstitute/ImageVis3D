@@ -83,8 +83,8 @@ UINT64 SystemInfo::ComputeCPUMemSize() {
       return 0;
     #else
       struct sysinfo si;
-      if(sysinfo(&si) == 0) return 0;
-      return 100;//UINT64(si.totalram);// * UINT64(si*mem_unit);
+      if(sysinfo(&si) != 0) return 0;
+      return UINT64(si.totalram);// * UINT64(si*mem_unit);
     #endif
   #endif
 }
