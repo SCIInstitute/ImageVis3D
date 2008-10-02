@@ -129,7 +129,7 @@ protected slots:
   void SetDebugViewMask();
 
   void CheckForRedraw();
-  bool ShowSettings(SettingsDlg::TabID eTabID = SettingsDlg::MEM_TAB);
+  bool ShowSettings() {return ShowSettings(SettingsDlg::MEM_TAB);}
 
 protected:    
 
@@ -141,6 +141,8 @@ private :
   QGLWidget*            m_glShareWidget;
   QTOut*                m_DebugOut;
   RenderWindow*         m_ActiveRenderWin;
+  static const unsigned int ms_iMaxRecentFiles = 5;
+  QAction *m_recentFileActs[ms_iMaxRecentFiles];
 
   RenderWindow* CreateNewRenderWindow(QString dataset);
   RenderWindow* GetActiveRenderWindow();
@@ -158,7 +160,6 @@ private :
 
   bool SaveGeometry(QString strFilename);
 
-  static const unsigned int ms_iMaxRecentFiles = 5;QAction *m_recentFileActs[ms_iMaxRecentFiles];
 
   void setupUi(QMainWindow *MainWindow);
 
@@ -174,6 +175,8 @@ private :
 
   bool ParseCommand(std::string strCommand, std::string strParam);
   void CheckSettings();
+  void ApplySettings();
+  bool ShowSettings(SettingsDlg::TabID eTabID);
 };
 
 #endif // IMAGEVIS3D_H

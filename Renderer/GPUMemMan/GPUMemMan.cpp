@@ -390,3 +390,14 @@ void GPUMemMan::FreeAssociatedTextures(VolumeDataset* pDataset) {
     }
   }
 }
+
+
+void GPUMemMan::MemSizesChanged() {
+  if (m_iAllocatedCPUMemory > m_SystemInfo->GetMaxUsableCPUMem()) {
+      // TODO: CPU free resources to match max mem requirements
+  }
+
+  if (m_iAllocatedGPUMemory > m_SystemInfo->GetMaxUsableGPUMem()) {
+      // TODO: GPU free resources to match max mem requirements
+  }
+}

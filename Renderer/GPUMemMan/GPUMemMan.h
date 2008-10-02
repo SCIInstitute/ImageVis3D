@@ -251,13 +251,15 @@ class GPUMemMan {
     GLTexture3D* Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
     void FreeTexture(GLTexture3D* pTexture);
 
+    void MemSizesChanged();
+
     // system statistics
-    UINT64 GetCPUMem() const {return m_SystemInfo->m_iCPUMemSize;}
-    UINT64 GetGPUMem() const {return m_SystemInfo->m_iGPUMemSize;}
+    UINT64 GetCPUMem() const {return m_SystemInfo->GetCPUMemSize();}
+    UINT64 GetGPUMem() const {return m_SystemInfo->GetGPUMemSize();}
     UINT64 GetAllocatedCPUMem() const {return m_iAllocatedCPUMemory;}
     UINT64 GetAllocatedGPUMem() const {return m_iAllocatedGPUMemory;}
-    unsigned int GetBitWithMem() const {return m_SystemInfo->m_iProgrammBitWith;}
-    unsigned int GetNumCPUs() const {return m_SystemInfo->m_iNumberofCPUs;}
+    unsigned int GetBitWithMem() const {return m_SystemInfo->GetProgrammBitWith();}
+    unsigned int GetNumCPUs() const {return m_SystemInfo->GetNumberOfCPUs();}
 
   private:
     VolDataList       m_vpVolumeDatasets;

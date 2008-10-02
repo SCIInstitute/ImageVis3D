@@ -36,34 +36,56 @@
 
 #include "SystemInfo.h"
 
-SystemInfo::SystemInfo()
+#ifdef _WIN32
+  #include <windows.h>
+#else
+  #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+    // TODO
+  #else
+    #include <sys/sysinfo.h>
+  #endif
+#endif
+
+
+SystemInfo::SystemInfo() :
+  m_iUseMaxCPUMem(0),
+  m_iUseMaxGPUMem(0)
+
 {
   m_iProgrammBitWith = sizeof(void*)*8;
-  m_iNumberofCPUs = GetNumCPUs();
-  m_iCPUMemSize   = GetCPUMemSize();
-  m_iGPUMemSize   = GetGPUMemory();
+  m_iNumberOfCPUs = ComputeNumCPUs();
+  m_iCPUMemSize   = ComputeCPUMemSize();
+  m_iGPUMemSize   = ComputeGPUMemory();
 }
 
-unsigned int SystemInfo::GetNumCPUs() {
+unsigned int SystemInfo::ComputeNumCPUs() {
   #ifdef _WIN32
     SYSTEM_INFO siSysInfo;
     GetSystemInfo(&siSysInfo); 
     return siSysInfo.dwNumberOfProcessors;
   #else
-    // TODO
-    return 0;
+    #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+      return 0;
+    #else
+      return 0;
+    #endif
   #endif
 }
 
-UINT64 SystemInfo::GetCPUMemSize() {
+UINT64 SystemInfo::ComputeCPUMemSize() {
   #ifdef _WIN32
     MEMORYSTATUSEX statex;
     statex.dwLength = sizeof (statex);
     GlobalMemoryStatusEx (&statex);
     return statex.ullTotalPhys;
   #else
-    // TODO
-    return 0;
+    #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+      return 0;
+    #else
+      struct sysinfo si;
+      if(sysinfo(&si) == 0) return 0;
+      return UINT64(si.totalram) * UINT64(si*mem_unit);
+    #endif
   #endif
 }
 
@@ -85,7 +107,7 @@ UINT64 SystemInfo::GetCPUMemSize() {
     #define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p)=NULL; } }
   #endif
 
-  UINT64 SystemInfo::GetGPUMemory( )
+  UINT64 SystemInfo::ComputeGPUMemory( )
   {
     IDirect3D9* pD3D9 = NULL;
     pD3D9 = Direct3DCreate9( D3D_SDK_VERSION );
@@ -121,15 +143,17 @@ UINT64 SystemInfo::GetCPUMemSize() {
     }
     else
     {
-        wprintf( L"Can't create D3D9 object\n" );
-        return -1;
+        return 0;
     }
   }
 
 #else
-  UINT64 SystemInfo::GetGPUMemory( )
+  UINT64 SystemInfo::ComputeGPUMemory( )
   {
-    // TODO
-    return 0;
+    #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+      return 0;
+    #else
+      return 0;
+    #endif
   }
 #endif

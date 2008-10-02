@@ -48,3 +48,75 @@ SettingsDlg::SettingsDlg(MasterController& MasterController, TabID eTabID /* = M
 SettingsDlg::~SettingsDlg(void)
 {
 }
+
+void SettingsDlg::setupUi(QDialog *SettingsDlg) {
+  Ui_SettingsDlg::setupUi(SettingsDlg);
+
+  UINT64 iMaxCPUMemSize   = m_MasterController.SysInfo()->GetCPUMemSize();
+  UINT64 iMaxGPUMemSize   = m_MasterController.SysInfo()->GetGPUMemSize();
+  unsigned int iProcCount = m_MasterController.SysInfo()->GetNumberOfCPUs();
+  unsigned int iBitWith   = m_MasterController.SysInfo()->GetProgrammBitWith();
+
+  // init stats labels
+  QString desc;
+  if (iMaxCPUMemSize==0) 
+    desc = tr("CPU Mem: unchecked");
+  else 
+    desc = tr("CPU Mem: %1 MB (%2 bytes)").arg(iMaxCPUMemSize/(1024*1024)).arg(iMaxCPUMemSize);
+  label_CPUMem->setText(desc);
+
+  if (iMaxGPUMemSize==0) 
+    desc = tr("GPU Mem: unchecked");
+  else 
+    desc = tr("GPU Mem: %1 MB (%2 bytes)").arg(iMaxGPUMemSize/(1024*1024)).arg(iMaxGPUMemSize);
+  label_GPUMem->setText(desc);
+
+  if (iProcCount==0) 
+    desc = tr("Processors: unchecked");
+  else 
+    desc = tr("Processors %1").arg(iProcCount);    
+  label_NumProc->setText(desc);
+
+  desc = tr("Running in %1 bit mode").arg(iBitWith);
+  label_NumBits->setText(desc);
+
+  // init mem sliders
+
+  horizontalSlider_GPUMem->setMinimum(64);
+  horizontalSlider_CPUMem->setMinimum(512);
+
+  if (iMaxCPUMemSize == 0) {
+    iMaxCPUMemSize = 32*1024;
+    horizontalSlider_CPUMem->setMaximum(iMaxCPUMemSize);
+    horizontalSlider_CPUMem->setValue(2*1024);
+  } else {
+    iMaxCPUMemSize /= 1024*1024;
+    horizontalSlider_CPUMem->setMaximum(iMaxCPUMemSize);
+    horizontalSlider_CPUMem->setValue(iMaxCPUMemSize*0.8f);
+  }
+
+  if (iMaxGPUMemSize == 0) {
+    iMaxGPUMemSize = 32*1024;
+    horizontalSlider_GPUMem->setMaximum(iMaxGPUMemSize);
+    horizontalSlider_GPUMem->setValue(512);
+  } else {
+    iMaxGPUMemSize /= 1024*1024;
+    horizontalSlider_GPUMem->setMaximum(iMaxGPUMemSize);
+    horizontalSlider_GPUMem->setValue(iMaxGPUMemSize*0.8f);
+  }
+}
+
+
+UINT64 SettingsDlg::GetGPUMem() {
+  return UINT64(horizontalSlider_GPUMem->value())*1024*1024;
+}
+
+UINT64 SettingsDlg::GetCPUMem() {
+  return UINT64(horizontalSlider_CPUMem->value())*1024*1024;
+}
+
+
+void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU) {
+    horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
+    horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
+}

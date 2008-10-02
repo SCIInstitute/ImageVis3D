@@ -189,14 +189,14 @@ bool MainWindow::ParseCommand(string strCommand, string strParam) {
   if (strCommand == "sysinfo") {
     m_DebugOut->printf("This a %ibit build.", m_MasterController.MemMan()->GetBitWithMem());
 
-    m_DebugOut->printf("CPU Mem: %llu MB", m_MasterController.MemMan()->GetCPUMem()/(1024*1024));
+    m_DebugOut->printf("CPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetCPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableCPUMem()/(1024*1024));
     m_DebugOut->printf("    Used: %llu MB (%llu Bytes)", 
       m_MasterController.MemMan()->GetAllocatedCPUMem()/(1024*1024),
       m_MasterController.MemMan()->GetAllocatedCPUMem());
     if (m_MasterController.MemMan()->GetAllocatedCPUMem() < m_MasterController.MemMan()->GetCPUMem() )
       m_DebugOut->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetCPUMem()-m_MasterController.MemMan()->GetAllocatedCPUMem())/(1024*1024));
 
-    m_DebugOut->printf("GPU Mem: %llu MB", m_MasterController.MemMan()->GetGPUMem()/(1024*1024));
+    m_DebugOut->printf("GPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetGPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableGPUMem()/(1024*1024));
     m_DebugOut->printf("    Used: %llu MB (%llu Bytes)", 
       m_MasterController.MemMan()->GetAllocatedGPUMem()/(1024*1024),
       m_MasterController.MemMan()->GetAllocatedGPUMem());

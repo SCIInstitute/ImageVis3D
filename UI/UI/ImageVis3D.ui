@@ -206,8 +206,8 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>40</x>
-          <y>140</y>
+          <x>48</x>
+          <y>168</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -336,8 +336,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>40</x>
-          <y>140</y>
+          <x>48</x>
+          <y>168</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -438,8 +438,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>40</x>
-          <y>140</y>
+          <x>48</x>
+          <y>168</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -1149,8 +1149,8 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>40</x>
-          <y>140</y>
+          <x>48</x>
+          <y>168</y>
           <width>360</width>
           <height>71</height>
          </rect>
@@ -1248,8 +1248,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>40</x>
-          <y>140</y>
+          <x>48</x>
+          <y>168</y>
           <width>360</width>
           <height>71</height>
          </rect>
@@ -3755,12 +3755,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>42</x>
-     <y>1163</y>
+     <x>43</x>
+     <y>1164</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>373</x>
-     <y>1163</y>
+     <x>370</x>
+     <y>1164</y>
     </hint>
    </hints>
   </connection>
@@ -3771,12 +3771,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>373</x>
-     <y>1163</y>
+     <x>370</x>
+     <y>1164</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>82</x>
-     <y>1163</y>
+     <x>83</x>
+     <y>1164</y>
     </hint>
    </hints>
   </connection>
@@ -3851,8 +3851,8 @@
    <slot>EditViewLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>169</x>
-     <y>835</y>
+     <x>179</x>
+     <y>853</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4011,8 +4011,8 @@
    <slot>ClearDebugWin()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>365</x>
-     <y>1259</y>
+     <x>362</x>
+     <y>1268</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4027,8 +4027,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>71</x>
-     <y>1259</y>
+     <x>69</x>
+     <y>1268</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4043,8 +4043,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>225</x>
-     <y>1259</y>
+     <x>224</x>
+     <y>1268</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4059,8 +4059,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>147</x>
-     <y>1259</y>
+     <x>145</x>
+     <y>1268</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4075,8 +4075,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>284</x>
-     <y>1259</y>
+     <x>281</x>
+     <y>1268</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4324,6 +4324,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSettings</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ShowSettings()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>982</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -4366,5 +4382,6 @@
   <slot>Transfer2DLoad()</slot>
   <slot>FilterImage()</slot>
   <slot>ParseAndExecuteDebugCommand()</slot>
+  <slot>ShowSettings()</slot>
  </slots>
 </ui>

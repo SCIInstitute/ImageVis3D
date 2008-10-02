@@ -51,9 +51,16 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     SettingsDlg(MasterController& masterController, TabID eTabID = MEM_TAB, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~SettingsDlg();
 
+    UINT64 GetGPUMem();
+    UINT64 GetCPUMem();
+
+    void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU);
+
   private:
     MasterController& m_MasterController;
     TabID             m_eTabID;
+
+    void setupUi(QDialog *SettingsDlg);
 
 };
 
