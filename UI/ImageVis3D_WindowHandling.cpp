@@ -187,8 +187,6 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   m_DebugOut = new QTOut(listWidget_3);
   m_MasterController.SetDebugOut(m_DebugOut);
   GetDebugViewMask();
-
-//  LoadDataset("DEBUG");
 }
 
 // ******************************************
@@ -458,10 +456,10 @@ void MainWindow::UpdateMenus() {
 
 void MainWindow::ClearMRUList()
 {
-  QSettings settings("ImageVis3D", "Recent Files");
+  QSettings settings;
   QStringList files;
   files.clear();
-  settings.setValue("recentFileList", files);
+  settings.setValue("Menu/MRU", files);
 
   UpdateMRUActions();
 }
@@ -469,15 +467,15 @@ void MainWindow::ClearMRUList()
 
 void MainWindow::AddFileToMRUList(const QString &fileName)
 {
-  QSettings settings("ImageVis3D", "Recent Files");
-  QStringList files = settings.value("recentFileList").toStringList();
+  QSettings settings;
+  QStringList files = settings.value("Menu/MRU").toStringList();
 
   files.removeAll(fileName);
   files.prepend(fileName);
   while ((unsigned int)(files.size()) > ms_iMaxRecentFiles)
     files.removeLast();
 
-  settings.setValue("recentFileList", files);
+  settings.setValue("Menu/MRU", files);
 
   UpdateMRUActions();
 }
@@ -490,8 +488,8 @@ QString MainWindow::strippedName(const QString &fullFileName)
 
 void MainWindow::UpdateMRUActions()
 {
-  QSettings settings("ImageVis3D", "Recent Files");
-  QStringList files = settings.value("recentFileList").toStringList();
+  QSettings settings;
+  QStringList files = settings.value("menu/MRU").toStringList();
 
   int numRecentFiles = qMin(files.size(), (int)ms_iMaxRecentFiles);
 

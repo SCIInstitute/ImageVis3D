@@ -199,7 +199,7 @@ struct Texture3DListElem {
     }
 
 
-    pTexture = new GLTexture3D(GLuint(vSize[0]), GLuint(vSize[1]), GLuint(vSize[2]), glInternalformat, glFormat, glType, pData);
+    pTexture = new GLTexture3D(GLuint(vSize[0]), GLuint(vSize[1]), GLuint(vSize[2]), glInternalformat, glFormat, glType, (unsigned int)(iBitWidth*iCompCount), pData);
 
     return true;
   }
@@ -249,6 +249,7 @@ class GPUMemMan {
     void FreeTexture(GLTexture2D* pTexture);
 
     GLTexture3D* Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
+    void FreeTexture(GLTexture3D* pTexture);
 
     // system statistics
     UINT64 GetCPUMem() const {return m_SystemInfo->m_iCPUMemSize;}
@@ -269,6 +270,8 @@ class GPUMemMan {
 
     UINT64            m_iAllocatedGPUMemory;
     UINT64            m_iAllocatedCPUMemory;
+
+    void FreeAssociatedTextures(VolumeDataset* pDataset);
 };
 
 #endif // GPUMEMMAN_H

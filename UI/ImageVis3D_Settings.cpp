@@ -26,35 +26,41 @@
    DEALINGS IN THE SOFTWARE.
 */
 
-/**
-  \file    GLTexture.h
-  \author    Jens Krueger
-        SCI Institute
-        University of Utah
-  \date    August 2008
-*/
+
+//!    File   : ImageVis3D_Settings.cpp
+//!    Author : Jens Krueger
+//!             SCI Institute
+//!             University of Utah
+//!    Date   : September 2008
+//
+//!    Copyright (C) 2008 SCI Institute
+
+#include "ImageVis3D.h"
+#include <Basics/SysTools.h>
+#include <QtCore/QSettings>
+
+using namespace std;
+
+void MainWindow::CheckSettings() {
+  QSettings settings;
+
+  settings.beginGroup("Memory");
+
+  unsigned int iMaxGPU = settings.value("MaxGPUMem", UINT_INVALID).toUInt();
+  unsigned int iMaxCPU = settings.value("MaxCPUMem", UINT_INVALID).toUInt();
+
+  if (iMaxGPU == UINT_INVALID || iMaxCPU == UINT_INVALID) {
+     // TODO open settings dialog
+  }
+}
+
+void MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
+
+    SettingsDlg settingsDlg(m_MasterController, eTabID, this);
+
+    if (settingsDlg.exec() == QDialog::Accepted) {
 
 
-#pragma once
+    }
 
-#ifndef GLTEXTURE_H
-#define GLTEXTURE_H
-
-#include "GLObject.h"
-
-class GLTexture : public GLObject {
-  public:
-    GLTexture(unsigned int iSizePerElement) : m_iGLID(-1), m_iSizePerElement(iSizePerElement) {}
-    virtual ~GLTexture();
-
-    virtual void Delete();
-    virtual void SetData(const GLvoid *pixels) = 0;
-    virtual void Bind() = 0;
-    GLuint GetGLID() {return m_iGLID;}
-
-  protected:
-    GLuint        m_iGLID;
-    unsigned int  m_iSizePerElement;
-};
-
-#endif // GLTEXTURE_H
+}

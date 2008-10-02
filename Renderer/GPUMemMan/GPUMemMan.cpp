@@ -52,22 +52,50 @@ GPUMemMan::GPUMemMan(MasterController* masterController) :
 GPUMemMan::~GPUMemMan() {
   for (VolDataListIter i = m_vpVolumeDatasets.begin();i<m_vpVolumeDatasets.end();i++) {
     m_MasterController->DebugOut()->Warning("GPUMemMan::~GPUMemMan","Detected unfreed dataset %s.", i->pVolumeDataset->Filename().c_str());
+    delete i->pVolumeDataset;
   }
 
   for (SimpleTextureListIter i = m_vpSimpleTextures.begin();i<m_vpSimpleTextures.end();i++) {
     m_MasterController->DebugOut()->Warning("GPUMemMan::~GPUMemMan","Detected unfreed SimpleTexture %s.", i->strFilename.c_str());
+
+    m_iAllocatedGPUMemory -= i->pTexture->GetCPUSize();
+    m_iAllocatedCPUMemory -= i->pTexture->GetGPUSize();
+
+    delete i->pTexture;
   }
 
   for (Trans1DListIter i = m_vpTrans1DList.begin();i<m_vpTrans1DList.end();i++) {
     m_MasterController->DebugOut()->Warning("GPUMemMan::~GPUMemMan","Detected unfreed 1D Transferfunction.");
+
+    m_iAllocatedGPUMemory -= i->pTexture->GetCPUSize();
+    m_iAllocatedCPUMemory -= i->pTexture->GetGPUSize();
+
+    delete i->pTexture;
+    delete i->pTransferFunction1D;
   }
 
   for (Trans2DListIter i = m_vpTrans2DList.begin();i<m_vpTrans2DList.end();i++) {
     m_MasterController->DebugOut()->Warning("GPUMemMan::~GPUMemMan","Detected unfreed 2D Transferfunction.");
+
+    m_iAllocatedGPUMemory -= i->pTexture->GetCPUSize();
+    m_iAllocatedCPUMemory -= i->pTexture->GetGPUSize();
+
+    delete i->pTexture;
+    delete i->pTransferFunction2D;
   }
 
-  for (Texture3DListIter i = m_vpTex3DList.begin();i<m_vpTex3DList.end();i++) delete (*i);
+  for (Texture3DListIter i = m_vpTex3DList.begin();i<m_vpTex3DList.end();i++) {
+
+    m_iAllocatedGPUMemory -= (*i)->pTexture->GetCPUSize();
+    m_iAllocatedCPUMemory -= (*i)->pTexture->GetGPUSize();
+
+    delete (*i);
+  }
+
   m_vpTex3DList.clear();
+
+  assert(m_iAllocatedGPUMemory == 0);
+  assert(m_iAllocatedCPUMemory == 0);
 }
 
 // ******************** Datasets
@@ -100,6 +128,8 @@ void GPUMemMan::FreeDataset(VolumeDataset* pVolumeDataset, AbstrRenderer* reques
         if (*j == requester) {
           i->qpUser.erase(j);
           if (i->qpUser.size() == 0) {
+            m_MasterController->DebugOut()->Message("GPUMemMan::FreeDataset","Cleaning up all 3D textures associated to dataset %s", pVolumeDataset->Filename().c_str());
+            FreeAssociatedTextures(pVolumeDataset);
             m_MasterController->DebugOut()->Message("GPUMemMan::FreeDataset","Released Dataset %s", pVolumeDataset->Filename().c_str());
             delete pVolumeDataset;
             m_vpVolumeDatasets.erase(i);
@@ -132,7 +162,7 @@ GLTexture2D* GPUMemMan::Load2DTextureFromFile(const std::string& strFilename) {
   }
   m_MasterController->DebugOut()->Message("GPUMemMan::Load2DTextureFromFile","Loading %s", strFilename.c_str());
 
-  GLTexture2D* tex = new GLTexture2D(image.width,image.height, GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE, image.data, GL_LINEAR, GL_LINEAR);
+  GLTexture2D* tex = new GLTexture2D(image.width,image.height, GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE, 3*8, image.data, GL_LINEAR, GL_LINEAR);
   delete [] image.data;
   
   m_iAllocatedGPUMemory += tex->GetCPUSize();
@@ -150,8 +180,8 @@ void GPUMemMan::FreeTexture(GLTexture2D* pTexture) {
       if (i->iAccessCounter == 0) {
         m_MasterController->DebugOut()->Message("GPUMemMan::FreeTexture","Deleted texture %s", i->strFilename.c_str());
 
-        m_iAllocatedGPUMemory += i->pTexture->GetCPUSize();
-        m_iAllocatedCPUMemory += i->pTexture->GetGPUSize();
+        m_iAllocatedGPUMemory -= i->pTexture->GetCPUSize();
+        m_iAllocatedCPUMemory -= i->pTexture->GetGPUSize();
 
         i->pTexture->Delete();
         m_vpSimpleTextures.erase(i);
@@ -181,7 +211,10 @@ void GPUMemMan::Changed1DTrans(AbstrRenderer* requester, TransferFunction1D* pTr
 void GPUMemMan::GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, TransferFunction1D** ppTransferFunction1D, GLTexture1D** tex) {
   m_MasterController->DebugOut()->Message("GPUMemMan::GetEmpty1DTrans","Creating new empty 1D transfer function");
   *ppTransferFunction1D = new TransferFunction1D(iSize);
-  *tex = new GLTexture1D(GLuint(iSize), GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE);
+  *tex = new GLTexture1D(GLuint(iSize), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8);
+
+  m_iAllocatedGPUMemory += (*tex)->GetCPUSize();
+  m_iAllocatedCPUMemory += (*tex)->GetGPUSize();
 
   m_vpTrans1DList.push_back(Trans1DListElem(*ppTransferFunction1D, *tex, requester));
 }
@@ -189,7 +222,10 @@ void GPUMemMan::GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, Transfer
 void GPUMemMan::Get1DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction1D** ppTransferFunction1D, GLTexture1D** tex) {
   m_MasterController->DebugOut()->Message("GPUMemMan::Get1DTransFromFile","Loading 2D transfer function from file");
   *ppTransferFunction1D = new TransferFunction1D(strFilename);
-  *tex = new GLTexture1D(GLuint((*ppTransferFunction1D)->vColorData.size()), GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE);
+  *tex = new GLTexture1D(GLuint((*ppTransferFunction1D)->vColorData.size()), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8);
+
+  m_iAllocatedGPUMemory += (*tex)->GetCPUSize();
+  m_iAllocatedCPUMemory += (*tex)->GetGPUSize();
 
   m_vpTrans1DList.push_back(Trans1DListElem(*ppTransferFunction1D, *tex, requester));
 }
@@ -215,7 +251,12 @@ void GPUMemMan::Free1DTrans(TransferFunction1D* pTransferFunction1D, AbstrRender
           i->qpUser.erase(j);
           if (i->qpUser.size() == 0) {
             m_MasterController->DebugOut()->Message("GPUMemMan::Free1DTrans","Released TransferFunction1D");
-            delete pTransferFunction1D;
+
+            m_iAllocatedGPUMemory -= i->pTexture->GetCPUSize();
+            m_iAllocatedCPUMemory -= i->pTexture->GetGPUSize();            
+
+            delete i->pTransferFunction1D;
+            delete i->pTexture;
             m_vpTrans1DList.erase(i);
           } else {
             m_MasterController->DebugOut()->Message("GPUMemMan::Free1DTrans","Decreased access count but TransferFunction1D is still in use by another subsystem");
@@ -227,7 +268,6 @@ void GPUMemMan::Free1DTrans(TransferFunction1D* pTransferFunction1D, AbstrRender
   }
   m_MasterController->DebugOut()->Warning("GPUMemMan::Free1DTrans","TransferFunction1D not found or not being used by requester");
 }
-
 
 // ******************** 2D Trans
 
@@ -246,7 +286,10 @@ void GPUMemMan::Changed2DTrans(AbstrRenderer* requester, TransferFunction2D* pTr
 void GPUMemMan::GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* requester, TransferFunction2D** ppTransferFunction2D, GLTexture2D** tex) {
   m_MasterController->DebugOut()->Message("GPUMemMan::GetEmpty2DTrans","Creating new empty 2D transfer function");
   *ppTransferFunction2D = new TransferFunction2D(iSize);
-  *tex = new GLTexture2D(GLuint(iSize.x), GLuint(iSize.y), GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE);
+  *tex = new GLTexture2D(GLuint(iSize.x), GLuint(iSize.y), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8);
+
+  m_iAllocatedGPUMemory += (*tex)->GetCPUSize();
+  m_iAllocatedCPUMemory += (*tex)->GetGPUSize();
 
   m_vpTrans2DList.push_back(Trans2DListElem(*ppTransferFunction2D, *tex, requester));
 }
@@ -254,7 +297,10 @@ void GPUMemMan::GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* req
 void GPUMemMan::Get2DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction2D** ppTransferFunction2D, GLTexture2D** tex) {
   m_MasterController->DebugOut()->Message("GPUMemMan::Get2DTransFromFile","Loading 2D transfer function from file");
   *ppTransferFunction2D = new TransferFunction2D(strFilename);
-  *tex = new GLTexture2D(GLuint((*ppTransferFunction2D)->GetSize().x), GLuint((*ppTransferFunction2D)->GetSize().y), GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE);
+  *tex = new GLTexture2D(GLuint((*ppTransferFunction2D)->GetSize().x), GLuint((*ppTransferFunction2D)->GetSize().y), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8);
+
+  m_iAllocatedGPUMemory += (*tex)->GetCPUSize();
+  m_iAllocatedCPUMemory += (*tex)->GetGPUSize();
 
   m_vpTrans2DList.push_back(Trans2DListElem(*ppTransferFunction2D, *tex, requester));
 }
@@ -280,7 +326,13 @@ void GPUMemMan::Free2DTrans(TransferFunction2D* pTransferFunction2D, AbstrRender
           i->qpUser.erase(j);
           if (i->qpUser.size() == 0) {
             m_MasterController->DebugOut()->Message("GPUMemMan::Free2DTrans","Released TransferFunction2D");
-            delete pTransferFunction2D;
+
+            m_iAllocatedGPUMemory -= i->pTexture->GetCPUSize();
+            m_iAllocatedCPUMemory -= i->pTexture->GetGPUSize();            
+
+            delete i->pTransferFunction2D;
+            delete i->pTexture;
+
             m_vpTrans2DList.erase(i);
           } else {
             m_MasterController->DebugOut()->Message("GPUMemMan::Free2DTrans","Decreased access count but TransferFunction2D is still in use by another subsystem");
@@ -314,4 +366,27 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
 
   m_vpTex3DList.push_back(pNew3DTex);
   return (*(m_vpTex3DList.end()-1))->pTexture;
+}
+
+
+void GPUMemMan::FreeAssociatedTextures(VolumeDataset* pDataset) {
+  for (size_t i = 0;i<m_vpTex3DList.size();i++) {
+    if (m_vpTex3DList[i]->pDataset == pDataset) {
+
+      m_MasterController->DebugOut()->Message(
+        "GPUMemMan::FreeAssociatedTextures",
+        "Deleteting a 3D texture of size %i x %i x %i", 
+        m_vpTex3DList[i]->pTexture->GetSize().x,
+        m_vpTex3DList[i]->pTexture->GetSize().y,
+        m_vpTex3DList[i]->pTexture->GetSize().z);
+
+      m_iAllocatedGPUMemory -= m_vpTex3DList[i]->pTexture->GetCPUSize();
+      m_iAllocatedCPUMemory -= m_vpTex3DList[i]->pTexture->GetGPUSize();
+
+      delete m_vpTex3DList[i];
+
+      m_vpTex3DList.erase(m_vpTex3DList.begin()+i);
+      i--;
+    }
+  }
 }

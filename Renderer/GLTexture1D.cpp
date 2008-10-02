@@ -37,9 +37,9 @@
 #include "GLTexture1D.h"
 
 
-GLTexture1D::GLTexture1D(GLuint iSize, GLint internalformat, GLenum format, GLenum type, const GLvoid *pixels, 
-             GLint iMagFilter, GLint iMinFilter, GLint wrap) :
-  GLTexture(),
+GLTexture1D::GLTexture1D(GLuint iSize, GLint internalformat, GLenum format, GLenum type, 
+             unsigned int iSizePerElement, const GLvoid *pixels, GLint iMagFilter, GLint iMinFilter, GLint wrap) :
+  GLTexture(iSizePerElement),
   m_iSize(iSize),
   m_internalformat(internalformat),
   m_format(format),

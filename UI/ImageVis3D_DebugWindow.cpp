@@ -72,74 +72,71 @@ void MainWindow::ParseAndExecuteDebugCommand() {
 
   // TODO
   string strCommand = lineEdit_DebugCommand->text().toStdString();
+  string strParameter;
 
-  if (ParseCommand(strCommand)) 
+  if (strCommand.find_first_of(" ") != string::npos) {
+    strParameter = strCommand.substr(strCommand.find_first_of(" ")+1,strCommand.length()-(strCommand.find_first_of(" ")+1));
+    strCommand   = strCommand.substr(0,strCommand.find_first_of(" "));
+  }
+
+  if (ParseCommand(strCommand,strParameter)) 
     m_DebugOut->printf("OK");
   else
-    m_DebugOut->printf("Input \"%s\" not understood, try \"help\"!", strCommand.c_str());
+    m_DebugOut->printf("Input \"%s\" not understood, try \"help\"!", lineEdit_DebugCommand->text().toStdString().c_str());
 
   m_DebugOut->m_bShowMessages = bTemp;
   lineEdit_DebugCommand->clear();
 }
 
-bool MainWindow::ParseCommand(string strCommand) {
+bool MainWindow::ParseCommand(string strCommand, string strParam) {
+
+
   strCommand = SysTools::ToLowerCase(strCommand);
+  strParam   = SysTools::ToLowerCase(strParam);
 
   if (strCommand == "help") {
     m_DebugOut->printf("Command Listing:");
-    m_DebugOut->printf("\"help\"             : this help screen");
-    m_DebugOut->printf("\"clear\"            : clear this window");
-    m_DebugOut->printf("\"getglinfo\"        : print information about the supported OpenGL extension");
-    m_DebugOut->printf("\"getsysinfo\"       : print information about the system and the mem usage");
-    m_DebugOut->printf("\"toggleerrorlog\"   : toggle recording of errors");
-    m_DebugOut->printf("\"togglewarninglog\" : toggle recording of warnings");
-    m_DebugOut->printf("\"togglemessagelog\" : toggle recording of messages");
-    m_DebugOut->printf("\"geterrorlog\"      : get recording of error status");
-    m_DebugOut->printf("\"getwarninglog\"    : get recording of warnings status");
-    m_DebugOut->printf("\"getmessagelog\"    : get recording of messages status");
-    m_DebugOut->printf("\"printerrorlog\"    : print recorded errors");
-    m_DebugOut->printf("\"printwarninglog\"  : print recorded warnings");
-    m_DebugOut->printf("\"printmessagelog\"  : print recorded messages");
-    m_DebugOut->printf("\"clearerrorlog\"    : clear recorded errors");
-    m_DebugOut->printf("\"clearwarninglog\"  : clear recorded warnings");
-    m_DebugOut->printf("\"clearmessagelog\"  : clear recorded messages");
+    m_DebugOut->printf("\"help\"                  : this help screen");
+    m_DebugOut->printf("\"clear\"                 : clear this window");
+    m_DebugOut->printf("\"versions\"              : print version information");
+    m_DebugOut->printf("\"glinfo\"                : print information about the supported OpenGL extension");
+    m_DebugOut->printf("\"sysinfo\"               : print information about the system and the mem usage");
+    m_DebugOut->printf("\"seterrorlog\" on/off    : toggle recording of errors");
+    m_DebugOut->printf("\"setwarninglog\" on/off  : toggle recording of warnings");
+    m_DebugOut->printf("\"setemessagelog\" on/off : toggle recording of messages");
+    m_DebugOut->printf("\"printerrorlog\"         : print recorded errors");
+    m_DebugOut->printf("\"printwarninglog\"       : print recorded warnings");
+    m_DebugOut->printf("\"printmessagelog\"       : print recorded messages");
+    m_DebugOut->printf("\"clearerrorlog\"         : clear recorded errors");
+    m_DebugOut->printf("\"clearwarninglog\"       : clear recorded warnings");
+    m_DebugOut->printf("\"clearmessagelog\"       : clear recorded messages");
     return true;
   }
   if (strCommand == "clear") {
     ClearDebugWin();
     return true;
   }
-  if (strCommand == "toggleerrorlog") {
-    m_DebugOut->SetListRecordingErrors(!m_DebugOut->GetListRecordingErrors());
+  if (strCommand == "versions") {      
+    m_DebugOut->printf("ImageVis3D Version: %s",IV3D_VERSION);
+    m_DebugOut->printf("QT Version: %s",QT_VERSION_STR);    
     return true;
   }
-  if (strCommand == "togglewarninglog") {
-    m_DebugOut->SetListRecordingWarnings(!m_DebugOut->GetListRecordingWarnings());
+  if (strCommand == "seterrorlog") {
+    if (strParam != "on" && strParam != "off") return false;
+    m_DebugOut->SetListRecordingErrors(strParam == "on");
+    if (m_DebugOut->GetListRecordingErrors()) m_DebugOut->printf("current state: true"); else m_DebugOut->printf("current state: false");
     return true;
   }
-  if (strCommand == "togglemessagelog") {
-    m_DebugOut->SetListRecordingMessages(!m_DebugOut->GetListRecordingMessages());
+  if (strCommand == "setwarninglog") {
+    if (strParam != "on" && strParam != "off") return false;
+    m_DebugOut->SetListRecordingWarnings(strParam == "on");
+    if (m_DebugOut->GetListRecordingWarnings()) m_DebugOut->printf("current state: true"); else m_DebugOut->printf("current state: false");
     return true;
   }
-  if (strCommand == "geterrorlog") {
-    if (m_DebugOut->GetListRecordingErrors()) 
-      m_DebugOut->printf("true");
-    else 
-      m_DebugOut->printf("false");
-    return true;
-  }
-  if (strCommand == "getwarninglog") {
-    if (m_DebugOut->GetListRecordingWarnings()) 
-      m_DebugOut->printf("true");
-    else 
-      m_DebugOut->printf("false");
-    return true;
-  }
-  if (strCommand == "getmessagelog") {
-    if (m_DebugOut->GetListRecordingMessages()) 
-      m_DebugOut->printf("true");
-    else 
-      m_DebugOut->printf("false");
+  if (strCommand == "setmessagelog") {
+    if (strParam != "on" && strParam != "off") return false;
+    m_DebugOut->SetListRecordingMessages(strParam == "on");
+    if (m_DebugOut->GetListRecordingMessages()) m_DebugOut->printf("current state: true"); else m_DebugOut->printf("current state: false");
     return true;
   }
   if (strCommand == "printerrorlog") {
@@ -166,34 +163,45 @@ bool MainWindow::ParseCommand(string strCommand) {
     m_DebugOut->ClearMessageList();
     return true;
   }
-  if (strCommand == "getglinfo") {
+  if (strCommand == "glinfo") {
     if (m_ActiveRenderWin == NULL) {
       m_DebugOut->printf("please open a renderwindow first");
     } else {
 
+      m_DebugOut->printf("Printing GL extensions:");
+
       const char *extensions = (const char*)glGetString(GL_EXTENSIONS);
 
+      unsigned int iExtCount = 0;
       string strExtension = "";
       while (extensions[0]) {
         if (extensions[0] == ' ' || extensions[0] == '\0') {
-          m_DebugOut->printf(strExtension.c_str());
+          m_DebugOut->printf("  %s",strExtension.c_str());
           strExtension = "";
+          iExtCount++;
         } else strExtension += extensions[0];
         extensions++;
       }
+      m_DebugOut->printf("%ui extensions found",iExtCount);
     }
     return true;
   }
-  if (strCommand == "getsysinfo") {
+  if (strCommand == "sysinfo") {
+    m_DebugOut->printf("This a %ibit build.", m_MasterController.MemMan()->GetBitWithMem());
+
     m_DebugOut->printf("CPU Mem: %llu MB", m_MasterController.MemMan()->GetCPUMem()/(1024*1024));
-    m_DebugOut->printf("    Used: %llu Bytes", m_MasterController.MemMan()->GetAllocatedCPUMem());
-    if (m_MasterController.MemMan()->GetAllocatedCPUMem() < m_MasterController.MemMan()->GetCPUMem() ) m_DebugOut->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetCPUMem()-m_MasterController.MemMan()->GetAllocatedCPUMem())/(1024*1024));
+    m_DebugOut->printf("    Used: %llu MB (%llu Bytes)", 
+      m_MasterController.MemMan()->GetAllocatedCPUMem()/(1024*1024),
+      m_MasterController.MemMan()->GetAllocatedCPUMem());
+    if (m_MasterController.MemMan()->GetAllocatedCPUMem() < m_MasterController.MemMan()->GetCPUMem() )
+      m_DebugOut->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetCPUMem()-m_MasterController.MemMan()->GetAllocatedCPUMem())/(1024*1024));
 
     m_DebugOut->printf("GPU Mem: %llu MB", m_MasterController.MemMan()->GetGPUMem()/(1024*1024));
-    m_DebugOut->printf("    Used: %llu Bytes", m_MasterController.MemMan()->GetAllocatedGPUMem());
-    if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() ) m_DebugOut->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024));
-
-    m_DebugOut->printf("BitWith: %i", m_MasterController.MemMan()->GetBitWithMem());
+    m_DebugOut->printf("    Used: %llu MB (%llu Bytes)", 
+      m_MasterController.MemMan()->GetAllocatedGPUMem()/(1024*1024),
+      m_MasterController.MemMan()->GetAllocatedGPUMem());
+    if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() ) 
+      m_DebugOut->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024));
 
     return true;
   }

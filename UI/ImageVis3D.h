@@ -40,7 +40,7 @@
 #ifndef IMAGEVIS3D_H
 #define IMAGEVIS3D_H
 
-#define IV3D_VERSION "0.01 alpha"
+#include <StdDefines.h>
 
 #include "Controller/MasterController.h"
 
@@ -49,6 +49,8 @@
 #include "Q1DTransferFunction.h"
 #include "Q2DTransferFunction.h"
 #include "DebugOut/QTOut.h"
+#include <UI/SettingsDlg.h>
+
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow
 {
@@ -127,6 +129,7 @@ protected slots:
   void SetDebugViewMask();
 
   void CheckForRedraw();
+  void ShowSettings(SettingsDlg::TabID eTabID = SettingsDlg::MEM_TAB);
 
 protected:    
 
@@ -155,8 +158,7 @@ private :
 
   bool SaveGeometry(QString strFilename);
 
-  static const unsigned int ms_iMaxRecentFiles = 5;
-  QAction *m_recentFileActs[ms_iMaxRecentFiles];
+  static const unsigned int ms_iMaxRecentFiles = 5;QAction *m_recentFileActs[ms_iMaxRecentFiles];
 
   void setupUi(QMainWindow *MainWindow);
 
@@ -170,7 +172,8 @@ private :
   QString strippedName(const QString &fullFileName);
   QString GetConvFilename();
 
-  bool ParseCommand(std::string strCommand);
+  bool ParseCommand(std::string strCommand, std::string strParam);
+  void CheckSettings();
 };
 
 #endif // IMAGEVIS3D_H

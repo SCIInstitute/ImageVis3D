@@ -41,10 +41,12 @@
 #define GLTexture3D_H
 
 #include "GLTexture.h"
+#include <Basics/Vectors.h>
 
 class GLTexture3D : public GLTexture {
   public:
     GLTexture3D(GLuint iSizeX, GLuint iSizeY, GLuint iSizeZ, GLint internalformat, GLenum format, GLenum type, 
+          unsigned int iSizePerElement,
           const GLvoid *pixels = 0,
           GLint iMagFilter = GL_NEAREST, 
           GLint iMinFilter = GL_NEAREST,
@@ -56,8 +58,9 @@ class GLTexture3D : public GLTexture {
     virtual void Bind() {glBindTexture(GL_TEXTURE_3D, m_iGLID);}
     virtual void SetData(const GLvoid *pixels);
 
-    virtual UINT64 GetCPUSize() {return 0;}  // TODO
-    virtual UINT64 GetGPUSize() {return 0;}  // TODO
+    UINTVECTOR3 GetSize() {return UINTVECTOR3(m_iSizeX,m_iSizeY,m_iSizeZ);}
+    virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizeZ*m_iSizePerElement/8;}
+    virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizeZ*m_iSizePerElement/8;}
 
   protected:
     GLuint m_iSizeX;

@@ -37,9 +37,9 @@
 #include "GLTexture3D.h"
 
 
-GLTexture3D::GLTexture3D(GLuint iSizeX, GLuint iSizeY, GLuint iSizeZ, GLint internalformat, GLenum format, GLenum type, const GLvoid *pixels, 
-             GLint iMagFilter, GLint iMinFilter, GLint wrapX, GLint wrapY, GLint wrapZ) :
-  GLTexture(),
+GLTexture3D::GLTexture3D(GLuint iSizeX, GLuint iSizeY, GLuint iSizeZ, GLint internalformat, GLenum format, GLenum type, 
+             unsigned int iSizePerElement, const GLvoid *pixels, GLint iMagFilter, GLint iMinFilter, GLint wrapX, GLint wrapY, GLint wrapZ) :
+  GLTexture(iSizePerElement),
   m_iSizeX(iSizeX),
   m_iSizeY(iSizeY),
   m_iSizeZ(iSizeZ),

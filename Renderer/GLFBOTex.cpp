@@ -10,18 +10,21 @@ bool	GLFBOTex::m_bInitialized = true;
  * Constructor: on first instantiation, generate an FBO.
  * In any case a new dummy texture according to the parameters is generated.
  */
-GLFBOTex::GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat,bool bHaveDepth, int iNumBuffers) :
-  m_pMasterController(pMasterController)
+GLFBOTex::GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth, int iNumBuffers) :
+  m_pMasterController(pMasterController),
+  m_iSizePerElement(iSizePerElement),
+  m_iSizeX(width),
+  m_iSizeY(height)
 {
 	if (width<1) width=1;
 	if (height<1) height=1;
 	if (!m_bInitialized) {
 		if (GLEW_OK!=glewInit()) {
-			m_pMasterController->DebugOut()->Error("GLFBOTex:GLFBOTex","failed to initialize GLEW!\n");
+			m_pMasterController->DebugOut()->Error("GLFBOTex:GLFBOTex","failed to initialize GLEW!");
 			exit(0);
 		}
 		if (!glewGetExtension("GL_EXT_framebuffer_object")) {
-			m_pMasterController->DebugOut()->Error("GLFBOTex:GLFBOTex","GL_EXT_framebuffer_object not supported!\n");
+			m_pMasterController->DebugOut()->Error("GLFBOTex:GLFBOTex","GL_EXT_framebuffer_object not supported!");
 			exit(0);
 		}
 		m_bInitialized=true;
@@ -97,7 +100,7 @@ GLFBOTex::~GLFBOTex(void) {
 	m_hDepthBuffer=0;
 	--m_iCount;
 	if (m_iCount==0) {
-		m_pMasterController->DebugOut()->Message("GLFBOTex:~GLFBOTex","\nFBO released via destructor call.\n");
+		m_pMasterController->DebugOut()->Message("GLFBOTex:~GLFBOTex","FBO released via destructor call.");
 		glDeleteFramebuffersEXT(1,&m_hFBO);
 		m_hFBO=0;
 	}
@@ -143,7 +146,7 @@ void GLFBOTex::initTextures(GLenum minfilter,GLenum magfilter,GLenum wrapmode, G
  * Build a new FBO.
  */
 void GLFBOTex::initFBO(void) {
-	m_pMasterController->DebugOut()->Message("GLFBOTex:initFBO","\nFBO initialized.\n");
+	m_pMasterController->DebugOut()->Message("GLFBOTex:initFBO","FBO initialized.");
 	glGenFramebuffersEXT(1, &m_hFBO);
 }
 
@@ -156,19 +159,19 @@ bool GLFBOTex::CheckFBO(const char* method) {
 		case GL_FRAMEBUFFER_COMPLETE_EXT: 
 			return true;
 		case GL_FRAMEBUFFER_UNSUPPORTED_EXT: 
-			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Unsupported Format!\n",method); return false;
+			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Unsupported Format!",method); return false;
 		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT: 
-			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete attachment\n",method); return false;
+			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete attachment",method); return false;
 		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT: 
-			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete missing attachment\n",method); return false;
+			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete missing attachment",method); return false;
 		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT: 
-			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete dimensions\n",method); return false;
+			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete dimensions",method); return false;
 		case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT: 
-			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete formats\n",method); return false;
+			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete formats",method); return false;
 		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT: 
-			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete draw buffer\n",method); return false;
+			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete draw buffer",method); return false;
 		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT: 
-			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete read buffer\n",method); return false;
+			m_pMasterController->DebugOut()->Error("GLFBOTex:CheckFBO","%s() - Incomplete read buffer",method); return false;
 		default:  return false;
 	}	
 }
@@ -233,7 +236,7 @@ VBOTex::~VBOTex() {
 inline void GLFBOTex::Write(GLenum target,int iBuffer) {
 #ifdef _DEBUG
 	if (!m_hFBO) {
-		m_pMasterController->DebugOut()->Error("GLFBOTex:Write","FBO not initialized!\n");
+		m_pMasterController->DebugOut()->Error("GLFBOTex:Write","FBO not initialized!");
 		exit(0);
 	}
 #endif
@@ -261,7 +264,7 @@ inline void GLFBOTex::FinishWrite(int iBuffer) {
 
 inline void GLFBOTex::Read(GLenum texunit, int iBuffer) {
 #ifdef _DEBUG
-	if (m_LastTexUnit[iBuffer]!=0) m_pMasterController->DebugOut()->Error("GLFBOTex:Read","Missing FinishRead()!\n");
+	if (m_LastTexUnit[iBuffer]!=0) m_pMasterController->DebugOut()->Error("GLFBOTex:Read","Missing FinishRead()!");
 #endif
 	assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);

@@ -67,6 +67,11 @@ MainWindow::MainWindow(MasterController& masterController,
   m_strCurrentWorkspaceFilename(""),
   m_ActiveRenderWin(NULL)
 {
+  QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
+  QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");
+  QCoreApplication::setApplicationName("ImageVis3D");
+
+
   setupUi(this);
 
   SetupWorkspaceMenu();
@@ -80,6 +85,8 @@ MainWindow::MainWindow(MasterController& masterController,
   QTimer *timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(CheckForRedraw()));
   timer->start(20);
+
+  CheckSettings();
 }
 
 MainWindow::~MainWindow()
@@ -137,7 +144,7 @@ void MainWindow::Use2DTrans() {
 
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(true);
-  // todo disable iso controlls
+  // todo disable iso controls
 
   if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(RM_2DTRANS);
 }

@@ -44,6 +44,7 @@
 class GLTexture1D : public GLTexture {
   public:
     GLTexture1D(GLuint iSize, GLint internalformat, GLenum format, GLenum type, 
+          unsigned int iSizePerElement,
           const GLvoid *pixels = 0,
           GLint iMagFilter = GL_NEAREST, 
           GLint iMinFilter = GL_NEAREST,
@@ -53,8 +54,8 @@ class GLTexture1D : public GLTexture {
     virtual void Bind() {glBindTexture(GL_TEXTURE_1D, m_iGLID);}
     virtual void SetData(const GLvoid *pixels);
 
-    virtual UINT64 GetCPUSize() {return 0;}  // TODO
-    virtual UINT64 GetGPUSize() {return 0;}  // TODO
+    virtual UINT64 GetCPUSize() {return m_iSize*m_iSizePerElement/8;}
+    virtual UINT64 GetGPUSize() {return m_iSize*m_iSizePerElement/8;} 
 
   protected:
     GLuint m_iSize;

@@ -19,12 +19,14 @@ INCLUDEPATH      += .
 QT               += opengl
 
 # Input
-HEADERS += Basics/Grids.h \
+HEADERS += StdDefines.h
+           Basics/Grids.h \
            Basics/SysTools.h \
            Basics/Vectors.h \
            Basics/MathTools.h \
            Basics/Checksums/MD5.h \
            Basics/Checksums/crc32.h \
+           UI/SettingsDlg.h \
            UI/BrowseData.h \
            UI/ImageVis3D.h \
            UI/PleaseWait.h \
@@ -69,7 +71,7 @@ HEADERS += Basics/Grids.h \
            Renderer/GPUMemMan/GPUMemMan.h \
            Renderer/SBVRGeogen.h
 
-FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui
+FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui UI/UI/SettingsDlg.ui
 
 SOURCES += 3rdParty/GLEW/glew.c \
            Basics/SystemInfo.cpp \
@@ -83,12 +85,14 @@ SOURCES += 3rdParty/GLEW/glew.c \
            UI/ImageVis3D_FileHandling.cpp \
            UI/ImageVis3D_WindowHandling.cpp \
            UI/ImageVis3D_DebugWindow.cpp \
+           UI/ImageVis3D_Settings.cpp \
            UI/PleaseWait.cpp \
            UI/QTransferFunction.cpp \
            UI/Q1DTransferFunction.cpp \
            UI/Q2DTransferFunction.cpp \
            UI/QDataRadioButton.cpp \
            UI/RenderWindow.cpp \
+           UI/SettingsDlg.cpp \
            IO/KeyValueFileParser.cpp \           
            IO/Transferfunction1D.cpp \
            IO/Transferfunction2D.cpp \

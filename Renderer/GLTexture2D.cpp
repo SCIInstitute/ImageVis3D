@@ -37,9 +37,9 @@
 #include "GLTexture2D.h"
 
 
-GLTexture2D::GLTexture2D(GLuint iSizeX, GLuint iSizeY, GLint internalformat, GLenum format, GLenum type, const GLvoid *pixels, 
-             GLint iMagFilter, GLint iMinFilter, GLint wrapX, GLint wrapY) :
-  GLTexture(),
+GLTexture2D::GLTexture2D(GLuint iSizeX, GLuint iSizeY, GLint internalformat, GLenum format, GLenum type,
+             unsigned int iSizePerElement, const GLvoid *pixels, GLint iMagFilter, GLint iMinFilter, GLint wrapX, GLint wrapY) :
+  GLTexture(iSizePerElement),
   m_iSizeX(iSizeX),
   m_iSizeY(iSizeY),
   m_internalformat(internalformat),

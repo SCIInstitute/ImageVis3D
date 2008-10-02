@@ -225,7 +225,7 @@ void GPUSBVR::Resize(int width, int height) {
 	gluPerspective(50.0,aspect,0.2,100.0); 	// Set Projection. Arguments are FOV (in degrees), aspect-ratio, near-plane, far-plane.
 	glMatrixMode(GL_MODELVIEW);
 
-  m_pFBO3DImage = new GLFBOTex(m_pMasterController, GL_NEAREST, GL_NEAREST, GL_CLAMP, width, height, GL_RGBA8);
+  m_pFBO3DImage = new GLFBOTex(m_pMasterController, GL_NEAREST, GL_NEAREST, GL_CLAMP, width, height, GL_RGBA8, 8*4);
 
   m_bDelayedCompleteRedraw = true;
 }

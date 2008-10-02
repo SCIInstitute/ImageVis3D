@@ -27,34 +27,24 @@
 */
 
 /**
-  \file    GLTexture.h
+  \file    StdDefines.h
   \author    Jens Krueger
         SCI Institute
         University of Utah
-  \date    August 2008
+  \date    October 2008
 */
-
 
 #pragma once
 
-#ifndef GLTEXTURE_H
-#define GLTEXTURE_H
+#ifndef STDDEFINES_H
+#define STDDEFINES_H
 
-#include "GLObject.h"
+#include <limits>
 
-class GLTexture : public GLObject {
-  public:
-    GLTexture(unsigned int iSizePerElement) : m_iGLID(-1), m_iSizePerElement(iSizePerElement) {}
-    virtual ~GLTexture();
 
-    virtual void Delete();
-    virtual void SetData(const GLvoid *pixels) = 0;
-    virtual void Bind() = 0;
-    GLuint GetGLID() {return m_iGLID;}
+#define IV3D_VERSION "0.01 alpha"
+#define UINT_INVALID (std::numeric_limits<UINT>::max())
+#define UINT64_INVALID (std::numeric_limits<UINT64>::max())
 
-  protected:
-    GLuint        m_iGLID;
-    unsigned int  m_iSizePerElement;
-};
 
-#endif // GLTEXTURE_H
+#endif // STDDEFINES_H

@@ -26,35 +26,25 @@
    DEALINGS IN THE SOFTWARE.
 */
 
-/**
-  \file    GLTexture.h
-  \author    Jens Krueger
-        SCI Institute
-        University of Utah
-  \date    August 2008
-*/
 
+//!    File   : SettingsDlg.cpp
+//!    Author : Jens Krueger
+//!             SCI Institute
+//!             University of Utah
+//!    Date   : October 2008
+//
+//!    Copyright (C) 2008 SCI Institute
 
-#pragma once
+#include "SettingsDlg.h"
 
-#ifndef GLTEXTURE_H
-#define GLTEXTURE_H
+SettingsDlg::SettingsDlg(MasterController& MasterController, TabID eTabID /* = MEM_TAB*/, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
+  QDialog(parent, flags),
+  m_MasterController(MasterController),
+  m_eTabID(eTabID)
+{
+  setupUi(this);
+}
 
-#include "GLObject.h"
-
-class GLTexture : public GLObject {
-  public:
-    GLTexture(unsigned int iSizePerElement) : m_iGLID(-1), m_iSizePerElement(iSizePerElement) {}
-    virtual ~GLTexture();
-
-    virtual void Delete();
-    virtual void SetData(const GLvoid *pixels) = 0;
-    virtual void Bind() = 0;
-    GLuint GetGLID() {return m_iGLID;}
-
-  protected:
-    GLuint        m_iGLID;
-    unsigned int  m_iSizePerElement;
-};
-
-#endif // GLTEXTURE_H
+SettingsDlg::~SettingsDlg(void)
+{
+}

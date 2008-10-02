@@ -18,7 +18,7 @@ class MasterController;
 
 class GLFBOTex : public GLObject {
 public:
-	GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, bool bHaveDepth=false, int iNumBuffers=1);
+	GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth=false, int iNumBuffers=1);
 	virtual ~GLFBOTex(void);
 	inline virtual void Write(GLenum target=GL_COLOR_ATTACHMENT0_EXT,int iBuffer=0);
 	inline virtual void Read(GLenum texunit,int iBuffer=0);
@@ -27,11 +27,15 @@ public:
 	inline virtual operator GLuint(void) { return m_hTexture[0]; }
 	inline virtual operator GLuint*(void) { return m_hTexture; }
 
-  virtual UINT64 GetCPUSize() {return 0;}  // TODO
-  virtual UINT64 GetGPUSize() {return 0;}  // TODO
+  virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
+  virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
 
 private:
-	bool			CheckFBO(const char* method);
+  unsigned int        m_iSizePerElement;
+  GLuint              m_iSizeX;
+  GLuint              m_iSizeY;
+
+  bool			CheckFBO(const char* method);
 	void			initFBO(void);
 	void			initTextures(GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat);
   MasterController    *m_pMasterController;
