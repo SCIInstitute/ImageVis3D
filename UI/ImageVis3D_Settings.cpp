@@ -50,17 +50,17 @@ void MainWindow::CheckSettings() {
   unsigned int iMaxCPU = settings.value("MaxCPUMem", UINT_INVALID).toUInt();
 
   if (iMaxGPU == UINT_INVALID || iMaxCPU == UINT_INVALID) {
-     // TODO open settings dialog
+     ShowSettings(SettingsDlg::MEM_TAB);
   }
 }
 
-void MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
+bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
 
     SettingsDlg settingsDlg(m_MasterController, eTabID, this);
 
     if (settingsDlg.exec() == QDialog::Accepted) {
 
-
-    }
+      return true;
+    } else return false;
 
 }

@@ -129,7 +129,7 @@ protected slots:
   void SetDebugViewMask();
 
   void CheckForRedraw();
-  void ShowSettings(SettingsDlg::TabID eTabID = SettingsDlg::MEM_TAB);
+  bool ShowSettings(SettingsDlg::TabID eTabID = SettingsDlg::MEM_TAB);
 
 protected:    
 
