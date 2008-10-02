@@ -10,6 +10,7 @@ bool	GLFBOTex::m_bInitialized = true;
  * Constructor: on first instantiation, generate an FBO.
  * In any case a new dummy texture according to the parameters is generated.
  */
+
 GLFBOTex::GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth, int iNumBuffers) :
   m_pMasterController(pMasterController),
   m_iSizePerElement(iSizePerElement),

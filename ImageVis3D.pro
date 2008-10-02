@@ -121,5 +121,6 @@ SOURCES += 3rdParty/GLEW/glew.c \
            Renderer/AbstrRenderer.cpp \
            Renderer/GPUSBVR.cpp \
            Renderer/GPUMemMan/GPUMemMan.cpp \
-           Renderer/SBVRGeogen.cpp \           
+           Renderer/SBVRGeogen.cpp \  
+           Renderer/GLFBOTex.cpp \  
            main.cpp
