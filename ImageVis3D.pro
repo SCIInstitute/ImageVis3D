@@ -19,7 +19,7 @@ INCLUDEPATH      += .
 QT               += opengl
 
 # Input
-HEADERS += StdDefines.h
+HEADERS += StdDefines.h \
            Basics/Grids.h \
            Basics/SysTools.h \
            Basics/Vectors.h \
