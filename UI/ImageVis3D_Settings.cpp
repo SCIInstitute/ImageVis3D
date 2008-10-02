@@ -46,7 +46,7 @@ void MainWindow::CheckSettings() {
   QSettings settings;
 
   // if memory isn't set this must be the first time we run this app
-  if (UINT64_INVALID == settings.value("Memory/MaxGPUMem", UINT64_INVALID).toLongLong()) {
+  if (UINT64_INVALID == settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong()) {
     do {
       QMessageBox::information(this, "Initial Setup", "As this is the first time you start ImageVis3D on this system you need to check the settings. In particular the memory usage settings need to be set according to the actual hardware configuration of thy machine. Note that these settings can also be changed later in the settings screen.");
     } while(!ShowSettings(SettingsDlg::MEM_TAB));
@@ -58,12 +58,12 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
     SettingsDlg settingsDlg(m_MasterController, eTabID, this);
 
     // load settings
-    UINT64 iMaxGPU = settings.value("Memory/MaxGPUMem", UINT64_INVALID).toLongLong();
+    UINT64 iMaxGPU = settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong();
 
     // if memory is set load other values (otherwise the dialog box will initialize with defaults
     if (iMaxGPU != UINT64_INVALID) {      
       // load other settings here
-      UINT64 iMaxCPU = settings.value("Memory/MaxCPUMem", UINT64_INVALID).toLongLong();     
+      UINT64 iMaxCPU = settings.value("Memory/MaxCPUMem", UINT64_INVALID).toULongLong();     
 
       // hand data to form
       settingsDlg.Data2Form(iMaxCPU, iMaxGPU);
@@ -91,8 +91,8 @@ void MainWindow::ApplySettings() {
     QSettings settings;
 
     settings.beginGroup("Memory");
-    UINT64 iMaxCPU = settings.value("MaxCPUMem", UINT64_INVALID).toLongLong();
-    UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toLongLong();
+    UINT64 iMaxCPU = settings.value("MaxCPUMem", UINT64_INVALID).toULongLong();
+    UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
     settings.endGroup();
 
     m_MasterController.SysInfo()->SetMaxUsableCPUMem(iMaxCPU);
