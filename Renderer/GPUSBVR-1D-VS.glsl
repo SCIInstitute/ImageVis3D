@@ -27,18 +27,21 @@
 */
 
 /**
-  \file    GPUSBVR.frag
+  \file    GPUSBVR-VS.glsl
   \author    Jens Krueger
         SCI Institute
         University of Utah
   \version  1.0
-  \date    August 2008
+  \date    October 2008
 */
 
-uniform sampler2D Texture0;
+//varying vec3 texCoordYPos;
 
 void main(void)
 {
-	vec4 inCoords = texture2D(Texture0, gl_TexCoord[0].xy);	
-	gl_FragColor = inCoords;
+   gl_Position = vec4( gl_Vertex.xy, 0.0, 1.0 );
+    
+   // Texture coordinate for screen aligned (in correct range):
+   gl_TexCoord[0].xy = (vec2( gl_Position.x, gl_Position.y ) + vec2( 1.0 ) ) / vec2( 2.0 );
+   gl_TexCoord[0].zw = vec2(0.0,0.0);
 }

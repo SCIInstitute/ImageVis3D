@@ -76,6 +76,10 @@ void GPUSBVR::Initialize() {
   if (m_IDTex[2] == NULL) {
     m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","Third Image load failed");    
   }
+
+  m_pProgram1DTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-1D-VS.glsl"),
+                                                                    SysTools::GetFromResourceOnMac("GPUSBVR-1D-FS.glsl"));
+
 }
 
 
@@ -225,6 +229,7 @@ void GPUSBVR::Resize(int width, int height) {
 	gluPerspective(50.0,aspect,0.2,100.0); 	// Set Projection. Arguments are FOV (in degrees), aspect-ratio, near-plane, far-plane.
 	glMatrixMode(GL_MODELVIEW);
 
+  if (m_pFBO3DImage != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImage);
   m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, width, height, GL_RGBA8, 8*4);
 
   m_bDelayedCompleteRedraw = true;

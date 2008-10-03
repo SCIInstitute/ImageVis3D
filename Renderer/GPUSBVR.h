@@ -77,7 +77,9 @@ class GPUSBVR : public AbstrRenderer {
     FLOATVECTOR2  m_vRot;
     bool          m_bDelayedCompleteRedraw;
     bool          m_bRenderWireframe;
+
     GLFBOTex*     m_pFBO3DImage;
+    GLSLProgram*  m_pProgram1DTrans;
 
     void DrawLogo();
     void UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
