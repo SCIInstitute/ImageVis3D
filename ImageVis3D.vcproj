@@ -1143,6 +1143,14 @@
 					RelativePath=".\Renderer\GPUMemMan\GPUMemMan.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Renderer\GPUMemMan\GPUMemManDataStructs.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GPUMemMan\GPUMemManDataStructs.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="OpenGLObjects"

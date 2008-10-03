@@ -69,6 +69,7 @@ HEADERS += StdDefines.h \
            Renderer/AbstrRenderer.h \
            Renderer/GPUSBVR.h \
            Renderer/GPUMemMan/GPUMemMan.h \
+           Renderer/GPUMemMan/GPUMemManDataStructs.h \
            Renderer/SBVRGeogen.h
 
 FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui UI/UI/SettingsDlg.ui
@@ -121,6 +122,7 @@ SOURCES += 3rdParty/GLEW/glew.c \
            Renderer/AbstrRenderer.cpp \
            Renderer/GPUSBVR.cpp \
            Renderer/GPUMemMan/GPUMemMan.cpp \
+           Renderer/GPUMemMan/GPUMemManDataStructs.cpp \
            Renderer/SBVRGeogen.cpp \  
            Renderer/GLFBOTex.cpp \  
            main.cpp
