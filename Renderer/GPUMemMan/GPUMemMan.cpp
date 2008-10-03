@@ -35,8 +35,8 @@
 */
 
 #include "GPUMemMan.h"
-#include "../../IO/Images/BMPLoader.h"
-#include "../../Controller/MasterController.h"
+#include <IO/Images/BMPLoader.h>
+#include <Controller/MasterController.h>
 
 using namespace std;
 
@@ -85,6 +85,7 @@ GPUMemMan::~GPUMemMan() {
   }
 
   for (Texture3DListIter i = m_vpTex3DList.begin();i<m_vpTex3DList.end();i++) {
+    m_MasterController->DebugOut()->Warning("GPUMemMan::~GPUMemMan","Detected unfreed 3D texture.");
 
     m_iAllocatedGPUMemory -= (*i)->pTexture->GetCPUSize();
     m_iAllocatedCPUMemory -= (*i)->pTexture->GetGPUSize();
@@ -92,7 +93,24 @@ GPUMemMan::~GPUMemMan() {
     delete (*i);
   }
 
-  m_vpTex3DList.clear();
+  for (FBOListIter i = m_vpFBOList.begin();i<m_vpFBOList.end();i++) {
+    m_MasterController->DebugOut()->Warning("GPUMemMan::~GPUMemMan","Detected unfreed FBO.");
+
+    m_iAllocatedGPUMemory -= (*i)->pFBOTex->GetCPUSize();
+    m_iAllocatedCPUMemory -= (*i)->pFBOTex->GetGPUSize();
+
+    delete (*i);
+  }
+
+  for (GLSLListIter i = m_vpGLSLList.begin();i<m_vpGLSLList.end();i++) {
+    m_MasterController->DebugOut()->Warning("GPUMemMan::~GPUMemMan","Detected unfreed GLSL program.");
+
+    m_iAllocatedGPUMemory -= (*i)->pGLSLProgram->GetCPUSize();
+    m_iAllocatedCPUMemory -= (*i)->pGLSLProgram->GetGPUSize();
+
+    delete (*i);
+  }
+
 
   assert(m_iAllocatedGPUMemory == 0);
   assert(m_iAllocatedCPUMemory == 0);
@@ -400,4 +418,69 @@ void GPUMemMan::MemSizesChanged() {
   if (m_iAllocatedGPUMemory > m_SystemInfo->GetMaxUsableGPUMem()) {
       // TODO: GPU free resources to match max mem requirements
   }
+}
+
+
+GLFBOTex* GPUMemMan::GetFBO(GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth, int iNumBuffers) {
+
+  m_MasterController->DebugOut()->Message("GPUMemMan::GetFBO","Creating new FBO of size %i x %i", width, height);
+
+  FBOListElem* e = new FBOListElem(m_MasterController,minfilter, magfilter, wrapmode, width, height, intformat, iSizePerElement, bHaveDepth, iNumBuffers);
+
+  m_vpFBOList.push_back(e);
+
+  m_iAllocatedGPUMemory += e->pFBOTex->GetCPUSize();
+  m_iAllocatedCPUMemory += e->pFBOTex->GetGPUSize();
+
+  return e->pFBOTex;
+}
+
+void GPUMemMan::FreeFBO(GLFBOTex* pFBO) {
+  for (size_t i = 0;i<m_vpFBOList.size();i++) {
+    if (m_vpFBOList[i]->pFBOTex == pFBO) {
+      m_MasterController->DebugOut()->Message("GPUMemMan::FreeFBO","Freeing FBO ");
+      m_iAllocatedGPUMemory -= m_vpFBOList[i]->pFBOTex->GetCPUSize();
+      m_iAllocatedCPUMemory -= m_vpFBOList[i]->pFBOTex->GetGPUSize();
+
+      delete m_vpFBOList[i];
+
+      m_vpFBOList.erase(m_vpFBOList.begin()+i);
+      i--;
+
+      return;
+    }
+  }
+  m_MasterController->DebugOut()->Warning("GPUMemMan::FreeFBO","FBO to free not found.");
+}
+
+GLSLProgram* GPUMemMan::GetGLSLProgram(const string& strVSFile, const string& strFSFile) {
+
+  m_MasterController->DebugOut()->Message("GPUMemMan::GetGLSLProgram","Creating new GLSL program from the VS %s and the FS %s", strVSFile.c_str(), strFSFile.c_str());
+
+  GLSLListElem* e = new GLSLListElem(m_MasterController, strVSFile, strFSFile);
+
+  m_vpGLSLList.push_back(e);
+
+  m_iAllocatedGPUMemory += e->pGLSLProgram->GetCPUSize();
+  m_iAllocatedCPUMemory += e->pGLSLProgram->GetGPUSize();
+
+  return e->pGLSLProgram;
+}
+
+void GPUMemMan::FreeGLSLProgram(GLSLProgram* pGLSLProgram) {
+  for (size_t i = 0;i<m_vpGLSLList.size();i++) {
+    if (m_vpGLSLList[i]->pGLSLProgram == pGLSLProgram) {
+      m_MasterController->DebugOut()->Message("GPUMemMan::FreeGLSLProgram","Freeing GLSL program");
+      m_iAllocatedGPUMemory -= m_vpGLSLList[i]->pGLSLProgram->GetCPUSize();
+      m_iAllocatedCPUMemory -= m_vpGLSLList[i]->pGLSLProgram->GetGPUSize();
+
+      delete m_vpGLSLList[i];
+
+      m_vpGLSLList.erase(m_vpGLSLList.begin()+i);
+      i--;
+
+      return;
+    }
+  }
+  m_MasterController->DebugOut()->Warning("GPUMemMan::FreeGLSLProgram","GLSL program to free not found.");
 }

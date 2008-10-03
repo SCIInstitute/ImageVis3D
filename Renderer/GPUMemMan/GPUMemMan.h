@@ -39,189 +39,8 @@
 #ifndef GPUMEMMAN_H
 #define GPUMEMMAN_H
 
-#include <deque>
-#include <string>
-#include <Renderer//AbstrRenderer.h>
-#include <Renderer/GLTexture1D.h>
-#include <Renderer/GLTexture2D.h>
-#include <Renderer/GLTexture3D.h>
-#include <IO/VolumeDataset.h>
-#include <IO//TransferFunction1D.h>
-#include <IO//TransferFunction2D.h>
+#include "GPUMemManDataStructs.h"
 #include <Basics/SystemInfo.h>
-
-typedef std::deque< AbstrRenderer* > AbstrRendererList;
-typedef AbstrRendererList::iterator AbstrRendererListIter;
-
-// volume datasets
-struct VolDataListElem {
-  VolDataListElem(VolumeDataset* _pVolumeDataset, AbstrRenderer* pUser) :
-    pVolumeDataset(_pVolumeDataset) 
-  {
-    qpUser.push_back(pUser);
-  }
-
-  VolumeDataset*  pVolumeDataset;
-  AbstrRendererList qpUser;
-};
-typedef std::deque<VolDataListElem> VolDataList;
-typedef VolDataList::iterator VolDataListIter;
-
-// simple textures
-struct SimpleTextureListElem {
-  SimpleTextureListElem(unsigned int _iAccessCounter, GLTexture2D* _pTexture, std::string _strFilename) :
-    iAccessCounter(_iAccessCounter), 
-    pTexture(_pTexture), 
-    strFilename(_strFilename)
-  {}
-
-  unsigned int  iAccessCounter;
-  GLTexture2D*  pTexture;
-  std::string    strFilename;
-};
-typedef std::deque<SimpleTextureListElem> SimpleTextureList;
-typedef SimpleTextureList::iterator SimpleTextureListIter;
-
-// 1D transfer functions
-struct Trans1DListElem {
-  Trans1DListElem(TransferFunction1D* _pTransferFunction1D, GLTexture1D* _pTexture, AbstrRenderer* pUser) :
-    pTransferFunction1D(_pTransferFunction1D),
-    pTexture(_pTexture)
-  {
-    qpUser.push_back(pUser);
-  }
-
-  TransferFunction1D*  pTransferFunction1D;
-  GLTexture1D*    pTexture;
-  AbstrRendererList  qpUser;
-};
-typedef std::deque<Trans1DListElem> Trans1DList;
-typedef Trans1DList::iterator Trans1DListIter;
-
-// 2D transfer functions
-struct Trans2DListElem {
-  Trans2DListElem(TransferFunction2D* _pTransferFunction2D, GLTexture2D* _pTexture, AbstrRenderer* pUser) :
-    pTransferFunction2D(_pTransferFunction2D),
-    pTexture(_pTexture)
-  {
-    qpUser.push_back(pUser);
-  }
-
-  TransferFunction2D*  pTransferFunction2D;
-  GLTexture2D*    pTexture;
-  AbstrRendererList  qpUser;
-};
-typedef std::deque<Trans2DListElem> Trans2DList;
-typedef Trans2DList::iterator Trans2DListIter;
-
-
-// 3D textures
-struct Texture3DListElem {
-  Texture3DListElem(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick) :
-    pData(NULL),
-    pTexture(NULL),
-    pDataset(_pDataset),
-    vLOD(_vLOD),
-    vBrick(_vBrick)
-  {
-     CreateTexture();
-  }
-
-  ~Texture3DListElem() {
-      FreeData();
-      FreeTexture();
-  }
-
-  bool Match(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick) {
-    if (_pDataset != pDataset || _vLOD.size() != vLOD.size() || _vBrick.size() != vBrick.size()) return false;
-
-    for (size_t i = 0;i<vLOD.size();i++)   if (vLOD[i] != _vLOD[i]) return false;
-    for (size_t i = 0;i<vBrick.size();i++) if (vBrick[i] != _vBrick[i]) return false;
-
-    return true;
-  }
-
-
-  bool LoadData() {
-    FreeData();
-    return pDataset->GetBrick(&pData, vLOD, vBrick);
-  }
-
-  void  FreeData() {
-    delete [] pData;
-    pData = NULL;
-  }
-
-  bool CreateTexture() {
-    FreeTexture();
-    if (pData == NULL) {
-      if (!LoadData()) return false;
-    }
-
-    const std::vector<UINT64> vSize = pDataset->GetInfo()->GetBrickSize(vLOD, vBrick);
-
-    UINT64 iBitWidth  = pDataset->GetInfo()->GetBitwith();
-    UINT64 iCompCount = pDataset->GetInfo()->GetComponentCount();
-
-    GLint glInternalformat;
-    GLenum glFormat;
-    GLenum glType;
-
-    switch (iCompCount) {
-      case 1 : glFormat = GL_LUMINANCE; break;
-      case 3 : glFormat = GL_RGB; break;
-      case 4 : glFormat = GL_RGBA; break;
-      default : return false;
-    }
-
-    if (iBitWidth == 8) {
-        glType = GL_UNSIGNED_BYTE;
-      
-        switch (iCompCount) {
-          case 1 : glInternalformat = GL_LUMINANCE8; break;
-          case 3 : glInternalformat = GL_RGB8; break;
-          case 4 : glInternalformat = GL_RGBA8; break;
-          default : return false;
-        }
-    } else {
-      if (iBitWidth == 16) {
-        glType = GL_UNSIGNED_SHORT;
-        switch (iCompCount) {
-          case 1 : glInternalformat = GL_LUMINANCE16; break;
-          case 3 : glInternalformat = GL_RGB16; break;
-          case 4 : glInternalformat = GL_RGBA16; break;
-          default : return false;
-        }
-
-      } else {
-          return false;
-      }
-    }
-
-
-    pTexture = new GLTexture3D(GLuint(vSize[0]), GLuint(vSize[1]), GLuint(vSize[2]), glInternalformat, glFormat, glType, (unsigned int)(iBitWidth*iCompCount), pData);
-
-    return true;
-  }
-
-  void  FreeTexture() {
-    if (pTexture != NULL) {
-      pTexture->Delete();
-      delete pTexture;
-    }
-    pTexture = NULL;
-  }
-
-
-  unsigned char*      pData;
-  GLTexture3D*        pTexture;
-  VolumeDataset*      pDataset;
-  std::vector<UINT64> vLOD;
-  std::vector<UINT64> vBrick;
-};
-typedef std::deque<Texture3DListElem*> Texture3DList;
-typedef Texture3DList::iterator Texture3DListIter;
-
 
 class MasterController;
 
@@ -251,6 +70,12 @@ class GPUMemMan {
     GLTexture3D* Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
     void FreeTexture(GLTexture3D* pTexture);
 
+    GLFBOTex* GetFBO(GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth=false, int iNumBuffers=1);
+    void FreeFBO(GLFBOTex* pFBO);
+
+    GLSLProgram* GPUMemMan::GetGLSLProgram(const std::string& strVSFile, const std::string& strFSFile);
+    void FreeGLSLProgram(GLSLProgram* pGLSLProgram);
+
     void MemSizesChanged();
 
     // system statistics
@@ -267,6 +92,8 @@ class GPUMemMan {
     Trans1DList       m_vpTrans1DList;
     Trans2DList       m_vpTrans2DList;
     Texture3DList     m_vpTex3DList;
+    FBOList           m_vpFBOList;
+    GLSLList          m_vpGLSLList;
     MasterController* m_MasterController;
     SystemInfo*       m_SystemInfo;
 

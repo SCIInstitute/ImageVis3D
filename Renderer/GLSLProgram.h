@@ -1,37 +1,39 @@
-/**************************************************************************************************************
+/*
+   For more information, please see: http://software.sci.utah.edu
 
-(c) 2004-05 by Jens Schneider, TUM.3D
-  mailto:jens.schneider@in.tum.de
-  Computer Graphics and Visualization Group
-    Institute for Computer Science I15
-  Technical University of Munich
+   The MIT License
 
-(c) 2007-2008 by Jens Krueger, SCI
-  mailto:jens@sci.utah.edu
+   Copyright (c) 2008 Scientific Computing and Imaging Institute,
+   University of Utah.
 
-  - - - H I S T O R Y - - -
-  
-  Nov.15  If GLSLPROGRAM_STRICT is defined, treat compiler warnings as errors. This was default 
-          for v1.0b. If left undefined, warnings are written to stdout, but ignored as long as the 
-      result is a valid program object.
-  Apr.07  renamed to GLSLProgram. Support for OpenGL 2.0.
-  Apr.04  work-around for nVidia ß-driver bug with ARB_shader_objects
-  Mar.05  added support for GLSLProgram
-  Mar.05  added support for booleans 
-  Mar.05  added support for matrices, including implicit casts from bool and int
-  Mar.05  added support for programs in strings as opposed to programs in files
-  Mar.05  improved mplicit casting of SetUniformVector().
-      This is only enabled when GLSL_ALLOW_IMPLICIT_CASTS is defined, otherwise SetUniform behaves 
-      strict, i.e. no uploading of ints to float uniforms.
-  Mar.05  all text output is now done by the method message(). By default, text is send to stderr. 
-      If you want to change this behaviour, change GLSLProgram::message() in Shader.inl
-  
-  Feb.05  added operator GLuint. This allows a GLSLProgram object to be cast into its respective GL handle.
+   
+   Permission is hereby granted, free of charge, to any person obtaining a
+   copy of this software and associated documentation files (the "Software"),
+   to deal in the Software without restriction, including without limitation
+   the rights to use, copy, modify, merge, publish, distribute, sublicense,
+   and/or sell copies of the Software, and to permit persons to whom the
+   Software is furnished to do so, subject to the following conditions:
 
-  Aug.04  hey, it runs
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
 
-**************************************************************************************************************/
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+   THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+*/
 
+/**
+  \file    GLSLProgram.h
+  \author  Jens Schneider, Jens Krueger
+           SCI Institute, University of Utah
+  \date    October 2008
+*/
+
+#pragma once
 
 #ifndef GLSLPROGRAM_H
 #define GLSLPROGRAM_H
@@ -112,8 +114,8 @@ public:
   inline void SetUniformArray(const char *name,const int   *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
   inline void SetUniformArray(const char *name,const bool  *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
 
-  virtual UINT64 GetCPUSize() {return 0;}  // assume zero CPU memeory cost for shaders to avoid any memory manager from paging out shaders
-  virtual UINT64 GetGPUSize() {return 0;}  // assume zero GPU memeory cost for shaders to avoid any memory manager from paging out shaders
+  virtual UINT64 GetCPUSize() {return 8;}  ///< assume near zero CPU memory cost for shaders to avoid any memory manager from paging out shaders, the 8 is basically only to detect mem-leaks
+  virtual UINT64 GetGPUSize() {return 8;}  ///< assume near zero GPU memory cost for shaders to avoid any memory manager from paging out shaders, the 8 is basically only to detect mem-leaks
 
 private:
   void    Initialize(void);

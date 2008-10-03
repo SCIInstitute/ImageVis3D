@@ -52,7 +52,7 @@ private:
 
 // ************************************************************************************************************************************************************
 
-class VBOTex {
+class VBOTex : public GLObject {
 public:
 	VBOTex(MasterController* pMasterController, GLsizei width, GLsizei height, bool bHaveDepth=false, int iNumBuffers=1);
 	virtual ~VBOTex(void);
@@ -64,8 +64,16 @@ public:
 	inline virtual void Read(void);
 	inline virtual void FinishRead(void);
 	inline virtual operator GLuint(void) { return m_hPBO; }	
+
+  virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
+  virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
+
 private:
-  MasterController  *m_pMasterController;
+  MasterController *m_pMasterController;
+  GLuint            m_iSizeX;
+  GLuint            m_iSizeY;
+  unsigned int      m_iSizePerElement;
+
 	GLFBOTex          *m_hGLFBOTex;
 	GLuint		        m_hPBO;
 	GLsizei		        m_iWidth;

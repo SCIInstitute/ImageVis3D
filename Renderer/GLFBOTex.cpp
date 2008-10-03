@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "GLFBOTex.h"
-#include "../Controller/MasterController.h"
+#include <Controller/MasterController.h>
 
 GLuint	GLFBOTex::m_hFBO = 0;
 int		GLFBOTex::m_iCount = 0;
@@ -184,7 +184,10 @@ bool	VBOTex::m_bInitialized = false;
 bool	VBOTex::m_bPBOSupported = false;
 
 VBOTex::VBOTex(MasterController* pMasterController, GLsizei width, GLsizei height, bool bHaveDepth, int iNumBuffers) :
-  m_pMasterController(pMasterController)
+  m_pMasterController(pMasterController),
+  m_iSizeX(width),
+  m_iSizeY(height),
+  m_iSizePerElement(4*32) // GL_RGBA32F_ARB
 {
 	if (!m_bInitialized) {
 		if (GLEW_OK!=glewInit()) {
