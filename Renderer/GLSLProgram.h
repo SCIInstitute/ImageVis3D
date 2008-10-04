@@ -88,7 +88,7 @@ public:
   GLSLProgram(MasterController* pMasterController);                                             ///< Standard Constructor.
   GLSLProgram(const GLSLProgram &other);                                                        ///< Copy Constructor
   GLSLProgram(MasterController* pMasterController, const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE src=GLSLPROGRAM_DISK);  ///< Constructor. Loads any combination of vertex (VPFile) and fragment (FPFile) shaders either from disk or from a C-string.
-  ~GLSLProgram();                                                                               ///< Destructor. Automatic clean-up.
+  virtual ~GLSLProgram();                                                                               ///< Destructor. Automatic clean-up.
   void Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE src=GLSLPROGRAM_DISK);    ///< Loads any combination of vertex (VPFile) and fragment (FPFile) shaders either from disk or from a C-string.
   void Enable(void);                                                                            ///< Enables this shader for rendering.
   void Disable(void);                                                                           ///< Disables this shader for rendering (using fixed function pipeline again).

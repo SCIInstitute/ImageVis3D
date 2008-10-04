@@ -60,6 +60,7 @@ HEADERS += StdDefines.h \
            DebugOut/MultiplexOut.h \
            3rdParty/GLEW/glew.h \
            3rdParty/GLEW/glxew.h \
+           Renderer/GLSLProgram.h \
            Renderer/GLInclude.h \
            Renderer/GLObject.h \
            Renderer/GLTexture.h \
@@ -114,7 +115,8 @@ SOURCES += 3rdParty/GLEW/glew.c \
            DebugOut/TextfileOut.cpp \
            DebugOut/QTOut.cpp \
            DebugOut/ConsoleOut.cpp \
-           DebugOut/MultiplexOut.cpp \          
+           DebugOut/MultiplexOut.cpp \ 
+           Renderer/GLSLProgram.cpp \                    
            Renderer/GLTexture.cpp \
            Renderer/GLTexture1D.cpp \
            Renderer/GLTexture2D.cpp \

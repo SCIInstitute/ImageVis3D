@@ -45,6 +45,7 @@
 
 class GLObject {
 public:
+    virtual ~GLObject() {}
     virtual UINT64 GetCPUSize() = 0;
     virtual UINT64 GetGPUSize() = 0;
 };
