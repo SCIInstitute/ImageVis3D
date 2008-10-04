@@ -170,7 +170,7 @@ void GPUSBVR::Paint() {
     m_SBVRGeogen.SetTransformation(m_matModelView);
 
   	glEnable(GL_BLEND);
-	  glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+	  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // switch to wireframe
     if (m_bRenderWireframe) {
@@ -284,10 +284,7 @@ bool GPUSBVR::CheckForRedraw() {
     m_bRedraw = true;
   }
 
-  if (m_bRedraw) {
-    //Paint();
-    return true;
-  } else return false;
+  return m_bRedraw;
 }
 
 

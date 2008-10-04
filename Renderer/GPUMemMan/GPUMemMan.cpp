@@ -229,7 +229,12 @@ void GPUMemMan::Changed1DTrans(AbstrRenderer* requester, TransferFunction1D* pTr
 void GPUMemMan::GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, TransferFunction1D** ppTransferFunction1D, GLTexture1D** tex) {
   m_MasterController->DebugOut()->Message("GPUMemMan::GetEmpty1DTrans","Creating new empty 1D transfer function");
   *ppTransferFunction1D = new TransferFunction1D(iSize);
-  *tex = new GLTexture1D(GLuint(iSize), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8);
+  (*ppTransferFunction1D)->SetDefault();
+
+  unsigned char* pcData = NULL;
+  (*ppTransferFunction1D)->GetByteArray(&pcData);
+  *tex = new GLTexture1D(GLuint((*ppTransferFunction1D)->vColorData.size()), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8,pcData);
+  delete [] pcData;
 
   m_iAllocatedGPUMemory += (*tex)->GetCPUSize();
   m_iAllocatedCPUMemory += (*tex)->GetGPUSize();
@@ -324,7 +329,11 @@ void GPUMemMan::GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* req
 void GPUMemMan::Get2DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction2D** ppTransferFunction2D, GLTexture2D** tex) {
   m_MasterController->DebugOut()->Message("GPUMemMan::Get2DTransFromFile","Loading 2D transfer function from file");
   *ppTransferFunction2D = new TransferFunction2D(strFilename);
-  *tex = new GLTexture2D(GLuint((*ppTransferFunction2D)->GetSize().x), GLuint((*ppTransferFunction2D)->GetSize().y), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8);
+
+  unsigned char* pcData = NULL;
+  (*ppTransferFunction2D)->GetByteArray(&pcData);
+  *tex = new GLTexture2D(GLuint((*ppTransferFunction2D)->GetSize().x), GLuint((*ppTransferFunction2D)->GetSize().y), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8,pcData);
+  delete [] pcData;
 
   m_iAllocatedGPUMemory += (*tex)->GetCPUSize();
   m_iAllocatedCPUMemory += (*tex)->GetGPUSize();

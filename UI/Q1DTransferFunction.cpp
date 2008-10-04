@@ -102,8 +102,6 @@ void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
   // resize internal histogram, we only consider histogram values to the maximum entry that is non-zero
   m_vHistogram.Resize(vHistogram->GetFilledSize());
 
-  m_pTrans->SetDefault(m_vHistogram.GetSize()-1);
-
   // resize the preview bar and force the draw routine to recompute the backdrop cache
   PreparePreviewData();
 
