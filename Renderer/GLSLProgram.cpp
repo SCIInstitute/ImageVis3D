@@ -70,7 +70,7 @@ GLSLProgram::GLSLProgram(MasterController* pMasterController) :
  * \date Aug.2004
  * \see Initialize()
  */
-GLSLProgram::GLSLProgram(const GLSLProgram &other) {
+GLSLProgram::GLSLProgram(const GLSLProgram &other) : GLObject() {
 
   m_pMasterController = other.m_pMasterController;
 
@@ -494,14 +494,14 @@ void GLSLProgram::Disable(void) {
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Aug.2004
  */
+#ifndef GLSL_DEBUG
 bool GLSLProgram::CheckGLError(const char *pcError, const char *pcAdditional) const{
-#ifdef GLSL_DEBUG
+  return (glGetError()!=GL_NO_ERROR);
+}
+#else
+bool GLSLProgram::CheckGLError(const char *pcError, const char *pcAdditional) const{
   if (pcError==NULL) {  // Simply check for error, true if an error occured.
-#endif
-
     return (glGetError()!=GL_NO_ERROR);
-
-#ifdef GLSL_DEBUG
   }
   else {  // print out error
     GLenum iError=glGetError();
@@ -535,8 +535,8 @@ bool GLSLProgram::CheckGLError(const char *pcError, const char *pcAdditional) co
 
     return true;  
   }
-#endif
 }
+#endif
 
 
 /**************************************************************************************************************
@@ -1124,7 +1124,7 @@ void GLSLProgram::SetUniformArray(const char *name,const float *a) const {
   if (CheckGLError("SetUniformArray(%s,float*) [getting type]",name)) return;
 
 #ifdef GLSL_ALLOW_IMPLICIT_CASTS
-  int *iArray;
+  GLint *iArray;
 #endif
 
   switch (iType) {
@@ -1148,26 +1148,26 @@ void GLSLProgram::SetUniformArray(const char *name,const float *a) const {
     case GL_SAMPLER_2D_SHADOW:
     case GL_SAMPLER_2D_RECT_ARB:
     case GL_SAMPLER_2D_RECT_SHADOW_ARB:    
-      iArray=new int[iSize];
+      iArray=new GLint[iSize];
       for (int i=0; i<iSize; i++) iArray[i]=int(a[i]);
       glUniform1iv(iLocation,iSize,iArray); 
       delete[] iArray;
       break;
 
     case GL_INT_VEC2:
-      iArray=new int[2*iSize];
+      iArray=new GLint[2*iSize];
       for (int i=0; i<2*iSize; i++) iArray[i]=int(a[i]);
       glUniform2iv(iLocation,iSize,iArray); 
       delete[] iArray;
       break;
     case GL_INT_VEC3:
-      iArray=new int[3*iSize];
+      iArray=new GLint[3*iSize];
       for (int i=0; i<3*iSize; i++) iArray[i]=int(a[i]);
       glUniform3iv(iLocation,iSize,iArray);
       delete[] iArray;
       break;
     case GL_INT_VEC4:
-      iArray=new int[4*iSize];
+      iArray=new GLint[4*iSize];
       for (int i=0; i<4*iSize; i++) iArray[i]=int(a[i]);
       glUniform4iv(iLocation,iSize,iArray);
       delete[] iArray;
@@ -1195,7 +1195,7 @@ void GLSLProgram::SetUniformArray(const char *name,const float *a) const {
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Mar.2005
  */
-void GLSLProgram::SetUniformArray(const char *name,const int   *a) const {
+void GLSLProgram::SetUniformArray(const char *name,const int *a) const {
   assert(m_bEnabled);
   CheckGLError();
 
@@ -1227,16 +1227,16 @@ void GLSLProgram::SetUniformArray(const char *name,const int   *a) const {
     case GL_SAMPLER_1D_SHADOW:
     case GL_SAMPLER_2D_SHADOW:
     case GL_SAMPLER_2D_RECT_ARB:
-    case GL_SAMPLER_2D_RECT_SHADOW_ARB:  glUniform1iv(iLocation,iSize,a); break;
-    case GL_INT_VEC2:          glUniform2iv(iLocation,iSize,a); break;
-    case GL_INT_VEC3:          glUniform3iv(iLocation,iSize,a); break;
-    case GL_INT_VEC4:          glUniform4iv(iLocation,iSize,a); break;
+    case GL_SAMPLER_2D_RECT_SHADOW_ARB:  glUniform1iv(iLocation,iSize,(const GLint*)a); break;
+    case GL_INT_VEC2:          glUniform2iv(iLocation,iSize,(const GLint*)a); break;
+    case GL_INT_VEC3:          glUniform3iv(iLocation,iSize,(const GLint*)a); break;
+    case GL_INT_VEC4:          glUniform4iv(iLocation,iSize,(const GLint*)a); break;
 
 #ifdef GLSL_ALLOW_IMPLICIT_CASTS
-    case GL_BOOL:            glUniform1iv(iLocation,iSize,a); break;
-    case GL_BOOL_VEC2:          glUniform2iv(iLocation,iSize,a); break;
-    case GL_BOOL_VEC3:          glUniform3iv(iLocation,iSize,a); break;
-    case GL_BOOL_VEC4:          glUniform4iv(iLocation,iSize,a); break;
+    case GL_BOOL:            glUniform1iv(iLocation,iSize,(const GLint*)a); break;
+    case GL_BOOL_VEC2:          glUniform2iv(iLocation,iSize,(const GLint*)a); break;
+    case GL_BOOL_VEC3:          glUniform3iv(iLocation,iSize,(const GLint*)a); break;
+    case GL_BOOL_VEC4:          glUniform4iv(iLocation,iSize,(const GLint*)a); break;
     
     case GL_FLOAT:
       fArray=new float[iSize];
@@ -1307,28 +1307,28 @@ void GLSLProgram::SetUniformArray(const char *name,const bool  *a) const {
 #ifdef GLSL_ALLOW_IMPLICIT_CASTS
   float *fArray;  
 #endif
-  int   *iArray;
+  GLint *iArray;
   switch (iType) {
     case GL_BOOL:
-      iArray=new int[iSize];
+      iArray=new GLint[iSize];
       for (int i=0; i<iSize; i++) iArray[i]=(a[i] ? 1 : 0);
       glUniform1iv(iLocation,iSize,iArray); 
       delete[] iArray;
       break;
     case GL_BOOL_VEC2:
-      iArray=new int[2*iSize];
+      iArray=new GLint[2*iSize];
       for (int i=0; i<2*iSize; i++) iArray[i]=(a[i] ? 1 : 0);
       glUniform2iv(iLocation,iSize,iArray); 
       delete[] iArray;
       break;
     case GL_BOOL_VEC3:
-      iArray=new int[3*iSize];
+      iArray=new GLint[3*iSize];
       for (int i=0; i<3*iSize; i++) iArray[i]=(a[i] ? 1 : 0);
       glUniform3iv(iLocation,iSize,iArray); 
       delete[] iArray;
       break;
     case GL_BOOL_VEC4:
-      iArray=new int[4*iSize];
+      iArray=new GLint[4*iSize];
       for (int i=0; i<4*iSize; i++) iArray[i]=(a[i] ? 1 : 0);
       glUniform4iv(iLocation,iSize,iArray); 
       delete[] iArray;
@@ -1336,25 +1336,25 @@ void GLSLProgram::SetUniformArray(const char *name,const bool  *a) const {
 
 #ifdef GLSL_ALLOW_IMPLICIT_CASTS
     case GL_INT:
-      iArray=new int[iSize];
+      iArray=new GLint[iSize];
       for (int i=0; i<iSize; i++) iArray[i]=(a[i] ? 1 : 0);
       glUniform1iv(iLocation,iSize,iArray); 
       delete[] iArray;
       break;
     case GL_INT_VEC2:
-      iArray=new int[2*iSize];
+      iArray=new GLint[2*iSize];
       for (int i=0; i<2*iSize; i++) iArray[i]=(a[i] ? 1 : 0);
       glUniform2iv(iLocation,iSize,iArray); 
       delete[] iArray;
       break;
     case GL_INT_VEC3:
-      iArray=new int[3*iSize];
+      iArray=new GLint[3*iSize];
       for (int i=0; i<3*iSize; i++) iArray[i]=(a[i] ? 1 : 0);
       glUniform3iv(iLocation,iSize,iArray); 
       delete[] iArray;
       break;
     case GL_INT_VEC4:
-      iArray=new int[4*iSize];
+      iArray=new GLint[4*iSize];
       for (int i=0; i<4*iSize; i++) iArray[i]=(a[i] ? 1 : 0);
       glUniform4iv(iLocation,iSize,iArray); 
       delete[] iArray;
