@@ -96,7 +96,7 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   }
 
   if (iMaxGPUMemSize == 0) {
-    iMaxGPUMemSize = 32*1024;
+    iMaxGPUMemSize = 4*1024;
     horizontalSlider_GPUMem->setMaximum(iMaxGPUMemSize);
     horizontalSlider_GPUMem->setValue(512);
   } else {
