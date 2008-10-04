@@ -116,7 +116,7 @@ bool TransferFunction2D::Save(const std::string& filename) {
 }
 
 void TransferFunction2D::GetByteArray(unsigned char** pcData, unsigned char cUsedRange) {
-  if (*pcData == NULL) *pcData = new unsigned char[m_iSize.area()];
+  if (*pcData == NULL) *pcData = new unsigned char[m_iSize.area()*4];
 
   ColorData2D* pColorData = RenderTransferFunction();
   unsigned char *pcDataIterator = *pcData;
@@ -132,7 +132,7 @@ void TransferFunction2D::GetByteArray(unsigned char** pcData, unsigned char cUse
 }
 
 void TransferFunction2D::GetShortArray(unsigned short** psData, unsigned short sUsedRange) {
-  if (*psData == NULL) *psData = new unsigned short[m_iSize.area()];
+  if (*psData == NULL) *psData = new unsigned short[m_iSize.area()*4];
 
   ColorData2D* pColorData = RenderTransferFunction();
   unsigned short *psDataIterator = *psData;

@@ -240,7 +240,11 @@ void GPUMemMan::GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, Transfer
 void GPUMemMan::Get1DTransFromFile(const std::string& strFilename, AbstrRenderer* requester, TransferFunction1D** ppTransferFunction1D, GLTexture1D** tex) {
   m_MasterController->DebugOut()->Message("GPUMemMan::Get1DTransFromFile","Loading 2D transfer function from file");
   *ppTransferFunction1D = new TransferFunction1D(strFilename);
-  *tex = new GLTexture1D(GLuint((*ppTransferFunction1D)->vColorData.size()), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8);
+
+  unsigned char* pcData = NULL;
+  (*ppTransferFunction1D)->GetByteArray(&pcData);
+  *tex = new GLTexture1D(GLuint((*ppTransferFunction1D)->vColorData.size()), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8,pcData);
+  delete [] pcData;
 
   m_iAllocatedGPUMemory += (*tex)->GetCPUSize();
   m_iAllocatedCPUMemory += (*tex)->GetGPUSize();
@@ -274,6 +278,7 @@ void GPUMemMan::Free1DTrans(TransferFunction1D* pTransferFunction1D, AbstrRender
             m_iAllocatedCPUMemory -= i->pTexture->GetGPUSize();            
 
             delete i->pTransferFunction1D;
+            i->pTexture->Delete();
             delete i->pTexture;
             m_vpTrans1DList.erase(i);
           } else {
@@ -304,8 +309,12 @@ void GPUMemMan::Changed2DTrans(AbstrRenderer* requester, TransferFunction2D* pTr
 void GPUMemMan::GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* requester, TransferFunction2D** ppTransferFunction2D, GLTexture2D** tex) {
   m_MasterController->DebugOut()->Message("GPUMemMan::GetEmpty2DTrans","Creating new empty 2D transfer function");
   *ppTransferFunction2D = new TransferFunction2D(iSize);
-  *tex = new GLTexture2D(GLuint(iSize.x), GLuint(iSize.y), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8);
 
+  unsigned char* pcData = NULL;
+  (*ppTransferFunction2D)->GetByteArray(&pcData);
+  *tex = new GLTexture2D(GLuint(iSize.x), GLuint(iSize.y), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,4*8,pcData);
+  delete [] pcData;
+  
   m_iAllocatedGPUMemory += (*tex)->GetCPUSize();
   m_iAllocatedCPUMemory += (*tex)->GetGPUSize();
 
@@ -349,6 +358,7 @@ void GPUMemMan::Free2DTrans(TransferFunction2D* pTransferFunction2D, AbstrRender
             m_iAllocatedCPUMemory -= i->pTexture->GetGPUSize();            
 
             delete i->pTransferFunction2D;
+            i->pTexture->Delete();
             delete i->pTexture;
 
             m_vpTrans2DList.erase(i);
@@ -445,8 +455,6 @@ void GPUMemMan::FreeFBO(GLFBOTex* pFBO) {
       delete m_vpFBOList[i];
 
       m_vpFBOList.erase(m_vpFBOList.begin()+i);
-      i--;
-
       return;
     }
   }
@@ -454,6 +462,13 @@ void GPUMemMan::FreeFBO(GLFBOTex* pFBO) {
 }
 
 GLSLProgram* GPUMemMan::GetGLSLProgram(const string& strVSFile, const string& strFSFile) {
+  for (GLSLListIter i = m_vpGLSLList.begin();i<m_vpGLSLList.end();i++) {
+    if ((*i)->strVSFile == strVSFile && (*i)->strFSFile == strFSFile) {
+      m_MasterController->DebugOut()->Message("GPUMemMan::GetGLSLProgram","Reusing GLSL program from the VS %s and the FS %s", strVSFile.c_str(), strFSFile.c_str());
+      (*i)->iAccessCounter++;
+      return (*i)->pGLSLProgram;
+    }
+  }
 
   m_MasterController->DebugOut()->Message("GPUMemMan::GetGLSLProgram","Creating new GLSL program from the VS %s and the FS %s", strVSFile.c_str(), strFSFile.c_str());
 
@@ -470,15 +485,17 @@ GLSLProgram* GPUMemMan::GetGLSLProgram(const string& strVSFile, const string& st
 void GPUMemMan::FreeGLSLProgram(GLSLProgram* pGLSLProgram) {
   for (size_t i = 0;i<m_vpGLSLList.size();i++) {
     if (m_vpGLSLList[i]->pGLSLProgram == pGLSLProgram) {
-      m_MasterController->DebugOut()->Message("GPUMemMan::FreeGLSLProgram","Freeing GLSL program");
-      m_iAllocatedGPUMemory -= m_vpGLSLList[i]->pGLSLProgram->GetCPUSize();
-      m_iAllocatedCPUMemory -= m_vpGLSLList[i]->pGLSLProgram->GetGPUSize();
+      m_vpGLSLList[i]->iAccessCounter--;
+      if (m_vpGLSLList[i]->iAccessCounter == 0) {
 
-      delete m_vpGLSLList[i];
+        m_MasterController->DebugOut()->Message("GPUMemMan::FreeGLSLProgram","Freeing GLSL program");
+        m_iAllocatedGPUMemory -= m_vpGLSLList[i]->pGLSLProgram->GetCPUSize();
+        m_iAllocatedCPUMemory -= m_vpGLSLList[i]->pGLSLProgram->GetGPUSize();
 
-      m_vpGLSLList.erase(m_vpGLSLList.begin()+i);
-      i--;
+        delete m_vpGLSLList[i];
 
+        m_vpGLSLList.erase(m_vpGLSLList.begin()+i);
+      } else m_MasterController->DebugOut()->Message("GPUMemMan::FreeGLSLProgram","Decreased access counter but kept GLSL program in memory.");
       return;
     }
   }

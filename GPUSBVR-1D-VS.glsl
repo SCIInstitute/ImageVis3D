@@ -35,13 +35,9 @@
   \date    October 2008
 */
 
-//varying vec3 texCoordYPos;
 
 void main(void)
 {
-   gl_Position = vec4( gl_Vertex.xy, 0.0, 1.0 );
-    
-   // Texture coordinate for screen aligned (in correct range):
-   gl_TexCoord[0].xy = (vec2( gl_Position.x, gl_Position.y ) + vec2( 1.0 ) ) / vec2( 2.0 );
-   gl_TexCoord[0].zw = vec2(0.0,0.0);
+  gl_Position = gl_ModelViewProjectionMatrix * vec4(gl_Vertex.xyz,1.0);
+  gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;
 }

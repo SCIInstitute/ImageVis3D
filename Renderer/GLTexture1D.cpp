@@ -48,6 +48,9 @@ GLTexture1D::GLTexture1D(GLuint iSize, GLint internalformat, GLenum format, GLen
   glGenTextures(1, &m_iGLID);
   glBindTexture(GL_TEXTURE_1D, m_iGLID);
 
+  glPixelStorei(GL_PACK_ALIGNMENT ,1);
+  glPixelStorei(GL_UNPACK_ALIGNMENT ,1);
+
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, wrap);
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, iMagFilter);
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, iMinFilter);
@@ -55,6 +58,9 @@ GLTexture1D::GLTexture1D(GLuint iSize, GLint internalformat, GLenum format, GLen
 }
 
 void GLTexture1D::SetData(const GLvoid *pixels) {
+  glPixelStorei(GL_PACK_ALIGNMENT ,1);
+  glPixelStorei(GL_UNPACK_ALIGNMENT ,1);
+
   glBindTexture(GL_TEXTURE_1D, m_iGLID);
   glTexImage1D(GL_TEXTURE_1D, 0, m_internalformat, m_iSize, 0, m_format, m_type, pixels);
 }

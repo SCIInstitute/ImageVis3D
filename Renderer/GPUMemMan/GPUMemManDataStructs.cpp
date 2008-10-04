@@ -47,8 +47,8 @@ Texture3DListElem::Texture3DListElem(VolumeDataset* _pDataset, const std::vector
 }
 
 Texture3DListElem::~Texture3DListElem() {
-    FreeData();
-    FreeTexture();
+  FreeData();
+  FreeTexture();
 }
 
 bool Texture3DListElem::Match(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick) {

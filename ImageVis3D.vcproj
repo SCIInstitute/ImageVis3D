@@ -512,6 +512,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GPUSBVR-1D-FS.glsl"
+				>
+			</File>
+			<File
+				RelativePath=".\GPUSBVR-1D-VS.glsl"
+				>
+			</File>
+			<File
 				RelativePath=".\ImageVis3D.pro"
 				>
 			</File>

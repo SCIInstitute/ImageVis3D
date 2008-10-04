@@ -35,10 +35,12 @@
   \date    October 2008
 */
 
-uniform sampler2D Texture0;
+uniform sampler3D VolTexture;
+uniform sampler1D Trans1DTexture;
 
 void main(void)
 {
-	vec4 inCoords = texture2D(Texture0, gl_TexCoord[0].xy);	
-	gl_FragColor = inCoords;
+	float fVolumVal = texture3D(VolTexture, gl_TexCoord[0].xyz).x;	
+	vec4  vTransVal = texture1D(Trans1DTexture, fVolumVal);
+	gl_FragColor    = vTransVal;
 }

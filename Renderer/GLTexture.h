@@ -49,7 +49,7 @@ class GLTexture : public GLObject {
 
     virtual void Delete();
     virtual void SetData(const GLvoid *pixels) = 0;
-    virtual void Bind() = 0;
+    virtual void Bind(unsigned int iUnit=0) = 0;
     GLuint GetGLID() {return m_iGLID;}
 
   protected:

@@ -39,18 +39,28 @@
 
 #include <math.h>
 #include <Basics/SysTools.h>
-#include "../Controller/MasterController.h"
+#include <Controller/MasterController.h>
+
+using namespace std;
 
 GPUSBVR::GPUSBVR(MasterController* pMasterController) :
   m_iCurrentView(0),
   m_vRot(0,0),
   m_bDelayedCompleteRedraw(false),
-  m_bRenderWireframe(false)
+  m_bRenderWireframe(false),
+  m_pFBO3DImage(NULL),
+  m_pProgram1DTrans(NULL),
+  m_p1DTransTex(NULL),
+  m_p2DTransTex(NULL),
+  m_p1DData(NULL),
+  m_p2DData(NULL)
 {
   m_pMasterController = pMasterController;
 }
 
 GPUSBVR::~GPUSBVR() {
+  delete [] m_p1DData;
+  delete [] m_p2DData;
 }
 
 
@@ -58,7 +68,7 @@ void GPUSBVR::Initialize() {
 
   m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","");
 
-  glClearColor(0.2f,0.2f,0.2f,0);
+  glClearColor(0,0,0,0);
   glShadeModel(GL_SMOOTH);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_TEXTURE_2D);
@@ -80,6 +90,8 @@ void GPUSBVR::Initialize() {
   m_pProgram1DTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-1D-VS.glsl"),
                                                                     SysTools::GetFromResourceOnMac("GPUSBVR-1D-FS.glsl"));
 
+  m_pMasterController->MemMan()->GetEmpty1DTrans(1<<m_pDataset->GetInfo()->GetBitwith(), this, &m_p1DTrans, &m_p1DTransTex);
+  m_pMasterController->MemMan()->GetEmpty2DTrans(VECTOR2<size_t>(1<<m_pDataset->GetInfo()->GetBitwith(), 256), this, &m_p2DTrans, &m_p2DTransTex);
 }
 
 
@@ -140,6 +152,7 @@ void GPUSBVR::Paint() {
     for (size_t i = 0;i<vFirstBrick.size();i++) vFirstBrick[i] = 0;
     UpdateGeoGen(vSmallestLOD, vFirstBrick);
 
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     DrawLogo();
@@ -168,10 +181,13 @@ void GPUSBVR::Paint() {
     }
 
     GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vSmallestLOD, vFirstBrick);
+    t->Bind(0);
+    m_p1DTransTex->Bind(1);
 
-    t->Bind();
 
-    glEnable(GL_TEXTURE_3D);
+    m_pProgram1DTrans->Enable();
+    m_pProgram1DTrans->SetUniformVector("VolTexture",0);
+    m_pProgram1DTrans->SetUniformVector("Trans1DTexture",1);
 
     glBegin(GL_TRIANGLES);
       glColor4f(1,1,1,1);
@@ -181,6 +197,8 @@ void GPUSBVR::Paint() {
         glVertex3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vPos);
       }
     glEnd();
+
+    m_pProgram1DTrans->Disable();
 
     glDisable(GL_BLEND);
 
@@ -241,48 +259,38 @@ void GPUSBVR::Cleanup() {
   m_pMasterController->MemMan()->FreeTexture(m_IDTex[2]);
 
   m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImage);
-}
-
-
-void GPUSBVR::Set1DTrans(TransferFunction1D* p1DTrans) {
-  AbstrRenderer::Set1DTrans(p1DTrans);
-  m_bRedraw = true;
-  m_bCompleteRedraw = true;
-}
-
-void GPUSBVR::Set2DTrans(TransferFunction2D* p2DTrans) {
-  AbstrRenderer::Set2DTrans(p2DTrans);
-  m_bRedraw = true;
-  m_bCompleteRedraw = true;
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans);
 }
 
 void GPUSBVR::Changed1DTrans() {
-  if (m_eRenderMode != RM_1DTRANS) {
-    m_pMasterController->DebugOut()->Message("GPUSBVR::Changed1DTrans","not using the 1D transferfunction at the moment, ignoring message");
-  } else {
-    m_pMasterController->DebugOut()->Message("GPUSBVR::Changed1DTrans","complete redraw scheduled");
-    m_bRedraw = true;
-    m_bCompleteRedraw = true;
-  }
+  m_p1DTrans->GetByteArray(&m_p1DData);
+  m_p1DTransTex->SetData(m_p1DData);
+
+  AbstrRenderer::Changed1DTrans();
 }
 
 void GPUSBVR::Changed2DTrans() {
-  if (m_eRenderMode != RM_2DTRANS) {
-    m_pMasterController->DebugOut()->Message("GPUSBVR::Changed2DTrans","not using the 2D transferfunction at the moment, ignoring message");
-  } else {
-    m_pMasterController->DebugOut()->Message("GPUSBVR::Changed2DTrans","complete redraw scheduled");
-    m_bRedraw = true;
-    m_bCompleteRedraw = true;
-  }
+  m_p2DTrans->GetByteArray(&m_p2DData);
+  m_p2DTransTex->SetData(m_p2DData);
+
+  AbstrRenderer::Changed1DTrans();
 }
 
 
-void GPUSBVR::CheckForRedraw() {
+bool GPUSBVR::CheckForRedraw() {
   if (m_bDelayedCompleteRedraw) {
     m_bDelayedCompleteRedraw = false;
     m_bCompleteRedraw = true;
     m_bRedraw = true;
   }
 
-  if (m_bRedraw) Paint();
+  if (m_bRedraw) {
+    //Paint();
+    return true;
+  } else return false;
+}
+
+
+bool GPUSBVR::LoadDataset(const string& strFilename) {
+  return AbstrRenderer::LoadDataset(strFilename);
 }

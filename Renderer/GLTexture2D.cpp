@@ -49,6 +49,9 @@ GLTexture2D::GLTexture2D(GLuint iSizeX, GLuint iSizeY, GLint internalformat, GLe
   glGenTextures(1, &m_iGLID);
   glBindTexture(GL_TEXTURE_2D, m_iGLID);
 
+  glPixelStorei(GL_PACK_ALIGNMENT ,1);
+  glPixelStorei(GL_UNPACK_ALIGNMENT ,1);
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapX);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapY);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, iMagFilter);
@@ -57,6 +60,9 @@ GLTexture2D::GLTexture2D(GLuint iSizeX, GLuint iSizeY, GLint internalformat, GLe
 }
 
 void GLTexture2D::SetData(const GLvoid *pixels) {
+  glPixelStorei(GL_PACK_ALIGNMENT ,1);
+  glPixelStorei(GL_UNPACK_ALIGNMENT ,1);
+
   glBindTexture(GL_TEXTURE_2D, m_iGLID);
   glTexImage2D(GL_TEXTURE_2D, 0, m_internalformat, m_iSizeX, m_iSizeY, 0, m_format, m_type, pixels);
 }

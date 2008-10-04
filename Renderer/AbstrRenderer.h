@@ -62,7 +62,8 @@ class AbstrRenderer {
   public:
     AbstrRenderer();
     virtual ~AbstrRenderer();
-    bool LoadDataset(const std::string& strFilename);
+    virtual bool LoadDataset(const std::string& strFilename);
+    virtual bool CheckForRedraw() = 0;
 
     VolumeDataset*      GetDataSet() {return m_pDataset;}
     TransferFunction1D* Get1DTrans() {return m_p1DTrans;}
@@ -70,10 +71,8 @@ class AbstrRenderer {
     
     ERenderMode GetRendermode() {return m_eRenderMode;}
     virtual void SetRendermode(ERenderMode eRenderMode);
-    virtual void Set1DTrans(TransferFunction1D* p1DTrans) {m_p1DTrans = p1DTrans;}
-    virtual void Set2DTrans(TransferFunction2D* p2DTrans) {m_p2DTrans = p2DTrans;}
-    virtual void Changed1DTrans() = 0;
-    virtual void Changed2DTrans() = 0;
+    virtual void Changed1DTrans();
+    virtual void Changed2DTrans();
 
   protected:
     bool                m_bRedraw;
@@ -82,9 +81,7 @@ class AbstrRenderer {
     MasterController*   m_pMasterController;
     VolumeDataset*      m_pDataset;
     TransferFunction1D* m_p1DTrans;
-    GLTexture1D*        m_p1DTransTex;
     TransferFunction2D* m_p2DTrans;
-    GLTexture2D*        m_p2DTransTex;
 };
 
 #endif // ABSTRRENDERER_H

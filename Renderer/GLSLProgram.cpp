@@ -224,9 +224,8 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
   GLuint hFS=0;
   bool bVSSuccess=true;  // fixed function pipeline is always working
   if (VSFile!=NULL) {
-    m_pMasterController->DebugOut()->Message("GLSLProgram::Load","\nVERTEX SHADER:");
     hVS=LoadShader(VSFile,GL_VERTEX_SHADER,src);
-    if (hVS!=0) m_pMasterController->DebugOut()->Message("GLSLProgram::Load","OK.");
+    if (hVS!=0) m_pMasterController->DebugOut()->Message("GLSLProgram::Load","VERTEX SHADER: OK");
     else {
       bVSSuccess=false;
       if (src==GLSLPROGRAM_DISK) {
@@ -243,7 +242,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
           if (chVerbose[i]=='\n') {
             chVerbose[i]='\0';
             sprintf(chLine,"(%.4i) ",iLine++);
-            m_pMasterController->DebugOut()->Message("GLSLProgram::Load %s %s",chLine,&chVerbose[iPos]);
+            m_pMasterController->DebugOut()->Error("GLSLProgram::Load %s %s",chLine,&chVerbose[iPos]);
             iPos=i+1;
           }
         }
@@ -253,9 +252,9 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
   }
   bool bFSSuccess=true;  // fixed function pipeline is always working
   if (FSFile!=NULL) {
-    m_pMasterController->DebugOut()->Message("GLSLProgram::Load","\nFRAGMENT SHADER:");
+    
     hFS=LoadShader(FSFile,GL_FRAGMENT_SHADER,src);
-    if (hFS!=0) m_pMasterController->DebugOut()->Message("GLSLProgram::Load","OK.");
+    if (hFS!=0) m_pMasterController->DebugOut()->Message("GLSLProgram::Load","FRAGMENT SHADER: OK");
     else {
       bFSSuccess=false;
       if (src==GLSLPROGRAM_DISK) {
@@ -287,7 +286,6 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
   if (hFS) glAttachShader(m_hProgram,hFS);
 
   // link the program together
-  m_pMasterController->DebugOut()->Message("GLSLProgram::Load","\nPROGRAM OBJECT: ");
   if (bVSSuccess && bFSSuccess) {
     glLinkProgram(m_hProgram);
 
@@ -306,7 +304,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE
       return;
     }
     else {
-      m_pMasterController->DebugOut()->Message("GLSLProgram::Load","OK.");
+      m_pMasterController->DebugOut()->Message("GLSLProgram::Load","PROGRAM OBJECT: OK");
       m_bInitialized=true;
     }
   }
@@ -522,19 +520,19 @@ bool GLSLProgram::CheckGLError(const char *pcError, const char *pcAdditional) co
         if (pcMessage!=pcError) delete[] pcMessage;
         return false;
         break;
-      case GL_INVALID_ENUM:       sprintf(output,"%s - %s\n",pcMessage,"GL_INVALID_ENUM");    break;
-      case GL_INVALID_VALUE:      sprintf(output,"%s - %s\n",pcMessage,"GL_INVALID_VALUE");    break;
-      case GL_INVALID_OPERATION:  sprintf(output,"%s - %s\n",pcMessage,"GL_INVALID_OPERATION");  break;
-      case GL_STACK_OVERFLOW:     sprintf(output,"%s - %s\n",pcMessage,"GL_STACK_OVERFLOW");  break;
-      case GL_STACK_UNDERFLOW:    sprintf(output,"%s - %s\n",pcMessage,"GL_STACK_UNDERFLOW");  break;
-      case GL_OUT_OF_MEMORY:      sprintf(output,"%s - %s\n",pcMessage,"GL_OUT_OF_MEMORY");    break;
-      default:                    sprintf(output,"%s - unknown GL_ERROR\n",pcError);      break;    
+      case GL_INVALID_ENUM:       sprintf(output,"%s - %s",pcMessage,"GL_INVALID_ENUM");    break;
+      case GL_INVALID_VALUE:      sprintf(output,"%s - %s",pcMessage,"GL_INVALID_VALUE");    break;
+      case GL_INVALID_OPERATION:  sprintf(output,"%s - %s",pcMessage,"GL_INVALID_OPERATION");  break;
+      case GL_STACK_OVERFLOW:     sprintf(output,"%s - %s",pcMessage,"GL_STACK_OVERFLOW");  break;
+      case GL_STACK_UNDERFLOW:    sprintf(output,"%s - %s",pcMessage,"GL_STACK_UNDERFLOW");  break;
+      case GL_OUT_OF_MEMORY:      sprintf(output,"%s - %s",pcMessage,"GL_OUT_OF_MEMORY");    break;
+      default:                    sprintf(output,"%s - unknown GL_ERROR",pcError);      break;    
     }
     if (pcMessage!=pcError) delete[] pcMessage;
-    delete[] output;
 
     // display the error.
     m_pMasterController->DebugOut()->Error("GLSLProgram::CheckGLError",output);
+    delete[] output;
 
     return true;  
   }
@@ -559,7 +557,7 @@ bool GLSLProgram::CheckGLError(const char *pcError, const char *pcAdditional) co
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Jun.2005
  */
-inline bool GLSLProgram::IsValid(void) {
+bool GLSLProgram::IsValid(void) {
   return m_bInitialized;
 }
 
@@ -572,7 +570,7 @@ inline bool GLSLProgram::IsValid(void) {
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Aug.2004
  */
-inline void GLSLProgram::SetUniformVector(const char *name,float x, float y, float z, float w) const{
+void GLSLProgram::SetUniformVector(const char *name,float x, float y, float z, float w) const{
   assert(m_bEnabled);
   CheckGLError();
   
@@ -638,7 +636,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,float x, float y, flo
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Mar.2005
  */
-inline void GLSLProgram::SetUniformVector(const char *name,bool x, bool y, bool z, bool w) const {
+void GLSLProgram::SetUniformVector(const char *name,bool x, bool y, bool z, bool w) const {
   assert(m_bEnabled);
   CheckGLError();
   
@@ -695,7 +693,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,bool x, bool y, bool 
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Aug.2004
  */
-inline void GLSLProgram::SetUniformVector(const char *name,int x,int y,int z,int w) const {
+void GLSLProgram::SetUniformVector(const char *name,int x,int y,int z,int w) const {
   assert(m_bEnabled);
   CheckGLError();
 
@@ -704,7 +702,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,int x,int y,int z,int
   GLint iLocation;
   iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
 
-  if (CheckGLError("SetUniformVector(%s,int,...) [getting adress]" )) return;
+  if (CheckGLError("SetUniformVector(%s,int,...) [getting adress]", name )) return;
   if(iLocation==-1) {
     m_pMasterController->DebugOut()->Error("GLSLProgram::SetUniformVector","Error getting address for %s.",name);
     return;  
@@ -761,7 +759,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,int x,int y,int z,int
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Aug.2004
  */
-inline void GLSLProgram::SetUniformVector(const char *name,const float *v) const {  
+void GLSLProgram::SetUniformVector(const char *name,const float *v) const {  
   assert(m_bEnabled);
   CheckGLError();
 
@@ -828,7 +826,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,const float *v) const
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Aug.2004
  */
-inline void GLSLProgram::SetUniformVector(const char *name,const int *i) const {
+void GLSLProgram::SetUniformVector(const char *name,const int *i) const {
   assert(m_bEnabled);
   CheckGLError();
 
@@ -891,7 +889,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,const int *i) const {
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Mar.2005
  */
-inline void GLSLProgram::SetUniformVector(const char *name,const bool *b) const {
+void GLSLProgram::SetUniformVector(const char *name,const bool *b) const {
   assert(m_bEnabled);
   CheckGLError();
 
@@ -947,7 +945,7 @@ inline void GLSLProgram::SetUniformVector(const char *name,const bool *b) const 
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Mar.2005
  */
-inline void GLSLProgram::SetUniformMatrix(const char *name,const float *m,bool bTranspose) const {
+void GLSLProgram::SetUniformMatrix(const char *name,const float *m,bool bTranspose) const {
   assert(m_bEnabled);
   CheckGLError();
 
@@ -995,7 +993,7 @@ inline void GLSLProgram::SetUniformMatrix(const char *name,const float *m,bool b
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Mar.2005
  */
-inline void GLSLProgram::SetUniformMatrix(const char *name,const int *m, bool bTranspose) const {
+void GLSLProgram::SetUniformMatrix(const char *name,const int *m, bool bTranspose) const {
   assert(m_bEnabled);
   CheckGLError();
 
@@ -1051,7 +1049,7 @@ inline void GLSLProgram::SetUniformMatrix(const char *name,const int *m, bool bT
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Mar.2005
  */
-inline void GLSLProgram::SetUniformMatrix(const char *name,const bool *m, bool bTranspose) const {
+void GLSLProgram::SetUniformMatrix(const char *name,const bool *m, bool bTranspose) const {
   assert(m_bEnabled);
   CheckGLError();
 
@@ -1107,7 +1105,7 @@ inline void GLSLProgram::SetUniformMatrix(const char *name,const bool *m, bool b
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Mar.2005
  */
-inline void GLSLProgram::SetUniformArray(const char *name,const float *a) const {
+void GLSLProgram::SetUniformArray(const char *name,const float *a) const {
   assert(m_bEnabled);
   CheckGLError();
 
@@ -1198,7 +1196,7 @@ inline void GLSLProgram::SetUniformArray(const char *name,const float *a) const 
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Mar.2005
  */
-inline void GLSLProgram::SetUniformArray(const char *name,const int   *a) const {
+void GLSLProgram::SetUniformArray(const char *name,const int   *a) const {
   assert(m_bEnabled);
   CheckGLError();
 
@@ -1288,7 +1286,7 @@ inline void GLSLProgram::SetUniformArray(const char *name,const int   *a) const 
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Mar.2005
  */
-inline void GLSLProgram::SetUniformArray(const char *name,const bool  *a) const {
+void GLSLProgram::SetUniformArray(const char *name,const bool  *a) const {
   assert(m_bEnabled);
   CheckGLError();
 

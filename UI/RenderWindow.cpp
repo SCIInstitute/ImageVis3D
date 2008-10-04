@@ -186,5 +186,7 @@ void RenderWindow::focusInEvent ( QFocusEvent * event ) {
 
 void RenderWindow::CheckForRedraw() {
   makeCurrent();
-  m_Renderer->CheckForRedraw();
+  if (m_Renderer->CheckForRedraw()) {
+    update();
+  }
 }

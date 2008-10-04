@@ -46,9 +46,7 @@ AbstrRenderer::AbstrRenderer() :
   m_pMasterController(NULL),
   m_pDataset(NULL),
   m_p1DTrans(NULL),
-  m_p1DTransTex(NULL),
-  m_p2DTrans(NULL),
-  m_p2DTransTex(NULL)
+  m_p2DTrans(NULL)
 {
 }
 
@@ -67,9 +65,6 @@ bool AbstrRenderer::LoadDataset(const string& strFilename) {
     m_pMasterController->DebugOut()->Error("AbstrRenderer::LoadDataset","IOMan call to load dataset failed");
     return false;
   }
-
-  m_pMasterController->MemMan()->GetEmpty1DTrans(1<<m_pDataset->GetInfo()->GetBitwith(), this, &m_p1DTrans, &m_p1DTransTex);
-  m_pMasterController->MemMan()->GetEmpty2DTrans(VECTOR2<size_t>(1<<m_pDataset->GetInfo()->GetBitwith(), 256), this, &m_p2DTrans, &m_p2DTransTex);  // TODO: decide: always 8bit gradient ?
 
   m_pMasterController->DebugOut()->Message("AbstrRenderer::LoadDataset","Load successful, initializing renderer!");
 
@@ -90,4 +85,24 @@ void AbstrRenderer::SetRendermode(ERenderMode eRenderMode)
     m_bRedraw = true;
     m_bCompleteRedraw = true;
   }  
+}
+
+void AbstrRenderer::Changed1DTrans() {
+  if (m_eRenderMode != RM_1DTRANS) {
+    m_pMasterController->DebugOut()->Message("AbstrRenderer::Changed1DTrans","not using the 1D transferfunction at the moment, ignoring message");
+  } else {
+    m_pMasterController->DebugOut()->Message("AbstrRenderer::Changed1DTrans","complete redraw scheduled");
+    m_bRedraw = true;
+    m_bCompleteRedraw = true;
+  }
+}
+
+void AbstrRenderer::Changed2DTrans() {
+  if (m_eRenderMode != RM_2DTRANS) {
+    m_pMasterController->DebugOut()->Message("AbstrRenderer::Changed2DTrans","not using the 2D transferfunction at the moment, ignoring message");
+  } else {
+    m_pMasterController->DebugOut()->Message("AbstrRenderer::Changed2DTrans","complete redraw scheduled");
+    m_bRedraw = true;
+    m_bCompleteRedraw = true;
+  }
 }

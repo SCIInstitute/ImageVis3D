@@ -50,20 +50,19 @@ class GPUSBVR : public AbstrRenderer {
   public:
     GPUSBVR(MasterController* pMasterController);
     virtual ~GPUSBVR();
+    virtual bool LoadDataset(const std::string& strFilename);
+    virtual bool CheckForRedraw();
 
     void Initialize();
     void Paint();
     void Resize(int width, int height);
     void Cleanup();
 
-    virtual void Set1DTrans(TransferFunction1D* p1DTrans);
-    virtual void Set2DTrans(TransferFunction2D* p2DTrans);
     virtual void Changed1DTrans();
     virtual void Changed2DTrans();
 
     void SetWireFrame(bool bRenderWireframe) {m_bRenderWireframe = bRenderWireframe;}
     bool GetWireFrame() {return m_bRenderWireframe;}
-    void CheckForRedraw();
 
     void SetRotation(FLOATVECTOR2 vRot) {m_vRot = vRot;}
     void SetCurrentView(int iCurrentView) {m_iCurrentView = iCurrentView;}
@@ -80,6 +79,12 @@ class GPUSBVR : public AbstrRenderer {
 
     GLFBOTex*     m_pFBO3DImage;
     GLSLProgram*  m_pProgram1DTrans;
+
+    GLTexture1D*  m_p1DTransTex;
+    GLTexture2D*  m_p2DTransTex;
+    unsigned char* m_p1DData;
+    unsigned char* m_p2DData;
+
 
     void DrawLogo();
     void UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);

@@ -55,7 +55,7 @@ class GLTexture3D : public GLTexture {
           GLint wrapZ = GL_CLAMP);
     virtual ~GLTexture3D() {}
     
-    virtual void Bind() {glBindTexture(GL_TEXTURE_3D, m_iGLID);}
+    virtual void Bind(unsigned int iUnit=0) {glActiveTexture(GL_TEXTURE0 + iUnit); glBindTexture(GL_TEXTURE_3D, m_iGLID);}
     virtual void SetData(const GLvoid *pixels);
 
     UINTVECTOR3 GetSize() {return UINTVECTOR3(m_iSizeX,m_iSizeY,m_iSizeZ);}

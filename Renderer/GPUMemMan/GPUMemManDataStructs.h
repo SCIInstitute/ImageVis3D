@@ -165,12 +165,10 @@ typedef FBOList::iterator FBOListIter;
 // framebuffer objects
 class GLSLListElem {
 public:
-  GLSLListElem(GLSLProgram* _pGLSLProgram) : 
-      pGLSLProgram(_pGLSLProgram)
-  {}
-
-  GLSLListElem(MasterController* pMasterController, const std::string& strVSFile, const std::string& strFSFile) :
-    pGLSLProgram(new GLSLProgram(pMasterController, strVSFile.c_str(), strFSFile.c_str()))
+  GLSLListElem(MasterController* pMasterController, const std::string& _strVSFile, const std::string& _strFSFile) :
+    strVSFile(_strVSFile), strFSFile(_strFSFile),
+    iAccessCounter(1),
+    pGLSLProgram(new GLSLProgram(pMasterController, _strVSFile.c_str(), _strFSFile.c_str()))
   {}
 
   ~GLSLListElem()
@@ -178,6 +176,9 @@ public:
     delete pGLSLProgram;
   }
 
+  const std::string& strVSFile; 
+  const std::string& strFSFile;
+  unsigned int iAccessCounter;
   GLSLProgram* pGLSLProgram;
 };
 typedef std::deque<GLSLListElem*> GLSLList;

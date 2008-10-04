@@ -94,25 +94,25 @@ public:
   void Disable(void);                                                                           ///< Disables this shader for rendering (using fixed function pipeline again).
   operator GLuint(void) const;                                                                  ///< Returns the handle of this shader.
   
-  inline bool IsValid(void);    ///< returns true if this program is valid
+  bool IsValid(void);    ///< returns true if this program is valid
 
-  inline void SetUniformVector(const char *name,float x=0.0f, float y=0.0f, float z=0.0f, float w=0.0f) const;  ///< Sets an uniform parameter.
-  inline void SetUniformVector(const char *name,int x=0, int y=0, int z=0, int w=0) const;            ///< Sets an uniform parameter.
-  inline void SetUniformVector(const char *name,bool x=false, bool y=false,  bool z=false, bool w=false) const;  ///< Sets an uniform parameter.
-  inline void SetUniformVector(const char *name,const float *v) const;    ///< Sets an uniform parameter.  
-  inline void SetUniformVector(const char *name,const int *i) const;    ///< Sets an uniform parameter.  
-  inline void SetUniformVector(const char *name,const bool *b) const;    ///< Sets an uniform parameter.  
+  void SetUniformVector(const char *name,float x=0.0f, float y=0.0f, float z=0.0f, float w=0.0f) const;  ///< Sets an uniform parameter.
+  void SetUniformVector(const char *name,int x=0, int y=0, int z=0, int w=0) const;            ///< Sets an uniform parameter.
+  void SetUniformVector(const char *name,bool x=false, bool y=false,  bool z=false, bool w=false) const;  ///< Sets an uniform parameter.
+  void SetUniformVector(const char *name,const float *v) const;    ///< Sets an uniform parameter.  
+  void SetUniformVector(const char *name,const int *i) const;    ///< Sets an uniform parameter.  
+  void SetUniformVector(const char *name,const bool *b) const;    ///< Sets an uniform parameter.  
   
-  inline void SetUniformMatrix(const char *name,const float *m,bool bTranspose=false) const;    ///< Sets an uniform matrix. Matrices are always float.
+  void SetUniformMatrix(const char *name,const float *m,bool bTranspose=false) const;    ///< Sets an uniform matrix. Matrices are always float.
 
 #ifdef GLSL_ALLOW_IMPLICIT_CASTS
-  inline void SetUniformMatrix(const char *name,const int *m,bool bTranspose=false) const;    ///< Sets an uniform matrix. Matrices are always float.
-  inline void SetUniformMatrix(const char *name,const bool *m,bool bTranspose=false) const;    ///< Sets an uniform matrix. Matrices are always float.
+  void SetUniformMatrix(const char *name,const int *m,bool bTranspose=false) const;    ///< Sets an uniform matrix. Matrices are always float.
+  void SetUniformMatrix(const char *name,const bool *m,bool bTranspose=false) const;    ///< Sets an uniform matrix. Matrices are always float.
 #endif
 
-  inline void SetUniformArray(const char *name,const float *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
-  inline void SetUniformArray(const char *name,const int   *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
-  inline void SetUniformArray(const char *name,const bool  *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
+  void SetUniformArray(const char *name,const float *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
+  void SetUniformArray(const char *name,const int   *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
+  void SetUniformArray(const char *name,const bool  *a) const;    ///< Sets an uniform array. User has to take care that a is large enough.
 
   virtual UINT64 GetCPUSize() {return 8;}  ///< assume near zero CPU memory cost for shaders to avoid any memory manager from paging out shaders, the 8 is basically only to detect mem-leaks
   virtual UINT64 GetGPUSize() {return 8;}  ///< assume near zero GPU memory cost for shaders to avoid any memory manager from paging out shaders, the 8 is basically only to detect mem-leaks

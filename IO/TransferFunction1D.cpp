@@ -185,7 +185,7 @@ bool TransferFunction1D::Save(ofstream& file) {
 
 
 void TransferFunction1D::GetByteArray(unsigned char** pcData, unsigned char cUsedRange) {
-  if (*pcData == NULL) *pcData = new unsigned char[vColorData.size()];
+  if (*pcData == NULL) *pcData = new unsigned char[vColorData.size()*4];
 
   unsigned char *pcDataIterator = *pcData;
   for (unsigned int i = 0;i<vColorData.size();i++) {
@@ -197,7 +197,7 @@ void TransferFunction1D::GetByteArray(unsigned char** pcData, unsigned char cUse
 }
 
 void TransferFunction1D::GetShortArray(unsigned short** psData, unsigned short sUsedRange) {
-  if (*psData == NULL) *psData = new unsigned short[vColorData.size()];
+  if (*psData == NULL) *psData = new unsigned short[vColorData.size()*4];
 
   unsigned short *psDataIterator = *psData;
   for (unsigned int i = 0;i<vColorData.size();i++) {
