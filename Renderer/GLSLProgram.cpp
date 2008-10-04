@@ -495,7 +495,7 @@ void GLSLProgram::Disable(void) {
  * \date Aug.2004
  */
 #ifndef GLSL_DEBUG
-bool GLSLProgram::CheckGLError(const char*, const char* const) {
+bool GLSLProgram::CheckGLError(const char*, const char*) const {
   return (glGetError()!=GL_NO_ERROR);
 }
 #else
