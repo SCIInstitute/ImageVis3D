@@ -38,7 +38,6 @@
 #endif
 
 #include "GLSLProgram.h"
-#include <windows.h>
 #include <Controller/MasterController.h>
 
 bool GLSLProgram::m_bGlewInitialized=true;    ///< GL Extension Wrangler (glew) is initialized on first instantiation
@@ -856,14 +855,14 @@ void GLSLProgram::SetUniformVector(const char *name,const int *i) const {
     case GL_SAMPLER_2D_RECT_ARB:
     case GL_SAMPLER_2D_RECT_SHADOW_ARB:  glUniform1i(iLocation,i[0]); break;
 
-    case GL_INT_VEC2:          glUniform2iv(iLocation,1,i); break;
-    case GL_INT_VEC3:          glUniform3iv(iLocation,1,i); break;
-    case GL_INT_VEC4:          glUniform4iv(iLocation,1,i); break;
+    case GL_INT_VEC2:          glUniform2iv(iLocation,1,(const GLint*)i); break;
+    case GL_INT_VEC3:          glUniform3iv(iLocation,1,(const GLint*)i); break;
+    case GL_INT_VEC4:          glUniform4iv(iLocation,1,(const GLint*)i); break;
 #ifdef GLSL_ALLOW_IMPLICIT_CASTS
-    case GL_BOOL:            glUniform1iv(iLocation,1,i); break;
-    case GL_BOOL_VEC2:          glUniform2iv(iLocation,1,i); break;
-    case GL_BOOL_VEC3:          glUniform3iv(iLocation,1,i); break;
-    case GL_BOOL_VEC4:          glUniform4iv(iLocation,1,i); break;
+    case GL_BOOL:            glUniform1iv(iLocation,1,(const GLint*)i); break;
+    case GL_BOOL_VEC2:          glUniform2iv(iLocation,1,(const GLint*)i); break;
+    case GL_BOOL_VEC3:          glUniform3iv(iLocation,1,(const GLint*)i); break;
+    case GL_BOOL_VEC4:          glUniform4iv(iLocation,1,(const GLint*)i); break;
     case GL_FLOAT:            glUniform1f(iLocation,float(i[0])); break;
     case GL_FLOAT_VEC2:          glUniform2f(iLocation,float(i[0]),float(i[1])); break;
     case GL_FLOAT_VEC3:          glUniform3f(iLocation,float(i[0]),float(i[1]),float(i[2])); break;
