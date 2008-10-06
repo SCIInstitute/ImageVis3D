@@ -27,61 +27,46 @@
 */
 
 /**
-  \file    AbstrRenderer.h
+  \file    GLRenderer.cpp
   \author    Jens Krueger
         SCI Institute
         University of Utah
-  \version  1.0
   \date    August 2008
 */
 
+#include "GLRenderer.h"
+#include <Controller/MasterController.h>
 
-#pragma once
+using namespace std;
 
-#ifndef ABSTRRENDERER_H
-#define ABSTRRENDERER_H
+GLRenderer::GLRenderer(MasterController* pMasterController) : 
+  AbstrRenderer(pMasterController),
+  m_p1DTransTex(NULL),
+  m_p2DTransTex(NULL),
+  m_p1DData(NULL),
+  m_p2DData(NULL)
+{
+}
 
-#include <string>
+GLRenderer::~GLRenderer() {
+}
 
-#include "../IO/VolumeDataset.h"
-#include "../IO/TransferFunction1D.h"
-#include "../IO/TransferFunction2D.h"
-#include "../Renderer/GLTexture1D.h"
-#include "../Renderer/GLTexture2D.h"
+void GLRenderer::Initialize() {
+  m_pMasterController->MemMan()->GetEmpty1DTrans(1<<m_pDataset->GetInfo()->GetBitwith(), this, &m_p1DTrans, &m_p1DTransTex);
+  m_pMasterController->MemMan()->GetEmpty2DTrans(VECTOR2<size_t>(1<<m_pDataset->GetInfo()->GetBitwith(), 256), this, &m_p2DTrans, &m_p2DTransTex);
+}
 
-class MasterController;
+void GLRenderer::Changed1DTrans() {
+  m_p1DTrans->GetByteArray(&m_p1DData);
+  m_p1DTransTex->SetData(m_p1DData);
 
-enum ERenderMode {
-  RM_1DTRANS = 0,
-  RM_2DTRANS,
-  RM_ISOSURFACE,
-  RM_INVALID
-};
+  AbstrRenderer::Changed1DTrans();
+}
 
-class AbstrRenderer {
-  public:
-    AbstrRenderer(MasterController* pMasterController);
-    virtual ~AbstrRenderer();
-    virtual bool LoadDataset(const std::string& strFilename);
-    virtual bool CheckForRedraw() = 0;
+void GLRenderer::Changed2DTrans() {
+  m_p2DTrans->GetByteArray(&m_p2DData);
+  m_p2DTransTex->SetData(m_p2DData);
 
-    VolumeDataset*      GetDataSet() {return m_pDataset;}
-    TransferFunction1D* Get1DTrans() {return m_p1DTrans;}
-    TransferFunction2D* Get2DTrans() {return m_p2DTrans;}
-    
-    ERenderMode GetRendermode() {return m_eRenderMode;}
-    virtual void SetRendermode(ERenderMode eRenderMode);
-    virtual void Changed1DTrans();
-    virtual void Changed2DTrans();
+  AbstrRenderer::Changed1DTrans();
+}
 
-  protected:
-    MasterController*   m_pMasterController;
-    bool                m_bRedraw;
-    bool                m_bCompleteRedraw;
-    ERenderMode         m_eRenderMode;
-    VolumeDataset*      m_pDataset;
-    TransferFunction1D* m_p1DTrans;
-    TransferFunction2D* m_p2DTrans;
-};
-
-#endif // ABSTRRENDERER_H

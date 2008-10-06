@@ -173,6 +173,14 @@
       </attribute>
      </widget>
      <widget class="QWidget" name="tabRenderer" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>376</width>
+        <height>224</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>Renderer</string>
       </attribute>

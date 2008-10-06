@@ -44,29 +44,26 @@
 #include <Renderer/AbstrRenderer.h>
 #include <Renderer/GPUMemMan/GPUMemMan.h>
 #include <Renderer/SBVRGeogen.h>
-#include <Renderer/GLFBOTex.h>
+#include <Renderer/GLRenderer.h>
 
-class GPUSBVR : public AbstrRenderer {
+class GPUSBVR : public GLRenderer {
   public:
     GPUSBVR(MasterController* pMasterController);
     virtual ~GPUSBVR();
-    virtual bool LoadDataset(const std::string& strFilename);
     virtual bool CheckForRedraw();
 
-    void Initialize();
     void Paint();
     void Resize(int width, int height);
     void Cleanup();
 
-    virtual void Changed1DTrans();
-    virtual void Changed2DTrans();
+    virtual void Initialize();
 
     void SetWireFrame(bool bRenderWireframe) {m_bRenderWireframe = bRenderWireframe;}
     bool GetWireFrame() {return m_bRenderWireframe;}
 
-    void SetRotation(FLOATVECTOR2 vRot) {m_vRot = vRot;}
-    void SetCurrentView(int iCurrentView) {m_iCurrentView = iCurrentView;}
-    int GetCurrentView() {return m_iCurrentView;}
+    void SetRotation(FLOATVECTOR2 vRot) {if (m_vRot != vRot) {m_vRot = vRot; m_bCompleteRedraw = true;}}
+    void SetCurrentView(int iCurrentView) {if (m_iCurrentView != iCurrentView) {m_iCurrentView = iCurrentView; m_bCompleteRedraw = true;}}
+    int GetCurrentView() const {return m_iCurrentView;}
 
   protected:
     FLOATMATRIX4  m_matModelView;
@@ -80,14 +77,9 @@ class GPUSBVR : public AbstrRenderer {
     GLFBOTex*     m_pFBO3DImage;
     GLSLProgram*  m_pProgram1DTrans;
 
-    GLTexture1D*  m_p1DTransTex;
-    GLTexture2D*  m_p2DTransTex;
-    unsigned char* m_p1DData;
-    unsigned char* m_p2DData;
-
-
     void DrawLogo();
     void UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
+    void RerenderPreviousResult();
 };
 
 #endif // GPUSBVR_H

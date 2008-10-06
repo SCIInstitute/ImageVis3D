@@ -67,6 +67,7 @@ HEADERS += StdDefines.h \
            Renderer/GLTexture1D.h \
            Renderer/GLTexture2D.h \
            Renderer/GLTexture3D.h \
+           Renderer/GLRenderer.h \
            Renderer/AbstrRenderer.h \
            Renderer/GPUSBVR.h \
            Renderer/GPUMemMan/GPUMemMan.h \
@@ -121,6 +122,7 @@ SOURCES += 3rdParty/GLEW/glew.c \
            Renderer/GLTexture1D.cpp \
            Renderer/GLTexture2D.cpp \
            Renderer/GLTexture3D.cpp \
+           Renderer/GLRenderer.cpp \           
            Renderer/AbstrRenderer.cpp \
            Renderer/GPUSBVR.cpp \
            Renderer/GPUMemMan/GPUMemMan.cpp \

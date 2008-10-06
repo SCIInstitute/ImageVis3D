@@ -44,18 +44,14 @@
 using namespace std;
 
 GPUSBVR::GPUSBVR(MasterController* pMasterController) :
+  GLRenderer(pMasterController),
   m_iCurrentView(0),
   m_vRot(0,0),
   m_bDelayedCompleteRedraw(false),
   m_bRenderWireframe(false),
   m_pFBO3DImage(NULL),
-  m_pProgram1DTrans(NULL),
-  m_p1DTransTex(NULL),
-  m_p2DTransTex(NULL),
-  m_p1DData(NULL),
-  m_p2DData(NULL)
+  m_pProgram1DTrans(NULL)
 {
-  m_pMasterController = pMasterController;
 }
 
 GPUSBVR::~GPUSBVR() {
@@ -90,8 +86,7 @@ void GPUSBVR::Initialize() {
   m_pProgram1DTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-1D-VS.glsl"),
                                                                     SysTools::GetFromResourceOnMac("GPUSBVR-1D-FS.glsl"));
 
-  m_pMasterController->MemMan()->GetEmpty1DTrans(1<<m_pDataset->GetInfo()->GetBitwith(), this, &m_p1DTrans, &m_p1DTransTex);
-  m_pMasterController->MemMan()->GetEmpty2DTrans(VECTOR2<size_t>(1<<m_pDataset->GetInfo()->GetBitwith(), 256), this, &m_p2DTrans, &m_p2DTransTex);
+  GLRenderer::Initialize();
 }
 
 
@@ -142,7 +137,7 @@ void GPUSBVR::DrawLogo() {
 
 
 void GPUSBVR::Paint() {
-  if (true || m_bCompleteRedraw) {
+  if (m_bCompleteRedraw) {
     m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Complete Redraw");
 
     // DEBUG: just render the smallest brick for a start
@@ -152,6 +147,7 @@ void GPUSBVR::Paint() {
     for (size_t i = 0;i<vFirstBrick.size();i++) vFirstBrick[i] = 0;
     UpdateGeoGen(vSmallestLOD, vFirstBrick);
 
+    m_pFBO3DImage->Write();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -184,10 +180,10 @@ void GPUSBVR::Paint() {
     t->Bind(0);
     m_p1DTransTex->Bind(1);
 
-
     m_pProgram1DTrans->Enable();
     m_pProgram1DTrans->SetUniformVector("VolTexture",0);
     m_pProgram1DTrans->SetUniformVector("Trans1DTexture",1);
+
 
     glBegin(GL_TRIANGLES);
       glColor4f(1,1,1,1);
@@ -198,6 +194,8 @@ void GPUSBVR::Paint() {
       }
     glEnd();
 
+    m_pFBO3DImage->FinishWrite();
+
     m_pProgram1DTrans->Disable();
 
     glDisable(GL_BLEND);
@@ -206,29 +204,9 @@ void GPUSBVR::Paint() {
       // TODO: restore state
     }
 
-  } else {
-/*    m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Quick Redraw");
+  } else m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Quick Redraw");
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-    glTranslated(0.0, 0.0, -10.0);
-    glRotated(m_xRot / 16.0, 1.0, 0.0, 0.0);
-
-    if (m_IDTex[m_iCurrentView] != NULL) m_IDTex[m_iCurrentView]->Bind();
-
-    glBegin(GL_QUADS);
-      glColor4d(1,1,1,1);
-      glTexCoord2d(0,0);
-      glVertex3d(-0.5,  0.5, 0.0);
-      glTexCoord2d(1,0);
-      glVertex3d( 0.5,  0.5, 0.0);
-      glTexCoord2d(1,1);
-      glVertex3d( 0.5, -0.5, 0.0);
-      glTexCoord2d(0,1);
-      glVertex3d(-0.5, -0.5, 0.0);
-    glEnd();
-    */
-  }
+  RerenderPreviousResult();
 
   m_bCompleteRedraw = false;
   m_bRedraw = false;
@@ -262,20 +240,6 @@ void GPUSBVR::Cleanup() {
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans);
 }
 
-void GPUSBVR::Changed1DTrans() {
-  m_p1DTrans->GetByteArray(&m_p1DData);
-  m_p1DTransTex->SetData(m_p1DData);
-
-  AbstrRenderer::Changed1DTrans();
-}
-
-void GPUSBVR::Changed2DTrans() {
-  m_p2DTrans->GetByteArray(&m_p2DData);
-  m_p2DTransTex->SetData(m_p2DData);
-
-  AbstrRenderer::Changed1DTrans();
-}
-
 
 bool GPUSBVR::CheckForRedraw() {
   if (m_bDelayedCompleteRedraw) {
@@ -288,6 +252,40 @@ bool GPUSBVR::CheckForRedraw() {
 }
 
 
-bool GPUSBVR::LoadDataset(const string& strFilename) {
-  return AbstrRenderer::LoadDataset(strFilename);
+void GPUSBVR::RerenderPreviousResult() {
+  m_pFBO3DImage->Read(GL_TEXTURE0);
+  glEnable(GL_TEXTURE_2D);
+
+  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glDisable(GL_DEPTH_TEST);
+
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  glOrtho(-1.0, +1.0, +1.0, -1.0, 0.0, 1.0);
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
+
+  glBegin(GL_QUADS);
+    glColor4d(1,1,1,1);
+    glTexCoord2d(0,0);
+    glVertex3d(-1.0,  1.0, -0.5);
+    glTexCoord2d(1,0);
+    glVertex3d( 1.0,  1.0, -0.5);
+    glTexCoord2d(1,1);
+    glVertex3d( 1.0, -1.0, -0.5);
+    glTexCoord2d(0,1);
+    glVertex3d(-1.0, -1.0, -0.5);
+  glEnd();
+
+  m_pFBO3DImage->FinishRead();
+
+  glPopMatrix();
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+  glMatrixMode(GL_MODELVIEW);
+
+  glEnable(GL_DEPTH_TEST);
 }

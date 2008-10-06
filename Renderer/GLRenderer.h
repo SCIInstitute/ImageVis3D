@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    AbstrRenderer.h
+  \file    GLRenderer.h
   \author    Jens Krueger
         SCI Institute
         University of Utah
@@ -38,50 +38,28 @@
 
 #pragma once
 
-#ifndef ABSTRRENDERER_H
-#define ABSTRRENDERER_H
+#ifndef GLRENDERER_H
+#define GLRENDERER_H
 
 #include <string>
 
-#include "../IO/VolumeDataset.h"
-#include "../IO/TransferFunction1D.h"
-#include "../IO/TransferFunction2D.h"
-#include "../Renderer/GLTexture1D.h"
-#include "../Renderer/GLTexture2D.h"
+#include "AbstrRenderer.h"
 
 class MasterController;
 
-enum ERenderMode {
-  RM_1DTRANS = 0,
-  RM_2DTRANS,
-  RM_ISOSURFACE,
-  RM_INVALID
-};
-
-class AbstrRenderer {
+class GLRenderer : public AbstrRenderer {
   public:
-    AbstrRenderer(MasterController* pMasterController);
-    virtual ~AbstrRenderer();
-    virtual bool LoadDataset(const std::string& strFilename);
-    virtual bool CheckForRedraw() = 0;
-
-    VolumeDataset*      GetDataSet() {return m_pDataset;}
-    TransferFunction1D* Get1DTrans() {return m_p1DTrans;}
-    TransferFunction2D* Get2DTrans() {return m_p2DTrans;}
-    
-    ERenderMode GetRendermode() {return m_eRenderMode;}
-    virtual void SetRendermode(ERenderMode eRenderMode);
+    GLRenderer(MasterController* pMasterController);
+    virtual ~GLRenderer();
+    virtual void Initialize();
     virtual void Changed1DTrans();
     virtual void Changed2DTrans();
 
   protected:
-    MasterController*   m_pMasterController;
-    bool                m_bRedraw;
-    bool                m_bCompleteRedraw;
-    ERenderMode         m_eRenderMode;
-    VolumeDataset*      m_pDataset;
-    TransferFunction1D* m_p1DTrans;
-    TransferFunction2D* m_p2DTrans;
+    GLTexture1D*    m_p1DTransTex;
+    GLTexture2D*    m_p2DTransTex;
+    unsigned char*  m_p1DData;
+    unsigned char*  m_p2DData;
 };
 
-#endif // ABSTRRENDERER_H
+#endif // GLRenderer_H
