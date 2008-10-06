@@ -73,7 +73,7 @@ class GPUMemMan {
     GLFBOTex* GetFBO(GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth=false, int iNumBuffers=1);
     void FreeFBO(GLFBOTex* pFBO);
 
-    GLSLProgram* GPUMemMan::GetGLSLProgram(const std::string& strVSFile, const std::string& strFSFile);
+    GLSLProgram* GetGLSLProgram(const std::string& strVSFile, const std::string& strFSFile);
     void FreeGLSLProgram(GLSLProgram* pGLSLProgram);
 
     void MemSizesChanged();
