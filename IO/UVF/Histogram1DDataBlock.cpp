@@ -17,7 +17,7 @@ Histogram1DDataBlock::Histogram1DDataBlock(const Histogram1DDataBlock &other) :
 Histogram1DDataBlock::Histogram1DDataBlock(LargeRAWFile* pStreamFile, UINT64 iOffset, bool bIsBigEndian) :
   RasterDataBlock(pStreamFile, iOffset, bIsBigEndian) 
 {
-  m_vHistData.resize(ulDomainSize[0]);
+  m_vHistData.resize(size_t(ulDomainSize[0]));
   pStreamFile->ReadRAW((unsigned char*)&m_vHistData[0], ulDomainSize[0]*sizeof(UINT64));
 
   ulBlockSemantics = UVFTables::BS_1D_Histogram;
@@ -33,7 +33,7 @@ DataBlock* Histogram1DDataBlock::Clone() {
 
 UINT64 Histogram1DDataBlock::GetHeaderFromFile(LargeRAWFile* pStreamFile, UINT64 iOffset, bool bIsBigEndian) {
   iOffset = RasterDataBlock::GetHeaderFromFile(pStreamFile, iOffset, bIsBigEndian);
-  m_vHistData.resize(ulDomainSize[0]);
+  m_vHistData.resize(size_t(ulDomainSize[0]));
   pStreamFile->ReadRAW((unsigned char*)&m_vHistData[0], ulDomainSize[0]*sizeof(UINT64));
   return iOffset;
 }
@@ -51,10 +51,10 @@ bool Histogram1DDataBlock::Compute(RasterDataBlock* source) {
   for (unsigned int i = 0;i<vBricks.size();i++) if (vBricks[i] != 1) return false;
   
   // create temp histogram 
-  UINT64 iValueRange = 1<<(source->ulElementBitSize[0][0]);
+  size_t iValueRange = size_t(1<<(source->ulElementBitSize[0][0]));
   vector<UINT64> vTmpHist(iValueRange);
   if (vTmpHist.size() != iValueRange) return false;
-  for (UINT64 i = 0;i<iValueRange;i++) vTmpHist[i] = 0;
+  for (size_t i = 0;i<iValueRange;i++) vTmpHist[i] = 0;
 
   // find smalest brick in hirarchy
   unsigned char *pcSourceData = NULL;
@@ -94,7 +94,7 @@ bool Histogram1DDataBlock::Compute(RasterDataBlock* source) {
   // copy non zero elements in temp histogram to histogram
   m_vHistData.resize(iValueRange);
   if (m_vHistData.size() != iValueRange) return false;
-  for (UINT64 i = 0;i<iValueRange;i++) m_vHistData[i] = vTmpHist[i];
+  for (size_t i = 0;i<iValueRange;i++) m_vHistData[i] = vTmpHist[i];
 
   // set raster data block information
   strBlockID = "1D Histogram for datablock " + source->strBlockID;

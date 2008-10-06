@@ -315,7 +315,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
     }
 
     UINT64 ulFileLength = WrongEndianData.GetCurrentSize();
-    size_t iBufferSize = min<size_t>(size_t(ulFileLength),BRICKSIZE*BRICKSIZE*BRICKSIZE*iComponentSize/8); // this must fit into memory otherwise other subsystems would break
+    size_t iBufferSize = min<size_t>(size_t(ulFileLength),size_t(BRICKSIZE*BRICKSIZE*BRICKSIZE*iComponentSize/8)); // this must fit into memory otherwise other subsystems would break
     UINT64 ulBufferConverted = 0;
 
     unsigned char* pBuffer = new unsigned char[iBufferSize];
