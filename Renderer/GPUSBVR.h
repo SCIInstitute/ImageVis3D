@@ -52,7 +52,7 @@ class GPUSBVR : public GLRenderer {
     virtual ~GPUSBVR();
     virtual bool CheckForRedraw();
 
-    void Paint();
+    void Paint(bool bClearDepthBuffer=true);
     void Resize(int width, int height);
     void Cleanup();
 
@@ -78,6 +78,7 @@ class GPUSBVR : public GLRenderer {
     GLSLProgram*  m_pProgram1DTrans;
 
     void DrawLogo();
+    void DrawBackGradient();
     void UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
     void RerenderPreviousResult();
 };

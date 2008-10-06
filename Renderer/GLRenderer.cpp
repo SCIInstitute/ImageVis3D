@@ -70,3 +70,18 @@ void GLRenderer::Changed2DTrans() {
   AbstrRenderer::Changed1DTrans();
 }
 
+void GLRenderer::SetBackgroundColors(FLOATVECTOR3 vColors[2]) {
+  if (vColors[0] != m_vBackgroundColors[0] || vColors[1] != m_vBackgroundColors[1]) {
+    AbstrRenderer::SetBackgroundColors(vColors);
+    glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
+    m_bCompleteRedraw = true;
+  }
+}
+
+void GLRenderer::SetTextColor(FLOATVECTOR4 vColor) {
+  if (vColor != m_vTextColor) {
+    AbstrRenderer::SetTextColor(vColor);
+    m_bCompleteRedraw = true;
+  }
+}
+

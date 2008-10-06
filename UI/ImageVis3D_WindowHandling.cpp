@@ -297,7 +297,7 @@ bool MainWindow::ApplyWorkspace() {
 void MainWindow::CloneCurrentView() {
   RenderWindow *renderWin =
     CreateNewRenderWindow(GetActiveRenderWindow()->GetDatasetName());
-  renderWin->show();
+  renderWin->show();  
 }
 
 // ARS - TODO Need to be able to CreateNewRenderWindow based on memory only
@@ -309,6 +309,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   RenderWindow *renderWin =
     new RenderWindow(m_MasterController, dataset,
 		     iCounter++, m_glShareWidget, this);
+  renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
   mdiArea->addSubWindow(renderWin);
   listWidget_Lock->addItem(renderWin->GetWindowID());
 
@@ -411,7 +412,7 @@ RenderWindow* MainWindow::GetActiveRenderWindow()
 
 void MainWindow::CheckForRedraw() {
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {
-    QWidget* w = mdiArea->subWindowList().at(i)->widget();      
+    QWidget* w = mdiArea->subWindowList().at(i)->widget();
     qobject_cast<RenderWindow*>(w)->CheckForRedraw();
   }
 }

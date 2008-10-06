@@ -51,14 +51,27 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     SettingsDlg(MasterController& masterController, TabID eTabID = MEM_TAB, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~SettingsDlg();
 
-    UINT64 GetGPUMem();
-    UINT64 GetCPUMem();
+    UINT64        GetGPUMem();
+    UINT64        GetCPUMem();
+    FLOATVECTOR3  GetBackgroundColor1();
+    FLOATVECTOR3  GetBackgroundColor2();
+    FLOATVECTOR4  GetTextColor();
 
-    void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU);
+    void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
+
+  protected slots:
+    void SelectTextColor();
+    void SetTextOpacity(int iOpacity);
+    void SelectBackColor1();
+    void SelectBackColor2();
 
   private:
     MasterController& m_MasterController;
     TabID             m_eTabID;
+    QColor            m_cBackColor1;
+    QColor            m_cBackColor2;
+    QColor            m_cTextColor;
+
 
     void setupUi(QDialog *SettingsDlg);
 

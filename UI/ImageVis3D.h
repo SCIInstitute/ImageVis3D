@@ -143,6 +143,9 @@ private :
   RenderWindow*         m_ActiveRenderWin;
   static const unsigned int ms_iMaxRecentFiles = 5;
   QAction *m_recentFileActs[ms_iMaxRecentFiles];
+  FLOATVECTOR3          m_vBackgroundColors[2];
+  FLOATVECTOR4          m_vTextColor;
+
 
   RenderWindow* CreateNewRenderWindow(QString dataset);
   RenderWindow* GetActiveRenderWindow();

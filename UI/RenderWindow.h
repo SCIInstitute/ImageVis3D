@@ -69,6 +69,12 @@ class RenderWindow : public QGLWidget
       makeCurrent();
       m_Renderer->SetRendermode(eRenderMode); }
 
+    void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor) {
+      makeCurrent();
+      m_Renderer->SetBackgroundColors(vBackColors); 
+      m_Renderer->SetTextColor(vTextColor); 
+    }
+
   public slots:
     void ToggleRenderWindowView1x3();
     void ToggleRenderWindowView2x2();

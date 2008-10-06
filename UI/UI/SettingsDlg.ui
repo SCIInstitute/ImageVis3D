@@ -199,9 +199,9 @@
            </widget>
           </item>
           <item row="0" column="2" >
-           <widget class="QPushButton" name="pushButton" >
+           <widget class="QPushButton" name="pushButtonSelBack1" >
             <property name="text" >
-             <string>Select Color</string>
+             <string>Select Top Color</string>
             </property>
            </widget>
           </item>
@@ -213,9 +213,32 @@
            </widget>
           </item>
           <item row="1" column="2" >
-           <widget class="QPushButton" name="pushButton_3" >
+           <widget class="QPushButton" name="pushButtonSelText" >
             <property name="text" >
              <string>Select Color</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3" >
+           <widget class="QPushButton" name="pushButtonSelBack2" >
+            <property name="text" >
+             <string>Select Bottom Color</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3" >
+           <widget class="QSlider" name="horizontalSliderTextOpacity" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximum" >
+             <number>255</number>
+            </property>
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
@@ -228,14 +251,35 @@
           <string>Logo</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2" >
-          <item row="3" column="0" >
-           <widget class="QRadioButton" name="radioButton_3" >
+          <item row="0" column="0" >
+           <widget class="QLabel" name="label_4" >
             <property name="text" >
-             <string>Bottom Left</string>
+             <string>Logo File</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1" >
+          <item row="0" column="1" >
+           <widget class="QPushButton" name="pushButtonSelLogo" >
+            <property name="text" >
+             <string>Select File</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2" >
+           <widget class="QPushButton" name="pushButtonNoLogo" >
+            <property name="text" >
+             <string>None</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2" >
+           <widget class="QRadioButton" name="radioButton_4" >
+            <property name="text" >
+             <string>Top Right</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2" >
            <widget class="QRadioButton" name="radioButton_2" >
             <property name="text" >
              <string>Bottom Right</string>
@@ -246,13 +290,6 @@
            </widget>
           </item>
           <item row="2" column="1" >
-           <widget class="QRadioButton" name="radioButton_4" >
-            <property name="text" >
-             <string>Top Right</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" >
            <widget class="QRadioButton" name="radioButton" >
             <property name="text" >
              <string>Top Left</string>
@@ -262,17 +299,10 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0" >
-           <widget class="QLabel" name="label_4" >
+          <item row="3" column="1" >
+           <widget class="QRadioButton" name="radioButton_3" >
             <property name="text" >
-             <string>Logo File</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" >
-           <widget class="QPushButton" name="pushButton_2" >
-            <property name="text" >
-             <string>Select File</string>
+             <string>Bottom Left</string>
             </property>
            </widget>
           </item>
@@ -339,12 +369,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>299</x>
-     <y>82</y>
+     <x>127</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>342</x>
-     <y>80</y>
+     <x>127</x>
+     <y>98</y>
     </hint>
    </hints>
   </connection>
@@ -355,14 +385,84 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>267</x>
-     <y>107</y>
+     <x>127</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>337</x>
-     <y>111</y>
+     <x>127</x>
+     <y>98</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelBack1</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>SelectBackColor1()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>240</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>319</x>
+     <y>-7</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelBack2</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>SelectBackColor2()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>282</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>377</x>
+     <y>8</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelText</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>SelectTextColor()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>197</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>278</x>
+     <y>4</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSliderTextOpacity</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>SetTextOpacity(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>324</x>
+     <y>106</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>396</x>
+     <y>36</y>
     </hint>
    </hints>
   </connection>
  </connections>
+ <slots>
+  <slot>SelectBackColor1()</slot>
+  <slot>SelectBackColor2()</slot>
+  <slot>SelectTextColor()</slot>
+  <slot>SetTextOpacity(int)</slot>
+ </slots>
 </ui>

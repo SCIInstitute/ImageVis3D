@@ -64,9 +64,8 @@ void GPUSBVR::Initialize() {
 
   m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","");
 
-  glClearColor(0,0,0,0);
+  glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
   glShadeModel(GL_SMOOTH);
-  glEnable(GL_DEPTH_TEST);
   glEnable(GL_TEXTURE_2D);
   glDisable(GL_CULL_FACE);
   
@@ -102,7 +101,6 @@ void GPUSBVR::UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UI
 }
 
 void GPUSBVR::DrawLogo() {
-
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -135,8 +133,40 @@ void GPUSBVR::DrawLogo() {
     glPopMatrix();
 }
 
+void GPUSBVR::DrawBackGradient() {
+  glDisable(GL_DEPTH_TEST);
 
-void GPUSBVR::Paint() {
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  glOrtho(-0.5, +0.5, +0.5, -0.5, 0.0, 1.0);
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
+
+  glDisable(GL_TEXTURE_3D);
+
+  glBegin(GL_QUADS);
+    glColor4d(m_vBackgroundColors[1].x,m_vBackgroundColors[1].y,m_vBackgroundColors[1].z,1);
+    glVertex3d(-1.0,  1.0, -0.5);
+    glVertex3d( 1.0,  1.0, -0.5);
+    glColor4d(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,1);
+    glVertex3d( 1.0, -1.0, -0.5);
+    glVertex3d(-1.0, -1.0, -0.5);
+  glEnd();
+
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+  glMatrixMode(GL_MODELVIEW);
+  glPopMatrix();
+
+  glEnable(GL_DEPTH_TEST);
+}
+
+void GPUSBVR::Paint(bool bClearDepthBuffer) {
+
+  if (bClearDepthBuffer) glClear(GL_DEPTH_BUFFER_BIT);
+
   if (m_bCompleteRedraw) {
     m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Complete Redraw");
 
@@ -149,7 +179,11 @@ void GPUSBVR::Paint() {
 
     m_pFBO3DImage->Write();
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
+      glClear(GL_COLOR_BUFFER_BIT);
+    } else {
+      DrawBackGradient();
+    }
 
     DrawLogo();
 
@@ -255,8 +289,6 @@ bool GPUSBVR::CheckForRedraw() {
 void GPUSBVR::RerenderPreviousResult() {
   m_pFBO3DImage->Read(GL_TEXTURE0);
   glEnable(GL_TEXTURE_2D);
-
-  //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glDisable(GL_DEPTH_TEST);
 

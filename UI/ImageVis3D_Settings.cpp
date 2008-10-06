@@ -39,6 +39,7 @@
 #include <Basics/SysTools.h>
 #include <QtCore/QSettings>
 #include <QtGui/QMessageBox>
+#include <QtGui/QMdiSubWindow>
 
 using namespace std;
 
@@ -65,8 +66,23 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       // load other settings here
       UINT64 iMaxCPU = settings.value("Memory/MaxCPUMem", UINT64_INVALID).toULongLong();     
 
+      settings.beginGroup("Renderer");
+      FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0f).toULongLong(),
+                              settings.value("Background1G", 0.0f).toULongLong(),
+                              settings.value("Background1B", 0.0f).toULongLong());
+
+      FLOATVECTOR3 vBackColor2(settings.value("Background2R", 0.0f).toULongLong(),
+                              settings.value("Background2G", 0.0f).toULongLong(),
+                              settings.value("Background2B", 0.0f).toULongLong());
+
+      FLOATVECTOR4 vTextColor(settings.value("TextR", 1.0f).toULongLong(),
+                              settings.value("TextG", 1.0f).toULongLong(),
+                              settings.value("TextB", 1.0f).toULongLong(),
+                              settings.value("TextA", 1.0f).toULongLong());
+      settings.endGroup();
+
       // hand data to form
-      settingsDlg.Data2Form(iMaxCPU, iMaxGPU);
+      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, vBackColor1, vBackColor2, vTextColor);
     }
 
     if (settingsDlg.exec() == QDialog::Accepted) {
@@ -78,6 +94,18 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       settings.endGroup();
 
       // TODO save other settings here
+      settings.beginGroup("Renderer");
+      settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
+      settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
+      settings.setValue("Background1B", settingsDlg.GetBackgroundColor1().z);
+      settings.setValue("Background2R", settingsDlg.GetBackgroundColor2().x);
+      settings.setValue("Background2G", settingsDlg.GetBackgroundColor2().y);
+      settings.setValue("Background2B", settingsDlg.GetBackgroundColor2().z);
+      settings.setValue("TextR", settingsDlg.GetTextColor().x);
+      settings.setValue("TextG", settingsDlg.GetTextColor().y);
+      settings.setValue("TextB", settingsDlg.GetTextColor().z);
+      settings.setValue("TextA", settingsDlg.GetTextColor().w);
+      settings.endGroup();
 
 
       ApplySettings();
@@ -94,6 +122,26 @@ void MainWindow::ApplySettings() {
     UINT64 iMaxCPU = settings.value("MaxCPUMem", UINT64_INVALID).toULongLong();
     UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
     settings.endGroup();
+
+    settings.beginGroup("Renderer");
+    m_vBackgroundColors[0] = FLOATVECTOR3(settings.value("Background1R", 0.0f).toULongLong(),
+                            settings.value("Background1G", 0.0f).toULongLong(),
+                            settings.value("Background1B", 0.0f).toULongLong());
+
+    m_vBackgroundColors[1] = FLOATVECTOR3(settings.value("Background2R", 0.0f).toULongLong(),
+                            settings.value("Background2G", 0.0f).toULongLong(),
+                            settings.value("Background2B", 0.0f).toULongLong());
+
+    m_vTextColor = FLOATVECTOR4(settings.value("TextR", 1.0f).toULongLong(),
+                            settings.value("TextG", 1.0f).toULongLong(),
+                            settings.value("TextB", 1.0f).toULongLong(),
+                            settings.value("TextA", 1.0f).toULongLong());
+    settings.endGroup();
+
+    for (int i = 0;i<mdiArea->subWindowList().size();i++) {
+      QWidget* w = mdiArea->subWindowList().at(i)->widget();
+      qobject_cast<RenderWindow*>(w)->SetColors(m_vBackgroundColors, m_vTextColor);
+    }
 
     m_MasterController.SysInfo()->SetMaxUsableCPUMem(iMaxCPU);
     m_MasterController.SysInfo()->SetMaxUsableGPUMem(iMaxGPU);

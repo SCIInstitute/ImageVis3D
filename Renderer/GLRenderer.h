@@ -54,6 +54,8 @@ class GLRenderer : public AbstrRenderer {
     virtual void Initialize();
     virtual void Changed1DTrans();
     virtual void Changed2DTrans();
+    virtual void SetBackgroundColors(FLOATVECTOR3 vColors[2]);
+    virtual void SetTextColor(FLOATVECTOR4 vColor);
 
   protected:
     GLTexture1D*    m_p1DTransTex;

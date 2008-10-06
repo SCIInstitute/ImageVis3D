@@ -74,6 +74,11 @@ class AbstrRenderer {
     virtual void Changed1DTrans();
     virtual void Changed2DTrans();
 
+    virtual void SetBackgroundColors(FLOATVECTOR3 vColors[2]) {m_vBackgroundColors[0]=vColors[0];m_vBackgroundColors[1]=vColors[1];}
+    virtual void SetTextColor(FLOATVECTOR4 vColor) {m_vTextColor=vColor;}
+    FLOATVECTOR3 GetBackgroundColor(int i) const {return m_vBackgroundColors[i];}
+    FLOATVECTOR4 GetTextColor() const {return m_vTextColor;}
+
   protected:
     MasterController*   m_pMasterController;
     bool                m_bRedraw;
@@ -82,6 +87,9 @@ class AbstrRenderer {
     VolumeDataset*      m_pDataset;
     TransferFunction1D* m_p1DTrans;
     TransferFunction2D* m_p2DTrans;
+
+    FLOATVECTOR3        m_vBackgroundColors[2];
+    FLOATVECTOR4        m_vTextColor;
 };
 
 #endif // ABSTRRENDERER_H
