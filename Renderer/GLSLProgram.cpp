@@ -238,9 +238,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
   GLuint hFS=0;
   bool bVSSuccess=true;  // fixed function pipeline is always working
   if (VSFile!=NULL) {
-    m_pMasterController->DebugOut()->Message("printf debugging","A");
     hVS=LoadShader(VSFile,GL_VERTEX_SHADER,src);
-    m_pMasterController->DebugOut()->Message("printf debugging","B");
     if (hVS!=0) m_pMasterController->DebugOut()->Message("GLSLProgram::Load","VERTEX SHADER: OK");
     else {
       bVSSuccess=false;
@@ -295,44 +293,79 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
       } 
     }    
   }
-  
-  // attach to program object
-  m_hProgram=glCreateProgram();
-  if (hVS) glAttachShader(m_hProgram,hVS); 
-  if (hFS) glAttachShader(m_hProgram,hFS);
 
-  // link the program together
-  if (bVSSuccess && bFSSuccess) {
-    glLinkProgram(m_hProgram);
+  if (m_bGLUseARB) {
+	  // attach to shader program
+	  m_hProgram=glCreateProgramObjectARB();
+	  if (hVS) glAttachObjectARB(m_hProgram,hVS); 
+	  if (hFS) glAttachObjectARB(m_hProgram,hFS);
 
-    // check for errors
-    GLint iLinked;
-    glGetProgramiv(m_hProgram,GL_LINK_STATUS,&iLinked);
-    WriteInfoLog(m_hProgram,true);
-      
-    // flag shaders such that they can be deleted when they get detached
-    if (hVS) glDeleteShader(hVS);
-    if (hFS) glDeleteShader(hFS);
-    if (CheckGLError("Load()") || iLinked!=GLint(GL_TRUE)) {
+    // link the program together
+    if (bVSSuccess && bFSSuccess) {
+	    glLinkProgramARB(m_hProgram);
+
+	    // check for errors
+	    int iLinked;
+	    glGetObjectParameterivARB(m_hProgram,GL_OBJECT_LINK_STATUS_ARB,&iLinked);
+	    m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Linker Error");
+	    WriteError(m_hProgram);
+    		
+	    // delete temporary objects
+	    if (hVS) glDeleteObjectARB(hVS);
+	    if (hFS) glDeleteObjectARB(hFS);	
+
+	    if (CheckGLError("Load()") || !iLinked) {
+		    glDeleteObjectARB(m_hProgram);
+		    m_bInitialized=false;
+		    return;
+	    }
+    } else {
+      glDeleteObjectARB(m_hProgram);
+      m_hProgram=0;
+      m_bInitialized=false;
+      if (!bVSSuccess && !bFSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in vertex and fragment shaders");
+      else if (!bVSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in vertex shader");
+      else if (!bFSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in fragment shader");
+    }
+  } else {
+    // attach to program object
+    m_hProgram=glCreateProgram();
+    if (hVS) glAttachShader(m_hProgram,hVS); 
+    if (hFS) glAttachShader(m_hProgram,hFS);
+
+    // link the program together
+    if (bVSSuccess && bFSSuccess) {
+      glLinkProgram(m_hProgram);
+
+      // check for errors
+      GLint iLinked;
+      glGetProgramiv(m_hProgram,GL_LINK_STATUS,&iLinked);
+      WriteInfoLog(m_hProgram,true);
+        
+      // flag shaders such that they can be deleted when they get detached
+      if (hVS) glDeleteShader(hVS);
+      if (hFS) glDeleteShader(hFS);
+      if (CheckGLError("Load()") || iLinked!=GLint(GL_TRUE)) {
+        glDeleteProgram(m_hProgram);
+        m_hProgram=0;
+        m_bInitialized=false;
+        return;
+      }
+      else {
+        m_pMasterController->DebugOut()->Message("GLSLProgram::Load","PROGRAM OBJECT: OK");
+        m_bInitialized=true;
+      }
+    }
+    else {
+      if (hVS) glDeleteShader(hVS);
+      if (hFS) glDeleteShader(hFS);
       glDeleteProgram(m_hProgram);
       m_hProgram=0;
       m_bInitialized=false;
-      return;
+      if (!bVSSuccess && !bFSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in vertex and fragment shaders");
+      else if (!bVSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in vertex shader");
+      else if (!bFSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in fragment shader");
     }
-    else {
-      m_pMasterController->DebugOut()->Message("GLSLProgram::Load","PROGRAM OBJECT: OK");
-      m_bInitialized=true;
-    }
-  }
-  else {
-    if (hVS) glDeleteShader(hVS);
-    if (hFS) glDeleteShader(hFS);
-    glDeleteProgram(m_hProgram);
-    m_hProgram=0;
-    m_bInitialized=false;
-    if (!bVSSuccess && !bFSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in vertex and fragment shaders");
-    else if (!bVSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in vertex shader");
-    else if (!bFSSuccess) m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Error in fragment shader");
   }
 }
 
@@ -371,6 +404,29 @@ bool GLSLProgram::WriteInfoLog(GLuint hObject, bool bProgram) {
 #endif
   }
   return !bool(bAtMostWarnings==GL_TRUE); // error occured?  
+}
+
+/**
+ * Writes errors/information messages to stdout.
+ * Gets the InfoLogARB and writes it to stdout.
+ * Parameter is necessary for temporary objects (i.e. vertex / fragment shader)
+ * \param hObject - a handle to the object.
+ * \return true if InfoLogARB non-empty (i.e. error/info message), false otherwise
+ * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
+ * \date Aug.2004
+ */
+bool GLSLProgram::WriteError(GLhandleARB hObject) {
+	// Check for errors
+	GLint iLength;
+	glGetObjectParameterivARB(hObject,GL_OBJECT_INFO_LOG_LENGTH_ARB,&iLength);
+	if (iLength>1) {
+		GLcharARB *pcLogInfo=new GLcharARB[iLength];
+		glGetInfoLogARB(hObject,iLength,&iLength,pcLogInfo);
+    m_pMasterController->DebugOut()->Message("GLSLProgram::WriteError",pcLogInfo);
+		delete[] pcLogInfo;
+		return true;	// an error had occured.
+	}
+	return false;
 }
 
 
@@ -439,6 +495,7 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
     glShaderSourceARB(hShader,1,(const GLchar**)&pcShader,NULL); // upload null-terminated shader
 	  glCompileShaderARB(hShader);  
 
+    // Check for errors
 	  if (CheckGLError("LoadProgram()")) {
 		  glDeleteObjectARB(hShader);
 		  bError =true;
@@ -462,7 +519,6 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
       glDeleteShader(hShader);
       bError=true;
     }
-
   }
 
   if (pcShader!=ShaderDesc) delete[] pcShader;
