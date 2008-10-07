@@ -128,6 +128,7 @@ private:
   GLuint              m_hProgram;  
   static bool         m_bGlewInitialized;
   static bool         m_bGLChecked;
+  static bool         m_bGLUseARB;
 
 };
 

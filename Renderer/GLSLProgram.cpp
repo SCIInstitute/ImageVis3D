@@ -42,6 +42,7 @@
 
 bool GLSLProgram::m_bGlewInitialized=true;    ///< GL Extension Wrangler (glew) is initialized on first instantiation
 bool GLSLProgram::m_bGLChecked=false;         ///< GL extension check
+bool GLSLProgram::m_bGLUseARB=false;          ///< use pre GL 2.0 syntax
 
 /**
  * Default Constructor.
@@ -189,16 +190,23 @@ bool GLSLProgram::Initialize(void) {
 #endif
 
   if (!m_bGLChecked) {
-    if (GLEW_VERSION_2_0) m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","OpenGL 2.0 supported");
-    else { // check for ARB extensions
-      if (glewGetExtension("GL_ARB_shader_objects")) m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shader_objects supported.");
+    if (GLEW_VERSION_2_0) {
+      m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","OpenGL 2.0 supported");
+      m_bGLUseARB = false;
+    } else { // check for ARB extensions
+      if (glewGetExtension("GL_ARB_shader_objects")) 
+        m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shader_objects supported.");
       else {
         m_pMasterController->DebugOut()->Error("GLSLProgram::Initialize","ARB_shader_objects not supported!");
+        return false;
       }
-      if (glewGetExtension("GL_ARB_shading_language_100")) m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shading_language_100 supported.");
+      if (glewGetExtension("GL_ARB_shading_language_100")) 
+        m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shading_language_100 supported.");
       else {
         m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shading_language_100 not supported!");
+        return false;
       }
+      m_bGLUseARB = true;
     }
     return false;
     m_bGLChecked = true;
@@ -383,11 +391,7 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
   // assert right type
   assert(Type==GL_VERTEX_SHADER || Type==GL_FRAGMENT_SHADER);
 
-  m_pMasterController->DebugOut()->Message("printf debugging","a");
-
   CheckGLError();
-
-  m_pMasterController->DebugOut()->Message("printf debugging","b");
 
   unsigned long lFileSize;
   char *pcShader;
@@ -428,58 +432,40 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
       break;
   }
 
-  m_pMasterController->DebugOut()->Message("printf debugging","c");
-
-  m_pMasterController->DebugOut()->Message("printf debugging","Type: %i, (vertex=%i, fragment=%i)", Type, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER);
-  
   GLuint hShader = 0;
-  if (glCreateShader != 0) {
-    glCreateShader(Type);
-  } else {
-    m_pMasterController->DebugOut()->Message("printf debugging","NULL glCreateShader");
-  }
-
-  if (glCreateShaderObjectARB != 0) {
+  bool bError=false;
+  if (m_bGLUseARB) {
     hShader = glCreateShaderObjectARB(Type);
+    glShaderSourceARB(hShader,1,(const GLchar**)&pcShader,NULL); // upload null-terminated shader
+	  glCompileShaderARB(hShader);  
+
+	  if (CheckGLError("LoadProgram()")) {
+		  glDeleteObjectARB(hShader);
+		  bError =true;
+	  }
   } else {
-    m_pMasterController->DebugOut()->Error("printf debugging","NULL glCreateShaderObjectARB");
+    hShader = glCreateShader(Type);
+    glShaderSource(hShader,1,(const char**)&pcShader,NULL);  // upload null-terminated shader
+    glCompileShader(hShader);
+
+    // Check for compile status
+    GLint iCompiled;
+    glGetShaderiv(hShader,GL_COMPILE_STATUS,&iCompiled);
+
+    // Check for errors
+    if (WriteInfoLog(hShader,false)) {
+      glDeleteShader(hShader);
+      bError=true;
+    }
+
+    if (CheckGLError("LoadProgram()") || iCompiled!=GLint(GL_TRUE)) {
+      glDeleteShader(hShader);
+      bError=true;
+    }
+
   }
-
-  m_pMasterController->DebugOut()->Message("printf debugging","c0");
-
-  CheckGLError();
-
-  m_pMasterController->DebugOut()->Message("printf debugging","c1");
-
-  glShaderSource(hShader,1,(const char**)&pcShader,NULL);  // upload null-terminated shader
-
-  m_pMasterController->DebugOut()->Message("printf debugging","c2");
-
-  glCompileShader(hShader);
-
-  m_pMasterController->DebugOut()->Message("printf debugging","c3");
 
   if (pcShader!=ShaderDesc) delete[] pcShader;
-
-  m_pMasterController->DebugOut()->Message("printf debugging","d");
-
-  // Check for compile status
-  GLint iCompiled;
-  glGetShaderiv(hShader,GL_COMPILE_STATUS,&iCompiled);
-
-  // Check for errors
-  bool bError=false;
-  if (WriteInfoLog(hShader,false)) {
-    glDeleteShader(hShader);
-    bError=true;
-  }
-
-  if (CheckGLError("LoadProgram()") || iCompiled!=GLint(GL_TRUE)) {
-    glDeleteShader(hShader);
-    bError=true;
-  }
-
-  m_pMasterController->DebugOut()->Message("printf debugging","e");
 
   if (bError) return 0;
   return hShader;
