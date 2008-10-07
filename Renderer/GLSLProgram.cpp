@@ -423,9 +423,20 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
 
   m_pMasterController->DebugOut()->Message("printf debugging","c");
 
-  GLuint hShader=glCreateShader(Type);  
+  GLuint hShader=glCreateShader(Type);
+
+  CheckGLError();
+
+  m_pMasterController->DebugOut()->Message("printf debugging","c1");
+
   glShaderSource(hShader,1,(const char**)&pcShader,NULL);  // upload null-terminated shader
+
+  m_pMasterController->DebugOut()->Message("printf debugging","c2");
+
   glCompileShader(hShader);
+
+  m_pMasterController->DebugOut()->Message("printf debugging","c3");
+
   if (pcShader!=ShaderDesc) delete[] pcShader;
 
   m_pMasterController->DebugOut()->Message("printf debugging","d");
