@@ -195,7 +195,7 @@ bool GLSLProgram::Initialize(void) {
       else {
         m_pMasterController->DebugOut()->Error("GLSLProgram::Initialize","ARB_shader_objects not supported!");
       }
-      if (glewGetExtension("GL_ARB_shading_language_100")) m_pMasterController->DebugOut()->Error("GLSLProgram::Initialize","ARB_shading_language_100 supported.");
+      if (glewGetExtension("GL_ARB_shading_language_100")) m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shading_language_100 supported.");
       else {
         m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shading_language_100 not supported!");
       }
@@ -432,13 +432,9 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
 
   m_pMasterController->DebugOut()->Message("printf debugging","Type: %i, (vertex=%i, fragment=%i)", Type, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER);
   
-
-  GLuint hShader = 0;
-  try {
-    hShader=glCreateShader(Type);
-  } catch (...) {
-      m_pMasterController->DebugOut()->Message("printf debugging","exception c0");
-  }
+  if (glCreateShader == 0) 
+    m_pMasterController->DebugOut()->Message("printf debugging","NULL glCreateShader");
+  GLuint hShader = glCreateShader(Type);
 
   m_pMasterController->DebugOut()->Message("printf debugging","c0");
 
