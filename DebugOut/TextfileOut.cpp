@@ -73,6 +73,7 @@ void TextfileOut::printf(const char* format, ...)
   fs.open(m_strFilename.c_str(),  ios_base::app);
   if (fs.fail()) return;
   fs << buff << endl;
+  fs.flush();
   fs.close();
 }
 
