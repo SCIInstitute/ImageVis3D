@@ -279,7 +279,10 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
 		    glDeleteObjectARB(m_hProgram);
 		    m_bInitialized=false;
 		    return;
-	    }
+      } else {
+        m_pMasterController->DebugOut()->Message("GLSLProgram::Load","PROGRAM OBJECT: OK");
+        m_bInitialized=true;
+      }
     } else {
 	    if (hVS) glDeleteObjectARB(hVS);
 	    if (hFS) glDeleteObjectARB(hFS);	
