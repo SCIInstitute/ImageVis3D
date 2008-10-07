@@ -63,62 +63,6 @@ GLSLProgram::GLSLProgram(MasterController* pMasterController) :
 }
 
 /**
- * Copy Constructor.
- * Initializes glew on first instantiation. 
- * \param other - GLSLProgram object to initialize this with
- * \return void
- * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
- * \remark this object will not be automatically enabled, even if other was.
- * \date Aug.2004
- * \see Initialize()
- */
-GLSLProgram::GLSLProgram(const GLSLProgram &other) : GLObject() {
-
-  m_pMasterController = other.m_pMasterController;
-
-  m_pMasterController->DebugOut()->Message("GLSLProgram::GLSLProgram","calling the copy constructor is _slow_");
-
-  m_bInitialized = other.m_bInitialized;
-  m_bEnabled     = false;  
-  
-  // Retrieve handles for all attached shaders
-  GLint iNumAttachedShaders;
-  glGetProgramiv(other.m_hProgram,GL_ATTACHED_SHADERS,&iNumAttachedShaders);
-  if (iNumAttachedShaders==0) {
-    m_pMasterController->DebugOut()->Error("GLSLProgram::GLSLProgram","Error copying vertex shader.");
-    m_bInitialized=false;
-    return;
-  }
-  GLuint *hShader=new GLuint[iNumAttachedShaders];
-  glGetAttachedShaders(other.m_hProgram,iNumAttachedShaders,&iNumAttachedShaders,hShader);
-
-  // create a new program object
-  m_hProgram=glCreateProgram();
-
-  // Attach all shaders that were attached to other also to this
-  for (int i=0; i<iNumAttachedShaders; i++) glAttachShader(m_hProgram,hShader[i]);
-  
-  // link the program together
-  glLinkProgram(m_hProgram);
-
-  // check for errors
-  GLint iLinked;
-  glGetProgramiv(m_hProgram,GL_LINK_STATUS,&iLinked);
-        
-  if (CheckGLError("GLSLProgram(const GLSLProgram &other)") || iLinked!=int(GL_TRUE)) {
-    glDeleteProgram(m_hProgram);
-    m_hProgram=0;
-    m_bInitialized=false;
-    return;
-  }
-  else {
-    m_bInitialized=true;
-  }
-}
-
-
-
-/**
  * Specialized Constructor.
  * Loads any combination of vertex and fragment shader from disk.
  * \param VSFile - name of the file containing the vertex shader
@@ -152,7 +96,10 @@ GLSLProgram::GLSLProgram(MasterController* pMasterController, const char *VSFile
  * \date Aug.2004
  */
 GLSLProgram::~GLSLProgram() {
-  glDeleteProgram(m_hProgram);
+  if (m_bGLUseARB) 
+    glDeleteObjectARB(m_hProgram);
+  else
+    glDeleteProgram(m_hProgram);
   m_hProgram=0;
 }
 
@@ -206,6 +153,23 @@ bool GLSLProgram::Initialize(void) {
         m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shading_language_100 not supported!");
         return false;
       }
+
+      glUniform1i  = glUniform1iARB;    glUniform2i  = glUniform2iARB;
+      glUniform1iv = glUniform1ivARB;   glUniform2iv = glUniform2ivARB;
+      glUniform3i  = glUniform3iARB;    glUniform4i  = glUniform4iARB;
+      glUniform3iv = glUniform3ivARB;   glUniform4iv = glUniform4ivARB;
+
+      glUniform1f  = glUniform1fARB;    glUniform2f  = glUniform2fARB;
+      glUniform1fv = glUniform1fvARB;   glUniform2fv = glUniform2fvARB;
+      glUniform3f  = glUniform3fARB;    glUniform4f  = glUniform4fARB;
+      glUniform3fv = glUniform3fvARB;   glUniform4fv = glUniform4fvARB;
+
+      glUniformMatrix2fv = glUniformMatrix2fvARB;
+      glUniformMatrix3fv = glUniformMatrix3fvARB;
+      glUniformMatrix4fv = glUniformMatrix4fvARB;
+
+      glGetActiveUniform   = glGetActiveUniformARB;
+
       m_bGLUseARB = true;
     }
     return false;
@@ -307,7 +271,6 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
 	    // check for errors
 	    GLint iLinked;
 	    glGetObjectParameterivARB(m_hProgram,GL_OBJECT_LINK_STATUS_ARB,&iLinked);
-	    m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Linker Error");
 	    WriteError(m_hProgram);
     		
 	    // delete temporary objects
@@ -543,7 +506,10 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
 void GLSLProgram::Enable(void) {
   if (m_bInitialized) {
     CheckGLError();
-    glUseProgram(m_hProgram);
+    if (m_bGLUseARB) 
+      glUseProgramObjectARB(m_hProgram);
+    else
+      glUseProgram(m_hProgram);
     if (!CheckGLError("Enable()")) m_bEnabled=true;
   }
   else m_pMasterController->DebugOut()->Error("GLSLProgram::Enable","No program loaded!");
@@ -563,7 +529,10 @@ void GLSLProgram::Enable(void) {
 void GLSLProgram::Disable(void) {
   if (m_bInitialized) {
     CheckGLError();
-    glUseProgram(0);
+    if (m_bGLUseARB) 
+      glUseProgramObjectARB(0);
+    else
+      glUseProgram(0);
     if (!CheckGLError("Disable()")) m_bEnabled=false;
   }
   else m_pMasterController->DebugOut()->Error("GLSLProgram::Disable","No program loaded!");
@@ -666,7 +635,10 @@ void GLSLProgram::SetUniformVector(const char *name,float x, float y, float z, f
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformVector(%s,float,...) [getting adress]",name)) return;
 
@@ -680,7 +652,7 @@ void GLSLProgram::SetUniformVector(const char *name,float x, float y, float z, f
   if (CheckGLError("SetUniformVector(%s,float,...) [getting type]",name)) return;  
 
   switch (iType) {
-    case GL_FLOAT:            glUniform1f(iLocation,x); break;
+    case GL_FLOAT:               glUniform1f(iLocation,x); break;
     case GL_FLOAT_VEC2:          glUniform2f(iLocation,x,y); break;
     case GL_FLOAT_VEC3:          glUniform3f(iLocation,x,y,z); break;
     case GL_FLOAT_VEC4:          glUniform4f(iLocation,x,y,z,w); break;
@@ -732,7 +704,10 @@ void GLSLProgram::SetUniformVector(const char *name,bool x, bool y, bool z, bool
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformVector(%s,bool,...) [getting adress]",name)) return;
 
@@ -789,7 +764,10 @@ void GLSLProgram::SetUniformVector(const char *name,int x,int y,int z,int w) con
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformVector(%s,int,...) [getting adress]", name )) return;
   if(iLocation==-1) {
@@ -855,7 +833,10 @@ void GLSLProgram::SetUniformVector(const char *name,const float *v) const {
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformVector(%s,float*) [getting adress]",name)) return;  
 
@@ -922,7 +903,10 @@ void GLSLProgram::SetUniformVector(const char *name,const int *i) const {
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformVector(%s,int*) [getting adress]",name)) return;
   if(iLocation==-1) {
@@ -985,7 +969,10 @@ void GLSLProgram::SetUniformVector(const char *name,const bool *b) const {
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformVector(%s,bool*) [getting adress]",name)) return;
   if(iLocation==-1) {
@@ -1041,7 +1028,10 @@ void GLSLProgram::SetUniformMatrix(const char *name,const float *m,bool bTranspo
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformMatrix(%s,float*,bool) [getting adress]",name)) return;
   if(iLocation==-1) {
@@ -1049,7 +1039,7 @@ void GLSLProgram::SetUniformMatrix(const char *name,const float *m,bool bTranspo
     return;
   }
 
-  glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformMatrix(%s,float*,bool) [getting type]",name)) return;
 
@@ -1089,7 +1079,10 @@ void GLSLProgram::SetUniformMatrix(const char *name,const int *m, bool bTranspos
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformMatrix(%s,int*,bool) [getting adress]",name)) return;
   if(iLocation==-1) {
@@ -1145,7 +1138,10 @@ void GLSLProgram::SetUniformMatrix(const char *name,const bool *m, bool bTranspo
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformMatrix(%s,int*,bool) [getting adress]",name)) return;
   if(iLocation==-1) {
@@ -1153,7 +1149,7 @@ void GLSLProgram::SetUniformMatrix(const char *name,const bool *m, bool bTranspo
     return;
   }
 
-  glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformMatrix(%s,float*,bool) [getting type]",name)) return;
 
@@ -1201,7 +1197,10 @@ void GLSLProgram::SetUniformArray(const char *name,const float *a) const {
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformArray(%s,float*) [getting adress]",name)) return;
   if(iLocation==-1) {
@@ -1292,7 +1291,10 @@ void GLSLProgram::SetUniformArray(const char *name,const int *a) const {
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformArray(%s,int*) [getting adress]",name)) return;
   if(iLocation==-1) {
@@ -1382,7 +1384,10 @@ void GLSLProgram::SetUniformArray(const char *name,const bool  *a) const {
   GLint iSize;
   GLenum iType;
   GLint iLocation;
-  iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
+  if (m_bGLUseARB)    
+    iLocation=glGetUniformLocationARB(m_hProgram,name); // Position of uniform var
+  else
+    iLocation=glGetUniformLocation(m_hProgram,name); // Position of uniform var
 
   if (CheckGLError("SetUniformArray(%s,bool*) [getting adress]",name)) return;
   if(iLocation==-1) {
