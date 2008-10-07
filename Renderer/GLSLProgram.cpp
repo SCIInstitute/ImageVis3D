@@ -215,8 +215,10 @@ void GLSLProgram::Initialize(void) {
  * \date Aug.2004
  * \see GLSLPROGRAM_SOURCE
  */
-void GLSLProgram::Load(const char *VSFile, const char *FSFile,GLSLPROGRAM_SOURCE src) {
+void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURCE src) {
+  m_pMasterController->DebugOut()->Message("GLSLProgram::Load","Initial Error Check");
   CheckGLError();
+  m_pMasterController->DebugOut()->Message("GLSLProgram::Load","Called with %s and %s", VSFile, FSFile);
 
   // load
   GLuint hVS=0;
