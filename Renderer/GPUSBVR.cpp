@@ -211,7 +211,7 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
     }
 
     GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vSmallestLOD, vFirstBrick);
-    t->Bind(0);
+    if(t!=NULL) t->Bind(0);
     m_p1DTransTex->Bind(1);
 
     m_pProgram1DTrans->Enable();
