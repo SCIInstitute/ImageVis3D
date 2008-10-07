@@ -432,9 +432,18 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
 
   m_pMasterController->DebugOut()->Message("printf debugging","Type: %i, (vertex=%i, fragment=%i)", Type, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER);
   
-  if (glCreateShader == 0) 
+  GLuint hShader = 0;
+  if (glCreateShader != 0) {
+    glCreateShader(Type);
+  } else {
     m_pMasterController->DebugOut()->Message("printf debugging","NULL glCreateShader");
-  GLuint hShader = glCreateShader(Type);
+  }
+
+  if (glCreateShaderObjectARB != 0) {
+    hShader = glCreateShaderObjectARB(Type);
+  } else {
+    m_pMasterController->DebugOut()->Error("printf debugging","NULL glCreateShaderObjectARB");
+  }
 
   m_pMasterController->DebugOut()->Message("printf debugging","c0");
 
