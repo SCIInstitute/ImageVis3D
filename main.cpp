@@ -84,10 +84,10 @@ int main(int argc, char* argv[])
   // if using a logfile inject this into the debug out chain
   if (bUseLogFile) {
     TextfileOut* textout = new TextfileOut(strLogFileName);
-    switch (iLogLevel) { // remark: fall through on purpose
-      case 0 : textout->m_bShowWarnings = false;
-      case 1 : textout->m_bShowMessages = false; break;
-    }
+  
+    textout->m_bShowErrors   = true;
+    textout->m_bShowWarnings = iLogLevel > 0;
+    textout->m_bShowMessages = iLogLevel > 1;
 
     AbstrDebugOut* pOldDebug       = masterController.DebugOut();
     bool           bDeleteOldDebug = masterController.DoDeleteDebugOut();
