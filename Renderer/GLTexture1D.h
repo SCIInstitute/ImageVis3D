@@ -51,7 +51,7 @@ class GLTexture1D : public GLTexture {
           GLint wrap = GL_CLAMP);
     virtual ~GLTexture1D() {}
 
-    virtual void Bind(unsigned int iUnit=0) {glActiveTexture(GL_TEXTURE0 + iUnit); glBindTexture(GL_TEXTURE_1D, m_iGLID);}
+    virtual void Bind(unsigned int iUnit=0) {glActiveTextureARB(GL_TEXTURE0 + iUnit); glBindTexture(GL_TEXTURE_1D, m_iGLID);}
     virtual void SetData(const GLvoid *pixels);
 
     virtual UINT64 GetCPUSize() {return m_iSize*m_iSizePerElement/8;}

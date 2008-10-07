@@ -53,7 +53,7 @@ class GLTexture2D : public GLTexture {
           GLint wrapY = GL_CLAMP);
     virtual ~GLTexture2D() {}
     
-    virtual void Bind(unsigned int iUnit=0) {glActiveTexture(GL_TEXTURE0 + iUnit); glBindTexture(GL_TEXTURE_2D, m_iGLID);}
+    virtual void Bind(unsigned int iUnit=0) {glActiveTextureARB(GL_TEXTURE0 + iUnit); glBindTexture(GL_TEXTURE_2D, m_iGLID);}
     virtual void SetData(const GLvoid *pixels);
 
     virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}

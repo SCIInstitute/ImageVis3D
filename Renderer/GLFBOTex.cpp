@@ -273,7 +273,7 @@ inline void GLFBOTex::Read(GLenum texunit, int iBuffer) {
 	assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);
 	m_LastTexUnit[iBuffer]=texunit;
-	glActiveTexture(texunit);
+	glActiveTextureARB(texunit);
 	glBindTexture(GL_TEXTURE_2D,m_hTexture[iBuffer]);
 }
 
@@ -281,7 +281,7 @@ inline void GLFBOTex::Read(GLenum texunit, int iBuffer) {
 inline void GLFBOTex::FinishRead(int iBuffer) {
 	assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);
-	glActiveTexture(m_LastTexUnit[iBuffer]);
+	glActiveTextureARB(m_LastTexUnit[iBuffer]);
 	glBindTexture(GL_TEXTURE_2D,0);
 	m_LastTexUnit[iBuffer]=0;
 }
