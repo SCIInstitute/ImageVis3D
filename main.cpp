@@ -89,6 +89,8 @@ int main(int argc, char* argv[])
     textout->m_bShowWarnings = iLogLevel > 0;
     textout->m_bShowMessages = iLogLevel > 1;
 
+    textout->printf("Loglevel:%i\n",iLogLevel);
+
     AbstrDebugOut* pOldDebug       = masterController.DebugOut();
     bool           bDeleteOldDebug = masterController.DoDeleteDebugOut();
 

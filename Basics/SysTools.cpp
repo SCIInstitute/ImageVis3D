@@ -77,8 +77,10 @@ namespace SysTools {
       if (imageURL == NULL) return "";
       CFStringRef macPath = CFURLCopyFileSystemPath(imageURL, kCFURLPOSIXPathStyle);
       const char *pathPtr = CFStringGetCStringPtr(macPath, CFStringGetSystemEncoding());
-      string result = pathPtr;
-      return result;
+      if (macPath != 0 && pathPtr != 0) {
+        string result = pathPtr;
+        return result;
+      } else return strFileName;
     #else
       return strFileName;
     #endif
@@ -91,7 +93,7 @@ namespace SysTools {
       string strFileName(wstrFileName.begin(), wstrFileName.end());
       string strResult = GetFromResourceOnMac(strFileName);
       wstring wstrResult(strResult.begin(), strResult.end());
-      return wstrResult; 
+      return wstrResult;
     #else
       return wstrFileName;
     #endif
