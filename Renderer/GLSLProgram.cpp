@@ -216,16 +216,16 @@ void GLSLProgram::Initialize(void) {
  * \see GLSLPROGRAM_SOURCE
  */
 void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURCE src) {
-  m_pMasterController->DebugOut()->Message("GLSLProgram::Load","Initial Error Check");
   CheckGLError();
-  m_pMasterController->DebugOut()->Message("GLSLProgram::Load","Called with %s and %s", VSFile, FSFile);
 
   // load
   GLuint hVS=0;
   GLuint hFS=0;
   bool bVSSuccess=true;  // fixed function pipeline is always working
   if (VSFile!=NULL) {
+    m_pMasterController->DebugOut()->Message("printf debugging","A");
     hVS=LoadShader(VSFile,GL_VERTEX_SHADER,src);
+    m_pMasterController->DebugOut()->Message("printf debugging","B");
     if (hVS!=0) m_pMasterController->DebugOut()->Message("GLSLProgram::Load","VERTEX SHADER: OK");
     else {
       bVSSuccess=false;
@@ -376,7 +376,11 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
   // assert right type
   assert(Type==GL_VERTEX_SHADER || Type==GL_FRAGMENT_SHADER);
 
+  m_pMasterController->DebugOut()->Message("printf debugging","a");
+
   CheckGLError();
+
+  m_pMasterController->DebugOut()->Message("printf debugging","b");
 
   unsigned long lFileSize;
   char *pcShader;
@@ -416,10 +420,15 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
       return 0;
       break;
   }
+
+  m_pMasterController->DebugOut()->Message("printf debugging","c");
+
   GLuint hShader=glCreateShader(Type);  
   glShaderSource(hShader,1,(const char**)&pcShader,NULL);  // upload null-terminated shader
   glCompileShader(hShader);
   if (pcShader!=ShaderDesc) delete[] pcShader;
+
+  m_pMasterController->DebugOut()->Message("printf debugging","d");
 
   // Check for compile status
   GLint iCompiled;
@@ -436,6 +445,8 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
     glDeleteShader(hShader);
     bError=true;
   }
+
+  m_pMasterController->DebugOut()->Message("printf debugging","e");
 
   if (bError) return 0;
   return hShader;
