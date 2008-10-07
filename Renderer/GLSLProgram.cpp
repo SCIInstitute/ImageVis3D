@@ -320,6 +320,8 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
 		    return;
 	    }
     } else {
+	    if (hVS) glDeleteObjectARB(hVS);
+	    if (hFS) glDeleteObjectARB(hFS);	
       glDeleteObjectARB(m_hProgram);
       m_hProgram=0;
       m_bInitialized=false;
