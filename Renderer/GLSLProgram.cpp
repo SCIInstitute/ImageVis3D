@@ -41,6 +41,7 @@
 #include <Controller/MasterController.h>
 
 bool GLSLProgram::m_bGlewInitialized=true;    ///< GL Extension Wrangler (glew) is initialized on first instantiation
+bool GLSLProgram::m_bGLChecked=false;         ///< GL extension check
 
 /**
  * Default Constructor.
@@ -176,9 +177,18 @@ GLSLProgram::operator GLuint(void) const {
  * \date Aug.2004
  * \see m_bGlewInitialized
  */
-void GLSLProgram::Initialize(void) {
+bool GLSLProgram::Initialize(void) {
   if (!m_bGlewInitialized) {
     if (GLEW_OK!=glewInit()) m_pMasterController->DebugOut()->Error("GLSLProgram::Initialize","GLEW initialization failed!");    
+    m_bGlewInitialized=true;
+  }
+#ifdef GLSL_DEBUG  // just in case someone wants to handle GLEW himself (by setting the static var to true) but failed to do so properly
+  else {
+    if (glMultiTexCoord2f==NULL) m_pMasterController->DebugOut()->Error("GLSLProgram::Initialize","GLEW must be initialized. Set GLSLProgram::m_bGlewInitialized = false in GLSLProgram.cpp if you want this class to do it for you");
+  }
+#endif
+
+  if (!m_bGLChecked) {
     if (GLEW_VERSION_2_0) m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","OpenGL 2.0 supported");
     else { // check for ARB extensions
       if (glewGetExtension("GL_ARB_shader_objects")) m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shader_objects supported.");
@@ -190,13 +200,10 @@ void GLSLProgram::Initialize(void) {
         m_pMasterController->DebugOut()->Message("GLSLProgram::Initialize","ARB_shading_language_100 not supported!");
       }
     }
-    m_bGlewInitialized=true;
-  }
-#ifdef GLSL_DEBUG  // just in case someone wants to handle GLEW himself (by setting the static var to true) but failed to do so properly
-  else {
-    if (glMultiTexCoord2f==NULL) m_pMasterController->DebugOut()->Error("GLSLProgram::Initialize","GLEW must be initialized. Set GLSLProgram::m_bGlewInitialized = false in GLSLProgram.cpp if you want this class to do it for you");
-  }
-#endif
+    return false;
+    m_bGLChecked = true;
+  } 
+  return true;
 }
 
 
@@ -424,6 +431,7 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
   m_pMasterController->DebugOut()->Message("printf debugging","c");
 
   m_pMasterController->DebugOut()->Message("printf debugging","Type: %i, (vertex=%i, fragment=%i)", Type, GL_VERTEX_SHADER, GL_FRAGMENT_SHADER);
+  
 
   GLuint hShader = 0;
   try {
@@ -590,7 +598,7 @@ bool GLSLProgram::CheckGLError(const char *pcError, const char *pcAdditional) co
  * \date Jun.2005
  */
 bool GLSLProgram::IsValid(void) {
-  return m_bInitialized;
+  return m_bInitialized && m_bGLChecked;
 }
 
 /**

@@ -118,7 +118,7 @@ public:
   virtual UINT64 GetGPUSize() {return 8;}  ///< assume near zero GPU memory cost for shaders to avoid any memory manager from paging out shaders, the 8 is basically only to detect mem-leaks
 
 private:
-  void    Initialize(void);
+  bool    Initialize(void);
   GLuint  LoadShader(const char*,GLenum,GLSLPROGRAM_SOURCE src);
   bool    WriteInfoLog(GLuint,bool);
   bool    CheckGLError(const char *pcError=NULL,const char *pcAdditional=NULL) const;
@@ -127,7 +127,7 @@ private:
   bool                m_bEnabled;
   GLuint              m_hProgram;  
   static bool         m_bGlewInitialized;
-
+  static bool         m_bGLChecked;
 
 };
 
