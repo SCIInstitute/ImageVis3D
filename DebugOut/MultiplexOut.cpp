@@ -99,7 +99,6 @@ void MultiplexOut::printf(const char* format, ...)
 }
 
 void MultiplexOut::Message(const char* source, const char* format, ...) {
-  if (!m_bShowMessages) return;
   char buff[16384];
   va_list args;
   va_start(args, format);
@@ -112,7 +111,6 @@ void MultiplexOut::Message(const char* source, const char* format, ...) {
 }
 
 void MultiplexOut::Warning(const char* source, const char* format, ...) {
-  if (!m_bShowWarnings) return;
   char buff[16384];
   va_list args;
   va_start(args, format);
@@ -125,7 +123,6 @@ void MultiplexOut::Warning(const char* source, const char* format, ...) {
 }
 
 void MultiplexOut::Error(const char* source, const char* format, ...) {
-  if (!m_bShowErrors) return;
   char buff[16384];
   va_list args;
   va_start(args, format);

@@ -54,6 +54,8 @@ class TextfileOut : public AbstrDebugOut{
     virtual void Error(const char* source, const char* format, ...);
   private:
     std::string m_strFilename;
+
+    void _printf(const char* format, ...); //< same as printf above but does regard m_bShowOther
 };
 
 #endif // TEXTFILEOUT_H

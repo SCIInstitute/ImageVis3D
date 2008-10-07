@@ -77,6 +77,25 @@ void TextfileOut::printf(const char* format, ...)
   fs.close();
 }
 
+void TextfileOut::_printf(const char* format, ...)
+{
+  char buff[16384];
+  va_list args;
+  va_start(args, format);
+#ifdef WIN32
+  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
+#else
+  vsnprintf( buff, sizeof(buff), format, args);
+#endif
+
+  ofstream fs;
+  fs.open(m_strFilename.c_str(),  ios_base::app);
+  if (fs.fail()) return;
+  fs << buff << endl;
+  fs.flush();
+  fs.close();
+}
+
 void TextfileOut::Message(const char* source, const char* format, ...) {
   if (!m_bShowMessages) return;
   char buff[16384];
@@ -87,7 +106,7 @@ void TextfileOut::Message(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-  this->printf("MESSAGE (%s): %s",source, buff);
+  this->_printf("MESSAGE (%s): %s",source, buff);
 }
 
 void TextfileOut::Warning(const char* source, const char* format, ...) {
@@ -100,7 +119,7 @@ void TextfileOut::Warning(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-  this->printf("WARNING (%s): %s",source, buff);
+  this->_printf("WARNING (%s): %s",source, buff);
 }
 
 void TextfileOut::Error(const char* source, const char* format, ...) {
@@ -113,5 +132,5 @@ void TextfileOut::Error(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-  this->printf("ERROR (%s): %s",source, buff);
+  this->_printf("ERROR (%s): %s",source, buff);
 }
