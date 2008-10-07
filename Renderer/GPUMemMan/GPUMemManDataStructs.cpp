@@ -43,7 +43,10 @@ Texture3DListElem::Texture3DListElem(VolumeDataset* _pDataset, const std::vector
   vLOD(_vLOD),
   vBrick(_vBrick)
 {
-   CreateTexture();
+  if (!CreateTexture()) {
+    delete pTexture;
+    pTexture = NULL;
+  }
 }
 
 Texture3DListElem::~Texture3DListElem() {
@@ -118,8 +121,7 @@ bool Texture3DListElem::CreateTexture() {
 
 
   pTexture = new GLTexture3D(GLuint(vSize[0]), GLuint(vSize[1]), GLuint(vSize[2]), glInternalformat, glFormat, glType, (unsigned int)(iBitWidth*iCompCount), pData);
-
-  return true;
+	return GL_NO_ERROR==glGetError();
 }
 
 void Texture3DListElem::FreeTexture() {

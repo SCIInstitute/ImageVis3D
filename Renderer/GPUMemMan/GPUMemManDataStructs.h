@@ -133,6 +133,7 @@ public:
   unsigned char*      pData;
   GLTexture3D*        pTexture;
   VolumeDataset*      pDataset;
+  bool                bTextureCreated;
 
 private:
   std::vector<UINT64> vLOD;

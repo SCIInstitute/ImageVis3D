@@ -398,6 +398,12 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
 
   Texture3DListElem* pNew3DTex = new Texture3DListElem(pDataset, vLOD, vBrick);
 
+  if (pNew3DTex->pTexture == NULL) {
+    m_MasterController->DebugOut()->Error("GPUMemMan::Get3DTexture","Failed to create OpenGL texture.");
+    delete pNew3DTex;
+    return NULL;
+  }
+
   m_iAllocatedGPUMemory += pNew3DTex->pTexture->GetCPUSize();
   m_iAllocatedCPUMemory += pNew3DTex->pTexture->GetGPUSize();
 
