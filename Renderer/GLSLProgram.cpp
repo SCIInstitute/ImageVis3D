@@ -168,8 +168,6 @@ bool GLSLProgram::Initialize(void) {
       glUniformMatrix3fv = glUniformMatrix3fvARB;
       glUniformMatrix4fv = glUniformMatrix4fvARB;
 
-      glGetActiveUniform   = glGetActiveUniformARB;
-
       m_bGLUseARB = true;
     }
     return false;
@@ -647,7 +645,10 @@ void GLSLProgram::SetUniformVector(const char *name,float x, float y, float z, f
     return;  
   }
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformVector(%s,float,...) [getting type]",name)) return;  
 
@@ -716,7 +717,10 @@ void GLSLProgram::SetUniformVector(const char *name,bool x, bool y, bool z, bool
     return;  
   }
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformVector(%s,bool,...) [getting type]",name)) return;  
 
@@ -776,7 +780,10 @@ void GLSLProgram::SetUniformVector(const char *name,int x,int y,int z,int w) con
   }
 
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformVector(%s,int,...) [getting type]",name)) return;
 
@@ -845,8 +852,10 @@ void GLSLProgram::SetUniformVector(const char *name,const float *v) const {
     return;  
   }
 
-
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformVector(%s,float*) [getting type]" ,name)) return;
 
@@ -914,7 +923,10 @@ void GLSLProgram::SetUniformVector(const char *name,const int *i) const {
     return;  
   }
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformVector(%s,int*) [getting type]",name)) return;
 
@@ -980,7 +992,10 @@ void GLSLProgram::SetUniformVector(const char *name,const bool *b) const {
     return;  
   }
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformVector(%s,bool*) [getting type]",name)) return;
 
@@ -1039,7 +1054,10 @@ void GLSLProgram::SetUniformMatrix(const char *name,const float *m,bool bTranspo
     return;
   }
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformMatrix(%s,float*,bool) [getting type]",name)) return;
 
@@ -1090,7 +1108,10 @@ void GLSLProgram::SetUniformMatrix(const char *name,const int *m, bool bTranspos
     return;
   }
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformMatrix(%s,float*,bool) [getting type]",name)) return;
 
@@ -1149,7 +1170,10 @@ void GLSLProgram::SetUniformMatrix(const char *name,const bool *m, bool bTranspo
     return;
   }
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformMatrix(%s,float*,bool) [getting type]",name)) return;
 
@@ -1208,7 +1232,10 @@ void GLSLProgram::SetUniformArray(const char *name,const float *a) const {
     return;  
   }
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformArray(%s,float*) [getting type]",name)) return;
 
@@ -1302,7 +1329,10 @@ void GLSLProgram::SetUniformArray(const char *name,const int *a) const {
     return;  
   }
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformArray(%s,int*) [getting type]",name)) return;
 
@@ -1395,7 +1425,10 @@ void GLSLProgram::SetUniformArray(const char *name,const bool  *a) const {
     return;  
   }
 
-  glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  if (m_bGLUseARB)    
+    glGetActiveUniformARB(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
+  else
+    glGetActiveUniform(m_hProgram,iLocation,0,NULL,&iSize,&iType,NULL);
 
   if (CheckGLError("SetUniformArray(%s,bool*) [getting type]",name)) return;
 
