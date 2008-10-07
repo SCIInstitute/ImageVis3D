@@ -101,6 +101,8 @@ void GPUSBVR::UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UI
 }
 
 void GPUSBVR::DrawLogo() {
+    m_pMasterController->DebugOut()->Message("printf debugging","a");
+
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -109,9 +111,13 @@ void GPUSBVR::DrawLogo() {
     glPushMatrix();
     glLoadIdentity();
 
+    m_pMasterController->DebugOut()->Message("printf debugging","b");
+
     if (m_IDTex[m_iCurrentView] != NULL) m_IDTex[m_iCurrentView]->Bind();
     glDisable(GL_TEXTURE_3D);
     glEnable(GL_TEXTURE_2D);
+
+    m_pMasterController->DebugOut()->Message("printf debugging","c");
 
     glBegin(GL_QUADS);
       glColor4d(1,1,1,1);
@@ -125,12 +131,17 @@ void GPUSBVR::DrawLogo() {
       glVertex3d(0.2, 0.2, -0.5);
     glEnd();
 
+    m_pMasterController->DebugOut()->Message("printf debugging","d");
+
     glDisable(GL_TEXTURE_2D);
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
+
+    m_pMasterController->DebugOut()->Message("printf debugging","e");
+
 }
 
 void GPUSBVR::DrawBackGradient() {
