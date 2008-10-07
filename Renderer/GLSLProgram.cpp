@@ -305,7 +305,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
 	    glLinkProgramARB(m_hProgram);
 
 	    // check for errors
-	    int iLinked;
+	    Glint iLinked;
 	    glGetObjectParameterivARB(m_hProgram,GL_OBJECT_LINK_STATUS_ARB,&iLinked);
 	    m_pMasterController->DebugOut()->Error("GLSLProgram::Load","Linker Error");
 	    WriteError(m_hProgram);
