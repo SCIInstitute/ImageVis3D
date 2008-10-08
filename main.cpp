@@ -53,8 +53,7 @@
 */
 
 int main(int argc, char* argv[])
-{
-	
+{	
   /*
   // Enable run-time memory check for debug builds on windows
 	#ifdef _WIN32
@@ -63,7 +62,6 @@ int main(int argc, char* argv[])
 		#endif
 	#endif
   */
-
 
   // get command line paramers 
   SysTools::CmdLineParams parameters(argc, argv);

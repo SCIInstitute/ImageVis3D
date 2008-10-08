@@ -182,12 +182,12 @@ bool MainWindow::ParseCommand(string strCommand, string strParam) {
         } else strExtension += extensions[0];
         extensions++;
       }
-      m_DebugOut->printf("%ui extensions found",iExtCount);
+      m_DebugOut->printf("%u extensions found",iExtCount);
     }
     return true;
   }
   if (strCommand == "sysinfo") {
-    m_DebugOut->printf("This a %ibit build.", m_MasterController.MemMan()->GetBitWithMem());
+    m_DebugOut->printf("This a %ubit build.", m_MasterController.MemMan()->GetBitWithMem());
 
     m_DebugOut->printf("CPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetCPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableCPUMem()/(1024*1024));
     m_DebugOut->printf("    Used: %llu MB (%llu Bytes)", 
