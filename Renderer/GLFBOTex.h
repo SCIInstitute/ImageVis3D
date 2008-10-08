@@ -20,12 +20,12 @@ class GLFBOTex : public GLObject {
 public:
 	GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth=false, int iNumBuffers=1);
 	virtual ~GLFBOTex(void);
-	inline virtual void Write(GLenum target=GL_COLOR_ATTACHMENT0_EXT,int iBuffer=0);
-	inline virtual void Read(GLenum texunit,int iBuffer=0);
-	inline virtual void FinishWrite(int iBuffer=0);
-	inline virtual void FinishRead(int iBuffer=0);
-	inline virtual operator GLuint(void) { return m_hTexture[0]; }
-	inline virtual operator GLuint*(void) { return m_hTexture; }
+	virtual void Write(GLenum target=GL_COLOR_ATTACHMENT0_EXT,int iBuffer=0);
+	virtual void Read(GLenum texunit,int iBuffer=0);
+	virtual void FinishWrite(int iBuffer=0);
+	virtual void FinishRead(int iBuffer=0);
+	virtual operator GLuint(void) { return m_hTexture[0]; }
+	virtual operator GLuint*(void) { return m_hTexture; }
 
   virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
   virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
@@ -56,14 +56,14 @@ class VBOTex : public GLObject {
 public:
 	VBOTex(MasterController* pMasterController, GLsizei width, GLsizei height, bool bHaveDepth=false, int iNumBuffers=1);
 	virtual ~VBOTex(void);
-	inline virtual void CopyToVBO(int iBuffer=0);
-	inline virtual void Write(GLenum target=GL_COLOR_ATTACHMENT0_EXT, int iBuffer=0);
-	inline virtual void FinishWrite(int iBuffer=0);
-	inline virtual void ReadTex(GLenum texunit, int iBuffer=0);
-	inline virtual void FinishReadTex(int iBuffer=0);
-	inline virtual void Read(void);
-	inline virtual void FinishRead(void);
-	inline virtual operator GLuint(void) { return m_hPBO; }	
+	virtual void CopyToVBO(int iBuffer=0);
+	virtual void Write(GLenum target=GL_COLOR_ATTACHMENT0_EXT, int iBuffer=0);
+	virtual void FinishWrite(int iBuffer=0);
+	virtual void ReadTex(GLenum texunit, int iBuffer=0);
+	virtual void FinishReadTex(int iBuffer=0);
+	virtual void Read(void);
+	virtual void FinishRead(void);
+	virtual operator GLuint(void) { return m_hPBO; }	
 
   virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
   virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies

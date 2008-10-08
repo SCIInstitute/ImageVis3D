@@ -237,7 +237,7 @@ VBOTex::~VBOTex() {
 /**
  * Lock texture for writing. Texture may not be bound any more!
  */
-inline void GLFBOTex::Write(GLenum target,int iBuffer) {
+void GLFBOTex::Write(GLenum target,int iBuffer) {
 #ifdef _DEBUG
 	if (!m_hFBO) {
 		m_pMasterController->DebugOut()->Error("GLFBOTex:Write","FBO not initialized!");
@@ -256,7 +256,7 @@ inline void GLFBOTex::Write(GLenum target,int iBuffer) {
 #endif
 }
 
-inline void GLFBOTex::FinishWrite(int iBuffer) {
+void GLFBOTex::FinishWrite(int iBuffer) {
 	assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,m_LastAttachment[iBuffer],GL_TEXTURE_2D,0,0);
@@ -266,7 +266,7 @@ inline void GLFBOTex::FinishWrite(int iBuffer) {
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
 }
 
-inline void GLFBOTex::Read(GLenum texunit, int iBuffer) {
+void GLFBOTex::Read(GLenum texunit, int iBuffer) {
 #ifdef _DEBUG
 	if (m_LastTexUnit[iBuffer]!=0) m_pMasterController->DebugOut()->Error("GLFBOTex:Read","Missing FinishRead()!");
 #endif
@@ -278,7 +278,7 @@ inline void GLFBOTex::Read(GLenum texunit, int iBuffer) {
 }
 
 // Finish rendering from this texture
-inline void GLFBOTex::FinishRead(int iBuffer) {
+void GLFBOTex::FinishRead(int iBuffer) {
 	assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);
 	glActiveTextureARB(m_LastTexUnit[iBuffer]);
@@ -286,7 +286,7 @@ inline void GLFBOTex::FinishRead(int iBuffer) {
 	m_LastTexUnit[iBuffer]=0;
 }
 
-inline void VBOTex::Write(GLenum target,int iBuffer) {
+void VBOTex::Write(GLenum target,int iBuffer) {
 	assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);
 	m_hGLFBOTex->Write(target,iBuffer);
@@ -296,7 +296,7 @@ inline void VBOTex::Write(GLenum target,int iBuffer) {
 // Trouble: FinishWrite required for all buffers, but not all should end up in a VBO. Solution: CopyToVBO(int iBuffer);
 // Trouble: need multiple VBOs...
 
-inline void VBOTex::CopyToVBO(int iBuffer) {
+void VBOTex::CopyToVBO(int iBuffer) {
 	if (m_bPBOSupported) {
 		glBindBufferARB(GL_PIXEL_PACK_BUFFER_EXT,m_hPBO);
 		glReadBuffer(m_LastAttachment[iBuffer]);
@@ -321,7 +321,7 @@ inline void VBOTex::CopyToVBO(int iBuffer) {
 	}
 }
 
-inline void VBOTex::FinishWrite(int iBuffer) {	
+void VBOTex::FinishWrite(int iBuffer) {	
 	m_hGLFBOTex->FinishWrite(iBuffer);
 }
 
@@ -329,7 +329,7 @@ inline void VBOTex::FinishWrite(int iBuffer) {
 // TODO: More intelligent implementation: Render everything, then if a buffer is requested for reading, first
 // perform VBO/PBO copy. Read(GLenum target,int iBuffer) does the trick. Should be copied to respective array.
 
-inline void VBOTex::Read(void) {
+void VBOTex::Read(void) {
 	//assert(iBuffer>=0);
 	//assert(iBuffer<m_iNumBuffers);
 	glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_hPBO);
@@ -337,16 +337,16 @@ inline void VBOTex::Read(void) {
 	glEnableClientState(GL_VERTEX_ARRAY);
 };
 
-inline void VBOTex::FinishRead(void) {
+void VBOTex::FinishRead(void) {
 	glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-inline void VBOTex::ReadTex(GLenum texunit,int iBuffer) {
+void VBOTex::ReadTex(GLenum texunit,int iBuffer) {
 	m_hGLFBOTex->Read(texunit,iBuffer);
 }
 
 // Finish rendering from this texture
-inline void VBOTex::FinishReadTex(int iBuffer) {
+void VBOTex::FinishReadTex(int iBuffer) {
 	m_hGLFBOTex->FinishRead(iBuffer);
 }
