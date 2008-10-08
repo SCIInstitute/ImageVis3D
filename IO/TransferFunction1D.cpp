@@ -58,21 +58,34 @@ void TransferFunction1D::Resize(size_t iSize) {
   vColorData.resize(iSize);
 }
 
-
-void TransferFunction1D::SetDefault(size_t iSaturationPoint) {
-  for (size_t i = 0;i<iSaturationPoint+1;i++) {
-    float val = (float) i / (float) iSaturationPoint;
-    vColorData[i] = FLOATVECTOR4(val,val,val,1.0f);
-  }
-
-  for (size_t i = iSaturationPoint+1;i<vColorData.size();i++) {
-    vColorData[i] = FLOATVECTOR4(1.0f,1.0f,1.0f,1.0f);
-  }
-
+float TransferFunction1D::Smoothstep(float x) {
+  return 3*x*x-2*x*x*x;
 }
 
-void TransferFunction1D::SetDefault() {
-  SetDefault(vColorData.size()-1);
+void TransferFunction1D::SetStdFunction(float fCenterPoint, float fInvGradient) {
+  SetStdFunction(fCenterPoint, fInvGradient,0);
+  SetStdFunction(fCenterPoint, fInvGradient,1);
+  SetStdFunction(fCenterPoint, fInvGradient,2);
+  SetStdFunction(fCenterPoint, fInvGradient,3);
+}
+
+void TransferFunction1D::SetStdFunction(float fCenterPoint, float fInvGradient, int iComponent) {
+  size_t iCenterPoint = size_t((vColorData.size()-1) * float(std::min<float>(std::max<float>(0,fCenterPoint),1)));
+  size_t iInvGradient = size_t((vColorData.size()-1) * float(std::min<float>(std::max<float>(0,fInvGradient),1)));
+
+  size_t iRampStartPoint = (iInvGradient/2 > iCenterPoint)                      ? 0                 : iCenterPoint-(iInvGradient/2); 
+  size_t iRampEndPoint   = (iInvGradient/2 + iCenterPoint > vColorData.size())  ? vColorData.size() : iCenterPoint+(iInvGradient/2);
+
+  for (size_t i = 0;i<iRampStartPoint;i++)                  
+    vColorData[i][iComponent] = 0;
+
+  for (size_t i = iRampStartPoint;i<iRampEndPoint;i++) {
+    float fValue = Smoothstep(float(i-iCenterPoint+(iInvGradient/2))/float(iInvGradient));
+    vColorData[i][iComponent] = fValue;
+  }
+
+  for (size_t i = iRampEndPoint;i<vColorData.size();i++)
+    vColorData[i][iComponent] = 1;
 }
 
 void TransferFunction1D::Clear() {

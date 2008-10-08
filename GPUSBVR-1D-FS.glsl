@@ -35,12 +35,13 @@
   \date    October 2008
 */
 
-uniform sampler3D VolTexture;
-uniform sampler1D Trans1DTexture;
+uniform sampler3D texVolTexture;
+uniform sampler1D texTrans1DTexture;
+uniform float fTransScale;
 
 void main(void)
 {
-	float fVolumVal = texture3D(VolTexture, gl_TexCoord[0].xyz).x;	
-	vec4  vTransVal = texture1D(Trans1DTexture, fVolumVal);
+	float fVolumVal = texture3D(texVolTexture, gl_TexCoord[0].xyz).x;	
+	vec4  vTransVal = texture1D(texTrans1DTexture, fVolumVal*fTransScale);
 	gl_FragColor    = vTransVal;
 }

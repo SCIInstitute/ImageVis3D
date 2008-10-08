@@ -51,6 +51,7 @@ class GPUSBVR : public GLRenderer {
     GPUSBVR(MasterController* pMasterController);
     virtual ~GPUSBVR();
     virtual bool CheckForRedraw();
+    virtual bool LoadDataset(const std::string& strFilename);
 
     void Paint(bool bClearDepthBuffer=true);
     void Resize(int width, int height);
@@ -81,6 +82,7 @@ class GPUSBVR : public GLRenderer {
     void DrawBackGradient();
     void UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
     void RerenderPreviousResult();
+    void SetDataDepShaderVars();
 };
 
 #endif // GPUSBVR_H

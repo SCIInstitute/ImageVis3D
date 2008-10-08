@@ -41,9 +41,18 @@
 
 #include <limits>
 
+#ifdef _WIN32
+  typedef unsigned __int64 UINT64;
+#else
+  typedef unsigned long long UINT64;
+#endif
+typedef unsigned int UINT32;
 
+#define UNUSED 0
+#define UNUSED_FLOAT 0.0f
+#define UNUSED_DOUBLE 0.0f
 #define IV3D_VERSION "0.01 alpha"
-#define UINT_INVALID (std::numeric_limits<UINT>::max())
+#define UINT32_INVALID (std::numeric_limits<UINT>::max())
 #define UINT64_INVALID (std::numeric_limits<UINT64>::max())
 
 

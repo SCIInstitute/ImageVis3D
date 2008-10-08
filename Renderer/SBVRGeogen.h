@@ -64,7 +64,7 @@ public:
 	virtual void SetTransformation(const FLOATMATRIX4& matTransform);
 	virtual void SetVolumeData(	const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize) {m_vAspect = vAspect; m_vSize = vSize;  InitBBOX(); }
 	void ComputeGeometry();
-	uint ComputeLayerGeometry(float fDepth, POS3TEX3_VERTEX pfLayerPoints[6]);
+	uint ComputeLayerGeometry(float fDepth, POS3TEX3_VERTEX pfLayerPoints[12]);
 
 	std::vector<POS3TEX3_VERTEX> m_vSliceTriangles;
 
@@ -83,7 +83,7 @@ protected:
 	void ComputeIntersection(float z, uint indexA, uint indexB, POS3TEX3_VERTEX& vHit, uint &count);
 	bool CheckOdering(FLOATVECTOR3& a, FLOATVECTOR3& b, FLOATVECTOR3& c);
 	void Swap(POS3TEX3_VERTEX& a, POS3TEX3_VERTEX& b);
-	void SortPoints(POS3TEX3_VERTEX fArray[6], uint iCount);
-	int FindMinPoint(POS3TEX3_VERTEX fArray[6], uint iCount);
-	void Triangulate(POS3TEX3_VERTEX fArray[6], uint iCount);
+	void SortPoints(POS3TEX3_VERTEX fArray[12], uint iCount);
+	int FindMinPoint(POS3TEX3_VERTEX fArray[12], uint iCount);
+	void Triangulate(POS3TEX3_VERTEX fArray[12], uint iCount);
 };

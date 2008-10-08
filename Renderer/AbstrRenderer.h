@@ -43,6 +43,7 @@
 
 #include <string>
 
+#include <StdDefines.h>
 #include "../IO/VolumeDataset.h"
 #include "../IO/TransferFunction1D.h"
 #include "../IO/TransferFunction2D.h"

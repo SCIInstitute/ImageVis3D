@@ -61,6 +61,7 @@ GPUSBVR::~GPUSBVR() {
 
 
 void GPUSBVR::Initialize() {
+  GLRenderer::Initialize();
 
   m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","");
 
@@ -85,19 +86,37 @@ void GPUSBVR::Initialize() {
   m_pProgram1DTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-1D-VS.glsl"),
                                                                     SysTools::GetFromResourceOnMac("GPUSBVR-1D-FS.glsl"));
 
-  GLRenderer::Initialize();
+ 
+  m_pProgram1DTrans->Enable();
+  m_pProgram1DTrans->SetUniformVector("texVolTexture",0);
+  m_pProgram1DTrans->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram1DTrans->Disable();
+}
+
+void GPUSBVR::SetDataDepShaderVars() {
+  m_pProgram1DTrans->Enable();
+  size_t       iMaxValue = m_p1DTrans->vColorData.size();
+  unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
+  float fScale = float(iMaxRange)/float(iMaxValue);
+  m_pProgram1DTrans->SetUniformVector("fTransScale",fScale);
+  m_pProgram1DTrans->Disable();
+}
+
+bool GPUSBVR::LoadDataset(const string& strFilename) {
+  if (GLRenderer::LoadDataset(strFilename)) {
+    if (m_pProgram1DTrans != NULL) SetDataDepShaderVars();
+    return true;
+  } else return false;
 }
 
 
 void GPUSBVR::UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) {
-
   UINTVECTOR3  vSize = m_pDataset->GetBrickSize(vLOD, vBrick);
   FLOATVECTOR3 vCenter, vExtension;
   m_pDataset->GetBrickCenterAndExtension(vLOD, vBrick, vCenter, vExtension);
 
   // TODO: transfer brick offsets to m_SBVRGeogen
   m_SBVRGeogen.SetVolumeData(vExtension, vSize);
-  
 }
 
 void GPUSBVR::DrawLogo() {
@@ -179,6 +198,8 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
 
     m_pFBO3DImage->Write();
 
+    SetDataDepShaderVars();
+
     if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
       glClear(GL_COLOR_BUFFER_BIT);
     } else {
@@ -215,8 +236,6 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
     m_p1DTransTex->Bind(1);
 
     m_pProgram1DTrans->Enable();
-    m_pProgram1DTrans->SetUniformVector("VolTexture",0);
-    m_pProgram1DTrans->SetUniformVector("Trans1DTexture",1);
 
 
     glBegin(GL_TRIANGLES);

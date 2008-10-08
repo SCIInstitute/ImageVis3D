@@ -613,13 +613,13 @@ void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
 void Q2DTransferFunction::Transfer2DAddSwatch() {  
   TFPolygon newSwatch;
 
-  newSwatch.pPoints.push_back(FLOATVECTOR2(0,0));
-  newSwatch.pPoints.push_back(FLOATVECTOR2(0,1));
-  newSwatch.pPoints.push_back(FLOATVECTOR2(1,1));
-  newSwatch.pPoints.push_back(FLOATVECTOR2(1,0));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(0.3f,0.3f));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(0.3f,0.7f));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(0.7f,0.7f));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(0.7f,0.3f));
 
-  newSwatch.pGradientCoords[0] = FLOATVECTOR2(0,0.5);
-  newSwatch.pGradientCoords[1] = FLOATVECTOR2(1,0.5);
+  newSwatch.pGradientCoords[0] = FLOATVECTOR2(0.3f,0.5f);
+  newSwatch.pGradientCoords[1] = FLOATVECTOR2(0.7f,0.5f);
 
   GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),g2(0.5f,FLOATVECTOR4(1,1,1,1)),g3(1,FLOATVECTOR4(0,0,0,0));
   newSwatch.pGradientStops.push_back(g1);

@@ -234,7 +234,16 @@ void VolumeDataset::GetBrickCenterAndExtension(const std::vector<UINT64>& vLOD, 
   vCenter[1] = 0;
   vCenter[2] = 0;
 
-  vExtension[0] = 1;
-  vExtension[1] = 1;
-  vExtension[2] = 1;
+  const std::vector<UINT64> vBrickSize = m_pVolumeDatasetInfo->GetBrickSize(vLOD, vBrick);
+  const std::vector<double> vScale     = m_pVolumeDatasetInfo->GetScale();
+
+  assert(vBrickSize.size() >= 3); 
+  
+  UINT64 iMax = vBrickSize[0];
+  for (size_t i = 1;i<3;i++) if (iMax < vBrickSize[i]) iMax = vBrickSize[i];
+
+
+  vExtension[0] = float(vBrickSize[0])/float(iMax)*float(vScale[0]);
+  vExtension[1] = float(vBrickSize[1])/float(iMax)*float(vScale[1]);
+  vExtension[2] = float(vBrickSize[2])/float(iMax)*float(vScale[2]);
 }

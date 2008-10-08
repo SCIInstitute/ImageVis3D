@@ -123,6 +123,8 @@ private:
   // mouse motion handling
   int m_iLastIndex;
   float m_fLastValue;
+  bool m_bMouseLeft;
+  bool m_bMouseRight;
 
   // drawing routines
   void DrawCoordinateSystem(QPainter& painter);

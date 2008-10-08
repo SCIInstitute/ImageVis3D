@@ -75,7 +75,9 @@ Q1DTransferFunction::Q1DTransferFunction(MasterController& masterController, QWi
   m_iBigMarkerLength(m_iMarkerLength*3),
   // mouse motion
   m_iLastIndex(-1),
-  m_fLastValue(0)
+  m_fLastValue(0),
+  m_bMouseLeft(false),
+  m_bMouseRight(false)
 {
   SetColor(isEnabled());
 }
@@ -253,6 +255,9 @@ void Q1DTransferFunction::mousePressEvent(QMouseEvent *event) {
   QWidget::mousePressEvent(event);
   // clear the "last position" index
   m_iLastIndex = -1;
+
+  if (event->button() == Qt::LeftButton)  m_bMouseLeft = true;
+  if (event->button() == Qt::RightButton) m_bMouseRight = true;
 }
 
 void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
@@ -261,7 +266,11 @@ void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   // call superclass method
   QWidget::mouseReleaseEvent(event);
   // clear the "last position" index
+
   m_iLastIndex = -1;
+
+  if (event->button() == Qt::LeftButton) m_bMouseLeft = false;
+  if (event->button() == Qt::RightButton) m_bMouseRight = false;
 
   // send message to update the GLtexture
   if( m_eExecutionMode == ONRELEASE )ApplyFunction();
@@ -289,67 +298,81 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
   float fValue = (float(m_iTopBorder)+float(iGridHeight)-float(event->y()))/float(iGridHeight);
   fValue    = std::min<float>(1.0f, std::max<float>(0.0f,fValue));
 
-  // find out the range to change
-  if (m_iLastIndex == -1) {
+  if (m_bMouseLeft) {
+    // find out the range to change
+    if (m_iLastIndex == -1) {
+      m_iLastIndex = iCurrentIndex;
+      m_fLastValue = fValue;
+    }
+    
+    int iIndexMin, iIndexMax;
+    float fValueMin, fValueInc;
+
+    if (m_iLastIndex < iCurrentIndex) {
+      iIndexMin = m_iLastIndex;
+      iIndexMax = iCurrentIndex;
+
+      fValueMin = m_fLastValue;
+      fValueInc = -(fValue-m_fLastValue)/(m_iLastIndex-iCurrentIndex);
+    } else {
+      iIndexMin = iCurrentIndex;
+      iIndexMax = m_iLastIndex;
+
+      fValueMin = fValue;
+      fValueInc = -(fValue-m_fLastValue)/(m_iLastIndex-iCurrentIndex);
+    }
+
     m_iLastIndex = iCurrentIndex;
     m_fLastValue = fValue;
-  }
-  
-  int iIndexMin, iIndexMax;
-  float fValueMin, fValueInc;
 
-  if (m_iLastIndex < iCurrentIndex) {
-    iIndexMin = m_iLastIndex;
-    iIndexMax = iCurrentIndex;
+    // update transfer function
+    if (m_iPaintMode & PAINT_RED) {
+      float _fValueMin = fValueMin;
+      for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
+        m_pTrans->vColorData[iIndex][0] = _fValueMin;
+        _fValueMin += fValueInc;
+      }
+    }
+    if (m_iPaintMode & PAINT_GREEN) {
+      float _fValueMin = fValueMin;
+      for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
+        m_pTrans->vColorData[iIndex][1] = _fValueMin;
+        _fValueMin += fValueInc;
+      }
+    }
+    if (m_iPaintMode & PAINT_BLUE) {
+      float _fValueMin = fValueMin;
+      for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
+        m_pTrans->vColorData[iIndex][2] = _fValueMin;
+        _fValueMin += fValueInc;
+      }
+    }
+    if (m_iPaintMode & PAINT_ALPHA) {
+      float _fValueMin = fValueMin;
+      for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
+        m_pTrans->vColorData[iIndex][3] = _fValueMin;
+        _fValueMin += fValueInc;
+      }
+    }
 
-    fValueMin = m_fLastValue;
-    fValueInc = -(fValue-m_fLastValue)/(m_iLastIndex-iCurrentIndex);
+    // redraw this widget
+    update();
+    // send message to update the GLtexture
+    if( m_eExecutionMode == CONTINUOUS ) ApplyFunction();
   } else {
-    iIndexMin = iCurrentIndex;
-    iIndexMax = m_iLastIndex;
+    if (m_bMouseRight) {
+      // set "step" function      
+      if (m_iPaintMode & PAINT_RED)   m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->vColorData.size()), fValue,0);
+      if (m_iPaintMode & PAINT_GREEN) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->vColorData.size()), fValue,1);
+      if (m_iPaintMode & PAINT_BLUE)  m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->vColorData.size()), fValue,2);
+      if (m_iPaintMode & PAINT_ALPHA) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->vColorData.size()), fValue,3);
 
-    fValueMin = fValue;
-    fValueInc = -(fValue-m_fLastValue)/(m_iLastIndex-iCurrentIndex);
-  }
-
-  m_iLastIndex = iCurrentIndex;
-  m_fLastValue = fValue;
-
-  // update transfer function
-  if (m_iPaintMode & PAINT_RED) {
-    float _fValueMin = fValueMin;
-    for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-      m_pTrans->vColorData[iIndex][0] = _fValueMin;
-      _fValueMin += fValueInc;
+      // redraw this widget
+      update();
+      // send message to update the GLtexture
+      if( m_eExecutionMode == CONTINUOUS ) ApplyFunction();
     }
   }
-  if (m_iPaintMode & PAINT_GREEN) {
-    float _fValueMin = fValueMin;
-    for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-      m_pTrans->vColorData[iIndex][1] = _fValueMin;
-      _fValueMin += fValueInc;
-    }
-  }
-  if (m_iPaintMode & PAINT_BLUE) {
-    float _fValueMin = fValueMin;
-    for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-      m_pTrans->vColorData[iIndex][2] = _fValueMin;
-      _fValueMin += fValueInc;
-    }
-  }
-  if (m_iPaintMode & PAINT_ALPHA) {
-    float _fValueMin = fValueMin;
-    for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-      m_pTrans->vColorData[iIndex][3] = _fValueMin;
-      _fValueMin += fValueInc;
-    }
-  }
-
-  // redraw this widget
-  update();
-
-  // send message to update the GLtexture
-  if( m_eExecutionMode == CONTINUOUS ) ApplyFunction();
 }
 
 void Q1DTransferFunction::ApplyFunction() {

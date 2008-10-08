@@ -73,6 +73,12 @@ class VolumeDatasetInfo {
     const std::vector<UINT64> GetLODLevelCount() const {
       return m_pVolumeDataBlock->ulLODLevelCount;
     }
+    const std::vector<double> GetScale() const {
+      std::vector<double> vfScale;  
+      size_t iSize = m_pVolumeDataBlock->ulDomainSize.size();
+      for (size_t i = 0;i<iSize;i++) vfScale.push_back(m_pVolumeDataBlock->dDomainTransformation[i+(iSize+1)*i]);
+      return vfScale;
+    }
 
     // TODO: change this if we want to support color data
     UINT64 GetBitwith() const {

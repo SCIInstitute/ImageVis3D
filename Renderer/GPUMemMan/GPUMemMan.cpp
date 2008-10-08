@@ -229,7 +229,7 @@ void GPUMemMan::Changed1DTrans(AbstrRenderer* requester, TransferFunction1D* pTr
 void GPUMemMan::GetEmpty1DTrans(size_t iSize, AbstrRenderer* requester, TransferFunction1D** ppTransferFunction1D, GLTexture1D** tex) {
   m_MasterController->DebugOut()->Message("GPUMemMan::GetEmpty1DTrans","Creating new empty 1D transfer function");
   *ppTransferFunction1D = new TransferFunction1D(iSize);
-  (*ppTransferFunction1D)->SetDefault();
+  (*ppTransferFunction1D)->SetStdFunction();
 
   unsigned char* pcData = NULL;
   (*ppTransferFunction1D)->GetByteArray(&pcData);

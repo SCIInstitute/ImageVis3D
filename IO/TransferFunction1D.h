@@ -55,8 +55,8 @@ public:
   TransferFunction1D(const std::string& filename);
   ~TransferFunction1D(void);
   
-  void SetDefault();
-  void SetDefault(size_t iSaturationPoint);
+  void SetStdFunction(float fCenterPoint=0.5f, float fInvGradient=0.5f);
+  void SetStdFunction(float fCenterPoint, float fInvGradient, int iComponent);
 
   void Resize(size_t iSize);
   void Resample(size_t iTargetSize);
@@ -75,6 +75,9 @@ public:
   void GetFloatArray(float** pfData);
 
   std::vector< FLOATVECTOR4 > vColorData;
+private:
+  float Smoothstep(float x);
+
 
 };
 

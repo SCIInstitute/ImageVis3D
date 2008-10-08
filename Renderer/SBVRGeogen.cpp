@@ -117,7 +117,7 @@ void SBVRGeogen::Swap(POS3TEX3_VERTEX& a, POS3TEX3_VERTEX& b) {
 	b = temp;
 }
 
-void SBVRGeogen::SortPoints(POS3TEX3_VERTEX fArray[6], uint iCount) {
+void SBVRGeogen::SortPoints(POS3TEX3_VERTEX fArray[12], uint iCount) {
 	// use bubble sort here, because array is very small which makes bubble sort faster than QSort
 	for (uint i= 1;i<iCount;++i) 
 		for (uint j = 1;j<iCount-i;++j) 
@@ -125,14 +125,14 @@ void SBVRGeogen::SortPoints(POS3TEX3_VERTEX fArray[6], uint iCount) {
 }
 
 
-int SBVRGeogen::FindMinPoint(POS3TEX3_VERTEX fArray[6], uint iCount) {
+int SBVRGeogen::FindMinPoint(POS3TEX3_VERTEX fArray[12], uint iCount) {
 	int iIndex = 0;
 	for (uint i = 1;i<iCount;++i) if (fArray[i].m_vPos.y < fArray[iIndex].m_vPos.y) iIndex = i;
 	return iIndex;
 }
 
 
-void SBVRGeogen::Triangulate(POS3TEX3_VERTEX fArray[6], uint iCount) {
+void SBVRGeogen::Triangulate(POS3TEX3_VERTEX fArray[12], uint iCount) {
 	// move bottom element to front of array
 	Swap(fArray[0],fArray[FindMinPoint(fArray,iCount)]);
 	// sort points according to gradient
@@ -147,7 +147,7 @@ void SBVRGeogen::Triangulate(POS3TEX3_VERTEX fArray[6], uint iCount) {
 }
 
 
-uint SBVRGeogen::ComputeLayerGeometry(float fDepth, POS3TEX3_VERTEX pfLayerPoints[6]) {
+uint SBVRGeogen::ComputeLayerGeometry(float fDepth, POS3TEX3_VERTEX pfLayerPoints[12]) {
 	uint iCount = 0;
 
 	ComputeIntersection(fDepth,0,1,pfLayerPoints[iCount],iCount);
@@ -178,7 +178,7 @@ uint SBVRGeogen::ComputeLayerGeometry(float fDepth, POS3TEX3_VERTEX pfLayerPoint
 
 bool SBVRGeogen::ComputeLayerGeometry(float fDepth) {
 	uint iCount = 0;
-	POS3TEX3_VERTEX pfLayerPoints[6];
+	POS3TEX3_VERTEX pfLayerPoints[12];
 
 	ComputeIntersection(fDepth,0,1,pfLayerPoints[iCount],iCount);
 	ComputeIntersection(fDepth,1,2,pfLayerPoints[iCount],iCount);
