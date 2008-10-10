@@ -49,7 +49,14 @@ void MainWindow::CheckSettings() {
   // if memory isn't set this must be the first time we run this app
   if (UINT64_INVALID == settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong()) {
     do {
-      QMessageBox::information(this, "Initial Setup", "As this is the first time you start ImageVis3D on this system you need to check the settings. In particular the memory usage settings need to be set according to the actual hardware configuration of thy machine. Note that these settings can also be changed later in the settings screen.");
+      QMessageBox::information(this, "Initial Setup", "As this is the first "
+                               "time you've started ImageVis3D on this system, "
+                               "you need to configure the initial settings.  "
+                               "In particular, the memory usage settings need "
+                               "to be configured according to the hardware "
+                               "configuration of the machine.  Note that "
+                               "these settings can be changed later in the "
+                               "settings screen.");
     } while(!ShowSettings(SettingsDlg::MEM_TAB));
   } else ApplySettings();
 }
