@@ -100,7 +100,7 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       settings.setValue("MaxCPUMem", settingsDlg.GetCPUMem());
       settings.endGroup();
 
-      // TODO save other settings here
+      /// \todo save other settings here
       settings.beginGroup("Renderer");
       settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
       settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);

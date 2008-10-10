@@ -27,8 +27,10 @@ public:
 	virtual operator GLuint(void) { return m_hTexture[0]; }
 	virtual operator GLuint*(void) { return m_hTexture; }
 
-  virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
-  virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
+  /// \todo check how much mem an FBO really occupies
+  virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}
+  /// \todo check how much mem an FBO really occupies
+  virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}
 
 private:
   MasterController    *m_pMasterController;
@@ -65,8 +67,10 @@ public:
 	virtual void FinishRead(void);
 	virtual operator GLuint(void) { return m_hPBO; }	
 
-  virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
-  virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}  // TODO: check how much mem an FBO really occupies
+  /// \todo check how much mem an FBO really occupies
+  virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}
+  /// \todo check how much mem an FBO really occupies
+  virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}
 
 private:
   MasterController *m_pMasterController;

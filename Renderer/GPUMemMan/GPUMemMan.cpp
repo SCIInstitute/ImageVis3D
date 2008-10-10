@@ -392,7 +392,8 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
     }
   }
 
-  // TODO: add code here to release textures/memory if we run out of free GPU/CPU mem
+  /// \todo add code here to release textures/memory if we run out of free
+  ///       GPU/CPU mem
 
   m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Creating new texture");
 
@@ -437,11 +438,11 @@ void GPUMemMan::FreeAssociatedTextures(VolumeDataset* pDataset) {
 
 void GPUMemMan::MemSizesChanged() {
   if (m_iAllocatedCPUMemory > m_SystemInfo->GetMaxUsableCPUMem()) {
-      // TODO: CPU free resources to match max mem requirements
+      /// \todo CPU free resources to match max mem requirements
   }
 
   if (m_iAllocatedGPUMemory > m_SystemInfo->GetMaxUsableGPUMem()) {
-      // TODO: GPU free resources to match max mem requirements
+      /// \todo GPU free resources to match max mem requirements
   }
 }
 

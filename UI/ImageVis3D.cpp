@@ -245,13 +245,13 @@ void MainWindow::FilterImage() {
 
   QString fileName = m_ActiveRenderWin->GetDatasetName();
 
-  // ARS - TODO this should return a pointer to memory.
+  /// \todo ARS -- this should return a pointer to memory.
   m_MasterController.Filter( m_ActiveRenderWin->GetDatasetName().toStdString(),
 			     tab,
 			     &var0, &var1 );
 
 
-  // ARS - TODO Need to be able to a CreateNewRenderWindow based on memory
+  /// \todo ARS -- Need to be able to a CreateNewRenderWindow based on memory
   if( radioButton_FilterUpdate->isChecked() ) {
 
     RenderWindow *renderWin = CreateNewRenderWindow(fileName);

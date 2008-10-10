@@ -101,10 +101,10 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
                 i++;
               }
              } break;
-      default  : break; // TODO: handle other bitwith data
+      default  : break; /// \todo handle other bitwith data
     }
   } else {
-    // TODO: handle color data
+    /// \todo handle color data
   }
 
   delete [] (char*)pData;

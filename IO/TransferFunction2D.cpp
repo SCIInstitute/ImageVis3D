@@ -159,7 +159,7 @@ void TransferFunction2D::GetFloatArray(float** pfData) {
 ColorData2D* TransferFunction2D::RenderTransferFunction() {
   ColorData2D* pColorData = new ColorData2D(m_iSize);
 
-  // TODO
+  /// \todo (? undocumented)
 
   return pColorData;
 }

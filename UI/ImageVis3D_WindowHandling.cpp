@@ -300,7 +300,7 @@ void MainWindow::CloneCurrentView() {
   renderWin->show();  
 }
 
-// ARS - TODO Need to be able to CreateNewRenderWindow based on memory only
+/// \todo ARS Need to be able to CreateNewRenderWindow based on memory only
 
 RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 {

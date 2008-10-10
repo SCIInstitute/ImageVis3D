@@ -70,7 +70,6 @@ void MainWindow::ParseAndExecuteDebugCommand() {
     m_DebugOut->printf("Debug out is currently redirected to another debug out.");
   }
 
-  // TODO
   string strCommand = lineEdit_DebugCommand->text().toStdString();
   string strParameter;
 

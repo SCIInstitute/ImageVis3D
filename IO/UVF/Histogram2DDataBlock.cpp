@@ -47,19 +47,19 @@ UINT64 Histogram2DDataBlock::GetHeaderFromFile(LargeRAWFile* pStreamFile, UINT64
   return iOffset;
 }
 
-// TODO: right now compute Histogram assumes that the lowest LOD level consists only of a single brick, this brick is used for the hist. computation
+/// \todo right now compute Histogram assumes that the lowest LOD level consists only of a single brick, this brick is used for the hist. computation
 //       this should be changed to a more general approach
 bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
-  // TODO: right now we can only compute Histograms of scalar data this should be changed to a more general approach
+  /// \todo right now we can only compute Histograms of scalar data this should be changed to a more general approach
   if (source->ulElementDimension != 1 || source->ulElementDimensionSize.size() != 1) return false;
 
-  // TODO: right now compute Histogram assumes that the lowest LOD level consists only of a single brick, this brick is used for the hist. computation
+  /// \todo right now compute Histogram assumes that the lowest LOD level consists only of a single brick, this brick is used for the hist. computation
   //       this should be changed to a more general approach
   vector<UINT64> vSmallestLOD = source->GetSmallestBrickIndex();
   const vector<UINT64>& vBricks = source->GetBrickCount(vSmallestLOD);
   for (unsigned int i = 0;i<vBricks.size();i++) if (vBricks[i] != 1) return false;
   
-  // TODO: right now we can only compute 2D Histograms of at least 3D data this should be changed to a more general approach
+  /// \todo right now we can only compute 2D Histograms of at least 3D data this should be changed to a more general approach
   //       also we require that the first three entries as X,Y,Z
   if (source->ulDomainSize.size() < 3 || source->ulDomainSemantics[0] != UVFTables::DS_X ||
       source->ulDomainSemantics[1] != UVFTables::DS_Y || source->ulDomainSemantics[2] != UVFTables::DS_Z) return false;
@@ -86,7 +86,7 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   UINT64 iDataSize = 1;
   for (size_t i = 0;i<vSize.size();i++) iDataSize*=vSize[i];
 
-  // TODO: right now only 8 and 16 bit integer data is supported this should be changed to a more general approach
+  /// \todo right now only 8 and 16 bit integer data is supported this should be changed to a more general approach
   float fMaxGrad = 0.0f;
   if (source->ulElementBitSize[0][0] == 8) {
     for (size_t z = 1;z<size_t(vSize[2]-1);z++) {

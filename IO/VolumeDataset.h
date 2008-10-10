@@ -80,7 +80,7 @@ class VolumeDatasetInfo {
       return vfScale;
     }
 
-    // TODO: change this if we want to support color data
+    /// \todo change this if we want to support color data
     UINT64 GetBitwith() const {
       return m_pVolumeDataBlock->ulElementBitSize[0][0];
     }

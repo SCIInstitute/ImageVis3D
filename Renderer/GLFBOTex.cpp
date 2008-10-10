@@ -326,7 +326,7 @@ void VBOTex::FinishWrite(int iBuffer) {
 }
 
 
-// TODO: More intelligent implementation: Render everything, then if a buffer is requested for reading, first
+/// \todo More intelligent implementation: Render everything, then if a buffer is requested for reading, first
 // perform VBO/PBO copy. Read(GLenum target,int iBuffer) does the trick. Should be copied to respective array.
 
 void VBOTex::Read(void) {
