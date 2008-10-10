@@ -115,7 +115,7 @@ void GPUSBVR::UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UI
   FLOATVECTOR3 vCenter, vExtension;
   m_pDataset->GetBrickCenterAndExtension(vLOD, vBrick, vCenter, vExtension);
 
-  // TODO: transfer brick offsets to m_SBVRGeogen
+  /// \todo transfer brick offsets to m_SBVRGeogen
   m_SBVRGeogen.SetVolumeData(vExtension, vSize);
 }
 
@@ -135,11 +135,11 @@ void GPUSBVR::DrawLogo() {
     glBegin(GL_QUADS);
       glColor4d(1,1,1,1);
       glTexCoord2d(0,0);
-      glVertex3d(0.2,  0.4, -0.5);
+      glVertex3d(0.2, 0.4, -0.5);
       glTexCoord2d(1,0);
-      glVertex3d( 0.4,  0.4, -0.5);
+      glVertex3d(0.4, 0.4, -0.5);
       glTexCoord2d(1,1);
-      glVertex3d( 0.4, 0.2, -0.5);
+      glVertex3d(0.4, 0.2, -0.5);
       glTexCoord2d(0,1);
       glVertex3d(0.2, 0.2, -0.5);
     glEnd();
@@ -225,7 +225,7 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
 
     // switch to wireframe
     if (m_bRenderWireframe) {
-      // TODO save state
+        /// \todo save state
 	    glDisable(GL_CULL_FACE);
 	    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 	    glEdgeFlag(true);
@@ -254,7 +254,7 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
     glDisable(GL_BLEND);
 
     if (m_bRenderWireframe) {
-      // TODO: restore state
+      /// \todo restore state
     }
 
   } else m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Quick Redraw");

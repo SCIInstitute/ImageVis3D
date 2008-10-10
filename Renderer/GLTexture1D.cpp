@@ -28,17 +28,19 @@
 
 /**
   \file    GLTexture1D.cpp
-  \author    Jens Krueger
-        SCI Institute
-        University of Utah
+  \author  Jens Krueger
+           SCI Institute
+           University of Utah
   \date    August 2008
 */
 
 #include "GLTexture1D.h"
 
 
-GLTexture1D::GLTexture1D(GLuint iSize, GLint internalformat, GLenum format, GLenum type, 
-             unsigned int iSizePerElement, const GLvoid *pixels, GLint iMagFilter, GLint iMinFilter, GLint wrap) :
+GLTexture1D::GLTexture1D(GLuint iSize, GLint internalformat, GLenum format,
+                         GLenum type,  unsigned int iSizePerElement,
+                         const GLvoid *pixels, GLint iMagFilter, GLint iMinFilter,
+                         GLint wrap) :
   GLTexture(iSizePerElement),
   m_iSize(iSize),
   m_internalformat(internalformat),

@@ -84,4 +84,3 @@ void GLRenderer::SetTextColor(FLOATVECTOR4 vColor) {
     m_bCompleteRedraw = true;
   }
 }
-

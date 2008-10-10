@@ -69,7 +69,6 @@ class GLTexture3D : public GLTexture {
     GLint  m_internalformat;
     GLenum m_format;
     GLenum m_type;
-
 };
 
 #endif // GLTexture3D_H

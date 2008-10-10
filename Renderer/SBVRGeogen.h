@@ -39,6 +39,8 @@
 #include <vector>
 #include <Basics/Vectors.h>
 
+/** \class POS3TEX3_VERTEX
+ * Position and vertex coordinate. */
 class POS3TEX3_VERTEX
 {
 public:
@@ -55,6 +57,8 @@ public:
 	FLOATVECTOR3 m_vTex;
 };
 
+/** \class SBVRGeoGen
+ * Geometry generation for the slice-based volume renderer. */
 class SBVRGeogen
 {
 public:

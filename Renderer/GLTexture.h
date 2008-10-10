@@ -28,12 +28,11 @@
 
 /**
   \file    GLTexture.h
-  \author    Jens Krueger
-        SCI Institute
-        University of Utah
+  \author  Jens Krueger
+           SCI Institute
+           University of Utah
   \date    August 2008
 */
-
 
 #pragma once
 
@@ -42,14 +41,28 @@
 
 #include "GLObject.h"
 
+/** \class GLTexture
+ * Abstracted texture usage.
+ *
+ * GLTexture loads and unloads textures from the GPU. */
 class GLTexture : public GLObject {
   public:
-    GLTexture(unsigned int iSizePerElement) : m_iGLID(-1), m_iSizePerElement(iSizePerElement) {}
+    /** Constructs an invalid texture.
+     * A texture is created with an invalid GL identifier.  No data are
+     * pushed to the GPU.  Derived classes are expected to generate the
+     * texture in their constructor[s].
+     * @param iSizePerElement bits per texel.  Used to track memory size of the
+                              texture. */
+    GLTexture(unsigned int iSizePerElement) : m_iGLID(-1),
+                                              m_iSizePerElement(iSizePerElement) {}
     virtual ~GLTexture();
 
+    /** Removes this texture from the OpenGL context. */
     virtual void Delete();
+    /** Initializes the texture data with the given data. */
     virtual void SetData(const GLvoid *pixels) = 0;
     virtual void Bind(unsigned int iUnit=0) = 0;
+    /** \return The OpenGL identifier for this texture. */
     GLuint GetGLID() {return m_iGLID;}
 
   protected:

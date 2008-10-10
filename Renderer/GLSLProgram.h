@@ -52,17 +52,13 @@
   #endif
 #endif
 
-/**
- * Used to specify sources for shaders.
- * There are two different sources so far, either GLSLPROGRAM_DISK, which means that
- * a shader is specified by a C-string containing a file name, or GLSLPROGRAM_STRING,
- * in which case the shader is specified directly as sourcecode in a C-string.
- * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
- * \date March 2004
- */
+//! Used to specify sources for shaders.
+/*! \author Jens Schneider
+    \date March 2004 */
 typedef enum {
-  GLSLPROGRAM_DISK=0,
-  GLSLPROGRAM_STRING
+  GLSLPROGRAM_DISK=0, //!< the shader is a C-string containing the file name.
+  GLSLPROGRAM_STRING  /*!< the shader sourcecode is specified directly in the
+                           given C-string. */
 } GLSLPROGRAM_SOURCE;
 
 #include "GLObject.h"
@@ -79,7 +75,7 @@ class MasterController;
  * \class GLSLProgram
  * \version 1.0c
  * \warning include _before_ you include anything like gl.h, glut.h etc.
- * \warning requires the GL Extension Wrangler (glew) library.
+ * \warning requires the GL Extension Wrangler (GLEW) library.
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date November 2005
  */

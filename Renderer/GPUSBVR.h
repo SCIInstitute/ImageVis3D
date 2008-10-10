@@ -28,10 +28,10 @@
 
 /**
   \file    GPUSBVR.h
-  \author    Jens Krueger
-        SCI Institute
-        University of Utah
-  \version  1.0
+  \author  Jens Krueger
+           SCI Institute
+           University of Utah
+  \version 1.0
   \date    August 2008
 */
 
@@ -46,23 +46,41 @@
 #include <Renderer/SBVRGeogen.h>
 #include <Renderer/GLRenderer.h>
 
+/** \class GPUSBVR
+ * Slice-based GPU volume renderer.
+ *
+ * GPUSBVR is a slice based volume renderer which uses GLSL. */
 class GPUSBVR : public GLRenderer {
   public:
+    /** Constructs a VRer with no view rotation, immediate redraws, and
+     * wireframe mode off.
+     * \param pMasterController message routing object */
     GPUSBVR(MasterController* pMasterController);
     virtual ~GPUSBVR();
+    /** Determines whether we should redraw now.  Currently, if we've just
+     * resized, we wait until something else changes before redrawing. */
     virtual bool CheckForRedraw();
     virtual bool LoadDataset(const std::string& strFilename);
 
     void Paint(bool bClearDepthBuffer=true);
+    /** Change the size of the FBO we render to.  Any previous image is
+     * destroyed, causing a full redraw on the next render.
+     * \param width  new width of the view window
+     * \param height new height of the view window */
     void Resize(int width, int height);
+    /** Deallocates GPU memory allocated during the rendering process. */
     void Cleanup();
 
+    /** Loads GLSL vertex and fragment shaders. */
     virtual void Initialize();
 
     void SetWireFrame(bool bRenderWireframe) {m_bRenderWireframe = bRenderWireframe;}
     bool GetWireFrame() {return m_bRenderWireframe;}
 
+    /** Change the view rotation.  Causes a full redraw. */
     void SetRotation(FLOATVECTOR2 vRot) {if (m_vRot != vRot) {m_vRot = vRot; m_bCompleteRedraw = true;}}
+    /** Changes the current view mode -- just the 3D rendering, a 1 by three
+     * configuration, or a 2x2 configuration.  Causes a full redraw. */
     void SetCurrentView(int iCurrentView) {if (m_iCurrentView != iCurrentView) {m_iCurrentView = iCurrentView; m_bCompleteRedraw = true;}}
     int GetCurrentView() const {return m_iCurrentView;}
 

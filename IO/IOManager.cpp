@@ -81,7 +81,7 @@ vector<FileStackInfo*> IOManager::ScanDirectory(std::string strDirectory) {
     fileStacks.push_back(f);
   }
 
-  // TODO: add other image parsers here
+  /// \todo  add other image parsers here
 
   m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  scan complete");
 
@@ -271,7 +271,7 @@ bool IOManager::ConvertDATDataset(const std::string& strFilename, const std::str
 
 	  strRAWFile = SysTools::GetPath(strFilename) + strRAWFile;
 
-    // TODO: detect big endian DAT/RAW combinations and set the conversion parameter accordingly instead of always converting if the machine is big endian 
+    /// \todo  detect big endian DAT/RAW combinations and set the conversion parameter accordingly instead of always converting if the machine is big endian 
     return ConvertRAWDataset(strRAWFile, strTargetFilename, iComponentSize, iComponentCount, bSigned, EndianConvert::IsBigEndian(),
                              vVolumeSize, vVolumeAspect, "Qvis data", SysTools::GetFilename(strFilename));
 
@@ -503,7 +503,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 	uvfFile.AddDataBlock(&Histogram2D,Histogram2D.ComputeDataSize());
 
 /*
-  // TODO: maybe add information from the source file to the UVF, like DICOM desc etc.
+  /// \todo maybe add information from the source file to the UVF, like DICOM desc etc.
 
   KeyValuePairDataBlock testPairs;
 	testPairs.AddPair("SOURCE","DICOM");
@@ -591,7 +591,7 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
 		UINTVECTOR3 iSize = pDICOMStack->m_ivSize;
 		iSize.z *= (unsigned int)pDICOMStack->m_Elements.size();
 
-    // TODO: evaluate pDICOMStack->m_strModality
+    /// \todo evaluate pDICOMStack->m_strModality
 
     bool result = ConvertRAWDataset(strTempMergeFilename, strTargetFilename, pDICOMStack->m_iAllocated, 
                                     pDICOMStack->m_iComponentCount, 
@@ -608,7 +608,7 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
     return result;
   }
 
-  // TODO: more stack converters here
+  /// \todo more stack converters here
 
   m_pMasterController->DebugOut()->Error("IOManager::ConvertDataset","Unknown source stack type %s", pStack->m_strFileType.c_str());
   return false;
@@ -627,7 +627,7 @@ bool IOManager::ConvertDataset(const std::string& strFilename, const std::string
     return ConvertNHDRDataset(strFilename, strTargetFilename);
   } 
 
-  // TODO: more converters here
+  /// \todo more converters here
   return false;  
 }
 

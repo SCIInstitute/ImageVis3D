@@ -53,17 +53,27 @@
 class MasterController;
 
 enum ERenderMode {
-  RM_1DTRANS = 0,
-  RM_2DTRANS,
+  RM_1DTRANS = 0,  /**< one dimensional transfer function */
+  RM_2DTRANS,      /**< two dimensional transfer function */
   RM_ISOSURFACE,
   RM_INVALID
 };
 
+/** \class AbstrRenderer
+ * Base for all renderers. */
 class AbstrRenderer {
   public:
+    /** Default settings: 1D transfer function, white text, black BG.
+     * @param pMasterController message router */
     AbstrRenderer(MasterController* pMasterController);
+    /** Deallocates dataset and transfer functions. */
     virtual ~AbstrRenderer();
+    /** Sends a message to the master to ask for a dataset to be loaded.
+     * The dataset is converted to UVF if it is not one already.
+     * @param strFilename path to a file */
     virtual bool LoadDataset(const std::string& strFilename);
+    /** Query whether or not we should redraw the next frame, else we should
+     * reuse what is already rendered. */
     virtual bool CheckForRedraw() = 0;
 
     VolumeDataset*      GetDataSet() {return m_pDataset;}
@@ -72,10 +82,18 @@ class AbstrRenderer {
     
     ERenderMode GetRendermode() {return m_eRenderMode;}
     virtual void SetRendermode(ERenderMode eRenderMode);
+    /** Force a redraw if we're currently using a one dimensional TF. */ 
     virtual void Changed1DTrans();
+    /** Force a redraw if we're currently using a two dimensional TF. */ 
     virtual void Changed2DTrans();
 
-    virtual void SetBackgroundColors(FLOATVECTOR3 vColors[2]) {m_vBackgroundColors[0]=vColors[0];m_vBackgroundColors[1]=vColors[1];}
+    /** Sets up a gradient background which fades vertically.
+     * @param vColors[0] is the color at the bottom;
+     * @param vColors[1] is the color at the top. */
+    virtual void SetBackgroundColors(FLOATVECTOR3 vColors[2]) {
+        m_vBackgroundColors[0]=vColors[0];
+        m_vBackgroundColors[1]=vColors[1];
+    }
     virtual void SetTextColor(FLOATVECTOR4 vColor) {m_vTextColor=vColor;}
     FLOATVECTOR3 GetBackgroundColor(int i) const {return m_vBackgroundColors[i];}
     FLOATVECTOR4 GetTextColor() const {return m_vTextColor;}

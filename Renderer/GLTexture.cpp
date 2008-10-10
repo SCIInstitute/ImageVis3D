@@ -38,7 +38,9 @@
 #include <cassert>
   
 GLTexture::~GLTexture() {
-  // TODO: I think we cannot call glDeleteTextures here as we are not guaranteed to be in the right context, need to check this thougth
+  /*! \todo We'd like to call ::Delete() here, but we're not guaranteed to be
+   *        in the correct context.  Instead, we'll make sure the texture was
+   *        previously Delete-d, or at least never initialized. */
   assert(m_iGLID == (unsigned int)(-1));
 }
 

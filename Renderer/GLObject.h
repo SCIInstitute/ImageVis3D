@@ -43,6 +43,9 @@
 #include "GLInclude.h"
 #include <Basics/MathTools.h>  // for UINT64
 
+/** Base for all types which will utilize GPU memory.
+ * Forces children to keep track of memory use on both the CPU and GPU,
+ * allowing us to use as much memory as will be possible without swapping. */
 class GLObject {
 public:
     virtual ~GLObject() {}
