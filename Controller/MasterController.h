@@ -57,25 +57,50 @@ enum VolumeRenderer {
   OPENGL_SBVR = 0
 };
 
-
+/** \class MasterController
+ * Centralized controller for ImageVis3D.
+ *
+ * MasterController is a router for all of the components of
+ * ImageVis3D.  Modules only depend on / utilize the controller,
+ * never other modules.  For example, the GUI does not inform the
+ * renderer that a re-render is necessary when a window is resized.
+ * Instead, it informs the abstract interface through this controller,
+ * and the renderer implementation decides on its own how it wants to
+ * handle the resize event. */
 class MasterController {
 public:
+  /// Defaults to using a Console-based debug output stream.
   MasterController();
   virtual ~MasterController();
 
+  /// Create a new renderer.
   AbstrRenderer* RequestNewVolumerenderer(VolumeRenderer eRendererType);
+  /// Indicate that a renderer is no longer needed.
   void ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer);
     
+  /// Connects a new debug output stream.
+  /// If necessary, the old stream is deallocated.
+  /// \param debugOut      the new stream
+  /// \param bDeleteOnExit ownership information
   void SetDebugOut(AbstrDebugOut* debugOut, bool bDeleteOnExit = false);
+  /// Removes the given debug output stream.
+  /// The stream must be the currently connected/used one.
   void RemoveDebugOut(AbstrDebugOut* debugOut);
 
+  /// Access the currently-active debug stream.
   AbstrDebugOut* DebugOut() {return m_pDebugOut;}
+  /// Whether this controller owns the debug stream.
   bool           DoDeleteDebugOut() {return m_bDeleteDebugOutOnExit;}
+  /// The GPU memory manager moves data from CPU to GPU memory, and
+  /// removes data from GPU memory.
   GPUMemMan*     MemMan()   {return m_pGPUMemMan;}
+  /// The IO manager is responsible for loading data into host memory.
   IOManager*     IOMan()    {return m_pIOManager;}
+  /// System information is for looking up host parameters, such as the
+  /// amount of memory available.
   SystemInfo*    SysInfo()  {return m_pSystemInfo;}
 
-  // ARS - TODO this should return a pointer to memory.
+  /// \todo this should return a pointer to memory.
   void Filter( std::string datasetName,
 	       unsigned int filter,
 	       void *var0 = 0, void *var1 = 0,
