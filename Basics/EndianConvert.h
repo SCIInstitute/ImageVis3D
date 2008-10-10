@@ -53,7 +53,7 @@ namespace EndianConvert {
   /**
    * Swap routine to convert between little and big-endian.
    * x is converted in situ.
-   * \param pointer to x
+   * \param x pointer to data we should swap.
    * \return void 
    * \date October.2004
    */
@@ -114,7 +114,6 @@ namespace EndianConvert {
 
   /**
    * Checks whether this machine is big-endian. 
-   * \param void
    * \return true if the machine is big-endian, false otherwise
    * \date December.2004
    */
@@ -132,7 +131,6 @@ namespace EndianConvert {
 
   /**
    * Checks whether this machine is little-endian. 
-   * \param void
    * \return true if the machine is little-endian, false otherwise
    * \date December.2004
    */
@@ -147,8 +145,9 @@ namespace EndianConvert {
   }
 
   /**
-   * Automatically swaps the data without prior knowledge about bit order.
-   * \param void
+   * Swaps the endianness without prior knowledge about bit order.
+   * \param data         array to swap every element of.
+   * \param NumElements  size of the array.
    * \return the variance of the swapped data.
    * \date Jul.2006
    */
