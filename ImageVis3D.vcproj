@@ -516,7 +516,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GPUSBVR-1D-VS.glsl"
+				RelativePath=".\GPUSBVR-1D-light-FS.glsl"
+				>
+			</File>
+			<File
+				RelativePath=".\GPUSBVR-2D-FS.glsl"
+				>
+			</File>
+			<File
+				RelativePath=".\GPUSBVR-2D-light-FS.glsl"
+				>
+			</File>
+			<File
+				RelativePath=".\GPUSBVR-ISO-FS.glsl"
+				>
+			</File>
+			<File
+				RelativePath=".\GPUSBVR-VS.glsl"
 				>
 			</File>
 			<File
@@ -924,7 +940,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -934,7 +950,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -944,7 +960,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -954,7 +970,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>

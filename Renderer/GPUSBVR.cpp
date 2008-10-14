@@ -86,19 +86,19 @@ void GPUSBVR::Initialize() {
   }
 
   m_pProgram1DTrans[0] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
-                                                                    SysTools::GetFromResourceOnMac("GPUSBVR-1D-FS.glsl"));
+                                                                       SysTools::GetFromResourceOnMac("GPUSBVR-1D-FS.glsl"));
 
   m_pProgram1DTrans[1] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
-                                                                    SysTools::GetFromResourceOnMac("GPUSBVR-1D-light-FS.glsl"));
+                                                                       SysTools::GetFromResourceOnMac("GPUSBVR-1D-light-FS.glsl"));
 
   m_pProgram2DTrans[0] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
-                                                                    SysTools::GetFromResourceOnMac("GPUSBVR-2D-FS.glsl"));
+                                                                       SysTools::GetFromResourceOnMac("GPUSBVR-2D-FS.glsl"));
 
   m_pProgram2DTrans[1] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
-                                                                    SysTools::GetFromResourceOnMac("GPUSBVR-2D-light-FS.glsl"));
+                                                                       SysTools::GetFromResourceOnMac("GPUSBVR-2D-light-FS.glsl"));
 
   m_pProgramIso = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
-                                                                    SysTools::GetFromResourceOnMac("GPUSBVR-ISO-FS.glsl"));
+                                                                SysTools::GetFromResourceOnMac("GPUSBVR-ISO-FS.glsl"));
 
   m_pProgram1DTrans[0]->Enable();
   m_pProgram1DTrans[0]->SetUniformVector("texVolTexture",0);
@@ -137,7 +137,7 @@ void GPUSBVR::SetDataDepShaderVars() {
                             float fScale = float(iMaxRange)/float(iMaxValue);
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",fScale);
                             if (m_bUseLigthing) {
-
+                                /// \todo setup lighting specific vars here
                             }
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
                             break;
@@ -166,7 +166,7 @@ void GPUSBVR::SetDataDepShaderVars() {
 
 bool GPUSBVR::LoadDataset(const string& strFilename) {
   if (GLRenderer::LoadDataset(strFilename)) {
-    if (m_pProgram1DTrans != NULL) SetDataDepShaderVars();
+    if (m_pProgram1DTrans[0] != NULL) SetDataDepShaderVars();
     return true;
   } else return false;
 }
