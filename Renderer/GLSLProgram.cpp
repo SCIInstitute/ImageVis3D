@@ -363,7 +363,7 @@ bool GLSLProgram::WriteInfoLog(GLuint hObject, bool bProgram) {
       glGetShaderInfoLog(hObject,iLength,&iLength,pcLogInfo);
       bAtMostWarnings=glIsShader(hObject);
     }
-    m_pMasterController->DebugOut()->Message("GLSLProgram::WriteInfoLog",pcLogInfo);
+    m_pMasterController->DebugOut()->Error("GLSLProgram::WriteInfoLog",pcLogInfo);
     delete[] pcLogInfo;  
 #ifdef GLSLPROGRAM_STRICT
     return true;

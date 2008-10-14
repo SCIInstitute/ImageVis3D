@@ -206,8 +206,8 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>48</x>
-          <y>168</y>
+          <x>56</x>
+          <y>196</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -336,8 +336,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>48</x>
-          <y>168</y>
+          <x>56</x>
+          <y>196</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -438,8 +438,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>48</x>
-          <y>168</y>
+          <x>56</x>
+          <y>196</y>
           <width>360</width>
           <height>240</height>
          </rect>
@@ -1149,8 +1149,8 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>48</x>
-          <y>168</y>
+          <x>56</x>
+          <y>196</y>
           <width>360</width>
           <height>71</height>
          </rect>
@@ -1248,8 +1248,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>48</x>
-          <y>168</y>
+          <x>56</x>
+          <y>196</y>
           <width>360</width>
           <height>71</height>
          </rect>
@@ -2649,6 +2649,13 @@
          <number>9</number>
         </property>
         <item>
+         <widget class="QCheckBox" name="checkBox_Lighting" >
+          <property name="text" >
+           <string>Lighting</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QRadioButton" name="radioButton_1DTrans" >
           <property name="minimumSize" >
            <size>
@@ -3803,8 +3810,8 @@
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1113</x>
-     <y>1131</y>
+     <x>1123</x>
+     <y>1155</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3819,8 +3826,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1123</x>
-     <y>1155</y>
+     <x>1133</x>
+     <y>1176</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3835,8 +3842,8 @@
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1123</x>
-     <y>1176</y>
+     <x>1133</x>
+     <y>1197</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4235,8 +4242,8 @@
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1037</x>
-     <y>1220</y>
+     <x>1056</x>
+     <y>1241</y>
     </hint>
     <hint type="destinationlabel" >
      <x>685</x>
@@ -4251,8 +4258,8 @@
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1037</x>
-     <y>1241</y>
+     <x>1056</x>
+     <y>1262</y>
     </hint>
     <hint type="destinationlabel" >
      <x>683</x>
@@ -4267,8 +4274,8 @@
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1037</x>
-     <y>1262</y>
+     <x>1056</x>
+     <y>1283</y>
     </hint>
     <hint type="destinationlabel" >
      <x>680</x>
@@ -4340,6 +4347,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>checkBox_Lighting</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetLighting(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1081</x>
+     <y>1127</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>390</x>
+     <y>1320</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -4383,5 +4406,6 @@
   <slot>FilterImage()</slot>
   <slot>ParseAndExecuteDebugCommand()</slot>
   <slot>ShowSettings()</slot>
+  <slot>SetLighting(bool)</slot>
  </slots>
 </ui>

@@ -352,6 +352,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 		                      sender->GetDatasetName().toStdString().c_str());
                 break;
     }
+
+    checkBox_Lighting->setChecked(m_ActiveRenderWin->GetRenderer()->GetUseLigthing());
   }
 }
 

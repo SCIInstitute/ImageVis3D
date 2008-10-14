@@ -108,6 +108,9 @@ void GPUSBVR::Initialize() {
   m_pProgram1DTrans[1]->Enable();
   m_pProgram1DTrans[1]->SetUniformVector("texVolTexture",0);
   m_pProgram1DTrans[1]->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram1DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
+  m_pProgram1DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
+  m_pProgram1DTrans[1]->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgram1DTrans[1]->Disable();
 
   m_pProgram2DTrans[0]->Enable();
@@ -118,12 +121,42 @@ void GPUSBVR::Initialize() {
   m_pProgram2DTrans[1]->Enable();
   m_pProgram2DTrans[1]->SetUniformVector("texVolTexture",0);
   m_pProgram2DTrans[1]->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram2DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
+  m_pProgram2DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
+  m_pProgram2DTrans[1]->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgram2DTrans[1]->Disable();
 
   m_pProgramIso->Enable();
   m_pProgramIso->SetUniformVector("texVolTexture",0);
   /// \todo setup iso vas here
   m_pProgramIso->Disable();
+
+}
+
+void GPUSBVR::SetBrickDepShaderVars(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) {
+
+  UINTVECTOR3  vSize = m_pDataset->GetBrickSize(vLOD, vBrick);
+  float fStepX = 1.0f/vSize.x;
+  float fStepY = 1.0f/vSize.y;
+  float fStepZ = 1.0f/vSize.z;
+
+  switch (m_eRenderMode) {
+    case RM_1DTRANS    :  {
+                            if (m_bUseLigthing) {
+                                m_pProgram1DTrans[1]->SetUniformVector("vVolumeStepsize", fStepX, fStepY, fStepZ);
+                            }
+                            break;
+                          }
+    case RM_2DTRANS    :  {
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("vVolumeStepsize", fStepX, fStepY, fStepZ);
+                            break;
+                          }
+    case RM_ISOSURFACE : {
+                            m_pProgramIso->SetUniformVector("vVolumeStepsize", fStepX, fStepY, fStepZ);
+                            break;
+                          }
+    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::SetDataDepShaderVars","Invalid rendermode set"); break;
+  }
 
 }
 
@@ -136,9 +169,6 @@ void GPUSBVR::SetDataDepShaderVars() {
                             unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
                             float fScale = float(iMaxRange)/float(iMaxValue);
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",fScale);
-                            if (m_bUseLigthing) {
-                                /// \todo setup lighting specific vars here
-                            }
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
                             break;
                           }
@@ -146,7 +176,7 @@ void GPUSBVR::SetDataDepShaderVars() {
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable();
 
                             /// \todo setup 2D transferfunction vars here
-              
+                            m_pProgram2DTrans[1]->SetUniformVector("vVolumeStepsize",1);
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable();
                             break;
                           }
@@ -279,17 +309,20 @@ void GPUSBVR::Render3DView() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     FLOATMATRIX4 trans, rotx, roty;
-    trans.Translation(0,0,-4);
+    trans.Translation(0,0,-2);
     rotx.RotationAxis(FLOATVECTOR3(0,1,0),m_vRot.x);
     roty.RotationAxis(FLOATVECTOR3(1,0,0),m_vRot.y);
     m_matModelView = trans*rotx*roty;
 
+    m_matModelView.setModelview();
     m_SBVRGeogen.SetTransformation(m_matModelView);
 
 	  glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vSmallestLOD, vFirstBrick);
     if(t!=NULL) t->Bind(0);
+
+    SetBrickDepShaderVars(vSmallestLOD, vFirstBrick);
 
     glBegin(GL_TRIANGLES);
       glColor4f(1,1,1,1);
@@ -311,7 +344,6 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
   if (m_bCompleteRedraw) {
     m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Complete Redraw");
 
-
     m_pFBO3DImage->Write();
 
     SetDataDepShaderVars();
@@ -321,12 +353,16 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
 
     switch (m_eRenderMode) {
       case RM_1DTRANS    :  m_p1DTransTex->Bind(1); 
-                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable(); break;
+                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
+                            break;
       case RM_2DTRANS    :  m_p2DTransTex->Bind(1);
-                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable(); break;
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable(); 
+                            break;
       case RM_ISOSURFACE :  /// \todo setup isovalue shader vars
-                            m_pProgramIso->Enable(); break;
-      case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid rendermode set"); break;
+                            m_pProgramIso->Enable(); 
+                            break;
+      case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid rendermode set"); 
+                            break;
     }
 
     switch (m_eViewMode) {

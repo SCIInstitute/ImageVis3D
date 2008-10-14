@@ -130,6 +130,7 @@ protected slots:
 
   void CheckForRedraw();
   bool ShowSettings() {return ShowSettings(SettingsDlg::MEM_TAB);}
+  void SetLighting(bool bLighting);
 
 protected:    
 

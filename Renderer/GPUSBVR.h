@@ -41,8 +41,9 @@
 #ifndef GPUSBVR_H
 #define GPUSBVR_H
 
-#include <Renderer/AbstrRenderer.h>
+#include "GLInclude.h"
 #include <Renderer/GPUMemMan/GPUMemMan.h>
+#include <Renderer/AbstrRenderer.h>
 #include <Renderer/SBVRGeogen.h>
 #include <Renderer/GLRenderer.h>
 
@@ -95,6 +96,7 @@ class GPUSBVR : public GLRenderer {
     void UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
     void RerenderPreviousResult();
     void SetDataDepShaderVars();
+    void SetBrickDepShaderVars(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
 
     void RenderSingle();
     void Render2by2();

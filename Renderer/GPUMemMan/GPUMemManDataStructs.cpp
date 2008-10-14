@@ -121,7 +121,7 @@ bool Texture3DListElem::CreateTexture() {
   }
 
   glGetError();
-  pTexture = new GLTexture3D(GLuint(vSize[0]), GLuint(vSize[1]), GLuint(vSize[2]), glInternalformat, glFormat, glType, (unsigned int)(iBitWidth*iCompCount), pData);
+  pTexture = new GLTexture3D(GLuint(vSize[0]), GLuint(vSize[1]), GLuint(vSize[2]), glInternalformat, glFormat, glType, (unsigned int)(iBitWidth*iCompCount), pData, GL_LINEAR, GL_LINEAR);
 	return GL_NO_ERROR==glGetError();
 }
 

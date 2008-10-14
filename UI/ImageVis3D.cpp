@@ -265,3 +265,11 @@ void MainWindow::FilterImage() {
     renderWin->show();
   }
 }
+
+
+void MainWindow::SetLighting(bool bLighting) {
+  RenderWindow* w = GetActiveRenderWindow();
+  if (w != NULL) {
+    w->GetRenderer()->SetUseLigthing(bLighting);
+  }
+}

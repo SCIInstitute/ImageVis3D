@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    GPUSBVR-FS.glsl
+  \file    GPUSBVR-2D-light-FS.glsl
   \author    Jens Krueger
         SCI Institute
         University of Utah
@@ -36,12 +36,38 @@
 */
 
 uniform sampler3D texVolTexture;
-uniform sampler1D texTrans1DTexture;
+uniform sampler2D texTrans2DTexture;
 uniform float fTransScale;
+uniform float fGradientScale;
+
+uniform vec3 vLightAmbient;
+uniform vec3 vLightSpecular;
+uniform vec3 vLightDir;
+uniform vec3 vVolumeStepsize;
 
 void main(void)
 {
 	float fVolumVal = texture3D(texVolTexture, gl_TexCoord[0].xyz).x;	
-	vec4  vTransVal = texture1D(texTrans1DTexture, fVolumVal*fTransScale);
-	gl_FragColor    = vTransVal;
+
+  // compute the gradient/normal
+	float fVolumValXp = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(+vVolumeStepsize.x,0,0)).x;
+	float fVolumValXm = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(-vVolumeStepsize.x,0,0)).x;
+	float fVolumValYp = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,-vVolumeStepsize.y,0)).x;
+	float fVolumValYm = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,+vVolumeStepsize.y,0)).x;
+	float fVolumValZp = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,0,+vVolumeStepsize.z)).x;
+	float fVolumValZm = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,0,-vVolumeStepsize.z)).x;
+  vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
+  float fGradientMag = length(vGradient); 
+
+  // 2D Transferfunction lookup
+	vec4  vTransVal = texture2D(texTrans2DTexture, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale);
+
+  // compute lighting
+  vec3 vNormal = normalize(gl_NormalMatrix * vGradient);
+  vec3 vPosition   = (gl_ModelViewMatrix * vec4(gl_TexCoord[0].xyz*2.0-1.0,1)).xyz;
+  vec3 vViewDir    = normalize(vec3(0,0,0)-vPosition);
+  vec3 vReflection = reflect(vViewDir, vNormal);
+  vec3 vLightColor = vLightAmbient+clamp(dot(vNormal, -vLightDir),0.0,1.0)*vTransVal.xyz+pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0)*vLightSpecular;
+
+	gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, vTransVal.a);
 }
