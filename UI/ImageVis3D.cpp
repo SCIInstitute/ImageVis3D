@@ -127,7 +127,7 @@ void MainWindow::Use1DTrans() {
   m_2DTransferFunction->setEnabled(false);
   // todo disable iso controlls
 
-  if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(RM_1DTRANS);
+  if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(AbstrRenderer::RM_1DTRANS);
 }
 
 
@@ -146,7 +146,7 @@ void MainWindow::Use2DTrans() {
   m_2DTransferFunction->setEnabled(true);
   // todo disable iso controls
 
-  if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(RM_2DTRANS);
+  if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(AbstrRenderer::RM_2DTRANS);
 }
 
 
@@ -164,7 +164,7 @@ void MainWindow::UseIso() {
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(false);
   // todo enable iso controlls
-  if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(RM_ISOSURFACE);
+  if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(AbstrRenderer::RM_ISOSURFACE);
 }
 
 

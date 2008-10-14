@@ -45,13 +45,15 @@ using namespace std;
 
 GPUSBVR::GPUSBVR(MasterController* pMasterController) :
   GLRenderer(pMasterController),
-  m_iCurrentView(0),
   m_vRot(0,0),
   m_bDelayedCompleteRedraw(false),
-  m_bRenderWireframe(false),
-  m_pFBO3DImage(NULL),
-  m_pProgram1DTrans(NULL)
+  m_pFBO3DImage(NULL)
 {
+  m_pProgram1DTrans[0] = NULL;
+  m_pProgram1DTrans[1] = NULL;
+  m_pProgram2DTrans[0] = NULL;
+  m_pProgram2DTrans[1] = NULL;
+  m_pProgramIso        = NULL;
 }
 
 GPUSBVR::~GPUSBVR() {
@@ -70,7 +72,7 @@ void GPUSBVR::Initialize() {
   glEnable(GL_TEXTURE_2D);
   glDisable(GL_CULL_FACE);
   
-  m_IDTex[0] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1x3.bmp").c_str());
+  m_IDTex[0] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1.bmp").c_str());
   if (m_IDTex[0] == NULL) {
     m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","First Image load failed");    
   }
@@ -78,28 +80,88 @@ void GPUSBVR::Initialize() {
   if (m_IDTex[1] == NULL) {
     m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","Second Image load failed");    
   }
-  m_IDTex[2] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1.bmp").c_str());
+  m_IDTex[2] = m_pMasterController->MemMan()->Load2DTextureFromFile(SysTools::GetFromResourceOnMac("RenderWin1x3.bmp").c_str());
   if (m_IDTex[2] == NULL) {
     m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","Third Image load failed");    
   }
 
-  m_pProgram1DTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-1D-VS.glsl"),
+  m_pProgram1DTrans[0] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
                                                                     SysTools::GetFromResourceOnMac("GPUSBVR-1D-FS.glsl"));
 
- 
-  m_pProgram1DTrans->Enable();
-  m_pProgram1DTrans->SetUniformVector("texVolTexture",0);
-  m_pProgram1DTrans->SetUniformVector("texTrans1DTexture",1);
-  m_pProgram1DTrans->Disable();
+  m_pProgram1DTrans[1] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
+                                                                    SysTools::GetFromResourceOnMac("GPUSBVR-1D-light-FS.glsl"));
+
+  m_pProgram2DTrans[0] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
+                                                                    SysTools::GetFromResourceOnMac("GPUSBVR-2D-FS.glsl"));
+
+  m_pProgram2DTrans[1] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
+                                                                    SysTools::GetFromResourceOnMac("GPUSBVR-2D-light-FS.glsl"));
+
+  m_pProgramIso = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
+                                                                    SysTools::GetFromResourceOnMac("GPUSBVR-ISO-FS.glsl"));
+
+  m_pProgram1DTrans[0]->Enable();
+  m_pProgram1DTrans[0]->SetUniformVector("texVolTexture",0);
+  m_pProgram1DTrans[0]->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram1DTrans[0]->Disable();
+
+  m_pProgram1DTrans[1]->Enable();
+  m_pProgram1DTrans[1]->SetUniformVector("texVolTexture",0);
+  m_pProgram1DTrans[1]->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram1DTrans[1]->Disable();
+
+  m_pProgram2DTrans[0]->Enable();
+  m_pProgram2DTrans[0]->SetUniformVector("texVolTexture",0);
+  m_pProgram2DTrans[0]->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram2DTrans[0]->Disable();
+
+  m_pProgram2DTrans[1]->Enable();
+  m_pProgram2DTrans[1]->SetUniformVector("texVolTexture",0);
+  m_pProgram2DTrans[1]->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram2DTrans[1]->Disable();
+
+  m_pProgramIso->Enable();
+  m_pProgramIso->SetUniformVector("texVolTexture",0);
+  /// \todo setup iso vas here
+  m_pProgramIso->Disable();
+
 }
 
 void GPUSBVR::SetDataDepShaderVars() {
-  m_pProgram1DTrans->Enable();
-  size_t       iMaxValue = m_p1DTrans->vColorData.size();
-  unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
-  float fScale = float(iMaxRange)/float(iMaxValue);
-  m_pProgram1DTrans->SetUniformVector("fTransScale",fScale);
-  m_pProgram1DTrans->Disable();
+
+  switch (m_eRenderMode) {
+    case RM_1DTRANS    :  {
+                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
+                            size_t       iMaxValue = m_p1DTrans->vColorData.size();
+                            unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
+                            float fScale = float(iMaxRange)/float(iMaxValue);
+                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",fScale);
+                            if (m_bUseLigthing) {
+
+                            }
+                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
+                            break;
+                          }
+    case RM_2DTRANS    :  {
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable();
+
+                            /// \todo setup 2D transferfunction vars here
+              
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable();
+                            break;
+                          }
+  case RM_ISOSURFACE : {
+                            m_pProgramIso->Enable();
+
+                            /// \todo setup isovalue shader vars
+              
+                            m_pProgramIso->Disable();
+                            break;
+                          }
+    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::SetDataDepShaderVars","Invalid rendermode set"); break;
+  }
+
+
 }
 
 bool GPUSBVR::LoadDataset(const string& strFilename) {
@@ -128,7 +190,7 @@ void GPUSBVR::DrawLogo() {
     glPushMatrix();
     glLoadIdentity();
 
-    if (m_IDTex[m_iCurrentView] != NULL) m_IDTex[m_iCurrentView]->Bind();
+    if (m_IDTex[size_t(m_eViewMode)] != NULL) m_IDTex[size_t(m_eViewMode)]->Bind();
     glDisable(GL_TEXTURE_3D);
     glEnable(GL_TEXTURE_2D);
 
@@ -182,12 +244,30 @@ void GPUSBVR::DrawBackGradient() {
   glEnable(GL_DEPTH_TEST);
 }
 
-void GPUSBVR::Paint(bool bClearDepthBuffer) {
+void GPUSBVR::RenderSingle() {
+  switch (m_eWindowMode[0]) {
+    case WM_3D         :  Render3DView(); break;
+    case WM_CORONAL    :  
+    case WM_AXIAL      :  
+    case WM_SAGITTAL   :  Render2DView(m_eWindowMode[0], m_fSliceIndex[0]); break; 
+    case WM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::RenderSingle","Invalid windowmode set"); break;
+  }
+}
 
-  if (bClearDepthBuffer) glClear(GL_DEPTH_BUFFER_BIT);
+void GPUSBVR::Render2by2() {
 
-  if (m_bCompleteRedraw) {
-    m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Complete Redraw");
+}
+
+void GPUSBVR::Render1by3() {
+
+}
+
+
+void GPUSBVR::Render2DView(EWindowMode eDirection, float fSliceIndex) {
+
+}
+
+void GPUSBVR::Render3DView() {
 
     // DEBUG: just render the smallest brick for a start
     std::vector<UINT64> vSmallestLOD = m_pDataset->GetInfo()->GetLODLevelCount();
@@ -196,66 +276,77 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
     for (size_t i = 0;i<vFirstBrick.size();i++) vFirstBrick[i] = 0;
     UpdateGeoGen(vSmallestLOD, vFirstBrick);
 
-    m_pFBO3DImage->Write();
-
-    SetDataDepShaderVars();
-
-    if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
-      glClear(GL_COLOR_BUFFER_BIT);
-    } else {
-      DrawBackGradient();
-    }
-
-    DrawLogo();
-
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
     FLOATMATRIX4 trans, rotx, roty;
     trans.Translation(0,0,-4);
     rotx.RotationAxis(FLOATVECTOR3(0,1,0),m_vRot.x);
     roty.RotationAxis(FLOATVECTOR3(1,0,0),m_vRot.y);
     m_matModelView = trans*rotx*roty;
 
-    //m_matModelView.setModelview();
     m_SBVRGeogen.SetTransformation(m_matModelView);
 
-  	glEnable(GL_BLEND);
-	  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // switch to wireframe
-    if (m_bRenderWireframe) {
-        /// \todo save state
-	    glDisable(GL_CULL_FACE);
-	    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-	    glEdgeFlag(true);
-    }
-
+	  glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vSmallestLOD, vFirstBrick);
     if(t!=NULL) t->Bind(0);
-    m_p1DTransTex->Bind(1);
-
-    m_pProgram1DTrans->Enable();
-
 
     glBegin(GL_TRIANGLES);
       glColor4f(1,1,1,1);
-
       for (size_t i = 0;i<m_SBVRGeogen.m_vSliceTriangles.size();i++) {
         glTexCoord3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vTex);
         glVertex3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vPos);
       }
     glEnd();
 
+    m_pMasterController->MemMan()->Release3DTexture(t);
+}
+
+
+
+void GPUSBVR::Paint(bool bClearDepthBuffer) {
+
+  if (bClearDepthBuffer) glClear(GL_DEPTH_BUFFER_BIT);
+
+  if (m_bCompleteRedraw) {
+    m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Complete Redraw");
+
+
+    m_pFBO3DImage->Write();
+
+    SetDataDepShaderVars();
+    if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) glClear(GL_COLOR_BUFFER_BIT); else DrawBackGradient();
+
+    DrawLogo();
+
+    switch (m_eRenderMode) {
+      case RM_1DTRANS    :  m_p1DTransTex->Bind(1); 
+                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable(); break;
+      case RM_2DTRANS    :  m_p2DTransTex->Bind(1);
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable(); break;
+      case RM_ISOSURFACE :  /// \todo setup isovalue shader vars
+                            m_pProgramIso->Enable(); break;
+      case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid rendermode set"); break;
+    }
+
+    switch (m_eViewMode) {
+      case VM_SINGLE    :  RenderSingle(); break;
+      case VM_TWOBYTWO  :  Render2by2();   break;
+      case VM_ONEBYTREE :  Render1by3();   break;
+      case VM_INVALID   :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid viewmode set"); break;
+    }
+
     m_pFBO3DImage->FinishWrite();
 
-    m_pProgram1DTrans->Disable();
+    switch (m_eRenderMode) {
+      case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
+      case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
+      case RM_ISOSURFACE :  m_pProgramIso->Disable(); break;
+      case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid rendermode set"); break;
+    }
+    
 
     glDisable(GL_BLEND);
-
-    if (m_bRenderWireframe) {
-      /// \todo restore state
-    }
 
   } else m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Quick Redraw");
 
@@ -290,7 +381,11 @@ void GPUSBVR::Cleanup() {
   m_pMasterController->MemMan()->FreeTexture(m_IDTex[2]);
 
   m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImage);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[0]);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[1]);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[1]);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIso);
 }
 
 

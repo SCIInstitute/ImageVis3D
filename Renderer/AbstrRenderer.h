@@ -52,18 +52,42 @@
 
 class MasterController;
 
-enum ERenderMode {
-  RM_1DTRANS = 0,  /**< one dimensional transfer function */
-  RM_2DTRANS,      /**< two dimensional transfer function */
-  RM_ISOSURFACE,
-  RM_INVALID
-};
-
 /** \class AbstrRenderer
  * Base for all renderers. */
 class AbstrRenderer {
   public:
-    /** Default settings: 1D transfer function, white text, black BG.
+    enum ERenderMode {
+      RM_1DTRANS = 0,  /**< one dimensional transfer function */
+      RM_2DTRANS,      /**< two dimensional transfer function */
+      RM_ISOSURFACE,   /**< render isosurfaces                */
+      RM_INVALID
+    };
+    ERenderMode GetRendermode() {return m_eRenderMode;}
+    virtual void SetRendermode(ERenderMode eRenderMode);
+
+    enum EViewMode {
+      VM_SINGLE = 0,  /**< a single large image */
+      VM_TWOBYTWO,    /**< four small images */
+      VM_ONEBYTREE,   /**< one large and three small images */
+      VM_INVALID
+    };
+    EViewMode GetViewmode() {return m_eViewMode;}
+    virtual void SetViewmode(EViewMode eViewMode);
+
+    enum EWindowMode {
+      WM_3D = 0,      
+      WM_CORONAL,    
+      WM_AXIAL,   
+      WM_SAGITTAL,   
+      WM_INVALID
+    };
+    EWindowMode GetWindowmode(unsigned int iWindowIndex) {return m_eWindowMode[iWindowIndex];}
+    virtual void SetWindowmode(unsigned int iWindowIndex, EWindowMode eWindowMode);
+
+    bool GetUseLigthing() {return m_bUseLigthing;}
+    virtual void SetUseLigthing(bool bUseLigthing);
+
+    /** Default settings: 1D transfer function, one by three view, white text, black BG.
      * @param pMasterController message router */
     AbstrRenderer(MasterController* pMasterController);
     /** Deallocates dataset and transfer functions. */
@@ -79,9 +103,7 @@ class AbstrRenderer {
     VolumeDataset*      GetDataSet() {return m_pDataset;}
     TransferFunction1D* Get1DTrans() {return m_p1DTrans;}
     TransferFunction2D* Get2DTrans() {return m_p2DTrans;}
-    
-    ERenderMode GetRendermode() {return m_eRenderMode;}
-    virtual void SetRendermode(ERenderMode eRenderMode);
+
     /** Force a redraw if we're currently using a one dimensional TF. */ 
     virtual void Changed1DTrans();
     /** Force a redraw if we're currently using a two dimensional TF. */ 
@@ -103,6 +125,10 @@ class AbstrRenderer {
     bool                m_bRedraw;
     bool                m_bCompleteRedraw;
     ERenderMode         m_eRenderMode;
+    EViewMode           m_eViewMode;
+    EWindowMode         m_eWindowMode[4];
+    bool                m_bUseLigthing;
+    float               m_fSliceIndex[4];
     VolumeDataset*      m_pDataset;
     TransferFunction1D* m_p1DTrans;
     TransferFunction2D* m_p2DTrans;

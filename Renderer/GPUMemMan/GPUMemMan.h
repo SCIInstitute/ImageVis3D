@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    GPUMemMan.h
+  \file    GLFBOTex.h
   \author  Jens Krueger
            SCI Institute
            University of Utah
@@ -68,7 +68,7 @@ class GPUMemMan {
     void FreeTexture(GLTexture2D* pTexture);
 
     GLTexture3D* Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
-    void FreeTexture(GLTexture3D* pTexture);
+    void Release3DTexture(GLTexture3D* pTexture);
 
     GLFBOTex* GetFBO(GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth=false, int iNumBuffers=1);
     void FreeFBO(GLFBOTex* pFBO);

@@ -43,7 +43,9 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_pMasterController(pMasterController),
   m_bRedraw(true), 
   m_bCompleteRedraw(true), 
-  m_eRenderMode(RM_1DTRANS), 
+  m_eRenderMode(RM_1DTRANS),
+  m_eViewMode(VM_ONEBYTREE),
+  m_bUseLigthing(true),
   m_pDataset(NULL),
   m_p1DTrans(NULL),
   m_p2DTrans(NULL),
@@ -51,6 +53,16 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
+
+  m_eWindowMode[0] = WM_3D;
+  m_eWindowMode[1] = WM_CORONAL;
+  m_eWindowMode[2] = WM_AXIAL;
+  m_eWindowMode[3] = WM_SAGITTAL;
+
+  m_fSliceIndex[0] = 0.5f;
+  m_fSliceIndex[1] = 0.5f;
+  m_fSliceIndex[2] = 0.5f;
+  m_fSliceIndex[3] = 0.5f;
 }
 
 
@@ -89,6 +101,36 @@ void AbstrRenderer::SetRendermode(ERenderMode eRenderMode)
     m_bCompleteRedraw = true;
   }  
 }
+
+void AbstrRenderer::SetViewmode(EViewMode eViewMode)
+{
+  if (m_eViewMode != eViewMode) {
+    m_eViewMode = eViewMode; 
+    m_bRedraw = true;
+    m_bCompleteRedraw = true;
+  }  
+}
+
+
+void AbstrRenderer::SetWindowmode(unsigned int iWindowIndex, EWindowMode eWindowMode)
+{
+  if (m_eWindowMode[iWindowIndex] != eWindowMode) {
+    m_eWindowMode[iWindowIndex] = eWindowMode; 
+    m_bRedraw = true;
+    m_bCompleteRedraw = true;
+    /// \todo only redraw the windows dependent on this change
+  }  
+}
+
+void AbstrRenderer::SetUseLigthing(bool bUseLigthing) {
+  if (m_bUseLigthing != bUseLigthing) {
+    m_bUseLigthing = bUseLigthing; 
+    m_bRedraw = true;
+    m_bCompleteRedraw = true;
+    /// \todo only redraw the windows dependent on this change
+  }
+}
+
 
 void AbstrRenderer::Changed1DTrans() {
   if (m_eRenderMode != RM_1DTRANS) {

@@ -388,6 +388,7 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
   for (Texture3DListIter i = m_vpTex3DList.begin();i<m_vpTex3DList.end();i++) {
     if ((*i)->Match(pDataset, vLOD, vBrick)) {
       m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Reusing 3D texture");
+      (*i)->iUserCount++;
       return (*i)->pTexture;
     }
   }
@@ -404,6 +405,7 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
     delete pNew3DTex;
     return NULL;
   }
+  pNew3DTex->iUserCount = 1;
 
   m_iAllocatedGPUMemory += pNew3DTex->pTexture->GetCPUSize();
   m_iAllocatedCPUMemory += pNew3DTex->pTexture->GetGPUSize();
@@ -412,6 +414,19 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
   return (*(m_vpTex3DList.end()-1))->pTexture;
 }
 
+void GPUMemMan::Release3DTexture(GLTexture3D* pTexture) {
+  for (size_t i = 0;i<m_vpTex3DList.size();i++) {
+    if (m_vpTex3DList[i]->pTexture == pTexture) {
+      if (m_vpTex3DList[i]->iUserCount > 0) {
+          m_vpTex3DList[i]->iUserCount--;
+      } else {
+        m_MasterController->DebugOut()->Warning(
+          "GPUMemMan::Release3DTexture",
+          "Attempting to release a 3D texture that is not in use.");
+      }
+    }
+  }
+}
 
 void GPUMemMan::FreeAssociatedTextures(VolumeDataset* pDataset) {
   for (size_t i = 0;i<m_vpTex3DList.size();i++) {
@@ -426,6 +441,12 @@ void GPUMemMan::FreeAssociatedTextures(VolumeDataset* pDataset) {
 
       m_iAllocatedGPUMemory -= m_vpTex3DList[i]->pTexture->GetCPUSize();
       m_iAllocatedCPUMemory -= m_vpTex3DList[i]->pTexture->GetGPUSize();
+
+      if (  m_vpTex3DList[i]->iUserCount != 0) {
+        m_MasterController->DebugOut()->Warning(
+          "GPUMemMan::FreeAssociatedTextures",
+          "Freeing used 3D texture!");
+      }
 
       delete m_vpTex3DList[i];
 

@@ -54,7 +54,6 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   setWindowTitle(m_strID);
 
   m_Renderer->LoadDataset(m_strDataset.toStdString());
-  m_Renderer->SetCurrentView(0);
 
   this->setFocusPolicy(Qt::StrongFocus);
 }
@@ -110,9 +109,11 @@ void RenderWindow::mousePressEvent(QMouseEvent *event)
   m_vLastPos = event->pos();
 
   if (event->buttons() & Qt::RightButton) {
-    if (m_Renderer != NULL) m_Renderer->SetCurrentView((m_Renderer->GetCurrentView()+1) %3);
-    emit RenderWindowViewChanged(m_Renderer->GetCurrentView());
-    updateGL();
+    if (m_Renderer != NULL) {
+      m_Renderer->SetViewmode(AbstrRenderer::EViewMode((int(m_Renderer->GetViewmode())+1) %3));
+      emit RenderWindowViewChanged(m_Renderer->GetViewmode());
+      updateGL();
+    }
   }
 }
 
@@ -143,21 +144,27 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 }
 
 void RenderWindow::ToggleRenderWindowView1x3() {
-  if (m_Renderer != NULL) m_Renderer->SetCurrentView(0);
-  emit RenderWindowViewChanged(0);
-  updateGL();
+  if (m_Renderer != NULL) {
+    m_Renderer->SetViewmode(AbstrRenderer::VM_ONEBYTREE);
+    emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
+    updateGL();
+  }
 }
 
 void RenderWindow::ToggleRenderWindowView2x2() {
-  if (m_Renderer != NULL) m_Renderer->SetCurrentView(1);
-  emit RenderWindowViewChanged(1);
-  updateGL();
+  if (m_Renderer != NULL) {
+    m_Renderer->SetViewmode(AbstrRenderer::VM_TWOBYTWO);
+    emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
+    updateGL();
+  }
 }
 
 void RenderWindow::ToggleRenderWindowViewSingle() {
-  if (m_Renderer != NULL) m_Renderer->SetCurrentView(2);
-  emit RenderWindowViewChanged(2);
-  updateGL();
+  if (m_Renderer != NULL) {
+    m_Renderer->SetViewmode(AbstrRenderer::VM_SINGLE);
+    emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
+    updateGL();
+  }
 }
 
 void RenderWindow::Cleanup() {

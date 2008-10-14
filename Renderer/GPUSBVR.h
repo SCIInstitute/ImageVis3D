@@ -74,33 +74,34 @@ class GPUSBVR : public GLRenderer {
     /** Loads GLSL vertex and fragment shaders. */
     virtual void Initialize();
 
-    void SetWireFrame(bool bRenderWireframe) {m_bRenderWireframe = bRenderWireframe;}
-    bool GetWireFrame() {return m_bRenderWireframe;}
-
     /** Change the view rotation.  Causes a full redraw. */
     void SetRotation(FLOATVECTOR2 vRot) {if (m_vRot != vRot) {m_vRot = vRot; m_bCompleteRedraw = true;}}
-    /** Changes the current view mode -- just the 3D rendering, a 1 by three
-     * configuration, or a 2x2 configuration.  Causes a full redraw. */
-    void SetCurrentView(int iCurrentView) {if (m_iCurrentView != iCurrentView) {m_iCurrentView = iCurrentView; m_bCompleteRedraw = true;}}
-    int GetCurrentView() const {return m_iCurrentView;}
 
   protected:
     FLOATMATRIX4  m_matModelView;
     SBVRGeogen    m_SBVRGeogen;
     GLTexture2D*  m_IDTex[3];
-    int           m_iCurrentView;
     FLOATVECTOR2  m_vRot;
     bool          m_bDelayedCompleteRedraw;
-    bool          m_bRenderWireframe;
 
     GLFBOTex*     m_pFBO3DImage;
-    GLSLProgram*  m_pProgram1DTrans;
+    GLSLProgram*  m_pProgram1DTrans[2];
+    GLSLProgram*  m_pProgram2DTrans[2];
+    GLSLProgram*  m_pProgramIso;
+
 
     void DrawLogo();
     void DrawBackGradient();
     void UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
     void RerenderPreviousResult();
     void SetDataDepShaderVars();
+
+    void RenderSingle();
+    void Render2by2();
+    void Render1by3();
+
+    void Render3DView();
+    void Render2DView(EWindowMode eDirection, float fSliceIndex);
 };
 
 #endif // GPUSBVR_H

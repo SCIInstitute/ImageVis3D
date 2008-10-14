@@ -340,17 +340,17 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 	      sender->GetRenderer()->Get2DTrans());
     m_2DTransferFunction->update();
 
-    ERenderMode e = m_ActiveRenderWin->GetRenderer()->GetRendermode();
+    AbstrRenderer::ERenderMode e = m_ActiveRenderWin->GetRenderer()->GetRendermode();
 
     switch (e) {
-    case RM_1DTRANS    : Use1DTrans(); break;
-    case RM_2DTRANS    : Use2DTrans(); break;
-    case RM_ISOSURFACE : UseIso(); break;
-    default : m_MasterController.DebugOut()->
-		Error("MainWindow::RenderWindowActive",
-		      "unknown rendermode from %s",
-		      sender->GetDatasetName().toStdString().c_str());
-      break;
+      case AbstrRenderer::RM_1DTRANS    : Use1DTrans(); break;
+      case AbstrRenderer::RM_2DTRANS    : Use2DTrans(); break;
+      case AbstrRenderer::RM_ISOSURFACE : UseIso(); break;
+      default : m_MasterController.DebugOut()->
+		                Error("MainWindow::RenderWindowActive",
+		                      "unknown rendermode from %s",
+		                      sender->GetDatasetName().toStdString().c_str());
+                break;
     }
   }
 }

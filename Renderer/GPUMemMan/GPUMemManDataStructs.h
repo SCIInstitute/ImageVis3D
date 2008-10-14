@@ -134,6 +134,7 @@ public:
   GLTexture3D*        pTexture;
   VolumeDataset*      pDataset;
   bool                bTextureCreated;
+  unsigned int        iUserCount;
 
 private:
   std::vector<UINT64> vLOD;

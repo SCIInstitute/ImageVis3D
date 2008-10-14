@@ -65,7 +65,7 @@ class RenderWindow : public QGLWidget
     QSize sizeHint() const;
     AbstrRenderer* GetRenderer() {return m_Renderer;}
     void CheckForRedraw();
-    void SetRendermode(ERenderMode eRenderMode) {
+    void SetRendermode(AbstrRenderer::ERenderMode eRenderMode) {
       makeCurrent();
       m_Renderer->SetRendermode(eRenderMode); }
 
