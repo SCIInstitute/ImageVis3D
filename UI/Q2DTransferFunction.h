@@ -152,7 +152,7 @@ private:
   // drawing routines
   void DrawBorder(QPainter& painter);
   void DrawHistogram(QPainter& painter);
-  void DrawSwatches(QPainter& painter);
+  void DrawSwatches(QPainter& painter, bool bDrawWidgets);
   void Draw1DTrans(QPainter& painter);
 
   // helper

@@ -2,25 +2,34 @@
 
 #include <memory.h>
 using namespace std;
+using namespace UVFTables;
 
 
-Histogram1DDataBlock::Histogram1DDataBlock() : RasterDataBlock() {
-  ulBlockSemantics = UVFTables::BS_1D_Histogram;
+Histogram1DDataBlock::Histogram1DDataBlock() : DataBlock() {
+  ulBlockSemantics = BS_1D_Histogram;
+  strBlockID       = "1D Histrogram";
 }
 
 Histogram1DDataBlock::Histogram1DDataBlock(const Histogram1DDataBlock &other) :
-  RasterDataBlock(other),
+  DataBlock(other),
   m_vHistData(other.m_vHistData)
 {
 }
 
-Histogram1DDataBlock::Histogram1DDataBlock(LargeRAWFile* pStreamFile, UINT64 iOffset, bool bIsBigEndian) :
-  RasterDataBlock(pStreamFile, iOffset, bIsBigEndian) 
-{
-  m_vHistData.resize(size_t(ulDomainSize[0]));
-  pStreamFile->ReadRAW((unsigned char*)&m_vHistData[0], ulDomainSize[0]*sizeof(UINT64));
+Histogram1DDataBlock& Histogram1DDataBlock::operator=(const Histogram1DDataBlock& other) {
+	strBlockID = other.strBlockID;
+	ulBlockSemantics = other.ulBlockSemantics;
+	ulCompressionScheme = other.ulCompressionScheme;
+	ulOffsetToNextDataBlock = other.ulOffsetToNextDataBlock;
 
-  ulBlockSemantics = UVFTables::BS_1D_Histogram;
+	m_vHistData = other.m_vHistData;
+
+	return *this;
+}
+
+
+Histogram1DDataBlock::Histogram1DDataBlock(LargeRAWFile* pStreamFile, UINT64 iOffset, bool bIsBigEndian) {
+	GetHeaderFromFile(pStreamFile, iOffset, bIsBigEndian);	
 }
 
 Histogram1DDataBlock::~Histogram1DDataBlock() 
@@ -32,17 +41,21 @@ DataBlock* Histogram1DDataBlock::Clone() {
 }
 
 UINT64 Histogram1DDataBlock::GetHeaderFromFile(LargeRAWFile* pStreamFile, UINT64 iOffset, bool bIsBigEndian) {
-  iOffset = RasterDataBlock::GetHeaderFromFile(pStreamFile, iOffset, bIsBigEndian);
-  m_vHistData.resize(size_t(ulDomainSize[0]));
-  pStreamFile->ReadRAW((unsigned char*)&m_vHistData[0], ulDomainSize[0]*sizeof(UINT64));
-  return iOffset;
+  UINT64 iStart = iOffset + DataBlock::GetHeaderFromFile(pStreamFile, iOffset, bIsBigEndian);
+	pStreamFile->SeekPos(iStart);
+
+	UINT64 ulElementCount;
+	pStreamFile->ReadData(ulElementCount, bIsBigEndian);
+
+  m_vHistData.resize(size_t(ulElementCount));
+  pStreamFile->ReadRAW((unsigned char*)&m_vHistData[0], ulElementCount*sizeof(UINT64));
+	return pStreamFile->GetPos() - iOffset;
 }
 
 bool Histogram1DDataBlock::Compute(RasterDataBlock* source) {
 
   // TODO: right now we can only compute Histograms of scalar data this should be changed to a more general approach
   if (source->ulElementDimension != 1 || source->ulElementDimensionSize.size() != 1) return false;
-
 
   // TODO: right now compute Histogram assumes that the lowest LOD level consists only of a single brick, this brick is used for the hist. computation
   //       this should be changed to a more general approach
@@ -86,7 +99,7 @@ bool Histogram1DDataBlock::Compute(RasterDataBlock* source) {
   }
   delete [] pcSourceData;
 
-  // find maximum non zero entry
+  // find maximum-index non zero entry
   size_t iSize = 0;
   for (size_t i = 0;i<iValueRange;i++) if (vTmpHist[i] != 0) iSize = i+1;
   iValueRange = iSize;
@@ -96,18 +109,8 @@ bool Histogram1DDataBlock::Compute(RasterDataBlock* source) {
   if (m_vHistData.size() != iValueRange) return false;
   for (size_t i = 0;i<iValueRange;i++) m_vHistData[i] = vTmpHist[i];
 
-  // set raster data block information
-  strBlockID = "1D Histogram for datablock " + source->strBlockID;
-	ulCompressionScheme = UVFTables::COS_NONE;
-	ulDomainSemantics.push_back(UVFTables::DS_X);
-  ulDomainSize.push_back(iValueRange);
-	ulLODDecFactor.push_back(2);
-	ulLODGroups.push_back(0);
-	ulLODLevelCount.push_back(1);
-  SetTypeToUInt64(UVFTables::ES_UNKNOWN);
-	ulBrickSize.push_back(iValueRange);
-	ulBrickOverlap.push_back(1);
-	SetIdentityTransformation();
+  // set data block information
+	strBlockID = "1D Histogram for datablock " + source->strBlockID;
 
   return true;
 }
@@ -116,48 +119,19 @@ UINT64 Histogram1DDataBlock::CopyToFile(LargeRAWFile* pStreamFile, UINT64 iOffse
   UINT64 iStart = iOffset + DataBlock::CopyToFile(pStreamFile, iOffset, bIsBigEndian, bIsLastBlock);
 	pStreamFile->SeekPos(iStart);
 
-	// write header
-	UINT64 ulDomainDimension = ulDomainSemantics.size();
-	pStreamFile->WriteData(ulDomainDimension, bIsBigEndian);
-
-	if (ulDomainDimension > 0) {
-		vector<UINT64> uintVect; uintVect.resize(size_t(ulDomainDimension));
-		for (size_t i = 0;i<uintVect.size();i++) uintVect[i] = (UINT64)ulDomainSemantics[i];
-		pStreamFile->WriteData(uintVect, bIsBigEndian);
-
-		pStreamFile->WriteData(dDomainTransformation, bIsBigEndian);
-		pStreamFile->WriteData(ulDomainSize, bIsBigEndian);
-		pStreamFile->WriteData(ulBrickSize, bIsBigEndian);
-		pStreamFile->WriteData(ulBrickOverlap, bIsBigEndian);
-		pStreamFile->WriteData(ulLODDecFactor, bIsBigEndian);
-		pStreamFile->WriteData(ulLODGroups, bIsBigEndian);
-	}
-
-	pStreamFile->WriteData(ulLODLevelCount, bIsBigEndian);
-	pStreamFile->WriteData(ulElementDimension, bIsBigEndian);
-	pStreamFile->WriteData(ulElementDimensionSize, bIsBigEndian);
-
-	for (size_t i = 0;i<size_t(ulElementDimension);i++) {
-
-		vector<UINT64> uintVect; uintVect.resize(size_t(ulElementDimensionSize[i]));
-		for (size_t j = 0;j<uintVect.size();j++)  uintVect[j] = (UINT64)ulElementSemantic[i][j];
-		pStreamFile->WriteData(uintVect, bIsBigEndian);				
-
-		pStreamFile->WriteData(ulElementBitSize[i], bIsBigEndian);
-		pStreamFile->WriteData(ulElementMantissa[i], bIsBigEndian);
-
-		// writing bools failed on windows so we are writing chars
-		vector<char> charVect; charVect.resize(size_t(ulElementDimensionSize[i]));
-		for (size_t j = 0;j<charVect.size();j++)  charVect[j] = bSignedElement[i][j] ? 1 : 0;
-		pStreamFile->WriteData(charVect, bIsBigEndian);				
-	}
-
-	pStreamFile->WriteData(ulOffsetToDataBlock, bIsBigEndian);
-
-	UINT64 iDataSize = ComputeDataSize();
-
-  pStreamFile->SeekPos( pStreamFile->GetPos() + ulOffsetToDataBlock);
-  pStreamFile->WriteRAW((unsigned char*)&m_vHistData[0], ulDomainSize[0]*sizeof(UINT64));
+	UINT64 ulElementCount = UINT64(m_vHistData.size());
+  pStreamFile->WriteData(ulElementCount, bIsBigEndian);
+  pStreamFile->WriteRAW((unsigned char*)&m_vHistData[0], ulElementCount*sizeof(UINT64));
 
 	return pStreamFile->GetPos() - iOffset;  
+}
+
+
+UINT64 Histogram1DDataBlock::GetOffsetToNextBlock() const {
+	return DataBlock::GetOffsetToNextBlock() + ComputeDataSize();
+}
+
+UINT64 Histogram1DDataBlock::ComputeDataSize() const {
+	return sizeof(UINT64) +								  // length of the vector
+		   m_vHistData.size()*sizeof(UINT64);  // the vector itself
 }

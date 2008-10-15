@@ -46,11 +46,14 @@
 #include <Basics/Vectors.h>
 #include <Basics/Grids.h>
 
+#include <QtGui/QPainter>
+
 #include "TransferFunction1D.h"
 
 typedef Grid2D<unsigned int> Histogram2D;
 typedef Grid2D<float> NormalizedHistogram2D;
 typedef Grid2D<FLOATVECTOR4> ColorData2D;
+typedef Grid2D< VECTOR4<char> > ColorData2D8Bit;
 
 typedef std::pair< float, FLOATVECTOR4 > GradientStop;
 
@@ -90,9 +93,18 @@ public:
   TransferFunction1D m_Trans1D;
 
   const VECTOR2<size_t> GetSize() const {return m_iSize;}
+
 protected:
   VECTOR2<size_t> m_iSize;
   ColorData2D* RenderTransferFunction();
+  INTVECTOR2 Rel2Abs(FLOATVECTOR2 vfCoord);
+
+private:
+  QPainter*         m_pPainter;  
+  ColorData2D*      m_pColorData;
+  QImage*           m_pCanvas;
+  void DeleteCanvasData();
+
 };
 
 #endif // TRANSFERFUNCTION2D

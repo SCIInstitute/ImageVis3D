@@ -178,8 +178,8 @@ public:
     delete pGLSLProgram;
   }
 
-  const std::string& strVSFile; 
-  const std::string& strFSFile;
+  std::string strVSFile; 
+  std::string strFSFile;
   unsigned int iAccessCounter;
   GLSLProgram* pGLSLProgram;
 };

@@ -101,33 +101,33 @@ void GPUSBVR::Initialize() {
                                                                 SysTools::GetFromResourceOnMac("GPUSBVR-ISO-FS.glsl"));
 
   m_pProgram1DTrans[0]->Enable();
-  m_pProgram1DTrans[0]->SetUniformVector("texVolTexture",0);
-  m_pProgram1DTrans[0]->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram1DTrans[0]->SetUniformVector("texVolume",0);
+  m_pProgram1DTrans[0]->SetUniformVector("texTrans1D",1);
   m_pProgram1DTrans[0]->Disable();
 
   m_pProgram1DTrans[1]->Enable();
-  m_pProgram1DTrans[1]->SetUniformVector("texVolTexture",0);
-  m_pProgram1DTrans[1]->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram1DTrans[1]->SetUniformVector("texVolume",0);
+  m_pProgram1DTrans[1]->SetUniformVector("texTrans1D",1);
   m_pProgram1DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
   m_pProgram1DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
   m_pProgram1DTrans[1]->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgram1DTrans[1]->Disable();
 
   m_pProgram2DTrans[0]->Enable();
-  m_pProgram2DTrans[0]->SetUniformVector("texVolTexture",0);
-  m_pProgram2DTrans[0]->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram2DTrans[0]->SetUniformVector("texVolume",0);
+  m_pProgram2DTrans[0]->SetUniformVector("texTrans2D",1);
   m_pProgram2DTrans[0]->Disable();
 
   m_pProgram2DTrans[1]->Enable();
-  m_pProgram2DTrans[1]->SetUniformVector("texVolTexture",0);
-  m_pProgram2DTrans[1]->SetUniformVector("texTrans1DTexture",1);
+  m_pProgram2DTrans[1]->SetUniformVector("texVolume",0);
+  m_pProgram2DTrans[1]->SetUniformVector("texTrans2D",1);
   m_pProgram2DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
   m_pProgram2DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
   m_pProgram2DTrans[1]->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgram2DTrans[1]->Disable();
 
   m_pProgramIso->Enable();
-  m_pProgramIso->SetUniformVector("texVolTexture",0);
+  m_pProgramIso->SetUniformVector("texVolume",0);
   /// \todo setup iso vas here
   m_pProgramIso->Disable();
 
@@ -142,9 +142,8 @@ void GPUSBVR::SetBrickDepShaderVars(const std::vector<UINT64>& vLOD, const std::
 
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  {
-                            if (m_bUseLigthing) {
+                            if (m_bUseLigthing)
                                 m_pProgram1DTrans[1]->SetUniformVector("vVolumeStepsize", fStepX, fStepY, fStepZ);
-                            }
                             break;
                           }
     case RM_2DTRANS    :  {
@@ -161,22 +160,22 @@ void GPUSBVR::SetBrickDepShaderVars(const std::vector<UINT64>& vLOD, const std::
 }
 
 void GPUSBVR::SetDataDepShaderVars() {
+  size_t       iMaxValue = m_p1DTrans->vColorData.size();
+  unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
+  float fScale = float(iMaxRange)/float(iMaxValue);
 
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  {
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
-                            size_t       iMaxValue = m_p1DTrans->vColorData.size();
-                            unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
-                            float fScale = float(iMaxRange)/float(iMaxValue);
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",fScale);
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
                             break;
                           }
     case RM_2DTRANS    :  {
+                            float fGradientScale = 1.0f/m_pDataset->GetMaxGradMagnitude();
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable();
-
-                            /// \todo setup 2D transferfunction vars here
-                            m_pProgram2DTrans[1]->SetUniformVector("vVolumeStepsize",1);
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",fScale);
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fGradientScale",fGradientScale);
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable();
                             break;
                           }
@@ -256,6 +255,7 @@ void GPUSBVR::DrawBackGradient() {
   glLoadIdentity();
 
   glDisable(GL_TEXTURE_3D);
+  glDisable(GL_TEXTURE_2D);
 
   glBegin(GL_QUADS);
     glColor4d(m_vBackgroundColors[1].x,m_vBackgroundColors[1].y,m_vBackgroundColors[1].z,1);

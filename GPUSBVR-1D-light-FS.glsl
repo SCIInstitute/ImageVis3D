@@ -35,8 +35,8 @@
   \date    October 2008
 */
 
-uniform sampler3D texVolTexture;
-uniform sampler1D texTrans1DTexture;
+uniform sampler3D texVolume;
+uniform sampler1D texTrans1D;
 uniform float fTransScale;
 
 uniform vec3 vLightAmbient;
@@ -46,16 +46,16 @@ uniform vec3 vVolumeStepsize;
 
 void main(void)
 {
-	float fVolumVal = texture3D(texVolTexture, gl_TexCoord[0].xyz).x;	
-  vec4  vTransVal = texture1D(texTrans1DTexture, fVolumVal*fTransScale);
+	float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
+  vec4  vTransVal = texture1D(texTrans1D, fVolumVal*fTransScale);
 
   // compute the gradient/normal
-	float fVolumValXp = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(+vVolumeStepsize.x,0,0)).x;
-	float fVolumValXm = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(-vVolumeStepsize.x,0,0)).x;
-	float fVolumValYp = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,-vVolumeStepsize.y,0)).x;
-	float fVolumValYm = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,+vVolumeStepsize.y,0)).x;
-	float fVolumValZp = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,0,+vVolumeStepsize.z)).x;
-	float fVolumValZm = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,0,-vVolumeStepsize.z)).x;
+	float fVolumValXp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(+vVolumeStepsize.x,0,0)).x;
+	float fVolumValXm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(-vVolumeStepsize.x,0,0)).x;
+	float fVolumValYp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,-vVolumeStepsize.y,0)).x;
+	float fVolumValYm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,+vVolumeStepsize.y,0)).x;
+	float fVolumValZp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,+vVolumeStepsize.z)).x;
+	float fVolumValZm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,-vVolumeStepsize.z)).x;
   vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
   vec3  vNormal = normalize(gl_NormalMatrix * vGradient);
 

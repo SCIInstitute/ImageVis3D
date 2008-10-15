@@ -7,13 +7,13 @@ using namespace UVFTables;
 
 KeyValuePairDataBlock::KeyValuePairDataBlock() {
 	ulBlockSemantics = BS_KEY_VALUE_PAIRS;
+  strBlockID       = "KeyValue Pair Block";
 }
 
 KeyValuePairDataBlock::KeyValuePairDataBlock(const KeyValuePairDataBlock &other) : 
 	DataBlock(other), m_KeyValuePairs(other.m_KeyValuePairs)
 {
 }
-
 
 KeyValuePairDataBlock::KeyValuePairDataBlock(LargeRAWFile* pStreamFile, UINT64 iOffset, bool bIsBigEndian) {
 	GetHeaderFromFile(pStreamFile, iOffset, bIsBigEndian);	

@@ -106,6 +106,7 @@ public:
 
   const Histogram1D* Get1DHistogram() const {return m_pHist1D;}
   const Histogram2D* Get2DHistogram() const {return m_pHist2D;}
+  float GetMaxGradMagnitude() const {return m_pHist2DDataBlock->GetMaxGradMagnitude();}
 
   const VolumeDatasetInfo* GetInfo() const {return m_pVolumeDatasetInfo;}
 

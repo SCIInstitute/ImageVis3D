@@ -501,7 +501,7 @@ void GPUMemMan::FreeFBO(GLFBOTex* pFBO) {
 GLSLProgram* GPUMemMan::GetGLSLProgram(const string& strVSFile, const string& strFSFile) {
   for (GLSLListIter i = m_vpGLSLList.begin();i<m_vpGLSLList.end();i++) {
     if ((*i)->strVSFile == strVSFile && (*i)->strFSFile == strFSFile) {
-      m_MasterController->DebugOut()->Message("GPUMemMan::GetGLSLProgram","Reusing GLSL program from the VS %s and the FS %s", strVSFile.c_str(), strFSFile.c_str());
+      m_MasterController->DebugOut()->Message("GPUMemMan::GetGLSLProgram","Reusing GLSL program from the VS %s and the FS %s", (*i)->strVSFile.c_str(), (*i)->strFSFile.c_str());
       (*i)->iAccessCounter++;
       return (*i)->pGLSLProgram;
     }

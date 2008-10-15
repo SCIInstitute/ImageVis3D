@@ -63,7 +63,7 @@ Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWi
   
   // border size, may be changed arbitrarily
   m_iBorderSize(4),
-  m_iSwatchBorderSize(5),
+  m_iSwatchBorderSize(3),
 
   // mouse motion
   m_iPointSelIndex(-1),
@@ -119,6 +119,8 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunctio
   float fDiff = float(iMax)-float(iMin);
   for (size_t i = 0;i<m_vHistogram.GetSize().area();i++)
     m_vHistogram.SetLinear(i, (float(vHistogram->GetLinear(i)) - float(iMin)) / fDiff);
+
+  emit SwatchChange();
 }
 
 void Q2DTransferFunction::DrawBorder(QPainter& painter) {
@@ -178,16 +180,16 @@ FLOATVECTOR2 Q2DTransferFunction::Abs2Rel(INTVECTOR2 vCoord) {
 		      float(height()-m_iBorderSize-m_iSwatchBorderSize));
 }
 
-void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
+void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
   if (m_pTrans == NULL) return;
 
-  static bool t = true;
-  if (!t) return;
-
-  painter.setRenderHint(painter.Antialiasing, true);
-  painter.translate(+0.5, +0.5);  // TODO: check if we need this
+  if (bDrawWidgets) {
+    painter.setRenderHint(painter.Antialiasing, true);
+    painter.translate(+0.5, +0.5);  /// \todo check if we need this
+  }
 
   QPen borderPen(m_colorSwatchBorder,       m_iSwatchBorderSize, Qt::SolidLine);
+  QPen noBorderPen(Qt::NoPen);
   QPen circlePen(m_colorSwatchBorderCircle, m_iSwatchBorderSize, Qt::SolidLine);
   QPen gradCircePen(m_colorSwatchGradCircle, m_iSwatchBorderSize/2, Qt::SolidLine);
   QPen circlePenSel(m_colorSwatchBorderCircleSel, m_iSwatchBorderSize, Qt::SolidLine);
@@ -216,12 +218,12 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
                           int(currentSwatch.pGradientStops[j].second[3]*255)));
     }
 
-    painter.setPen(borderPen);
+    if (bDrawWidgets && m_iActiveSwatchIndex == int(i)) painter.setPen(borderPen); else painter.setPen(noBorderPen);
     painter.setBrush(linearBrush);
     painter.drawPolygon(&pointList[0], int(currentSwatch.pPoints.size()));
     painter.setBrush(Qt::NoBrush);
 
-    if (m_iActiveSwatchIndex == int(i)) {
+    if (bDrawWidgets && m_iActiveSwatchIndex == int(i)) {
       painter.setBrush(solidBrush);
       for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {    
         if (m_iPointSelIndex == int(j)) painter.setPen(circlePenSel); else painter.setPen(circlePen);
@@ -237,7 +239,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
       painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);      
     }
   }
-  painter.setRenderHint(painter.Antialiasing, false);
+  if (bDrawWidgets) painter.setRenderHint(painter.Antialiasing, false);
 }
 
 void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
@@ -464,8 +466,8 @@ void Q2DTransferFunction::SetColor(bool bIsEnabled) {
       m_colorHistogram = QColor(255,255,255);
       m_colorBack = QColor(Qt::black);
       m_colorBorder = QColor(255, 255, 255);
-      m_colorSwatchBorder = QColor(255, 0, 0);
-      m_colorSwatchBorderCircle = QColor(255, 255, 0);
+      m_colorSwatchBorder = QColor(180, 0, 0);
+      m_colorSwatchBorderCircle = QColor(200, 200, 0);
       m_colorSwatchGradCircle = QColor(0, 255, 0);
       m_colorSwatchGradCircleSel = QColor(255, 255, 255);
       m_colorSwatchBorderCircleSel = QColor(255, 255, 255);
@@ -494,12 +496,12 @@ void Q2DTransferFunction::changeEvent(QEvent * event) {
 
 
 void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
-  UINT64 iSize = min<UINT64>(m_vHistogram.GetSize().y,  m_pTrans->m_Trans1D.vColorData.size());
+  UINT64 iSize = min<UINT64>(m_vHistogram.GetSize().x,  m_pTrans->m_Trans1D.vColorData.size());
 
-  QImage image1DTrans(1, int(iSize), QImage::Format_ARGB32);
+  QImage image1DTrans(int(iSize), 1, QImage::Format_ARGB32);
 
   for (unsigned int i = 0;i<iSize;i++) {
-    image1DTrans.setPixel(0,i,qRgba(int(m_pTrans->m_Trans1D.vColorData[i][0]*255),
+    image1DTrans.setPixel(i,0,qRgba(int(m_pTrans->m_Trans1D.vColorData[i][0]*255),
                      int(m_pTrans->m_Trans1D.vColorData[i][1]*255),
                      int(m_pTrans->m_Trans1D.vColorData[i][2]*255),
                      int(m_pTrans->m_Trans1D.vColorData[i][3]*255)));
@@ -534,7 +536,6 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
     // draw the backdrop into the image
     DrawBorder(image_painter);
     DrawHistogram(image_painter);
-
     Draw1DTrans(image_painter);
 
     // update change detection states
@@ -550,7 +551,7 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
   painter.drawImage(0,0,m_pBackdropCache->toImage());
 
   // and the swatches
-  DrawSwatches(painter);
+  DrawSwatches(painter, true);
 }
 
 bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
@@ -586,7 +587,6 @@ void Q2DTransferFunction::Transfer2DSetActiveSwatch(const int iActiveSwatch) {
 
 void Q2DTransferFunction::Transfer2DAddCircleSwatch() {  
   TFPolygon newSwatch;
-
 
   FLOATVECTOR2 vPoint(0.8f,0.8f);
   unsigned int iNumberOfSegments = 20;

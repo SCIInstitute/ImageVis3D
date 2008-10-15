@@ -36,6 +36,7 @@
 
 #include "GLRenderer.h"
 #include <Controller/MasterController.h>
+#include <Basics/SysTools.h>
 
 using namespace std;
 
@@ -52,8 +53,18 @@ GLRenderer::~GLRenderer() {
 }
 
 void GLRenderer::Initialize() {
-  m_pMasterController->MemMan()->GetEmpty1DTrans(m_pDataset->Get1DHistogram()->GetFilledSize(), this, &m_p1DTrans, &m_p1DTransTex);
-  m_pMasterController->MemMan()->GetEmpty2DTrans(m_pDataset->Get2DHistogram()->GetFilledSize(), this, &m_p2DTrans, &m_p2DTransTex);
+  string strPotential1DTransName = SysTools::ChangeExt(m_pDataset->Filename(), "1dt");
+  string strPotential2DTransName = SysTools::ChangeExt(m_pDataset->Filename(), "2dt");
+  
+  if (SysTools::FileExists(strPotential1DTransName)) 
+    m_pMasterController->MemMan()->Get1DTransFromFile(strPotential1DTransName, this, &m_p1DTrans, &m_p1DTransTex);
+  else
+    m_pMasterController->MemMan()->GetEmpty1DTrans(m_pDataset->Get1DHistogram()->GetFilledSize(), this, &m_p1DTrans, &m_p1DTransTex);
+
+  if (SysTools::FileExists(strPotential2DTransName)) 
+    m_pMasterController->MemMan()->Get2DTransFromFile(strPotential2DTransName, this, &m_p2DTrans, &m_p2DTransTex);
+  else
+    m_pMasterController->MemMan()->GetEmpty2DTrans(m_pDataset->Get2DHistogram()->GetFilledSize(), this, &m_p2DTrans, &m_p2DTransTex);
 }
 
 void GLRenderer::Changed1DTrans() {
@@ -67,7 +78,7 @@ void GLRenderer::Changed2DTrans() {
   m_p2DTrans->GetByteArray(&m_p2DData);
   m_p2DTransTex->SetData(m_p2DData);
 
-  AbstrRenderer::Changed1DTrans();
+  AbstrRenderer::Changed2DTrans();
 }
 
 void GLRenderer::SetBackgroundColors(FLOATVECTOR3 vColors[2]) {

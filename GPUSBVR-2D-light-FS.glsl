@@ -35,8 +35,8 @@
   \date    October 2008
 */
 
-uniform sampler3D texVolTexture;
-uniform sampler2D texTrans2DTexture;
+uniform sampler3D texVolume;
+uniform sampler2D texTrans2D;
 uniform float fTransScale;
 uniform float fGradientScale;
 
@@ -47,20 +47,20 @@ uniform vec3 vVolumeStepsize;
 
 void main(void)
 {
-	float fVolumVal = texture3D(texVolTexture, gl_TexCoord[0].xyz).x;	
+	float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
 
   // compute the gradient/normal
-	float fVolumValXp = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(+vVolumeStepsize.x,0,0)).x;
-	float fVolumValXm = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(-vVolumeStepsize.x,0,0)).x;
-	float fVolumValYp = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,-vVolumeStepsize.y,0)).x;
-	float fVolumValYm = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,+vVolumeStepsize.y,0)).x;
-	float fVolumValZp = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,0,+vVolumeStepsize.z)).x;
-	float fVolumValZm = texture3D(texVolTexture, gl_TexCoord[0].xyz+vec3(0,0,-vVolumeStepsize.z)).x;
+	float fVolumValXp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(+vVolumeStepsize.x,0,0)).x;
+	float fVolumValXm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(-vVolumeStepsize.x,0,0)).x;
+	float fVolumValYp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,-vVolumeStepsize.y,0)).x;
+	float fVolumValYm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,+vVolumeStepsize.y,0)).x;
+	float fVolumValZp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,+vVolumeStepsize.z)).x;
+	float fVolumValZm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,-vVolumeStepsize.z)).x;
   vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
   float fGradientMag = length(vGradient); 
 
   // 2D Transferfunction lookup
-	vec4  vTransVal = texture2D(texTrans2DTexture, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale);
+	vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale));
 
   // compute lighting
   vec3 vNormal = normalize(gl_NormalMatrix * vGradient);
