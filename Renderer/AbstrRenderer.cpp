@@ -49,8 +49,8 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_pDataset(NULL),
   m_p1DTrans(NULL),
   m_p2DTrans(NULL),
-  m_vTextColor(1,1,1,1),
   m_fSampleRateModifier(1.0f),
+  m_vTextColor(1,1,1,1),
   m_fIsovalue(0.5f)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);

@@ -140,8 +140,6 @@ class AbstrRenderer {
     TransferFunction2D* m_p2DTrans;
     float               m_fSampleRateModifier;
     float               m_fIsovalue;
-
-
     FLOATVECTOR3        m_vBackgroundColors[2];
     FLOATVECTOR4        m_vTextColor;
 };

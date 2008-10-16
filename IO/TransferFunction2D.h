@@ -102,11 +102,11 @@ protected:
   INTVECTOR2 Rel2Abs(FLOATVECTOR2 vfCoord);
 
 private:
-  QPainter*         m_pPainter;  
   ColorData2D*      m_pColorData;
   QImage*           m_pCanvas;
-  void DeleteCanvasData();
+  QPainter*         m_pPainter;  
 
+  void DeleteCanvasData();
 };
 
 #endif // TRANSFERFUNCTION2D
