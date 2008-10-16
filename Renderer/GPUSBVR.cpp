@@ -160,7 +160,7 @@ void GPUSBVR::SetBrickDepShaderVars(const std::vector<UINT64>& vLOD, const std::
 }
 
 void GPUSBVR::SetDataDepShaderVars() {
-  size_t       iMaxValue = m_p1DTrans->vColorData.size();
+  size_t       iMaxValue = m_p1DTrans->GetSize();
   unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
   float fScale = float(iMaxRange)/float(iMaxValue);
 

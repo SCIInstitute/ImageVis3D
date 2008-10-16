@@ -85,7 +85,8 @@ public:
   bool Load(const std::string& filename);
   bool Save(const std::string& filename);
 
-  void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
+  void GetByteArray(unsigned char** pcData);
+  void GetByteArray(unsigned char** pcData, unsigned char cUsedRange);
   void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
   void GetFloatArray(float** pfData);
 
@@ -97,6 +98,7 @@ public:
 protected:
   VECTOR2<size_t> m_iSize;
   ColorData2D* RenderTransferFunction();
+  unsigned char* RenderTransferFunction8Bit();
   INTVECTOR2 Rel2Abs(FLOATVECTOR2 vfCoord);
 
 private:

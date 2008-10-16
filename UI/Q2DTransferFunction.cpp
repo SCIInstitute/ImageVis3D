@@ -496,7 +496,7 @@ void Q2DTransferFunction::changeEvent(QEvent * event) {
 
 
 void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
-  UINT64 iSize = min<UINT64>(m_vHistogram.GetSize().x,  m_pTrans->m_Trans1D.vColorData.size());
+  UINT64 iSize = min<UINT64>(m_vHistogram.GetSize().x,  m_pTrans->m_Trans1D.GetSize());
 
   QImage image1DTrans(int(iSize), 1, QImage::Format_ARGB32);
 

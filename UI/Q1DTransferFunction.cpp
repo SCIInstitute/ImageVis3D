@@ -362,10 +362,10 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
   } else {
     if (m_bMouseRight) {
       // set "step" function      
-      if (m_iPaintMode & PAINT_RED)   m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->vColorData.size()), fValue,0);
-      if (m_iPaintMode & PAINT_GREEN) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->vColorData.size()), fValue,1);
-      if (m_iPaintMode & PAINT_BLUE)  m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->vColorData.size()), fValue,2);
-      if (m_iPaintMode & PAINT_ALPHA) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->vColorData.size()), fValue,3);
+      if (m_iPaintMode & PAINT_RED)   m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,0);
+      if (m_iPaintMode & PAINT_GREEN) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,1);
+      if (m_iPaintMode & PAINT_BLUE)  m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,2);
+      if (m_iPaintMode & PAINT_ALPHA) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,3);
 
       // redraw this widget
       update();
@@ -480,7 +480,7 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 
 bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
   // hand the load call over to the TransferFunction1D class
-  size_t iSize = m_pTrans->vColorData.size();
+  size_t iSize = m_pTrans->GetSize();
 
   if( m_pTrans->Load(strFilename.toStdString(), iSize) ) {
     PreparePreviewData();

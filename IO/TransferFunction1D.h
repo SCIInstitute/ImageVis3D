@@ -48,6 +48,8 @@
 typedef Grid1D<unsigned int> Histogram1D;
 typedef Grid1D<float> NormalizedHistogram1D;
 
+class TransferFunction2D;
+
 class TransferFunction1D
 {
 public:
@@ -58,6 +60,7 @@ public:
   void SetStdFunction(float fCenterPoint=0.5f, float fInvGradient=0.5f);
   void SetStdFunction(float fCenterPoint, float fInvGradient, int iComponent);
 
+  size_t GetSize() {return vColorData.size();}
   void Resize(size_t iSize);
   void Resample(size_t iTargetSize);
 
@@ -70,15 +73,14 @@ public:
 
   void Clear();
 
-  void GetByteArray(unsigned char** pcData, unsigned char cUsedRange=255);
+  void GetByteArray(unsigned char** pcData, unsigned char cUsedRange = 255);
   void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
   void GetFloatArray(float** pfData);
 
   std::vector< FLOATVECTOR4 > vColorData;
+
 private:
   float Smoothstep(float x);
-
-
 };
 
 #endif // TRANSFERFUNCTION1D

@@ -135,18 +135,48 @@ bool TransferFunction2D::Save(const std::string& filename) {
   return true;
 }
 
+void TransferFunction2D::GetByteArray(unsigned char** pcData) {
+  if (*pcData == NULL) *pcData = new unsigned char[m_iSize.area()*4];
+
+  unsigned int iSize = m_iSize.area();
+  unsigned char *pcSourceDataIterator = RenderTransferFunction8Bit();
+  unsigned char *pcDataIterator = *pcData;
+  memcpy(pcDataIterator, pcSourceDataIterator, iSize*4);
+  for (unsigned int i = 0;i<iSize;i++) {
+    unsigned char r = *(pcDataIterator+2);
+    unsigned char b = *(pcDataIterator+0);
+    unsigned char a = *(pcDataIterator+3);
+
+    *(pcDataIterator+0) = r;
+    *(pcDataIterator+2) = b;
+    *(pcDataIterator+3) = a;
+
+    pcDataIterator+=4;
+  }
+}
+
+
 void TransferFunction2D::GetByteArray(unsigned char** pcData, unsigned char cUsedRange) {
   if (*pcData == NULL) *pcData = new unsigned char[m_iSize.area()*4];
 
-  RenderTransferFunction();
+  float fScale = 255.0f/float(cUsedRange);
+
+  unsigned int iSize = m_iSize.area();
+  unsigned char *pcSourceDataIterator = RenderTransferFunction8Bit();
   unsigned char *pcDataIterator = *pcData;
-  FLOATVECTOR4  *piSourceIterator = m_pColorData->GetDataPointer();
-  for (unsigned int i = 0;i<m_pColorData->GetSize().area();i++) {
-    *pcDataIterator++ = (unsigned char)((*piSourceIterator)[0]*cUsedRange);
-    *pcDataIterator++ = (unsigned char)((*piSourceIterator)[1]*cUsedRange);
-    *pcDataIterator++ = (unsigned char)((*piSourceIterator)[2]*cUsedRange);
-    *pcDataIterator++ = (unsigned char)((*piSourceIterator)[3]*cUsedRange);
-    piSourceIterator++;
+  memcpy(pcDataIterator, pcSourceDataIterator, iSize*4);
+  for (unsigned int i = 0;i<iSize;i++) {
+    unsigned char r = *(pcDataIterator+2);
+    unsigned char g = *(pcDataIterator+1);
+    unsigned char b = *(pcDataIterator+0);
+    unsigned char a = *(pcDataIterator+3);
+
+    *(pcDataIterator+0) = (unsigned char)(float(r)*fScale);
+    *(pcDataIterator+1) = (unsigned char)(float(g)*fScale);
+    *(pcDataIterator+2) = (unsigned char)(float(b)*fScale);
+    *(pcDataIterator+3) = (unsigned char)(float(a)*fScale);
+
+    pcDataIterator+=4;
   }
 }
 
@@ -180,9 +210,7 @@ INTVECTOR2 TransferFunction2D::Rel2Abs(FLOATVECTOR2 vfCoord) {
 		                int(m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.y*(m_iSize.y-m_iBorderSize-m_iSwatchBorderSize)));
 }
 
-
-ColorData2D* TransferFunction2D::RenderTransferFunction() {
-  
+unsigned char* TransferFunction2D::RenderTransferFunction8Bit() {
   if (m_pColorData == NULL ) m_pColorData = new ColorData2D(m_iSize);
   if (m_pCanvas == NULL )    m_pCanvas    = new QImage(m_iSize.x, m_iSize.y, QImage::Format_ARGB32);
   if (m_pPainter == NULL)    m_pPainter   = new QPainter(m_pCanvas);
@@ -190,13 +218,13 @@ ColorData2D* TransferFunction2D::RenderTransferFunction() {
   m_pCanvas->fill(0);  
 
   // render 1D trans
-  unsigned int iSize = min<int>(m_iSize.x,  m_Trans1D.vColorData.size());
+  unsigned int iSize = min<int>(m_iSize.x,  m_Trans1D.GetSize());
   QImage image1DTrans(int(iSize), 1, QImage::Format_ARGB32);
   for (unsigned int i = 0;i<iSize;i++) {
     image1DTrans.setPixel(i,0,qRgba(int(m_Trans1D.vColorData[i][0]*255),
-                     int(m_Trans1D.vColorData[i][1]*255),
-                     int(m_Trans1D.vColorData[i][2]*255),
-                     int(m_Trans1D.vColorData[i][3]*255)));
+                                    int(m_Trans1D.vColorData[i][1]*255),
+                                    int(m_Trans1D.vColorData[i][2]*255),
+                                    int(m_Trans1D.vColorData[i][3]*255)));
   }
   QRect imageRect(0, 0, m_iSize.x, m_iSize.y);
   m_pPainter->drawImage(imageRect,image1DTrans);
@@ -220,7 +248,7 @@ ColorData2D* TransferFunction2D::RenderTransferFunction() {
     for (size_t j = 0;j<currentSwatch.pGradientStops.size();j++) {      
       linearBrush.setColorAt(currentSwatch.pGradientStops[j].first, 
                    QColor(int(currentSwatch.pGradientStops[j].second[0]*255),
-                      int(currentSwatch.pGradientStops[j].second[1]*255),
+                          int(currentSwatch.pGradientStops[j].second[1]*255),
                           int(currentSwatch.pGradientStops[j].second[2]*255),
                           int(currentSwatch.pGradientStops[j].second[3]*255)));
     }
@@ -229,7 +257,12 @@ ColorData2D* TransferFunction2D::RenderTransferFunction() {
     m_pPainter->drawPolygon(&pointList[0], int(currentSwatch.pPoints.size()));
   }
 
-  unsigned char* pPixelData = m_pCanvas->bits();
+  return m_pCanvas->bits();
+}
+
+ColorData2D* TransferFunction2D::RenderTransferFunction() {
+  
+  unsigned char* pPixelData = RenderTransferFunction8Bit();
 
   FLOATVECTOR4* p = (FLOATVECTOR4*)(m_pColorData->GetDataPointer());
   for (size_t i = 0;i<m_pColorData->GetSize().area();i++) {
