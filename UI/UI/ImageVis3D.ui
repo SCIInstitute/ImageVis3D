@@ -206,8 +206,8 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>16</x>
+          <y>56</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -336,8 +336,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>16</x>
+          <y>56</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -438,8 +438,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>16</x>
+          <y>56</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -1149,8 +1149,8 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>16</x>
+          <y>56</y>
           <width>195</width>
           <height>72</height>
          </rect>
@@ -1248,8 +1248,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>16</x>
+          <y>56</y>
           <width>195</width>
           <height>72</height>
          </rect>
@@ -3070,7 +3070,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="frame_10" >
+      <widget class="QFrame" name="frame_IsosurfaceEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
        <property name="frameShape" >
         <enum>QFrame::StyledPanel</enum>
        </property>
@@ -4546,7 +4549,7 @@
   <connection>
    <sender>checkBox_UseIso</sender>
    <signal>toggled(bool)</signal>
-   <receiver>frame_10</receiver>
+   <receiver>frame_IsosurfaceEdit</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
