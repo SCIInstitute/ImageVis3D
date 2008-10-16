@@ -37,7 +37,7 @@
 
 #include "GPUSBVR.h"
 
-#include <math.h>
+#include <cmath>
 #include <Basics/SysTools.h>
 #include <Controller/MasterController.h>
 
@@ -109,6 +109,7 @@ void GPUSBVR::Initialize() {
   m_pProgram1DTrans[1]->SetUniformVector("texVolume",0);
   m_pProgram1DTrans[1]->SetUniformVector("texTrans1D",1);
   m_pProgram1DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
+  m_pProgram1DTrans[1]->SetUniformVector("vLightDiffuse",1.0f,1.0f,1.0f);
   m_pProgram1DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
   m_pProgram1DTrans[1]->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgram1DTrans[1]->Disable();
@@ -122,13 +123,17 @@ void GPUSBVR::Initialize() {
   m_pProgram2DTrans[1]->SetUniformVector("texVolume",0);
   m_pProgram2DTrans[1]->SetUniformVector("texTrans2D",1);
   m_pProgram2DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
+  m_pProgram2DTrans[1]->SetUniformVector("vLightDiffuse",1.0f,1.0f,1.0f);
   m_pProgram2DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
   m_pProgram2DTrans[1]->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgram2DTrans[1]->Disable();
 
   m_pProgramIso->Enable();
   m_pProgramIso->SetUniformVector("texVolume",0);
-  /// \todo setup iso vas here
+  m_pProgramIso->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
+  m_pProgramIso->SetUniformVector("vLightDiffuse",0.8f,0.8f,0.8f);
+  m_pProgramIso->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
+  m_pProgramIso->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgramIso->Disable();
 
 }
@@ -140,18 +145,22 @@ void GPUSBVR::SetBrickDepShaderVars(const std::vector<UINT64>& vLOD, const std::
   float fStepY = 1.0f/vSize.y;
   float fStepZ = 1.0f/vSize.z;
 
+  float fStepScale = m_SBVRGeogen.GetOpacityCorrection();
+
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  {
+                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fStepScale", fStepScale);
                             if (m_bUseLigthing)
-                                m_pProgram1DTrans[1]->SetUniformVector("vVolumeStepsize", fStepX, fStepY, fStepZ);
+                                m_pProgram1DTrans[1]->SetUniformVector("vVoxelStepsize", fStepX, fStepY, fStepZ);
                             break;
                           }
     case RM_2DTRANS    :  {
-                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("vVolumeStepsize", fStepX, fStepY, fStepZ);
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fStepScale", fStepScale);
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("vVoxelStepsize", fStepX, fStepY, fStepZ);
                             break;
                           }
     case RM_ISOSURFACE : {
-                            m_pProgramIso->SetUniformVector("vVolumeStepsize", fStepX, fStepY, fStepZ);
+                            m_pProgramIso->SetUniformVector("vVoxelStepsize", fStepX, fStepY, fStepZ);
                             break;
                           }
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::SetDataDepShaderVars","Invalid rendermode set"); break;
@@ -181,9 +190,7 @@ void GPUSBVR::SetDataDepShaderVars() {
                           }
   case RM_ISOSURFACE : {
                             m_pProgramIso->Enable();
-
-                            /// \todo setup isovalue shader vars
-              
+                            m_pProgramIso->SetUniformVector("fIsoval",m_fIsovalue/fScale);
                             m_pProgramIso->Disable();
                             break;
                           }
@@ -470,4 +477,9 @@ void GPUSBVR::RerenderPreviousResult() {
   glMatrixMode(GL_MODELVIEW);
 
   glEnable(GL_DEPTH_TEST);
+}
+
+void GPUSBVR::SetSampleRateModifier(float fSampleRateModifier) {
+  GLRenderer::SetSampleRateModifier(fSampleRateModifier);
+  m_SBVRGeogen.SetSamplingModifier(fSampleRateModifier);
 }

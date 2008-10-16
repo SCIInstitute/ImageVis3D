@@ -31,12 +31,11 @@
   \author    Jens Krueger
         SCI Institute
         University of Utah
-  \version  1.1
-  \date    July 2008
+  \version  1.11
+  \date    October 2008
 */
 
 #include "MathTools.h"
-#include <math.h>
 
 unsigned int MathTools::Log(unsigned int value, unsigned int base) {
   return (unsigned int)(log(float(value)) / log(float(base)));

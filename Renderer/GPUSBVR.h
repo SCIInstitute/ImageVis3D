@@ -78,6 +78,9 @@ class GPUSBVR : public GLRenderer {
     /** Change the view rotation.  Causes a full redraw. */
     void SetRotation(FLOATVECTOR2 vRot) {if (m_vRot != vRot) {m_vRot = vRot; m_bCompleteRedraw = true;}}
 
+    /** Set the oversampling ratio (e.g. 2 means twice the slices as needed).  Causes a full redraw. */
+    virtual void SetSampleRateModifier(float fSampleRateModifier);
+
   protected:
     FLOATMATRIX4  m_matModelView;
     SBVRGeogen    m_SBVRGeogen;

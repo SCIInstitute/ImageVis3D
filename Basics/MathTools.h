@@ -31,14 +31,18 @@
   \author    Jens Krueger
         SCI Institute
         University of Utah
-  \version  1.1
-  \date    July 2008
+  \version  1.11
+  \date    October 2008
 */
 
 #pragma once
 
 #ifndef MATHTOOLS_H
 #define MATHTOOLS_H
+
+#include <cmath>
+
+#define ROOT3 1.732050f
 
 #ifdef _WIN32
   typedef unsigned __int64 UINT64;

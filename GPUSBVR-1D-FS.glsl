@@ -35,13 +35,22 @@
   \date    October 2008
 */
 
-uniform sampler3D texVolume;
-uniform sampler1D texTrans1D;
-uniform float fTransScale;
+uniform sampler3D texVolume;  ///< the data volume
+uniform sampler1D texTrans1D; ///< the 1D Transfer function
+uniform float fTransScale;    ///< scale for 1D Transfer function lookup
+uniform float fStepScale;   ///< quotient of nyquist and actual stepsize
 
 void main(void)
 {
+  /// get volume value
 	float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
+
+  /// apply 1D transfer function
 	vec4  vTransVal = texture1D(texTrans1D, fVolumVal*fTransScale);
+
+  /// apply opacity correction
+  vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
+
+  /// write result to fragment color
 	gl_FragColor    = vTransVal;
 }

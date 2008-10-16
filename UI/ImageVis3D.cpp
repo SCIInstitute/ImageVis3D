@@ -273,3 +273,36 @@ void MainWindow::SetLighting(bool bLighting) {
     w->GetRenderer()->SetUseLigthing(bLighting);
   }
 }
+
+void MainWindow::SetSampleRate(int iValue) {
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetSampleRateModifier(iValue/100.0f); 
+  UpdateSampleRateLabel(iValue);
+}
+
+void MainWindow::UpdateSampleRateLabel(int iValue) {
+  QString desc;
+  desc = tr("Sampling Rate (%1%)").arg(iValue);
+  label_SamplingRate->setText(desc);
+}
+
+void MainWindow::SetSampleRateSlider(int iValue) {
+  horizontalSlider_Sampling->setValue(iValue);
+  UpdateSampleRateLabel(iValue);
+}
+
+void MainWindow::SetIsoValue(int iValue) {
+  int iMaxSize = m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize();
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetIsoValue(float(iValue)/float(iMaxSize));
+  UpdateIsoValLabel(iValue, iMaxSize);
+}
+
+void MainWindow::SetIsoValueSlider(int iValue, int iMaxValue) {
+  horizontalSlider_Isovalue->setValue(iValue);
+  horizontalSlider_Isovalue->setMaximum(iMaxValue);
+}
+
+void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {
+  QString desc;
+  desc = tr("%1/%2").arg(iValue).arg(iMaxValue);
+  label_IsoValue->setText(desc);
+}

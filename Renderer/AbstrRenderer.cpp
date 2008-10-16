@@ -49,7 +49,9 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_pDataset(NULL),
   m_p1DTrans(NULL),
   m_p2DTrans(NULL),
-  m_vTextColor(1,1,1,1)
+  m_vTextColor(1,1,1,1),
+  m_fSampleRateModifier(1.0f),
+  m_fIsovalue(0.5f)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -147,6 +149,24 @@ void AbstrRenderer::Changed2DTrans() {
     m_pMasterController->DebugOut()->Message("AbstrRenderer::Changed2DTrans","not using the 2D transferfunction at the moment, ignoring message");
   } else {
     m_pMasterController->DebugOut()->Message("AbstrRenderer::Changed2DTrans","complete redraw scheduled");
+    m_bRedraw = true;
+    m_bCompleteRedraw = true;
+  }
+}
+
+
+void AbstrRenderer::SetSampleRateModifier(float fSampleRateModifier) {
+  if(m_fSampleRateModifier != fSampleRateModifier) {
+    m_fSampleRateModifier = fSampleRateModifier;
+    m_bRedraw = true;
+    m_bCompleteRedraw = true;
+  }
+}
+
+
+void AbstrRenderer::SetIsoValue(float fIsovalue) {
+  if(m_fIsovalue != fIsovalue) {
+    m_fIsovalue = fIsovalue;
     m_bRedraw = true;
     m_bCompleteRedraw = true;
   }

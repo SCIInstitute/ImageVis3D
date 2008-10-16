@@ -187,6 +187,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   m_DebugOut = new QTOut(listWidget_3);
   m_MasterController.SetDebugOut(m_DebugOut);
   GetDebugViewMask();
+
+  frame_Expand2DWidgets->hide();
 }
 
 // ******************************************
@@ -354,6 +356,9 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     }
 
     checkBox_Lighting->setChecked(m_ActiveRenderWin->GetRenderer()->GetUseLigthing());
+    SetSampleRateSlider(int(m_ActiveRenderWin->GetRenderer()->GetSampleRateModifier()*100));
+    int iRange = int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
+    SetIsoValueSlider(int(m_ActiveRenderWin->GetRenderer()->GetIsoValue()*iRange), iRange);
   }
 }
 
@@ -505,4 +510,15 @@ void MainWindow::UpdateMRUActions()
 
   for (unsigned int j = numRecentFiles; j < ms_iMaxRecentFiles; ++j)
     m_recentFileActs[j]->setVisible(false);
+}
+
+
+void MainWindow::Collapse2DWidgets() {
+  frame_2DTransEditWrapper->hide();
+  frame_Expand2DWidgets->show();
+}
+
+void MainWindow::Expand2DWidgets() {
+  frame_2DTransEditWrapper->show();
+  frame_Expand2DWidgets->hide();
 }

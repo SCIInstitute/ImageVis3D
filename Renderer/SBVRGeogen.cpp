@@ -35,8 +35,13 @@
 */
 
 #include "SBVRGeogen.h"
+#include <Basics/MathTools.h>
 
-SBVRGeogen::SBVRGeogen(void)
+SBVRGeogen::SBVRGeogen(void) :
+  m_fSamplingModifier(1.0f),
+	m_fMinZ(0),
+	m_vAspect(1,1,1),
+	m_vSize(1,1,1)
 {
 	m_pfBBOXStaticVertex[0] = FLOATVECTOR3(-0.5, 0.5,-0.5);
 	m_pfBBOXStaticVertex[1] = FLOATVECTOR3( 0.5, 0.5,-0.5);
@@ -46,6 +51,15 @@ SBVRGeogen::SBVRGeogen(void)
 	m_pfBBOXStaticVertex[5] = FLOATVECTOR3( 0.5,-0.5,-0.5);
 	m_pfBBOXStaticVertex[6] = FLOATVECTOR3( 0.5,-0.5, 0.5);
 	m_pfBBOXStaticVertex[7] = FLOATVECTOR3(-0.5,-0.5, 0.5);
+
+	m_pfBBOXVertex[0] = FLOATVECTOR3(0,0,0);
+	m_pfBBOXVertex[1] = FLOATVECTOR3(0,0,0);
+	m_pfBBOXVertex[2] = FLOATVECTOR3(0,0,0);
+	m_pfBBOXVertex[3] = FLOATVECTOR3(0,0,0);
+	m_pfBBOXVertex[4] = FLOATVECTOR3(0,0,0);
+	m_pfBBOXVertex[5] = FLOATVECTOR3(0,0,0);
+	m_pfBBOXVertex[6] = FLOATVECTOR3(0,0,0);
+	m_pfBBOXVertex[7] = FLOATVECTOR3(0,0,0);
 }
 
 SBVRGeogen::~SBVRGeogen(void)
@@ -98,7 +112,7 @@ void SBVRGeogen::ComputeIntersection(float z, uint indexA, uint indexB, POS3TEX3
 }
 
 
-bool SBVRGeogen::CheckOdering(FLOATVECTOR3& a, FLOATVECTOR3& b, FLOATVECTOR3& c) {
+bool SBVRGeogen::CheckOrdering(FLOATVECTOR3& a, FLOATVECTOR3& b, FLOATVECTOR3& c) {
 	float g1 = (a[1]-c[1])/(a[0]-c[0]),
 		  g2 = (b[1]-c[1])/(b[0]-c[0]);
 
@@ -121,7 +135,7 @@ void SBVRGeogen::SortPoints(POS3TEX3_VERTEX fArray[12], uint iCount) {
 	// use bubble sort here, because array is very small which makes bubble sort faster than QSort
 	for (uint i= 1;i<iCount;++i) 
 		for (uint j = 1;j<iCount-i;++j) 
-			if (!CheckOdering(fArray[j].m_vPos,fArray[j+1].m_vPos,fArray[0].m_vPos)) Swap(fArray[j],fArray[j+1]);
+			if (!CheckOrdering(fArray[j].m_vPos,fArray[j+1].m_vPos,fArray[0].m_vPos)) Swap(fArray[j],fArray[j+1]);
 }
 
 
@@ -201,11 +215,15 @@ bool SBVRGeogen::ComputeLayerGeometry(float fDepth) {
 	} else return false;
 }
 
+float SBVRGeogen::GetOpacityCorrection() {
+  return ROOT3 * 1.0f/m_fSamplingModifier * float(m_vAspect.minVal());
+}
+
 void SBVRGeogen::ComputeGeometry() {
 	m_vSliceTriangles.clear();
 
 	float fDepth = m_fMinZ;
-	float fLayerDistance = m_vAspect.minVal()/float(m_vSize.maxVal());
+  float fLayerDistance = ROOT3 * 1.0f/m_fSamplingModifier * float(m_vAspect.minVal())/float(m_vSize.maxVal());
 
 	while (ComputeLayerGeometry(fDepth)) fDepth += fLayerDistance;
 }

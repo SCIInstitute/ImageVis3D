@@ -65,15 +65,17 @@ public:
 	SBVRGeogen(void);
 	virtual ~SBVRGeogen(void);
 
-	virtual void SetTransformation(const FLOATMATRIX4& matTransform);
-	virtual void SetVolumeData(	const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize) {m_vAspect = vAspect; m_vSize = vSize;  InitBBOX(); }
+  void SetSamplingModifier(float fSamplingModifier) {m_fSamplingModifier = fSamplingModifier; ComputeGeometry();}
+  void SetTransformation(const FLOATMATRIX4& matTransform);
+	void SetVolumeData(	const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize) {m_vAspect = vAspect; m_vSize = vSize;  InitBBOX(); }
 	void ComputeGeometry();
 	uint ComputeLayerGeometry(float fDepth, POS3TEX3_VERTEX pfLayerPoints[12]);
-
+  float GetOpacityCorrection();
 	std::vector<POS3TEX3_VERTEX> m_vSliceTriangles;
 
 protected:
 
+  float             m_fSamplingModifier;
 	FLOATMATRIX4		  m_matTransform;
 	float				      m_fMinZ;
 	POS3TEX3_VERTEX		m_pfBBOXVertex[8];
@@ -85,7 +87,7 @@ protected:
 	bool EpsilonEqual(float a, float b);
 	bool ComputeLayerGeometry(float fDepth);
 	void ComputeIntersection(float z, uint indexA, uint indexB, POS3TEX3_VERTEX& vHit, uint &count);
-	bool CheckOdering(FLOATVECTOR3& a, FLOATVECTOR3& b, FLOATVECTOR3& c);
+	bool CheckOrdering(FLOATVECTOR3& a, FLOATVECTOR3& b, FLOATVECTOR3& c);
 	void Swap(POS3TEX3_VERTEX& a, POS3TEX3_VERTEX& b);
 	void SortPoints(POS3TEX3_VERTEX fArray[12], uint iCount);
 	int FindMinPoint(POS3TEX3_VERTEX fArray[12], uint iCount);

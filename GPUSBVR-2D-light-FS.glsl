@@ -35,39 +35,48 @@
   \date    October 2008
 */
 
-uniform sampler3D texVolume;
-uniform sampler2D texTrans2D;
-uniform float fTransScale;
-uniform float fGradientScale;
+uniform sampler3D texVolume;  ///< the data volume
+uniform sampler2D texTrans2D; ///< the 2D Transfer function
+uniform float fTransScale;    ///< value scale for 2D Transfer function lookup
+uniform float fGradientScale; ///< gradient scale for 2D Transfer function lookup
+uniform float fStepScale;     ///< quotient of nyquist and actual stepsize
+uniform vec3 vVoxelStepsize;  ///< Stepsize (in texcoord) to get to the next voxel
 
 uniform vec3 vLightAmbient;
 uniform vec3 vLightSpecular;
+uniform vec3 vLightDiffuse;
 uniform vec3 vLightDir;
-uniform vec3 vVolumeStepsize;
 
 void main(void)
 {
+  /// get volume value
 	float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
 
-  // compute the gradient/normal
-	float fVolumValXp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(+vVolumeStepsize.x,0,0)).x;
-	float fVolumValXm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(-vVolumeStepsize.x,0,0)).x;
-	float fVolumValYp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,-vVolumeStepsize.y,0)).x;
-	float fVolumValYm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,+vVolumeStepsize.y,0)).x;
-	float fVolumValZp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,+vVolumeStepsize.z)).x;
-	float fVolumValZm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,-vVolumeStepsize.z)).x;
+  /// compute the gradient magnitude & normal
+	float fVolumValXp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(+vVoxelStepsize.x,0,0)).x;
+	float fVolumValXm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(-vVoxelStepsize.x,0,0)).x;
+	float fVolumValYp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,-vVoxelStepsize.y,0)).x;
+	float fVolumValYm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,+vVoxelStepsize.y,0)).x;
+	float fVolumValZp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,+vVoxelStepsize.z)).x;
+	float fVolumValZm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,-vVoxelStepsize.z)).x;
   vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
   float fGradientMag = length(vGradient); 
 
-  // 2D Transferfunction lookup
+  /// apply 2D transfer function
 	vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale));
 
-  // compute lighting
+  /// compute lighting
   vec3 vNormal = normalize(gl_NormalMatrix * vGradient);
   vec3 vPosition   = (gl_ModelViewMatrix * vec4(gl_TexCoord[0].xyz*2.0-1.0,1)).xyz;
   vec3 vViewDir    = normalize(vec3(0,0,0)-vPosition);
   vec3 vReflection = reflect(vViewDir, vNormal);
-  vec3 vLightColor = vLightAmbient+clamp(dot(vNormal, -vLightDir),0.0,1.0)*vTransVal.xyz+pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0)*vLightSpecular;
+  vec3 vLightColor = vLightAmbient+
+                     clamp(dot(vNormal, -vLightDir),0.0,1.0)*vTransVal.xyz*vLightDiffuse+
+                     pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0)*vLightSpecular;
 
+  /// apply opacity correction
+  vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
+
+  /// write result to fragment color
 	gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, vTransVal.a);
 }

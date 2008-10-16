@@ -120,6 +120,12 @@ class AbstrRenderer {
     FLOATVECTOR3 GetBackgroundColor(int i) const {return m_vBackgroundColors[i];}
     FLOATVECTOR4 GetTextColor() const {return m_vTextColor;}
 
+    virtual void SetSampleRateModifier(float fSampleRateModifier);
+    float GetSampleRateModifier() {return m_fSampleRateModifier;}
+
+    virtual void SetIsoValue(float fIsovalue);
+    float GetIsoValue() {return m_fIsovalue;}
+
   protected:
     MasterController*   m_pMasterController;
     bool                m_bRedraw;
@@ -132,6 +138,9 @@ class AbstrRenderer {
     VolumeDataset*      m_pDataset;
     TransferFunction1D* m_p1DTrans;
     TransferFunction2D* m_p2DTrans;
+    float               m_fSampleRateModifier;
+    float               m_fIsovalue;
+
 
     FLOATVECTOR3        m_vBackgroundColors[2];
     FLOATVECTOR4        m_vTextColor;

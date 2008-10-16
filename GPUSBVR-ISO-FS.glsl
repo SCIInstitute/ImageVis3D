@@ -35,13 +35,41 @@
   \date    October 2008
 */
 
-uniform sampler3D texVolume;
-uniform sampler1D texTrans1DTexture;
-uniform float fTransScale;
+uniform sampler3D texVolume;  ///< the data volume
+uniform vec3 vVoxelStepsize;  ///< Stepsize (in texcoord) to get to the next voxel
+uniform float fIsoval;        ///< the isovalue
+
+uniform vec3 vLightAmbient;
+uniform vec3 vLightDiffuse;
+uniform vec3 vLightSpecular;
+uniform vec3 vLightDir;
 
 void main(void)
 {
+  /// get volume value
 	float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
-	vec4  vTransVal = texture1D(texTrans1DTexture, fVolumVal*fTransScale);
-	gl_FragColor    = vTransVal;
+
+  // if we hit (or shot over) an isosurface
+  if (fVolumVal >= fIsoval) {
+    // compute the gradient/normal
+	  float fVolumValXp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(+vVoxelStepsize.x,0,0)).x;
+	  float fVolumValXm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(-vVoxelStepsize.x,0,0)).x;
+	  float fVolumValYp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,-vVoxelStepsize.y,0)).x;
+	  float fVolumValYm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,+vVoxelStepsize.y,0)).x;
+	  float fVolumValZp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,+vVoxelStepsize.z)).x;
+	  float fVolumValZm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,-vVoxelStepsize.z)).x;
+    vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
+    vec3  vNormal = normalize(gl_NormalMatrix * vGradient);
+
+    // compute lighting
+    vec3 vPosition   = (gl_ModelViewMatrix * vec4(gl_TexCoord[0].xyz*2.0-1.0,1)).xyz;
+    vec3 vViewDir    = normalize(vec3(0,0,0)-vPosition);
+    vec3 vReflection = reflect(vViewDir, vNormal);
+    vec3 vLightColor = vLightAmbient+clamp(dot(vNormal, -vLightDir),0.0,1.0)*vLightDiffuse+pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0)*vLightSpecular;
+
+    /// write result to fragment color
+	  gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, 1);
+  } else {
+    gl_FragColor    = vec4(0,0,0,0);
+  }
 }

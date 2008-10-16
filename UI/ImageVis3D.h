@@ -113,7 +113,6 @@ protected slots:
   void ClearMRUList();
 
   void UpdateMenus();
-
   void SaveDataset();
 
   void EditViewLocks();
@@ -132,7 +131,10 @@ protected slots:
   bool ShowSettings() {return ShowSettings(SettingsDlg::MEM_TAB);}
   void SetLighting(bool bLighting);
 
-protected:    
+  void Collapse2DWidgets();
+  void Expand2DWidgets();
+  void SetSampleRate(int iValue);
+  void SetIsoValue(int iValue);
 
 private :
   MasterController&     m_MasterController;
@@ -146,7 +148,6 @@ private :
   QAction *m_recentFileActs[ms_iMaxRecentFiles];
   FLOATVECTOR3          m_vBackgroundColors[2];
   FLOATVECTOR4          m_vTextColor;
-
 
   RenderWindow* CreateNewRenderWindow(QString dataset);
   RenderWindow* GetActiveRenderWindow();
@@ -181,6 +182,10 @@ private :
   void CheckSettings();
   void ApplySettings();
   bool ShowSettings(SettingsDlg::TabID eTabID);
+  void SetSampleRateSlider(int iValue);
+  void UpdateSampleRateLabel(int iValue);
+  void SetIsoValueSlider(int iValue, int iMaxValue);
+  void UpdateIsoValLabel(int iValue, int iMaxValue);
 };
 
 #endif // IMAGEVIS3D_H
