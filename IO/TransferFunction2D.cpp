@@ -138,11 +138,11 @@ bool TransferFunction2D::Save(const std::string& filename) {
 void TransferFunction2D::GetByteArray(unsigned char** pcData) {
   if (*pcData == NULL) *pcData = new unsigned char[m_iSize.area()*4];
 
-  unsigned int iSize = m_iSize.area();
+  size_t iSize = m_iSize.area();
   unsigned char *pcSourceDataIterator = RenderTransferFunction8Bit();
   unsigned char *pcDataIterator = *pcData;
   memcpy(pcDataIterator, pcSourceDataIterator, iSize*4);
-  for (unsigned int i = 0;i<iSize;i++) {
+  for (size_t i = 0;i<iSize;i++) {
     unsigned char r = *(pcDataIterator+2);
     unsigned char b = *(pcDataIterator+0);
     unsigned char a = *(pcDataIterator+3);
@@ -161,11 +161,11 @@ void TransferFunction2D::GetByteArray(unsigned char** pcData, unsigned char cUse
 
   float fScale = 255.0f/float(cUsedRange);
 
-  unsigned int iSize = m_iSize.area();
+  size_t iSize = m_iSize.area();
   unsigned char *pcSourceDataIterator = RenderTransferFunction8Bit();
   unsigned char *pcDataIterator = *pcData;
   memcpy(pcDataIterator, pcSourceDataIterator, iSize*4);
-  for (unsigned int i = 0;i<iSize;i++) {
+  for (size_t i = 0;i<iSize;i++) {
     unsigned char r = *(pcDataIterator+2);
     unsigned char g = *(pcDataIterator+1);
     unsigned char b = *(pcDataIterator+0);
@@ -212,13 +212,13 @@ INTVECTOR2 TransferFunction2D::Rel2Abs(FLOATVECTOR2 vfCoord) {
 
 unsigned char* TransferFunction2D::RenderTransferFunction8Bit() {
   if (m_pColorData == NULL ) m_pColorData = new ColorData2D(m_iSize);
-  if (m_pCanvas == NULL )    m_pCanvas    = new QImage(m_iSize.x, m_iSize.y, QImage::Format_ARGB32);
+  if (m_pCanvas == NULL )    m_pCanvas    = new QImage(int(m_iSize.x), int(m_iSize.y), QImage::Format_ARGB32);
   if (m_pPainter == NULL)    m_pPainter   = new QPainter(m_pCanvas);
 
   m_pCanvas->fill(0);  
 
   // render 1D trans
-  unsigned int iSize = min<int>(m_iSize.x,  m_Trans1D.GetSize());
+  size_t iSize = min<size_t>(m_iSize.x,  m_Trans1D.GetSize());
   QImage image1DTrans(int(iSize), 1, QImage::Format_ARGB32);
   for (unsigned int i = 0;i<iSize;i++) {
     image1DTrans.setPixel(i,0,qRgba(int(m_Trans1D.vColorData[i][0]*255),
@@ -226,7 +226,7 @@ unsigned char* TransferFunction2D::RenderTransferFunction8Bit() {
                                     int(m_Trans1D.vColorData[i][2]*255),
                                     int(m_Trans1D.vColorData[i][3]*255)));
   }
-  QRect imageRect(0, 0, m_iSize.x, m_iSize.y);
+  QRect imageRect(0, 0, int(m_iSize.x), int(m_iSize.y));
   m_pPainter->drawImage(imageRect,image1DTrans);
 
 

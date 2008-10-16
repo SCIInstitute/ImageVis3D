@@ -291,14 +291,14 @@ void MainWindow::SetSampleRateSlider(int iValue) {
 }
 
 void MainWindow::SetIsoValue(int iValue) {
-  int iMaxSize = m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize();
+  int iMaxSize = int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
   if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetIsoValue(float(iValue)/float(iMaxSize));
   UpdateIsoValLabel(iValue, iMaxSize);
 }
 
 void MainWindow::SetIsoValueSlider(int iValue, int iMaxValue) {
-  horizontalSlider_Isovalue->setValue(iValue);
   horizontalSlider_Isovalue->setMaximum(iMaxValue);
+  horizontalSlider_Isovalue->setValue(iValue);
 }
 
 void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {

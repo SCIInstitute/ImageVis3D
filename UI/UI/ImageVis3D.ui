@@ -206,8 +206,8 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -336,8 +336,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -438,8 +438,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -1149,8 +1149,8 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>195</width>
           <height>72</height>
          </rect>
@@ -1248,8 +1248,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>8</x>
+          <y>28</y>
           <width>195</width>
           <height>72</height>
          </rect>
@@ -4540,6 +4540,22 @@
     <hint type="destinationlabel" >
      <x>390</x>
      <y>1184</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_UseIso</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frame_10</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>53</x>
+     <y>1190</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>337</x>
+     <y>1202</y>
     </hint>
    </hints>
   </connection>
