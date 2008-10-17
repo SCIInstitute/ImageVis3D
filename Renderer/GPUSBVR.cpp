@@ -102,14 +102,11 @@ void GPUSBVR::Initialize() {
   m_pProgramTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-Transfer-VS.glsl"),
                                                                 SysTools::GetFromResourceOnMac("GPUSBVR-Transfer-FS.glsl"));
 
-  m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","1");
 
   m_pProgram1DTrans[0]->Enable();
   m_pProgram1DTrans[0]->SetUniformVector("texVolume",0);
   m_pProgram1DTrans[0]->SetUniformVector("texTrans1D",1);
   m_pProgram1DTrans[0]->Disable();
-
-  m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","2");
 
   m_pProgram1DTrans[1]->Enable();
   m_pProgram1DTrans[1]->SetUniformVector("texVolume",0);
@@ -120,14 +117,10 @@ void GPUSBVR::Initialize() {
   m_pProgram1DTrans[1]->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgram1DTrans[1]->Disable();
 
-  m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","3");
-
   m_pProgram2DTrans[0]->Enable();
   m_pProgram2DTrans[0]->SetUniformVector("texVolume",0);
   m_pProgram2DTrans[0]->SetUniformVector("texTrans2D",1);
   m_pProgram2DTrans[0]->Disable();
-
-  m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","4");
 
   m_pProgram2DTrans[1]->Enable();
   m_pProgram2DTrans[1]->SetUniformVector("texVolume",0);
@@ -138,8 +131,6 @@ void GPUSBVR::Initialize() {
   m_pProgram2DTrans[1]->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgram2DTrans[1]->Disable();
 
-  m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","5");
-
   m_pProgramIso->Enable();
   m_pProgramIso->SetUniformVector("texVolume",0);
   m_pProgramIso->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
@@ -148,14 +139,10 @@ void GPUSBVR::Initialize() {
   m_pProgramIso->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgramIso->Disable();
 
-  m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","6");
-
   m_pProgramTrans->Enable();
   m_pProgramTrans->SetUniformVector("texColor",0);
   m_pProgramTrans->SetUniformVector("texDepth",1);
   m_pProgramTrans->Disable();
-
-  m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","7");
 
 }
 
