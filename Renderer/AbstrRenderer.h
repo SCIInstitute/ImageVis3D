@@ -44,11 +44,12 @@
 #include <string>
 
 #include <StdDefines.h>
-#include "../IO/VolumeDataset.h"
-#include "../IO/TransferFunction1D.h"
-#include "../IO/TransferFunction2D.h"
-#include "../Renderer/GLTexture1D.h"
-#include "../Renderer/GLTexture2D.h"
+#include <IO/VolumeDataset.h>
+#include <IO/TransferFunction1D.h>
+#include <IO/TransferFunction2D.h>
+#include <Renderer/GLTexture1D.h>
+#include <Renderer/GLTexture2D.h>
+#include <Basics/ArcBall.h>
 
 class MasterController;
 
@@ -126,6 +127,16 @@ class AbstrRenderer {
     virtual void SetIsoValue(float fIsovalue);
     float GetIsoValue() {return m_fIsovalue;}
 
+    /** Change the size of the render window.  Any previous image is
+     * destroyed, causing a full redraw on the next render.
+     * \param vWinSize  new width and height of the view window */
+    virtual void Resize(const UINTVECTOR2& vWinSize);
+    
+    virtual void Click(UINTVECTOR2 vPosition);
+    virtual void Release(UINTVECTOR2 vPosition);
+    virtual void Drag(UINTVECTOR2 vPosition);
+    virtual void Zoom(int iZoom);
+
   protected:
     MasterController*   m_pMasterController;
     bool                m_bRedraw;
@@ -142,6 +153,10 @@ class AbstrRenderer {
     float               m_fIsovalue;
     FLOATVECTOR3        m_vBackgroundColors[2];
     FLOATVECTOR4        m_vTextColor;
+    ArcBall             m_ArcBall;
+    FLOATMATRIX4        m_RestRot;
+    FLOATMATRIX4        m_Rot;
+    float               m_fZoom;
 };
 
 #endif // ABSTRRENDERER_H

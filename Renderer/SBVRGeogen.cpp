@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    SBVRGeogen.h
+  \file    SBVRGeogen.cpp
   \author    Jens Krueger
         SCI Institute
         University of Utah
@@ -41,7 +41,8 @@ SBVRGeogen::SBVRGeogen(void) :
   m_fSamplingModifier(1.0f),
 	m_fMinZ(0),
 	m_vAspect(1,1,1),
-	m_vSize(1,1,1)
+	m_vSize(1,1,1),
+  m_iMinLayers(100)
 {
 	m_pfBBOXStaticVertex[0] = FLOATVECTOR3(-0.5, 0.5,-0.5);
 	m_pfBBOXStaticVertex[1] = FLOATVECTOR3( 0.5, 0.5,-0.5);
@@ -215,15 +216,20 @@ bool SBVRGeogen::ComputeLayerGeometry(float fDepth) {
 	} else return false;
 }
 
+float SBVRGeogen::GetLayerDistance() {
+  return ROOT3 * 1.0f/m_fSamplingModifier * float(m_vAspect.minVal())/float(std::max(m_vSize.maxVal(),m_iMinLayers));
+}
+
+
 float SBVRGeogen::GetOpacityCorrection() {
-  return ROOT3 * 1.0f/m_fSamplingModifier * float(m_vAspect.minVal());
+  return GetLayerDistance()*m_vSize.maxVal();
 }
 
 void SBVRGeogen::ComputeGeometry() {
 	m_vSliceTriangles.clear();
 
 	float fDepth = m_fMinZ;
-  float fLayerDistance = ROOT3 * 1.0f/m_fSamplingModifier * float(m_vAspect.minVal())/float(m_vSize.maxVal());
+  float fLayerDistance = GetLayerDistance();
 
 	while (ComputeLayerGeometry(fDepth)) fDepth += fLayerDistance;
 }

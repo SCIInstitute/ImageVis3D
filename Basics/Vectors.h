@@ -1104,4 +1104,77 @@ typedef MATRIX2<double> DOUBLEMATRIX2;
 typedef MATRIX3<double> DOUBLEMATRIX3;
 typedef MATRIX4<double> DOUBLEMATRIX4;
 
+template <class T> class QUATERNION4 {
+public:
+  float x, y, z, w;  
+
+  QUATERNION4<T>(): x(0), y(0),z(0), w(0) {}
+  QUATERNION4<T>(T _x, T _y, T _z, T _w): x(_x), y(_y), z(_z), w(_w) {}
+  QUATERNION4<T>(const T* other) : x(other.x), y(other.y), z(other.z), w(other.w) {}
+
+  MATRIX4<T> ComputeRotation() {
+    float n, s;
+    float xs, ys, zs;
+    float wx, wy, wz;
+    float xx, xy, xz;
+    float yy, yz, zz;
+
+    n = (x * x) + (y * y) + (z * z) + (w * w);
+    s = (n > 0.0f) ? (2.0f / n) : 0.0f;
+
+    xs = x * s;
+    ys = y * s;
+    zs = z * s;
+    wx = w * xs;
+    wy = w * ys;
+    wz = w * zs;
+    xx = x * xs;
+    xy = x * ys;
+    xz = x * zs;
+    yy = y * ys;
+    yz = y * zs;
+    zz = z * zs;
+
+    return MATRIX4<T>(T(1.0f - (yy + zz)), T(xy - wz),          T(xz + wy),          T(0),
+                      T(xy + wz),          T(1.0f - (xx + zz)), T(yz - wx),          T(0),
+                      T(xz - wy),          T(yz + wx),          T(1.0f - (xx + yy)), T(0),
+                      T(0),                T(0),                T(0),                T(1));
+
+  }
+
+  bool operator == ( const QUATERNION4<T>& other ) const {return (other.x==x && other.y==y && other.z==z && other.w==w); }
+  bool operator != ( const QUATERNION4<T>& other ) const {return (other.x!=x || other.y!=y || other.z!=z || other.w!=w); } 
+
+  // binary operators with other quaternions
+  QUATERNION4<T> operator + ( const QUATERNION4<T>& other ) const {return QUATERNION4<T>(x+other.x,y+other.y,z+other.z,w+other.w);}
+  QUATERNION4<T> operator - ( const QUATERNION4<T>& other ) const {return QUATERNION4<T>(x-other.x,y-other.y,z-other.z,w-other.w);}
+  QUATERNION4<T> operator * ( const QUATERNION4<T>& other ) const {
+    VECTOR3<T> v1(x,y,z);
+    VECTOR3<T> v2(other.x,other.y,other.z);
+
+    T _w = w * other.w - (v1 ^ v2);
+    VECTOR3<T> _v = (v2 * w) + (v1 * other.w) + (v1 % v2);
+    
+    return QUATERNION4<T>(_v.x, _v.y, _v.z, _w);
+  }
+
+
+  // binary operator with scalars
+  QUATERNION4<T> operator * ( const T other ) const {
+    return QUATERNION4<T>(x*other,y*other,z*other,w*other);
+  }
+
+  QUATERNION4<T>& operator=(const QUATERNION4<T>& other)  { x = other.x; y = other.y; z = other.z; w = other.w; return *this; }
+  QUATERNION4<T>& operator+=(const T& other) { x += other; y += other; z += other;  w += other; return *this; }
+  QUATERNION4<T>& operator-=(const T& other) { x -= other; y -= other; z -= other;  w -= other; return *this; }
+
+  operator T*(void) {return &x;}
+  const T *operator *(void) const {return &x;}
+  T *operator *(void) {return &x;}
+};
+
+typedef QUATERNION4<float>  FLOATQUATERNION4;
+typedef QUATERNION4<double> DOUBLEQUATERNION4;
+
+
 #endif // VECTORS_H

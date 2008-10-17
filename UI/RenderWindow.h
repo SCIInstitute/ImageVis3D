@@ -90,7 +90,9 @@ class RenderWindow : public QGLWidget
     virtual void paintGL();
     virtual void resizeGL(int width, int height);
     virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void wheelEvent(QWheelEvent *event);
     virtual void closeEvent(QCloseEvent *event);
     virtual void focusInEvent(QFocusEvent * event);
     virtual void Cleanup();
@@ -102,8 +104,6 @@ class RenderWindow : public QGLWidget
     QString m_strDataset;
     QString m_strID;
 
-    FLOATVECTOR2 m_vLastRot;
-    QPoint m_vLastPos;
     UINTVECTOR2  m_vWinDim;
 };
 

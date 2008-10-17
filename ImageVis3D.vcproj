@@ -1057,6 +1057,14 @@
 			Name="Basics"
 			>
 			<File
+				RelativePath=".\Basics\ArcBall.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Basics\ArcBall.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Basics\Console.h"
 				>
 			</File>

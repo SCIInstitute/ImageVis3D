@@ -51,7 +51,8 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_p2DTrans(NULL),
   m_fSampleRateModifier(1.0f),
   m_fIsovalue(0.5f),
-  m_vTextColor(1,1,1,1)
+  m_vTextColor(1,1,1,1),
+  m_fZoom(0.0f)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -170,4 +171,30 @@ void AbstrRenderer::SetIsoValue(float fIsovalue) {
     m_bRedraw = true;
     m_bCompleteRedraw = true;
   }
+}
+
+
+void AbstrRenderer::Resize(const UINTVECTOR2& vWinSize) {
+  m_ArcBall.SetWindowSize(vWinSize.x, vWinSize.y);
+}
+
+
+void AbstrRenderer::Click(UINTVECTOR2 vPosition) {
+  m_ArcBall.Click(vPosition);
+}
+
+void AbstrRenderer::Release(UINTVECTOR2) {
+  m_RestRot = m_Rot;
+}
+
+void AbstrRenderer::Drag(UINTVECTOR2 vPosition) {
+  m_Rot = m_ArcBall.Drag(vPosition).ComputeRotation() * m_RestRot;
+  m_bRedraw = true;
+  m_bCompleteRedraw = true;
+}
+
+void AbstrRenderer::Zoom(int iZoom) {
+  m_fZoom += float(iZoom)/1000.0f;
+  m_bRedraw = true;
+  m_bCompleteRedraw = true;
 }

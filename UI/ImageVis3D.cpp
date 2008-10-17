@@ -306,3 +306,24 @@ void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {
   desc = tr("%1/%2").arg(iValue).arg(iMaxValue);
   label_IsoValue->setText(desc);
 }
+
+
+void MainWindow::SetToggleGlobalBBoxLabel(bool bRenderBBox)
+{
+/// \todo
+}
+
+void MainWindow::SetToggleLocalBBoxLabel(bool bRenderBBox)
+{
+/// \todo
+}
+
+void MainWindow::ToggleGlobalBBox(bool bRenderBBox)
+{
+/// \todo
+}
+
+void MainWindow::ToggleLocalBBox(bool bRenderBBox)
+{
+/// \todo
+}

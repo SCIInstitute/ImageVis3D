@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    SBVRGeogen.cpp
+  \file    SBVRGeogen.h
   \author    Jens Krueger
         SCI Institute
         University of Utah
@@ -72,6 +72,7 @@ public:
 	uint ComputeLayerGeometry(float fDepth, POS3TEX3_VERTEX pfLayerPoints[12]);
   float GetOpacityCorrection();
 	std::vector<POS3TEX3_VERTEX> m_vSliceTriangles;
+  void SetMinLayers(unsigned int iMinLayers) {m_iMinLayers = iMinLayers; ComputeGeometry();}
 
 protected:
 
@@ -82,6 +83,7 @@ protected:
 	FLOATVECTOR3		  m_pfBBOXStaticVertex[8];
 	FLOATVECTOR3		  m_vAspect;
 	UINTVECTOR3			  m_vSize;
+  unsigned int      m_iMinLayers; ///< allows the user to specifiy a minimum layer count to prevent small volumes from beeing sparsely sampled
 
 	void InitBBOX();
 	bool EpsilonEqual(float a, float b);
@@ -92,4 +94,5 @@ protected:
 	void SortPoints(POS3TEX3_VERTEX fArray[12], uint iCount);
 	int FindMinPoint(POS3TEX3_VERTEX fArray[12], uint iCount);
 	void Triangulate(POS3TEX3_VERTEX fArray[12], uint iCount);
+  float GetLayerDistance();
 };

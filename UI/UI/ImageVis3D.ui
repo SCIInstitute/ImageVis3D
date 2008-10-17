@@ -35,7 +35,7 @@
     <rect>
      <x>385</x>
      <y>22</y>
-     <width>620</width>
+     <width>606</width>
      <height>1503</height>
     </rect>
    </property>
@@ -206,8 +206,8 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>0</x>
+          <y>0</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -336,8 +336,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>0</x>
+          <y>0</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -438,8 +438,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>0</x>
+          <y>0</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -867,9 +867,9 @@
   <widget class="QDockWidget" name="dockWidget_Recorder" >
    <property name="geometry" >
     <rect>
-     <x>1009</x>
+     <x>995</x>
      <y>22</y>
-     <width>194</width>
+     <width>208</width>
      <height>471</height>
     </rect>
    </property>
@@ -884,7 +884,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>194</width>
+      <width>208</width>
       <height>449</height>
      </rect>
     </property>
@@ -1149,8 +1149,8 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>0</x>
+          <y>0</y>
           <width>195</width>
           <height>72</height>
          </rect>
@@ -1248,8 +1248,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>0</x>
+          <y>0</y>
           <width>195</width>
           <height>72</height>
          </rect>
@@ -1449,9 +1449,9 @@
   <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="geometry" >
     <rect>
-     <x>1009</x>
+     <x>995</x>
      <y>497</y>
-     <width>194</width>
+     <width>208</width>
      <height>403</height>
     </rect>
    </property>
@@ -1472,7 +1472,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>194</width>
+      <width>208</width>
       <height>381</height>
      </rect>
     </property>
@@ -2659,9 +2659,9 @@
   <widget class="QDockWidget" name="dockWidget_RenderOptions" >
    <property name="geometry" >
     <rect>
-     <x>1009</x>
+     <x>995</x>
      <y>904</y>
-     <width>194</width>
+     <width>208</width>
      <height>621</height>
     </rect>
    </property>
@@ -2676,7 +2676,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>194</width>
+      <width>208</width>
       <height>599</height>
      </rect>
     </property>
@@ -2851,6 +2851,20 @@
             <widget class="QCheckBox" name="checkBox_Lighting" >
              <property name="text" >
               <string>Lighting</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_GGBbox" >
+             <property name="text" >
+              <string>Global Bounding Box</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_LBBox" >
+             <property name="text" >
+              <string>Local Bounding Box</string>
              </property>
             </widget>
            </item>
@@ -4522,7 +4536,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1164</x>
-     <y>1338</y>
+     <y>1386</y>
     </hint>
     <hint type="destinationlabel" >
      <x>389</x>
@@ -4559,6 +4573,38 @@
     <hint type="destinationlabel" >
      <x>337</x>
      <y>1202</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_GGBbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ToggleGlobalBBox(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1094</x>
+     <y>1303</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>990</x>
+     <y>1448</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_LBBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ToggleLocalBBox(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1062</x>
+     <y>1324</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>989</x>
+     <y>1361</y>
     </hint>
    </hints>
   </connection>
@@ -4610,5 +4656,7 @@
   <slot>Expand2DWidgets()</slot>
   <slot>SetSampleRate(int)</slot>
   <slot>SetIsoValue(int)</slot>
+  <slot>ToggleGlobalBBox(bool)</slot>
+  <slot>ToggleLocalBBox(bool)</slot>
  </slots>
 </ui>

@@ -45,7 +45,6 @@ using namespace std;
 
 GPUSBVR::GPUSBVR(MasterController* pMasterController) :
   GLRenderer(pMasterController),
-  m_vRot(0,0),
   m_bDelayedCompleteRedraw(false),
   m_pFBO3DImage(NULL)
 {
@@ -315,11 +314,9 @@ void GPUSBVR::Render3DView() {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    FLOATMATRIX4 trans, rotx, roty;
-    trans.Translation(0,0,-2);
-    rotx.RotationAxis(FLOATVECTOR3(0,1,0),m_vRot.x);
-    roty.RotationAxis(FLOATVECTOR3(1,0,0),m_vRot.y);
-    m_matModelView = trans*rotx*roty;
+    FLOATMATRIX4 trans;
+    trans.Translation(0,0,-2+m_fZoom);
+    m_matModelView = trans*m_Rot;
 
     m_matModelView.setModelview();
     m_SBVRGeogen.SetTransformation(m_matModelView);
@@ -399,21 +396,23 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
   m_bRedraw = false;
 }
 
-void GPUSBVR::Resize(int width, int height) {
-  m_pMasterController->DebugOut()->Message("GPUSBVR::Resize","");
+void GPUSBVR::Resize(const UINTVECTOR2& vWinSize) {
+  AbstrRenderer::Resize(vWinSize);
+
+  m_pMasterController->DebugOut()->Message("GPUSBVR::Resize","Resizing to %i x %i", vWinSize.x, vWinSize);
 
 //  int side = std::min(width, height);
 //  glViewport((width - side) / 2, (height - side) / 2, side, side);
 
-  float aspect=(float)width/(float)height;
-	glViewport(0,0,width,height);
+  float aspect=(float)vWinSize.x/(float)vWinSize.y;
+	glViewport(0,0,vWinSize.x,vWinSize.y);
 	glMatrixMode(GL_PROJECTION);		
 	glLoadIdentity();
 	gluPerspective(50.0,aspect,0.2,100.0); 	// Set Projection. Arguments are FOV (in degrees), aspect-ratio, near-plane, far-plane.
 	glMatrixMode(GL_MODELVIEW);
 
   if (m_pFBO3DImage != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImage);
-  m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, width, height, GL_RGBA8, 8*4);
+  m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, vWinSize.x, vWinSize.y, GL_RGBA8, 8*4);
 
   m_bDelayedCompleteRedraw = true;
 }

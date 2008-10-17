@@ -46,8 +46,6 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   m_Renderer((GPUSBVR*)masterController.RequestNewVolumerenderer(OPENGL_SBVR)),
   m_MasterController(masterController),
   m_strDataset(dataset),
-  m_vLastRot(0,0),
-  m_vLastPos(0,0),
   m_vWinDim(0,0)
 {  
   m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
@@ -101,19 +99,26 @@ void RenderWindow::paintGL()
 void RenderWindow::resizeGL(int width, int height)
 {
   m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
-  if (m_Renderer != NULL) m_Renderer->Resize(width, height);
+  if (m_Renderer != NULL) m_Renderer->Resize(UINTVECTOR2(width, height));
 }
 
 void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
-  m_vLastPos = event->pos();
-
-  if (event->buttons() & Qt::RightButton) {
+  if (event->button() == Qt::RightButton) {
     if (m_Renderer != NULL) {
       m_Renderer->SetViewmode(AbstrRenderer::EViewMode((int(m_Renderer->GetViewmode())+1) %3));
       emit RenderWindowViewChanged(m_Renderer->GetViewmode());
       updateGL();
     }
+  } 
+  if (event->button() == Qt::LeftButton) {
+    m_Renderer->Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+  }
+}
+
+void RenderWindow::mouseReleaseEvent(QMouseEvent *event) {
+  if (event->button() == Qt::LeftButton) {
+    m_Renderer->Release(UINTVECTOR2(event->pos().x(), event->pos().y()));
   }
 }
 
@@ -128,20 +133,16 @@ float scale(int max, float w) {
 
 void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 {
-  INTVECTOR2 vDelta (event->x() - m_vLastPos.x(), event->y() - m_vLastPos.y());
-
   if (event->buttons() & Qt::LeftButton) {
-
-    FLOATVECTOR2 currentRot(scale(2*3.1415f,m_vLastRot.x+2*3.1415f*(vDelta.x)/m_vWinDim.x), scale(2*3.1415f,m_vLastRot.y+2*3.1415f*(vDelta.y)/m_vWinDim.y));
-
-    if (m_vLastRot != currentRot) {
-      m_vLastRot = currentRot;
-      if (m_Renderer != NULL) m_Renderer->SetRotation(currentRot);
-      updateGL();
-    }
+    m_Renderer->Drag(UINTVECTOR2(event->x(), event->y()));
+    updateGL();
   }
-  m_vLastPos = event->pos();
 }
+
+void RenderWindow::wheelEvent(QWheelEvent *event) {
+  m_Renderer->Zoom(event->delta());
+}
+
 
 void RenderWindow::ToggleRenderWindowView1x3() {
   if (m_Renderer != NULL) {

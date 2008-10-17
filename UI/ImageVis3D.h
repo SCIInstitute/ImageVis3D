@@ -135,6 +135,8 @@ protected slots:
   void Expand2DWidgets();
   void SetSampleRate(int iValue);
   void SetIsoValue(int iValue);
+  void ToggleGlobalBBox(bool bRenderBBox);
+  void ToggleLocalBBox(bool bRenderBBox);
 
 private :
   MasterController&     m_MasterController;
@@ -186,6 +188,9 @@ private :
   void UpdateSampleRateLabel(int iValue);
   void SetIsoValueSlider(int iValue, int iMaxValue);
   void UpdateIsoValLabel(int iValue, int iMaxValue);
+  void SetToggleGlobalBBoxLabel(bool bRenderBBox);
+  void SetToggleLocalBBoxLabel(bool bRenderBBox);
+
 };
 
 #endif // IMAGEVIS3D_H

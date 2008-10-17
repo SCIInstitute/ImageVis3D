@@ -66,17 +66,14 @@ class GPUSBVR : public GLRenderer {
     void Paint(bool bClearDepthBuffer=true);
     /** Change the size of the FBO we render to.  Any previous image is
      * destroyed, causing a full redraw on the next render.
-     * \param width  new width of the view window
-     * \param height new height of the view window */
-    void Resize(int width, int height);
+     * \param vWinSize  new width and height of the view window */
+    virtual void Resize(const UINTVECTOR2& vWinSize);
+
     /** Deallocates GPU memory allocated during the rendering process. */
     void Cleanup();
 
     /** Loads GLSL vertex and fragment shaders. */
     virtual void Initialize();
-
-    /** Change the view rotation.  Causes a full redraw. */
-    void SetRotation(FLOATVECTOR2 vRot) {if (m_vRot != vRot) {m_vRot = vRot; m_bCompleteRedraw = true;}}
 
     /** Set the oversampling ratio (e.g. 2 means twice the slices as needed).  Causes a full redraw. */
     virtual void SetSampleRateModifier(float fSampleRateModifier);
@@ -85,14 +82,12 @@ class GPUSBVR : public GLRenderer {
     FLOATMATRIX4  m_matModelView;
     SBVRGeogen    m_SBVRGeogen;
     GLTexture2D*  m_IDTex[3];
-    FLOATVECTOR2  m_vRot;
     bool          m_bDelayedCompleteRedraw;
 
     GLFBOTex*     m_pFBO3DImage;
     GLSLProgram*  m_pProgram1DTrans[2];
     GLSLProgram*  m_pProgram2DTrans[2];
     GLSLProgram*  m_pProgramIso;
-
 
     void DrawLogo();
     void DrawBackGradient();
