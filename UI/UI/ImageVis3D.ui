@@ -35,7 +35,7 @@
     <rect>
      <x>385</x>
      <y>22</y>
-     <width>606</width>
+     <width>620</width>
      <height>1503</height>
     </rect>
    </property>
@@ -206,8 +206,8 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>16</x>
+          <y>56</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -336,8 +336,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>16</x>
+          <y>56</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -438,8 +438,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>16</x>
+          <y>56</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -867,10 +867,10 @@
   <widget class="QDockWidget" name="dockWidget_Recorder" >
    <property name="geometry" >
     <rect>
-     <x>995</x>
+     <x>1009</x>
      <y>22</y>
-     <width>208</width>
-     <height>471</height>
+     <width>194</width>
+     <height>454</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -884,8 +884,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>208</width>
-      <height>449</height>
+      <width>194</width>
+      <height>432</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1149,8 +1149,8 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>16</x>
+          <y>56</y>
           <width>195</width>
           <height>72</height>
          </rect>
@@ -1248,8 +1248,8 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>0</x>
-          <y>0</y>
+          <x>16</x>
+          <y>56</y>
           <width>195</width>
           <height>72</height>
          </rect>
@@ -1449,10 +1449,10 @@
   <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="geometry" >
     <rect>
-     <x>995</x>
-     <y>497</y>
-     <width>208</width>
-     <height>403</height>
+     <x>1009</x>
+     <y>480</y>
+     <width>194</width>
+     <height>388</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1472,8 +1472,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>208</width>
-      <height>381</height>
+      <width>194</width>
+      <height>366</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -2659,10 +2659,10 @@
   <widget class="QDockWidget" name="dockWidget_RenderOptions" >
    <property name="geometry" >
     <rect>
-     <x>995</x>
-     <y>904</y>
-     <width>208</width>
-     <height>621</height>
+     <x>1009</x>
+     <y>872</y>
+     <width>194</width>
+     <height>653</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2676,8 +2676,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>208</width>
-      <height>599</height>
+      <width>194</width>
+      <height>631</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
@@ -2855,7 +2855,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="checkBox_GGBbox" >
+            <widget class="QCheckBox" name="checkBox_GBBox" >
              <property name="text" >
               <string>Global Bounding Box</string>
              </property>
@@ -4577,7 +4577,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkBox_GGBbox</sender>
+   <sender>checkBox_GBBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>MainWindow</receiver>
    <slot>ToggleGlobalBBox(bool)</slot>

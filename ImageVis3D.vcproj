@@ -532,6 +532,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GPUSBVR-Transfer-FS.glsl"
+				>
+			</File>
+			<File
+				RelativePath=".\GPUSBVR-Transfer-VS.glsl"
+				>
+			</File>
+			<File
 				RelativePath=".\GPUSBVR-VS.glsl"
 				>
 			</File>

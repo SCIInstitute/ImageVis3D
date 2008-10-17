@@ -70,6 +70,6 @@ void main(void)
     /// write result to fragment color
 	  gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, 1);
   } else {
-    gl_FragColor    = vec4(0,0,0,0);
+    discard;
   }
 }

@@ -52,25 +52,26 @@ GLFBOTex::GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum
   m_pMasterController(pMasterController),
   m_iSizePerElement(iSizePerElement),
   m_iSizeX(width),
-  m_iSizeY(height)
+  m_iSizeY(height),
+  m_LastDepthTextUnit(0),
+	m_iNumBuffers(iNumBuffers)
 {
 	if (width<1) width=1;
 	if (height<1) height=1;
 	if (!m_bInitialized) {
 		if (GLEW_OK!=glewInit()) {
 			m_pMasterController->DebugOut()->Error("GLFBOTex:GLFBOTex","failed to initialize GLEW!");
-			exit(0);
+			return;
 		}
 		if (!glewGetExtension("GL_EXT_framebuffer_object")) {
 			m_pMasterController->DebugOut()->Error("GLFBOTex:GLFBOTex","GL_EXT_framebuffer_object not supported!");
-			exit(0);
+			return;
 		}
 		m_bInitialized=true;
 	}		
 	glGetError();
 	assert(iNumBuffers>0);
 	assert(iNumBuffers<5);
-	m_iNumBuffers=iNumBuffers;
 	m_hTexture=new GLuint[iNumBuffers];
 	m_LastTexUnit=new GLenum[iNumBuffers];
 	m_LastAttachment=new GLenum[iNumBuffers];
@@ -229,7 +230,7 @@ VBOTex::VBOTex(MasterController* pMasterController, GLsizei width, GLsizei heigh
 	if (!m_bInitialized) {
 		if (GLEW_OK!=glewInit()) {
 			m_pMasterController->DebugOut()->Error("VBOTex:VBOTex","failed to initialize GLEW!");
-			exit(0);
+			return;
 		}
 		m_bPBOSupported=(GL_FALSE!=glewGetExtension("GL_ARB_pixel_buffer_object"));
 		if (!m_bPBOSupported) m_pMasterController->DebugOut()->Warning("VBOTex:VBOTex","GL_ARB_pixel_buffer_object not supported -> CPU fallback!");
@@ -278,7 +279,7 @@ void GLFBOTex::Write(GLenum target,int iBuffer) {
 #ifdef _DEBUG
 	if (!m_hFBO) {
 		m_pMasterController->DebugOut()->Error("GLFBOTex:Write","FBO not initialized!");
-		exit(0);
+    return;
 	}
 #endif
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,m_hFBO);
@@ -289,7 +290,7 @@ void GLFBOTex::Write(GLenum target,int iBuffer) {
 	//if (m_hDepthBuffer) glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,m_hDepthBuffer);
 	if (m_hDepthBuffer) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,m_hDepthBuffer,0);
 #ifdef _DEBUG
-	if (!CheckFBO("Write")) exit(0);
+	if (!CheckFBO("Write")) return;
 #endif
 }
 
@@ -305,7 +306,9 @@ void GLFBOTex::FinishWrite(int iBuffer) {
 
 void GLFBOTex::Read(GLenum texunit, int iBuffer) {
 #ifdef _DEBUG
-	if (m_LastTexUnit[iBuffer]!=0) m_pMasterController->DebugOut()->Error("GLFBOTex:Read","Missing FinishRead()!");
+  if (m_LastTexUnit[iBuffer]!=0) {
+    m_pMasterController->DebugOut()->Error("GLFBOTex:Read","Missing FinishRead()!");
+  }
 #endif
 	assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);
@@ -314,7 +317,25 @@ void GLFBOTex::Read(GLenum texunit, int iBuffer) {
 	glBindTexture(GL_TEXTURE_2D,m_hTexture[iBuffer]);
 }
 
-// Finish rendering from this texture
+void GLFBOTex::ReadDepth(GLenum texunit) {
+#ifdef _DEBUG
+  if (m_LastDepthTextUnit!=0) {
+    m_pMasterController->DebugOut()->Error("GLFBOTex:ReadDepth","Missing FinishDepthRead()!");
+  }
+#endif
+	m_LastDepthTextUnit=texunit;
+	glActiveTextureARB(texunit);
+	glBindTexture(GL_TEXTURE_2D,m_hDepthBuffer);
+}
+
+// Finish reading from the depth texture
+void GLFBOTex::FinishDepthRead() {
+	glActiveTextureARB(m_LastDepthTextUnit);
+	glBindTexture(GL_TEXTURE_2D,0);
+	m_LastDepthTextUnit=0;
+}
+
+// Finish reading from this texture
 void GLFBOTex::FinishRead(int iBuffer) {
 	assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);

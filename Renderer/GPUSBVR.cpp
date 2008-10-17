@@ -53,6 +53,7 @@ GPUSBVR::GPUSBVR(MasterController* pMasterController) :
   m_pProgram2DTrans[0] = NULL;
   m_pProgram2DTrans[1] = NULL;
   m_pProgramIso        = NULL;
+  m_pProgramTrans      = NULL;
 }
 
 GPUSBVR::~GPUSBVR() {
@@ -66,7 +67,6 @@ void GPUSBVR::Initialize() {
 
   m_pMasterController->DebugOut()->Message("GPUSBVR::Initialize","");
 
-  glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
   glShadeModel(GL_SMOOTH);
   glEnable(GL_TEXTURE_2D);
   glDisable(GL_CULL_FACE);
@@ -98,6 +98,9 @@ void GPUSBVR::Initialize() {
 
   m_pProgramIso = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
                                                                 SysTools::GetFromResourceOnMac("GPUSBVR-ISO-FS.glsl"));
+
+  m_pProgramTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-Transfer-VS.glsl"),
+                                                                SysTools::GetFromResourceOnMac("GPUSBVR-Transfer-FS.glsl"));
 
   m_pProgram1DTrans[0]->Enable();
   m_pProgram1DTrans[0]->SetUniformVector("texVolume",0);
@@ -134,6 +137,11 @@ void GPUSBVR::Initialize() {
   m_pProgramIso->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
   m_pProgramIso->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
   m_pProgramIso->Disable();
+
+  m_pProgramTrans->Enable();
+  m_pProgramTrans->SetUniformVector("texColor",0);
+  m_pProgramTrans->SetUniformVector("texDepth",1);
+  m_pProgramTrans->Disable();
 
 }
 
@@ -303,6 +311,41 @@ void GPUSBVR::Render2DView(EWindowMode eDirection, float fSliceIndex) {
 
 }
 
+void GPUSBVR::RenderBBox() {
+  glBegin(GL_LINES);
+    glColor4f(1,0,0,1);
+    // FRONT
+    glVertex3f( 0.5f,-0.5f,-0.5f);
+    glVertex3f(-0.5f,-0.5f,-0.5f);
+    glVertex3f( 0.5f, 0.5f,-0.5f);
+    glVertex3f(-0.5f, 0.5f,-0.5f);
+    glVertex3f(-0.5f,-0.5f,-0.5f);
+    glVertex3f(-0.5f, 0.5f,-0.5f);
+    glVertex3f( 0.5f,-0.5f,-0.5f);
+    glVertex3f( 0.5f, 0.5f,-0.5f);
+
+    // BACK
+    glVertex3f( 0.5f,-0.5f, 0.5f);
+    glVertex3f(-0.5f,-0.5f, 0.5f);
+    glVertex3f( 0.5f, 0.5f, 0.5f);
+    glVertex3f(-0.5f, 0.5f, 0.5f);
+    glVertex3f(-0.5f,-0.5f, 0.5f);
+    glVertex3f(-0.5f, 0.5f, 0.5f);
+    glVertex3f( 0.5f,-0.5f, 0.5f);
+    glVertex3f( 0.5f, 0.5f, 0.5f);
+
+    // CONNECTION
+    glVertex3f(-0.5f,-0.5f, 0.5f);
+    glVertex3f(-0.5f,-0.5f,-0.5f);
+    glVertex3f(-0.5f, 0.5f, 0.5f);
+    glVertex3f(-0.5f, 0.5f,-0.5f);
+    glVertex3f( 0.5f,-0.5f, 0.5f);
+    glVertex3f( 0.5f,-0.5f,-0.5f);
+    glVertex3f( 0.5f, 0.5f, 0.5f);
+    glVertex3f( 0.5f, 0.5f,-0.5f);
+  glEnd();
+}
+
 void GPUSBVR::Render3DView() {
 
     // DEBUG: just render the smallest brick for a start
@@ -321,53 +364,89 @@ void GPUSBVR::Render3DView() {
     m_matModelView.setModelview();
     m_SBVRGeogen.SetTransformation(m_matModelView);
 
-	  glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_TEXTURE_3D);
+    glDisable(GL_TEXTURE_2D);
+    if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+    if (m_bRenderGlobalBBox) RenderBBox();
+    if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+
+    switch (m_eRenderMode) {
+      case RM_1DTRANS    :  m_p1DTransTex->Bind(1); 
+                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
+	                          glEnable(GL_BLEND);
+                            glBlendEquation(GL_FUNC_ADD);
+                            glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+                            break;
+      case RM_2DTRANS    :  m_p2DTransTex->Bind(1);
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable(); 
+	                          glEnable(GL_BLEND);
+                            glBlendEquation(GL_FUNC_ADD);
+                            glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+                            break;
+      case RM_ISOSURFACE :  m_pProgramIso->Enable(); 
+	                          glDisable(GL_BLEND);
+                            break;
+      case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid rendermode set"); 
+                            break;
+    }
+
     GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vSmallestLOD, vFirstBrick);
     if(t!=NULL) t->Bind(0);
 
     SetBrickDepShaderVars(vSmallestLOD, vFirstBrick);
 
+    if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_FALSE);
+
     glBegin(GL_TRIANGLES);
-      glColor4f(1,1,1,1);
-      for (size_t i = 0;i<m_SBVRGeogen.m_vSliceTriangles.size();i++) {
+      for (int i = m_SBVRGeogen.m_vSliceTriangles.size()-1;i>=0;i--) {
         glTexCoord3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vTex);
         glVertex3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vPos);
       }
     glEnd();
 
     m_pMasterController->MemMan()->Release3DTexture(t);
+
+    switch (m_eRenderMode) {
+      case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
+      case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
+      case RM_ISOSURFACE :  m_pProgramIso->Disable(); break;
+      case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid rendermode set"); break;
+    }
+
+    if (m_eRenderMode != RM_ISOSURFACE) {    
+      if (m_bRenderGlobalBBox) {
+        glDisable(GL_DEPTH_TEST);
+        RenderBBox();
+      }
+      glDepthMask(GL_TRUE);
+    }
+
+    glDisable(GL_BLEND);
 }
 
 
 
-void GPUSBVR::Paint(bool bClearDepthBuffer) {
+void GPUSBVR::Paint(bool bClear) {
 
-  if (bClearDepthBuffer) glClear(GL_DEPTH_BUFFER_BIT);
+  if (bClear) {
+    glClear(GL_DEPTH_BUFFER_BIT);
+    SetDataDepShaderVars();
+    if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
+      glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
+      glClear(GL_COLOR_BUFFER_BIT); 
+    } else DrawBackGradient();
+    DrawLogo();
+    glClear(GL_DEPTH_BUFFER_BIT);
+  }
 
   if (m_bCompleteRedraw) {
     m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Complete Redraw");
 
     m_pFBO3DImage->Write();
 
-    SetDataDepShaderVars();
-    if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) glClear(GL_COLOR_BUFFER_BIT); else DrawBackGradient();
-
-    DrawLogo();
-
-    switch (m_eRenderMode) {
-      case RM_1DTRANS    :  m_p1DTransTex->Bind(1); 
-                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
-                            break;
-      case RM_2DTRANS    :  m_p2DTransTex->Bind(1);
-                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable(); 
-                            break;
-      case RM_ISOSURFACE :  /// \todo setup isovalue shader vars
-                            m_pProgramIso->Enable(); 
-                            break;
-      case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid rendermode set"); 
-                            break;
-    }
+    glClearColor(0,0,0,0);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     switch (m_eViewMode) {
       case VM_SINGLE    :  RenderSingle(); break;
@@ -377,16 +456,6 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
     }
 
     m_pFBO3DImage->FinishWrite();
-
-    switch (m_eRenderMode) {
-      case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
-      case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
-      case RM_ISOSURFACE :  m_pProgramIso->Disable(); break;
-      case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid rendermode set"); break;
-    }
-    
-
-    glDisable(GL_BLEND);
 
   } else m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Quick Redraw");
 
@@ -412,7 +481,7 @@ void GPUSBVR::Resize(const UINTVECTOR2& vWinSize) {
 	glMatrixMode(GL_MODELVIEW);
 
   if (m_pFBO3DImage != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImage);
-  m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, vWinSize.x, vWinSize.y, GL_RGBA8, 8*4);
+  m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, vWinSize.x, vWinSize.y, GL_RGBA8, 8*4, true);
 
   m_bDelayedCompleteRedraw = true;
 }
@@ -428,6 +497,7 @@ void GPUSBVR::Cleanup() {
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[1]);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIso);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramTrans);
 }
 
 
@@ -444,39 +514,33 @@ bool GPUSBVR::CheckForRedraw() {
 
 void GPUSBVR::RerenderPreviousResult() {
   m_pFBO3DImage->Read(GL_TEXTURE0);
-  glEnable(GL_TEXTURE_2D);
+  m_pFBO3DImage->ReadDepth(GL_TEXTURE1);
+
+  m_pProgramTrans->Enable();
 
   glDisable(GL_DEPTH_TEST);
-
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-  glLoadIdentity();
-  glOrtho(-1.0, +1.0, +1.0, -1.0, 0.0, 1.0);
-  glMatrixMode(GL_MODELVIEW);
-  glPushMatrix();
-  glLoadIdentity();
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   glBegin(GL_QUADS);
     glColor4d(1,1,1,1);
-    glTexCoord2d(0,0);
-    glVertex3d(-1.0,  1.0, -0.5);
-    glTexCoord2d(1,0);
-    glVertex3d( 1.0,  1.0, -0.5);
-    glTexCoord2d(1,1);
-    glVertex3d( 1.0, -1.0, -0.5);
     glTexCoord2d(0,1);
+    glVertex3d(-1.0,  1.0, -0.5);
+    glTexCoord2d(1,1);
+    glVertex3d( 1.0,  1.0, -0.5);
+    glTexCoord2d(1,0);
+    glVertex3d( 1.0, -1.0, -0.5);
+    glTexCoord2d(0,0);
     glVertex3d(-1.0, -1.0, -0.5);
   glEnd();
 
+  m_pProgramTrans->Disable();
+
   m_pFBO3DImage->FinishRead();
-
-  glPopMatrix();
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
-  glMatrixMode(GL_MODELVIEW);
-
+  m_pFBO3DImage->FinishDepthRead();
   glEnable(GL_DEPTH_TEST);
 }
+
 
 void GPUSBVR::SetSampleRateModifier(float fSampleRateModifier) {
   GLRenderer::SetSampleRateModifier(fSampleRateModifier);

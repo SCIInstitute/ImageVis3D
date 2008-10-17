@@ -63,7 +63,7 @@ class GPUSBVR : public GLRenderer {
     virtual bool CheckForRedraw();
     virtual bool LoadDataset(const std::string& strFilename);
 
-    void Paint(bool bClearDepthBuffer=true);
+    void Paint(bool bClear=true);
     /** Change the size of the FBO we render to.  Any previous image is
      * destroyed, causing a full redraw on the next render.
      * \param vWinSize  new width and height of the view window */
@@ -88,6 +88,7 @@ class GPUSBVR : public GLRenderer {
     GLSLProgram*  m_pProgram1DTrans[2];
     GLSLProgram*  m_pProgram2DTrans[2];
     GLSLProgram*  m_pProgramIso;
+    GLSLProgram*  m_pProgramTrans;
 
     void DrawLogo();
     void DrawBackGradient();
@@ -102,6 +103,7 @@ class GPUSBVR : public GLRenderer {
 
     void Render3DView();
     void Render2DView(EWindowMode eDirection, float fSliceIndex);
+    void RenderBBox();
 };
 
 #endif // GPUSBVR_H

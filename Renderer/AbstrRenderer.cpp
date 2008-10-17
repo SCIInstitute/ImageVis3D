@@ -52,7 +52,10 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_fSampleRateModifier(1.0f),
   m_fIsovalue(0.5f),
   m_vTextColor(1,1,1,1),
-  m_fZoom(0.0f)
+  m_fZoom(0.0f),
+  m_bRenderGlobalBBox(false),
+  m_bRenderLocalBBox(false)
+
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -195,6 +198,18 @@ void AbstrRenderer::Drag(UINTVECTOR2 vPosition) {
 
 void AbstrRenderer::Zoom(int iZoom) {
   m_fZoom += float(iZoom)/1000.0f;
+  m_bRedraw = true;
+  m_bCompleteRedraw = true;
+}
+
+void AbstrRenderer::SetGlobalBBox(bool bRenderBBox) {
+  m_bRenderGlobalBBox = bRenderBBox;
+  m_bRedraw = true;
+  m_bCompleteRedraw = true;
+}
+
+void AbstrRenderer::SetLocalBBox(bool bRenderBBox) {
+  m_bRenderLocalBBox = bRenderBBox;
   m_bRedraw = true;
   m_bCompleteRedraw = true;
 }

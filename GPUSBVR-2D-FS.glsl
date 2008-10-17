@@ -62,6 +62,9 @@ void main(void)
   /// apply opacity correction
   vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
 
+  // premultiply color with alpha (for front to back)
+  vTransVal.xyz *= vTransVal.a;
+
   /// write result to fragment color
   gl_FragColor    = vTransVal;
 }

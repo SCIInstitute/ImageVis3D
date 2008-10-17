@@ -310,20 +310,20 @@ void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {
 
 void MainWindow::SetToggleGlobalBBoxLabel(bool bRenderBBox)
 {
-/// \todo
+  this->checkBox_GBBox->setChecked(bRenderBBox);
 }
 
 void MainWindow::SetToggleLocalBBoxLabel(bool bRenderBBox)
 {
-/// \todo
+  this->checkBox_LBBox->setChecked(bRenderBBox);
 }
 
 void MainWindow::ToggleGlobalBBox(bool bRenderBBox)
 {
-/// \todo
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetGlobalBBox(bRenderBBox);
 }
 
 void MainWindow::ToggleLocalBBox(bool bRenderBBox)
 {
-/// \todo
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetLocalBBox(bRenderBBox);
 }

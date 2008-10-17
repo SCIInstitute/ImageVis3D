@@ -359,6 +359,9 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     SetSampleRateSlider(int(m_ActiveRenderWin->GetRenderer()->GetSampleRateModifier()*100));
     int iRange = int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
     SetIsoValueSlider(int(m_ActiveRenderWin->GetRenderer()->GetIsoValue()*iRange), iRange);
+
+    SetToggleGlobalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetGlobalBBox());
+    SetToggleLocalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetLocalBBox());
   }
 }
 

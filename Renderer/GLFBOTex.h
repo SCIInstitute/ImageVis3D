@@ -52,6 +52,8 @@ public:
 	virtual void Read(GLenum texunit,int iBuffer=0);
 	virtual void FinishWrite(int iBuffer=0);
 	virtual void FinishRead(int iBuffer=0);
+  virtual void ReadDepth(GLenum texunit);
+  virtual void FinishDepthRead();
 	virtual operator GLuint(void) { return m_hTexture[0]; }
 	virtual operator GLuint*(void) { return m_hTexture; }
 
@@ -75,6 +77,7 @@ private:
 	static bool		      m_bInitialized;
 	static int		      m_iCount;
 	GLenum			        *m_LastTexUnit;
+	GLenum			        m_LastDepthTextUnit;
 	int				          m_iNumBuffers;
 	GLenum			        *m_LastAttachment;
 };

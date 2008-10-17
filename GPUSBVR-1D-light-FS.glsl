@@ -72,5 +72,5 @@ void main(void)
   vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
 
   /// write result to fragment color
-	gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, vTransVal.a);
+	gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, 1.0)*vTransVal.a;
 }

@@ -137,6 +137,11 @@ class AbstrRenderer {
     virtual void Drag(UINTVECTOR2 vPosition);
     virtual void Zoom(int iZoom);
 
+    void SetGlobalBBox(bool bRenderBBox);
+    bool GetGlobalBBox() {return m_bRenderGlobalBBox;}
+    void SetLocalBBox(bool bRenderBBox);
+    bool GetLocalBBox() {return m_bRenderLocalBBox;}
+
   protected:
     MasterController*   m_pMasterController;
     bool                m_bRedraw;
@@ -157,6 +162,9 @@ class AbstrRenderer {
     FLOATMATRIX4        m_RestRot;
     FLOATMATRIX4        m_Rot;
     float               m_fZoom;
+    bool                m_bRenderGlobalBBox;
+    bool                m_bRenderLocalBBox;
+
 };
 
 #endif // ABSTRRENDERER_H
