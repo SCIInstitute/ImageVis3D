@@ -44,6 +44,9 @@ bool GLSLProgram::m_bGlewInitialized=true;    ///< GL Extension Wrangler (glew) 
 bool GLSLProgram::m_bGLChecked=false;         ///< GL extension check
 bool GLSLProgram::m_bGLUseARB=false;          ///< use pre GL 2.0 syntax
 
+/*
+Hack: since the ATI/AMD driver has a bug and the 3rd parameter if glGetActiveUniform must be != 0 we use these two dummy vars in the glGetActiveUniform calls
+*/
 GLsizei AtiHackLen;
 GLchar AtiHackChar;
 
