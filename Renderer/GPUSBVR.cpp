@@ -399,7 +399,7 @@ void GPUSBVR::Paint(bool bClearDepthBuffer) {
 void GPUSBVR::Resize(const UINTVECTOR2& vWinSize) {
   AbstrRenderer::Resize(vWinSize);
 
-  m_pMasterController->DebugOut()->Message("GPUSBVR::Resize","Resizing to %i x %i", vWinSize.x, vWinSize);
+  m_pMasterController->DebugOut()->Message("GPUSBVR::Resize","Resizing to %i x %i", vWinSize.x, vWinSize.y);
 
 //  int side = std::min(width, height);
 //  glViewport((width - side) / 2, (height - side) / 2, side, side);
