@@ -44,7 +44,7 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_bRedraw(true), 
   m_bCompleteRedraw(true), 
   m_eRenderMode(RM_1DTRANS),
-  m_eViewMode(VM_ONEBYTREE),
+  m_eViewMode(VM_SINGLE),
   m_bUseLigthing(true),
   m_pDataset(NULL),
   m_p1DTrans(NULL),
