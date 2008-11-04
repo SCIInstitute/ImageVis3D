@@ -41,7 +41,8 @@
 SettingsDlg::SettingsDlg(MasterController& MasterController, TabID eTabID /* = MEM_TAB*/, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
   QDialog(parent, flags),
   m_MasterController(MasterController),
-  m_eTabID(eTabID)
+  m_eTabID(eTabID),
+  m_InitialGPUMemMax(0)
 {
   setupUi(this);
 }
@@ -105,6 +106,8 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
     horizontalSlider_GPUMem->setMaximum(iMaxGPUMemSize);
     horizontalSlider_GPUMem->setValue(iMaxGPUMemSize*0.8f);
   }
+
+  m_InitialGPUMemMax = horizontalSlider_GPUMem->maximum();
 }
 
 
@@ -116,10 +119,21 @@ UINT64 SettingsDlg::GetCPUMem() {
   return UINT64(horizontalSlider_CPUMem->value())*1024*1024;
 }
 
-void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
+bool SettingsDlg::GetQuickopen() {
+  return checkBoxQuickload->checkState() == Qt::Checked;
+}
+
+UINT64 SettingsDlg::GetMinFramerate() {
+  return UINT64(horizontalSlider->value());
+}
+
+void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, bool bQuickopen, UINT64 iMinFramerate, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
     horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
     horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
+    checkBoxQuickload->setChecked(bQuickopen);
+    horizontalSlider->setValue(iMinFramerate);
+    
     m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
     m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));
     m_cTextColor  = QColor(int(vTextColor.x*255), int(vTextColor.y*255),int(vTextColor.z*255),int(vTextColor.w*255));
@@ -230,3 +244,11 @@ void SettingsDlg::SelectBackColor2() {
   } 
 }
 
+// make sure the user cannot select more GPU than CPU mem
+void SettingsDlg::SetMaxMemCheck() {
+  if (horizontalSlider_GPUMem->value() > horizontalSlider_CPUMem->value()) {
+    horizontalSlider_GPUMem->setValue(horizontalSlider_CPUMem->value());
+  }
+
+  horizontalSlider_GPUMem->setMaximum(std::min<int> (horizontalSlider_CPUMem->value(),m_InitialGPUMemMax)  );
+}

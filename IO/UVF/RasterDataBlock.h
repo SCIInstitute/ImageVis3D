@@ -114,22 +114,12 @@ public:
 	bool GetData(unsigned char** ppData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const;
   bool SetData(unsigned char* pData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
 
-	const std::vector<UINT64>& GetBrickCount(const std::vector<UINT64>& vLOD) const {return m_vBrickCount[size_t(PermutationToIndex(vLOD, ulLODLevelCount))];}
-	const std::vector<UINT64>& GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {UINT64 iLODIndex = PermutationToIndex(vLOD, ulLODLevelCount);return m_vBrickSizes[size_t(iLODIndex)][size_t(PermutationToIndex(vBrick, m_vBrickCount[size_t(iLODIndex)]))];}
+	const std::vector<UINT64>& GetBrickCount(const std::vector<UINT64>& vLOD) const;
+  const std::vector<UINT64>& GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const;
+  std::vector<UINT64> GetLODDomainSize(const std::vector<UINT64>& vLOD) const;
 
-	const std::vector<UINT64> GetSmallestBrickIndex() const {
-    std::vector<UINT64> vSmallestLOD = ulLODLevelCount;
-    for (size_t i = 0;i<vSmallestLOD.size();i++) vSmallestLOD[i] -= 1; // convert "size" to "maxindex"      
-    return vSmallestLOD;
-  }
-
-  const std::vector<UINT64>& GetSmallestBrickSize() const {
-    std::vector<UINT64> vSmallestLOD = GetSmallestBrickIndex();
-    std::vector<UINT64> vFirstBrick(GetBrickCount(vSmallestLOD).size());
-    for (size_t i = 0;i<vFirstBrick.size();i++) vFirstBrick[i] = 0; // get the size of the first brick
-    return GetBrickSize(vSmallestLOD, vFirstBrick);
-  }
-
+	const std::vector<UINT64> GetSmallestBrickIndex() const;
+  const std::vector<UINT64>& GetSmallestBrickSize() const;
 
 	void FlatDataToBrickedLOD(const void* pSourceData, const std::string& strTempFile = "tempFile.tmp", void (*combineFunc)(std::vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut) = CombineAverage<char>);
   void FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const std::string& strTempFile = "tempFile.tmp", void (*combineFunc)(std::vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut) = CombineAverage<char>);
@@ -149,7 +139,7 @@ protected:
 	virtual UINT64 GetLODSize(std::vector<UINT64>& vLODIndices) const;
 	virtual UINT64 ComputeLODLevelSize(const std::vector<UINT64>& vReducedDomainSize) const;
 	virtual std::vector<std::vector<UINT64> > ComputeBricks(const std::vector<UINT64>& vDomainSize) const;
-	virtual std::vector<std::vector<UINT64> > GenerateAllPermutations(const std::vector<std::vector<UINT64> >& vElements, UINT64 iIndex=0) const;
+	virtual std::vector<std::vector<UINT64> > GenerateCartesianProduct(const std::vector<std::vector<UINT64> >& vElements, UINT64 iIndex=0) const;
 	UINT64 RecompLODIndexCount() const;
 	void CleanupTemp();
 
@@ -164,7 +154,7 @@ protected:
 	std::vector<std::vector<UINT64> > m_vBrickOffsets;
 	std::vector<std::vector<std::vector<UINT64> > > m_vBrickSizes;
 
-	UINT64 PermutationToIndex(const std::vector<UINT64>& vec, const std::vector<UINT64>& vSizes) const;
+	UINT64 Serialize(const std::vector<UINT64>& vec, const std::vector<UINT64>& vSizes) const;
 	UINT64 GetLocalDataPointerOffset(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const;
 	UINT64 GetLocalDataPointerOffset(const UINT64 iLODIndex, const UINT64 iBrickIndex) const {return m_vLODOffsets[size_t(iLODIndex)] + m_vBrickOffsets[size_t(iLODIndex)][size_t(iBrickIndex)];}
 	void SubSample(LargeRAWFile* pSourceFile, LargeRAWFile* pTargetFile, std::vector<UINT64> sourceSize, std::vector<UINT64> targetSize, void (*combineFunc)(std::vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut));

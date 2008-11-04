@@ -42,6 +42,8 @@ SBVRGeogen::SBVRGeogen(void) :
 	m_fMinZ(0),
 	m_vAspect(1,1,1),
 	m_vSize(1,1,1),
+  m_vTexCoordMin(0,0,0),
+  m_vTexCoordMax(1,1,1),
   m_iMinLayers(100)
 {
 	m_pfBBOXStaticVertex[0] = FLOATVECTOR3(-0.5, 0.5,-0.5);
@@ -79,8 +81,17 @@ void SBVRGeogen::InitBBOX() {
 
 	FLOATVECTOR3 vVertexScale(float(m_vAspect.x),float(m_vAspect.y),float(m_vAspect.z));
 
-	for (uint i = 0;i<8;i++) m_pfBBOXVertex[i] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[i]*vVertexScale,1.0f), m_pfBBOXStaticVertex[i]);
-	// find the minimum z value
+  m_pfBBOXVertex[0] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[0]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMax.y,m_vTexCoordMin.z));
+  m_pfBBOXVertex[1] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[1]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMax.y,m_vTexCoordMin.z));
+  m_pfBBOXVertex[2] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[2]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMax.y,m_vTexCoordMax.z));
+  m_pfBBOXVertex[3] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[3]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMax.y,m_vTexCoordMax.z));
+  m_pfBBOXVertex[4] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[4]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMin.y,m_vTexCoordMin.z));
+  m_pfBBOXVertex[5] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[5]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMin.y,m_vTexCoordMin.z));
+  m_pfBBOXVertex[6] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[6]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMin.y,m_vTexCoordMax.z));
+  m_pfBBOXVertex[7] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[7]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMin.y,m_vTexCoordMax.z));
+
+  
+  // find the minimum z value
 	m_fMinZ = m_pfBBOXVertex[0].m_vPos.z;
 	
 	for (int i = 1;i<8;++i) m_fMinZ= MIN(m_fMinZ, m_pfBBOXVertex[i].m_vPos.z);
@@ -232,4 +243,13 @@ void SBVRGeogen::ComputeGeometry() {
   float fLayerDistance = GetLayerDistance();
 
 	while (ComputeLayerGeometry(fDepth)) fDepth += fLayerDistance;
+}
+
+
+void SBVRGeogen::SetVolumeData(const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize, const FLOATVECTOR3& vTexCoordMin, const FLOATVECTOR3& vTexCoordMax) {
+  m_vAspect       = vAspect; 
+  m_vSize         = vSize;
+  m_vTexCoordMin  = vTexCoordMin;
+  m_vTexCoordMax  = vTexCoordMax;
+  InitBBOX(); 
 }

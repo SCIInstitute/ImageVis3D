@@ -649,3 +649,8 @@ bool IOManager::NeedsConversion(std::string strFilename, bool& bChecksumFail) {
   wstring wstrFilename(strFilename.begin(), strFilename.end());
   return !UVF::IsUVFFile(wstrFilename, bChecksumFail);
 }
+
+bool IOManager::NeedsConversion(std::string strFilename) {
+  wstring wstrFilename(strFilename.begin(), strFilename.end());
+  return !UVF::IsUVFFile(wstrFilename);
+}

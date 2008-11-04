@@ -44,7 +44,8 @@ GPUMemMan::GPUMemMan(MasterController* masterController) :
   m_MasterController(masterController),
   m_SystemInfo(masterController->SysInfo()),
   m_iAllocatedGPUMemory(0),
-  m_iAllocatedCPUMemory(0)
+  m_iAllocatedCPUMemory(0),
+  m_iFrameCounter(0)
 {
 
 }
@@ -384,21 +385,58 @@ void GPUMemMan::Free2DTrans(TransferFunction2D* pTransferFunction2D, AbstrRender
 
 // ******************** 3D Textures
 
-GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) {
+GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter) {
   for (Texture3DListIter i = m_vpTex3DList.begin();i<m_vpTex3DList.end();i++) {
-    if ((*i)->Match(pDataset, vLOD, vBrick)) {
+    if ((*i)->Equals(pDataset, vLOD, vBrick)) {
       m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Reusing 3D texture");
-      (*i)->iUserCount++;
-      return (*i)->pTexture;
+      return (*i)->Access(iIntraFrameCounter, iFrameCounter);
     }
   }
 
-  /// \todo add code here to release textures/memory if we run out of free
-  ///       GPU/CPU mem
+  const std::vector<UINT64> vSize = pDataset->GetInfo()->GetBrickSizeND(vLOD, vBrick);
+  UINT64 iBitWidth  = pDataset->GetInfo()->GetBitwith();
+  UINT64 iCompCount = pDataset->GetInfo()->GetComponentCount();
 
-  m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Creating new texture");
+  UINT64 iNeededCPUMemory = iBitWidth * iCompCount* vSize[0];
+  for (size_t i = 1;i<vSize.size();i++) iNeededCPUMemory *= vSize[i];
 
-  Texture3DListElem* pNew3DTex = new Texture3DListElem(pDataset, vLOD, vBrick);
+  // for OpenGL we ignore the GPU memory load and let GL do the paging
+  if (m_iAllocatedCPUMemory + iNeededCPUMemory > m_SystemInfo->GetMaxUsableCPUMem()) {
+    m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Not enougth memory for texture %i x %i x %i (%ibit * %i), paging ...", vSize[0], vSize[1], vSize[2], iBitWidth, iCompCount);
+
+    // search for best brick to replace with this brick
+    UINT64 iTargetFrameCounter = UINT64_INVALID;
+    UINT64 iTargetIntraFrameCounter = UINT64_INVALID;
+    Texture3DListIter iBestMatch;
+    for (Texture3DListIter i = m_vpTex3DList.begin();i<m_vpTex3DList.end();i++) {
+      if ((*i)->BestMatch(vSize,iTargetIntraFrameCounter,iTargetFrameCounter)) iBestMatch = i;
+    }
+
+    if (iTargetFrameCounter != UINT64_INVALID) {
+      // found a suitable brick that can be replaced
+      m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","  Found suitable target brick from frame %i with intraframe counter %i (current frame %i / current intraframe %i)",
+                                              iTargetFrameCounter, iTargetIntraFrameCounter , iFrameCounter, iIntraFrameCounter);
+      (*iBestMatch)->Replace(pDataset, vLOD, vBrick, iIntraFrameCounter, iFrameCounter);
+      (*iBestMatch)->iUserCount++;
+      return (*iBestMatch)->pTexture;
+    } else {
+      m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","  No suitable brick found. Randomly deleting bricks until this brick fits into memory");
+      
+      // no suitable brick found -> randomly delete bricks until this brick fits into memory
+      while (m_iAllocatedCPUMemory + iNeededCPUMemory > m_SystemInfo->GetMaxUsableCPUMem()) {
+        size_t iIndex = size_t(rand()%m_vpTex3DList.size());  // theoretically this means that if we have more than MAX_RAND bricks we always pick the first, but who cares ...
+
+        if (m_vpTex3DList[iIndex]->iUserCount == 0) {
+          m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","   Deleting texture %i", iIndex);
+          Delete3DTexture(iIndex);
+        }
+      }     
+    }
+  }
+
+  m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Creating new texture %i x %i x %i, bitsize=%i, componentcount=%i", vSize[0], vSize[1], vSize[2], iBitWidth, iCompCount);
+
+  Texture3DListElem* pNew3DTex = new Texture3DListElem(pDataset, vLOD, vBrick, iIntraFrameCounter, iFrameCounter);
 
   if (pNew3DTex->pTexture == NULL) {
     m_MasterController->DebugOut()->Error("GPUMemMan::Get3DTexture","Failed to create OpenGL texture.");
@@ -428,6 +466,22 @@ void GPUMemMan::Release3DTexture(GLTexture3D* pTexture) {
   }
 }
 
+void GPUMemMan::Delete3DTexture(size_t iIndex) {
+
+  m_iAllocatedGPUMemory -= m_vpTex3DList[iIndex]->pTexture->GetCPUSize();
+  m_iAllocatedCPUMemory -= m_vpTex3DList[iIndex]->pTexture->GetGPUSize();
+
+  if ( m_vpTex3DList[iIndex]->iUserCount != 0) {
+    m_MasterController->DebugOut()->Warning(
+      "Delete3DTexture::FreeAssociatedTextures",
+      "Freeing used 3D texture!");
+  }
+
+  delete m_vpTex3DList[iIndex];
+
+  m_vpTex3DList.erase(m_vpTex3DList.begin()+iIndex);
+}
+
 void GPUMemMan::FreeAssociatedTextures(VolumeDataset* pDataset) {
   for (size_t i = 0;i<m_vpTex3DList.size();i++) {
     if (m_vpTex3DList[i]->pDataset == pDataset) {
@@ -439,18 +493,7 @@ void GPUMemMan::FreeAssociatedTextures(VolumeDataset* pDataset) {
         m_vpTex3DList[i]->pTexture->GetSize().y,
         m_vpTex3DList[i]->pTexture->GetSize().z);
 
-      m_iAllocatedGPUMemory -= m_vpTex3DList[i]->pTexture->GetCPUSize();
-      m_iAllocatedCPUMemory -= m_vpTex3DList[i]->pTexture->GetGPUSize();
-
-      if (  m_vpTex3DList[i]->iUserCount != 0) {
-        m_MasterController->DebugOut()->Warning(
-          "GPUMemMan::FreeAssociatedTextures",
-          "Freeing used 3D texture!");
-      }
-
-      delete m_vpTex3DList[i];
-
-      m_vpTex3DList.erase(m_vpTex3DList.begin()+i);
+      Delete3DTexture(i);
       i--;
     }
   }

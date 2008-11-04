@@ -99,7 +99,7 @@ class AbstrRenderer {
     virtual bool LoadDataset(const std::string& strFilename);
     /** Query whether or not we should redraw the next frame, else we should
      * reuse what is already rendered. */
-    virtual bool CheckForRedraw() = 0;
+    virtual bool CheckForRedraw();
 
     VolumeDataset*      GetDataSet() {return m_pDataset;}
     TransferFunction1D* Get1DTrans() {return m_p1DTrans;}
@@ -113,11 +113,22 @@ class AbstrRenderer {
     /** Sets up a gradient background which fades vertically.
      * @param vColors[0] is the color at the bottom;
      * @param vColors[1] is the color at the top. */
-    virtual void SetBackgroundColors(FLOATVECTOR3 vColors[2]) {
+    virtual bool SetBackgroundColors(FLOATVECTOR3 vColors[2]) {
+      if (vColors[0] != m_vBackgroundColors[0] || vColors[1] != m_vBackgroundColors[1]) {
         m_vBackgroundColors[0]=vColors[0];
         m_vBackgroundColors[1]=vColors[1];
+        ScheduleCompleteRedraw();
+        return true;
+      } return false;
     }
-    virtual void SetTextColor(FLOATVECTOR4 vColor) {m_vTextColor=vColor;}
+
+    virtual bool SetTextColor(FLOATVECTOR4 vColor) {
+      if (vColor != m_vTextColor) {
+        m_vTextColor=vColor;ScheduleCompleteRedraw();
+        return true;
+      } return false;
+    }
+
     FLOATVECTOR3 GetBackgroundColor(int i) const {return m_vBackgroundColors[i];}
     FLOATVECTOR4 GetTextColor() const {return m_vTextColor;}
 
@@ -145,7 +156,6 @@ class AbstrRenderer {
   protected:
     MasterController*   m_pMasterController;
     bool                m_bRedraw;
-    bool                m_bCompleteRedraw;
     ERenderMode         m_eRenderMode;
     EViewMode           m_eViewMode;
     EWindowMode         m_eWindowMode[4];
@@ -164,6 +174,13 @@ class AbstrRenderer {
     float               m_fZoom;
     bool                m_bRenderGlobalBBox;
     bool                m_bRenderLocalBBox;
+
+    UINT64              m_iIntraFrameCounter;
+    UINT64              m_iFrameCounter;
+    UINT64              m_iCheckCounter;
+    UINT64              m_iMaxLODIndex;
+    UINT64              m_iCurrentLODOffset;
+    virtual void ScheduleCompleteRedraw();
 
 };
 

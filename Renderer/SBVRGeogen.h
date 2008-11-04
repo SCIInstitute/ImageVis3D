@@ -46,12 +46,8 @@ class POS3TEX3_VERTEX
 public:
 	POS3TEX3_VERTEX() : m_vPos() , m_vTex() {}
 	POS3TEX3_VERTEX(const FLOATVECTOR3 &vPos, const FLOATVECTOR3 &vTex) : m_vPos(vPos) , m_vTex(vTex) {}
-	POS3TEX3_VERTEX(const FLOATVECTOR4 &vPos, const FLOATVECTOR3 &vUnTransPos) : m_vPos(vPos.xyz())  {
-		m_vTex = vUnTransPos + 0.5f;
-	}
-	POS3TEX3_VERTEX(const FLOATVECTOR3 &vPos) : m_vPos(vPos)  {
-		m_vTex = m_vPos + 0.5f;
-	}
+	POS3TEX3_VERTEX(const FLOATVECTOR4 &vPos, const FLOATVECTOR3 &vTex) : m_vPos(vPos.xyz()), m_vTex(vTex) {}
+  POS3TEX3_VERTEX(const FLOATVECTOR3 &vPos) : m_vPos(vPos)  {m_vTex = m_vPos + 0.5f;}
 
 	FLOATVECTOR3 m_vPos;
 	FLOATVECTOR3 m_vTex;
@@ -67,7 +63,7 @@ public:
 
   void SetSamplingModifier(float fSamplingModifier) {m_fSamplingModifier = fSamplingModifier; ComputeGeometry();}
   void SetTransformation(const FLOATMATRIX4& matTransform);
-	void SetVolumeData(	const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize) {m_vAspect = vAspect; m_vSize = vSize;  InitBBOX(); }
+	void SetVolumeData(const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize, const FLOATVECTOR3& vTexCoordMin=FLOATVECTOR3(0,0,0), const FLOATVECTOR3& vTexCoordMax=FLOATVECTOR3(1,1,1));
 	void ComputeGeometry();
 	uint ComputeLayerGeometry(float fDepth, POS3TEX3_VERTEX pfLayerPoints[12]);
   float GetOpacityCorrection();
@@ -83,6 +79,8 @@ protected:
 	FLOATVECTOR3		  m_pfBBOXStaticVertex[8];
 	FLOATVECTOR3		  m_vAspect;
 	UINTVECTOR3			  m_vSize;
+  FLOATVECTOR3		  m_vTexCoordMin;
+  FLOATVECTOR3		  m_vTexCoordMax;
   unsigned int      m_iMinLayers; ///< allows the user to specifiy a minimum layer count to prevent small volumes from beeing sparsely sampled
 
 	void InitBBOX();

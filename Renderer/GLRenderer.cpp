@@ -52,7 +52,7 @@ GLRenderer::GLRenderer(MasterController* pMasterController) :
 GLRenderer::~GLRenderer() {
 }
 
-void GLRenderer::Initialize() {
+bool GLRenderer::Initialize() {
   string strPotential1DTransName = SysTools::ChangeExt(m_pDataset->Filename(), "1dt");
   string strPotential2DTransName = SysTools::ChangeExt(m_pDataset->Filename(), "2dt");
   
@@ -65,6 +65,8 @@ void GLRenderer::Initialize() {
     m_pMasterController->MemMan()->Get2DTransFromFile(strPotential2DTransName, this, &m_p2DTrans, &m_p2DTransTex);
   else
     m_pMasterController->MemMan()->GetEmpty2DTrans(m_pDataset->Get2DHistogram()->GetFilledSize(), this, &m_p2DTrans, &m_p2DTransTex);
+
+  return true;
 }
 
 void GLRenderer::Changed1DTrans() {
@@ -81,17 +83,10 @@ void GLRenderer::Changed2DTrans() {
   AbstrRenderer::Changed2DTrans();
 }
 
-void GLRenderer::SetBackgroundColors(FLOATVECTOR3 vColors[2]) {
-  if (vColors[0] != m_vBackgroundColors[0] || vColors[1] != m_vBackgroundColors[1]) {
-    AbstrRenderer::SetBackgroundColors(vColors);
+bool GLRenderer::SetBackgroundColors(FLOATVECTOR3 vColors[2]) {
+  if (AbstrRenderer::SetBackgroundColors(vColors)) {
     glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
-    m_bCompleteRedraw = true;
-  }
+    return true;
+  } else return false;
 }
 
-void GLRenderer::SetTextColor(FLOATVECTOR4 vColor) {
-  if (vColor != m_vTextColor) {
-    AbstrRenderer::SetTextColor(vColor);
-    m_bCompleteRedraw = true;
-  }
-}

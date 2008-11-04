@@ -53,17 +53,21 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     UINT64        GetGPUMem();
     UINT64        GetCPUMem();
+    bool          GetQuickopen();
+    UINT64        GetMinFramerate();
+
     FLOATVECTOR3  GetBackgroundColor1();
     FLOATVECTOR3  GetBackgroundColor2();
     FLOATVECTOR4  GetTextColor();
 
-    void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
+    void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, bool bQuickopen, UINT64 iMinFramerate, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
 
   protected slots:
     void SelectTextColor();
     void SetTextOpacity(int iOpacity);
     void SelectBackColor1();
     void SelectBackColor2();
+    void SetMaxMemCheck();
 
   private:
     MasterController& m_MasterController;
@@ -73,6 +77,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     QColor            m_cTextColor;
 
 
+    int               m_InitialGPUMemMax;
     void setupUi(QDialog *SettingsDlg);
 
 };

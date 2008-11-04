@@ -42,7 +42,6 @@ using namespace std;
 AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :   
   m_pMasterController(pMasterController),
   m_bRedraw(true), 
-  m_bCompleteRedraw(true), 
   m_eRenderMode(RM_1DTRANS),
   m_eViewMode(VM_SINGLE),
   m_bUseLigthing(true),
@@ -54,8 +53,12 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_vTextColor(1,1,1,1),
   m_fZoom(0.0f),
   m_bRenderGlobalBBox(false),
-  m_bRenderLocalBBox(false)
-
+  m_bRenderLocalBBox(false),
+  m_iIntraFrameCounter(0),
+  m_iFrameCounter(0),
+  m_iCheckCounter(0),
+  m_iMaxLODIndex(0),
+  m_iCurrentLODOffset(0)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -89,6 +92,15 @@ bool AbstrRenderer::LoadDataset(const string& strFilename) {
 
   m_pMasterController->DebugOut()->Message("AbstrRenderer::LoadDataset","Load successful, initializing renderer!");
 
+
+  std::vector<UINT64> vSmallestLOD = m_pDataset->GetInfo()->GetLODLevelCountND();
+  for (size_t i = 0;i<vSmallestLOD.size();i++) vSmallestLOD[i] -= 1;
+
+  UINT64 iMaxSmallestLOD = 0;
+  for (size_t i = 0;i<vSmallestLOD.size();i++) if (iMaxSmallestLOD < vSmallestLOD[i]) iMaxSmallestLOD = vSmallestLOD[i];
+  
+  m_iMaxLODIndex = iMaxSmallestLOD;
+
   return true;
 }
 
@@ -103,8 +115,7 @@ void AbstrRenderer::SetRendermode(ERenderMode eRenderMode)
 {
   if (m_eRenderMode != eRenderMode) {
     m_eRenderMode = eRenderMode; 
-    m_bRedraw = true;
-    m_bCompleteRedraw = true;
+    ScheduleCompleteRedraw();
   }  
 }
 
@@ -112,8 +123,7 @@ void AbstrRenderer::SetViewmode(EViewMode eViewMode)
 {
   if (m_eViewMode != eViewMode) {
     m_eViewMode = eViewMode; 
-    m_bRedraw = true;
-    m_bCompleteRedraw = true;
+    ScheduleCompleteRedraw();
   }  
 }
 
@@ -122,8 +132,7 @@ void AbstrRenderer::SetWindowmode(unsigned int iWindowIndex, EWindowMode eWindow
 {
   if (m_eWindowMode[iWindowIndex] != eWindowMode) {
     m_eWindowMode[iWindowIndex] = eWindowMode; 
-    m_bRedraw = true;
-    m_bCompleteRedraw = true;
+    ScheduleCompleteRedraw();
     /// \todo only redraw the windows dependent on this change
   }  
 }
@@ -131,8 +140,7 @@ void AbstrRenderer::SetWindowmode(unsigned int iWindowIndex, EWindowMode eWindow
 void AbstrRenderer::SetUseLigthing(bool bUseLigthing) {
   if (m_bUseLigthing != bUseLigthing) {
     m_bUseLigthing = bUseLigthing; 
-    m_bRedraw = true;
-    m_bCompleteRedraw = true;
+    ScheduleCompleteRedraw();
     /// \todo only redraw the windows dependent on this change
   }
 }
@@ -143,8 +151,7 @@ void AbstrRenderer::Changed1DTrans() {
     m_pMasterController->DebugOut()->Message("AbstrRenderer::Changed1DTrans","not using the 1D transferfunction at the moment, ignoring message");
   } else {
     m_pMasterController->DebugOut()->Message("AbstrRenderer::Changed1DTrans","complete redraw scheduled");
-    m_bRedraw = true;
-    m_bCompleteRedraw = true;
+    ScheduleCompleteRedraw();
   }
 }
 
@@ -153,8 +160,7 @@ void AbstrRenderer::Changed2DTrans() {
     m_pMasterController->DebugOut()->Message("AbstrRenderer::Changed2DTrans","not using the 2D transferfunction at the moment, ignoring message");
   } else {
     m_pMasterController->DebugOut()->Message("AbstrRenderer::Changed2DTrans","complete redraw scheduled");
-    m_bRedraw = true;
-    m_bCompleteRedraw = true;
+    ScheduleCompleteRedraw();
   }
 }
 
@@ -162,23 +168,30 @@ void AbstrRenderer::Changed2DTrans() {
 void AbstrRenderer::SetSampleRateModifier(float fSampleRateModifier) {
   if(m_fSampleRateModifier != fSampleRateModifier) {
     m_fSampleRateModifier = fSampleRateModifier;
-    m_bRedraw = true;
-    m_bCompleteRedraw = true;
+    ScheduleCompleteRedraw();
   }
 }
-
 
 void AbstrRenderer::SetIsoValue(float fIsovalue) {
   if(m_fIsovalue != fIsovalue) {
     m_fIsovalue = fIsovalue;
-    m_bRedraw = true;
-    m_bCompleteRedraw = true;
+    ScheduleCompleteRedraw();
   }
 }
 
+bool AbstrRenderer::CheckForRedraw() {
+  if (m_iCurrentLODOffset > 0) {
+    if (m_iCheckCounter == 0)  {
+      m_bRedraw = true;
+      m_pMasterController->DebugOut()->Message("AbstrRenderer::CheckForRedraw","Scheduled redraw as LOD is %i > 0", m_iCurrentLODOffset);
+    } else m_iCheckCounter--;
+  }
+  return m_bRedraw;
+}
 
 void AbstrRenderer::Resize(const UINTVECTOR2& vWinSize) {
   m_ArcBall.SetWindowSize(vWinSize.x, vWinSize.y);
+  ScheduleCompleteRedraw();
 }
 
 
@@ -192,24 +205,26 @@ void AbstrRenderer::Release(UINTVECTOR2) {
 
 void AbstrRenderer::Drag(UINTVECTOR2 vPosition) {
   m_Rot = m_ArcBall.Drag(vPosition).ComputeRotation() * m_RestRot;
-  m_bRedraw = true;
-  m_bCompleteRedraw = true;
+  ScheduleCompleteRedraw();
 }
 
 void AbstrRenderer::Zoom(int iZoom) {
   m_fZoom += float(iZoom)/1000.0f;
-  m_bRedraw = true;
-  m_bCompleteRedraw = true;
+  ScheduleCompleteRedraw();
 }
 
 void AbstrRenderer::SetGlobalBBox(bool bRenderBBox) {
   m_bRenderGlobalBBox = bRenderBBox;
-  m_bRedraw = true;
-  m_bCompleteRedraw = true;
+  ScheduleCompleteRedraw();
 }
 
 void AbstrRenderer::SetLocalBBox(bool bRenderBBox) {
   m_bRenderLocalBBox = bRenderBBox;
+  ScheduleCompleteRedraw();
+}
+
+void AbstrRenderer::ScheduleCompleteRedraw() {
   m_bRedraw = true;
-  m_bCompleteRedraw = true;
+  m_iCurrentLODOffset = m_iMaxLODIndex+1;
+  m_iCheckCounter = 10;
 }

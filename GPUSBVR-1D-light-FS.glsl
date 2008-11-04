@@ -46,6 +46,8 @@ uniform vec3 vLightDiffuse;
 uniform vec3 vLightSpecular;
 uniform vec3 vLightDir;
 
+varying vec3 vPosition;
+
 void main(void)
 {
   /// get volume value
@@ -63,7 +65,6 @@ void main(void)
   vec3  vNormal = normalize(gl_NormalMatrix * vGradient);
 
   // compute lighting
-  vec3 vPosition   = (gl_ModelViewMatrix * vec4(gl_TexCoord[0].xyz*2.0-1.0,1)).xyz;
   vec3 vViewDir    = normalize(vec3(0,0,0)-vPosition);
   vec3 vReflection = reflect(vViewDir, vNormal);
   vec3 vLightColor = vLightAmbient+clamp(dot(vNormal, -vLightDir),0.0,1.0)*vTransVal.xyz*vLightDiffuse+pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0)*vLightSpecular;

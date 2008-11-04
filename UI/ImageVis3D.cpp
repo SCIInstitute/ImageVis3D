@@ -65,7 +65,9 @@ MainWindow::MainWindow(MasterController& masterController,
   QMainWindow(parent, flags),
   m_MasterController(masterController),
   m_strCurrentWorkspaceFilename(""),
-  m_ActiveRenderWin(NULL)
+  m_ActiveRenderWin(NULL),
+  m_bQuickopen(false),
+  m_iMinFramerate(10)
 {
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
   QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");

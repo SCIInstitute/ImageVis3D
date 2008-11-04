@@ -27,19 +27,31 @@
 */
 
 /**
-  \file    GPUSBVR-VS.glsl
+  \file    Culling.h
+  \brief    Simple routines for filename handling
   \author    Jens Krueger
         SCI Institute
         University of Utah
-  \version  1.0
-  \date    October 2008
+  \version  1.4
+  \date    July 2008
 */
 
-varying vec3 vPosition;
+#pragma once
 
-void main(void)
+#ifndef CULLING_H
+#define CULLING_H
+
+#include <Basics/Vectors.h>
+
+class Culling
 {
-  gl_Position = gl_ProjectionMatrix * vec4(gl_Vertex.xyz,1.0);
-  gl_TexCoord[0] = gl_MultiTexCoord0;
-  vPosition = gl_Vertex.xyz;
-}
+public:
+	void SetParameters(const FLOATMATRIX4& mProjectionMatrix);
+	void Update(const FLOATMATRIX4& mWorldViewMatrix);
+	bool IsVisible(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vHalfExtent) const;
+private:
+	FLOATMATRIX4 m_mProjectionMatrix;
+	FLOATVECTOR4 m_Planes[6];
+};
+
+#endif // CULLING_H

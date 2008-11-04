@@ -42,11 +42,8 @@ LargeRAWFile::LargeRAWFile(LargeRAWFile &other) :
 
 bool LargeRAWFile::Open(bool bReadWrite) {
   #ifdef _WIN32
-    int iOpenMode = _O_BINARY | _O_NOINHERIT | _O_RANDOM;
-    if ( bReadWrite )	iOpenMode |= _O_RDWR; else iOpenMode |= _O_RDONLY; 
-    
-    errno_t error =_sopen_s(&m_StreamFile,m_strFilename.c_str(), iOpenMode,	_SH_DENYNO,	_S_IREAD | _S_IWRITE);
-	  m_bIsOpen = !(error || m_StreamFile<0);
+    m_StreamFile = CreateFileA(m_strFilename.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+    m_bIsOpen = m_StreamFile != INVALID_HANDLE_VALUE;
   #else
     m_StreamFile = fopen(m_strFilename.c_str(), (bReadWrite) ? "w+b" : "rb");
     m_bIsOpen = m_StreamFile != NULL;
@@ -59,10 +56,8 @@ bool LargeRAWFile::Open(bool bReadWrite) {
 
 bool LargeRAWFile::Create(UINT64 iInitialSize) {
 #ifdef _WIN32
-  int iOpenMode = _O_BINARY | _O_NOINHERIT | _O_RANDOM | _O_CREAT | _O_RDWR | _O_TRUNC;
-  
-  errno_t error =_sopen_s(&m_StreamFile,m_strFilename.c_str(), iOpenMode,	SH_DENYNO,	_S_IREAD | _S_IWRITE);
-	m_bIsOpen = !(error || m_StreamFile<0);
+  m_StreamFile = CreateFileA(m_strFilename.c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
+  m_bIsOpen = m_StreamFile != INVALID_HANDLE_VALUE;
 #else
   m_StreamFile = fopen(m_strFilename.c_str(), "w+b");
   m_bIsOpen = m_StreamFile != NULL;
@@ -80,7 +75,7 @@ bool LargeRAWFile::Create(UINT64 iInitialSize) {
 void LargeRAWFile::Close() {
   if (m_bIsOpen) {
     #ifdef _WIN32
-	    _close(m_StreamFile);
+        CloseHandle(m_StreamFile);
     #else
       fclose(m_StreamFile);
     #endif
@@ -103,7 +98,8 @@ UINT64 LargeRAWFile::GetCurrentSize() {
 
 void LargeRAWFile::SeekStart(){
   #ifdef _WIN32
-   	_lseeki64(m_StreamFile,0,SEEK_SET);
+    LARGE_INTEGER liTarget; liTarget.QuadPart = 0;
+    SetFilePointerEx(m_StreamFile, liTarget, NULL, FILE_BEGIN);
   #else
     fseeko(m_StreamFile, 0, SEEK_SET);
   #endif
@@ -111,7 +107,9 @@ void LargeRAWFile::SeekStart(){
 
 UINT64 LargeRAWFile::SeekEnd(){
   #ifdef _WIN32
-   	return _lseeki64(m_StreamFile,0,SEEK_END);
+    LARGE_INTEGER liTarget, liRealTarget; liTarget.QuadPart = 0;
+    SetFilePointerEx(m_StreamFile, liTarget, &liRealTarget, FILE_END);
+    return UINT64(liRealTarget.QuadPart); 
   #else
     if(fseeko(m_StreamFile, 0, SEEK_END)==0)
       return ftello(m_StreamFile);//get current position=file size!
@@ -122,7 +120,9 @@ UINT64 LargeRAWFile::SeekEnd(){
 
 UINT64 LargeRAWFile::GetPos(){
   #ifdef _WIN32
-   	return _telli64(m_StreamFile);
+    LARGE_INTEGER liTarget, liRealTarget; liTarget.QuadPart = 0;
+    SetFilePointerEx(m_StreamFile, liTarget, &liRealTarget, FILE_CURRENT);
+    return UINT64(liRealTarget.QuadPart);
   #else
       return ftello(m_StreamFile);//get current position=file size!
   #endif
@@ -130,7 +130,8 @@ UINT64 LargeRAWFile::GetPos(){
 
 void LargeRAWFile::SeekPos(UINT64 iPos){
   #ifdef _WIN32
-  	_lseeki64(m_StreamFile,iPos,SEEK_SET);
+    LARGE_INTEGER liTarget; liTarget.QuadPart = LONGLONG(iPos);
+    SetFilePointerEx(m_StreamFile, liTarget, NULL, FILE_BEGIN);
   #else
     fseeko(m_StreamFile, off_t(iPos), SEEK_SET);
   #endif
@@ -138,7 +139,9 @@ void LargeRAWFile::SeekPos(UINT64 iPos){
 
 size_t LargeRAWFile::ReadRAW(unsigned char* pData, UINT64 iCount){
   #ifdef _WIN32
-    return _read(m_StreamFile,pData,(unsigned int)(iCount));
+    DWORD dwReadBytes;
+    ReadFile(m_StreamFile, pData, (unsigned int)(iCount), &dwReadBytes, NULL);
+    return dwReadBytes;
   #else
     return fread(pData,1,iCount,m_StreamFile);
   #endif
@@ -146,7 +149,9 @@ size_t LargeRAWFile::ReadRAW(unsigned char* pData, UINT64 iCount){
 
 size_t LargeRAWFile::WriteRAW(const unsigned char* pData, UINT64 iCount){
   #ifdef _WIN32
-    return _write(m_StreamFile,pData,(unsigned int)(iCount));
+    DWORD dwWrittenBytes;
+    WriteFile(m_StreamFile, pData, (unsigned int)(iCount), &dwWrittenBytes, NULL);
+    return dwWrittenBytes;
   #else
     return fwrite(pData,1,iCount,m_StreamFile);
   #endif

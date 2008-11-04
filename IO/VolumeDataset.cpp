@@ -43,7 +43,119 @@
 
 using namespace std;
 
-VolumeDataset::VolumeDataset(const std::string& strFilename, bool bVerify, MasterController* pMasterController) : 
+VolumeDatasetInfo::VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock) : m_pVolumeDataBlock(pVolumeDataBlock) {
+    vector<double> vfScale;  
+    size_t iSize = m_pVolumeDataBlock->ulDomainSize.size();
+
+    // we require the data to be at least 3D
+    assert(iSize >= 3);
+
+    // we also assume that x,y,z are in the first 3 components and we have no anisotropy (i.e. ulLODLevelCount.size=1)
+    m_iLODLevel = m_pVolumeDataBlock->ulLODLevelCount[0];
+    for (size_t i = 0;i<3;i++) {
+      m_aOverlap[i] = m_pVolumeDataBlock->ulBrickOverlap[i];
+      m_aMaxBrickSize[i] = m_pVolumeDataBlock->ulBrickSize[i];
+      m_aScale[i] = m_pVolumeDataBlock->dDomainTransformation[i+(iSize+1)*i];
+    }
+
+    m_vvaBrickSize.resize(m_iLODLevel);
+    for (size_t j = 0;j<m_iLODLevel;j++) {
+
+      vector<UINT64> vLOD;  vLOD.push_back(j);
+      vector<UINT64> vDomSize = m_pVolumeDataBlock->GetLODDomainSize(vLOD);
+      m_aDomainSize.push_back(UINT64VECTOR3(vDomSize[0], vDomSize[1], vDomSize[2]));
+
+      vector<UINT64> vBrickCount = m_pVolumeDataBlock->GetBrickCount(vLOD);
+      m_vaBrickCount.push_back(UINT64VECTOR3(vBrickCount[0], vBrickCount[1], vBrickCount[2]));
+
+      m_vvaBrickSize[j].resize(m_vaBrickCount[j].x);
+      for (UINT64 x = 0;x<m_vaBrickCount[j].x;x++) {
+        m_vvaBrickSize[j][x].resize(m_vaBrickCount[j].y);
+        for (UINT64 y = 0;y<m_vaBrickCount[j].y;y++) {
+          for (UINT64 z = 0;z<m_vaBrickCount[j].z;z++) {
+
+            vector<UINT64> vBrick;
+            vBrick.push_back(x); vBrick.push_back(y); vBrick.push_back(z);
+            vector<UINT64> vBrickSize = m_pVolumeDataBlock->GetBrickSize(vLOD, vBrick);
+            
+            m_vvaBrickSize[j][x][y].push_back(UINT64VECTOR3(vBrickSize[0], vBrickSize[1], vBrickSize[2]));
+
+          }
+        }
+      }
+    }
+}
+
+UINT64VECTOR3 VolumeDatasetInfo::GetBrickCount(const UINT64 iLOD) const {
+  return m_vaBrickCount[iLOD];
+}
+
+UINT64VECTOR3 VolumeDatasetInfo::GetBrickSize(const UINT64 iLOD, const UINT64VECTOR3& vBrick) const {
+  return m_vvaBrickSize[iLOD][vBrick.x][vBrick.y][vBrick.z];
+}
+
+FLOATVECTOR3 VolumeDatasetInfo::GetEffectiveBrickSize(const UINT64 iLOD, const UINT64VECTOR3& vBrick) const {
+  FLOATVECTOR3 vBrickSize(m_vvaBrickSize[iLOD][vBrick.x][vBrick.y][vBrick.z].x,
+                          m_vvaBrickSize[iLOD][vBrick.x][vBrick.y][vBrick.z].y,
+                          m_vvaBrickSize[iLOD][vBrick.x][vBrick.y][vBrick.z].z);
+
+  if (vBrick.x > 0) vBrickSize.x -= m_aOverlap.x/2.0f;
+  if (vBrick.y > 0) vBrickSize.y -= m_aOverlap.y/2.0f;
+  if (vBrick.z > 0) vBrickSize.z -= m_aOverlap.z/2.0f;
+
+  if (vBrick.x < m_vaBrickCount[iLOD].x-1) vBrickSize.x -= m_aOverlap.x/2.0f;
+  if (vBrick.y < m_vaBrickCount[iLOD].y-1) vBrickSize.y -= m_aOverlap.y/2.0f;
+  if (vBrick.z < m_vaBrickCount[iLOD].z-1) vBrickSize.z -= m_aOverlap.z/2.0f;
+
+  return vBrickSize;
+}
+
+UINT64VECTOR3 VolumeDatasetInfo::GetDomainSize(const UINT64 iLOD) const {
+  return m_aDomainSize[iLOD];
+}
+
+UINT64VECTOR3 VolumeDatasetInfo::GetMaxBrickSize() const {
+  return m_aMaxBrickSize;
+}
+
+UINT64VECTOR3 VolumeDatasetInfo::GetBrickOverlapSize() const {
+  return m_aOverlap;
+}
+
+UINT64 VolumeDatasetInfo::GetLODLevelCount() const {
+  return m_iLODLevel;
+}
+
+DOUBLEVECTOR3 VolumeDatasetInfo::GetScale() const {
+  return m_aScale;
+}
+
+const vector<UINT64>& VolumeDatasetInfo::GetBrickCountND(const vector<UINT64>& vLOD) const {
+  return m_pVolumeDataBlock->GetBrickCount(vLOD);
+}
+const vector<UINT64>& VolumeDatasetInfo::GetBrickSizeND(const vector<UINT64>& vLOD, const vector<UINT64>& vBrick) const {
+  return m_pVolumeDataBlock->GetBrickSize(vLOD, vBrick);
+}
+const vector<UINT64> VolumeDatasetInfo::GetDomainSizeND() const {
+  return m_pVolumeDataBlock->ulDomainSize;
+}
+const vector<UINT64> VolumeDatasetInfo::GetMaxBrickSizeND() const {
+  return m_pVolumeDataBlock->ulBrickSize;
+}
+const vector<UINT64> VolumeDatasetInfo::GetBrickOverlapSizeND() const {
+  return m_pVolumeDataBlock->ulBrickOverlap;
+}    
+const vector<UINT64> VolumeDatasetInfo::GetLODLevelCountND() const {
+  return m_pVolumeDataBlock->ulLODLevelCount;
+}
+const vector<double> VolumeDatasetInfo::GetScaleND() const {
+  vector<double> vfScale;  
+  size_t iSize = m_pVolumeDataBlock->ulDomainSize.size();
+  for (size_t i = 0;i<iSize;i++) vfScale.push_back(m_pVolumeDataBlock->dDomainTransformation[i+(iSize+1)*i]);
+  return vfScale;
+}
+
+VolumeDataset::VolumeDataset(const string& strFilename, bool bVerify, MasterController* pMasterController) : 
   m_pMasterController(pMasterController),
   m_pVolumeDataBlock(NULL),
   m_pHist1DDataBlock(NULL),
@@ -124,7 +236,7 @@ bool VolumeDataset::Open(bool bVerify)
 
       // check if the data's smallest LOD level is not larger than our bricksize
       // TODO: if this fails we may want to convert the dataset
-      std::vector<UINT64> vSmallLODBrick = pVolumeDataBlock->GetSmallestBrickSize();
+      vector<UINT64> vSmallLODBrick = pVolumeDataBlock->GetSmallestBrickSize();
       bool bToFewLODLevels = false;
       for (size_t i = 0;i<vSmallLODBrick.size();i++) {
         if (vSmallLODBrick[i] > BRICKSIZE) {
@@ -156,14 +268,14 @@ bool VolumeDataset::Open(bool bVerify)
 
   stringstream sStreamDomain, sStreamBrick;
 
-  for (size_t i = 0;i<m_pVolumeDatasetInfo->GetDomainSize().size();i++) {
+  for (size_t i = 0;i<m_pVolumeDatasetInfo->GetDomainSizeND().size();i++) {
     if (i == 0)
-      sStreamDomain << m_pVolumeDatasetInfo->GetDomainSize()[i];
+      sStreamDomain << m_pVolumeDatasetInfo->GetDomainSizeND()[i];
     else
       sStreamDomain << " x " << m_pVolumeDatasetInfo->GetDomainSize()[i];
   }
 
-  std::vector<UINT64> vSmallLODBrick = m_pVolumeDataBlock->GetSmallestBrickSize();
+  vector<UINT64> vSmallLODBrick = m_pVolumeDataBlock->GetSmallestBrickSize();
   for (size_t i = 0;i<vSmallLODBrick.size();i++) {
     if (i == 0)
       sStreamBrick << vSmallLODBrick[i];
@@ -214,9 +326,9 @@ bool VolumeDataset::Open(bool bVerify)
 
 
 
-UINTVECTOR3 VolumeDataset::GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) {
+UINTVECTOR3 VolumeDataset::GetBrickSize(const vector<UINT64>& vLOD, const vector<UINT64>& vBrick) {
   UINTVECTOR3 vSize;
-  vector<UINT64> vSizeUVF = m_pVolumeDatasetInfo->GetBrickSize(vLOD, vBrick);
+  vector<UINT64> vSizeUVF = m_pVolumeDatasetInfo->GetBrickSizeND(vLOD, vBrick);
 
   // TODO: this code assumes that x,y,z are the first coords in the dataset which does not have to be, so better check this at load time
   vSize[0] = (unsigned int)(vSizeUVF[0]);
@@ -224,26 +336,4 @@ UINTVECTOR3 VolumeDataset::GetBrickSize(const std::vector<UINT64>& vLOD, const s
   vSize[2] = (unsigned int)(vSizeUVF[2]);
 
   return vSize;
-}
-
-void VolumeDataset::GetBrickCenterAndExtension(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick, FLOATVECTOR3& vCenter, FLOATVECTOR3& vExtension) {
-  vector<UINT64> iBrickCount = m_pVolumeDatasetInfo->GetBrickCount(vLOD);
-
-  // TODO
-  vCenter[0] = 0;
-  vCenter[1] = 0;
-  vCenter[2] = 0;
-
-  const std::vector<UINT64> vBrickSize = m_pVolumeDatasetInfo->GetBrickSize(vLOD, vBrick);
-  const std::vector<double> vScale     = m_pVolumeDatasetInfo->GetScale();
-
-  assert(vBrickSize.size() >= 3); 
-  
-  UINT64 iMax = vBrickSize[0];
-  for (size_t i = 1;i<3;i++) if (iMax < vBrickSize[i]) iMax = vBrickSize[i];
-
-
-  vExtension[0] = float(vBrickSize[0])/float(iMax)*float(vScale[0]);
-  vExtension[1] = float(vBrickSize[1])/float(iMax)*float(vScale[1]);
-  vExtension[2] = float(vBrickSize[2])/float(iMax)*float(vScale[2]);
 }

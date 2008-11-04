@@ -126,7 +126,7 @@ GLSLProgram::operator GLuint(void) const {
  * Initializes the class.
  * If GLSLProgram is initialized for the first time, initialize GLEW
  * \param void
- * \return void 
+ * \return bool 
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Aug.2004
  * \see m_bGlewInitialized

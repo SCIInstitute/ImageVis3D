@@ -45,53 +45,54 @@
 #include "TransferFunction1D.h"
 #include "TransferFunction2D.h"
 #include <IO/UVF/UVF.h>
+#include <Basics/Vectors.h>
 
+typedef VECTOR3<UINT64> UINT64VECTOR3;
 
 class VolumeDataset;
 class MasterController;
 
-// this is just a wrapper around the UVF data to hide the actuall implementation in case we want to replace it some time
+// right now this is just a wrapper around the UVF data to hide the actual implementation and cosnider only 3D data
 class VolumeDatasetInfo {
   public:
     VolumeDatasetInfo() : m_pVolumeDataBlock(NULL) {}
 
-  	const std::vector<UINT64>& GetBrickCount(const std::vector<UINT64>& vLOD) const {
-      return m_pVolumeDataBlock->GetBrickCount(vLOD);
-    }
-    const std::vector<UINT64>& GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {
-      return m_pVolumeDataBlock->GetBrickSize(vLOD, vBrick);
-    }
-    const std::vector<UINT64> GetDomainSize() const {
-      return m_pVolumeDataBlock->ulDomainSize;
-    }
-    const std::vector<UINT64> GetBrickSize() const {
-      return m_pVolumeDataBlock->ulBrickSize;
-    }
-    const std::vector<UINT64> GetBrickOverlapSize() const {
-      return m_pVolumeDataBlock->ulBrickOverlap;
-    }    
-    const std::vector<UINT64> GetLODLevelCount() const {
-      return m_pVolumeDataBlock->ulLODLevelCount;
-    }
-    const std::vector<double> GetScale() const {
-      std::vector<double> vfScale;  
-      size_t iSize = m_pVolumeDataBlock->ulDomainSize.size();
-      for (size_t i = 0;i<iSize;i++) vfScale.push_back(m_pVolumeDataBlock->dDomainTransformation[i+(iSize+1)*i]);
-      return vfScale;
-    }
+  	UINT64VECTOR3 GetBrickCount(const UINT64 iLOD) const;
+    UINT64VECTOR3 GetBrickSize(const UINT64 iLOD, const UINT64VECTOR3& vBrick) const;
+    FLOATVECTOR3 GetEffectiveBrickSize(const UINT64 iLOD, const UINT64VECTOR3& vBrick) const;
+    UINT64VECTOR3 GetDomainSize(const UINT64 iLOD=0) const;
+    UINT64VECTOR3 GetMaxBrickSize() const;
+    UINT64VECTOR3 GetBrickOverlapSize() const;
+    UINT64 GetLODLevelCount() const;
+    DOUBLEVECTOR3 GetScale() const;
+
+  	const std::vector<UINT64>& GetBrickCountND(const std::vector<UINT64>& vLOD) const;
+    const std::vector<UINT64>& GetBrickSizeND(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const;
+    const std::vector<UINT64> GetDomainSizeND() const;
+    const std::vector<UINT64> GetMaxBrickSizeND() const;
+    const std::vector<UINT64> GetBrickOverlapSizeND() const;
+    const std::vector<UINT64> GetLODLevelCountND() const;
+    const std::vector<double> GetScaleND() const;
 
     /// \todo change this if we want to support color data
-    UINT64 GetBitwith() const {
-      return m_pVolumeDataBlock->ulElementBitSize[0][0];
-    }
-    UINT64 GetComponentCount() const {
-      return 1;
-    }
+    UINT64 GetBitwith() const {return m_pVolumeDataBlock->ulElementBitSize[0][0];}
+
+    /// \todo change this if we want to support color data
+    UINT64 GetComponentCount() const {return 1;}
 
 
   private:
-    VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock) : m_pVolumeDataBlock(pVolumeDataBlock) {}
+    VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock);
     RasterDataBlock*    m_pVolumeDataBlock;
+
+    
+    std::vector<UINT64VECTOR3> m_aDomainSize;
+    UINT64VECTOR3 m_aOverlap;
+    UINT64VECTOR3 m_aMaxBrickSize;
+    UINT64 m_iLODLevel;
+    DOUBLEVECTOR3 m_aScale;
+    std::vector<UINT64VECTOR3> m_vaBrickCount;
+    std::vector< std::vector< std::vector<std::vector<UINT64VECTOR3> > > >m_vvaBrickSize;
 
     friend class VolumeDataset;
 };
@@ -112,7 +113,6 @@ public:
 
   UINTVECTOR3 GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
   bool GetBrick(unsigned char** ppData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {return m_pVolumeDataBlock->GetData(ppData, vLOD, vBrick);}
-  void GetBrickCenterAndExtension(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick, FLOATVECTOR3& vCenter, FLOATVECTOR3& vExtension);
 
 private:
   MasterController*   m_pMasterController;

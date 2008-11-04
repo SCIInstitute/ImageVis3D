@@ -65,13 +65,16 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
     QSettings settings;
     SettingsDlg settingsDlg(m_MasterController, eTabID, this);
 
-    // load settings
+    // load first setting to see if we allready saved something
     UINT64 iMaxGPU = settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong();
 
     // if memory is set load other values (otherwise the dialog box will initialize with defaults
-    if (iMaxGPU != UINT64_INVALID) {      
+    if (iMaxGPU != UINT64_INVALID) {
       // load other settings here
-      UINT64 iMaxCPU = settings.value("Memory/MaxCPUMem", UINT64_INVALID).toULongLong();     
+      UINT64 iMaxCPU = std::min<UINT64>(settings.value("Memory/MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+  
+      bool bQuickopen = settings.value("Performance/Quickopen", m_bQuickopen).toBool();
+      UINT64 iMinFramerate = settings.value("Performance/MinFrameRate", m_iMinFramerate).toULongLong();
 
       settings.beginGroup("Renderer");
       FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0f).toULongLong(),
@@ -89,7 +92,7 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       settings.endGroup();
 
       // hand data to form
-      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, vBackColor1, vBackColor2, vTextColor);
+      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, bQuickopen, iMinFramerate, vBackColor1, vBackColor2, vTextColor);
     }
 
     if (settingsDlg.exec() == QDialog::Accepted) {
@@ -100,7 +103,11 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       settings.setValue("MaxCPUMem", settingsDlg.GetCPUMem());
       settings.endGroup();
 
-      /// \todo save other settings here
+      settings.beginGroup("Performance");
+      settings.setValue("Quickopen", settingsDlg.GetQuickopen());
+      settings.setValue("MinFrameRate", settingsDlg.GetMinFramerate());
+      settings.endGroup();
+
       settings.beginGroup("Renderer");
       settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
       settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
@@ -126,8 +133,13 @@ void MainWindow::ApplySettings() {
     QSettings settings;
 
     settings.beginGroup("Memory");
-    UINT64 iMaxCPU = settings.value("MaxCPUMem", UINT64_INVALID).toULongLong();
+    UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
     UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
+    settings.endGroup();
+
+    settings.beginGroup("Performance");
+    m_bQuickopen = settings.value("Quickopen", m_bQuickopen).toBool();
+    m_iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toULongLong();
     settings.endGroup();
 
     settings.beginGroup("Renderer");

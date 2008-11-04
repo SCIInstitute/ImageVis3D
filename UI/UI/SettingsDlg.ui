@@ -159,11 +159,65 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tabPerformance" >
+      <property name="geometry" >
+       <rect>
+        <x>85</x>
+        <y>125</y>
+        <width>1424</width>
+        <height>823</height>
+       </rect>
+      </property>
+      <attribute name="title" >
+       <string>Performance</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5" >
+       <item>
+        <widget class="QGroupBox" name="groupBox_3" >
+         <property name="title" >
+          <string>File Handling</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6" >
+          <item>
+           <widget class="QCheckBox" name="checkBoxQuickload" >
+            <property name="text" >
+             <string>Open files without verfication</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4" >
+         <property name="title" >
+          <string>Rendering</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7" >
+          <item>
+           <widget class="QLabel" name="label_MinFrameRate" >
+            <property name="text" >
+             <string>Minimal Framerate</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="horizontalSlider" >
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tabUI" >
       <property name="geometry" >
        <rect>
-        <x>0</x>
-        <y>0</y>
+        <x>16</x>
+        <y>56</y>
         <width>376</width>
         <height>224</height>
        </rect>
@@ -175,8 +229,8 @@
      <widget class="QWidget" name="tabRenderer" >
       <property name="geometry" >
        <rect>
-        <x>0</x>
-        <y>0</y>
+        <x>16</x>
+        <y>56</y>
         <width>376</width>
         <height>224</height>
        </rect>
@@ -369,12 +423,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>127</x>
-     <y>98</y>
+     <x>209</x>
+     <y>87</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>127</x>
-     <y>98</y>
+     <x>345</x>
+     <y>87</y>
     </hint>
    </hints>
   </connection>
@@ -389,8 +443,8 @@
      <y>98</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>127</x>
-     <y>98</y>
+     <x>345</x>
+     <y>116</y>
     </hint>
    </hints>
   </connection>
@@ -401,8 +455,8 @@
    <slot>SelectBackColor1()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>240</x>
-     <y>80</y>
+     <x>127</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel" >
      <x>319</x>
@@ -417,8 +471,8 @@
    <slot>SelectBackColor2()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>282</x>
-     <y>75</y>
+     <x>127</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel" >
      <x>377</x>
@@ -433,8 +487,8 @@
    <slot>SelectTextColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>197</x>
-     <y>109</y>
+     <x>127</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel" >
      <x>278</x>
@@ -449,12 +503,28 @@
    <slot>SetTextOpacity(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>324</x>
-     <y>106</y>
+     <x>127</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel" >
      <x>396</x>
      <y>36</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_CPUMem</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>SetMaxMemCheck()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>139</x>
+     <y>113</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>396</x>
+     <y>124</y>
     </hint>
    </hints>
   </connection>
@@ -464,5 +534,6 @@
   <slot>SelectBackColor2()</slot>
   <slot>SelectTextColor()</slot>
   <slot>SetTextOpacity(int)</slot>
+  <slot>SetMaxMemCheck()</slot>
  </slots>
 </ui>

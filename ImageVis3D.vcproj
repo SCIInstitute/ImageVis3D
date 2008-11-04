@@ -1173,6 +1173,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Renderer\Culling.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\Culling.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Renderer\GLRenderer.cpp"
 				>
 			</File>

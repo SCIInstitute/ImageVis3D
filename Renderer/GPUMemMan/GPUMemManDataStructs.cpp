@@ -36,12 +36,15 @@
 
 #include "GPUMemManDataStructs.h"
 
-Texture3DListElem::Texture3DListElem(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick) :
+Texture3DListElem::Texture3DListElem(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter) :
   pData(NULL),
   pTexture(NULL),
   pDataset(_pDataset),
   vLOD(_vLOD),
-  vBrick(_vBrick)
+  vBrick(_vBrick),
+  iUserCount(1),
+  m_iIntraFrameCounter(iIntraFrameCounter),
+  m_iFrameCounter(iFrameCounter)
 {
   if (!CreateTexture()) {
     pTexture->Delete();
@@ -55,7 +58,7 @@ Texture3DListElem::~Texture3DListElem() {
   FreeTexture();
 }
 
-bool Texture3DListElem::Match(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick) {
+bool Texture3DListElem::Equals(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick) {
   if (_pDataset != pDataset || _vLOD.size() != vLOD.size() || _vBrick.size() != vBrick.size()) return false;
 
   for (size_t i = 0;i<vLOD.size();i++)   if (vLOD[i] != _vLOD[i]) return false;
@@ -63,6 +66,67 @@ bool Texture3DListElem::Match(VolumeDataset* _pDataset, const std::vector<UINT64
 
   return true;
 }
+
+GLTexture3D* Texture3DListElem::Access(UINT64& iIntraFrameCounter, UINT64& iFrameCounter) {
+  m_iIntraFrameCounter = iIntraFrameCounter;
+  m_iFrameCounter = iFrameCounter;
+  iUserCount++;
+
+  return pTexture;
+}
+
+bool Texture3DListElem::BestMatch(const std::vector<UINT64>& vDimension, UINT64& iIntraFrameCounter, UINT64& iFrameCounter) {
+  if (!Match(vDimension) || iUserCount > 0) return false;
+
+  // framewise older data as before found -> use this object
+  if (iFrameCounter > m_iFrameCounter) {
+      iFrameCounter = m_iFrameCounter;
+      iIntraFrameCounter = m_iIntraFrameCounter;
+
+      return true;
+  }
+
+  // framewise older data as before found -> use this object
+  if (iFrameCounter == m_iFrameCounter &&
+      iIntraFrameCounter < m_iIntraFrameCounter) {
+
+      iFrameCounter = m_iFrameCounter;
+      iIntraFrameCounter = m_iIntraFrameCounter;
+
+      return true;
+  }
+
+  return false;
+}
+
+
+bool Texture3DListElem::Match(const std::vector<UINT64>& vDimension) {
+  if (pTexture == NULL) return false;
+
+  const std::vector<UINT64> vSize = pDataset->GetInfo()->GetBrickSizeND(vLOD, vBrick);
+
+  if (vDimension.size() != vSize.size()) return false;
+  for (size_t i = 0;i<vSize.size();i++)   if (vSize[i] != vDimension[i]) return false;
+
+  return true;
+}
+
+bool Texture3DListElem::Replace(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter) {
+  if (pTexture == NULL) return false;
+
+  pDataset = _pDataset;
+  vLOD     = _vLOD;
+  vBrick   = _vBrick;
+
+  m_iIntraFrameCounter = iIntraFrameCounter;
+  m_iFrameCounter = iFrameCounter;
+
+  LoadData();
+  glGetError();
+  pTexture->SetData(pData);
+	return GL_NO_ERROR==glGetError();
+}
+
 
 bool Texture3DListElem::LoadData() {
   FreeData();
@@ -74,13 +138,14 @@ void  Texture3DListElem::FreeData() {
   pData = NULL;
 }
 
-bool Texture3DListElem::CreateTexture() {
-  FreeTexture();
-  if (pData == NULL) {
-    if (!LoadData()) return false;
-  }
 
-  const std::vector<UINT64> vSize = pDataset->GetInfo()->GetBrickSize(vLOD, vBrick);
+bool Texture3DListElem::CreateTexture(bool bDeleteOldTexture) {
+  if (bDeleteOldTexture) FreeTexture();
+
+  if (pData == NULL) 
+    if (!LoadData()) return false;
+
+  const std::vector<UINT64> vSize = pDataset->GetInfo()->GetBrickSizeND(vLOD, vBrick);
 
   UINT64 iBitWidth  = pDataset->GetInfo()->GetBitwith();
   UINT64 iCompCount = pDataset->GetInfo()->GetComponentCount();
@@ -122,6 +187,7 @@ bool Texture3DListElem::CreateTexture() {
 
   glGetError();
   pTexture = new GLTexture3D(GLuint(vSize[0]), GLuint(vSize[1]), GLuint(vSize[2]), glInternalformat, glFormat, glType, (unsigned int)(iBitWidth*iCompCount), pData, GL_LINEAR, GL_LINEAR);
+  FreeData();
 	return GL_NO_ERROR==glGetError();
 }
 

@@ -40,6 +40,7 @@ public:
 	bool AddDataBlock(DataBlock* dataBlock, UINT64 iSizeofData, bool bUseSourcePointer=false);
 	bool Create();
 
+  static bool IsUVFFile(std::wstring wstrFilename);
   static bool IsUVFFile(std::wstring wstrFilename, bool& bChecksumFail);
 
 protected:
@@ -54,6 +55,8 @@ protected:
 	void ParseDataBlocks();
 	static bool VerifyChecksum(LargeRAWFile& streamFile, GlobalHeader& globalHeader, std::string* pstrProblem = NULL);	
 	static std::vector<unsigned char> ComputeChecksum(LargeRAWFile& streamFile, UVFTables::ChecksumSemanticTable eChecksumSemanticsEntry);
+
+  static bool CheckMagic(LargeRAWFile& streamFile);
 
 	// file creation routines
 	UINT64 ComputeNewFileSize();

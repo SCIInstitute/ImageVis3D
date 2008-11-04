@@ -25,7 +25,7 @@
 #endif
 
 #ifdef _WIN32
-  typedef int FILETYPE;
+  typedef HANDLE FILETYPE;
 #else
   typedef FILE* FILETYPE;
 #endif

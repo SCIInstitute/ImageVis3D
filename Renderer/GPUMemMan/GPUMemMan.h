@@ -67,7 +67,7 @@ class GPUMemMan {
     GLTexture2D* Load2DTextureFromFile(const std::string& strFilename);
     void FreeTexture(GLTexture2D* pTexture);
 
-    GLTexture3D* Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
+    GLTexture3D* Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter);
     void Release3DTexture(GLTexture3D* pTexture);
 
     GLFBOTex* GetFBO(GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth=false, int iNumBuffers=1);
@@ -77,6 +77,8 @@ class GPUMemMan {
     void FreeGLSLProgram(GLSLProgram* pGLSLProgram);
 
     void MemSizesChanged();
+
+    UINT64 UpdateFrameCounter() {return ++m_iFrameCounter;}  // ok, i know this UINT64 could theoretically overflow but lets assume the universe collapses before that happens
 
     // system statistics
     UINT64 GetCPUMem() const {return m_SystemInfo->GetCPUMemSize();}
@@ -99,8 +101,10 @@ class GPUMemMan {
 
     UINT64            m_iAllocatedGPUMemory;
     UINT64            m_iAllocatedCPUMemory;
+    UINT64            m_iFrameCounter;
 
     void FreeAssociatedTextures(VolumeDataset* pDataset);
+    void Delete3DTexture(size_t iIndex);
 };
 
 #endif // GPUMEMMAN_H

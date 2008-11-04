@@ -24,18 +24,12 @@ UVF::~UVF(void)
 	Close();
 }
 
-bool UVF::IsUVFFile(std::wstring wstrFilename, bool& bChecksumFail) {
-
-  LargeRAWFile streamFile(wstrFilename);
-
+bool UVF::CheckMagic(LargeRAWFile& streamFile) {
   if (!streamFile.Open(false)) {
-    bChecksumFail = false;
     return false;
   }
 
   if (streamFile.GetCurrentSize() < GlobalHeader::GetMinSize() + 8) {
-    bChecksumFail = false;
-    streamFile.Close();
     return false;
   }
 
@@ -43,17 +37,34 @@ bool UVF::IsUVFFile(std::wstring wstrFilename, bool& bChecksumFail) {
   streamFile.ReadRAW(pData, 8);
 
   if (pData[0] != 'U' || pData[1] != 'V' || pData[2] != 'F' || pData[3] != '-' || pData[4] != 'D' || pData[5] != 'A' || pData[6] != 'T' || pData[7] != 'A') {
+    return false;
+  }
+
+  return true;
+}
+
+bool UVF::IsUVFFile(std::wstring wstrFilename) {
+  LargeRAWFile streamFile(wstrFilename);
+  bool bResult = CheckMagic(streamFile);
+  streamFile.Close();
+  return bResult;
+}
+
+bool UVF::IsUVFFile(std::wstring wstrFilename, bool& bChecksumFail) {
+
+  LargeRAWFile streamFile(wstrFilename);
+
+  if (!CheckMagic(streamFile)) {
     bChecksumFail = false;
     streamFile.Close();
     return false;
   }
-	
+
+
 	GlobalHeader g;
   g.GetHeaderFromFile(&streamFile);
-
   bChecksumFail = !VerifyChecksum(streamFile, g);
   streamFile.Close();
-	
 	return true;
 }
 

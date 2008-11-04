@@ -51,11 +51,10 @@ class GLRenderer : public AbstrRenderer {
   public:
     GLRenderer(MasterController* pMasterController);
     virtual ~GLRenderer();
-    virtual void Initialize();
+    virtual bool Initialize();
     virtual void Changed1DTrans();
     virtual void Changed2DTrans();
-    virtual void SetBackgroundColors(FLOATVECTOR3 vColors[2]);
-    virtual void SetTextColor(FLOATVECTOR4 vColor);
+    virtual bool SetBackgroundColors(FLOATVECTOR3 vColors[2]);
 
   protected:
     GLTexture1D*    m_p1DTransTex;

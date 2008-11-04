@@ -63,6 +63,7 @@ public:
   VolumeDataset* ConvertDataset(const std::string& strFilename, const std::string& strTargetFilename, AbstrRenderer* requester);
   VolumeDataset* LoadDataset(std::string strFilename, AbstrRenderer* requester);
   bool NeedsConversion(std::string strFilename, bool& bChecksumFail);
+  bool NeedsConversion(std::string strFilename);
 
 private:  
   MasterController* m_pMasterController;

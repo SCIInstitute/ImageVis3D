@@ -43,9 +43,35 @@
 
 #include "GLInclude.h"
 #include <Renderer/GPUMemMan/GPUMemMan.h>
-#include <Renderer/AbstrRenderer.h>
 #include <Renderer/SBVRGeogen.h>
 #include <Renderer/GLRenderer.h>
+#include <Renderer/Culling.h>
+
+class Brick {
+public:
+  Brick() :
+    vCenter(0,0,0),
+    vExtension(0,0,0), 
+    vCoords(0,0,0) 
+  {
+  }
+
+  Brick(unsigned int x, unsigned int y, unsigned int z, unsigned int iSizeX, unsigned int iSizeY, unsigned int iSizeZ) :
+    vCenter(0,0,0),
+    vExtension(0,0,0), 
+    vVoxelCount(iSizeX, iSizeY, iSizeZ),
+    vCoords(x,y,z) 
+  {
+  }
+
+  FLOATVECTOR3 vCenter;
+  FLOATVECTOR3 vTexcoordsMin;
+  FLOATVECTOR3 vTexcoordsMax;
+  FLOATVECTOR3 vExtension;
+  UINTVECTOR3 vVoxelCount;
+  UINTVECTOR3 vCoords;
+};
+
 
 /** \class GPUSBVR
  * Slice-based GPU volume renderer.
@@ -53,14 +79,12 @@
  * GPUSBVR is a slice based volume renderer which uses GLSL. */
 class GPUSBVR : public GLRenderer {
   public:
-    /** Constructs a VRer with no view rotation, immediate redraws, and
+    /** Constructs a VRer with immediate redraw, and
      * wireframe mode off.
      * \param pMasterController message routing object */
     GPUSBVR(MasterController* pMasterController);
     virtual ~GPUSBVR();
-    /** Determines whether we should redraw now.  Currently, if we've just
-     * resized, we wait until something else changes before redrawing. */
-    virtual bool CheckForRedraw();
+
     virtual bool LoadDataset(const std::string& strFilename);
 
     void Paint(bool bClear=true);
@@ -73,7 +97,7 @@ class GPUSBVR : public GLRenderer {
     void Cleanup();
 
     /** Loads GLSL vertex and fragment shaders. */
-    virtual void Initialize();
+    virtual bool Initialize();
 
     /** Set the oversampling ratio (e.g. 2 means twice the slices as needed).  Causes a full redraw. */
     virtual void SetSampleRateModifier(float fSampleRateModifier);
@@ -82,20 +106,19 @@ class GPUSBVR : public GLRenderer {
     FLOATMATRIX4  m_matModelView;
     SBVRGeogen    m_SBVRGeogen;
     GLTexture2D*  m_IDTex[3];
-    bool          m_bDelayedCompleteRedraw;
 
     GLFBOTex*     m_pFBO3DImage;
     GLSLProgram*  m_pProgram1DTrans[2];
     GLSLProgram*  m_pProgram2DTrans[2];
     GLSLProgram*  m_pProgramIso;
     GLSLProgram*  m_pProgramTrans;
+    Culling       m_FrustumCulling;
 
     void DrawLogo();
     void DrawBackGradient();
-    void UpdateGeoGen(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
     void RerenderPreviousResult();
     void SetDataDepShaderVars();
-    void SetBrickDepShaderVars(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
+    void SetBrickDepShaderVars(UINT64 iCurrentLOD, const Brick& currentBrick);
 
     void RenderSingle();
     void Render2by2();
@@ -103,7 +126,10 @@ class GPUSBVR : public GLRenderer {
 
     void Render3DView();
     void Render2DView(EWindowMode eDirection, float fSliceIndex);
-    void RenderBBox();
+    void RenderBBox(const FLOATVECTOR4 vColor = FLOATVECTOR4(1,0,0,1));
+    void RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend);
+
+    std::vector<Brick> BuildFrameBrickList(UINT64 iCurrentLOD);
 };
 
 #endif // GPUSBVR_H

@@ -122,21 +122,32 @@ typedef Trans2DList::iterator Trans2DListIter;
 // 3D textures
 class Texture3DListElem {
 public:
-  Texture3DListElem(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick);
+  Texture3DListElem(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter);
   ~Texture3DListElem();
-  bool Match(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick);
+  bool Equals(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick);
+  bool Replace(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter);
+  bool BestMatch(const std::vector<UINT64>& vDimension, UINT64& iIntraFrameCounter, UINT64& iFrameCounter);
+  GLTexture3D* Access(UINT64& iIntraFrameCounter, UINT64& iFrameCounter);
+
   bool LoadData();
   void  FreeData();
-  bool CreateTexture();
+  bool CreateTexture(bool bDeleteOldTexture=true);
   void  FreeTexture();
 
   unsigned char*      pData;
   GLTexture3D*        pTexture;
   VolumeDataset*      pDataset;
-  bool                bTextureCreated;
   unsigned int        iUserCount;
 
+  UINT64 GetIntraFrameCounter() {return m_iIntraFrameCounter;}
+  UINT64 GetFrameCounter() {return m_iFrameCounter;}
+
 private:
+  bool Match(const std::vector<UINT64>& vDimension);
+
+  UINT64 m_iIntraFrameCounter;
+  UINT64 m_iFrameCounter;
+
   std::vector<UINT64> vLOD;
   std::vector<UINT64> vBrick;
 
