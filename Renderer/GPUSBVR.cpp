@@ -404,7 +404,7 @@ vector<Brick> GPUSBVR::BuildFrameBrickList(UINT64 iCurrentLOD) {
 
 
         // if the brick is visible (i.e. inside the frustum) add it to the list of active bricks
-        /* if (m_FrustumCulling.IsVisible(b.vCenter, b.vExtension)) */ {
+        if (m_FrustumCulling.IsVisible(b.vCenter, b.vExtension)) {
 
           b.vTexcoordsMin = FLOATVECTOR3((x == 0) ? 0.5f/b.vVoxelCount.x : vOverlap.x*0.5f/b.vVoxelCount.x,
                                          (y == 0) ? 0.5f/b.vVoxelCount.y : vOverlap.y*0.5f/b.vVoxelCount.y,
@@ -441,11 +441,11 @@ void GPUSBVR::Render3DView() {
   glLoadIdentity();
   FLOATMATRIX4 trans;
   trans.Translation(0,0,-2+m_fZoom);
-  m_matModelView = trans*m_Rot;
+  m_matModelView = m_Rot*trans;
   m_matModelView.setModelview();
 
   // forward modelviewmatrix to culling object
-  m_FrustumCulling.Update(m_matModelView);
+  if (!m_bRenderGlobalBBox) m_FrustumCulling.Update(m_matModelView);
 
   // build brick list and sort by depth
   vector<Brick> vCurrentBrickList = BuildFrameBrickList(iCurrentLOD);
@@ -497,7 +497,7 @@ void GPUSBVR::Render3DView() {
                                vCurrentBrickList[iCurrentBrick].vTexcoordsMin, vCurrentBrickList[iCurrentBrick].vTexcoordsMax);
     FLOATMATRIX4 maBricktTrans; 
     maBricktTrans.Translation(vCurrentBrickList[iCurrentBrick].vCenter.x, vCurrentBrickList[iCurrentBrick].vCenter.y, vCurrentBrickList[iCurrentBrick].vCenter.z);
-    FLOATMATRIX4 maBricktModelView = m_matModelView * maBricktTrans;
+    FLOATMATRIX4 maBricktModelView = maBricktTrans * m_matModelView;
     maBricktModelView.setModelview();
     m_SBVRGeogen.SetTransformation(maBricktModelView);
 

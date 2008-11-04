@@ -81,14 +81,14 @@ void SBVRGeogen::InitBBOX() {
 
 	FLOATVECTOR3 vVertexScale(float(m_vAspect.x),float(m_vAspect.y),float(m_vAspect.z));
 
-  m_pfBBOXVertex[0] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[0]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMax.y,m_vTexCoordMin.z));
-  m_pfBBOXVertex[1] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[1]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMax.y,m_vTexCoordMin.z));
-  m_pfBBOXVertex[2] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[2]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMax.y,m_vTexCoordMax.z));
-  m_pfBBOXVertex[3] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[3]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMax.y,m_vTexCoordMax.z));
-  m_pfBBOXVertex[4] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[4]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMin.y,m_vTexCoordMin.z));
-  m_pfBBOXVertex[5] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[5]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMin.y,m_vTexCoordMin.z));
-  m_pfBBOXVertex[6] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[6]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMin.y,m_vTexCoordMax.z));
-  m_pfBBOXVertex[7] = POS3TEX3_VERTEX(m_matTransform * FLOATVECTOR4(m_pfBBOXStaticVertex[7]*vVertexScale,1.0f),FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMin.y,m_vTexCoordMax.z));
+  m_pfBBOXVertex[0] = POS3TEX3_VERTEX(FLOATVECTOR4(m_pfBBOXStaticVertex[0]*vVertexScale,1.0f) * m_matTransform, FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMax.y,m_vTexCoordMin.z));
+  m_pfBBOXVertex[1] = POS3TEX3_VERTEX(FLOATVECTOR4(m_pfBBOXStaticVertex[1]*vVertexScale,1.0f) * m_matTransform, FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMax.y,m_vTexCoordMin.z));
+  m_pfBBOXVertex[2] = POS3TEX3_VERTEX(FLOATVECTOR4(m_pfBBOXStaticVertex[2]*vVertexScale,1.0f) * m_matTransform, FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMax.y,m_vTexCoordMax.z));
+  m_pfBBOXVertex[3] = POS3TEX3_VERTEX(FLOATVECTOR4(m_pfBBOXStaticVertex[3]*vVertexScale,1.0f) * m_matTransform, FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMax.y,m_vTexCoordMax.z));
+  m_pfBBOXVertex[4] = POS3TEX3_VERTEX(FLOATVECTOR4(m_pfBBOXStaticVertex[4]*vVertexScale,1.0f) * m_matTransform, FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMin.y,m_vTexCoordMin.z));
+  m_pfBBOXVertex[5] = POS3TEX3_VERTEX(FLOATVECTOR4(m_pfBBOXStaticVertex[5]*vVertexScale,1.0f) * m_matTransform, FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMin.y,m_vTexCoordMin.z));
+  m_pfBBOXVertex[6] = POS3TEX3_VERTEX(FLOATVECTOR4(m_pfBBOXStaticVertex[6]*vVertexScale,1.0f) * m_matTransform, FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMin.y,m_vTexCoordMax.z));
+  m_pfBBOXVertex[7] = POS3TEX3_VERTEX(FLOATVECTOR4(m_pfBBOXStaticVertex[7]*vVertexScale,1.0f) * m_matTransform, FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMin.y,m_vTexCoordMax.z));
 
   
   // find the minimum z value

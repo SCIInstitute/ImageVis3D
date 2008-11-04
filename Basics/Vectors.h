@@ -86,6 +86,10 @@
   #endif
 #endif
 
+template <class T> class MATRIX2;
+template <class T> class MATRIX3;
+template <class T> class MATRIX4;
+
 template <class T=int> class VECTOR2 {
 public:
   T x,y;
@@ -116,6 +120,12 @@ public:
   VECTOR2<T> operator + () const {return *this;}
   VECTOR2<T> operator - () const {return *this * -1;}
   VECTOR2<T> operator ~ () const {return VECTOR2<T>(T(1)/x,T(1)/y);}
+
+  // binary operators with a matrix
+  VECTOR2<T> operator * ( const MATRIX2<T>& matrix ) const {
+    return VECTOR2<T>(x*matrix.m11+y*matrix.m21,
+                      x*matrix.m12+y*matrix.m22);
+  }
 
   VECTOR2<T>& operator=(const VECTOR2<T>& other)  { x = other.x; y = other.y;return *this; }
   VECTOR2<T>& operator+=(const VECTOR2<T>& other) { x += other.x; y += other.y;return *this; }
@@ -174,6 +184,14 @@ public:
   #endif
 };
 
+
+template <class T> VECTOR2<T> operator+( const VECTOR2<T>& vec, T scalar ) {return VECTOR2<T>(vec.x+scalar,vec.y+scalar);}
+template <class T> VECTOR2<T> operator-( const VECTOR2<T>& vec, T scalar ) {return VECTOR2<T>(vec.x-scalar,vec.y-scalar);}
+template <class T> VECTOR2<T> operator*( const VECTOR2<T>& vec, T scalar ) {return VECTOR2<T>(vec.x*scalar,vec.y*scalar);}
+template <class T> VECTOR2<T> operator/( const VECTOR2<T>& vec, T scalar ) {return VECTOR2<T>(vec.x/scalar,vec.y/scalar);}
+template <class T> VECTOR2<T> operator%( const VECTOR2<T>& vec, T scalar ) {return VECTOR2<T>(vec.x%scalar,vec.y%scalar);}
+
+
 template <class T=int> class VECTOR3 {
 public:
   T x,y,z;
@@ -206,6 +224,13 @@ public:
   VECTOR3<T> operator + () const {return *this;}
   VECTOR3<T> operator - () const {return *this * -1;}
   VECTOR3<T> operator ~ () const {return VECTOR3<T>(T(1)/x,T(1)/y,T(1)/z);}
+
+  // binary operators with a matrix
+  VECTOR3<T> operator * ( const MATRIX3<T>& matrix ) const {
+    return VECTOR3<T>(x*matrix.m11+y*matrix.m21+z*matrix.m31,
+                      x*matrix.m12+y*matrix.m22+z*matrix.m32,
+                      x*matrix.m13+y*matrix.m23+z*matrix.m33);
+  }
 
   VECTOR3<T>& operator=(const VECTOR3<T>& other)  { x = other.x; y = other.y; z = other.z; return *this; }
   VECTOR3<T>& operator+=(const VECTOR3<T>& other) { x += other.x; y += other.y; z += other.z; return *this; }
@@ -298,6 +323,12 @@ public:
 
 };
 
+template <class T> VECTOR3<T> operator + ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(vec.x+scalar,vec.y+scalar,vec.z+scalar);}
+template <class T> VECTOR3<T> operator - ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(vec.x-scalar,vec.y-scalar,vec.z-scalar);}
+template <class T> VECTOR3<T> operator * ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(vec.x*scalar,vec.y*scalar,vec.z*scalar);}
+template <class T> VECTOR3<T> operator / ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(vec.x/scalar,vec.y/scalar,vec.z/scalar);}
+template <class T> VECTOR3<T> operator % ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(vec.x%scalar,vec.y%scalar,vec.z%scalar);}
+
 template <class T=int> class VECTOR4 {
 public:
 
@@ -326,6 +357,14 @@ public:
   VECTOR4<T> operator - ( const VECTOR4<T>& other ) const {return VECTOR4<T>(x-other.x,y-other.y,z-other.z,w-other.w);}
   VECTOR4<T> operator * ( const VECTOR4<T>& other ) const {return VECTOR4<T>(x*other.x,y*other.y,z*other.z,w*other.w);}
   VECTOR4<T> operator / ( const VECTOR4<T>& other ) const {return VECTOR4<T>(x/other.x,y/other.y,z/other.z,w/other.w);}
+
+  // binary operators with a matrix
+  VECTOR4<T> operator * ( const MATRIX4<T>& matrix ) const {
+    return VECTOR4<T>(x*matrix.m11+y*matrix.m21+z*matrix.m31+w*matrix.m41,
+                      x*matrix.m12+y*matrix.m22+z*matrix.m32+w*matrix.m42,
+                      x*matrix.m13+y*matrix.m23+z*matrix.m33+w*matrix.m43,
+                      x*matrix.m14+y*matrix.m24+z*matrix.m34+w*matrix.m44);
+  }
 
   // unary opartors
   VECTOR4<T> operator + () const {return *this;}
@@ -443,9 +482,6 @@ typedef VECTOR4<double> DOUBLEVECTOR4;
 typedef VECTOR3<double> DOUBLEVECTOR3;
 typedef VECTOR2<double> DOUBLEVECTOR2;
 
-template <class T=int> class MATRIX4;
-template <class T=int> class MATRIX3;
-
 template <class T=int> class MATRIX2 {
 public:
   union {
@@ -498,15 +534,15 @@ public:
 
     for (int x = 0;x<4;x+=2)
       for (int y = 0;y<2;y++) 
-        result[x+y] = array[0+y]*other.array[0+x] + array[2+y]*other.array[1+x];
+        result[x+y] = array[0+x]*other.array[0+y] + array[1+x]*other.array[2+y];
 
     return result;
   }
 
   // binary operators with vectors
   VECTOR2<T> operator * ( const VECTOR2<T>& other ) const {
-    return VECTOR2<T>(other.x*m11+other.y*m21,
-              other.x*m12+other.y*m22);
+    return VECTOR2<T>(other.x*m11+other.y*m12,
+                      other.x*m22+other.y*m22);
   }
 
   MATRIX2<T> inverse() const {
@@ -568,9 +604,9 @@ public:
     MATRIX3<T> result;
     for (int x = 0;x<9;x+=3)
       for (int y = 0;y<3;y++) 
-        result[x+y] = array[0+y]  * other.array[0+x]+
-                array[3+y]  * other.array[1+x]+
-                  array[6+y]  * other.array[2+x];
+        result[x+y] = array[1+x]  * other.array[0+y]+
+                      array[2+x]  * other.array[3+y]+
+                      array[3+x]  * other.array[6+y];
 
     return result;
   }
@@ -591,9 +627,9 @@ public:
 
   // binary operators with vectors
   VECTOR3<T> operator * ( const VECTOR3<T>& other ) const {
-    return VECTOR3<T>(other.x*m11+other.y*m21+other.z*m31,
-              other.x*m12+other.y*m22+other.z*m32,
-              other.x*m13+other.y*m23+other.z*m33);
+    return VECTOR3<T>(other.x*m11+other.y*m12+other.z*m13,
+                      other.x*m21+other.y*m22+other.z*m23,
+                      other.x*m31+other.y*m32+other.z*m33);
   }
 
   void Scaling(T x, T y, T z) {
@@ -793,33 +829,26 @@ public:
     MATRIX4<T> result;
     for (int x = 0;x<16;x+=4)
       for (int y = 0;y<4;y++) 
-        result[x+y] = array[0+y]  * other.array[0+x]+
-                array[4+y]  * other.array[1+x]+
-                array[8+y]  * other.array[2+x]+
-                array[12+y] * other.array[3+x];
+        result[x+y] = array[0+x] * other.array[0+y]+
+                      array[1+x] * other.array[4+y]+
+                      array[2+x] * other.array[8+y]+
+                      array[3+x] * other.array[12+y];
 
     return result;
   }
 
   // binary operators with vectors
   VECTOR4<T> operator * ( const VECTOR4<T>& other ) const {
-    return VECTOR4<T>(other.x*m11+other.y*m21+other.z*m31+other.w*m41,
-              other.x*m12+other.y*m22+other.z*m32+other.w*m42,
-              other.x*m13+other.y*m23+other.z*m33+other.w*m43,
-              other.x*m14+other.y*m24+other.z*m34+other.w*m44);
+    return VECTOR4<T>(other.x*m11+other.y*m12+other.z*m13+other.w*m14,
+                      other.x*m21+other.y*m22+other.z*m23+other.w*m24,
+                      other.x*m31+other.y*m32+other.z*m33+other.w*m34,
+                      other.x*m41+other.y*m42+other.z*m43+other.w*m44);
   }
-/*
+
   VECTOR3<T> operator * ( const VECTOR3<T>& other ) const {
-    return VECTOR3<T>(other.x*m11+other.y*m21+other.z*m31,
-              other.x*m12+other.y*m22+other.z*m32,
-              other.x*m13+other.y*m23+other.z*m33);
-  }
-*/
-  VECTOR3<T> operator * ( const VECTOR3<T>& other ) const {
-    return VECTOR3<T>(other.x*m11+other.y*m21+other.z*m31+m41,
-              other.x*m12+other.y*m22+other.z*m32+m42,
-              other.x*m13+other.y*m23+other.z*m33+m43/*,
-              other.x*m14+other.y*m24+other.z*m34+m44*/);
+    return VECTOR3<T>(other.x*m11+other.y*m12+other.z*m13,
+                      other.x*m21+other.y*m22+other.z*m23,
+                      other.x*m31+other.y*m32+other.z*m33);
   }
 
   void Translation(T x, T y, T z) {
@@ -1094,9 +1123,9 @@ public:
   #endif
 };
 
-typedef MATRIX2<> INTMATRIX2;
-typedef MATRIX3<> INTMATRIX3;
-typedef MATRIX4<> INTMATRIX4;
+typedef MATRIX2<int> INTMATRIX2;
+typedef MATRIX3<int> INTMATRIX3;
+typedef MATRIX4<int> INTMATRIX4;
 typedef MATRIX2<float> FLOATMATRIX2;
 typedef MATRIX3<float> FLOATMATRIX3;
 typedef MATRIX4<float> FLOATMATRIX4;

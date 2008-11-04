@@ -47,9 +47,7 @@ void Culling::Update(const FLOATMATRIX4& mWorldViewMatrix)
 {
 	FLOATMATRIX4 mWorldViewProjectionMatrix;
 
-  mWorldViewProjectionMatrix =  m_mProjectionMatrix * mWorldViewMatrix; // TODO: check -> D3DXMatrixMultiply(&mWorldViewProjectionMatrix, mWorldViewMatrix, &m_mProjectionMatrix);
-
-	// compute clip-planes in World Space
+  mWorldViewProjectionMatrix =  mWorldViewMatrix * m_mProjectionMatrix;
 
 	// right clip-plane
 	m_Planes[0].x = -mWorldViewProjectionMatrix.m11 + mWorldViewProjectionMatrix.m14;
@@ -72,26 +70,27 @@ void Culling::Update(const FLOATMATRIX4& mWorldViewMatrix)
 	m_Planes[3].z = mWorldViewProjectionMatrix.m32 + mWorldViewProjectionMatrix.m34;
 	m_Planes[3].w = mWorldViewProjectionMatrix.m42 + mWorldViewProjectionMatrix.m44;
 	// far clip-plane
-	m_Planes[4].x = -mWorldViewProjectionMatrix.m13 + mWorldViewProjectionMatrix.m14;
-	m_Planes[4].y = -mWorldViewProjectionMatrix.m23 + mWorldViewProjectionMatrix.m24;
-	m_Planes[4].z = -mWorldViewProjectionMatrix.m33 + mWorldViewProjectionMatrix.m34;
-	m_Planes[4].w = -mWorldViewProjectionMatrix.m43 + mWorldViewProjectionMatrix.m44;
+	m_Planes[4].x =  mWorldViewProjectionMatrix.m13 + mWorldViewProjectionMatrix.m14;
+	m_Planes[4].y =  mWorldViewProjectionMatrix.m23 + mWorldViewProjectionMatrix.m24;
+	m_Planes[4].z =  mWorldViewProjectionMatrix.m33 + mWorldViewProjectionMatrix.m34;
+	m_Planes[4].w =  mWorldViewProjectionMatrix.m43 + mWorldViewProjectionMatrix.m44;
 	// near clip-plane
-	m_Planes[5].x = mWorldViewProjectionMatrix.m13;
-	m_Planes[5].y = mWorldViewProjectionMatrix.m23;
-	m_Planes[5].z = mWorldViewProjectionMatrix.m33;
-	m_Planes[5].w = mWorldViewProjectionMatrix.m43;
-
+	m_Planes[5].x = -mWorldViewProjectionMatrix.m13 + mWorldViewProjectionMatrix.m14;
+	m_Planes[5].y = -mWorldViewProjectionMatrix.m23 + mWorldViewProjectionMatrix.m24;
+	m_Planes[5].z = -mWorldViewProjectionMatrix.m33 + mWorldViewProjectionMatrix.m34;
+	m_Planes[5].w = -mWorldViewProjectionMatrix.m43 + mWorldViewProjectionMatrix.m44;
 }
 
 bool Culling::IsVisible(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vHalfExtent)  const
 {
+  FLOATVECTOR3 _vHalfExtent = 0.5f * vHalfExtent; 
+
 	for (unsigned int uiPlane = 0; uiPlane < 6; uiPlane++)
 	{
 		FLOATVECTOR4 plane = m_Planes[uiPlane];
 		if (
 			plane.x * vCenter.x + plane.y * vCenter.y + plane.z * vCenter.z + plane.w
-			<= -(vHalfExtent.x * fabs(plane.x) + vHalfExtent.y * fabs(plane.y) + vHalfExtent.z * fabs(plane.z))
+			<= -(_vHalfExtent.x * fabs(plane.x) + _vHalfExtent.y * fabs(plane.y) + _vHalfExtent.z * fabs(plane.z))
 			)
 		{
 			return false;

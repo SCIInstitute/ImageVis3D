@@ -204,7 +204,7 @@ void AbstrRenderer::Release(UINTVECTOR2) {
 }
 
 void AbstrRenderer::Drag(UINTVECTOR2 vPosition) {
-  m_Rot = m_ArcBall.Drag(vPosition).ComputeRotation() * m_RestRot;
+  m_Rot = m_RestRot * m_ArcBall.Drag(vPosition).ComputeRotation();
   ScheduleCompleteRedraw();
 }
 
