@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
   QApplication app( argc, argv );
   MainWindow mainWindow(masterController, 0, Qt::Window);
   
-  // if using a logfile inject this into the debug out chain
+  // if using a logfile inject that file-logger into the debug out chain
   if (bUseLogFile) {
     TextfileOut* textout = new TextfileOut(strLogFileName);
   

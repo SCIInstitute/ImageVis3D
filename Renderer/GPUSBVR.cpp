@@ -432,11 +432,8 @@ vector<Brick> GPUSBVR::BuildFrameBrickList(UINT64 iCurrentLOD) {
 void GPUSBVR::Render3DView() {
   // compute current LOD level
   m_iCurrentLODOffset = (m_iCurrentLODOffset < 1) ? 0 : m_iCurrentLODOffset-1;
-  UINT64 iSmallestLOD = m_pDataset->GetInfo()->GetLODLevelCount()-1;
   UINT64 iCurrentLOD = std::min<UINT64>(m_iCurrentLODOffset,m_pDataset->GetInfo()->GetLODLevelCount()-1);
-
   UINT64VECTOR3 vBrickCount = m_pDataset->GetInfo()->GetBrickCount(iCurrentLOD);
-  UINT64 iBrickCount = vBrickCount.volume();
 
   // ************** GL States ***********
   // Modelview

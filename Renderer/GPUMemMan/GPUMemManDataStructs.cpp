@@ -40,11 +40,11 @@ Texture3DListElem::Texture3DListElem(VolumeDataset* _pDataset, const std::vector
   pData(NULL),
   pTexture(NULL),
   pDataset(_pDataset),
-  vLOD(_vLOD),
-  vBrick(_vBrick),
   iUserCount(1),
   m_iIntraFrameCounter(iIntraFrameCounter),
-  m_iFrameCounter(iFrameCounter)
+  m_iFrameCounter(iFrameCounter),
+  vLOD(_vLOD),
+  vBrick(_vBrick)
 {
   if (!CreateTexture()) {
     pTexture->Delete();

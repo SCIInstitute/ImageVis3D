@@ -61,6 +61,7 @@ HEADERS += StdDefines.h \
            DebugOut/MultiplexOut.h \
            3rdParty/GLEW/glew.h \
            3rdParty/GLEW/glxew.h \
+           Renderer/Culling.h \
            Renderer/GLSLProgram.h \
            Renderer/GLInclude.h \
            Renderer/GLObject.h \
@@ -119,6 +120,7 @@ SOURCES += 3rdParty/GLEW/glew.c \
            DebugOut/QTOut.cpp \
            DebugOut/ConsoleOut.cpp \
            DebugOut/MultiplexOut.cpp \ 
+           Renderer/Culling.cpp \
            Renderer/GLSLProgram.cpp \                    
            Renderer/GLTexture.cpp \
            Renderer/GLTexture1D.cpp \
