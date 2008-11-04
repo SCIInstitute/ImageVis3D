@@ -91,7 +91,7 @@ bool Culling::IsVisible(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vHalfEx
 		FLOATVECTOR4 plane = m_Planes[uiPlane];
 		if (
 			plane.x * vCenter.x + plane.y * vCenter.y + plane.z * vCenter.z + plane.w
-			<= -(vHalfExtent.x * abs(plane.x) + vHalfExtent.y * abs(plane.y) + vHalfExtent.z * abs(plane.z))
+			<= -(vHalfExtent.x * fabs(plane.x) + vHalfExtent.y * fabs(plane.y) + vHalfExtent.z * fabs(plane.z))
 			)
 		{
 			return false;
