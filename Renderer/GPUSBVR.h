@@ -70,7 +70,14 @@ public:
   FLOATVECTOR3 vExtension;
   UINTVECTOR3 vVoxelCount;
   UINTVECTOR3 vCoords;
+  float fDistance;
 };
+
+inline bool operator < (const Brick& left, const Brick& right) {
+	if  (left.fDistance < right.fDistance) return true;
+  return false;
+}
+
 
 
 /** \class GPUSBVR

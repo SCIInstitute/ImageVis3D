@@ -40,6 +40,7 @@
 #include <cmath>
 #include <Basics/SysTools.h>
 #include <Controller/MasterController.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -403,9 +404,10 @@ vector<Brick> GPUSBVR::BuildFrameBrickList(UINT64 iCurrentLOD) {
         vBrickCorner.x += b.vExtension.x;
 
 
-        // if the brick is visible (i.e. inside the frustum) add it to the list of active bricks
+        // if the brick is visible (i.e. inside the frustum) continue processing
         if (m_FrustumCulling.IsVisible(b.vCenter, b.vExtension)) {
 
+          // compute 
           b.vTexcoordsMin = FLOATVECTOR3((x == 0) ? 0.5f/b.vVoxelCount.x : vOverlap.x*0.5f/b.vVoxelCount.x,
                                          (y == 0) ? 0.5f/b.vVoxelCount.y : vOverlap.y*0.5f/b.vVoxelCount.y,
                                          (z == 0) ? 0.5f/b.vVoxelCount.z : vOverlap.z*0.5f/b.vVoxelCount.z);
@@ -413,6 +415,10 @@ vector<Brick> GPUSBVR::BuildFrameBrickList(UINT64 iCurrentLOD) {
                                          (y == vBrickDimension.y-1) ? 1.0f-0.5f/b.vVoxelCount.y : 1.0f-vOverlap.y*0.5f/b.vVoxelCount.y,
                                          (z == vBrickDimension.z-1) ? 1.0f-0.5f/b.vVoxelCount.z : 1.0f-vOverlap.z*0.5f/b.vVoxelCount.z);
           
+          /// \todo change this to a more accurate distance compuation
+          b.fDistance = (FLOATVECTOR4(b.vCenter,1.0f)*m_matModelView).xyz().length();
+
+          // add the brick to the list of active bricks
           vBrickList.push_back(b);
         }
       }
@@ -424,7 +430,8 @@ vector<Brick> GPUSBVR::BuildFrameBrickList(UINT64 iCurrentLOD) {
     vBrickCorner.z += b.vExtension.z;
   }
 
-  // Todo Sort list
+  // depth sort bricks
+  sort(vBrickList.begin(), vBrickList.end());
 
   return vBrickList;
 }
@@ -445,7 +452,7 @@ void GPUSBVR::Render3DView() {
   m_matModelView.setModelview();
 
   // forward modelviewmatrix to culling object
-  if (!m_bRenderGlobalBBox) m_FrustumCulling.Update(m_matModelView);
+  m_FrustumCulling.Update(m_matModelView);
 
   // build brick list and sort by depth
   vector<Brick> vCurrentBrickList = BuildFrameBrickList(iCurrentLOD);
