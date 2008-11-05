@@ -59,8 +59,9 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     FLOATVECTOR3  GetBackgroundColor1();
     FLOATVECTOR3  GetBackgroundColor2();
     FLOATVECTOR4  GetTextColor();
+    unsigned int  GetBlendPrecisionMode();
 
-    void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, bool bQuickopen, UINT64 iMinFramerate, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
+    void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, bool bQuickopen, UINT64 iMinFramerate, unsigned int iBlendPrecision, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
 
   protected slots:
     void SelectTextColor();

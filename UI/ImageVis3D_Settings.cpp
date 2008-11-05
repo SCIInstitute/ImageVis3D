@@ -74,6 +74,7 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       UINT64 iMaxCPU = std::min<UINT64>(settings.value("Memory/MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
   
       bool bQuickopen = settings.value("Performance/Quickopen", m_bQuickopen).toBool();
+      unsigned int iBlendPrecisionMode = settings.value("Performance/BlendPrecisionMode", 0).toUInt();
       UINT64 iMinFramerate = settings.value("Performance/MinFrameRate", m_iMinFramerate).toULongLong();
 
       settings.beginGroup("Renderer");
@@ -92,7 +93,7 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       settings.endGroup();
 
       // hand data to form
-      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, bQuickopen, iMinFramerate, vBackColor1, vBackColor2, vTextColor);
+      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, bQuickopen, iMinFramerate, iBlendPrecisionMode, vBackColor1, vBackColor2, vTextColor);
     }
 
     if (settingsDlg.exec() == QDialog::Accepted) {
@@ -106,6 +107,7 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       settings.beginGroup("Performance");
       settings.setValue("Quickopen", settingsDlg.GetQuickopen());
       settings.setValue("MinFrameRate", settingsDlg.GetMinFramerate());
+      settings.setValue("BlendPrecisionMode", settingsDlg.GetBlendPrecisionMode());
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -140,6 +142,7 @@ void MainWindow::ApplySettings() {
     settings.beginGroup("Performance");
     m_bQuickopen = settings.value("Quickopen", m_bQuickopen).toBool();
     m_iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toULongLong();
+    m_iBlendPrecisionMode = settings.value("BlendPrecisionMode", 0).toUInt();
     settings.endGroup();
 
     settings.beginGroup("Renderer");
@@ -159,7 +162,9 @@ void MainWindow::ApplySettings() {
 
     for (int i = 0;i<mdiArea->subWindowList().size();i++) {
       QWidget* w = mdiArea->subWindowList().at(i)->widget();
-      qobject_cast<RenderWindow*>(w)->SetColors(m_vBackgroundColors, m_vTextColor);
+      RenderWindow* renderWin = qobject_cast<RenderWindow*>(w);
+      renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
+      renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
     }
 
     m_MasterController.SysInfo()->SetMaxUsableCPUMem(iMaxCPU);

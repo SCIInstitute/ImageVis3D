@@ -44,6 +44,7 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_bRedraw(true), 
   m_eRenderMode(RM_1DTRANS),
   m_eViewMode(VM_SINGLE),
+  m_eBlendPrecision(BP_32BIT),
   m_bUseLigthing(true),
   m_pDataset(NULL),
   m_p1DTrans(NULL),
@@ -58,7 +59,8 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_iFrameCounter(0),
   m_iCheckCounter(0),
   m_iMaxLODIndex(0),
-  m_iCurrentLODOffset(0)
+  m_iCurrentLODOffset(0),
+  m_vWinSize(0,0)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -145,6 +147,13 @@ void AbstrRenderer::SetUseLigthing(bool bUseLigthing) {
   }
 }
 
+void AbstrRenderer::SetBlendPrecision(EBlendPrecision eBlendPrecision) {
+  if (m_eBlendPrecision != eBlendPrecision) {
+    m_eBlendPrecision = eBlendPrecision;
+    ScheduleCompleteRedraw();
+  }
+}
+
 
 void AbstrRenderer::Changed1DTrans() {
   if (m_eRenderMode != RM_1DTRANS) {
@@ -190,6 +199,7 @@ bool AbstrRenderer::CheckForRedraw() {
 }
 
 void AbstrRenderer::Resize(const UINTVECTOR2& vWinSize) {
+  m_vWinSize = vWinSize;
   m_ArcBall.SetWindowSize(vWinSize.x, vWinSize.y);
   ScheduleCompleteRedraw();
 }

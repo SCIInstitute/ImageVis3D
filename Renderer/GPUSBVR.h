@@ -109,6 +109,8 @@ class GPUSBVR : public GLRenderer {
     /** Set the oversampling ratio (e.g. 2 means twice the slices as needed).  Causes a full redraw. */
     virtual void SetSampleRateModifier(float fSampleRateModifier);
 
+    void SetBlendPrecision(EBlendPrecision eBlendPrecision);
+
   protected:
     FLOATMATRIX4  m_matModelView;
     SBVRGeogen    m_SBVRGeogen;
@@ -135,6 +137,7 @@ class GPUSBVR : public GLRenderer {
     void Render2DView(EWindowMode eDirection, float fSliceIndex);
     void RenderBBox(const FLOATVECTOR4 vColor = FLOATVECTOR4(1,0,0,1));
     void RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend);
+    void CreateOffscreenBuffer();
 
     std::vector<Brick> BuildFrameBrickList(UINT64 iCurrentLOD);
 };

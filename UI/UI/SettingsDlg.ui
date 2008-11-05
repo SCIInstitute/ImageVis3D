@@ -162,10 +162,10 @@
      <widget class="QWidget" name="tabPerformance" >
       <property name="geometry" >
        <rect>
-        <x>85</x>
-        <y>125</y>
-        <width>1424</width>
-        <height>823</height>
+        <x>0</x>
+        <y>0</y>
+        <width>376</width>
+        <height>224</height>
        </rect>
       </property>
       <attribute name="title" >
@@ -208,6 +208,55 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QLabel" name="label_6" >
+            <property name="text" >
+             <string>Blending Precision</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="frame" >
+            <property name="frameShape" >
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow" >
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth" >
+             <number>0</number>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout" >
+             <property name="margin" >
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="radioButton_Prec8Bit" >
+               <property name="text" >
+                <string>8 Bit</string>
+               </property>
+               <property name="checked" >
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_Prec16Bit" >
+               <property name="text" >
+                <string>16 Bit</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_Prec32Bit" >
+               <property name="text" >
+                <string>32 Bit</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -216,8 +265,8 @@
      <widget class="QWidget" name="tabUI" >
       <property name="geometry" >
        <rect>
-        <x>16</x>
-        <y>56</y>
+        <x>8</x>
+        <y>28</y>
         <width>376</width>
         <height>224</height>
        </rect>
@@ -229,8 +278,8 @@
      <widget class="QWidget" name="tabRenderer" >
       <property name="geometry" >
        <rect>
-        <x>16</x>
-        <y>56</y>
+        <x>8</x>
+        <y>28</y>
         <width>376</width>
         <height>224</height>
        </rect>
@@ -455,8 +504,8 @@
    <slot>SelectBackColor1()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>127</x>
-     <y>98</y>
+     <x>239</x>
+     <y>71</y>
     </hint>
     <hint type="destinationlabel" >
      <x>319</x>
@@ -471,8 +520,8 @@
    <slot>SelectBackColor2()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>127</x>
-     <y>98</y>
+     <x>353</x>
+     <y>71</y>
     </hint>
     <hint type="destinationlabel" >
      <x>377</x>
@@ -487,8 +536,8 @@
    <slot>SelectTextColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>127</x>
-     <y>98</y>
+     <x>239</x>
+     <y>103</y>
     </hint>
     <hint type="destinationlabel" >
      <x>278</x>
@@ -503,8 +552,8 @@
    <slot>SetTextOpacity(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>127</x>
-     <y>98</y>
+     <x>353</x>
+     <y>106</y>
     </hint>
     <hint type="destinationlabel" >
      <x>396</x>

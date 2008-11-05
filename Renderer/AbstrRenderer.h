@@ -84,6 +84,15 @@ class AbstrRenderer {
     };
     EWindowMode GetWindowmode(unsigned int iWindowIndex) {return m_eWindowMode[iWindowIndex];}
     virtual void SetWindowmode(unsigned int iWindowIndex, EWindowMode eWindowMode);
+    
+    enum EBlendPrecision {
+      BP_8BIT = 0,      
+      BP_16BIT,
+      BP_32BIT,
+      BP_INVALID
+    };
+    EBlendPrecision GetBlendPrecision() {return m_eBlendPrecision;}
+    virtual void SetBlendPrecision(EBlendPrecision eBlendPrecision);
 
     bool GetUseLigthing() {return m_bUseLigthing;}
     virtual void SetUseLigthing(bool bUseLigthing);
@@ -159,6 +168,7 @@ class AbstrRenderer {
     ERenderMode         m_eRenderMode;
     EViewMode           m_eViewMode;
     EWindowMode         m_eWindowMode[4];
+    EBlendPrecision     m_eBlendPrecision;
     bool                m_bUseLigthing;
     float               m_fSliceIndex[4];
     VolumeDataset*      m_pDataset;
@@ -174,6 +184,7 @@ class AbstrRenderer {
     float               m_fZoom;
     bool                m_bRenderGlobalBBox;
     bool                m_bRenderLocalBBox;
+    UINTVECTOR2         m_vWinSize;
 
     UINT64              m_iIntraFrameCounter;
     UINT64              m_iFrameCounter;

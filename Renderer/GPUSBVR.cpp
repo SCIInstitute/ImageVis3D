@@ -162,7 +162,7 @@ void GPUSBVR::SetBrickDepShaderVars(UINT64 iCurrentLOD, const Brick& currentBric
 
   FLOATVECTOR3 vStep(1.0f/currentBrick.vVoxelCount.x, 1.0f/currentBrick.vVoxelCount.y, 1.0f/currentBrick.vVoxelCount.z);
 
-  float fStepScale = m_SBVRGeogen.GetOpacityCorrection() * MathTools::Pow2(iCurrentLOD);
+  float fStepScale = m_SBVRGeogen.GetOpacityCorrection();
 
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  {
@@ -623,9 +623,32 @@ void GPUSBVR::Resize(const UINTVECTOR2& vWinSize) {
 
 	glMatrixMode(GL_MODELVIEW);
 
-  if (m_pFBO3DImage != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImage);
-  m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, vWinSize.x, vWinSize.y, GL_RGBA8, 8*4, true);
+  CreateOffscreenBuffer();
+}
 
+void GPUSBVR::CreateOffscreenBuffer() {
+  if (m_pFBO3DImage != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImage);
+
+  if (m_vWinSize.area() > 0) {
+    switch (m_eBlendPrecision) {
+      case BP_8BIT : m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA8, 8*4, true);
+                     break;
+      case BP_16BIT : m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true);
+                     break;
+      case BP_32BIT : m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA32F_ARB, 32*4, true);
+                     break;
+      default      : m_pMasterController->DebugOut()->Message("GPUSBVR::CreateOffscreenBuffer","Invalid Blending Precision");
+                     m_pFBO3DImage = NULL;
+                     break;
+    }
+  }
+}
+
+void GPUSBVR::SetBlendPrecision(EBlendPrecision eBlendPrecision) {
+  if (eBlendPrecision != m_eBlendPrecision) {
+    AbstrRenderer::SetBlendPrecision(eBlendPrecision);
+    CreateOffscreenBuffer();
+  }
 }
 
 void GPUSBVR::Cleanup() {

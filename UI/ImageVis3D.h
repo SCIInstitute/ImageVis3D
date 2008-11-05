@@ -152,6 +152,7 @@ private :
   FLOATVECTOR4          m_vTextColor;
   bool                  m_bQuickopen;
   UINT64                m_iMinFramerate;
+  UINT64                m_iBlendPrecisionMode;
 
   RenderWindow* CreateNewRenderWindow(QString dataset);
   RenderWindow* GetActiveRenderWindow();

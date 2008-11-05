@@ -228,7 +228,7 @@ bool SBVRGeogen::ComputeLayerGeometry(float fDepth) {
 }
 
 float SBVRGeogen::GetLayerDistance() {
-  return ROOT3 * 1.0f/m_fSamplingModifier * float(m_vAspect.minVal())/float(std::max(m_vSize.maxVal(),m_iMinLayers));
+  return 0.5f * 1.0f/m_fSamplingModifier * float(m_vAspect.minVal())/float(std::max(m_vSize.maxVal(),m_iMinLayers));
 }
 
 

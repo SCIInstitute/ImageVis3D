@@ -127,7 +127,7 @@ UINT64 SettingsDlg::GetMinFramerate() {
   return UINT64(horizontalSlider->value());
 }
 
-void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, bool bQuickopen, UINT64 iMinFramerate, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
+void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, bool bQuickopen, UINT64 iMinFramerate, unsigned int iBlendPrecision, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
     horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
     horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
@@ -138,6 +138,11 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, bool bQuickopen, UIN
     m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));
     m_cTextColor  = QColor(int(vTextColor.x*255), int(vTextColor.y*255),int(vTextColor.z*255),int(vTextColor.w*255));
 
+    switch (iBlendPrecision) {
+      case 2    : radioButton_Prec32Bit->setChecked(true); break;
+      case 1    : radioButton_Prec16Bit->setChecked(true); break;
+      default   : radioButton_Prec8Bit->setChecked(true); break;
+    }
     
     QString strStyle =
     tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
@@ -190,6 +195,12 @@ FLOATVECTOR4  SettingsDlg::GetTextColor() {
                       m_cTextColor.green()/255.0f,
                       m_cTextColor.blue()/255.0f,
                       m_cTextColor.alpha()/255.0f);
+}
+
+unsigned int SettingsDlg::GetBlendPrecisionMode() {
+  if (radioButton_Prec32Bit->isChecked()) return 2; else
+    if (radioButton_Prec16Bit->isChecked()) return 1; else
+      return 0;
 }
 
 void SettingsDlg::SelectTextColor() {

@@ -198,3 +198,8 @@ void RenderWindow::CheckForRedraw() {
     update();
   }
 }
+
+void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {
+  makeCurrent();
+  m_Renderer->SetBlendPrecision(eBlendPrecisionMode); 
+}

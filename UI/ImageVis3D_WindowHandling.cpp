@@ -312,6 +312,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
     new RenderWindow(m_MasterController, dataset,
 		     iCounter++, m_glShareWidget, this);
   renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
+  renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
   mdiArea->addSubWindow(renderWin);
   listWidget_Lock->addItem(renderWin->GetWindowID());
 

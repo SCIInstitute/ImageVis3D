@@ -75,6 +75,8 @@ class RenderWindow : public QGLWidget
       m_Renderer->SetTextColor(vTextColor); 
     }
 
+    void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
+
   public slots:
     void ToggleRenderWindowView1x3();
     void ToggleRenderWindowView2x2();
