@@ -46,6 +46,7 @@
 #include <Renderer/SBVRGeogen.h>
 #include <Renderer/GLRenderer.h>
 #include <Renderer/Culling.h>
+#include <deque>
 
 class Brick {
 public:
@@ -94,7 +95,7 @@ class GPUSBVR : public GLRenderer {
 
     virtual bool LoadDataset(const std::string& strFilename);
 
-    void Paint(bool bClear=true);
+    void Paint();
     /** Change the size of the FBO we render to.  Any previous image is
      * destroyed, causing a full redraw on the next render.
      * \param vWinSize  new width and height of the view window */
@@ -106,22 +107,36 @@ class GPUSBVR : public GLRenderer {
     /** Loads GLSL vertex and fragment shaders. */
     virtual bool Initialize();
 
+    /** Query whether or not we should redraw the next frame, else we should
+     * reuse what is already rendered. */
+    virtual bool CheckForRedraw();
+
     /** Set the oversampling ratio (e.g. 2 means twice the slices as needed).  Causes a full redraw. */
     virtual void SetSampleRateModifier(float fSampleRateModifier);
 
+    /** Set the bit depth mode of the offscreen buffer used for blending.  Causes a full redraw. */
     void SetBlendPrecision(EBlendPrecision eBlendPrecision);
+
+    UINT64 GetCurrentSubFrameCount() {return m_iMaxLODIndex-GetMinLODForCurrentView();}
+    unsigned int GetCurrentSubFrame() {return m_iCurrentLOD;}
+    unsigned int GetFrameProgress() {return (unsigned int)(100.0f * (m_iMaxLODIndex-m_iCurrentLOD) / float(GetCurrentSubFrameCount()));}
+    unsigned int GetSubFrameProgress() {return (m_vCurrentBrickList.size() == 0) ? 100 : (unsigned int)(100.0f * m_iBricksRenderedInThisSubFrame / float(m_vCurrentBrickList.size()));}
 
   protected:
     FLOATMATRIX4  m_matModelView;
     SBVRGeogen    m_SBVRGeogen;
     GLTexture2D*  m_IDTex[3];
 
-    GLFBOTex*     m_pFBO3DImage;
+    GLFBOTex*     m_pFBO3DImageLast;
+    GLFBOTex*     m_pFBO3DImageCurrent;
     GLSLProgram*  m_pProgram1DTrans[2];
     GLSLProgram*  m_pProgram2DTrans[2];
     GLSLProgram*  m_pProgramIso;
     GLSLProgram*  m_pProgramTrans;
     Culling       m_FrustumCulling;
+    UINT64        m_iCurrentLOD;
+    UINT64        m_iBricksRenderedInThisSubFrame;
+    std::vector<Brick> m_vCurrentBrickList;
 
     void DrawLogo();
     void DrawBackGradient();
@@ -131,7 +146,9 @@ class GPUSBVR : public GLRenderer {
 
     void RenderSingle();
     void Render2by2();
-    void Render1by3();
+
+    void PlanFrame();
+    void ExecuteFrame();
 
     void Render3DView();
     void Render2DView(EWindowMode eDirection, float fSliceIndex);
@@ -139,7 +156,10 @@ class GPUSBVR : public GLRenderer {
     void RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend);
     void CreateOffscreenBuffer();
 
-    std::vector<Brick> BuildFrameBrickList(UINT64 iCurrentLOD);
+    std::vector<Brick> BuildFrameBrickList();
+    void SetRenderTargetArea(ERenderArea eREnderArea);
+    void SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight);
+    UINT64 GetMinLODForCurrentView();
 };
 
 #endif // GPUSBVR_H

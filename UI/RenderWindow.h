@@ -45,6 +45,7 @@
 #include <QtGui/QListWidget>
 #include <QtOpenGL/QGLWidget>
 
+class MainWindow;
 
 class RenderWindow : public QGLWidget
 {
@@ -78,7 +79,6 @@ class RenderWindow : public QGLWidget
     void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
 
   public slots:
-    void ToggleRenderWindowView1x3();
     void ToggleRenderWindowView2x2();
     void ToggleRenderWindowViewSingle();
 
@@ -97,9 +97,12 @@ class RenderWindow : public QGLWidget
     virtual void wheelEvent(QWheelEvent *event);
     virtual void closeEvent(QCloseEvent *event);
     virtual void focusInEvent(QFocusEvent * event);
+    virtual void keyPressEvent ( QKeyEvent * event );
     virtual void Cleanup();
 
+
   private:
+    MainWindow*       m_MainWindow;
     GPUSBVR*          m_Renderer;
     MasterController& m_MasterController;
        

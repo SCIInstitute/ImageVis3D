@@ -39,16 +39,19 @@
 
 float ArcBall::ms_fEpsilon = 1.0e-5f;
 
-ArcBall::ArcBall(unsigned int iWinWidth, unsigned int iWinHeight) :
+ArcBall::ArcBall(unsigned int iWinWidth, unsigned int iWinHeight, int iWinOffsetX, int iWinOffsetY) :
     m_vStartDrag(),
-    m_iWinWidth(iWinWidth),
-    m_iWinHeight(iWinHeight)
+    m_iWinDim(iWinWidth, iWinHeight),
+    m_iWinOffsets(iWinOffsetX, iWinOffsetY)
 {
 }
 
-void ArcBall::SetWindowSize(unsigned int fWinWidth, unsigned int fWinHeight) {
-  m_iWinWidth  = fWinWidth;
-  m_iWinHeight = fWinHeight;
+void ArcBall::SetWindowSize(unsigned int iWinWidth, unsigned int iWinHeight) {
+    m_iWinDim = UINTVECTOR2(iWinWidth, iWinHeight);
+}
+
+void ArcBall::SetWindowOffset(int iWinOffsetX, int iWinOffsetY) {
+  m_iWinOffsets = INTVECTOR2(iWinOffsetX, iWinOffsetY);
 }
 
 void ArcBall::Click(UINTVECTOR2 vPosition) {
@@ -76,9 +79,8 @@ FLOATVECTOR3 ArcBall::MapToSphere(UINTVECTOR2 vPosition) const {
 
   // normalize position to [-1 ... 1]
   FLOATVECTOR2 vNormPosition; 
-  vNormPosition.x = -((vPosition.x   / (float(m_iWinWidth  - 1) / 2.0f)) - 1.0f);
-  vNormPosition.y =  ((vPosition.y / (float(m_iWinHeight - 1) / 2.0f)) - 1.0f);
-
+  vNormPosition.x = -(((vPosition.x-m_iWinOffsets.x) / (float(m_iWinDim.x  - 1) / 2.0f)) - 1.0f);
+  vNormPosition.y =  (((vPosition.y-m_iWinOffsets.y) / (float(m_iWinDim.y - 1) / 2.0f)) - 1.0f);
 
   // Compute the square of the length of the vector to the point from the center
   float length = vNormPosition.length();

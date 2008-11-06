@@ -26,37 +26,33 @@
    DEALINGS IN THE SOFTWARE.
 */
 
-/**
-  \file    ArcBall.cpp
-  \author  Jens Krueger
-           SCI Institute
-           University of Utah
-           Based on the NeHe Tutorial 48
-  \date    October 2008
-*/
 
-#pragma once
+//!    File   : ImageVis3D_Progress.cpp
+//!    Author : Jens Krueger
+//!             SCI Institute
+//!             University of Utah
+//!    Date   : November 2008
+//
+//!    Copyright (C) 2008 SCI Institute
 
-#include <vector>
-#include <Basics/Vectors.h>
+#include "ImageVis3D.h"
+#include <Basics/SysTools.h>
 
-/** \class ArcBall */
-class ArcBall
-{
-public:
-	ArcBall(unsigned int iWinWidth=0, unsigned int iWinHeight=0, int iWinOffsetX=0, int iWinOffsetY=0);
+using namespace std;
 
-  void SetWindowSize(unsigned int iWinWidth, unsigned int iWinHeight);
-  void SetWindowOffset(int iWinOffsetX, int iWinOffsetY);
-  void Click(UINTVECTOR2 vPosition);
-  FLOATQUATERNION4 Drag(UINTVECTOR2 vPosition);
+void MainWindow::ClearProgressView() {
+  label_ProgressDesc->setVisible(true);
+  groupBox_RenderProgress->setVisible(false);
+  groupBox_ProcessProgess->setVisible(false);
+}
 
-protected:
-  static float ms_fEpsilon;
+void MainWindow::SetRenderProgress(unsigned int iFrame, unsigned int iLevel) {
+  if (dockWidget_ProgressView->isVisible()) {
+    label_ProgressDesc->setVisible(false);
+    groupBox_RenderProgress->setVisible(true);
+    groupBox_ProcessProgess->setVisible(false);
 
-  FLOATVECTOR3 m_vStartDrag;  ///< Saved click vector
-  UINTVECTOR2  m_iWinDim;     ///< window dimensions
-  INTVECTOR2   m_iWinOffsets; ///< Horizontal/Vertical window offset
-
-  FLOATVECTOR3 MapToSphere(UINTVECTOR2 vPosition) const;
-};
+    progressBar_Frame->setValue(iFrame);
+    progressBar_Level->setValue(iLevel);
+  }
+}

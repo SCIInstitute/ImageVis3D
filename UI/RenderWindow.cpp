@@ -36,6 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "RenderWindow.h"
+#include "ImageVis3D.h"
 
 #include <QtGui/QtGui>
 #include <QtOpenGL/QtOpenGL>
@@ -46,7 +47,8 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   m_Renderer((GPUSBVR*)masterController.RequestNewVolumerenderer(OPENGL_SBVR)),
   m_MasterController(masterController),
   m_strDataset(dataset),
-  m_vWinDim(0,0)
+  m_vWinDim(0,0),
+  m_MainWindow((MainWindow*)parent)
 {  
   m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
   setWindowTitle(m_strID);
@@ -93,7 +95,14 @@ void RenderWindow::initializeGL()
 
 void RenderWindow::paintGL()
 {
-  if (m_Renderer != NULL) m_Renderer->Paint();
+  if (m_Renderer != NULL) {
+    m_Renderer->Paint();
+    if (isActiveWindow()) {
+      if (m_Renderer->GetCurrentSubFrameCount() > 2) {
+        m_MainWindow->SetRenderProgress(m_Renderer->GetFrameProgress(), m_Renderer->GetSubFrameProgress());
+      } 
+    } 
+  }
 }
 
 void RenderWindow::resizeGL(int width, int height)
@@ -105,11 +114,7 @@ void RenderWindow::resizeGL(int width, int height)
 void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::RightButton) {
-    if (m_Renderer != NULL) {
-      m_Renderer->SetViewmode(AbstrRenderer::EViewMode((int(m_Renderer->GetViewmode())+1) %3));
-      emit RenderWindowViewChanged(m_Renderer->GetViewmode());
-      updateGL();
-    }
+     // nothing todo yet
   } 
   if (event->button() == Qt::LeftButton) {
     m_Renderer->Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
@@ -143,14 +148,18 @@ void RenderWindow::wheelEvent(QWheelEvent *event) {
   m_Renderer->Zoom(event->delta());
 }
 
+void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
+  QGLWidget::keyPressEvent(event);
 
-void RenderWindow::ToggleRenderWindowView1x3() {
-  if (m_Renderer != NULL) {
-    m_Renderer->SetViewmode(AbstrRenderer::VM_ONEBYTREE);
+  if (event->key() == Qt::Key_Space) {
+    AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode((int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
+    m_Renderer->SetViewmode(eMode);
     emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
-    updateGL();
+    updateGL();    
   }
+
 }
+
 
 void RenderWindow::ToggleRenderWindowView2x2() {
   if (m_Renderer != NULL) {
@@ -193,8 +202,8 @@ void RenderWindow::focusInEvent ( QFocusEvent * event ) {
 }
 
 void RenderWindow::CheckForRedraw() {
-  makeCurrent();
   if (m_Renderer->CheckForRedraw()) {
+    makeCurrent();
     update();
   }
 }

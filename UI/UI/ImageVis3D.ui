@@ -35,7 +35,7 @@
     <rect>
      <x>385</x>
      <y>22</y>
-     <width>620</width>
+     <width>618</width>
      <height>1503</height>
     </rect>
    </property>
@@ -87,7 +87,6 @@
     <addaction name="actionPrevious" />
     <addaction name="separator" />
     <addaction name="action2_x_2_View" />
-    <addaction name="action1_x_3_View" />
     <addaction name="actionSinge_View" />
     <addaction name="separator" />
     <addaction name="actionCloneCurrentView" />
@@ -206,8 +205,8 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>8</x>
+          <y>28</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -336,8 +335,8 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>8</x>
+          <y>28</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -438,8 +437,8 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
+          <x>8</x>
+          <y>28</y>
           <width>357</width>
           <height>253</height>
          </rect>
@@ -867,10 +866,10 @@
   <widget class="QDockWidget" name="dockWidget_Recorder" >
    <property name="geometry" >
     <rect>
-     <x>1009</x>
+     <x>1007</x>
      <y>22</y>
-     <width>194</width>
-     <height>454</height>
+     <width>196</width>
+     <height>370</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -884,8 +883,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>194</width>
-      <height>432</height>
+      <width>196</width>
+      <height>348</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1123,7 +1122,7 @@
         <bool>true</bool>
        </property>
        <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Fixed" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -1149,9 +1148,9 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
-          <width>195</width>
+          <x>8</x>
+          <y>28</y>
+          <width>357</width>
           <height>72</height>
          </rect>
         </property>
@@ -1248,9 +1247,9 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>16</x>
-          <y>56</y>
-          <width>195</width>
+          <x>8</x>
+          <y>28</y>
+          <width>357</width>
           <height>72</height>
          </rect>
         </property>
@@ -1317,7 +1316,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>195</width>
+          <width>357</width>
           <height>72</height>
          </rect>
         </property>
@@ -1449,10 +1448,10 @@
   <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="geometry" >
     <rect>
-     <x>1009</x>
-     <y>480</y>
-     <width>194</width>
-     <height>388</height>
+     <x>1007</x>
+     <y>396</y>
+     <width>196</width>
+     <height>314</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1472,8 +1471,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>194</width>
-      <height>366</height>
+      <width>196</width>
+      <height>292</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -2659,10 +2658,10 @@
   <widget class="QDockWidget" name="dockWidget_RenderOptions" >
    <property name="geometry" >
     <rect>
-     <x>1009</x>
-     <y>872</y>
-     <width>194</width>
-     <height>653</height>
+     <x>1007</x>
+     <y>714</y>
+     <width>196</width>
+     <height>531</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2676,8 +2675,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>194</width>
-      <height>631</height>
+      <width>196</width>
+      <height>509</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
@@ -3311,6 +3310,146 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidget_ProgressView" >
+   <property name="geometry" >
+    <rect>
+     <x>1007</x>
+     <y>1249</y>
+     <width>196</width>
+     <height>276</height>
+    </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="windowTitle" >
+    <string>Progress Viewer</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_12" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>196</width>
+      <height>254</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_27" >
+     <property name="margin" >
+      <number>2</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_ProgressDesc" >
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>This panel shows the progress of lengthy rendering or data processing operations when they are running for the active window. Currently nothing of that kind is active so you only see this text.</string>
+       </property>
+       <property name="textFormat" >
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="scaledContents" >
+        <bool>false</bool>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_RenderProgress" >
+       <property name="title" >
+        <string>Rendering</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_8" >
+        <property name="horizontalSpacing" >
+         <number>8</number>
+        </property>
+        <property name="margin" >
+         <number>8</number>
+        </property>
+        <item row="0" column="0" >
+         <widget class="QLabel" name="label_LODProgress" >
+          <property name="text" >
+           <string>Frame</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" >
+         <widget class="QProgressBar" name="progressBar_Frame" >
+          <property name="value" >
+           <number>24</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" >
+         <widget class="QLabel" name="label_8" >
+          <property name="text" >
+           <string>Level</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" >
+         <widget class="QProgressBar" name="progressBar_Level" >
+          <property name="value" >
+           <number>24</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_ProcessProgess" >
+       <property name="title" >
+        <string>Processing</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_28" >
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <property name="margin" >
+         <number>8</number>
+        </property>
+        <item>
+         <widget class="QProgressBar" name="progressBar_Processing" >
+          <property name="value" >
+           <number>24</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_14" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionLoadDataset" >
    <property name="text" >
     <string>Load Dataset Frome File</string>
@@ -3332,11 +3471,6 @@
   <action name="action2_x_2_View" >
    <property name="text" >
     <string>2 x 2 View</string>
-   </property>
-  </action>
-  <action name="action1_x_3_View" >
-   <property name="text" >
-    <string>1 x 3 View</string>
    </property>
   </action>
   <action name="actionSinge_View" >
@@ -3525,22 +3659,6 @@
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>480</x>
-     <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action1_x_3_View</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>ToggleRenderWindowView1x3()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>-1</x>
@@ -4612,7 +4730,6 @@
  <slots>
   <slot>HideVisualizationWindows()</slot>
   <slot>LoadDataset()</slot>
-  <slot>ToggleRenderWindowView1x3()</slot>
   <slot>ToggleRenderWindowView2x2()</slot>
   <slot>ToggleRenderWindowViewSingle()</slot>
   <slot>CloneCurrentView()</slot>

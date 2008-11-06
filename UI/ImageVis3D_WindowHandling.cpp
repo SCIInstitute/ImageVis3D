@@ -204,6 +204,7 @@ void MainWindow::SetupWorkspaceMenu() {
   menu_Workspace->addAction(dockWidget_Recorder->toggleViewAction());
   menu_Workspace->addAction(dockWidget_LockOptions->toggleViewAction());
   menu_Workspace->addAction(dockWidget_RenderOptions->toggleViewAction());
+  menu_Workspace->addAction(dockWidget_ProgressView->toggleViewAction());
   menu_Workspace->addSeparator();
   menu_Workspace->addAction(dockWidget_1DTrans->toggleViewAction());
   menu_Workspace->addAction(dockWidget_2DTrans->toggleViewAction());
@@ -363,6 +364,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
     SetToggleGlobalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetGlobalBBox());
     SetToggleLocalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetLocalBBox());
+    ClearProgressView();
   }
 }
 
@@ -376,7 +378,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   QList<QListWidgetItem*> l =
     listWidget_Lock->findItems(sender->GetWindowID(),  Qt::MatchExactly);
   assert(l.size() == 1); // if l.size() != 1 something went wrong
-			 // during the creation of the list
+			                   // during the creation of the list
   delete l[0];
 
   m_ActiveRenderWin = NULL;
@@ -391,13 +393,9 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   m_2DTransferFunction->update();
 
   DisableAllTrans();
+  ClearProgressView();
 }
 
-
-void MainWindow::ToggleRenderWindowView1x3() {
-  RenderWindow* win = GetActiveRenderWindow();
-  if (win) win->ToggleRenderWindowView1x3();
-}
 
 
 void MainWindow::ToggleRenderWindowView2x2() {
@@ -448,7 +446,6 @@ void MainWindow::UpdateMenus() {
   actionNext->setEnabled(bHasMdiChild);
   actionPrevious->setEnabled(bHasMdiChild);
   action2_x_2_View->setEnabled(bHasMdiChild);
-  action1_x_3_View->setEnabled(bHasMdiChild);
   actionSinge_View->setEnabled(bHasMdiChild);
   actionCloneCurrentView->setEnabled(bHasMdiChild);
 

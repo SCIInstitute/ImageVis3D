@@ -57,6 +57,16 @@ class MasterController;
  * Base for all renderers. */
 class AbstrRenderer {
   public:
+
+    enum ERenderArea {
+      RA_TOPLEFT = 0,
+      RA_TOPRIGHT,
+      RA_LOWERLEFT,
+      RA_LOWERRIGHT,
+      RA_FULLSCREEN,
+      RA_INVALID
+    };
+
     enum ERenderMode {
       RM_1DTRANS = 0,  /**< one dimensional transfer function */
       RM_2DTRANS,      /**< two dimensional transfer function */
@@ -69,7 +79,6 @@ class AbstrRenderer {
     enum EViewMode {
       VM_SINGLE = 0,  /**< a single large image */
       VM_TWOBYTWO,    /**< four small images */
-      VM_ONEBYTREE,   /**< one large and three small images */
       VM_INVALID
     };
     EViewMode GetViewmode() {return m_eViewMode;}
@@ -157,6 +166,8 @@ class AbstrRenderer {
     virtual void Drag(UINTVECTOR2 vPosition);
     virtual void Zoom(int iZoom);
 
+    void SetClearFramebuffer(bool bClearFramebuffer) {m_bClearFramebuffer = bClearFramebuffer;}
+    bool GetClearFramebuffer() {return m_bClearFramebuffer;}
     void SetGlobalBBox(bool bRenderBBox);
     bool GetGlobalBBox() {return m_bRenderGlobalBBox;}
     void SetLocalBBox(bool bRenderBBox);
@@ -164,7 +175,7 @@ class AbstrRenderer {
 
   protected:
     MasterController*   m_pMasterController;
-    bool                m_bRedraw;
+    bool                m_bCompleteRedraw;
     ERenderMode         m_eRenderMode;
     EViewMode           m_eViewMode;
     EWindowMode         m_eWindowMode[4];
@@ -185,6 +196,7 @@ class AbstrRenderer {
     bool                m_bRenderGlobalBBox;
     bool                m_bRenderLocalBBox;
     UINTVECTOR2         m_vWinSize;
+    bool                m_bClearFramebuffer;
 
     UINT64              m_iIntraFrameCounter;
     UINT64              m_iFrameCounter;

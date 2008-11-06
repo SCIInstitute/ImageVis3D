@@ -1051,6 +1051,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\UI\ImageVis3D_Progress.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\UI\ImageVis3D_Settings.cpp"
 						>
 					</File>

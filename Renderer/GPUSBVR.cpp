@@ -41,12 +41,16 @@
 #include <Basics/SysTools.h>
 #include <Controller/MasterController.h>
 #include <algorithm>
+#include <ctime>
 
 using namespace std;
 
 GPUSBVR::GPUSBVR(MasterController* pMasterController) :
   GLRenderer(pMasterController),
-  m_pFBO3DImage(NULL)
+  m_pFBO3DImageLast(NULL),
+  m_pFBO3DImageCurrent(NULL),
+  m_iCurrentLOD(0),
+  m_iBricksRenderedInThisSubFrame(0)
 {
   m_pProgram1DTrans[0] = NULL;
   m_pProgram1DTrans[1] = NULL;
@@ -205,7 +209,7 @@ void GPUSBVR::SetDataDepShaderVars() {
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable();
                             break;
                           }
-  case RM_ISOSURFACE : {
+    case RM_ISOSURFACE : {
                             m_pProgramIso->Enable();
                             m_pProgramIso->SetUniformVector("fIsoval",m_fIsovalue/fScale);
                             m_pProgramIso->Disable();
@@ -290,6 +294,7 @@ void GPUSBVR::DrawBackGradient() {
 }
 
 void GPUSBVR::RenderSingle() {
+  SetRenderTargetArea(RA_FULLSCREEN);
   switch (m_eWindowMode[0]) {
     case WM_3D         :  Render3DView(); break;
     case WM_CORONAL    :  
@@ -300,10 +305,6 @@ void GPUSBVR::RenderSingle() {
 }
 
 void GPUSBVR::Render2by2() {
-
-}
-
-void GPUSBVR::Render1by3() {
 
 }
 
@@ -365,12 +366,12 @@ void GPUSBVR::RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter,
 }
 
 
-vector<Brick> GPUSBVR::BuildFrameBrickList(UINT64 iCurrentLOD) {
+vector<Brick> GPUSBVR::BuildFrameBrickList() {
   vector<Brick> vBrickList;
 
   UINT64VECTOR3 vOverlap = m_pDataset->GetInfo()->GetBrickOverlapSize();
-  UINT64VECTOR3 vBrickDimension = m_pDataset->GetInfo()->GetBrickCount(iCurrentLOD);
-  UINT64VECTOR3 vDomainSize = m_pDataset->GetInfo()->GetDomainSize(iCurrentLOD);
+  UINT64VECTOR3 vBrickDimension = m_pDataset->GetInfo()->GetBrickCount(m_iCurrentLOD);
+  UINT64VECTOR3 vDomainSize = m_pDataset->GetInfo()->GetDomainSize(m_iCurrentLOD);
   UINT64 iMaxDomainSize = vDomainSize.maxVal();
   FLOATVECTOR3 vScale(m_pDataset->GetInfo()->GetScale().x, 
                       m_pDataset->GetInfo()->GetScale().y, 
@@ -387,11 +388,11 @@ vector<Brick> GPUSBVR::BuildFrameBrickList(UINT64 iCurrentLOD) {
     for (UINT64 y = 0;y<vBrickDimension.y;y++) {
       for (UINT64 x = 0;x<vBrickDimension.x;x++) {
         
-        UINT64VECTOR3 vSize = m_pDataset->GetInfo()->GetBrickSize(iCurrentLOD, UINT64VECTOR3(x,y,z));
+        UINT64VECTOR3 vSize = m_pDataset->GetInfo()->GetBrickSize(m_iCurrentLOD, UINT64VECTOR3(x,y,z));
         b = Brick(x,y,z, (unsigned int)(vSize.x), (unsigned int)(vSize.y), (unsigned int)(vSize.z));
 
 
-        FLOATVECTOR3 vEffectiveSize = m_pDataset->GetInfo()->GetEffectiveBrickSize(iCurrentLOD, UINT64VECTOR3(x,y,z));
+        FLOATVECTOR3 vEffectiveSize = m_pDataset->GetInfo()->GetEffectiveBrickSize(m_iCurrentLOD, UINT64VECTOR3(x,y,z));
 
 
         b.vExtension.x = float(vEffectiveSize.x/float(iMaxDomainSize) * vScale.x);
@@ -437,42 +438,31 @@ vector<Brick> GPUSBVR::BuildFrameBrickList(UINT64 iCurrentLOD) {
 }
 
 void GPUSBVR::Render3DView() {
-  // compute current LOD level
-  m_iCurrentLODOffset = (m_iCurrentLODOffset < 1) ? 0 : m_iCurrentLODOffset-1;
-  UINT64 iCurrentLOD = std::min<UINT64>(m_iCurrentLODOffset,m_pDataset->GetInfo()->GetLODLevelCount()-1);
-  UINT64VECTOR3 vBrickCount = m_pDataset->GetInfo()->GetBrickCount(iCurrentLOD);
-
   // ************** GL States ***********
   // Modelview
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  FLOATMATRIX4 trans;
-  trans.Translation(0,0,-2+m_fZoom);
-  m_matModelView = m_Rot*trans;
   m_matModelView.setModelview();
 
-  // forward modelviewmatrix to culling object
-  m_FrustumCulling.Update(m_matModelView);
 
-  // build brick list and sort by depth
-  vector<Brick> vCurrentBrickList = BuildFrameBrickList(iCurrentLOD);
-
-  // Blending & textures
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_TEXTURE_3D);
   glDisable(GL_TEXTURE_2D);
-  glDisable(GL_BLEND);
-  // for rendering modes other than isosurface render the bbox once to init the depth buffer
-  // for isosurface rendering we can go ahead and render the bbox directly as isosurfacing 
-  // writes out correct depth values
-  if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
-  if (m_bRenderGlobalBBox) RenderBBox();
-  if (m_bRenderLocalBBox) {
-    for (UINT64 iCurrentBrick = 0;iCurrentBrick<vCurrentBrickList.size();iCurrentBrick++) {
-      RenderBBox(FLOATVECTOR4(0,1,0,1), vCurrentBrickList[iCurrentBrick].vCenter, vCurrentBrickList[iCurrentBrick].vExtension);
+
+  if (m_iBricksRenderedInThisSubFrame == 0) {
+    // for rendering modes other than isosurface render the bbox in the first pass once to init the depth buffer
+    // for isosurface rendering we can go ahead and render the bbox directly as isosurfacing 
+    // writes out correct depth values
+    glDisable(GL_BLEND);
+    if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+    if (m_bRenderGlobalBBox) RenderBBox();
+    if (m_bRenderLocalBBox) {
+      for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
+        RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
+      }
     }
+    if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
   }
-  if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
 
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  m_p1DTransTex->Bind(1); 
@@ -496,31 +486,34 @@ void GPUSBVR::Render3DView() {
   if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_FALSE);
 
   // loop over all bricks in the current LOD level
-  for (UINT64 iCurrentBrick = 0;iCurrentBrick<vCurrentBrickList.size();iCurrentBrick++) {
-    // m_pMasterController->DebugOut()->Message("GPUSBVR::Render3DView","Brick %i of %i", iCurrentBrick+1, vCurrentBrickList.size()); 
+  clock_t timeStart, timeProbe;
+  timeStart = timeProbe = clock();
+
+  unsigned int iBricksRenderedInThisBatch = 0;
+  while (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame && float(timeProbe-timeStart)/float(CLOCKS_PER_SEC) < 1) {
   
     // setup the slice generator
-    m_SBVRGeogen.SetVolumeData(vCurrentBrickList[iCurrentBrick].vExtension, vCurrentBrickList[iCurrentBrick].vVoxelCount, 
-                               vCurrentBrickList[iCurrentBrick].vTexcoordsMin, vCurrentBrickList[iCurrentBrick].vTexcoordsMax);
+    m_SBVRGeogen.SetVolumeData(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vExtension, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vVoxelCount, 
+                               m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vTexcoordsMin, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vTexcoordsMax);
     FLOATMATRIX4 maBricktTrans; 
-    maBricktTrans.Translation(vCurrentBrickList[iCurrentBrick].vCenter.x, vCurrentBrickList[iCurrentBrick].vCenter.y, vCurrentBrickList[iCurrentBrick].vCenter.z);
+    maBricktTrans.Translation(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.x, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.y, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.z);
     FLOATMATRIX4 maBricktModelView = maBricktTrans * m_matModelView;
     maBricktModelView.setModelview();
     m_SBVRGeogen.SetTransformation(maBricktModelView);
 
     // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
-    vector<UINT64> vLOD; vLOD.push_back(iCurrentLOD);
+    vector<UINT64> vLOD; vLOD.push_back(m_iCurrentLOD);
     vector<UINT64> vBrick; 
-    vBrick.push_back(vCurrentBrickList[iCurrentBrick].vCoords.x);
-    vBrick.push_back(vCurrentBrickList[iCurrentBrick].vCoords.y);
-    vBrick.push_back(vCurrentBrickList[iCurrentBrick].vCoords.z);
+    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.x);
+    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.y);
+    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.z);
 
     // get the 3D texture from the memory manager
     GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, m_iIntraFrameCounter++, m_iFrameCounter);
     if(t!=NULL) t->Bind(0);
 
     // update the shader parameter
-    SetBrickDepShaderVars(iCurrentLOD, vCurrentBrickList[iCurrentBrick]);
+    SetBrickDepShaderVars(m_iCurrentLOD, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame]);
 
     // render the slices
     glBegin(GL_TRIANGLES);
@@ -533,6 +526,9 @@ void GPUSBVR::Render3DView() {
     // release the 3D texture
     m_pMasterController->MemMan()->Release3DTexture(t);
 
+    // count the bricks rendered
+    m_iBricksRenderedInThisSubFrame++;
+    timeProbe = clock();
   }
 
   switch (m_eRenderMode) {
@@ -542,79 +538,161 @@ void GPUSBVR::Render3DView() {
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Render3DView","Invalid rendermode set"); break;
   }
 
-  if (m_eRenderMode != RM_ISOSURFACE) {    
-    m_matModelView.setModelview();
-    if (m_bRenderGlobalBBox) {
-      glDisable(GL_DEPTH_TEST);
-      RenderBBox();
-    }
-
-    if (m_bRenderLocalBBox) {
-      glDisable(GL_DEPTH_TEST);
-      for (UINT64 iCurrentBrick = 0;iCurrentBrick<vCurrentBrickList.size();iCurrentBrick++) {
-        RenderBBox(FLOATVECTOR4(0,1,0,1), vCurrentBrickList[iCurrentBrick].vCenter, vCurrentBrickList[iCurrentBrick].vExtension);
+  // at the very end render the global bbox
+  if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) {
+    if (m_eRenderMode != RM_ISOSURFACE) {    
+      m_matModelView.setModelview();
+      if (m_bRenderGlobalBBox) {
+        glDisable(GL_DEPTH_TEST);
+        RenderBBox();
       }
+
+      if (m_bRenderLocalBBox) {
+        glDisable(GL_DEPTH_TEST);
+        for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
+          RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
+        }
+      }
+      glDepthMask(GL_TRUE);
     }
-    glDepthMask(GL_TRUE);
   }
 
   glDisable(GL_BLEND);
 
 }
 
+UINT64 GPUSBVR::GetMinLODForCurrentView() {
+  /// \todo - determine minimal LOD
+  return 0;
+} 
+
+bool GPUSBVR::CheckForRedraw() {
+  if (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame || m_iCurrentLODOffset > GetMinLODForCurrentView()) {
+    if (m_iCheckCounter == 0)  {
+      m_pMasterController->DebugOut()->Message("GPUSBVR::CheckForRedraw","Continuing to draw");
+      return true;
+    } else m_iCheckCounter--;
+  }
+  return m_bCompleteRedraw;
+}
 
 
-void GPUSBVR::Paint(bool bClear) {
+void GPUSBVR::PlanFrame() {
+  // plan if if the frame is to be redrawn
+  // or if we have completed the last subframe but not the entire frame
+  if (m_bCompleteRedraw || 
+     (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame && m_iCurrentLODOffset > GetMinLODForCurrentView())) {
 
-  SetDataDepShaderVars();
+    /// \todo change this to the right subarea
+    SetRenderTargetArea(RA_FULLSCREEN);
 
-  if (bClear) {
+    // compute modelviewmatrix and forward to culling object
+    FLOATMATRIX4 trans;
+    trans.Translation(0,0,-2+m_fZoom);
+    m_matModelView = m_Rot*trans;
+    m_FrustumCulling.Update(m_matModelView);
+
+    // compute current LOD level
+    m_iCurrentLODOffset--;
+    m_iCurrentLOD = std::min<UINT64>(m_iCurrentLODOffset,m_pDataset->GetInfo()->GetLODLevelCount()-1);
+    UINT64VECTOR3 vBrickCount = m_pDataset->GetInfo()->GetBrickCount(m_iCurrentLOD);
+
+    // build new todo brick list
+    m_vCurrentBrickList = BuildFrameBrickList();
+    m_iBricksRenderedInThisSubFrame = 0;
+  }
+}
+
+
+void GPUSBVR::ExecuteFrame() {
+
+  // clear the framebuffer if instructed
+  if (m_bClearFramebuffer) {
+    SetRenderTargetArea(RA_FULLSCREEN);
     glClear(GL_DEPTH_BUFFER_BIT);
+    glDepthMask(GL_FALSE);
     if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
       glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
       glClear(GL_COLOR_BUFFER_BIT); 
     } else DrawBackGradient();
     //DrawLogo();
-    glClear(GL_DEPTH_BUFFER_BIT);
+    glDepthMask(GL_TRUE);
   }
 
-  if (m_bRedraw) {
+  if (m_bCompleteRedraw) {
+    // update frame states
     m_iIntraFrameCounter = 0;
     m_iFrameCounter = m_pMasterController->MemMan()->UpdateFrameCounter();
+    m_bCompleteRedraw = false;
+  }
 
-    m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Complete Redraw");
+  // if there is something left in the TODO list
+  if (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame) {
+    // setup shaders vars
+    SetDataDepShaderVars(); 
 
-    m_pFBO3DImage->Write();
+    // bind offscreen buffer
+    m_pFBO3DImageCurrent->Write();
 
-    glClearColor(0,0,0,0);
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    // clear target at the beginning
+    if (m_iBricksRenderedInThisSubFrame == 0) {
+      glClearColor(0,0,0,0);
+      glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    }
 
+    // render the images
     switch (m_eViewMode) {
       case VM_SINGLE    :  RenderSingle(); break;
       case VM_TWOBYTWO  :  Render2by2();   break;
-      case VM_ONEBYTREE :  Render1by3();   break;
       case VM_INVALID   :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid viewmode set"); break;
     }
 
-    m_pFBO3DImage->FinishWrite();
+    // unbind offscreen buffer
+    m_pFBO3DImageCurrent->FinishWrite();
+
+    // if there is nothing left todo in this subframe -> present the result
+    if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
 
   } else m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Quick Redraw");
 
-  RerenderPreviousResult();
 
-  m_bRedraw = false;
+  // show the result
+  RerenderPreviousResult();
+}
+
+void GPUSBVR::Paint() {
+  PlanFrame();
+  ExecuteFrame();
 }
 
 void GPUSBVR::Resize(const UINTVECTOR2& vWinSize) {
   AbstrRenderer::Resize(vWinSize);
-
   m_pMasterController->DebugOut()->Message("GPUSBVR::Resize","Resizing to %i x %i", vWinSize.x, vWinSize.y);
+  CreateOffscreenBuffer();
+}
 
-  float aspect=(float)vWinSize.x/(float)vWinSize.y;
-	glViewport(0,0,vWinSize.x,vWinSize.y);
+void GPUSBVR::SetRenderTargetArea(ERenderArea eREnderArea) {
+  switch (eREnderArea) {
+    case RA_TOPLEFT     : SetViewPort(UINTVECTOR2(0,m_vWinSize.y/2), m_vWinSize); break;
+    case RA_TOPRIGHT    : SetViewPort(m_vWinSize/2, m_vWinSize); break;
+    case RA_LOWERLEFT   : SetViewPort(UINTVECTOR2(0,0),m_vWinSize/2); break;
+    case RA_LOWERRIGHT  : SetViewPort(UINTVECTOR2(m_vWinSize.x/2,0), m_vWinSize); break;
+    case RA_FULLSCREEN  : SetViewPort(UINTVECTOR2(0,0), m_vWinSize); break;
+    default             : m_pMasterController->DebugOut()->Error("GPUSBVR::SetRenderTargetArea","Invalid render area set"); break;
+  }
+}
+
+void GPUSBVR::SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight) {
+
+  UINTVECTOR2 viSize = viUpperRight-viLowerLeft;
+
+  float aspect=(float)viSize.x/(float)viSize.y;
+	glViewport(viLowerLeft.x,viLowerLeft.y,viSize.x,viSize.y);
 	glMatrixMode(GL_PROJECTION);		
 	glLoadIdentity();
-	gluPerspective(50.0,aspect,0.2,100.0); 	// Set Projection. Arguments are FOV (in degrees), aspect-ratio, near-plane, far-plane.
+	gluPerspective(50.0,aspect,0.1,100.0); 	// Set Projection. Arguments are FOV (in degrees), aspect-ratio, near-plane, far-plane.
+  m_ArcBall.SetWindowSize(viSize.x, viSize.y);
+  m_ArcBall.SetWindowOffset(viLowerLeft.x,viLowerLeft.y);
   
   // forward the GL projection matrix to the culling object
   FLOATMATRIX4 mProjection;
@@ -622,24 +700,27 @@ void GPUSBVR::Resize(const UINTVECTOR2& vWinSize) {
   m_FrustumCulling.SetParameters(mProjection);
 
 	glMatrixMode(GL_MODELVIEW);
-
-  CreateOffscreenBuffer();
 }
 
+
 void GPUSBVR::CreateOffscreenBuffer() {
-  if (m_pFBO3DImage != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImage);
+  if (m_pFBO3DImageLast != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast);
+  if (m_pFBO3DImageCurrent != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent);
 
   if (m_vWinSize.area() > 0) {
     switch (m_eBlendPrecision) {
-      case BP_8BIT : m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA8, 8*4, true);
-                     break;
-      case BP_16BIT : m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true);
-                     break;
-      case BP_32BIT : m_pFBO3DImage = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA32F_ARB, 32*4, true);
-                     break;
-      default      : m_pMasterController->DebugOut()->Message("GPUSBVR::CreateOffscreenBuffer","Invalid Blending Precision");
-                     m_pFBO3DImage = NULL;
-                     break;
+      case BP_8BIT  : m_pFBO3DImageLast = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA8, 8*4, true);
+                      m_pFBO3DImageCurrent = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA8, 8*4, true);
+                      break;
+      case BP_16BIT : m_pFBO3DImageLast = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true);
+                      m_pFBO3DImageCurrent = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true);
+                      break;
+      case BP_32BIT : m_pFBO3DImageLast = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA32F_ARB, 32*4, true);
+                      m_pFBO3DImageCurrent = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA32F_ARB, 32*4, true);
+                      break;
+      default       : m_pMasterController->DebugOut()->Message("GPUSBVR::CreateOffscreenBuffer","Invalid Blending Precision");
+                      m_pFBO3DImageLast = NULL; m_pFBO3DImageCurrent = NULL;
+                      break;
     }
   }
 }
@@ -656,7 +737,8 @@ void GPUSBVR::Cleanup() {
   m_pMasterController->MemMan()->FreeTexture(m_IDTex[1]);
   m_pMasterController->MemMan()->FreeTexture(m_IDTex[2]);
 
-  m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImage);
+  m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast);
+  m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[0]);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[1]);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]);
@@ -667,8 +749,10 @@ void GPUSBVR::Cleanup() {
 
 
 void GPUSBVR::RerenderPreviousResult() {
-  m_pFBO3DImage->Read(GL_TEXTURE0);
-  m_pFBO3DImage->ReadDepth(GL_TEXTURE1);
+	glViewport(0,0,m_vWinSize.x,m_vWinSize.y);
+
+  m_pFBO3DImageLast->Read(GL_TEXTURE0);
+  m_pFBO3DImageLast->ReadDepth(GL_TEXTURE1);
 
   m_pProgramTrans->Enable();
 
@@ -690,8 +774,8 @@ void GPUSBVR::RerenderPreviousResult() {
 
   m_pProgramTrans->Disable();
 
-  m_pFBO3DImage->FinishRead();
-  m_pFBO3DImage->FinishDepthRead();
+  m_pFBO3DImageLast->FinishRead();
+  m_pFBO3DImageLast->FinishDepthRead();
   glEnable(GL_DEPTH_TEST);
 }
 

@@ -35,13 +35,13 @@
 */
 
 #include "AbstrRenderer.h"
-#include "../Controller/MasterController.h"
+#include <Controller/MasterController.h>
 
 using namespace std;
 
 AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :   
   m_pMasterController(pMasterController),
-  m_bRedraw(true), 
+  m_bCompleteRedraw(true), 
   m_eRenderMode(RM_1DTRANS),
   m_eViewMode(VM_SINGLE),
   m_eBlendPrecision(BP_32BIT),
@@ -55,12 +55,13 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_fZoom(0.0f),
   m_bRenderGlobalBBox(false),
   m_bRenderLocalBBox(false),
+  m_vWinSize(0,0),
   m_iIntraFrameCounter(0),
   m_iFrameCounter(0),
   m_iCheckCounter(0),
   m_iMaxLODIndex(0),
   m_iCurrentLODOffset(0),
-  m_vWinSize(0,0)
+  m_bClearFramebuffer(true)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -191,16 +192,15 @@ void AbstrRenderer::SetIsoValue(float fIsovalue) {
 bool AbstrRenderer::CheckForRedraw() {
   if (m_iCurrentLODOffset > 0) {
     if (m_iCheckCounter == 0)  {
-      m_bRedraw = true;
+      m_bCompleteRedraw = true;
       m_pMasterController->DebugOut()->Message("AbstrRenderer::CheckForRedraw","Scheduled redraw as LOD is %i > 0", m_iCurrentLODOffset);
     } else m_iCheckCounter--;
   }
-  return m_bRedraw;
+  return m_bCompleteRedraw;
 }
 
 void AbstrRenderer::Resize(const UINTVECTOR2& vWinSize) {
   m_vWinSize = vWinSize;
-  m_ArcBall.SetWindowSize(vWinSize.x, vWinSize.y);
   ScheduleCompleteRedraw();
 }
 
@@ -234,7 +234,7 @@ void AbstrRenderer::SetLocalBBox(bool bRenderBBox) {
 }
 
 void AbstrRenderer::ScheduleCompleteRedraw() {
-  m_bRedraw = true;
+  m_bCompleteRedraw = true;
   m_iCurrentLODOffset = m_iMaxLODIndex+1;
   m_iCheckCounter = 10;
 }

@@ -89,6 +89,7 @@ MainWindow::MainWindow(MasterController& masterController,
   timer->start(20);
 
   CheckSettings();
+  ClearProgressView();
 }
 
 MainWindow::~MainWindow()

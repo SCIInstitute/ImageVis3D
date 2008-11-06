@@ -65,12 +65,14 @@ public:
   
   QTOut* GetDebugOut() {return m_DebugOut;}
 
+public slots:
+  void SetRenderProgress(unsigned int iFrame, unsigned int iLevel);
+
 protected slots:
   void LoadDataset();
   void LoadDirectory();
   void CloneCurrentView();
 
-  void ToggleRenderWindowView1x3();
   void ToggleRenderWindowView2x2();
   void ToggleRenderWindowViewSingle();
 
@@ -193,6 +195,7 @@ private :
   void UpdateIsoValLabel(int iValue, int iMaxValue);
   void SetToggleGlobalBBoxLabel(bool bRenderBBox);
   void SetToggleLocalBBoxLabel(bool bRenderBBox);
+  void ClearProgressView();
 
 };
 
