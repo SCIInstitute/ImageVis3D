@@ -44,13 +44,13 @@
 
 RenderWindow::RenderWindow(MasterController& masterController, QString dataset, unsigned int iCounter, QGLWidget* glShareWidget, QWidget* parent, Qt::WindowFlags flags) :
   QGLWidget(parent, glShareWidget, flags),
+  m_MainWindow((MainWindow*)parent),
   m_Renderer((GPUSBVR*)masterController.RequestNewVolumerenderer(OPENGL_SBVR)),
   m_MasterController(masterController),
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),
   m_strDataset(dataset),
-  m_vWinDim(0,0),
-  m_MainWindow((MainWindow*)parent)
+  m_vWinDim(0,0)
 {  
   m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
   setWindowTitle(m_strID);
