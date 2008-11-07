@@ -1177,11 +1177,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Renderer\Culling.cpp"
+				RelativePath=".\Renderer\CullingLOD.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Renderer\Culling.h"
+				RelativePath=".\Renderer\CullingLOD.h"
 				>
 			</File>
 			<File

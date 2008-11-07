@@ -130,7 +130,7 @@ protected slots:
   void SetDebugViewMask();
 
   void CheckForRedraw();
-  bool ShowSettings() {return ShowSettings(SettingsDlg::MEM_TAB);}
+  bool ShowSettings();
   void SetLighting(bool bLighting);
 
   void Collapse2DWidgets();
@@ -153,8 +153,12 @@ private :
   FLOATVECTOR3          m_vBackgroundColors[2];
   FLOATVECTOR4          m_vTextColor;
   bool                  m_bQuickopen;
-  UINT64                m_iMinFramerate;
-  UINT64                m_iBlendPrecisionMode;
+  unsigned int          m_iMinFramerate;
+  unsigned int          m_iLODDelay;
+  unsigned int          m_iActiveTS;
+  unsigned int          m_iInactiveTS;
+
+  unsigned int          m_iBlendPrecisionMode;
 
   RenderWindow* CreateNewRenderWindow(QString dataset);
   RenderWindow* GetActiveRenderWindow();
@@ -188,7 +192,6 @@ private :
   bool ParseCommand(std::string strCommand, std::string strParam);
   void CheckSettings();
   void ApplySettings();
-  bool ShowSettings(SettingsDlg::TabID eTabID);
   void SetSampleRateSlider(int iValue);
   void UpdateSampleRateLabel(int iValue);
   void SetIsoValueSlider(int iValue, int iMaxValue);

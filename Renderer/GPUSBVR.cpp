@@ -49,8 +49,7 @@ GPUSBVR::GPUSBVR(MasterController* pMasterController) :
   GLRenderer(pMasterController),
   m_pFBO3DImageLast(NULL),
   m_pFBO3DImageCurrent(NULL),
-  m_iCurrentLOD(0),
-  m_iBricksRenderedInThisSubFrame(0)
+  m_iFilledBuffers(0)
 {
   m_pProgram1DTrans[0] = NULL;
   m_pProgram1DTrans[1] = NULL;
@@ -406,7 +405,7 @@ vector<Brick> GPUSBVR::BuildFrameBrickList() {
 
 
         // if the brick is visible (i.e. inside the frustum) continue processing
-        if (m_FrustumCulling.IsVisible(b.vCenter, b.vExtension)) {
+        if (m_FrustumCullingLOD.IsVisible(b.vCenter, b.vExtension)) {
 
           // compute 
           b.vTexcoordsMin = FLOATVECTOR3((x == 0) ? 0.5f/b.vVoxelCount.x : vOverlap.x*0.5f/b.vVoxelCount.x,
@@ -490,7 +489,7 @@ void GPUSBVR::Render3DView() {
   timeStart = timeProbe = clock();
 
   unsigned int iBricksRenderedInThisBatch = 0;
-  while (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame && float(timeProbe-timeStart)/float(CLOCKS_PER_SEC) < 1) {
+  while (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame && float(timeProbe-timeStart)*1000.0f/float(CLOCKS_PER_SEC) < m_iTimeSliceMSecs) {
   
     // setup the slice generator
     m_SBVRGeogen.SetVolumeData(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vExtension, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vVoxelCount, 
@@ -561,15 +560,11 @@ void GPUSBVR::Render3DView() {
 
 }
 
-UINT64 GPUSBVR::GetMinLODForCurrentView() {
-  /// \todo - determine minimal LOD
-  return 0;
-} 
 
 bool GPUSBVR::CheckForRedraw() {
-  if (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame || m_iCurrentLODOffset > GetMinLODForCurrentView()) {
+  if (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame || m_iCurrentLODOffset > m_iMinLODForCurrentView) {
     if (m_iCheckCounter == 0)  {
-      m_pMasterController->DebugOut()->Message("GPUSBVR::CheckForRedraw","Continuing to draw");
+      m_pMasterController->DebugOut()->Message("GPUSBVR::CheckForRedraw","Still drawing...");
       return true;
     } else m_iCheckCounter--;
   }
@@ -578,11 +573,7 @@ bool GPUSBVR::CheckForRedraw() {
 
 
 void GPUSBVR::PlanFrame() {
-  // plan if if the frame is to be redrawn
-  // or if we have completed the last subframe but not the entire frame
-  if (m_bCompleteRedraw || 
-     (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame && m_iCurrentLODOffset > GetMinLODForCurrentView())) {
-
+  if (m_bCompleteRedraw) {
     /// \todo change this to the right subarea
     SetRenderTargetArea(RA_FULLSCREEN);
 
@@ -590,7 +581,16 @@ void GPUSBVR::PlanFrame() {
     FLOATMATRIX4 trans;
     trans.Translation(0,0,-2+m_fZoom);
     m_matModelView = m_Rot*trans;
-    m_FrustumCulling.Update(m_matModelView);
+    m_FrustumCullingLOD.SetViewMatrix(m_matModelView);
+    m_FrustumCullingLOD.Update();
+
+    ComputeMinLODForCurrentView();
+  }
+
+  // plan if the frame is to be redrawn
+  // or if we have completed the last subframe but not the entire frame
+  if (m_bCompleteRedraw || 
+     (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame && m_iCurrentLODOffset > m_iMinLODForCurrentView)) {
 
     // compute current LOD level
     m_iCurrentLODOffset--;
@@ -605,26 +605,18 @@ void GPUSBVR::PlanFrame() {
 
 
 void GPUSBVR::ExecuteFrame() {
-
-  // clear the framebuffer if instructed
-  if (m_bClearFramebuffer) {
-    SetRenderTargetArea(RA_FULLSCREEN);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    glDepthMask(GL_FALSE);
-    if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
-      glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
-      glClear(GL_COLOR_BUFFER_BIT); 
-    } else DrawBackGradient();
-    //DrawLogo();
-    glDepthMask(GL_TRUE);
-  }
-
   if (m_bCompleteRedraw) {
     // update frame states
     m_iIntraFrameCounter = 0;
     m_iFrameCounter = m_pMasterController->MemMan()->UpdateFrameCounter();
     m_bCompleteRedraw = false;
+
+    // clear the depth buffer if instructed
+    if (m_bClearFramebuffer) glClear(GL_DEPTH_BUFFER_BIT);
   }
+
+  // are we starting a new LOD level?
+  if (m_iBricksRenderedInThisSubFrame == 0) m_iFilledBuffers = 0;
 
   // if there is something left in the TODO list
   if (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame) {
@@ -651,13 +643,30 @@ void GPUSBVR::ExecuteFrame() {
     m_pFBO3DImageCurrent->FinishWrite();
 
     // if there is nothing left todo in this subframe -> present the result
-    if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
+    if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) 
+      swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent); 
+    else {
+      if (m_iFilledBuffers >= 2) return;
+    }
 
   } else m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Quick Redraw");
 
 
+  // clear the framebuffer
+  if (m_bClearFramebuffer) {
+    SetRenderTargetArea(RA_FULLSCREEN);
+    glDepthMask(GL_FALSE);
+    if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
+      glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
+      glClear(GL_COLOR_BUFFER_BIT); 
+    } else DrawBackGradient();
+    //DrawLogo();
+    glDepthMask(GL_TRUE);
+  }
+
   // show the result
   RerenderPreviousResult();
+  m_iFilledBuffers++;
 }
 
 void GPUSBVR::Paint() {
@@ -687,17 +696,21 @@ void GPUSBVR::SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight) {
   UINTVECTOR2 viSize = viUpperRight-viLowerLeft;
 
   float aspect=(float)viSize.x/(float)viSize.y;
+  float fovy = 50.0f;
+  float nearPlane = 0.1f;
+  float farPlane = 100.0f;
 	glViewport(viLowerLeft.x,viLowerLeft.y,viSize.x,viSize.y);
 	glMatrixMode(GL_PROJECTION);		
 	glLoadIdentity();
-	gluPerspective(50.0,aspect,0.1,100.0); 	// Set Projection. Arguments are FOV (in degrees), aspect-ratio, near-plane, far-plane.
+	gluPerspective(fovy,aspect,nearPlane,farPlane); 	// Set Projection. Arguments are FOV (in degrees), aspect-ratio, near-plane, far-plane.
   m_ArcBall.SetWindowSize(viSize.x, viSize.y);
   m_ArcBall.SetWindowOffset(viLowerLeft.x,viLowerLeft.y);
   
   // forward the GL projection matrix to the culling object
   FLOATMATRIX4 mProjection;
   mProjection.getProjection();
-  m_FrustumCulling.SetParameters(mProjection);
+  m_FrustumCullingLOD.SetProjectionMatrix(mProjection);
+  m_FrustumCullingLOD.SetScreenParams(fovy,aspect,nearPlane,viSize.y);
 
 	glMatrixMode(GL_MODELVIEW);
 }

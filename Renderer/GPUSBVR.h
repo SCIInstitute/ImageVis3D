@@ -45,41 +45,7 @@
 #include <Renderer/GPUMemMan/GPUMemMan.h>
 #include <Renderer/SBVRGeogen.h>
 #include <Renderer/GLRenderer.h>
-#include <Renderer/Culling.h>
 #include <deque>
-
-class Brick {
-public:
-  Brick() :
-    vCenter(0,0,0),
-    vExtension(0,0,0), 
-    vCoords(0,0,0) 
-  {
-  }
-
-  Brick(unsigned int x, unsigned int y, unsigned int z, unsigned int iSizeX, unsigned int iSizeY, unsigned int iSizeZ) :
-    vCenter(0,0,0),
-    vExtension(0,0,0), 
-    vVoxelCount(iSizeX, iSizeY, iSizeZ),
-    vCoords(x,y,z) 
-  {
-  }
-
-  FLOATVECTOR3 vCenter;
-  FLOATVECTOR3 vTexcoordsMin;
-  FLOATVECTOR3 vTexcoordsMax;
-  FLOATVECTOR3 vExtension;
-  UINTVECTOR3 vVoxelCount;
-  UINTVECTOR3 vCoords;
-  float fDistance;
-};
-
-inline bool operator < (const Brick& left, const Brick& right) {
-	if  (left.fDistance < right.fDistance) return true;
-  return false;
-}
-
-
 
 /** \class GPUSBVR
  * Slice-based GPU volume renderer.
@@ -117,11 +83,6 @@ class GPUSBVR : public GLRenderer {
     /** Set the bit depth mode of the offscreen buffer used for blending.  Causes a full redraw. */
     void SetBlendPrecision(EBlendPrecision eBlendPrecision);
 
-    UINT64 GetCurrentSubFrameCount() {return m_iMaxLODIndex-GetMinLODForCurrentView();}
-    unsigned int GetCurrentSubFrame() {return m_iCurrentLOD;}
-    unsigned int GetFrameProgress() {return (unsigned int)(100.0f * (m_iMaxLODIndex-m_iCurrentLOD) / float(GetCurrentSubFrameCount()));}
-    unsigned int GetSubFrameProgress() {return (m_vCurrentBrickList.size() == 0) ? 100 : (unsigned int)(100.0f * m_iBricksRenderedInThisSubFrame / float(m_vCurrentBrickList.size()));}
-
   protected:
     FLOATMATRIX4  m_matModelView;
     SBVRGeogen    m_SBVRGeogen;
@@ -133,10 +94,7 @@ class GPUSBVR : public GLRenderer {
     GLSLProgram*  m_pProgram2DTrans[2];
     GLSLProgram*  m_pProgramIso;
     GLSLProgram*  m_pProgramTrans;
-    Culling       m_FrustumCulling;
-    UINT64        m_iCurrentLOD;
-    UINT64        m_iBricksRenderedInThisSubFrame;
-    std::vector<Brick> m_vCurrentBrickList;
+    int           m_iFilledBuffers;
 
     void DrawLogo();
     void DrawBackGradient();
@@ -159,7 +117,6 @@ class GPUSBVR : public GLRenderer {
     std::vector<Brick> BuildFrameBrickList();
     void SetRenderTargetArea(ERenderArea eREnderArea);
     void SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight);
-    UINT64 GetMinLODForCurrentView();
 };
 
 #endif // GPUSBVR_H

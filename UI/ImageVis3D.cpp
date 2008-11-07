@@ -67,7 +67,10 @@ MainWindow::MainWindow(MasterController& masterController,
   m_strCurrentWorkspaceFilename(""),
   m_ActiveRenderWin(NULL),
   m_bQuickopen(false),
-  m_iMinFramerate(10)
+  m_iMinFramerate(10),
+  m_iLODDelay(1000),
+  m_iActiveTS(500),
+  m_iInactiveTS(100)
 {
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
   QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");
@@ -86,7 +89,7 @@ MainWindow::MainWindow(MasterController& masterController,
 
   QTimer *timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(CheckForRedraw()));
-  timer->start(20);
+  timer->start(10);
 
   CheckSettings();
   ClearProgressView();

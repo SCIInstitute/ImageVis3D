@@ -77,14 +77,17 @@ class RenderWindow : public QGLWidget
     }
 
     void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
-
+    void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
+  
   public slots:
     void ToggleRenderWindowView2x2();
     void ToggleRenderWindowViewSingle();
+    void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {m_iTimeSliceMSecsActive = iActive; m_iTimeSliceMSecsInActive = iInactive;}
 
   signals:
     void RenderWindowViewChanged(int iViewID);
     void WindowActive(RenderWindow* sender);
+    void WindowInActive(RenderWindow* sender);
     void WindowClosing(RenderWindow* sender);
 
   protected:
@@ -97,6 +100,7 @@ class RenderWindow : public QGLWidget
     virtual void wheelEvent(QWheelEvent *event);
     virtual void closeEvent(QCloseEvent *event);
     virtual void focusInEvent(QFocusEvent * event);
+    virtual void focusOutEvent ( QFocusEvent * event );
     virtual void keyPressEvent ( QKeyEvent * event );
     virtual void Cleanup();
 
@@ -105,6 +109,8 @@ class RenderWindow : public QGLWidget
     MainWindow*       m_MainWindow;
     GPUSBVR*          m_Renderer;
     MasterController& m_MasterController;
+    unsigned int      m_iTimeSliceMSecsActive;
+    unsigned int      m_iTimeSliceMSecsInActive;
        
     QString m_strDataset;
     QString m_strID;

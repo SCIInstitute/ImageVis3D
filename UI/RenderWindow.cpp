@@ -46,6 +46,8 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   QGLWidget(parent, glShareWidget, flags),
   m_Renderer((GPUSBVR*)masterController.RequestNewVolumerenderer(OPENGL_SBVR)),
   m_MasterController(masterController),
+  m_iTimeSliceMSecsActive(500),
+  m_iTimeSliceMSecsInActive(100),
   m_strDataset(dataset),
   m_vWinDim(0,0),
   m_MainWindow((MainWindow*)parent)
@@ -98,9 +100,7 @@ void RenderWindow::paintGL()
   if (m_Renderer != NULL) {
     m_Renderer->Paint();
     if (isActiveWindow()) {
-      if (m_Renderer->GetCurrentSubFrameCount() > 2) {
         m_MainWindow->SetRenderProgress(m_Renderer->GetFrameProgress(), m_Renderer->GetSubFrameProgress());
-      } 
     } 
   }
 }
@@ -160,7 +160,6 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
 
 }
 
-
 void RenderWindow::ToggleRenderWindowView2x2() {
   if (m_Renderer != NULL) {
     m_Renderer->SetViewmode(AbstrRenderer::VM_TWOBYTWO);
@@ -195,11 +194,23 @@ void RenderWindow::closeEvent(QCloseEvent *event) {
 void RenderWindow::focusInEvent ( QFocusEvent * event ) {
   // call superclass method
   QGLWidget::focusInEvent(event);
+  m_Renderer->SetTimeSlice(m_iTimeSliceMSecsActive);
 
   if (event->gotFocus()) {
     emit WindowActive(this);
   }
 }
+
+void RenderWindow::focusOutEvent ( QFocusEvent * event ) {
+  // call superclass method
+  QGLWidget::focusOutEvent(event);
+  m_Renderer->SetTimeSlice(m_iTimeSliceMSecsInActive);
+
+  if (!event->gotFocus()) {
+    emit WindowInActive(this);
+  }
+}
+
 
 void RenderWindow::CheckForRedraw() {
   if (m_Renderer->CheckForRedraw()) {
@@ -211,4 +222,11 @@ void RenderWindow::CheckForRedraw() {
 void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {
   makeCurrent();
   m_Renderer->SetBlendPrecision(eBlendPrecisionMode); 
+}
+
+void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS) {
+  makeCurrent();
+  m_iTimeSliceMSecsActive   = iActiveTS;
+  m_iTimeSliceMSecsInActive = iInactiveTS;
+  m_Renderer->SetPerfMeasures(iMinFramerate, iLODDelay); 
 }

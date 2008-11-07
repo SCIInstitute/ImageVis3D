@@ -45,38 +45,42 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 {
   Q_OBJECT
   public:
-
-    enum TabID { MEM_TAB=0, UI_TAB };
-
-    SettingsDlg(MasterController& masterController, TabID eTabID = MEM_TAB, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    SettingsDlg(MasterController& masterController, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~SettingsDlg();
 
     UINT64        GetGPUMem();
     UINT64        GetCPUMem();
     bool          GetQuickopen();
-    UINT64        GetMinFramerate();
+    unsigned int  GetMinFramerate();
+    unsigned int  GetLODDelay();
+    unsigned int  GetActiveTS();
+    unsigned int  GetInactiveTS();
 
     FLOATVECTOR3  GetBackgroundColor1();
     FLOATVECTOR3  GetBackgroundColor2();
     FLOATVECTOR4  GetTextColor();
     unsigned int  GetBlendPrecisionMode();
 
-    void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, bool bQuickopen, UINT64 iMinFramerate, unsigned int iBlendPrecision, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
+    void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
+                   bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
+                   unsigned int iBlendPrecision, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
 
   protected slots:
     void SelectTextColor();
     void SetTextOpacity(int iOpacity);
     void SelectBackColor1();
     void SelectBackColor2();
-    void SetMaxMemCheck();
+    void SetMaxMemCheck();    
+    void LODDelayChanged();
+    void MinFramerateChanged();
+    void ActTSChanged();
+    void InactTSChanged();
 
   private:
     MasterController& m_MasterController;
-    TabID             m_eTabID;
     QColor            m_cBackColor1;
     QColor            m_cBackColor2;
     QColor            m_cTextColor;
-
 
     int               m_InitialGPUMemMax;
     void setupUi(QDialog *SettingsDlg);

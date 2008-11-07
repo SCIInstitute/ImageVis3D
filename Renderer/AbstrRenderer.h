@@ -50,6 +50,38 @@
 #include <Renderer/GLTexture1D.h>
 #include <Renderer/GLTexture2D.h>
 #include <Basics/ArcBall.h>
+#include <Renderer/CullingLOD.h>
+
+class Brick {
+public:
+  Brick() :
+    vCenter(0,0,0),
+    vExtension(0,0,0), 
+    vCoords(0,0,0) 
+  {
+  }
+
+  Brick(unsigned int x, unsigned int y, unsigned int z, unsigned int iSizeX, unsigned int iSizeY, unsigned int iSizeZ) :
+    vCenter(0,0,0),
+    vExtension(0,0,0), 
+    vVoxelCount(iSizeX, iSizeY, iSizeZ),
+    vCoords(x,y,z) 
+  {
+  }
+
+  FLOATVECTOR3 vCenter;
+  FLOATVECTOR3 vTexcoordsMin;
+  FLOATVECTOR3 vTexcoordsMax;
+  FLOATVECTOR3 vExtension;
+  UINTVECTOR3 vVoxelCount;
+  UINTVECTOR3 vCoords;
+  float fDistance;
+};
+
+inline bool operator < (const Brick& left, const Brick& right) {
+	if  (left.fDistance < right.fDistance) return true;
+  return false;
+}
 
 class MasterController;
 
@@ -173,6 +205,14 @@ class AbstrRenderer {
     void SetLocalBBox(bool bRenderBBox);
     bool GetLocalBBox() {return m_bRenderLocalBBox;}
 
+    // scheduling routines
+    UINT64 GetCurrentSubFrameCount() {return m_iMaxLODIndex-m_iMinLODForCurrentView;}
+    unsigned int GetCurrentSubFrame() {return m_iCurrentLOD;}
+    unsigned int GetFrameProgress() {return (unsigned int)(100.0f * (m_iMaxLODIndex-m_iCurrentLOD) / float(GetCurrentSubFrameCount()));}
+    unsigned int GetSubFrameProgress() {return (m_vCurrentBrickList.size() == 0) ? 100 : (unsigned int)(100.0f * m_iBricksRenderedInThisSubFrame / float(m_vCurrentBrickList.size()));}
+    void SetTimeSlice(unsigned int iMSecs) {m_iTimeSliceMSecs = iMSecs;}
+    void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay) {m_iMinFramerate = iMinFramerate; m_iLODDelay = iLODDelay;}
+
   protected:
     MasterController*   m_pMasterController;
     bool                m_bCompleteRedraw;
@@ -196,14 +236,26 @@ class AbstrRenderer {
     bool                m_bRenderGlobalBBox;
     bool                m_bRenderLocalBBox;
     UINTVECTOR2         m_vWinSize;
-    bool                m_bClearFramebuffer;
+
+    unsigned int        m_iMinFramerate;
+    unsigned int        m_iLODDelay;
+    UINT64              m_iMinLODForCurrentView;
+    unsigned int        m_iTimeSliceMSecs;
 
     UINT64              m_iIntraFrameCounter;
     UINT64              m_iFrameCounter;
-    UINT64              m_iCheckCounter;
+    unsigned int        m_iCheckCounter;
     UINT64              m_iMaxLODIndex;
     UINT64              m_iCurrentLODOffset;
+    CullingLOD          m_FrustumCullingLOD;
+    bool                m_bClearFramebuffer;
+    UINT64              m_iCurrentLOD;
+    UINT64              m_iBricksRenderedInThisSubFrame;
+    std::vector<Brick>  m_vCurrentBrickList;
+
     virtual void ScheduleCompleteRedraw();
+    void ComputeMinLODForCurrentView();
+
 
 };
 

@@ -44,11 +44,17 @@
 #ifdef _DEBUG
   #define GLSL_DEBUG  ///< switches on debugging output - can be changed per-class.
 #endif
+
+// on windows warn if GLSL_DEBUG differs from _DEBUG (i.e.. if the lines above are not used)
 #ifdef _WIN32
-  #ifdef GLSL_DEBUG
-    #pragma message("    [GLSLProgram.h] DEBUG ON.\n")
+  #ifndef _DEBUG
+    #ifdef GLSL_DEBUG
+      #pragma message("    [GLSLProgram.h] DEBUG ON.\n")
+    #endif
   #else
-    #pragma message("    [GLSLProgram.h] DEBUG OFF.\n")
+    #ifndef GLSL_DEBUG
+      #pragma message("    [GLSLProgram.h] DEBUG OFF.\n")
+    #endif
   #endif
 #endif
 

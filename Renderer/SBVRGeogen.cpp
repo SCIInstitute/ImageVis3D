@@ -79,7 +79,7 @@ void SBVRGeogen::SetTransformation(const FLOATMATRIX4& matTransform) {
 
 void SBVRGeogen::InitBBOX() {
 
-	FLOATVECTOR3 vVertexScale(float(m_vAspect.x),float(m_vAspect.y),float(m_vAspect.z));
+	FLOATVECTOR3 vVertexScale(m_vAspect);
 
   m_pfBBOXVertex[0] = POS3TEX3_VERTEX(FLOATVECTOR4(m_pfBBOXStaticVertex[0]*vVertexScale,1.0f) * m_matTransform, FLOATVECTOR3(m_vTexCoordMin.x,m_vTexCoordMax.y,m_vTexCoordMin.z));
   m_pfBBOXVertex[1] = POS3TEX3_VERTEX(FLOATVECTOR4(m_pfBBOXStaticVertex[1]*vVertexScale,1.0f) * m_matTransform, FLOATVECTOR3(m_vTexCoordMax.x,m_vTexCoordMax.y,m_vTexCoordMin.z));

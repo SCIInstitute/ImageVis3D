@@ -56,12 +56,18 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_bRenderGlobalBBox(false),
   m_bRenderLocalBBox(false),
   m_vWinSize(0,0),
+  m_iMinFramerate(10),
+  m_iLODDelay(1000),
+  m_iMinLODForCurrentView(0),
+  m_iTimeSliceMSecs(100),
   m_iIntraFrameCounter(0),
   m_iFrameCounter(0),
   m_iCheckCounter(0),
   m_iMaxLODIndex(0),
   m_iCurrentLODOffset(0),
-  m_bClearFramebuffer(true)
+  m_bClearFramebuffer(true),
+  m_iCurrentLOD(0),
+  m_iBricksRenderedInThisSubFrame(0)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -204,7 +210,6 @@ void AbstrRenderer::Resize(const UINTVECTOR2& vWinSize) {
   ScheduleCompleteRedraw();
 }
 
-
 void AbstrRenderer::Click(UINTVECTOR2 vPosition) {
   m_ArcBall.Click(vPosition);
 }
@@ -234,7 +239,15 @@ void AbstrRenderer::SetLocalBBox(bool bRenderBBox) {
 }
 
 void AbstrRenderer::ScheduleCompleteRedraw() {
-  m_bCompleteRedraw = true;
+  m_bCompleteRedraw   = true;
   m_iCurrentLODOffset = m_iMaxLODIndex+1;
-  m_iCheckCounter = 10;
+  m_iCheckCounter     = m_iLODDelay;
 }
+
+void AbstrRenderer::ComputeMinLODForCurrentView() {
+  UINTVECTOR3  viVoxelCount = UINTVECTOR3(m_pDataset->GetInfo()->GetDomainSize());
+  FLOATVECTOR3 vfExtend     = (FLOATVECTOR3(viVoxelCount) / viVoxelCount.maxVal()) * FLOATVECTOR3(m_pDataset->GetInfo()->GetScale());
+
+  FLOATVECTOR3 vfCenter(0,0,0);
+  m_iMinLODForCurrentView = max(0, m_FrustumCullingLOD.GetLODLevel(vfCenter,vfExtend,viVoxelCount));
+} 

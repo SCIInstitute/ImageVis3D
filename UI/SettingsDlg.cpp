@@ -38,10 +38,9 @@
 #include "SettingsDlg.h"
 #include <QtGui/QColorDialog>
 
-SettingsDlg::SettingsDlg(MasterController& MasterController, TabID eTabID /* = MEM_TAB*/, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
+SettingsDlg::SettingsDlg(MasterController& MasterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
   QDialog(parent, flags),
   m_MasterController(MasterController),
-  m_eTabID(eTabID),
   m_InitialGPUMemMax(0)
 {
   setupUi(this);
@@ -123,16 +122,33 @@ bool SettingsDlg::GetQuickopen() {
   return checkBoxQuickload->checkState() == Qt::Checked;
 }
 
-UINT64 SettingsDlg::GetMinFramerate() {
-  return UINT64(horizontalSlider->value());
+unsigned int SettingsDlg::GetMinFramerate() {
+  return (unsigned int)(horizontalSlider_MinFramerate->value());
 }
 
-void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, bool bQuickopen, UINT64 iMinFramerate, unsigned int iBlendPrecision, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
+unsigned int SettingsDlg::GetLODDelay() {
+  return (unsigned int)(horizontalSlider_LODDelay->value());
+}
+
+unsigned int SettingsDlg::GetActiveTS() {
+  return (unsigned int)(horizontalSlider_ActTS->value());
+}
+
+unsigned int SettingsDlg::GetInactiveTS() {
+  return (unsigned int)(horizontalSlider_InactTS->value());
+}
+
+void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
+                            bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
+                            unsigned int iBlendPrecision, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
     horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
     horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
     checkBoxQuickload->setChecked(bQuickopen);
-    horizontalSlider->setValue(iMinFramerate);
+    horizontalSlider_MinFramerate->setValue(iMinFramerate);
+    horizontalSlider_LODDelay->setValue(iLODDelay);
+    horizontalSlider_ActTS->setValue(iActiveTS);
+    horizontalSlider_InactTS->setValue(iInactiveTS);
     
     m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
     m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));
@@ -262,4 +278,24 @@ void SettingsDlg::SetMaxMemCheck() {
   }
 
   horizontalSlider_GPUMem->setMaximum(std::min<int> (horizontalSlider_CPUMem->value(),m_InitialGPUMemMax)  );
+}
+
+void SettingsDlg::LODDelayChanged() {
+  QString text= tr("%1 ms").arg(horizontalSlider_LODDelay->value());
+  label_LODDelayDisplay->setText(text);
+}
+
+void SettingsDlg::MinFramerateChanged() {
+  QString text= tr("%1 fps").arg(horizontalSlider_MinFramerate->value());
+  label_MinFrameRateDisplay->setText(text);
+}
+
+void SettingsDlg::ActTSChanged() {
+  QString text= tr("%1 ms").arg(horizontalSlider_ActTS->value());
+  label_ActTSDisplay->setText(text);
+}
+
+void SettingsDlg::InactTSChanged() {
+  QString text= tr("%1 ms").arg(horizontalSlider_InactTS->value());
+  label_InactTSDisplay->setText(text);
 }

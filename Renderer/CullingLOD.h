@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    Culling.h
+  \file    CullingLOD.h
   \brief    Simple routines for filename handling
   \author    Jens Krueger
         SCI Institute
@@ -38,20 +38,37 @@
 
 #pragma once
 
-#ifndef CULLING_H
-#define CULLING_H
+#ifndef CULLINGLOD_H
+#define CULLINGLOD_H
 
 #include <Basics/Vectors.h>
 
-class Culling
+class CullingLOD
 {
-public:
-	void SetParameters(const FLOATMATRIX4& mProjectionMatrix);
-	void Update(const FLOATMATRIX4& mWorldViewMatrix);
-	bool IsVisible(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vHalfExtent) const;
-private:
-	FLOATMATRIX4 m_mProjectionMatrix;
-	FLOATVECTOR4 m_Planes[6];
+  public:
+    CullingLOD(float fScreenSpaceError=1.0f);
+    void SetScreenParams(float fFOVY, float fAspect, float fNearPlane, unsigned int iPixelCountY);
+	  void SetProjectionMatrix(const FLOATMATRIX4& mProjectionMatrix);
+    void SetModelMatrix(const FLOATMATRIX4& mModelMatrix);
+    void SetViewMatrix(const FLOATMATRIX4& mViewMatrix);
+	  void Update();
+    
+    int GetLODLevel(const FLOATVECTOR3& vfCenter, const FLOATVECTOR3& vfExtent, const UINTVECTOR3& viVoxelCount) const;
+	  bool IsVisible(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vfExtent) const;
+
+  private:
+    FLOATMATRIX4 m_mModelViewProjectionMatrix;
+	  FLOATMATRIX4 m_mModelViewMatrix;
+	  FLOATMATRIX4 m_mProjectionMatrix;
+	  FLOATMATRIX4 m_mViewMatrix;
+	  FLOATMATRIX4 m_mModelMatrix;
+	  FLOATVECTOR4 m_Planes[6];
+    float        m_fFOVY;
+    float        m_fAspect;
+    float        m_fNearPlane;
+    unsigned int m_iPixelCountY;
+    float        m_fScreenSpaceError;
+    float        m_fLODFactor;          /// < the magic LOD factor !
 };
 
-#endif // CULLING_H
+#endif // CULLINGLOD_H

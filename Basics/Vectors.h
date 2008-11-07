@@ -75,14 +75,14 @@
   
   #ifdef __D3DX9MATH_H__
     #pragma message("    [vectors.h] Using DX extensions.\n")
-  #else
-    #pragma message("    [vectors.h] NOT using DX extensions.\n")
+//  #else
+//    #pragma message("    [vectors.h] NOT using DX extensions.\n")
   #endif
   
   #ifdef __GL_H__
     #pragma message("    [vectors.h] Using GL extensions.\n")
-  #else
-    #pragma message("    [vectors.h] NOT using GL extensions.\n")
+//  #else
+//    #pragma message("    [vectors.h] NOT using GL extensions.\n")
   #endif
 #endif
 
@@ -96,6 +96,7 @@ public:
 
   VECTOR2<T>(): x(0), y(0) {}
   VECTOR2<T>(const VECTOR2<T> &other): x(other.x), y(other.y) {}
+  template <class S> explicit VECTOR2<T>(const VECTOR2<S> &other): x(T(other.x)), y(T(other.y)) {}
   VECTOR2<T>(const T _x, const T _y) : x(_x), y(_y) {}
   VECTOR2<T>(const T* vec) : x(vec[0]), y(vec[1]) {}
 
@@ -197,10 +198,12 @@ public:
   T x,y,z;
 
   VECTOR3<T>(): x(0), y(0),z(0) {}
-  VECTOR3<T>(const VECTOR2<T> &other, const T _z): x(other.x), y(other.y), z(_z) {}
   VECTOR3<T>(const VECTOR3<T> &other): x(other.x), y(other.y), z(other.z) {}
+  template <class S> explicit VECTOR3<T>(const VECTOR3<S> &other): x(T(other.x)), y(T(other.y)), z(T(other.z)) {}
+  VECTOR3<T>(const VECTOR2<T> &other, const T _z): x(other.x), y(other.y), z(_z) {}
   VECTOR3<T>(const T _x, const T _y, const T _z) : x(_x), y(_y), z(_z) {}
   VECTOR3<T>(const T* vec) : x(vec[0]), y(vec[1]), z(vec[2]) {}
+
 
   bool operator == ( const VECTOR3<T>& other ) const {return (other.x==x && other.y==y && other.z==z); }
   bool operator != ( const VECTOR3<T>& other ) const {return (other.x!=x || other.y!=y || other.z!=z); } 
@@ -338,6 +341,7 @@ public:
   VECTOR4<T>(const VECTOR2<T> &other, const T _z, const T _w): x(other.x), y(other.y), z(_z), w(_w) {}
   VECTOR4<T>(const VECTOR3<T> &other, const T _w): x(other.x), y(other.y), z(other.z), w(_w) {}
   VECTOR4<T>(const VECTOR4<T> &other): x(other.x), y(other.y), z(other.z), w(other.w) {}
+  template <class S> explicit VECTOR4<T>(const VECTOR4<S> &other): x(T(other.x)), y(T(other.y)), z(T(other.z)), w(T(other.w)) {}
   VECTOR4<T>(const VECTOR3<T> &other): x(other.x), y(other.y), z(other.z), w(1) {}
   VECTOR4<T>(const T _x, const T _y, const T _z, const T _w) : x(_x), y(_y), z(_z), w(_w) {}
   VECTOR4<T>(const T* vec) : x(vec[0]), y(vec[1]), z(vec[2]), w(vec[3]) {}
@@ -759,32 +763,33 @@ public:
   };
   
   MATRIX4() : m11(1), m12(0), m13(0), m14(0),
-        m21(0), m22(1), m23(0), m24(0),
-        m31(0), m32(0), m33(1), m34(0),
-        m41(0), m42(0), m43(0), m44(1) {};
+              m21(0), m22(1), m23(0), m24(0),
+              m31(0), m32(0), m33(1), m34(0),
+              m41(0), m42(0), m43(0), m44(1) {};
   MATRIX4( const T *e ) : m11(e[0]),  m12(e[1]),  m13(e[2]),  m14(e[3]),
               m21(e[4]),  m22(e[5]),  m23(e[6]),  m24(e[7]),
               m31(e[8]),  m32(e[9]),  m33(e[10]), m34(e[11]),
               m41(e[12]), m42(e[13]), m43(e[14]), m44(e[15])  {};
-    MATRIX4( const MATRIX4<T>& other ) : m11(other.m11), m12(other.m12), m13(other.m13), m14(other.m14),
-                                  m21(other.m21), m22(other.m22), m23(other.m23), m24(other.m24),
-                    m31(other.m31), m32(other.m32), m33(other.m33), m34(other.m34),
-                    m41(other.m41), m42(other.m42), m43(other.m43), m44(other.m44) {};
-    MATRIX4( const MATRIX3<T>& other ) : m11(other.m11), m12(other.m12), m13(other.m13), m14(0),
-                                  m21(other.m21), m22(other.m22), m23(other.m23), m24(0),
-                    m31(other.m31), m32(other.m32), m33(other.m33), m34(0),
-                    m41(0), m42(0), m43(0), m44(1) {};
+  MATRIX4( const MATRIX4<T>& other ) : m11(other.m11), m12(other.m12), m13(other.m13), m14(other.m14),
+                                       m21(other.m21), m22(other.m22), m23(other.m23), m24(other.m24),
+                                       m31(other.m31), m32(other.m32), m33(other.m33), m34(other.m34),
+                                       m41(other.m41), m42(other.m42), m43(other.m43), m44(other.m44) {};
+  MATRIX4( const MATRIX3<T>& other ) : m11(other.m11), m12(other.m12), m13(other.m13), m14(0),
+                                       m21(other.m21), m22(other.m22), m23(other.m23), m24(0),
+                                       m31(other.m31), m32(other.m32), m33(other.m33), m34(0),
+                                       m41(0), m42(0), m43(0), m44(1) {};
   MATRIX4( const VECTOR4<T> *rows ) : m11(rows[0].x), m12(rows[0].y), m13(rows[0].z), m14(rows[0].w),
-                    m21(rows[1].x), m22(rows[1].y), m23(rows[1].z), m24(rows[1].w),
-                    m31(rows[2].x), m32(rows[2].y), m33(rows[2].z), m34(rows[2].w),
-                    m41(rows[3].x), m42(rows[3].y), m43(rows[3].z), m44(rows[3].w) {};
-    MATRIX4(T _m11, T _m12, T _m13, T _m14,
-      T _m21, T _m22, T _m23, T _m24,
-      T _m31, T _m32, T _m33, T _m34,
-      T _m41, T _m42, T _m43, T _m44) : m11(_m11), m12(_m12), m13(_m13), m14(_m14),
-                        m21(_m21), m22(_m22), m23(_m23), m24(_m24),
-                        m31(_m31), m32(_m32), m33(_m33), m34(_m34),
-                        m41(_m41), m42(_m42), m43(_m43), m44(_m44) {};
+                                      m21(rows[1].x), m22(rows[1].y), m23(rows[1].z), m24(rows[1].w),
+                                      m31(rows[2].x), m32(rows[2].y), m33(rows[2].z), m34(rows[2].w),
+                                      m41(rows[3].x), m42(rows[3].y), m43(rows[3].z), m44(rows[3].w) {};
+  MATRIX4(T _m11, T _m12, T _m13, T _m14,
+          T _m21, T _m22, T _m23, T _m24,
+          T _m31, T _m32, T _m33, T _m34,
+          T _m41, T _m42, T _m43, T _m44) : 
+      m11(_m11), m12(_m12), m13(_m13), m14(_m14),
+      m21(_m21), m22(_m22), m23(_m23), m24(_m24),
+      m31(_m31), m32(_m32), m33(_m33), m34(_m34),
+      m41(_m41), m42(_m42), m43(_m43), m44(_m44) {};
 
   bool operator == ( const MATRIX4<T>& other ) const {return (other.m11==m11 && other.m12==m12 && other.m13==m13 && other.m14==m14 &&
                                 other.m21==m21 && other.m22==m22 && other.m23==m23 && other.m24==m24 &&

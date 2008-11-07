@@ -57,13 +57,13 @@ void MainWindow::CheckSettings() {
                                "configuration of the machine.  Note that "
                                "these settings can be changed later in the "
                                "settings screen.");
-    } while(!ShowSettings(SettingsDlg::MEM_TAB));
+    } while(!ShowSettings());
   } else ApplySettings();
 }
 
-bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
+bool MainWindow::ShowSettings() {
     QSettings settings;
-    SettingsDlg settingsDlg(m_MasterController, eTabID, this);
+    SettingsDlg settingsDlg(m_MasterController, this);
 
     // load first setting to see if we allready saved something
     UINT64 iMaxGPU = settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong();
@@ -73,9 +73,14 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       // load other settings here
       UINT64 iMaxCPU = std::min<UINT64>(settings.value("Memory/MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
   
-      bool bQuickopen = settings.value("Performance/Quickopen", m_bQuickopen).toBool();
-      unsigned int iBlendPrecisionMode = settings.value("Performance/BlendPrecisionMode", 0).toUInt();
-      UINT64 iMinFramerate = settings.value("Performance/MinFrameRate", m_iMinFramerate).toULongLong();
+      settings.beginGroup("Performance");
+      bool bQuickopen = settings.value("Quickopen", m_bQuickopen).toBool();
+      unsigned int iBlendPrecisionMode = settings.value("BlendPrecisionMode", 0).toUInt();
+      unsigned int iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
+      unsigned int iLODDelay = settings.value("LODDelay", m_iLODDelay).toUInt();
+      unsigned int iActiveTS = settings.value("ActiveTS", m_iActiveTS).toUInt();
+      unsigned int iInactiveTS = settings.value("InactiveTS", m_iInactiveTS).toUInt();
+      settings.endGroup();
 
       settings.beginGroup("Renderer");
       FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0f).toULongLong(),
@@ -93,7 +98,7 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       settings.endGroup();
 
       // hand data to form
-      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, bQuickopen, iMinFramerate, iBlendPrecisionMode, vBackColor1, vBackColor2, vTextColor);
+      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS, iBlendPrecisionMode, vBackColor1, vBackColor2, vTextColor);
     }
 
     if (settingsDlg.exec() == QDialog::Accepted) {
@@ -107,6 +112,9 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       settings.beginGroup("Performance");
       settings.setValue("Quickopen", settingsDlg.GetQuickopen());
       settings.setValue("MinFrameRate", settingsDlg.GetMinFramerate());
+      settings.setValue("LODDelay", settingsDlg.GetLODDelay());
+      settings.setValue("ActiveTS", settingsDlg.GetActiveTS());
+      settings.setValue("InactiveTS", settingsDlg.GetInactiveTS());
       settings.setValue("BlendPrecisionMode", settingsDlg.GetBlendPrecisionMode());
       settings.endGroup();
 
@@ -122,7 +130,6 @@ bool MainWindow::ShowSettings(SettingsDlg::TabID eTabID) {
       settings.setValue("TextB", settingsDlg.GetTextColor().z);
       settings.setValue("TextA", settingsDlg.GetTextColor().w);
       settings.endGroup();
-
 
       ApplySettings();
       return true;
@@ -140,8 +147,12 @@ void MainWindow::ApplySettings() {
     settings.endGroup();
 
     settings.beginGroup("Performance");
-    m_bQuickopen = settings.value("Quickopen", m_bQuickopen).toBool();
-    m_iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toULongLong();
+    m_bQuickopen    = settings.value("Quickopen", m_bQuickopen).toBool();
+    m_iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
+    m_iLODDelay     = settings.value("LODDelay", m_iMinFramerate).toUInt();
+    m_iActiveTS     = settings.value("ActiveTS", m_iMinFramerate).toUInt();
+    m_iInactiveTS   = settings.value("InactiveTS", m_iMinFramerate).toUInt();
+
     m_iBlendPrecisionMode = settings.value("BlendPrecisionMode", 0).toUInt();
     settings.endGroup();
 
@@ -165,6 +176,7 @@ void MainWindow::ApplySettings() {
       RenderWindow* renderWin = qobject_cast<RenderWindow*>(w);
       renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
       renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
+      renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/10, m_iActiveTS, m_iInactiveTS);
     }
 
     m_MasterController.SysInfo()->SetMaxUsableCPUMem(iMaxCPU);
