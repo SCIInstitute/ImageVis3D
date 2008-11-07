@@ -149,9 +149,9 @@ void MainWindow::ApplySettings() {
     settings.beginGroup("Performance");
     m_bQuickopen    = settings.value("Quickopen", m_bQuickopen).toBool();
     m_iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
-    m_iLODDelay     = settings.value("LODDelay", m_iMinFramerate).toUInt();
-    m_iActiveTS     = settings.value("ActiveTS", m_iMinFramerate).toUInt();
-    m_iInactiveTS   = settings.value("InactiveTS", m_iMinFramerate).toUInt();
+    m_iLODDelay     = settings.value("LODDelay", m_iLODDelay).toUInt();
+    m_iActiveTS     = settings.value("ActiveTS", m_iActiveTS).toUInt();
+    m_iInactiveTS   = settings.value("InactiveTS", m_iInactiveTS).toUInt();
 
     m_iBlendPrecisionMode = settings.value("BlendPrecisionMode", 0).toUInt();
     settings.endGroup();
