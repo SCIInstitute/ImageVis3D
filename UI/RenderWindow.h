@@ -44,6 +44,7 @@
 
 #include <QtGui/QListWidget>
 #include <QtOpenGL/QGLWidget>
+#include <Basics/ArcBall.h>
 
 class MainWindow;
 
@@ -111,9 +112,15 @@ class RenderWindow : public QGLWidget
     MasterController& m_MasterController;
     unsigned int      m_iTimeSliceMSecsActive;
     unsigned int      m_iTimeSliceMSecsInActive;
+    
+    ArcBall           m_ArcBall;
+    INTVECTOR2        m_viRightClickPos;
+    FLOATMATRIX4      m_mCurrentRotation;
+    FLOATMATRIX4      m_mAccumulatedRotation;
+    FLOATMATRIX4      m_mAccumulatedTranslation;
        
-    QString m_strDataset;
-    QString m_strID;
+    QString           m_strDataset;
+    QString           m_strID;
 
     UINTVECTOR2  m_vWinDim;
 };

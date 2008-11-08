@@ -52,7 +52,6 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_fSampleRateModifier(1.0f),
   m_fIsovalue(0.5f),
   m_vTextColor(1,1,1,1),
-  m_fZoom(0.0f),
   m_bRenderGlobalBBox(false),
   m_bRenderLocalBBox(false),
   m_vWinSize(0,0),
@@ -139,6 +138,7 @@ void AbstrRenderer::SetViewmode(EViewMode eViewMode)
 
 void AbstrRenderer::SetWindowmode(unsigned int iWindowIndex, EWindowMode eWindowMode)
 {
+  /// \todo make avery view is only assigned to one subwindow
   if (m_eWindowMode[iWindowIndex] != eWindowMode) {
     m_eWindowMode[iWindowIndex] = eWindowMode; 
     ScheduleCompleteRedraw();
@@ -210,21 +210,13 @@ void AbstrRenderer::Resize(const UINTVECTOR2& vWinSize) {
   ScheduleCompleteRedraw();
 }
 
-void AbstrRenderer::Click(UINTVECTOR2 vPosition) {
-  m_ArcBall.Click(vPosition);
-}
-
-void AbstrRenderer::Release(UINTVECTOR2) {
-  m_RestRot = m_Rot;
-}
-
-void AbstrRenderer::Drag(UINTVECTOR2 vPosition) {
-  m_Rot = m_RestRot * m_ArcBall.Drag(vPosition).ComputeRotation();
+void AbstrRenderer::SetRotation(const FLOATMATRIX4& mRotation) {
+  m_mRotation = mRotation;
   ScheduleCompleteRedraw();
 }
 
-void AbstrRenderer::Zoom(int iZoom) {
-  m_fZoom += float(iZoom)/1000.0f;
+void AbstrRenderer::SetTranslation(const FLOATMATRIX4& mTranslation) {
+  m_mTranslation = mTranslation;
   ScheduleCompleteRedraw();
 }
 

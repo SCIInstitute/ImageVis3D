@@ -66,7 +66,7 @@ public:
   QTOut* GetDebugOut() {return m_DebugOut;}
 
 public slots:
-  void SetRenderProgress(unsigned int iFrame, unsigned int iLevel);
+  void SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick);
 
 protected slots:
   void LoadDataset();

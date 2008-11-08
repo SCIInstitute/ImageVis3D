@@ -42,7 +42,8 @@ float ArcBall::ms_fEpsilon = 1.0e-5f;
 ArcBall::ArcBall(unsigned int iWinWidth, unsigned int iWinHeight, int iWinOffsetX, int iWinOffsetY) :
     m_vStartDrag(),
     m_iWinDim(iWinWidth, iWinHeight),
-    m_iWinOffsets(iWinOffsetX, iWinOffsetY)
+    m_iWinOffsets(iWinOffsetX, iWinOffsetY),
+    m_fRadius(1.0f)
 {
 }
 
@@ -86,9 +87,9 @@ FLOATVECTOR3 ArcBall::MapToSphere(UINTVECTOR2 vPosition) const {
   float length = vNormPosition.length();
 
   // If the point is mapped outside of the sphere... (length > radius squared)
-  if (length > 1.0f) {
+  if (length > m_fRadius*m_fRadius) {
       // Compute a normalizing factor (radius / sqrt(length))
-      float norm = float(1.0 / sqrt(length));
+      float norm = float(m_fRadius / sqrt(length));
 
       // Return the "normalized" vector, a point on the sphere
       vResult.x = vNormPosition.x * norm;
@@ -101,6 +102,8 @@ FLOATVECTOR3 ArcBall::MapToSphere(UINTVECTOR2 vPosition) const {
       vResult.y = vNormPosition.y;
       vResult.z = float(sqrt(1.0f - length));
   }
+
+  vResult = vResult * m_mTranslation;
 
   return vResult;
 }

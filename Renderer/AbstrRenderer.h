@@ -49,7 +49,6 @@
 #include <IO/TransferFunction2D.h>
 #include <Renderer/GLTexture1D.h>
 #include <Renderer/GLTexture2D.h>
-#include <Basics/ArcBall.h>
 #include <Renderer/CullingLOD.h>
 
 class Brick {
@@ -193,10 +192,8 @@ class AbstrRenderer {
      * \param vWinSize  new width and height of the view window */
     virtual void Resize(const UINTVECTOR2& vWinSize);
     
-    virtual void Click(UINTVECTOR2 vPosition);
-    virtual void Release(UINTVECTOR2 vPosition);
-    virtual void Drag(UINTVECTOR2 vPosition);
-    virtual void Zoom(int iZoom);
+    virtual void SetRotation(const FLOATMATRIX4& mRotation);
+    virtual void SetTranslation(const FLOATMATRIX4& mTranslation);
 
     void SetClearFramebuffer(bool bClearFramebuffer) {m_bClearFramebuffer = bClearFramebuffer;}
     bool GetClearFramebuffer() {return m_bClearFramebuffer;}
@@ -206,10 +203,15 @@ class AbstrRenderer {
     bool GetLocalBBox() {return m_bRenderLocalBBox;}
 
     // scheduling routines
-    UINT64 GetCurrentSubFrameCount() {return m_iMaxLODIndex-m_iMinLODForCurrentView;}
-    unsigned int GetCurrentSubFrame() {return m_iCurrentLOD;}
-    unsigned int GetFrameProgress() {return (unsigned int)(100.0f * (m_iMaxLODIndex-m_iCurrentLOD) / float(GetCurrentSubFrameCount()));}
+    UINT64 GetCurrentSubFrameCount() {return 1+m_iMaxLODIndex-m_iMinLODForCurrentView;}
+    unsigned int GetWorkingSubFrame() {return 1+m_iMaxLODIndex-m_iCurrentLOD;}
+
+    unsigned int GetCurrentBrickCount() {return (unsigned int)(m_vCurrentBrickList.size());}
+    unsigned int GetWorkingBrick() {return m_iBricksRenderedInThisSubFrame;}
+
+    unsigned int GetFrameProgress() {return (unsigned int)(100.0f * float(GetWorkingSubFrame()) / float(GetCurrentSubFrameCount()));}
     unsigned int GetSubFrameProgress() {return (m_vCurrentBrickList.size() == 0) ? 100 : (unsigned int)(100.0f * m_iBricksRenderedInThisSubFrame / float(m_vCurrentBrickList.size()));}
+    
     void SetTimeSlice(unsigned int iMSecs) {m_iTimeSliceMSecs = iMSecs;}
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay) {m_iMinFramerate = iMinFramerate; m_iLODDelay = iLODDelay;}
 
@@ -229,10 +231,8 @@ class AbstrRenderer {
     float               m_fIsovalue;
     FLOATVECTOR3        m_vBackgroundColors[2];
     FLOATVECTOR4        m_vTextColor;
-    ArcBall             m_ArcBall;
-    FLOATMATRIX4        m_RestRot;
-    FLOATMATRIX4        m_Rot;
-    float               m_fZoom;
+    FLOATMATRIX4        m_mRotation;
+    FLOATMATRIX4        m_mTranslation;
     bool                m_bRenderGlobalBBox;
     bool                m_bRenderLocalBBox;
     UINTVECTOR2         m_vWinSize;

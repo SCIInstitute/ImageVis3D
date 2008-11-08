@@ -56,6 +56,10 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   setWindowTitle(m_strID);
 
   m_Renderer->LoadDataset(m_strDataset.toStdString());
+  
+  // shift the object backwards by two so we are not sitting inside the volume
+  m_mAccumulatedTranslation.m43 = -2.0f;
+  m_Renderer->SetTranslation(m_mAccumulatedTranslation);
 
   this->setFocusPolicy(Qt::StrongFocus);
 }
@@ -100,7 +104,13 @@ void RenderWindow::paintGL()
   if (m_Renderer != NULL) {
     m_Renderer->Paint();
     if (isActiveWindow()) {
-        m_MainWindow->SetRenderProgress(m_Renderer->GetFrameProgress(), m_Renderer->GetSubFrameProgress());
+      unsigned int iLevelCount        = m_Renderer->GetCurrentSubFrameCount();
+      unsigned int iWorkingLevelCount = m_Renderer->GetWorkingSubFrame();
+
+      unsigned int iBrickCount        = m_Renderer->GetCurrentBrickCount();
+      unsigned int iWorkingBrick      = m_Renderer->GetWorkingBrick();
+
+      m_MainWindow->SetRenderProgress(iLevelCount, iWorkingLevelCount, iBrickCount, iWorkingBrick);
     } 
   }
 }
@@ -108,25 +118,12 @@ void RenderWindow::paintGL()
 void RenderWindow::resizeGL(int width, int height)
 {
   m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
+
+  m_ArcBall.SetWindowSize(m_vWinDim.x, m_vWinDim.y);
+  m_ArcBall.SetWindowOffset(0,0);
+
   if (m_Renderer != NULL) m_Renderer->Resize(UINTVECTOR2(width, height));
 }
-
-void RenderWindow::mousePressEvent(QMouseEvent *event)
-{
-  if (event->button() == Qt::RightButton) {
-     // nothing todo yet
-  } 
-  if (event->button() == Qt::LeftButton) {
-    m_Renderer->Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
-  }
-}
-
-void RenderWindow::mouseReleaseEvent(QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton) {
-    m_Renderer->Release(UINTVECTOR2(event->pos().x(), event->pos().y()));
-  }
-}
-
 
 float scale(int max, float w) {
 	if (w < 0) {
@@ -136,16 +133,47 @@ float scale(int max, float w) {
 	}
 }
 
+void RenderWindow::mousePressEvent(QMouseEvent *event)
+{
+  if (event->button() == Qt::RightButton) m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+  if (event->button() == Qt::LeftButton)  m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+}
+
+void RenderWindow::mouseReleaseEvent(QMouseEvent *event) {
+  if (event->button() == Qt::LeftButton) m_mAccumulatedRotation = m_mCurrentRotation;
+}
+
 void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 {
+  bool bPerformUpdate = false;
+
   if (event->buttons() & Qt::LeftButton) {
-    m_Renderer->Drag(UINTVECTOR2(event->x(), event->y()));
-    updateGL();
+    m_mCurrentRotation = m_mAccumulatedRotation * m_ArcBall.Drag(UINTVECTOR2(event->pos().x(), event->pos().y())).ComputeRotation();
+    m_Renderer->SetRotation(m_mCurrentRotation);
+    bPerformUpdate = true;
   }
+
+  if (event->buttons() & Qt::RightButton) {
+    INTVECTOR2 viCurrentPos = INTVECTOR2(event->pos().x(), event->pos().y());
+    INTVECTOR2 viPosDelta = viCurrentPos - m_viRightClickPos;
+    m_viRightClickPos = viCurrentPos;
+
+    m_mAccumulatedTranslation.m41 += float(viPosDelta.x*2) / m_vWinDim.x;
+    m_mAccumulatedTranslation.m42 -= float(viPosDelta.y*2) / m_vWinDim.y;
+    m_Renderer->SetTranslation(m_mAccumulatedTranslation);
+    m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+    bPerformUpdate = true;
+  }
+
+  if (bPerformUpdate) updateGL();
 }
 
 void RenderWindow::wheelEvent(QWheelEvent *event) {
-  m_Renderer->Zoom(event->delta());
+  float fZoom = event->delta()/1000.0f;
+  m_mAccumulatedTranslation.m43 += fZoom;
+  m_Renderer->SetTranslation(m_mAccumulatedTranslation);
+  m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+  updateGL();
 }
 
 void RenderWindow::keyPressEvent ( QKeyEvent * event ) {

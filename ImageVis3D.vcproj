@@ -520,11 +520,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GPUSBVR-1D-slice-FS.glsl"
+				>
+			</File>
+			<File
 				RelativePath=".\GPUSBVR-2D-FS.glsl"
 				>
 			</File>
 			<File
 				RelativePath=".\GPUSBVR-2D-light-FS.glsl"
+				>
+			</File>
+			<File
+				RelativePath=".\GPUSBVR-2D-slice-FS.glsl"
 				>
 			</File>
 			<File

@@ -46,6 +46,8 @@ class ArcBall
 public:
 	ArcBall(unsigned int iWinWidth=0, unsigned int iWinHeight=0, int iWinOffsetX=0, int iWinOffsetY=0);
 
+  void SetRadius(float fRadius) {m_fRadius = fRadius;}
+  void SetTranslation(const FLOATMATRIX4& mTranslation) {m_mTranslation = mTranslation;}
   void SetWindowSize(unsigned int iWinWidth, unsigned int iWinHeight);
   void SetWindowOffset(int iWinOffsetX, int iWinOffsetY);
   void Click(UINTVECTOR2 vPosition);
@@ -54,9 +56,12 @@ public:
 protected:
   static float ms_fEpsilon;
 
-  FLOATVECTOR3 m_vStartDrag;  ///< Saved click vector
-  UINTVECTOR2  m_iWinDim;     ///< window dimensions
-  INTVECTOR2   m_iWinOffsets; ///< Horizontal/Vertical window offset
+  FLOATVECTOR3 m_vStartDrag;   ///< Saved click vector
+  UINTVECTOR2  m_iWinDim;      ///< window dimensions
+  INTVECTOR2   m_iWinOffsets;  ///< Horizontal/Vertical window offset
+  float        m_fRadius;      ///< radius of the ball
+  FLOATMATRIX4 m_mTranslation; ///< translation of the ball
+
 
   FLOATVECTOR3 MapToSphere(UINTVECTOR2 vPosition) const;
 };

@@ -26,38 +26,26 @@
    DEALINGS IN THE SOFTWARE.
 */
 
+/**
+  \file    GPUSBVR-1D-FS.glsl
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    October 2008
+*/
 
-//!    File   : ImageVis3D_Progress.cpp
-//!    Author : Jens Krueger
-//!             SCI Institute
-//!             University of Utah
-//!    Date   : November 2008
-//
-//!    Copyright (C) 2008 SCI Institute
+uniform sampler3D texVolume;  ///< the data volume
+uniform sampler1D texTrans1D; ///< the 1D Transfer function
+uniform float fTransScale;    ///< scale for 1D Transfer function lookup
 
-#include "ImageVis3D.h"
-#include <Basics/SysTools.h>
+void main(void)
+{
+  /// get volume value
+	float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
 
-using namespace std;
+  /// apply 1D transfer function
+	vec4  vTransVal = texture1D(texTrans1D, fVolumVal*fTransScale);
 
-void MainWindow::ClearProgressView() {
-  label_ProgressDesc->setVisible(true);
-  groupBox_RenderProgress->setVisible(false);
-  groupBox_ProcessProgess->setVisible(false);
-}
-
-void MainWindow::SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick) {
-  if (dockWidget_ProgressView->isVisible()) {
-    label_ProgressDesc->setVisible(false);
-    groupBox_RenderProgress->setVisible(true);
-    groupBox_ProcessProgess->setVisible(false);
-
-    QString msg = tr("LOD %1/%2").arg(iCurrentCount).arg(iLODCount);
-    label_LODProgress->setText(msg);
-    progressBar_Frame->setValue((unsigned int)(iCurrentCount * 100.0f / iLODCount));
-
-    msg = tr("Brick %1/%2").arg(iWorkingBrick).arg(iBrickCount);
-    label_BrickProgress->setText(msg);
-    progressBar_Level->setValue((unsigned int)(iWorkingBrick * 100.0f / iBrickCount));
-  }
+	gl_FragColor    = vec4(vTransVal.r, vTransVal.g, vTransVal.b, 1);
 }

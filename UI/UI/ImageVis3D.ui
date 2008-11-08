@@ -869,7 +869,7 @@
      <x>1007</x>
      <y>22</y>
      <width>196</width>
-     <height>370</height>
+     <height>371</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -884,7 +884,7 @@
       <x>0</x>
       <y>22</y>
       <width>196</width>
-      <height>348</height>
+      <height>349</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1449,9 +1449,9 @@
    <property name="geometry" >
     <rect>
      <x>1007</x>
-     <y>396</y>
+     <y>397</y>
      <width>196</width>
-     <height>314</height>
+     <height>315</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1472,7 +1472,7 @@
       <x>0</x>
       <y>22</y>
       <width>196</width>
-      <height>292</height>
+      <height>293</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -2659,9 +2659,9 @@
    <property name="geometry" >
     <rect>
      <x>1007</x>
-     <y>714</y>
+     <y>716</y>
      <width>196</width>
-     <height>531</height>
+     <height>532</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2676,7 +2676,7 @@
       <x>0</x>
       <y>22</y>
       <width>196</width>
-      <height>509</height>
+      <height>510</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
@@ -3314,9 +3314,9 @@
    <property name="geometry" >
     <rect>
      <x>1007</x>
-     <y>1249</y>
+     <y>1252</y>
      <width>196</width>
-     <height>276</height>
+     <height>273</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -3337,7 +3337,7 @@
       <x>0</x>
       <y>22</y>
       <width>196</width>
-      <height>254</height>
+      <height>251</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_27" >
@@ -3384,7 +3384,7 @@
         <item row="0" column="0" >
          <widget class="QLabel" name="label_LODProgress" >
           <property name="text" >
-           <string>Frame</string>
+           <string>LOD</string>
           </property>
          </widget>
         </item>
@@ -3396,9 +3396,9 @@
          </widget>
         </item>
         <item row="1" column="0" >
-         <widget class="QLabel" name="label_8" >
+         <widget class="QLabel" name="label_BrickProgress" >
           <property name="text" >
-           <string>Level</string>
+           <string>Bricks</string>
           </property>
          </widget>
         </item>

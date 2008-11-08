@@ -94,6 +94,8 @@ class GPUSBVR : public GLRenderer {
     GLSLProgram*  m_pProgram2DTrans[2];
     GLSLProgram*  m_pProgramIso;
     GLSLProgram*  m_pProgramTrans;
+    GLSLProgram*  m_pProgram1DTransSlice;
+    GLSLProgram*  m_pProgram2DTransSlice;
     int           m_iFilledBuffers;
 
     void DrawLogo();
@@ -101,21 +103,20 @@ class GPUSBVR : public GLRenderer {
     void RerenderPreviousResult();
     void SetDataDepShaderVars();
     void SetBrickDepShaderVars(UINT64 iCurrentLOD, const Brick& currentBrick);
+    void SetBrickDepShaderVarsSlice(UINT64 iCurrentLOD, const UINTVECTOR3& vVoxelCount);
 
-    void RenderSingle();
-    void Render2by2();
-
-    void PlanFrame();
-    void ExecuteFrame();
+    void Plan3DFrame();
+    bool Execute3DFrame(ERenderArea eREnderArea);
 
     void Render3DView();
-    void Render2DView(EWindowMode eDirection, float fSliceIndex);
+    bool Render2DView(EWindowMode eDirection, float fSliceIndex);
     void RenderBBox(const FLOATVECTOR4 vColor = FLOATVECTOR4(1,0,0,1));
     void RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend);
     void CreateOffscreenBuffer();
 
     std::vector<Brick> BuildFrameBrickList();
     void SetRenderTargetArea(ERenderArea eREnderArea);
+    void SetRenderTargetAreaScissor(ERenderArea eREnderArea);
     void SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight);
 };
 

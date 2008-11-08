@@ -51,12 +51,14 @@ GPUSBVR::GPUSBVR(MasterController* pMasterController) :
   m_pFBO3DImageCurrent(NULL),
   m_iFilledBuffers(0)
 {
-  m_pProgram1DTrans[0] = NULL;
-  m_pProgram1DTrans[1] = NULL;
-  m_pProgram2DTrans[0] = NULL;
-  m_pProgram2DTrans[1] = NULL;
-  m_pProgramIso        = NULL;
-  m_pProgramTrans      = NULL;
+  m_pProgram1DTrans[0]   = NULL;
+  m_pProgram1DTrans[1]   = NULL;
+  m_pProgram2DTrans[0]   = NULL;
+  m_pProgram2DTrans[1]   = NULL;
+  m_pProgramIso          = NULL;
+  m_pProgramTrans        = NULL;
+  m_pProgram1DTransSlice = NULL;
+  m_pProgram2DTransSlice = NULL;
 }
 
 GPUSBVR::~GPUSBVR() {
@@ -106,10 +108,18 @@ bool GPUSBVR::Initialize() {
   m_pProgramTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-Transfer-VS.glsl"),
                                                                 SysTools::GetFromResourceOnMac("GPUSBVR-Transfer-FS.glsl"));
 
+  m_pProgram1DTransSlice = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-Transfer-VS.glsl"),
+                                                                SysTools::GetFromResourceOnMac("GPUSBVR-1D-slice-FS.glsl"));
+
+  m_pProgram2DTransSlice = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-Transfer-VS.glsl"),
+                                                                SysTools::GetFromResourceOnMac("GPUSBVR-2D-slice-FS.glsl"));
+
+
 
   if (m_pProgram1DTrans[0] == NULL || m_pProgram1DTrans[1] == NULL ||
       m_pProgram2DTrans[0] == NULL || m_pProgram2DTrans[1] == NULL ||
-      m_pProgramIso == NULL || m_pProgramTrans == NULL) {
+      m_pProgramIso == NULL || m_pProgramTrans == NULL ||
+      m_pProgram1DTransSlice == NULL || m_pProgram2DTransSlice == NULL) {
   
       m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","Error loading a shader.");
       return false;
@@ -156,9 +166,26 @@ bool GPUSBVR::Initialize() {
     m_pProgramTrans->SetUniformVector("texColor",0);
     m_pProgramTrans->SetUniformVector("texDepth",1);
     m_pProgramTrans->Disable();
+
+    m_pProgram1DTransSlice->Enable();
+    m_pProgram1DTransSlice->SetUniformVector("texVolume",0);
+    m_pProgram1DTransSlice->SetUniformVector("texTrans1D",1);
+    m_pProgram1DTransSlice->Disable();
+
+    m_pProgram2DTransSlice->Enable();
+    m_pProgram2DTransSlice->SetUniformVector("texVolume",0);
+    m_pProgram2DTransSlice->SetUniformVector("texTrans2D",1);
+    m_pProgram2DTransSlice->Disable();
   }
 
   return true;
+}
+
+void GPUSBVR::SetBrickDepShaderVarsSlice(UINT64 iCurrentLOD, const UINTVECTOR3& vVoxelCount) {
+  if (m_eRenderMode ==  RM_2DTRANS) {
+    FLOATVECTOR3 vStep = 1.0f/FLOATVECTOR3(vVoxelCount);
+    m_pProgram2DTransSlice->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
+  }
 }
 
 void GPUSBVR::SetBrickDepShaderVars(UINT64 iCurrentLOD, const Brick& currentBrick) {
@@ -168,7 +195,7 @@ void GPUSBVR::SetBrickDepShaderVars(UINT64 iCurrentLOD, const Brick& currentBric
   float fStepScale = m_SBVRGeogen.GetOpacityCorrection();
 
   switch (m_eRenderMode) {
-    case RM_1DTRANS    :  {
+    case RM_1DTRANS    :  {                    
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fStepScale", fStepScale);
                             if (m_bUseLigthing)
                                 m_pProgram1DTrans[1]->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
@@ -183,7 +210,7 @@ void GPUSBVR::SetBrickDepShaderVars(UINT64 iCurrentLOD, const Brick& currentBric
                             m_pProgramIso->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
                             break;
                           }
-    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::SetDataDepShaderVars","Invalid rendermode set"); break;
+    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::SetBrickDepShaderVars","Invalid rendermode set"); break;
   }
 
 }
@@ -198,6 +225,11 @@ void GPUSBVR::SetDataDepShaderVars() {
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",fScale);
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
+
+                            m_pProgram1DTransSlice->Enable();
+                            m_pProgram1DTransSlice->SetUniformVector("fTransScale",fScale);
+                            m_pProgram1DTransSlice->Disable();
+
                             break;
                           }
     case RM_2DTRANS    :  {
@@ -206,12 +238,25 @@ void GPUSBVR::SetDataDepShaderVars() {
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",fScale);
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fGradientScale",fGradientScale);
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable();
+
+                            m_pProgram2DTransSlice->Enable();
+                            m_pProgram2DTransSlice->SetUniformVector("fTransScale",fScale);
+                            m_pProgram2DTransSlice->SetUniformVector("fGradientScale",fGradientScale);
+                            m_pProgram2DTransSlice->Disable();
+
                             break;
                           }
     case RM_ISOSURFACE : {
                             m_pProgramIso->Enable();
                             m_pProgramIso->SetUniformVector("fIsoval",m_fIsovalue/fScale);
                             m_pProgramIso->Disable();
+
+                            float fGradientScale = 1.0f/m_pDataset->GetMaxGradMagnitude();
+                            m_pProgram2DTransSlice->Enable();
+                            m_pProgram2DTransSlice->SetUniformVector("fTransScale",fScale);
+                            m_pProgram2DTransSlice->SetUniformVector("fGradientScale",fGradientScale);
+                            m_pProgram2DTransSlice->Disable();
+
                             break;
                           }
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::SetDataDepShaderVars","Invalid rendermode set"); break;
@@ -229,36 +274,36 @@ bool GPUSBVR::LoadDataset(const string& strFilename) {
 
 
 void GPUSBVR::DrawLogo() {
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(-0.5, +0.5, +0.5, -0.5, 0.0, 1.0);
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  glOrtho(-0.5, +0.5, +0.5, -0.5, 0.0, 1.0);
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
 
-    if (m_IDTex[size_t(m_eViewMode)] != NULL) m_IDTex[size_t(m_eViewMode)]->Bind();
-    glDisable(GL_TEXTURE_3D);
-    glEnable(GL_TEXTURE_2D);
+  if (m_IDTex[size_t(m_eViewMode)] != NULL) m_IDTex[size_t(m_eViewMode)]->Bind();
+  glDisable(GL_TEXTURE_3D);
+  glEnable(GL_TEXTURE_2D);
 
-    glBegin(GL_QUADS);
-      glColor4d(1,1,1,1);
-      glTexCoord2d(0,0);
-      glVertex3d(0.2, 0.4, -0.5);
-      glTexCoord2d(1,0);
-      glVertex3d(0.4, 0.4, -0.5);
-      glTexCoord2d(1,1);
-      glVertex3d(0.4, 0.2, -0.5);
-      glTexCoord2d(0,1);
-      glVertex3d(0.2, 0.2, -0.5);
-    glEnd();
+  glBegin(GL_QUADS);
+    glColor4d(1,1,1,1);
+    glTexCoord2d(0,0);
+    glVertex3d(0.2, 0.4, -0.5);
+    glTexCoord2d(1,0);
+    glVertex3d(0.4, 0.4, -0.5);
+    glTexCoord2d(1,1);
+    glVertex3d(0.4, 0.2, -0.5);
+    glTexCoord2d(0,1);
+    glVertex3d(0.2, 0.2, -0.5);
+  glEnd();
 
-    glDisable(GL_TEXTURE_2D);
+  glDisable(GL_TEXTURE_2D);
 
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+  glMatrixMode(GL_MODELVIEW);
+  glPopMatrix();
 }
 
 void GPUSBVR::DrawBackGradient() {
@@ -292,24 +337,105 @@ void GPUSBVR::DrawBackGradient() {
   glEnable(GL_DEPTH_TEST);
 }
 
-void GPUSBVR::RenderSingle() {
-  SetRenderTargetArea(RA_FULLSCREEN);
-  switch (m_eWindowMode[0]) {
-    case WM_3D         :  Render3DView(); break;
-    case WM_CORONAL    :  
-    case WM_AXIAL      :  
-    case WM_SAGITTAL   :  Render2DView(m_eWindowMode[0], m_fSliceIndex[0]); break; 
-    case WM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::RenderSingle","Invalid windowmode set"); break;
+
+bool GPUSBVR::Render2DView(EWindowMode eDirection, float fSliceIndex) {
+  // clear the depth buffer if instructed
+  if (m_bClearFramebuffer) glClear(GL_DEPTH_BUFFER_BIT);  
+   switch (m_eRenderMode) {
+    case RM_2DTRANS    :  m_p2DTransTex->Bind(1); 
+                          m_pProgram2DTransSlice->Enable();
+                          break;
+    default            :  m_p1DTransTex->Bind(1); 
+                          m_pProgram1DTransSlice->Enable();
+                          break;
   }
-}
 
-void GPUSBVR::Render2by2() {
+  glDisable(GL_BLEND);
+  glDisable(GL_DEPTH_TEST);
 
-}
+  UINT64 iCurrentLOD = 0;
+  UINTVECTOR3 vVoxelCount;
+
+  /// \todo change this code to use something better than the biggest single brick LOD level
+  for (UINT64 i = 0;i<m_pDataset->GetInfo()->GetLODLevelCount();i++) {
+    if (m_pDataset->GetInfo()->GetBrickCount(i).volume() == 1) {
+        iCurrentLOD = i;
+        vVoxelCount = UINTVECTOR3(m_pDataset->GetInfo()->GetDomainSize(i));
+    }
+  }
+
+  SetBrickDepShaderVarsSlice(iCurrentLOD, vVoxelCount);
 
 
-void GPUSBVR::Render2DView(EWindowMode eDirection, float fSliceIndex) {
+  // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
+  vector<UINT64> vLOD; vLOD.push_back(iCurrentLOD);
+  vector<UINT64> vBrick; 
+  vBrick.push_back(0);vBrick.push_back(0);vBrick.push_back(0);
 
+  // get the 3D texture from the memory manager
+  GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, 0, m_iFrameCounter);
+  if(t!=NULL) t->Bind(0);
+
+  // bind offscreen buffer
+  m_pFBO3DImageCurrent->Write();
+
+  FLOATVECTOR3 vMinCoords(0.5f/FLOATVECTOR3(vVoxelCount));
+  FLOATVECTOR3 vMaxCoords(1.0f-vMinCoords);
+
+  switch (eDirection) {
+    case WM_CORONAL : {
+                          glBegin(GL_QUADS);
+                            glTexCoord3d(vMinCoords.x,fSliceIndex,vMinCoords.z);
+                            glVertex3d(-1.0, +1.0, -0.5);
+                            glTexCoord3d(vMaxCoords.x,fSliceIndex,vMinCoords.z);
+                            glVertex3d(+1.0, +1.0, -0.5);
+                            glTexCoord3d(vMaxCoords.x,fSliceIndex,vMaxCoords.z);
+                            glVertex3d(+1.0, -1.0, -0.5);
+                            glTexCoord3d(vMinCoords.x,fSliceIndex,vMaxCoords.z);
+                            glVertex3d(-1.0, -1.0, -0.5);
+                          glEnd();
+                          break;
+                      }
+    case WM_AXIAL : {
+                          glBegin(GL_QUADS);
+                            glTexCoord3d(vMinCoords.x,vMinCoords.y,fSliceIndex);
+                            glVertex3d(-1.0, +1.0, -0.5);
+                            glTexCoord3d(vMaxCoords.x,vMinCoords.y,fSliceIndex);
+                            glVertex3d(+1.0, +1.0, -0.5);
+                            glTexCoord3d(vMaxCoords.x,vMaxCoords.y,fSliceIndex);
+                            glVertex3d(+1.0, -1.0, -0.5);
+                            glTexCoord3d(vMinCoords.x,vMaxCoords.y,fSliceIndex);
+                            glVertex3d(-1.0, -1.0, -0.5);
+                          glEnd();
+                          break;
+                      }
+    case WM_SAGITTAL : {
+                          glBegin(GL_QUADS);
+                            glTexCoord3d(fSliceIndex,vMinCoords.y,vMinCoords.z);
+                            glVertex3d(-1.0, +1.0, -0.5);
+                            glTexCoord3d(fSliceIndex,vMaxCoords.y,vMinCoords.z);
+                            glVertex3d(+1.0, +1.0, -0.5);
+                            glTexCoord3d(fSliceIndex,vMaxCoords.y,vMaxCoords.z);
+                            glVertex3d(+1.0, -1.0, -0.5);
+                            glTexCoord3d(fSliceIndex,vMinCoords.y,vMaxCoords.z);
+                            glVertex3d(-1.0, -1.0, -0.5);
+                          glEnd();
+                          break;
+                      }
+  }
+
+  m_pMasterController->MemMan()->Release3DTexture(t);
+
+  m_pFBO3DImageCurrent->FinishWrite();
+
+  glEnable(GL_DEPTH_TEST);
+
+  switch (m_eRenderMode) {
+    case RM_2DTRANS    :  m_pProgram2DTransSlice->Disable(); break;
+    default            :  m_pProgram1DTransSlice->Disable(); break;
+  }
+
+  return true;
 }
 
 void GPUSBVR::RenderBBox(const FLOATVECTOR4 vColor) {
@@ -443,7 +569,6 @@ void GPUSBVR::Render3DView() {
   glLoadIdentity();
   m_matModelView.setModelview();
 
-
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_TEXTURE_3D);
   glDisable(GL_TEXTURE_2D);
@@ -572,15 +697,10 @@ bool GPUSBVR::CheckForRedraw() {
 }
 
 
-void GPUSBVR::PlanFrame() {
+void GPUSBVR::Plan3DFrame() {
   if (m_bCompleteRedraw) {
-    /// \todo change this to the right subarea
-    SetRenderTargetArea(RA_FULLSCREEN);
-
     // compute modelviewmatrix and forward to culling object
-    FLOATMATRIX4 trans;
-    trans.Translation(0,0,-2+m_fZoom);
-    m_matModelView = m_Rot*trans;
+    m_matModelView = m_mRotation*m_mTranslation;
     m_FrustumCullingLOD.SetViewMatrix(m_matModelView);
     m_FrustumCullingLOD.Update();
 
@@ -604,17 +724,7 @@ void GPUSBVR::PlanFrame() {
 }
 
 
-void GPUSBVR::ExecuteFrame() {
-  if (m_bCompleteRedraw) {
-    // update frame states
-    m_iIntraFrameCounter = 0;
-    m_iFrameCounter = m_pMasterController->MemMan()->UpdateFrameCounter();
-    m_bCompleteRedraw = false;
-
-    // clear the depth buffer if instructed
-    if (m_bClearFramebuffer) glClear(GL_DEPTH_BUFFER_BIT);
-  }
-
+bool GPUSBVR::Execute3DFrame(ERenderArea eREnderArea) {
   // are we starting a new LOD level?
   if (m_iBricksRenderedInThisSubFrame == 0) m_iFilledBuffers = 0;
 
@@ -628,50 +738,77 @@ void GPUSBVR::ExecuteFrame() {
 
     // clear target at the beginning
     if (m_iBricksRenderedInThisSubFrame == 0) {
+      SetRenderTargetAreaScissor(eREnderArea);
       glClearColor(0,0,0,0);
       glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+      glDisable( GL_SCISSOR_TEST );
     }
 
-    // render the images
-    switch (m_eViewMode) {
-      case VM_SINGLE    :  RenderSingle(); break;
-      case VM_TWOBYTWO  :  Render2by2();   break;
-      case VM_INVALID   :  m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid viewmode set"); break;
-    }
+    Render3DView();
 
     // unbind offscreen buffer
     m_pFBO3DImageCurrent->FinishWrite();
 
     // if there is nothing left todo in this subframe -> present the result
-    if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) 
-      swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent); 
-    else {
-      if (m_iFilledBuffers >= 2) return;
+    if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) {      
+      return true;
     }
-
-  } else m_pMasterController->DebugOut()->Message("GPUSBVR::Paint","Quick Redraw");
-
-
-  // clear the framebuffer
-  if (m_bClearFramebuffer) {
-    SetRenderTargetArea(RA_FULLSCREEN);
-    glDepthMask(GL_FALSE);
-    if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
-      glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
-      glClear(GL_COLOR_BUFFER_BIT); 
-    } else DrawBackGradient();
-    //DrawLogo();
-    glDepthMask(GL_TRUE);
-  }
-
-  // show the result
-  RerenderPreviousResult();
-  m_iFilledBuffers++;
+  } 
+  return false;
 }
 
+
+
 void GPUSBVR::Paint() {
-  PlanFrame();
-  ExecuteFrame();
+  if (m_bCompleteRedraw && m_bClearFramebuffer) {
+    glClear(GL_DEPTH_BUFFER_BIT);
+  }
+
+  if (m_eViewMode == VM_SINGLE) {
+    SetRenderTargetArea(RA_FULLSCREEN);
+    // plan the frame
+    Plan3DFrame();
+
+    if (m_bCompleteRedraw) {
+      // update frame states
+      m_iIntraFrameCounter = 0;
+      m_iFrameCounter = m_pMasterController->MemMan()->UpdateFrameCounter();
+      m_bCompleteRedraw = false;
+    }
+
+    // render a subframe
+    bool bNewDataToShow = Execute3DFrame(RA_FULLSCREEN);
+    // if the image is complete swap the offscreen buffers
+    if (bNewDataToShow) swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
+    // show the result
+    if (bNewDataToShow || m_iFilledBuffers < 2) RerenderPreviousResult();
+  } else { // VM_TWOBYTWO 
+    bool bNewDataToShow = true;
+    for (unsigned int i = 0;i<4;i++) {
+      ERenderArea eArea = ERenderArea(int(RA_TOPLEFT)+i);
+      SetRenderTargetArea(eArea);
+
+      Plan3DFrame();
+
+      if (m_bCompleteRedraw) {
+        // update frame states
+        m_iIntraFrameCounter = 0;
+        m_iFrameCounter = m_pMasterController->MemMan()->UpdateFrameCounter();
+        m_bCompleteRedraw = false;
+      }
+
+      switch (m_eWindowMode[i]) {
+         case WM_3D       : bNewDataToShow &= Execute3DFrame(eArea); break;
+         case WM_SAGITTAL : 
+         case WM_AXIAL    : 
+         case WM_CORONAL  : bNewDataToShow &= Render2DView(m_eWindowMode[i], 0.5f); break;
+      }
+    }
+    // if the image is complete swap the offscreen buffers
+    if (bNewDataToShow) swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
+    // show the result
+    if (bNewDataToShow || m_iFilledBuffers < 2) RerenderPreviousResult();
+  }
 }
 
 void GPUSBVR::Resize(const UINTVECTOR2& vWinSize) {
@@ -682,13 +819,25 @@ void GPUSBVR::Resize(const UINTVECTOR2& vWinSize) {
 
 void GPUSBVR::SetRenderTargetArea(ERenderArea eREnderArea) {
   switch (eREnderArea) {
-    case RA_TOPLEFT     : SetViewPort(UINTVECTOR2(0,m_vWinSize.y/2), m_vWinSize); break;
+    case RA_TOPLEFT     : SetViewPort(UINTVECTOR2(0,m_vWinSize.y/2), UINTVECTOR2(m_vWinSize.x/2,m_vWinSize.y)); break;
     case RA_TOPRIGHT    : SetViewPort(m_vWinSize/2, m_vWinSize); break;
     case RA_LOWERLEFT   : SetViewPort(UINTVECTOR2(0,0),m_vWinSize/2); break;
-    case RA_LOWERRIGHT  : SetViewPort(UINTVECTOR2(m_vWinSize.x/2,0), m_vWinSize); break;
+    case RA_LOWERRIGHT  : SetViewPort(UINTVECTOR2(m_vWinSize.x/2,0), UINTVECTOR2(m_vWinSize.x,m_vWinSize.y/2)); break;
     case RA_FULLSCREEN  : SetViewPort(UINTVECTOR2(0,0), m_vWinSize); break;
     default             : m_pMasterController->DebugOut()->Error("GPUSBVR::SetRenderTargetArea","Invalid render area set"); break;
   }
+}
+
+void GPUSBVR::SetRenderTargetAreaScissor(ERenderArea eREnderArea) {
+  switch (eREnderArea) {
+    case RA_TOPLEFT     : glScissor(0,m_vWinSize.y/2, m_vWinSize.x/2,m_vWinSize.y); break;
+    case RA_TOPRIGHT    : glScissor(m_vWinSize.x/2, m_vWinSize.y/2, m_vWinSize.x, m_vWinSize.y); break;
+    case RA_LOWERLEFT   : glScissor(0,0,m_vWinSize.x/2, m_vWinSize.y/2); break;
+    case RA_LOWERRIGHT  : glScissor(m_vWinSize.x/2,0,m_vWinSize.x,m_vWinSize.y/2); break;
+    case RA_FULLSCREEN  : glScissor(0,0,m_vWinSize.x, m_vWinSize.y); break;
+    default             : m_pMasterController->DebugOut()->Error("GPUSBVR::SetRenderTargetAreaScissor","Invalid render area set"); break;
+  }
+  glEnable( GL_SCISSOR_TEST );
 }
 
 void GPUSBVR::SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight) {
@@ -703,8 +852,6 @@ void GPUSBVR::SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight) {
 	glMatrixMode(GL_PROJECTION);		
 	glLoadIdentity();
 	gluPerspective(fovy,aspect,nearPlane,farPlane); 	// Set Projection. Arguments are FOV (in degrees), aspect-ratio, near-plane, far-plane.
-  m_ArcBall.SetWindowSize(viSize.x, viSize.y);
-  m_ArcBall.SetWindowOffset(viLowerLeft.x,viLowerLeft.y);
   
   // forward the GL projection matrix to the culling object
   FLOATMATRIX4 mProjection;
@@ -758,11 +905,26 @@ void GPUSBVR::Cleanup() {
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[1]);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIso);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramTrans);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTransSlice);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTransSlice);
 }
 
 
 void GPUSBVR::RerenderPreviousResult() {
 	glViewport(0,0,m_vWinSize.x,m_vWinSize.y);
+
+  // clear the framebuffer
+  if (m_bClearFramebuffer) {
+    glDepthMask(GL_FALSE);
+    if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
+      glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
+      glClear(GL_COLOR_BUFFER_BIT); 
+    } else DrawBackGradient();
+    //DrawLogo();
+    glDepthMask(GL_TRUE);
+  }
+  m_iFilledBuffers++;
+
 
   m_pFBO3DImageLast->Read(GL_TEXTURE0);
   m_pFBO3DImageLast->ReadDepth(GL_TEXTURE1);

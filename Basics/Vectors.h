@@ -186,11 +186,11 @@ public:
 };
 
 
-template <class T> VECTOR2<T> operator+( const VECTOR2<T>& vec, T scalar ) {return VECTOR2<T>(vec.x+scalar,vec.y+scalar);}
-template <class T> VECTOR2<T> operator-( const VECTOR2<T>& vec, T scalar ) {return VECTOR2<T>(vec.x-scalar,vec.y-scalar);}
-template <class T> VECTOR2<T> operator*( const VECTOR2<T>& vec, T scalar ) {return VECTOR2<T>(vec.x*scalar,vec.y*scalar);}
-template <class T> VECTOR2<T> operator/( const VECTOR2<T>& vec, T scalar ) {return VECTOR2<T>(vec.x/scalar,vec.y/scalar);}
-template <class T> VECTOR2<T> operator%( const VECTOR2<T>& vec, T scalar ) {return VECTOR2<T>(vec.x%scalar,vec.y%scalar);}
+template <class T> VECTOR2<T> operator + ( T scalar, const VECTOR2<T>& vec ) {return VECTOR2<T>(scalar+vec.x,scalar+vec.y);}
+template <class T> VECTOR2<T> operator - ( T scalar, const VECTOR2<T>& vec ) {return VECTOR2<T>(scalar-vec.x,scalar-vec.y);}
+template <class T> VECTOR2<T> operator * ( T scalar, const VECTOR2<T>& vec ) {return VECTOR2<T>(scalar*vec.x,scalar*vec.y);}
+template <class T> VECTOR2<T> operator / ( T scalar, const VECTOR2<T>& vec ) {return VECTOR2<T>(scalar/vec.x,scalar/vec.y);}
+template <class T> VECTOR2<T> operator % ( T scalar, const VECTOR2<T>& vec ) {return VECTOR2<T>(scalar%vec.x,scalar%vec.y);}
 
 
 template <class T=int> class VECTOR3 {
@@ -326,11 +326,11 @@ public:
 
 };
 
-template <class T> VECTOR3<T> operator + ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(vec.x+scalar,vec.y+scalar,vec.z+scalar);}
-template <class T> VECTOR3<T> operator - ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(vec.x-scalar,vec.y-scalar,vec.z-scalar);}
-template <class T> VECTOR3<T> operator * ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(vec.x*scalar,vec.y*scalar,vec.z*scalar);}
-template <class T> VECTOR3<T> operator / ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(vec.x/scalar,vec.y/scalar,vec.z/scalar);}
-template <class T> VECTOR3<T> operator % ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(vec.x%scalar,vec.y%scalar,vec.z%scalar);}
+template <class T> VECTOR3<T> operator + ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(scalar+vec.x,scalar+vec.y,scalar+vec.z);}
+template <class T> VECTOR3<T> operator - ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(scalar-vec.x,scalar-vec.y,scalar-vec.z);}
+template <class T> VECTOR3<T> operator * ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(scalar*vec.x,scalar*vec.y,scalar*vec.z);}
+template <class T> VECTOR3<T> operator / ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(scalar/vec.x,scalar/vec.y,scalar/vec.z);}
+template <class T> VECTOR3<T> operator % ( T scalar, const VECTOR3<T>& vec ) {return VECTOR3<T>(scalar%vec.x,scalar%vec.y,scalar%vec.z);}
 
 template <class T=int> class VECTOR4 {
 public:
@@ -462,6 +462,13 @@ public:
   #endif
 
 };
+
+template <class T> VECTOR4<T> operator + ( T scalar, const VECTOR4<T>& vec ) {return VECTOR4<T>(scalar+vec.x,scalar+vec.y,scalar+vec.z,scalar+vec.w);}
+template <class T> VECTOR4<T> operator - ( T scalar, const VECTOR4<T>& vec ) {return VECTOR4<T>(scalar-vec.x,scalar-vec.y,scalar-vec.z,scalar-vec.w);}
+template <class T> VECTOR4<T> operator * ( T scalar, const VECTOR4<T>& vec ) {return VECTOR4<T>(scalar*vec.x,scalar*vec.y,scalar*vec.z,scalar*vec.w);}
+template <class T> VECTOR4<T> operator / ( T scalar, const VECTOR4<T>& vec ) {return VECTOR4<T>(scalar/vec.x,scalar/vec.y,scalar/vec.z,scalar/vec.w);}
+template <class T> VECTOR4<T> operator % ( T scalar, const VECTOR4<T>& vec ) {return VECTOR4<T>(scalar%vec.x,scalar%vec.y,scalar%vec.z,scalar%vec.w);}
+
 
 typedef unsigned int uint;
 typedef unsigned short ushort;
