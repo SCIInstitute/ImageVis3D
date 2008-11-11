@@ -181,14 +181,14 @@ bool GPUSBVR::Initialize() {
   return true;
 }
 
-void GPUSBVR::SetBrickDepShaderVarsSlice(UINT64 iCurrentLOD, const UINTVECTOR3& vVoxelCount) {
+void GPUSBVR::SetBrickDepShaderVarsSlice(const UINTVECTOR3& vVoxelCount) {
   if (m_eRenderMode ==  RM_2DTRANS) {
     FLOATVECTOR3 vStep = 1.0f/FLOATVECTOR3(vVoxelCount);
     m_pProgram2DTransSlice->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
   }
 }
 
-void GPUSBVR::SetBrickDepShaderVars(UINT64 iCurrentLOD, const Brick& currentBrick) {
+void GPUSBVR::SetBrickDepShaderVars(const Brick& currentBrick) {
 
   FLOATVECTOR3 vStep(1.0f/currentBrick.vVoxelCount.x, 1.0f/currentBrick.vVoxelCount.y, 1.0f/currentBrick.vVoxelCount.z);
 
@@ -439,6 +439,7 @@ bool GPUSBVR::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT
                           glEnd();
                           break;
                       }
+    default        :  m_pMasterController->DebugOut()->Error("GPUSBVR::Render2DView","Invalid windowmode set"); break;
   }
 
   m_pMasterController->MemMan()->Release3DTexture(t);
@@ -613,7 +614,7 @@ void GPUSBVR::Render3DView() {
                           break;
     case RM_ISOSURFACE :  m_pProgramIso->Enable(); 
                           break;
-    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Render3DView","Invalid rendermode set"); 
+    default    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Render3DView","Invalid rendermode set"); 
                           break;
   }
 

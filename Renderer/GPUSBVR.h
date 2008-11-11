@@ -102,8 +102,8 @@ class GPUSBVR : public GLRenderer {
     void DrawBackGradient();
     void RerenderPreviousResult(bool bTransferToFramebuffer);
     void SetDataDepShaderVars();
-    void SetBrickDepShaderVars(UINT64 iCurrentLOD, const Brick& currentBrick);
-    void SetBrickDepShaderVarsSlice(UINT64 iCurrentLOD, const UINTVECTOR3& vVoxelCount);
+    void SetBrickDepShaderVars(const Brick& currentBrick);
+    void SetBrickDepShaderVarsSlice(const UINTVECTOR3& vVoxelCount);
 
     void Plan3DFrame();
     bool Execute3DFrame(ERenderArea eREnderArea);
