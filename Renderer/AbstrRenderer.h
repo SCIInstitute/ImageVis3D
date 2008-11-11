@@ -219,7 +219,7 @@ class AbstrRenderer {
     unsigned int GetSubFrameProgress() {return (m_vCurrentBrickList.size() == 0) ? 100 : (unsigned int)(100.0f * m_iBricksRenderedInThisSubFrame / float(m_vCurrentBrickList.size()));}
     
     void SetTimeSlice(unsigned int iMSecs) {m_iTimeSliceMSecs = iMSecs;}
-    void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay) {m_iMinFramerate = iMinFramerate; m_iLODDelay = iLODDelay;}
+    void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iStartDelay) {m_iMinFramerate = iMinFramerate; m_iStartDelay = iStartDelay;}
 
   protected:
     MasterController*   m_pMasterController;
@@ -246,7 +246,7 @@ class AbstrRenderer {
     UINTVECTOR2         m_vWinSize;
 
     unsigned int        m_iMinFramerate;
-    unsigned int        m_iLODDelay;
+    unsigned int        m_iStartDelay;
     UINT64              m_iMinLODForCurrentView;
     unsigned int        m_iTimeSliceMSecs;
 

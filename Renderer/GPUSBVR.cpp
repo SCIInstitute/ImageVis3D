@@ -455,10 +455,12 @@ bool GPUSBVR::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT
 }
 
 void GPUSBVR::RenderBBox(const FLOATVECTOR4 vColor) {
-  FLOATVECTOR3 vAspectRatio = FLOATVECTOR3(m_pDataset->GetInfo()->GetScale()) * FLOATVECTOR3(m_pDataset->GetInfo()->GetDomainSize());
-  vAspectRatio = vAspectRatio / vAspectRatio.maxVal();
+  UINT64VECTOR3 vDomainSize = m_pDataset->GetInfo()->GetDomainSize();
+  UINT64 iMaxDomainSize = vDomainSize.maxVal();
+  FLOATVECTOR3 vExtend = FLOATVECTOR3(vDomainSize)/float(iMaxDomainSize) * FLOATVECTOR3(m_pDataset->GetInfo()->GetScale());
+
   FLOATVECTOR3 vCenter(0,0,0);
-  RenderBBox(vColor, vCenter, vAspectRatio);
+  RenderBBox(vColor, vCenter, vExtend);
 }
 
 void GPUSBVR::RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend) {
@@ -709,7 +711,7 @@ bool GPUSBVR::CheckForRedraw() {
 
 void GPUSBVR::Plan3DFrame() {
   if (m_bPerformRedraw) {
-    // compute modelviewmatrix and forward to culling object
+    // compute modelviewmatrix and pass it to the culling object
     m_matModelView = m_mRotation*m_mTranslation;
     m_FrustumCullingLOD.SetViewMatrix(m_matModelView);
     m_FrustumCullingLOD.Update();
@@ -769,6 +771,7 @@ bool GPUSBVR::Execute3DFrame(ERenderArea eREnderArea) {
 
 
 void GPUSBVR::Paint() {
+  // if we are redrawing clear the framebuffer (if requested)
   if (m_bPerformRedraw && m_bClearFramebuffer) glClear(GL_DEPTH_BUFFER_BIT);
 
   bool bNewDataToShow;

@@ -56,7 +56,7 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_bRenderLocalBBox(false),
   m_vWinSize(0,0),
   m_iMinFramerate(10),
-  m_iLODDelay(1000),
+  m_iStartDelay(1000),
   m_iMinLODForCurrentView(0),
   m_iTimeSliceMSecs(100),
   m_iIntraFrameCounter(0),
@@ -282,7 +282,7 @@ void AbstrRenderer::SetLocalBBox(bool bRenderBBox) {
 
 void AbstrRenderer::ScheduleCompleteRedraw() {
   m_bPerformRedraw   = true;
-  m_iCheckCounter    = m_iLODDelay;
+  m_iCheckCounter    = m_iStartDelay;
 
   m_bRedrawMask[0] = true;
   m_bRedrawMask[1] = true;
@@ -293,7 +293,7 @@ void AbstrRenderer::ScheduleCompleteRedraw() {
 
 void AbstrRenderer::ScheduleWindowRedraw(int iIndex) {
   m_bPerformRedraw      = true;
-  m_iCheckCounter       = m_iLODDelay;
+  m_iCheckCounter       = m_iStartDelay;
   m_bRedrawMask[iIndex] = true;
 }
 
@@ -302,5 +302,5 @@ void AbstrRenderer::ComputeMinLODForCurrentView() {
   FLOATVECTOR3 vfExtend     = (FLOATVECTOR3(viVoxelCount) / viVoxelCount.maxVal()) * FLOATVECTOR3(m_pDataset->GetInfo()->GetScale());
 
   FLOATVECTOR3 vfCenter(0,0,0);
-  m_iMinLODForCurrentView = max(0, m_FrustumCullingLOD.GetLODLevel(vfCenter,vfExtend,viVoxelCount));
+  m_iMinLODForCurrentView = max(0, min<int>(m_pDataset->GetInfo()->GetLODLevelCount()-1,m_FrustumCullingLOD.GetLODLevel(vfCenter,vfExtend,viVoxelCount)));
 } 

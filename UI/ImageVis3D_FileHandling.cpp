@@ -89,7 +89,7 @@ QString MainWindow::GetConvFilename() {
 
 void MainWindow::LoadDataset(QString fileName) {
   PleaseWaitDialog pleaseWait(this);
-
+ 
   if (!fileName.isEmpty()) {
 
     bool bChecksumFail=false;
