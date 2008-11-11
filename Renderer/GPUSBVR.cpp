@@ -624,7 +624,6 @@ void GPUSBVR::Render3DView() {
   clock_t timeStart, timeProbe;
   timeStart = timeProbe = clock();
 
-  unsigned int iBricksRenderedInThisBatch = 0;
   while (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame && float(timeProbe-timeStart)*1000.0f/float(CLOCKS_PER_SEC) < m_iTimeSliceMSecs) {
   
     // setup the slice generator
@@ -792,6 +791,7 @@ void GPUSBVR::Paint() {
        case WM_AXIAL    : 
        case WM_CORONAL  : bNewDataToShow = Render2DView(RA_FULLSCREEN, m_eFullWindowMode, m_piSlice[size_t(m_eFullWindowMode)]); break;
        default          : m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid Windowmode");
+                          bNewDataToShow = false;
                           break;
 
     }
@@ -807,7 +807,6 @@ void GPUSBVR::Paint() {
     // bind offscreen buffer
     m_pFBO3DImageCurrent->Write();
 
-    bool bPartialRedraw = false;
     for (unsigned int i = 0;i<4;i++) {
       ERenderArea eArea = ERenderArea(int(RA_TOPLEFT)+i);
 
