@@ -364,7 +364,7 @@ bool GPUSBVR::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT
     }
   }
 
-  SetBrickDepShaderVarsSlice(iCurrentLOD, vVoxelCount);
+  SetBrickDepShaderVarsSlice(vVoxelCount);
 
   // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
   vector<UINT64> vLOD; vLOD.push_back(iCurrentLOD);
@@ -648,7 +648,7 @@ void GPUSBVR::Render3DView() {
     if(t!=NULL) t->Bind(0);
 
     // update the shader parameter
-    SetBrickDepShaderVars(m_iCurrentLOD, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame]);
+    SetBrickDepShaderVars(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame]);
 
     // render the slices
     glBegin(GL_TRIANGLES);
