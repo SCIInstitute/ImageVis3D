@@ -92,7 +92,7 @@ bool GPUSBVR::Initialize() {
 
   m_pProgram1DTrans[0] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
                                                                        SysTools::GetFromResourceOnMac("GPUSBVR-1D-FS.glsl"));
-
+  
   m_pProgram1DTrans[1] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
                                                                        SysTools::GetFromResourceOnMac("GPUSBVR-1D-light-FS.glsl"));
 
@@ -338,7 +338,7 @@ void GPUSBVR::DrawBackGradient() {
 }
 
 
-bool GPUSBVR::Render2DView(EWindowMode eDirection, float fSliceIndex) {
+bool GPUSBVR::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT64 iSliceIndex) {
   // clear the depth buffer if instructed
   if (m_bClearFramebuffer) glClear(GL_DEPTH_BUFFER_BIT);  
    switch (m_eRenderMode) {
@@ -366,7 +366,6 @@ bool GPUSBVR::Render2DView(EWindowMode eDirection, float fSliceIndex) {
 
   SetBrickDepShaderVarsSlice(iCurrentLOD, vVoxelCount);
 
-
   // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
   vector<UINT64> vLOD; vLOD.push_back(iCurrentLOD);
   vector<UINT64> vBrick; 
@@ -376,57 +375,73 @@ bool GPUSBVR::Render2DView(EWindowMode eDirection, float fSliceIndex) {
   GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, 0, m_iFrameCounter);
   if(t!=NULL) t->Bind(0);
 
-  // bind offscreen buffer
-  m_pFBO3DImageCurrent->Write();
+  // clear the target at the beginning
+  SetRenderTargetAreaScissor(eREnderArea);
+  glClearColor(0,0,0,1);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glDisable(GL_SCISSOR_TEST);
 
   FLOATVECTOR3 vMinCoords(0.5f/FLOATVECTOR3(vVoxelCount));
   FLOATVECTOR3 vMaxCoords(1.0f-vMinCoords);
 
+  UINT64VECTOR3 vDomainSize = m_pDataset->GetInfo()->GetDomainSize();
+  DOUBLEVECTOR3 vAspectRatio = m_pDataset->GetInfo()->GetScale() * DOUBLEVECTOR3(vDomainSize);  
+
+  DOUBLEVECTOR2 vWinAspectRatio = 1.0 / DOUBLEVECTOR2(m_vWinSize);
+  vWinAspectRatio = vWinAspectRatio / vWinAspectRatio.maxVal();
+
   switch (eDirection) {
     case WM_CORONAL : {
+                          DOUBLEVECTOR2 v2AspectRatio = vAspectRatio.xz()*DOUBLEVECTOR2(vWinAspectRatio);
+                          v2AspectRatio = v2AspectRatio / v2AspectRatio.maxVal();
+                          double fSliceIndex = double(iSliceIndex)/double(vDomainSize.y);
                           glBegin(GL_QUADS);
-                            glTexCoord3d(vMinCoords.x,fSliceIndex,vMinCoords.z);
-                            glVertex3d(-1.0, +1.0, -0.5);
-                            glTexCoord3d(vMaxCoords.x,fSliceIndex,vMinCoords.z);
-                            glVertex3d(+1.0, +1.0, -0.5);
-                            glTexCoord3d(vMaxCoords.x,fSliceIndex,vMaxCoords.z);
-                            glVertex3d(+1.0, -1.0, -0.5);
                             glTexCoord3d(vMinCoords.x,fSliceIndex,vMaxCoords.z);
-                            glVertex3d(-1.0, -1.0, -0.5);
+                            glVertex3d(-1.0f*v2AspectRatio.x, +1.0f*v2AspectRatio.y, -0.5f);
+                            glTexCoord3d(vMaxCoords.x,fSliceIndex,vMaxCoords.z);
+                            glVertex3d(+1.0f*v2AspectRatio.x, +1.0f*v2AspectRatio.y, -0.5f);
+                            glTexCoord3d(vMaxCoords.x,fSliceIndex,vMinCoords.z);
+                            glVertex3d(+1.0f*v2AspectRatio.x, -1.0f*v2AspectRatio.y, -0.5f);
+                            glTexCoord3d(vMinCoords.x,fSliceIndex,vMinCoords.z);
+                            glVertex3d(-1.0f*v2AspectRatio.x, -1.0f*v2AspectRatio.y, -0.5f);
                           glEnd();
                           break;
                       }
     case WM_AXIAL : {
+                          DOUBLEVECTOR2 v2AspectRatio = vAspectRatio.xy()*DOUBLEVECTOR2(vWinAspectRatio);
+                          v2AspectRatio = v2AspectRatio / v2AspectRatio.maxVal();
+                          double fSliceIndex = double(iSliceIndex)/double(vDomainSize.z);
                           glBegin(GL_QUADS);
-                            glTexCoord3d(vMinCoords.x,vMinCoords.y,fSliceIndex);
-                            glVertex3d(-1.0, +1.0, -0.5);
-                            glTexCoord3d(vMaxCoords.x,vMinCoords.y,fSliceIndex);
-                            glVertex3d(+1.0, +1.0, -0.5);
-                            glTexCoord3d(vMaxCoords.x,vMaxCoords.y,fSliceIndex);
-                            glVertex3d(+1.0, -1.0, -0.5);
                             glTexCoord3d(vMinCoords.x,vMaxCoords.y,fSliceIndex);
-                            glVertex3d(-1.0, -1.0, -0.5);
+                            glVertex3d(-1.0f*v2AspectRatio.x, +1.0f*v2AspectRatio.y, -0.5f);
+                            glTexCoord3d(vMaxCoords.x,vMaxCoords.y,fSliceIndex);
+                            glVertex3d(+1.0f*v2AspectRatio.x, +1.0f*v2AspectRatio.y, -0.5f);
+                            glTexCoord3d(vMaxCoords.x,vMinCoords.y,fSliceIndex);
+                            glVertex3d(+1.0f*v2AspectRatio.x, -1.0f*v2AspectRatio.y, -0.5f);
+                            glTexCoord3d(vMinCoords.x,vMinCoords.y,fSliceIndex);
+                            glVertex3d(-1.0f*v2AspectRatio.x, -1.0f*v2AspectRatio.y, -0.5f);
                           glEnd();
                           break;
                       }
     case WM_SAGITTAL : {
+                          DOUBLEVECTOR2 v2AspectRatio = vAspectRatio.yz()*DOUBLEVECTOR2(vWinAspectRatio);
+                          v2AspectRatio = v2AspectRatio / v2AspectRatio.maxVal();
+                          double fSliceIndex = double(iSliceIndex)/double(vDomainSize.x);
                           glBegin(GL_QUADS);
-                            glTexCoord3d(fSliceIndex,vMinCoords.y,vMinCoords.z);
-                            glVertex3d(-1.0, +1.0, -0.5);
-                            glTexCoord3d(fSliceIndex,vMaxCoords.y,vMinCoords.z);
-                            glVertex3d(+1.0, +1.0, -0.5);
-                            glTexCoord3d(fSliceIndex,vMaxCoords.y,vMaxCoords.z);
-                            glVertex3d(+1.0, -1.0, -0.5);
                             glTexCoord3d(fSliceIndex,vMinCoords.y,vMaxCoords.z);
-                            glVertex3d(-1.0, -1.0, -0.5);
+                            glVertex3d(-1.0f*v2AspectRatio.x, +1.0f*v2AspectRatio.y, -0.5f);
+                            glTexCoord3d(fSliceIndex,vMaxCoords.y,vMaxCoords.z);
+                            glVertex3d(+1.0f*v2AspectRatio.x, +1.0f*v2AspectRatio.y, -0.5f);
+                            glTexCoord3d(fSliceIndex,vMaxCoords.y,vMinCoords.z);
+                            glVertex3d(+1.0f*v2AspectRatio.x, -1.0f*v2AspectRatio.y, -0.5f);
+                            glTexCoord3d(fSliceIndex,vMinCoords.y,vMinCoords.z);
+                            glVertex3d(-1.0f*v2AspectRatio.x, -1.0f*v2AspectRatio.y, -0.5f);
                           glEnd();
                           break;
                       }
   }
 
   m_pMasterController->MemMan()->Release3DTexture(t);
-
-  m_pFBO3DImageCurrent->FinishWrite();
 
   glEnable(GL_DEPTH_TEST);
 
@@ -439,15 +454,10 @@ bool GPUSBVR::Render2DView(EWindowMode eDirection, float fSliceIndex) {
 }
 
 void GPUSBVR::RenderBBox(const FLOATVECTOR4 vColor) {
-  FLOATVECTOR3 vScale(m_pDataset->GetInfo()->GetScale().x, m_pDataset->GetInfo()->GetScale().y, m_pDataset->GetInfo()->GetScale().z);
-  UINT64VECTOR3 vDomainSize = m_pDataset->GetInfo()->GetDomainSize(0);
-  vScale.x *= float(vDomainSize.x)/float(vDomainSize.maxVal());
-  vScale.y *= float(vDomainSize.y)/float(vDomainSize.maxVal());
-  vScale.z *= float(vDomainSize.z)/float(vDomainSize.maxVal());
-
+  FLOATVECTOR3 vAspectRatio = FLOATVECTOR3(m_pDataset->GetInfo()->GetScale()) * FLOATVECTOR3(m_pDataset->GetInfo()->GetDomainSize());
+  vAspectRatio = vAspectRatio / vAspectRatio.maxVal();
   FLOATVECTOR3 vCenter(0,0,0);
-
-  RenderBBox(vColor, vCenter, vScale);
+  RenderBBox(vColor, vCenter, vAspectRatio);
 }
 
 void GPUSBVR::RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend) {
@@ -693,23 +703,24 @@ bool GPUSBVR::CheckForRedraw() {
       return true;
     } else m_iCheckCounter--;
   }
-  return m_bCompleteRedraw;
+  return m_bPerformRedraw;
 }
 
 
 void GPUSBVR::Plan3DFrame() {
-  if (m_bCompleteRedraw) {
+  if (m_bPerformRedraw) {
     // compute modelviewmatrix and forward to culling object
     m_matModelView = m_mRotation*m_mTranslation;
     m_FrustumCullingLOD.SetViewMatrix(m_matModelView);
     m_FrustumCullingLOD.Update();
 
+    m_iCurrentLODOffset = m_iMaxLODIndex+1;
     ComputeMinLODForCurrentView();
   }
 
   // plan if the frame is to be redrawn
   // or if we have completed the last subframe but not the entire frame
-  if (m_bCompleteRedraw || 
+  if (m_bPerformRedraw || 
      (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame && m_iCurrentLODOffset > m_iMinLODForCurrentView)) {
 
     // compute current LOD level
@@ -717,9 +728,15 @@ void GPUSBVR::Plan3DFrame() {
     m_iCurrentLOD = std::min<UINT64>(m_iCurrentLODOffset,m_pDataset->GetInfo()->GetLODLevelCount()-1);
     UINT64VECTOR3 vBrickCount = m_pDataset->GetInfo()->GetBrickCount(m_iCurrentLOD);
 
-    // build new todo brick list
+    // build new brick todo-list
     m_vCurrentBrickList = BuildFrameBrickList();
     m_iBricksRenderedInThisSubFrame = 0;
+  }
+
+  if (m_bPerformRedraw) {
+    // update frame states
+    m_iIntraFrameCounter = 0;
+    m_iFrameCounter = m_pMasterController->MemMan()->UpdateFrameCounter();
   }
 }
 
@@ -733,9 +750,6 @@ bool GPUSBVR::Execute3DFrame(ERenderArea eREnderArea) {
     // setup shaders vars
     SetDataDepShaderVars(); 
 
-    // bind offscreen buffer
-    m_pFBO3DImageCurrent->Write();
-
     // clear target at the beginning
     if (m_iBricksRenderedInThisSubFrame == 0) {
       SetRenderTargetAreaScissor(eREnderArea);
@@ -746,13 +760,8 @@ bool GPUSBVR::Execute3DFrame(ERenderArea eREnderArea) {
 
     Render3DView();
 
-    // unbind offscreen buffer
-    m_pFBO3DImageCurrent->FinishWrite();
-
     // if there is nothing left todo in this subframe -> present the result
-    if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) {      
-      return true;
-    }
+    if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) return true;
   } 
   return false;
 }
@@ -760,55 +769,122 @@ bool GPUSBVR::Execute3DFrame(ERenderArea eREnderArea) {
 
 
 void GPUSBVR::Paint() {
-  if (m_bCompleteRedraw && m_bClearFramebuffer) {
-    glClear(GL_DEPTH_BUFFER_BIT);
-  }
+  if (m_bPerformRedraw && m_bClearFramebuffer) glClear(GL_DEPTH_BUFFER_BIT);
 
+  bool bNewDataToShow;
   if (m_eViewMode == VM_SINGLE) {
+    // set render area to fullscreen
     SetRenderTargetArea(RA_FULLSCREEN);
-    // plan the frame
-    Plan3DFrame();
 
-    if (m_bCompleteRedraw) {
-      // update frame states
-      m_iIntraFrameCounter = 0;
-      m_iFrameCounter = m_pMasterController->MemMan()->UpdateFrameCounter();
-      m_bCompleteRedraw = false;
+    // bind offscreen buffer
+    m_pFBO3DImageCurrent->Write();
+
+    switch (m_eFullWindowMode) {
+       case WM_3D       : {
+                              // plan the frame
+                              Plan3DFrame();
+                              // execute the frame
+                              bNewDataToShow = Execute3DFrame(RA_FULLSCREEN); 
+                              break;
+                          }
+       case WM_SAGITTAL : 
+       case WM_AXIAL    : 
+       case WM_CORONAL  : bNewDataToShow = Render2DView(RA_FULLSCREEN, m_eFullWindowMode, m_piSlice[size_t(m_eFullWindowMode)]); break;
+       default          : m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid Windowmode");
+                          break;
+
     }
 
-    // render a subframe
-    bool bNewDataToShow = Execute3DFrame(RA_FULLSCREEN);
-    // if the image is complete swap the offscreen buffers
-    if (bNewDataToShow) swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
-    // show the result
-    if (bNewDataToShow || m_iFilledBuffers < 2) RerenderPreviousResult();
+    // unbind offscreen buffer
+    m_pFBO3DImageCurrent->FinishWrite();
+
   } else { // VM_TWOBYTWO 
-    bool bNewDataToShow = true;
+    int iActiveRenderWindows = 0;
+    int iReadyWindows = 0;
+    for (unsigned int i = 0;i<4;i++) if (m_bRedrawMask[i]) iActiveRenderWindows++;
+
+    // bind offscreen buffer
+    m_pFBO3DImageCurrent->Write();
+
+    bool bPartialRedraw = false;
     for (unsigned int i = 0;i<4;i++) {
       ERenderArea eArea = ERenderArea(int(RA_TOPLEFT)+i);
-      SetRenderTargetArea(eArea);
 
-      Plan3DFrame();
-
-      if (m_bCompleteRedraw) {
-        // update frame states
-        m_iIntraFrameCounter = 0;
-        m_iFrameCounter = m_pMasterController->MemMan()->UpdateFrameCounter();
-        m_bCompleteRedraw = false;
+      if (m_bRedrawMask[size_t(m_e2x2WindowMode[i])]) {
+        SetRenderTargetArea(eArea);
+        bool bLocalNewDataToShow;
+        switch (m_e2x2WindowMode[i]) {
+           case WM_3D       : {
+                                // plan the frame
+                                Plan3DFrame();
+                                // execute the frame
+                                bLocalNewDataToShow = Execute3DFrame(eArea);
+                                // are we done traversing the LOD levels
+                                m_bRedrawMask[size_t(m_e2x2WindowMode[i])] = (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame) || (m_iCurrentLODOffset > m_iMinLODForCurrentView);
+                                break;
+                              }
+           case WM_SAGITTAL : 
+           case WM_AXIAL    : 
+           case WM_CORONAL  : bLocalNewDataToShow= Render2DView(eArea, m_e2x2WindowMode[i], m_piSlice[size_t(m_e2x2WindowMode[i])]); 
+                              m_bRedrawMask[size_t(m_e2x2WindowMode[i])] = false;
+                              break;
+           default          : m_pMasterController->DebugOut()->Error("GPUSBVR::Paint","Invalid Windowmode");
+                              bLocalNewDataToShow = false; 
+                              break;
+        }
+        
+        if (bLocalNewDataToShow) iReadyWindows++;
+      } else {
+        SetRenderTargetArea(RA_FULLSCREEN);
+        SetRenderTargetAreaScissor(eArea);
+        RerenderPreviousResult(false);
       }
 
-      switch (m_eWindowMode[i]) {
-         case WM_3D       : bNewDataToShow &= Execute3DFrame(eArea); break;
-         case WM_SAGITTAL : 
-         case WM_AXIAL    : 
-         case WM_CORONAL  : bNewDataToShow &= Render2DView(m_eWindowMode[i], 0.5f); break;
-      }
+      bNewDataToShow = (iActiveRenderWindows > 0) && (iReadyWindows==iActiveRenderWindows);
     }
-    // if the image is complete swap the offscreen buffers
-    if (bNewDataToShow) swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
-    // show the result
-    if (bNewDataToShow || m_iFilledBuffers < 2) RerenderPreviousResult();
+
+
+    // set render area to fullscreen
+    SetRenderTargetAreaScissor(RA_FULLSCREEN);
+    SetRenderTargetArea(RA_FULLSCREEN);
+    glDisable( GL_SCISSOR_TEST );
+
+    // render seperating lines
+    glDisable(GL_BLEND);
+
+    glDisable(GL_DEPTH_TEST);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(-1, 1, 1, -1, 0, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glBegin(GL_LINES);
+      glColor4f(1.0f,1.0f,1.0f,1.0f);
+      glVertex3f(0,-1,0);
+      glVertex3f(0,1,0);
+      glVertex3f(-1,0,0);
+      glVertex3f(1,0,0);
+    glEnd();
+
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+    glEnable(GL_DEPTH_TEST);
+
+    // unbind offscreen buffer
+    m_pFBO3DImageCurrent->FinishWrite();
   }
+  // if the image is complete swap the offscreen buffers
+  if (bNewDataToShow) swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
+
+  // show the result
+  if (bNewDataToShow || m_iFilledBuffers < 2) RerenderPreviousResult(true);
+
+  m_bPerformRedraw = false;
 }
 
 void GPUSBVR::Resize(const UINTVECTOR2& vWinSize) {
@@ -910,9 +986,7 @@ void GPUSBVR::Cleanup() {
 }
 
 
-void GPUSBVR::RerenderPreviousResult() {
-	glViewport(0,0,m_vWinSize.x,m_vWinSize.y);
-
+void GPUSBVR::RerenderPreviousResult(bool bTransferToFramebuffer) {
   // clear the framebuffer
   if (m_bClearFramebuffer) {
     glDepthMask(GL_FALSE);
@@ -923,7 +997,15 @@ void GPUSBVR::RerenderPreviousResult() {
     //DrawLogo();
     glDepthMask(GL_TRUE);
   }
-  m_iFilledBuffers++;
+
+  if (bTransferToFramebuffer) {
+    glViewport(0,0,m_vWinSize.x,m_vWinSize.y);
+    m_iFilledBuffers++;
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  } else {
+    glDisable(GL_BLEND);
+  }
 
 
   m_pFBO3DImageLast->Read(GL_TEXTURE0);
@@ -932,8 +1014,6 @@ void GPUSBVR::RerenderPreviousResult() {
   m_pProgramTrans->Enable();
 
   glDisable(GL_DEPTH_TEST);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   glBegin(GL_QUADS);
     glColor4d(1,1,1,1);

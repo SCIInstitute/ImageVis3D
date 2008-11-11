@@ -115,6 +115,7 @@ class RenderWindow : public QGLWidget
     
     ArcBall           m_ArcBall;
     INTVECTOR2        m_viRightClickPos;
+    INTVECTOR2        m_viMousePos;
     FLOATMATRIX4      m_mCurrentRotation;
     FLOATMATRIX4      m_mAccumulatedRotation;
     FLOATMATRIX4      m_mAccumulatedTranslation;
@@ -123,6 +124,8 @@ class RenderWindow : public QGLWidget
     QString           m_strID;
 
     UINTVECTOR2  m_vWinDim;
+
+    void SetupArcBall();
 };
 
 #endif // RENDERWINDOW_H

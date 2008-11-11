@@ -116,14 +116,17 @@ class AbstrRenderer {
     virtual void SetViewmode(EViewMode eViewMode);
 
     enum EWindowMode {
-      WM_3D = 0,      
-      WM_CORONAL,    
+      WM_CORONAL = 0,
       WM_AXIAL,   
       WM_SAGITTAL,   
+      WM_3D,
       WM_INVALID
     };
-    EWindowMode GetWindowmode(unsigned int iWindowIndex) {return m_eWindowMode[iWindowIndex];}
-    virtual void SetWindowmode(unsigned int iWindowIndex, EWindowMode eWindowMode);
+    EWindowMode Get2x2Windowmode(unsigned int iWindowIndex) {return m_e2x2WindowMode[iWindowIndex];}
+    virtual void Set2x2Windowmode(unsigned int iWindowIndex, EWindowMode eWindowMode);
+    EWindowMode GetFullWindowmode() {return m_eFullWindowMode;}
+    virtual void SetFullWindowmode(EWindowMode eWindowMode);
+    EWindowMode GetWindowUnderCursor(FLOATVECTOR2 vPos);
     
     enum EBlendPrecision {
       BP_8BIT = 0,      
@@ -194,6 +197,8 @@ class AbstrRenderer {
     
     virtual void SetRotation(const FLOATMATRIX4& mRotation);
     virtual void SetTranslation(const FLOATMATRIX4& mTranslation);
+    virtual void SetSliceDepth(EWindowMode eWindow, UINT64 fSliceDepth);
+    virtual UINT64 GetSliceDepth(EWindowMode eWindow);
 
     void SetClearFramebuffer(bool bClearFramebuffer) {m_bClearFramebuffer = bClearFramebuffer;}
     bool GetClearFramebuffer() {return m_bClearFramebuffer;}
@@ -201,6 +206,7 @@ class AbstrRenderer {
     bool GetGlobalBBox() {return m_bRenderGlobalBBox;}
     void SetLocalBBox(bool bRenderBBox);
     bool GetLocalBBox() {return m_bRenderLocalBBox;}
+
 
     // scheduling routines
     UINT64 GetCurrentSubFrameCount() {return 1+m_iMaxLODIndex-m_iMinLODForCurrentView;}
@@ -217,13 +223,15 @@ class AbstrRenderer {
 
   protected:
     MasterController*   m_pMasterController;
-    bool                m_bCompleteRedraw;
+    bool                m_bPerformRedraw;
+    bool                m_bRedrawMask[4];
     ERenderMode         m_eRenderMode;
     EViewMode           m_eViewMode;
-    EWindowMode         m_eWindowMode[4];
+    EWindowMode         m_e2x2WindowMode[4];
+    EWindowMode         m_eFullWindowMode;
+    UINT64              m_piSlice[3];
     EBlendPrecision     m_eBlendPrecision;
     bool                m_bUseLigthing;
-    float               m_fSliceIndex[4];
     VolumeDataset*      m_pDataset;
     TransferFunction1D* m_p1DTrans;
     TransferFunction2D* m_p2DTrans;
@@ -254,6 +262,7 @@ class AbstrRenderer {
     std::vector<Brick>  m_vCurrentBrickList;
 
     virtual void ScheduleCompleteRedraw();
+    virtual void ScheduleWindowRedraw(int iIndex);
     void ComputeMinLODForCurrentView();
 
 

@@ -41,7 +41,7 @@ using namespace std;
 
 AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :   
   m_pMasterController(pMasterController),
-  m_bCompleteRedraw(true), 
+  m_bPerformRedraw(true), 
   m_eRenderMode(RM_1DTRANS),
   m_eViewMode(VM_SINGLE),
   m_eBlendPrecision(BP_32BIT),
@@ -71,15 +71,21 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
 
-  m_eWindowMode[0] = WM_3D;
-  m_eWindowMode[1] = WM_CORONAL;
-  m_eWindowMode[2] = WM_AXIAL;
-  m_eWindowMode[3] = WM_SAGITTAL;
+  m_e2x2WindowMode[0] = WM_3D;
+  m_e2x2WindowMode[1] = WM_CORONAL;
+  m_e2x2WindowMode[2] = WM_AXIAL;
+  m_e2x2WindowMode[3] = WM_SAGITTAL;
 
-  m_fSliceIndex[0] = 0.5f;
-  m_fSliceIndex[1] = 0.5f;
-  m_fSliceIndex[2] = 0.5f;
-  m_fSliceIndex[3] = 0.5f;
+  m_eFullWindowMode   = WM_3D;
+
+  m_piSlice[0]     = 0.0f;
+  m_piSlice[1]     = 0.0f;
+  m_piSlice[2]     = 0.0f;
+
+  m_bRedrawMask[0] = true;
+  m_bRedrawMask[1] = true;
+  m_bRedrawMask[2] = true;
+  m_bRedrawMask[3] = true;
 }
 
 
@@ -100,14 +106,16 @@ bool AbstrRenderer::LoadDataset(const string& strFilename) {
 
   m_pMasterController->DebugOut()->Message("AbstrRenderer::LoadDataset","Load successful, initializing renderer!");
 
-
+  // find the maximum lod index
   std::vector<UINT64> vSmallestLOD = m_pDataset->GetInfo()->GetLODLevelCountND();
   for (size_t i = 0;i<vSmallestLOD.size();i++) vSmallestLOD[i] -= 1;
-
   UINT64 iMaxSmallestLOD = 0;
-  for (size_t i = 0;i<vSmallestLOD.size();i++) if (iMaxSmallestLOD < vSmallestLOD[i]) iMaxSmallestLOD = vSmallestLOD[i];
-  
+  for (size_t i = 0;i<vSmallestLOD.size();i++) if (iMaxSmallestLOD < vSmallestLOD[i]) iMaxSmallestLOD = vSmallestLOD[i];  
   m_iMaxLODIndex = iMaxSmallestLOD;
+
+  m_piSlice[size_t(WM_SAGITTAL)] = m_pDataset->GetInfo()->GetDomainSize()[0]/2;
+  m_piSlice[size_t(WM_CORONAL)]  = m_pDataset->GetInfo()->GetDomainSize()[1]/2;
+  m_piSlice[size_t(WM_AXIAL)]    = m_pDataset->GetInfo()->GetDomainSize()[2]/2;
 
   return true;
 }
@@ -135,14 +143,19 @@ void AbstrRenderer::SetViewmode(EViewMode eViewMode)
   }  
 }
 
-
-void AbstrRenderer::SetWindowmode(unsigned int iWindowIndex, EWindowMode eWindowMode)
+void AbstrRenderer::Set2x2Windowmode(unsigned int iWindowIndex, EWindowMode eWindowMode)
 {
-  /// \todo make avery view is only assigned to one subwindow
-  if (m_eWindowMode[iWindowIndex] != eWindowMode) {
-    m_eWindowMode[iWindowIndex] = eWindowMode; 
+  /// \todo make sure every view is only assigned to one subwindow
+  if (m_e2x2WindowMode[iWindowIndex] != eWindowMode) {
+    m_e2x2WindowMode[iWindowIndex] = eWindowMode; 
+    ScheduleWindowRedraw(iWindowIndex);
+  }  
+}
+
+void AbstrRenderer::SetFullWindowmode(EWindowMode eWindowMode) {
+  if (m_eFullWindowMode != eWindowMode) {
+    m_eFullWindowMode = eWindowMode; 
     ScheduleCompleteRedraw();
-    /// \todo only redraw the windows dependent on this change
   }  
 }
 
@@ -196,14 +209,37 @@ void AbstrRenderer::SetIsoValue(float fIsovalue) {
 }
 
 bool AbstrRenderer::CheckForRedraw() {
-  if (m_iCurrentLODOffset > 0) {
+  if (m_iCurrentLODOffset > m_iMinLODForCurrentView) {
     if (m_iCheckCounter == 0)  {
-      m_bCompleteRedraw = true;
+      m_bPerformRedraw = true;
       m_pMasterController->DebugOut()->Message("AbstrRenderer::CheckForRedraw","Scheduled redraw as LOD is %i > 0", m_iCurrentLODOffset);
     } else m_iCheckCounter--;
   }
-  return m_bCompleteRedraw;
+  return m_bPerformRedraw;
 }
+
+AbstrRenderer::EWindowMode AbstrRenderer::GetWindowUnderCursor(FLOATVECTOR2 vPos) {
+  switch (m_eViewMode) {
+    case VM_SINGLE   : return m_eFullWindowMode;
+    case VM_TWOBYTWO : {
+                          if (vPos.y < 0.5f) {
+                            if (vPos.x < 0.5f) {
+                                return m_e2x2WindowMode[0];
+                            } else {
+                                return m_e2x2WindowMode[1];
+                            }
+                          } else {
+                            if (vPos.x < 0.5f) {
+                                return m_e2x2WindowMode[2];
+                            } else {
+                                return m_e2x2WindowMode[3];
+                            }
+                          }
+                       }
+    default          : return WM_INVALID;
+  }
+}
+
 
 void AbstrRenderer::Resize(const UINTVECTOR2& vWinSize) {
   m_vWinSize = vWinSize;
@@ -220,6 +256,20 @@ void AbstrRenderer::SetTranslation(const FLOATMATRIX4& mTranslation) {
   ScheduleCompleteRedraw();
 }
 
+void AbstrRenderer::SetSliceDepth(EWindowMode eWindow, UINT64 iSliceDepth) {
+  if (eWindow < WM_3D) {
+    m_piSlice[size_t(eWindow)] = iSliceDepth;
+    ScheduleWindowRedraw(size_t(eWindow));
+  }
+}
+
+UINT64 AbstrRenderer::GetSliceDepth(EWindowMode eWindow) {
+  if (eWindow < WM_3D)
+    return m_piSlice[size_t(eWindow)];
+  else
+    return 0;
+}
+
 void AbstrRenderer::SetGlobalBBox(bool bRenderBBox) {
   m_bRenderGlobalBBox = bRenderBBox;
   ScheduleCompleteRedraw();
@@ -231,9 +281,20 @@ void AbstrRenderer::SetLocalBBox(bool bRenderBBox) {
 }
 
 void AbstrRenderer::ScheduleCompleteRedraw() {
-  m_bCompleteRedraw   = true;
-  m_iCurrentLODOffset = m_iMaxLODIndex+1;
-  m_iCheckCounter     = m_iLODDelay;
+  m_bPerformRedraw   = true;
+  m_iCheckCounter    = m_iLODDelay;
+
+  m_bRedrawMask[0] = true;
+  m_bRedrawMask[1] = true;
+  m_bRedrawMask[2] = true;
+  m_bRedrawMask[3] = true;
+}
+
+
+void AbstrRenderer::ScheduleWindowRedraw(int iIndex) {
+  m_bPerformRedraw      = true;
+  m_iCheckCounter       = m_iLODDelay;
+  m_bRedrawMask[iIndex] = true;
 }
 
 void AbstrRenderer::ComputeMinLODForCurrentView() {

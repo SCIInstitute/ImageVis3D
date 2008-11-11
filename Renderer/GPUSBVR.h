@@ -100,7 +100,7 @@ class GPUSBVR : public GLRenderer {
 
     void DrawLogo();
     void DrawBackGradient();
-    void RerenderPreviousResult();
+    void RerenderPreviousResult(bool bTransferToFramebuffer);
     void SetDataDepShaderVars();
     void SetBrickDepShaderVars(UINT64 iCurrentLOD, const Brick& currentBrick);
     void SetBrickDepShaderVarsSlice(UINT64 iCurrentLOD, const UINTVECTOR3& vVoxelCount);
@@ -109,7 +109,7 @@ class GPUSBVR : public GLRenderer {
     bool Execute3DFrame(ERenderArea eREnderArea);
 
     void Render3DView();
-    bool Render2DView(EWindowMode eDirection, float fSliceIndex);
+    bool Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT64 iSliceIndex);
     void RenderBBox(const FLOATVECTOR4 vColor = FLOATVECTOR4(1,0,0,1));
     void RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend);
     void CreateOffscreenBuffer();

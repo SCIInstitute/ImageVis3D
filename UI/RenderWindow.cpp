@@ -52,6 +52,8 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   m_strDataset(dataset),
   m_vWinDim(0,0)
 {  
+  SetupArcBall();
+
   m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
   setWindowTitle(m_strID);
 
@@ -61,7 +63,8 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   m_mAccumulatedTranslation.m43 = -2.0f;
   m_Renderer->SetTranslation(m_mAccumulatedTranslation);
 
-  this->setFocusPolicy(Qt::StrongFocus);
+  setFocusPolicy(Qt::StrongFocus);
+  setMouseTracking(true);
 }
 
 RenderWindow::~RenderWindow()
@@ -119,24 +122,21 @@ void RenderWindow::resizeGL(int width, int height)
 {
   m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
 
-  m_ArcBall.SetWindowSize(m_vWinDim.x, m_vWinDim.y);
-  m_ArcBall.SetWindowOffset(0,0);
-
-  if (m_Renderer != NULL) m_Renderer->Resize(UINTVECTOR2(width, height));
-}
-
-float scale(int max, float w) {
-	if (w < 0) {
-		return w-(((int)w/max)-1)*max;
-	} else {
-		return w-((int)w/max)*max;
-	}
+  if (m_Renderer != NULL) {
+    m_Renderer->Resize(UINTVECTOR2(width, height));
+    SetupArcBall();
+  }
 }
 
 void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
-  if (event->button() == Qt::RightButton) m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
-  if (event->button() == Qt::LeftButton)  m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+  AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+
+  // mouse is over the 3D window
+  if (eWinMode == AbstrRenderer::WM_3D ) {
+    if (event->button() == Qt::RightButton) m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+    if (event->button() == Qt::LeftButton)  m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+  }
 }
 
 void RenderWindow::mouseReleaseEvent(QMouseEvent *event) {
@@ -145,34 +145,50 @@ void RenderWindow::mouseReleaseEvent(QMouseEvent *event) {
 
 void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 {
-  bool bPerformUpdate = false;
+  m_viMousePos = INTVECTOR2(event->pos().x(), event->pos().y());
+  AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
 
-  if (event->buttons() & Qt::LeftButton) {
-    m_mCurrentRotation = m_mAccumulatedRotation * m_ArcBall.Drag(UINTVECTOR2(event->pos().x(), event->pos().y())).ComputeRotation();
-    m_Renderer->SetRotation(m_mCurrentRotation);
-    bPerformUpdate = true;
+  // mouse is over the 3D window
+  if (eWinMode == AbstrRenderer::WM_3D ) {
+    bool bPerformUpdate = false;
+
+    if (event->buttons() & Qt::LeftButton) {
+      m_mCurrentRotation = m_mAccumulatedRotation * m_ArcBall.Drag(UINTVECTOR2(event->pos().x(), event->pos().y())).ComputeRotation();
+      m_Renderer->SetRotation(m_mCurrentRotation);
+      bPerformUpdate = true;
+    }
+
+    if (event->buttons() & Qt::RightButton) {
+      INTVECTOR2 viPosDelta = m_viMousePos - m_viRightClickPos;
+      m_viRightClickPos = m_viMousePos;
+
+      m_mAccumulatedTranslation.m41 += float(viPosDelta.x*2) / m_vWinDim.x;
+      m_mAccumulatedTranslation.m42 -= float(viPosDelta.y*2) / m_vWinDim.y;
+      m_Renderer->SetTranslation(m_mAccumulatedTranslation);
+      m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+      bPerformUpdate = true;
+    }
+
+    if (bPerformUpdate) updateGL();
   }
-
-  if (event->buttons() & Qt::RightButton) {
-    INTVECTOR2 viCurrentPos = INTVECTOR2(event->pos().x(), event->pos().y());
-    INTVECTOR2 viPosDelta = viCurrentPos - m_viRightClickPos;
-    m_viRightClickPos = viCurrentPos;
-
-    m_mAccumulatedTranslation.m41 += float(viPosDelta.x*2) / m_vWinDim.x;
-    m_mAccumulatedTranslation.m42 -= float(viPosDelta.y*2) / m_vWinDim.y;
-    m_Renderer->SetTranslation(m_mAccumulatedTranslation);
-    m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
-    bPerformUpdate = true;
-  }
-
-  if (bPerformUpdate) updateGL();
 }
 
+
 void RenderWindow::wheelEvent(QWheelEvent *event) {
-  float fZoom = event->delta()/1000.0f;
-  m_mAccumulatedTranslation.m43 += fZoom;
-  m_Renderer->SetTranslation(m_mAccumulatedTranslation);
-  m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+  QGLWidget::wheelEvent(event);
+
+  AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+
+  // mouse is over the 3D window
+  if (eWinMode == AbstrRenderer::WM_3D ) {
+    float fZoom = event->delta()/1000.0f;
+    m_mAccumulatedTranslation.m43 += fZoom;
+    m_Renderer->SetTranslation(m_mAccumulatedTranslation);
+    m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+  } else {
+    int iZoom = event->delta()/120;  // this returns 1 for "most" mice if the wheel is turned one "click"
+    m_Renderer->SetSliceDepth(eWinMode, int(m_Renderer->GetSliceDepth(eWinMode))+iZoom);
+  }
   updateGL();
 }
 
@@ -180,17 +196,51 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
   QGLWidget::keyPressEvent(event);
 
   if (event->key() == Qt::Key_Space) {
+    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+
     AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode((int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
     m_Renderer->SetViewmode(eMode);
+
+    if (eMode == AbstrRenderer::VM_SINGLE) m_Renderer->SetFullWindowmode(eWinMode);
+
+    SetupArcBall();
     emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
     updateGL();    
   }
 
 }
 
+void RenderWindow::SetupArcBall() {
+  if (m_Renderer->GetViewmode() == AbstrRenderer::VM_TWOBYTWO) {
+    m_ArcBall.SetWindowSize(m_vWinDim.x/2, m_vWinDim.y/2);
+
+    // find the 3D window
+    int i3DWindowIndex = 0;
+    for (unsigned int i = 0;i<4;i++) {
+      if (m_Renderer->Get2x2Windowmode(i) == AbstrRenderer::WM_3D) {
+        i3DWindowIndex = i;
+        break;
+      }
+    }
+    
+    switch (i3DWindowIndex) {
+      case 0 : m_ArcBall.SetWindowOffset(0,0); break;
+      case 1 : m_ArcBall.SetWindowOffset(m_vWinDim.x/2,0); break;
+      case 2 : m_ArcBall.SetWindowOffset(0,m_vWinDim.y/2); break;
+      case 3 : m_ArcBall.SetWindowOffset(m_vWinDim.x/2, m_vWinDim.y/2); break;
+    }
+  } else {
+    m_ArcBall.SetWindowSize(m_vWinDim.x, m_vWinDim.y);
+    m_ArcBall.SetWindowOffset(0,0);
+  }
+
+}
+
+
 void RenderWindow::ToggleRenderWindowView2x2() {
   if (m_Renderer != NULL) {
     m_Renderer->SetViewmode(AbstrRenderer::VM_TWOBYTWO);
+    SetupArcBall();
     emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
     updateGL();
   }
@@ -199,6 +249,7 @@ void RenderWindow::ToggleRenderWindowView2x2() {
 void RenderWindow::ToggleRenderWindowViewSingle() {
   if (m_Renderer != NULL) {
     m_Renderer->SetViewmode(AbstrRenderer::VM_SINGLE);
+    SetupArcBall();
     emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
     updateGL();
   }
