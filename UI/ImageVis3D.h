@@ -69,6 +69,9 @@ public slots:
   void SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick);
 
 protected slots:
+  void SetCaptureFilename();
+  void CaptureFrame();
+  void CaptureSequence();
   void LoadDataset();
   void LoadDirectory();
   void CloneCurrentView();

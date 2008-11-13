@@ -333,3 +333,34 @@ void MainWindow::ToggleLocalBBox(bool bRenderBBox)
 {
   if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetLocalBBox(bRenderBBox);
 }
+
+void MainWindow::CaptureFrame() {
+  if (m_ActiveRenderWin) {
+	  if (!m_ActiveRenderWin->CaptureFrame(lineEditCaptureFile->text().toStdString())) {
+
+	  }
+  }
+}
+
+void MainWindow::CaptureSequence() {
+  
+  if (m_ActiveRenderWin) {
+	  if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString())) {
+
+	  }
+  }
+}
+
+void MainWindow::SetCaptureFilename() {
+  QFileDialog::Options options;
+#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
+  QString fileName = QFileDialog::getSaveFileName(this,"Select Image File", ".",
+					   "All Files (*.*)",&selectedFilter, options);
+
+
+  if (!fileName.isEmpty()) lineEditCaptureFile->setText(fileName);
+}

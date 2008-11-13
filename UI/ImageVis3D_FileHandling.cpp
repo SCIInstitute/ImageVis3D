@@ -88,7 +88,7 @@ QString MainWindow::GetConvFilename() {
 }
 
 void MainWindow::LoadDataset(QString fileName) {
-  PleaseWaitDialog pleaseWait(this);
+ // PleaseWaitDialog pleaseWait(this);
  
   if (!fileName.isEmpty()) {
 
@@ -106,7 +106,7 @@ void MainWindow::LoadDataset(QString fileName) {
     } else {
       QString targetFileName = GetConvFilename();
       if (targetFileName.isEmpty()) return;
-      pleaseWait.SetText("Converting, please wait  ...");
+    //  pleaseWait.SetText("Converting, please wait  ...");
       if (!m_MasterController.IOMan()->ConvertDataset(fileName.toStdString(), targetFileName.toStdString())) {
         QString strText = tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFileName);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());

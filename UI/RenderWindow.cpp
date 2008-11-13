@@ -41,6 +41,7 @@
 #include <QtGui/QtGui>
 #include <QtOpenGL/QtOpenGL>
 #include <assert.h>
+#include <Renderer/GLFrameCapture.h>
 
 RenderWindow::RenderWindow(MasterController& masterController, QString dataset, unsigned int iCounter, QGLWidget* glShareWidget, QWidget* parent, Qt::WindowFlags flags) :
   QGLWidget(parent, glShareWidget, flags),
@@ -308,4 +309,18 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLOD
   m_iTimeSliceMSecsActive   = iActiveTS;
   m_iTimeSliceMSecsInActive = iInactiveTS;
   m_Renderer->SetPerfMeasures(iMinFramerate, iLODDelay); 
+}
+
+bool RenderWindow::CaptureFrame(const std::string& strFilename)
+{
+	GLFrameCapture f;
+	makeCurrent();
+	return f.CaptureSingleFrame(strFilename);
+}
+
+bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename)
+{
+	GLFrameCapture f;
+	makeCurrent();
+	return f.CaptureSequenceFrame(strFilename);
 }

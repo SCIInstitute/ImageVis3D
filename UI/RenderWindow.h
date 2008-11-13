@@ -79,7 +79,9 @@ class RenderWindow : public QGLWidget
 
     void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
-  
+	bool CaptureFrame(const std::string& strFilename);
+	bool CaptureSequenceFrame(const std::string& strFilename);
+
   public slots:
     void ToggleRenderWindowView2x2();
     void ToggleRenderWindowViewSingle();
@@ -123,7 +125,7 @@ class RenderWindow : public QGLWidget
     QString           m_strDataset;
     QString           m_strID;
 
-    UINTVECTOR2  m_vWinDim;
+    UINTVECTOR2		  m_vWinDim;
 
     void SetupArcBall();
 };
