@@ -47,27 +47,28 @@
 class FrameCapture {
   public:
 	  virtual bool CaptureSingleFrame(const std::string& strFilename) = 0;
-	  bool CaptureSequenceFrame(const std::string& strFilename) {
-		std::string strFilenameOnly = SysTools::RemoveExt(strFilename);
-		std::string strFileExt = SysTools::GetExt(strFilename);
-		std::string strSequenceName = SysTools::FindNextSequenceName(strFilenameOnly,strFileExt);
-		return CaptureSingleFrame(strSequenceName);
+	    bool CaptureSequenceFrame(const std::string& strFilename) {
+      std::string strDirectory = SysTools::GetPath(strFilename);
+      std::string strFilenameOnly = SysTools::RemoveExt(SysTools::GetFilename(strFilename));
+		  std::string strFileExt = SysTools::GetExt(strFilename);
+		  std::string strSequenceName = SysTools::FindNextSequenceName(strFilenameOnly,strFileExt,strDirectory);
+		  return CaptureSingleFrame(strSequenceName);
 	  }
   protected:
 	  bool SaveImage(const std::string& strFilename, const UINTVECTOR2& vSize, unsigned char* pData) {
-		QImage qTargetFile(QSize(vSize.x, vSize.y), QImage::Format_ARGB32);
+		  QImage qTargetFile(QSize(vSize.x, vSize.y), QImage::Format_ARGB32);
 
-		size_t i = 0;
-		for (int y = 0;y<int(vSize.y);y++)
-		  for (int x = 0;x<int(vSize.x);x++) {
-			qTargetFile.setPixel(x,(vSize.y-1)-y,qRgba(int(pData[i+0]),
-										   int(pData[i+1]),
-										   int(pData[i+2]),
-										   int(pData[i+3])));
-			i+=4;
-		  }
+		  size_t i = 0;
+		  for (int y = 0;y<int(vSize.y);y++)
+		    for (int x = 0;x<int(vSize.x);x++) {
+			  qTargetFile.setPixel(x,(vSize.y-1)-y,qRgba(int(pData[i+0]),
+										     int(pData[i+1]),
+										     int(pData[i+2]),
+										     int(pData[i+3])));
+			  i+=4;
+		    }
 
-		return qTargetFile.save(strFilename.c_str());
+		  return qTargetFile.save(strFilename.c_str());
 	  }
 };
 

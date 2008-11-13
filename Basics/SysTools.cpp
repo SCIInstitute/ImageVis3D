@@ -501,7 +501,7 @@ namespace SysTools {
     if (dir == "" || dir[dir.size()-1] == '\\' ||  dir[dir.size()-1] == '/') 
       out << dir << fileName << iMaxIndex << "." << ext;
     else
-      out << dir << "\\" << fileName << iMaxIndex << "." << ext;
+      out << dir << "/" << fileName << iMaxIndex << "." << ext;
 
     return out.str();
   }
@@ -521,7 +521,7 @@ namespace SysTools {
     if (dir == L"" || dir[dir.size()-1] == L'\\' ||  dir[dir.size()-1] == L'/') 
       out << dir << fileName << iMaxIndex << L"." << ext;
     else
-      out << dir << L"\\" << fileName << iMaxIndex << L"." << ext;
+      out << dir << L"/" << fileName << iMaxIndex << L"." << ext;
 
     return out.str();
   }
