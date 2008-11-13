@@ -381,7 +381,6 @@ void MainWindow::SetRescaleFactors() {
   vfRescaleFactors.y = doubleSpinBox_RescaleY->value();
   vfRescaleFactors.z = doubleSpinBox_RescaleZ->value();
   m_ActiveRenderWin->GetRenderer()->SetRescaleFactors(vfRescaleFactors);
-  m_ActiveRenderWin->Schec
 }
 
 
