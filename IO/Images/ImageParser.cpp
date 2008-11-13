@@ -97,7 +97,7 @@ bool SimpleImageFileInfo::GetData(void* pData, unsigned int iLength, unsigned in
       QColor pixel(qImage.pixel(x,y));
       unsigned char cValue = (unsigned char)((pixel.red() + pixel.green() + pixel.blue()) / 3);
       ((unsigned char*)pData)[iCount-iOffset] = cValue;
-      if (int(iLength) == iCount-iOffset) break;
+      if (int(iLength) == iCount-int(iOffset)) break;
       iCount++;
     }
 

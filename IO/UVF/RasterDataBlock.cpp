@@ -802,7 +802,7 @@ void RasterDataBlock::AllocateTemp(const string& strTempFile, bool bBuildOffsetT
 
 
   // call FlatDataToBrickedLOD
-  FlatDataToBrickedLOD(&pSourceFile, strTempFile, combineFunc);
+  FlatDataToBrickedLOD(&pSourceFile, strTempFile, combineFunc, pDebugOut);
 
   // delete tempfile
   pSourceFile.Delete();

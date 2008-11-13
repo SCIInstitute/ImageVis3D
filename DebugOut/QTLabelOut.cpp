@@ -93,7 +93,7 @@ void QTLabelOut::Message(const char* source, const char* format, ...) {
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
   if (!m_bShowMessages) return;
-  _printf(buff);
+  _printf("MESSAGE (%s): %s",source, buff);
 }
 
 void QTLabelOut::Warning(const char* source, const char* format, ...) {
