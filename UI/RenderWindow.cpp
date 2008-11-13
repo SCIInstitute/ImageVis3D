@@ -51,7 +51,8 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),
   m_strDataset(dataset),
-  m_vWinDim(0,0)
+  m_vWinDim(0,0),
+  m_bCaptureMode(false)
 {  
   SetupArcBall();
 
@@ -142,6 +143,24 @@ void RenderWindow::mousePressEvent(QMouseEvent *event)
 
 void RenderWindow::mouseReleaseEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) m_mAccumulatedRotation = m_mCurrentRotation;
+}
+
+void RenderWindow::ToggleHQCaptureMode() {
+  m_bCaptureMode = !m_bCaptureMode;
+  if (m_bCaptureMode) {
+    m_mCaptureStartRotation = m_mAccumulatedRotation;
+  } else {
+    m_mAccumulatedRotation = m_mCaptureStartRotation;
+  }
+  m_Renderer->DisableLOD(m_bCaptureMode);
+}
+
+void RenderWindow::SetCaptureRotationAngle(float fAngle) {
+  FLOATMATRIX4 matRot;
+  matRot.RotationY(3.141592653589793238462643383*double(fAngle)/180.0);
+  m_mAccumulatedRotation = m_mCaptureStartRotation*matRot;
+  m_Renderer->SetRotation(m_mAccumulatedRotation);
+  paintGL();
 }
 
 void RenderWindow::mouseMoveEvent(QMouseEvent *event)

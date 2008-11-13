@@ -72,6 +72,7 @@ protected slots:
   void SetCaptureFilename();
   void CaptureFrame();
   void CaptureSequence();
+  void CaptureRotation();
   void LoadDataset();
   void LoadDirectory();
   void CloneCurrentView();

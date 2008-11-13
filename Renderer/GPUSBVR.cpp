@@ -664,7 +664,7 @@ void GPUSBVR::Render3DView() {
 
     // count the bricks rendered
     m_iBricksRenderedInThisSubFrame++;
-    timeProbe = clock();
+	if (!m_bLODDisabled) timeProbe = clock();
   }
 
   switch (m_eRenderMode) {
@@ -716,8 +716,14 @@ void GPUSBVR::Plan3DFrame() {
     m_FrustumCullingLOD.SetViewMatrix(m_matModelView);
     m_FrustumCullingLOD.Update();
 
-    m_iCurrentLODOffset = m_iMaxLODIndex+1;
-    ComputeMinLODForCurrentView();
+
+	if (!m_bLODDisabled) {
+		m_iCurrentLODOffset = m_iMaxLODIndex+1;
+	    ComputeMinLODForCurrentView();
+	} else {
+		m_iMinLODForCurrentView = 0;
+		m_iCurrentLODOffset = 1;
+	}
   }
 
   // plan if the frame is to be redrawn

@@ -221,6 +221,7 @@ class AbstrRenderer {
     void SetTimeSlice(unsigned int iMSecs) {m_iTimeSliceMSecs = iMSecs;}
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iStartDelay) {m_iMinFramerate = iMinFramerate; m_iStartDelay = iStartDelay;}
 
+	void DisableLOD(bool bLODDisabled) {m_bLODDisabled = bLODDisabled;}
   protected:
     MasterController*   m_pMasterController;
     bool                m_bPerformRedraw;
@@ -260,6 +261,7 @@ class AbstrRenderer {
     UINT64              m_iCurrentLOD;
     UINT64              m_iBricksRenderedInThisSubFrame;
     std::vector<Brick>  m_vCurrentBrickList;
+	bool				m_bLODDisabled;
 
     virtual void ScheduleCompleteRedraw();
     virtual void ScheduleWindowRedraw(int iIndex);

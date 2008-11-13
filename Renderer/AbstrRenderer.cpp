@@ -66,7 +66,8 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_iCurrentLODOffset(0),
   m_bClearFramebuffer(true),
   m_iCurrentLOD(0),
-  m_iBricksRenderedInThisSubFrame(0)
+  m_iBricksRenderedInThisSubFrame(0),
+  m_bLODDisabled(false)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -300,6 +301,8 @@ void AbstrRenderer::ScheduleWindowRedraw(int iIndex) {
 void AbstrRenderer::ComputeMinLODForCurrentView() {
   UINTVECTOR3  viVoxelCount = UINTVECTOR3(m_pDataset->GetInfo()->GetDomainSize());
   FLOATVECTOR3 vfExtend     = (FLOATVECTOR3(viVoxelCount) / viVoxelCount.maxVal()) * FLOATVECTOR3(m_pDataset->GetInfo()->GetScale());
+
+  // TODO consider real extend not center
 
   FLOATVECTOR3 vfCenter(0,0,0);
   m_iMinLODForCurrentView = max(0, min<int>(m_pDataset->GetInfo()->GetLODLevelCount()-1,m_FrustumCullingLOD.GetLODLevel(vfCenter,vfExtend,viVoxelCount)));

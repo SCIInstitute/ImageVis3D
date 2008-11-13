@@ -81,6 +81,9 @@ class RenderWindow : public QGLWidget
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
 	bool CaptureFrame(const std::string& strFilename);
 	bool CaptureSequenceFrame(const std::string& strFilename);
+	void ToggleHQCaptureMode();
+	void SetCaptureRotationAngle(float fAngle);
+
 
   public slots:
     void ToggleRenderWindowView2x2();
@@ -120,12 +123,14 @@ class RenderWindow : public QGLWidget
     INTVECTOR2        m_viMousePos;
     FLOATMATRIX4      m_mCurrentRotation;
     FLOATMATRIX4      m_mAccumulatedRotation;
+    FLOATMATRIX4      m_mCaptureStartRotation;
     FLOATMATRIX4      m_mAccumulatedTranslation;
        
     QString           m_strDataset;
     QString           m_strID;
 
     UINTVECTOR2		  m_vWinDim;
+	bool			  m_bCaptureMode;
 
     void SetupArcBall();
 };

@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1203</width>
-    <height>1965</height>
+    <height>1747</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -36,7 +36,7 @@
      <x>388</x>
      <y>22</y>
      <width>610</width>
-     <height>1503</height>
+     <height>1285</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7" >
@@ -142,7 +142,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1944</y>
+     <y>1726</y>
      <width>1203</width>
      <height>21</height>
     </rect>
@@ -154,7 +154,7 @@
      <x>0</x>
      <y>22</y>
      <width>384</width>
-     <height>320</height>
+     <height>315</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -184,7 +184,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>298</height>
+      <height>293</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout" >
@@ -205,10 +205,10 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>24</x>
+          <y>84</y>
           <width>360</width>
-          <height>253</height>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -335,10 +335,10 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>24</x>
+          <y>84</y>
           <width>360</width>
-          <height>253</height>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -437,10 +437,10 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>24</x>
+          <y>84</y>
           <width>360</width>
-          <height>253</height>
+          <height>240</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -631,7 +631,7 @@
           <x>0</x>
           <y>0</y>
           <width>360</width>
-          <height>253</height>
+          <height>248</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -869,7 +869,7 @@
      <x>1002</x>
      <y>22</y>
      <width>201</width>
-     <height>384</height>
+     <height>208</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -884,7 +884,7 @@
       <x>0</x>
       <y>22</y>
       <width>201</width>
-      <height>362</height>
+      <height>186</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
@@ -1049,6 +1049,44 @@
          <number>9</number>
         </property>
         <item>
+         <widget class="QFrame" name="frame_17" >
+          <property name="frameShape" >
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow" >
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_17" >
+           <property name="spacing" >
+            <number>5</number>
+           </property>
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label_RenderSpeed" >
+             <property name="text" >
+              <string>Speed</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="horizontalSlider_RotSpeed" >
+             <property name="minimum" >
+              <number>0</number>
+             </property>
+             <property name="maximum" >
+              <number>100</number>
+             </property>
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="pushButton_7" >
           <property name="minimumSize" >
            <size>
@@ -1058,91 +1096,6 @@
           </property>
           <property name="text" >
            <string>Start</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_9" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Pause</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_8" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Stop</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label" >
-          <property name="text" >
-           <string>Camera Path</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_10" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Play</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_11" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Add new View</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_12" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Delete Last View</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_13" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="text" >
-           <string>Clear All Views</string>
           </property>
          </widget>
         </item>
@@ -1169,9 +1122,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>346</y>
+     <y>341</y>
      <width>384</width>
-     <height>226</height>
+     <height>230</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -1192,7 +1145,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>204</height>
+      <height>208</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_4" >
@@ -1228,10 +1181,10 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>24</x>
+          <y>84</y>
           <width>360</width>
-          <height>72</height>
+          <height>71</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1327,10 +1280,10 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>8</x>
-          <y>28</y>
+          <x>24</x>
+          <y>84</y>
           <width>360</width>
-          <height>72</height>
+          <height>71</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1397,7 +1350,7 @@
           <x>0</x>
           <y>0</y>
           <width>360</width>
-          <height>72</height>
+          <height>76</height>
          </rect>
         </property>
         <attribute name="title" >
@@ -1529,9 +1482,9 @@
    <property name="geometry" >
     <rect>
      <x>1002</x>
-     <y>410</y>
+     <y>234</y>
      <width>201</width>
-     <height>312</height>
+     <height>190</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1552,7 +1505,7 @@
       <x>0</x>
       <y>22</y>
       <width>201</width>
-      <height>290</height>
+      <height>168</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -1731,9 +1684,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>576</y>
+     <y>575</y>
      <width>384</width>
-     <height>224</height>
+     <height>185</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -1760,7 +1713,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>202</height>
+      <height>163</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2" >
@@ -1800,7 +1753,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1529</y>
+     <y>1311</y>
      <width>570</width>
      <height>415</height>
     </rect>
@@ -2110,7 +2063,7 @@
    <property name="geometry" >
     <rect>
      <x>574</x>
-     <y>1529</y>
+     <y>1311</y>
      <width>629</width>
      <height>415</height>
     </rect>
@@ -2739,7 +2692,7 @@
    <property name="geometry" >
     <rect>
      <x>1002</x>
-     <y>726</y>
+     <y>428</y>
      <width>201</width>
      <height>527</height>
     </rect>
@@ -3008,9 +2961,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>804</y>
+     <y>764</y>
      <width>384</width>
-     <height>336</height>
+     <height>305</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -3025,7 +2978,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>314</height>
+      <height>283</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_17" >
@@ -3127,25 +3080,25 @@
   <widget class="QDockWidget" name="dockWidget_IsoSurface" >
    <property name="geometry" >
     <rect>
-     <x>0</x>
-     <y>1144</y>
-     <width>384</width>
-     <height>113</height>
+     <x>1002</x>
+     <y>959</y>
+     <width>201</width>
+     <height>92</height>
     </rect>
    </property>
    <property name="windowTitle" >
     <string>Isosurface Settings</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>1</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_10" >
     <property name="geometry" >
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>384</width>
-      <height>91</height>
+      <width>201</width>
+      <height>70</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_16" >
@@ -3214,9 +3167,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>1261</y>
+     <y>1073</y>
      <width>384</width>
-     <height>264</height>
+     <height>234</height>
     </rect>
    </property>
    <property name="floating" >
@@ -3234,7 +3187,7 @@
       <x>0</x>
       <y>22</y>
       <width>384</width>
-      <height>242</height>
+      <height>212</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_19" >
@@ -3394,9 +3347,9 @@
    <property name="geometry" >
     <rect>
      <x>1002</x>
-     <y>1257</y>
+     <y>1055</y>
      <width>201</width>
-     <height>268</height>
+     <height>252</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -3417,7 +3370,7 @@
       <x>0</x>
       <y>22</y>
       <width>201</width>
-      <height>246</height>
+      <height>230</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_27" >
@@ -3698,12 +3651,6 @@
   <tabstop>pushButton_23</tabstop>
   <tabstop>pushButton_24</tabstop>
   <tabstop>pushButton_7</tabstop>
-  <tabstop>pushButton_9</tabstop>
-  <tabstop>pushButton_8</tabstop>
-  <tabstop>pushButton_10</tabstop>
-  <tabstop>pushButton_11</tabstop>
-  <tabstop>pushButton_12</tabstop>
-  <tabstop>pushButton_13</tabstop>
   <tabstop>spinBox_FilterHistoBins</tabstop>
   <tabstop>spinBox_FilterHistoAlpha</tabstop>
   <tabstop>spinBox_FilterMedianRadius</tabstop>
@@ -3964,7 +3911,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>155</x>
-     <y>1562</y>
+     <y>1369</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3979,8 +3926,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>626</x>
-     <y>1563</y>
+     <x>627</x>
+     <y>1372</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4060,7 +4007,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>155</x>
-     <y>1875</y>
+     <y>1681</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4076,7 +4023,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>155</x>
-     <y>1904</y>
+     <y>1710</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4091,8 +4038,8 @@
    <slot>Transfer2DLoad()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>648</x>
-     <y>1916</y>
+     <x>649</x>
+     <y>1739</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4107,8 +4054,8 @@
    <slot>Transfer2DSave()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>930</x>
-     <y>1933</y>
+     <x>932</x>
+     <y>1739</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4123,8 +4070,8 @@
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>136</x>
-     <y>1175</y>
+     <x>1138</x>
+     <y>1271</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4139,8 +4086,8 @@
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1178</x>
-     <y>898</y>
+     <x>1183</x>
+     <y>610</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4156,7 +4103,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1183</x>
-     <y>919</y>
+     <y>631</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4172,7 +4119,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1183</x>
-     <y>940</y>
+     <y>652</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4252,7 +4199,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1626</y>
+     <y>1432</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4268,7 +4215,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1650</y>
+     <y>1456</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4284,7 +4231,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1674</y>
+     <y>1480</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4300,7 +4247,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1698</y>
+     <y>1504</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4316,7 +4263,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1821</y>
+     <y>1635</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4332,7 +4279,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1798</y>
+     <y>1604</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4347,8 +4294,8 @@
    <slot>ClearDebugWin()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>362</x>
-     <y>1301</y>
+     <x>365</x>
+     <y>1171</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4363,8 +4310,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>69</x>
-     <y>1301</y>
+     <x>71</x>
+     <y>1171</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4379,8 +4326,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>224</x>
-     <y>1301</y>
+     <x>225</x>
+     <y>1171</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4395,8 +4342,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>145</x>
-     <y>1301</y>
+     <x>147</x>
+     <y>1171</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4411,8 +4358,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>281</x>
-     <y>1301</y>
+     <x>284</x>
+     <y>1171</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4428,7 +4375,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>155</x>
-     <y>1933</y>
+     <y>1739</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4444,7 +4391,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>155</x>
-     <y>1562</y>
+     <y>1369</y>
     </hint>
     <hint type="destinationlabel" >
      <x>155</x>
@@ -4459,8 +4406,8 @@
    <slot>Transfer2DAddGradient()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>928</x>
-     <y>1845</y>
+     <x>931</x>
+     <y>1653</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4475,8 +4422,8 @@
    <slot>Transfer2DDeleteGradient()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>928</x>
-     <y>1876</y>
+     <x>931</x>
+     <y>1684</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4491,8 +4438,8 @@
    <slot>Transfer2DUpdateGradientBox()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>812</x>
-     <y>1563</y>
+     <x>813</x>
+     <y>1372</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4507,8 +4454,8 @@
    <slot>Transfer2DChooseGradientColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>725</x>
-     <y>1889</y>
+     <x>726</x>
+     <y>1716</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4523,8 +4470,8 @@
    <slot>Transfer2DChooseGradientOpacity()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>929</x>
-     <y>1906</y>
+     <x>932</x>
+     <y>1714</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4539,8 +4486,8 @@
    <slot>ApplyUpdate()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1127</x>
-     <y>1052</y>
+     <x>1146</x>
+     <y>764</y>
     </hint>
     <hint type="destinationlabel" >
      <x>687</x>
@@ -4555,8 +4502,8 @@
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1165</x>
-     <y>984</y>
+     <x>1174</x>
+     <y>696</y>
     </hint>
     <hint type="destinationlabel" >
      <x>685</x>
@@ -4571,8 +4518,8 @@
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1165</x>
-     <y>1005</y>
+     <x>1174</x>
+     <y>717</y>
     </hint>
     <hint type="destinationlabel" >
      <x>683</x>
@@ -4587,8 +4534,8 @@
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1165</x>
-     <y>1026</y>
+     <x>1174</x>
+     <y>738</y>
     </hint>
     <hint type="destinationlabel" >
      <x>680</x>
@@ -4604,7 +4551,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1767</y>
+     <y>1573</y>
     </hint>
     <hint type="destinationlabel" >
      <x>415</x>
@@ -4620,7 +4567,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>182</x>
-     <y>548</y>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel" >
      <x>419</x>
@@ -4635,8 +4582,8 @@
    <slot>ParseAndExecuteDebugCommand()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>371</x>
-     <y>1493</y>
+     <x>374</x>
+     <y>1299</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4668,7 +4615,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1173</x>
-     <y>1106</y>
+     <y>818</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -4684,7 +4631,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>932</x>
-     <y>1561</y>
+     <y>1368</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -4700,7 +4647,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>953</x>
-     <y>1508</y>
+     <y>1366</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -4715,8 +4662,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>701</x>
-     <y>1563</y>
+     <x>702</x>
+     <y>1372</y>
     </hint>
     <hint type="destinationlabel" >
      <x>714</x>
@@ -4732,7 +4679,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1164</x>
-     <y>1208</y>
+     <y>920</y>
     </hint>
     <hint type="destinationlabel" >
      <x>389</x>
@@ -4747,8 +4694,8 @@
    <slot>SetIsoValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>107</x>
-     <y>1206</y>
+     <x>1110</x>
+     <y>1303</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -4763,12 +4710,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>53</x>
-     <y>1190</y>
+     <x>1055</x>
+     <y>1286</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>337</x>
-     <y>1202</y>
+     <x>1193</x>
+     <y>1298</y>
     </hint>
    </hints>
   </connection>
@@ -4779,8 +4726,8 @@
    <slot>ToggleGlobalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1149</x>
-     <y>1130</y>
+     <x>1169</x>
+     <y>842</y>
     </hint>
     <hint type="destinationlabel" >
      <x>990</x>
@@ -4795,8 +4742,8 @@
    <slot>ToggleLocalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1117</x>
-     <y>1154</y>
+     <x>1137</x>
+     <y>866</y>
     </hint>
     <hint type="destinationlabel" >
      <x>989</x>
@@ -4852,6 +4799,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_7</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>CaptureRotation()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1065</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>997</x>
+     <y>202</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -4904,5 +4867,6 @@
   <slot>CaptureFrame()</slot>
   <slot>CaptureSequence()</slot>
   <slot>SetCaptureFilename()</slot>
+  <slot>CaptureRotation()</slot>
  </slots>
 </ui>
