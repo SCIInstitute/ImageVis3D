@@ -151,7 +151,7 @@ void MainWindow::Transfer2DUpdateGradientButtons() {
   pushButton_DelStop->setEnabled(iCurrent >= 0);
   frame_ChooseColor->setEnabled(iCurrent >= 0);
 
-  if (iCurrent >= 0) {
+  if (iCurrent >= 0 && m_2DTransferFunction->GetSwatchCount() > 0) {
 
     GradientStop s =
       m_2DTransferFunction->GetGradient(listWidget_Gradient->currentRow());

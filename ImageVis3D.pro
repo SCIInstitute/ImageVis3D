@@ -43,6 +43,8 @@ HEADERS += StdDefines.h \
            IO/VolumeDataset.h \
            IO/IOManager.h \          
            IO/Images/BMPLoader.h \
+           IO/DICOM/DICOMParser.h \
+           IO/Images/ImageParser.h \
            IO/UVF/DataBlock.h \
            IO/UVF/GlobalHeader.h \
            IO/UVF/KeyValuePairDataBlock.h \
@@ -57,10 +59,13 @@ HEADERS += StdDefines.h \
            DebugOut/AbstrDebugOut.h \
            DebugOut/TextfileOut.h \
            DebugOut/QTOut.h \
+           DebugOut/QTLabelOut.h \
            DebugOut/ConsoleOut.h \
            DebugOut/MultiplexOut.h \
            3rdParty/GLEW/glew.h \
            3rdParty/GLEW/glxew.h \
+           Renderer/FrameCapture.h \
+           Renderer/GLFrameCapture.h \
            Renderer/CullingLOD.h \
            Renderer/GLSLProgram.h \
            Renderer/GLInclude.h \
@@ -107,6 +112,7 @@ SOURCES += 3rdParty/GLEW/glew.c \
            IO/IOManager.cpp \
            IO/DirectoryParser.cpp \
            IO/DICOM/DICOMParser.cpp \
+           IO/Images/ImageParser.cpp \           
            IO/UVF/DataBlock.cpp \
            IO/UVF/GlobalHeader.cpp \
            IO/UVF/KeyValuePairDataBlock.cpp \
@@ -119,10 +125,12 @@ SOURCES += 3rdParty/GLEW/glew.c \
            Controller/MasterController.cpp \
            DebugOut/TextfileOut.cpp \
            DebugOut/QTOut.cpp \
+           DebugOut/QTLabelOut.cpp \
            DebugOut/ConsoleOut.cpp \
            DebugOut/MultiplexOut.cpp \ 
            Renderer/CullingLOD.cpp \
-           Renderer/GLSLProgram.cpp \                    
+           Renderer/GLFrameCapture.cpp \
+           Renderer/GLSLProgram.cpp \
            Renderer/GLTexture.cpp \
            Renderer/GLTexture1D.cpp \
            Renderer/GLTexture2D.cpp \
