@@ -63,7 +63,8 @@ class FrameCapture {
 			qTargetFile.setPixel(x,y,qRgba(int(pData[i+0]),
 										   int(pData[i+1]),
 										   int(pData[i+2]),
-										   int(pData[i+3])));i++;
+										   int(pData[i+3])));
+			i+=4;
 		  }
 
 		return qTargetFile.save(strFilename.c_str());
