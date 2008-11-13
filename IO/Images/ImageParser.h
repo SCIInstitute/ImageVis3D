@@ -61,6 +61,7 @@ public:
   SimpleImageFileInfo(const std::string& strFileName);
   SimpleImageFileInfo(const std::wstring& wstrFileName);
   SimpleImageFileInfo(const SimpleImageFileInfo* info);
+  virtual ~SimpleImageFileInfo() {}
 
   virtual bool GetData(void* pData, unsigned int iLength, unsigned int iOffset);
   virtual SimpleFileInfo* clone();
@@ -71,6 +72,7 @@ public:
   ImageFileInfo();
   ImageFileInfo(const std::string& strFileName);
   ImageFileInfo(const std::wstring& wstrFileName);
+  virtual ~ImageFileInfo() {}
 
   UINTVECTOR2  m_ivSize;
   unsigned int m_iAllocated;

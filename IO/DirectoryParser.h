@@ -52,6 +52,7 @@ public:
   SimpleFileInfo(const std::string& strFileName);
   SimpleFileInfo(const std::wstring& wstrFileName);
   SimpleFileInfo(const SimpleFileInfo* info);
+  virtual ~SimpleFileInfo() {}
 
   std::string  m_strFileName;
   std::wstring m_wstrFileName;

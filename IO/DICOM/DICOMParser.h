@@ -61,6 +61,7 @@ public:
   SimpleDICOMFileInfo(const std::string& strFileName);
   SimpleDICOMFileInfo(const std::wstring& wstrFileName);
   SimpleDICOMFileInfo(const SimpleDICOMFileInfo* info);
+  virtual ~SimpleDICOMFileInfo() {}
 
   FLOATVECTOR3 m_fvPatientPosition; // this data is needed to fix aspect ratio which is brocken in many DICOM files ... idiots
 
@@ -77,6 +78,7 @@ public:
   DICOMFileInfo();
   DICOMFileInfo(const std::string& strFileName);
   DICOMFileInfo(const std::wstring& wstrFileName);
+  virtual ~DICOMFileInfo() {}
 
   unsigned int m_iSeries;
   UINTVECTOR3  m_ivSize;
