@@ -364,10 +364,24 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     int iRange = int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
     SetIsoValueSlider(int(m_ActiveRenderWin->GetRenderer()->GetIsoValue()*iRange), iRange);
 
+    DOUBLEVECTOR3 vfRescaleFactors =  m_ActiveRenderWin->GetRenderer()->GetRescaleFactors();
+    doubleSpinBox_RescaleX->setValue(vfRescaleFactors.x);
+    doubleSpinBox_RescaleY->setValue(vfRescaleFactors.y);
+    doubleSpinBox_RescaleZ->setValue(vfRescaleFactors.z);
+
     SetToggleGlobalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetGlobalBBox());
     SetToggleLocalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetLocalBBox());
     ClearProgressView();
   }
+}
+
+void MainWindow::SetRescaleFactors() {
+  DOUBLEVECTOR3 vfRescaleFactors;
+  vfRescaleFactors.x = doubleSpinBox_RescaleX->value();
+  vfRescaleFactors.y = doubleSpinBox_RescaleY->value();
+  vfRescaleFactors.z = doubleSpinBox_RescaleZ->value();
+  m_ActiveRenderWin->GetRenderer()->SetRescaleFactors(vfRescaleFactors);
+  m_ActiveRenderWin->Schec
 }
 
 

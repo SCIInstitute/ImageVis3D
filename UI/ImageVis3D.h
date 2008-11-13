@@ -144,6 +144,8 @@ protected slots:
   void ToggleGlobalBBox(bool bRenderBBox);
   void ToggleLocalBBox(bool bRenderBBox);
 
+  void SetRescaleFactors();
+
 private :
   MasterController&     m_MasterController;
   QString               m_strCurrentWorkspaceFilename;

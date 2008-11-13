@@ -84,6 +84,11 @@ VolumeDatasetInfo::VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock) : m_pVol
         }
       }
     }
+
+    m_vfRescale.resize(m_pVolumeDataBlock->ulDomainSemantics.size());
+    for (size_t i = 0;i<m_pVolumeDataBlock->ulDomainSemantics.size();i++) {
+      m_vfRescale[i] = 1.0;
+    }
 }
 
 UINT64VECTOR3 VolumeDatasetInfo::GetBrickCount(const UINT64 iLOD) const {
@@ -127,7 +132,7 @@ UINT64 VolumeDatasetInfo::GetLODLevelCount() const {
 }
 
 DOUBLEVECTOR3 VolumeDatasetInfo::GetScale() const {
-  return m_aScale;
+  return m_aScale * DOUBLEVECTOR3(m_vfRescale[0], m_vfRescale[1], m_vfRescale[2]);
 }
 
 const vector<UINT64>& VolumeDatasetInfo::GetBrickCountND(const vector<UINT64>& vLOD) const {
@@ -136,22 +141,22 @@ const vector<UINT64>& VolumeDatasetInfo::GetBrickCountND(const vector<UINT64>& v
 const vector<UINT64>& VolumeDatasetInfo::GetBrickSizeND(const vector<UINT64>& vLOD, const vector<UINT64>& vBrick) const {
   return m_pVolumeDataBlock->GetBrickSize(vLOD, vBrick);
 }
-const vector<UINT64> VolumeDatasetInfo::GetDomainSizeND() const {
+const vector<UINT64>& VolumeDatasetInfo::GetDomainSizeND() const {
   return m_pVolumeDataBlock->ulDomainSize;
 }
-const vector<UINT64> VolumeDatasetInfo::GetMaxBrickSizeND() const {
+const vector<UINT64>& VolumeDatasetInfo::GetMaxBrickSizeND() const {
   return m_pVolumeDataBlock->ulBrickSize;
 }
-const vector<UINT64> VolumeDatasetInfo::GetBrickOverlapSizeND() const {
+const vector<UINT64>& VolumeDatasetInfo::GetBrickOverlapSizeND() const {
   return m_pVolumeDataBlock->ulBrickOverlap;
 }    
-const vector<UINT64> VolumeDatasetInfo::GetLODLevelCountND() const {
+const vector<UINT64>& VolumeDatasetInfo::GetLODLevelCountND() const {
   return m_pVolumeDataBlock->ulLODLevelCount;
 }
 const vector<double> VolumeDatasetInfo::GetScaleND() const {
   vector<double> vfScale;  
   size_t iSize = m_pVolumeDataBlock->ulDomainSize.size();
-  for (size_t i = 0;i<iSize;i++) vfScale.push_back(m_pVolumeDataBlock->dDomainTransformation[i+(iSize+1)*i]);
+  for (size_t i = 0;i<iSize;i++) vfScale.push_back(m_pVolumeDataBlock->dDomainTransformation[i+(iSize+1)*i] * m_vfRescale[i]);
   return vfScale;
 }
 

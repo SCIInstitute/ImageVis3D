@@ -57,6 +57,9 @@ class VolumeDatasetInfo {
   public:
     VolumeDatasetInfo() : m_pVolumeDataBlock(NULL) {}
 
+    void SetRescaleFactors(DOUBLEVECTOR3 vfRescale) {m_vfRescale[0] = vfRescale[0]; m_vfRescale[1] = vfRescale[1]; m_vfRescale[2] = vfRescale[2];}
+    DOUBLEVECTOR3 GetRescaleFactors() const {return DOUBLEVECTOR3(m_vfRescale[0], m_vfRescale[1], m_vfRescale[2]);}
+
   	UINT64VECTOR3 GetBrickCount(const UINT64 iLOD) const;
     UINT64VECTOR3 GetBrickSize(const UINT64 iLOD, const UINT64VECTOR3& vBrick) const;
     FLOATVECTOR3 GetEffectiveBrickSize(const UINT64 iLOD, const UINT64VECTOR3& vBrick) const;
@@ -66,12 +69,15 @@ class VolumeDatasetInfo {
     UINT64 GetLODLevelCount() const;
     DOUBLEVECTOR3 GetScale() const;
 
-  	const std::vector<UINT64>& GetBrickCountND(const std::vector<UINT64>& vLOD) const;
+    void SetRescaleFactorsND(std::vector<double> vfRescale) {m_vfRescale = vfRescale;}
+    const std::vector<double>& GetRescaleFactorsND() const {return m_vfRescale;};
+
+    const std::vector<UINT64>& GetBrickCountND(const std::vector<UINT64>& vLOD) const;
     const std::vector<UINT64>& GetBrickSizeND(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const;
-    const std::vector<UINT64> GetDomainSizeND() const;
-    const std::vector<UINT64> GetMaxBrickSizeND() const;
-    const std::vector<UINT64> GetBrickOverlapSizeND() const;
-    const std::vector<UINT64> GetLODLevelCountND() const;
+    const std::vector<UINT64>& GetDomainSizeND() const;
+    const std::vector<UINT64>& GetMaxBrickSizeND() const;
+    const std::vector<UINT64>& GetBrickOverlapSizeND() const;
+    const std::vector<UINT64>& GetLODLevelCountND() const;
     const std::vector<double> GetScaleND() const;
 
     /// \todo change this if we want to support color data
@@ -85,14 +91,17 @@ class VolumeDatasetInfo {
     VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock);
     RasterDataBlock*    m_pVolumeDataBlock;
 
-    
-    std::vector<UINT64VECTOR3> m_aDomainSize;
-    UINT64VECTOR3 m_aOverlap;
-    UINT64VECTOR3 m_aMaxBrickSize;
-    UINT64 m_iLODLevel;
-    DOUBLEVECTOR3 m_aScale;
-    std::vector<UINT64VECTOR3> m_vaBrickCount;
+    // read from the dataset
+    std::vector<UINT64VECTOR3>  m_aDomainSize;
+    UINT64VECTOR3               m_aOverlap;
+    UINT64VECTOR3               m_aMaxBrickSize;
+    UINT64                      m_iLODLevel;
+    DOUBLEVECTOR3               m_aScale;
+    std::vector<UINT64VECTOR3>  m_vaBrickCount;
     std::vector< std::vector< std::vector<std::vector<UINT64VECTOR3> > > >m_vvaBrickSize;
+
+    // set externaly by the user
+    std::vector<double>         m_vfRescale;
 
     friend class VolumeDataset;
 };
@@ -109,7 +118,7 @@ public:
   const Histogram2D* Get2DHistogram() const {return m_pHist2D;}
   float GetMaxGradMagnitude() const {return m_pHist2DDataBlock->GetMaxGradMagnitude();}
 
-  const VolumeDatasetInfo* GetInfo() const {return m_pVolumeDatasetInfo;}
+  VolumeDatasetInfo* GetInfo() const {return m_pVolumeDatasetInfo;}
 
   UINTVECTOR3 GetBrickSize(const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick);
   bool GetBrick(unsigned char** ppData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {return m_pVolumeDataBlock->GetData(ppData, vLOD, vBrick);}

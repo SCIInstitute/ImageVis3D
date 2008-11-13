@@ -220,6 +220,8 @@ class AbstrRenderer {
     
     void SetTimeSlice(unsigned int iMSecs) {m_iTimeSliceMSecs = iMSecs;}
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iStartDelay) {m_iMinFramerate = iMinFramerate; m_iStartDelay = iStartDelay;}
+    void SetRescaleFactors(const DOUBLEVECTOR3& vfRescale) {m_pDataset->GetInfo()->SetRescaleFactors(vfRescale); ScheduleCompleteRedraw();}
+    DOUBLEVECTOR3 GetRescaleFactors() {return m_pDataset->GetInfo()->GetRescaleFactors();}
 
 	  void DisableLOD(bool bLODDisabled) {m_bLODDisabled = bLODDisabled;}
   protected:
@@ -261,7 +263,7 @@ class AbstrRenderer {
     UINT64              m_iCurrentLOD;
     UINT64              m_iBricksRenderedInThisSubFrame;
     std::vector<Brick>  m_vCurrentBrickList;
-	bool				m_bLODDisabled;
+  	bool				        m_bLODDisabled;
 
     virtual void ScheduleCompleteRedraw();
     virtual void ScheduleWindowRedraw(int iIndex);

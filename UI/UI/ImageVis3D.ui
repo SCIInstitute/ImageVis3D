@@ -35,7 +35,7 @@
     <rect>
      <x>385</x>
      <y>22</y>
-     <width>618</width>
+     <width>620</width>
      <height>1285</height>
     </rect>
    </property>
@@ -205,9 +205,9 @@
        <widget class="QWidget" name="tab_3" >
         <property name="geometry" >
          <rect>
-          <x>32</x>
-          <y>112</y>
-          <width>360</width>
+          <x>0</x>
+          <y>0</y>
+          <width>357</width>
           <height>240</height>
          </rect>
         </property>
@@ -335,9 +335,9 @@
        <widget class="QWidget" name="tab_4" >
         <property name="geometry" >
          <rect>
-          <x>32</x>
-          <y>112</y>
-          <width>360</width>
+          <x>0</x>
+          <y>0</y>
+          <width>357</width>
           <height>240</height>
          </rect>
         </property>
@@ -437,9 +437,9 @@
        <widget class="QWidget" name="tab_5" >
         <property name="geometry" >
          <rect>
-          <x>32</x>
-          <y>112</y>
-          <width>360</width>
+          <x>0</x>
+          <y>0</y>
+          <width>357</width>
           <height>240</height>
          </rect>
         </property>
@@ -866,9 +866,9 @@
   <widget class="QDockWidget" name="dockWidget_Recorder" >
    <property name="geometry" >
     <rect>
-     <x>1007</x>
+     <x>1009</x>
      <y>22</y>
-     <width>196</width>
+     <width>194</width>
      <height>208</height>
     </rect>
    </property>
@@ -883,7 +883,7 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>196</width>
+      <width>194</width>
       <height>186</height>
      </rect>
     </property>
@@ -1184,9 +1184,9 @@
        <widget class="QWidget" name="tab" >
         <property name="geometry" >
          <rect>
-          <x>32</x>
-          <y>112</y>
-          <width>360</width>
+          <x>0</x>
+          <y>0</y>
+          <width>357</width>
           <height>71</height>
          </rect>
         </property>
@@ -1283,9 +1283,9 @@
        <widget class="QWidget" name="tab_2" >
         <property name="geometry" >
          <rect>
-          <x>32</x>
-          <y>112</y>
-          <width>360</width>
+          <x>0</x>
+          <y>0</y>
+          <width>357</width>
           <height>71</height>
          </rect>
         </property>
@@ -1484,10 +1484,10 @@
   <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="geometry" >
     <rect>
-     <x>1007</x>
+     <x>1009</x>
      <y>234</y>
-     <width>196</width>
-     <height>193</height>
+     <width>194</width>
+     <height>210</height>
     </rect>
    </property>
    <property name="minimumSize" >
@@ -1507,8 +1507,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>196</width>
-      <height>171</height>
+      <width>194</width>
+      <height>188</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
@@ -2694,10 +2694,10 @@
   <widget class="QDockWidget" name="dockWidget_RenderOptions" >
    <property name="geometry" >
     <rect>
-     <x>1007</x>
-     <y>431</y>
-     <width>196</width>
-     <height>530</height>
+     <x>1009</x>
+     <y>448</y>
+     <width>194</width>
+     <height>566</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -2711,8 +2711,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>196</width>
-      <height>508</height>
+      <width>194</width>
+      <height>544</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
@@ -2757,16 +2757,51 @@
           </property>
          </widget>
         </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_12" >
+       <property name="title" >
+        <string>Rescale</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_18" >
         <item>
-         <widget class="QRadioButton" name="radioButton_3" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>18</height>
-           </size>
+         <widget class="QDoubleSpinBox" name="doubleSpinBox_RescaleX" >
+          <property name="decimals" >
+           <number>1</number>
           </property>
-          <property name="text" >
-           <string>CPU Raycasting</string>
+          <property name="minimum" >
+           <double>1.000000000000000</double>
+          </property>
+          <property name="singleStep" >
+           <double>0.100000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="doubleSpinBox_RescaleY" >
+          <property name="decimals" >
+           <number>1</number>
+          </property>
+          <property name="minimum" >
+           <double>1.000000000000000</double>
+          </property>
+          <property name="singleStep" >
+           <double>0.100000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="doubleSpinBox_RescaleZ" >
+          <property name="decimals" >
+           <number>1</number>
+          </property>
+          <property name="minimum" >
+           <double>1.000000000000000</double>
+          </property>
+          <property name="singleStep" >
+           <double>0.100000000000000</double>
           </property>
          </widget>
         </item>
@@ -3083,10 +3118,10 @@
   <widget class="QDockWidget" name="dockWidget_IsoSurface" >
    <property name="geometry" >
     <rect>
-     <x>1007</x>
-     <y>965</y>
-     <width>196</width>
-     <height>95</height>
+     <x>1009</x>
+     <y>1018</y>
+     <width>194</width>
+     <height>91</height>
     </rect>
    </property>
    <property name="windowTitle" >
@@ -3100,8 +3135,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>196</width>
-      <height>73</height>
+      <width>194</width>
+      <height>69</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_16" >
@@ -3349,10 +3384,10 @@
   <widget class="QDockWidget" name="dockWidget_ProgressView" >
    <property name="geometry" >
     <rect>
-     <x>1007</x>
-     <y>1064</y>
-     <width>196</width>
-     <height>243</height>
+     <x>1009</x>
+     <y>1113</y>
+     <width>194</width>
+     <height>194</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -3372,8 +3407,8 @@
      <rect>
       <x>0</x>
       <y>22</y>
-      <width>196</width>
-      <height>221</height>
+      <width>194</width>
+      <height>172</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_27" >
@@ -3672,7 +3707,6 @@
   <tabstop>horizontalSlider_Opacity</tabstop>
   <tabstop>radioButton</tabstop>
   <tabstop>radioButton_2</tabstop>
-  <tabstop>radioButton_3</tabstop>
   <tabstop>radioButton_1DTrans</tabstop>
   <tabstop>radioButton_Iso</tabstop>
   <tabstop>radioButton_2DTrans</tabstop>
@@ -3913,8 +3947,8 @@
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>155</x>
-     <y>1369</y>
+     <x>156</x>
+     <y>1360</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3929,8 +3963,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>627</x>
-     <y>1372</y>
+     <x>628</x>
+     <y>1362</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4009,8 +4043,8 @@
    <slot>Transfer1DLoad()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>155</x>
-     <y>1681</y>
+     <x>156</x>
+     <y>1657</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4025,8 +4059,8 @@
    <slot>Transfer1DSave()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>155</x>
-     <y>1710</y>
+     <x>156</x>
+     <y>1686</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4041,8 +4075,8 @@
    <slot>Transfer2DLoad()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>649</x>
-     <y>1739</y>
+     <x>650</x>
+     <y>1715</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4058,7 +4092,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>932</x>
-     <y>1739</y>
+     <y>1715</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4074,7 +4108,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1138</x>
-     <y>1271</y>
+     <y>1066</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4090,7 +4124,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1183</x>
-     <y>610</y>
+     <y>659</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4106,7 +4140,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1183</x>
-     <y>631</y>
+     <y>680</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4122,7 +4156,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1183</x>
-     <y>652</y>
+     <y>701</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4137,8 +4171,8 @@
    <slot>EditViewLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>209</x>
-     <y>871</y>
+     <x>219</x>
+     <y>837</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4153,8 +4187,8 @@
    <slot>EditRenderLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>189</x>
-     <y>900</y>
+     <x>199</x>
+     <y>861</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4169,8 +4203,8 @@
    <slot>EditToolsLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>178</x>
-     <y>924</y>
+     <x>188</x>
+     <y>885</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4185,8 +4219,8 @@
    <slot>EditFiltersLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>178</x>
-     <y>948</y>
+     <x>188</x>
+     <y>909</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4201,8 +4235,8 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1432</y>
+     <x>147</x>
+     <y>1408</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4217,8 +4251,8 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1456</y>
+     <x>147</x>
+     <y>1432</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4233,8 +4267,8 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1480</y>
+     <x>147</x>
+     <y>1456</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4249,8 +4283,8 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1504</y>
+     <x>147</x>
+     <y>1480</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4265,8 +4299,8 @@
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1635</y>
+     <x>147</x>
+     <y>1611</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4281,8 +4315,8 @@
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1604</y>
+     <x>147</x>
+     <y>1580</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4297,8 +4331,8 @@
    <slot>ClearDebugWin()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>365</x>
-     <y>1171</y>
+     <x>362</x>
+     <y>1133</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4313,8 +4347,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>71</x>
-     <y>1171</y>
+     <x>69</x>
+     <y>1133</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4329,8 +4363,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>225</x>
-     <y>1171</y>
+     <x>224</x>
+     <y>1133</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4345,8 +4379,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>147</x>
-     <y>1171</y>
+     <x>145</x>
+     <y>1133</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4361,8 +4395,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>284</x>
-     <y>1171</y>
+     <x>281</x>
+     <y>1133</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4377,8 +4411,8 @@
    <slot>Transfer1DCopyTo2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>155</x>
-     <y>1739</y>
+     <x>156</x>
+     <y>1715</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4393,8 +4427,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>155</x>
-     <y>1369</y>
+     <x>156</x>
+     <y>1360</y>
     </hint>
     <hint type="destinationlabel" >
      <x>155</x>
@@ -4410,7 +4444,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>931</x>
-     <y>1653</y>
+     <y>1629</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4426,7 +4460,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>931</x>
-     <y>1684</y>
+     <y>1660</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4441,8 +4475,8 @@
    <slot>Transfer2DUpdateGradientBox()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>813</x>
-     <y>1372</y>
+     <x>814</x>
+     <y>1362</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4457,8 +4491,8 @@
    <slot>Transfer2DChooseGradientColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>726</x>
-     <y>1716</y>
+     <x>727</x>
+     <y>1692</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4474,7 +4508,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>932</x>
-     <y>1714</y>
+     <y>1690</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4489,8 +4523,8 @@
    <slot>ApplyUpdate()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1146</x>
-     <y>764</y>
+     <x>1165</x>
+     <y>813</y>
     </hint>
     <hint type="destinationlabel" >
      <x>687</x>
@@ -4506,7 +4540,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1174</x>
-     <y>696</y>
+     <y>745</y>
     </hint>
     <hint type="destinationlabel" >
      <x>685</x>
@@ -4522,7 +4556,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1174</x>
-     <y>717</y>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel" >
      <x>683</x>
@@ -4538,7 +4572,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1174</x>
-     <y>738</y>
+     <y>787</y>
     </hint>
     <hint type="destinationlabel" >
      <x>680</x>
@@ -4553,8 +4587,8 @@
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1573</y>
+     <x>147</x>
+     <y>1549</y>
     </hint>
     <hint type="destinationlabel" >
      <x>415</x>
@@ -4585,8 +4619,8 @@
    <slot>ParseAndExecuteDebugCommand()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>374</x>
-     <y>1299</y>
+     <x>371</x>
+     <y>1297</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4618,7 +4652,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1173</x>
-     <y>818</y>
+     <y>867</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -4634,7 +4668,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>932</x>
-     <y>1368</y>
+     <y>1365</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -4665,8 +4699,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>702</x>
-     <y>1372</y>
+     <x>703</x>
+     <y>1362</y>
     </hint>
     <hint type="destinationlabel" >
      <x>714</x>
@@ -4682,7 +4716,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1164</x>
-     <y>920</y>
+     <y>969</y>
     </hint>
     <hint type="destinationlabel" >
      <x>389</x>
@@ -4697,8 +4731,8 @@
    <slot>SetIsoValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1110</x>
-     <y>1303</y>
+     <x>1111</x>
+     <y>1092</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -4714,11 +4748,11 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1055</x>
-     <y>1286</y>
+     <y>1066</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1193</x>
-     <y>1298</y>
+     <y>1093</y>
     </hint>
    </hints>
   </connection>
@@ -4729,8 +4763,8 @@
    <slot>ToggleGlobalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1169</x>
-     <y>842</y>
+     <x>1173</x>
+     <y>891</y>
     </hint>
     <hint type="destinationlabel" >
      <x>990</x>
@@ -4745,8 +4779,8 @@
    <slot>ToggleLocalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1137</x>
-     <y>866</y>
+     <x>1157</x>
+     <y>915</y>
     </hint>
     <hint type="destinationlabel" >
      <x>989</x>
@@ -4818,6 +4852,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>doubleSpinBox_RescaleX</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetRescaleFactors()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1047</x>
+     <y>589</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>1008</x>
+     <y>593</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>doubleSpinBox_RescaleY</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetRescaleFactors()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1099</x>
+     <y>586</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>1005</x>
+     <y>556</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>doubleSpinBox_RescaleZ</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetRescaleFactors()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1153</x>
+     <y>589</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>1007</x>
+     <y>522</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -4871,5 +4953,6 @@
   <slot>CaptureSequence()</slot>
   <slot>SetCaptureFilename()</slot>
   <slot>CaptureRotation()</slot>
+  <slot>SetRescaleFactors()</slot>
  </slots>
 </ui>
