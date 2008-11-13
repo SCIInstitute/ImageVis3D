@@ -704,16 +704,16 @@ VolumeDataset* IOManager::ConvertDataset(const std::string& strFilename, const s
   return LoadDataset(strTargetFilename, requester);
 }
 
-VolumeDataset* IOManager::LoadDataset(std::string strFilename, AbstrRenderer* requester) {
+VolumeDataset* IOManager::LoadDataset(const std::string& strFilename, AbstrRenderer* requester) {
   return m_pMasterController->MemMan()->LoadDataset(strFilename, requester);
 }
 
-bool IOManager::NeedsConversion(std::string strFilename, bool& bChecksumFail) {
+bool IOManager::NeedsConversion(const std::string& strFilename, bool& bChecksumFail) {
   wstring wstrFilename(strFilename.begin(), strFilename.end());
   return !UVF::IsUVFFile(wstrFilename, bChecksumFail);
 }
 
-bool IOManager::NeedsConversion(std::string strFilename) {
+bool IOManager::NeedsConversion(const std::string& strFilename) {
   wstring wstrFilename(strFilename.begin(), strFilename.end());
   return !UVF::IsUVFFile(wstrFilename);
 }

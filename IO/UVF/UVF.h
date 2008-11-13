@@ -40,8 +40,8 @@ public:
 	bool AddDataBlock(DataBlock* dataBlock, UINT64 iSizeofData, bool bUseSourcePointer=false);
 	bool Create();
 
-  static bool IsUVFFile(std::wstring wstrFilename);
-  static bool IsUVFFile(std::wstring wstrFilename, bool& bChecksumFail);
+  static bool IsUVFFile(const std::wstring& wstrFilename);
+  static bool IsUVFFile(const std::wstring& wstrFilename, bool& bChecksumFail);
 
 protected:
   bool			      m_bFileIsLoaded;

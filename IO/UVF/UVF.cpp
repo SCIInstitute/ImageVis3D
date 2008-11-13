@@ -43,14 +43,14 @@ bool UVF::CheckMagic(LargeRAWFile& streamFile) {
   return true;
 }
 
-bool UVF::IsUVFFile(std::wstring wstrFilename) {
+bool UVF::IsUVFFile(const std::wstring& wstrFilename) {
   LargeRAWFile streamFile(wstrFilename);
   bool bResult = CheckMagic(streamFile);
   streamFile.Close();
   return bResult;
 }
 
-bool UVF::IsUVFFile(std::wstring wstrFilename, bool& bChecksumFail) {
+bool UVF::IsUVFFile(const std::wstring& wstrFilename, bool& bChecksumFail) {
 
   LargeRAWFile streamFile(wstrFilename);
 

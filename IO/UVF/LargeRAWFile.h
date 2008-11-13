@@ -32,8 +32,8 @@
 
 class LargeRAWFile {
 public:
-	LargeRAWFile(std::string strFilename);
-	LargeRAWFile(std::wstring wstrFilename);
+	LargeRAWFile(const std::string& strFilename);
+	LargeRAWFile(const std::wstring& wstrFilename);
 	LargeRAWFile(LargeRAWFile &other);
   virtual ~LargeRAWFile() {Close();}
 

@@ -4,14 +4,14 @@ using namespace std;
 
 #define BLOCK_COPY_SIZE (UINT64(128*1024*1024))
 
-LargeRAWFile::LargeRAWFile(string strFilename) :
+LargeRAWFile::LargeRAWFile(const std::string& strFilename) :
   m_strFilename(strFilename),
   m_bIsOpen(false),
   m_bWritable(false)
 {
 }
 
-LargeRAWFile::LargeRAWFile(wstring wstrFilename) :
+LargeRAWFile::LargeRAWFile(const std::wstring& wstrFilename) :
   m_bIsOpen(false),
   m_bWritable(false)
 {
