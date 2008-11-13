@@ -37,6 +37,7 @@
 #include "IOManager.h"
 #include <Controller/MasterController.h>
 #include <IO/DICOM/DICOMParser.h>
+#include <IO/Images/ImageParser.h>
 #include <IO/KeyValueFileParser.h>
 #include <Basics/SysTools.h>
 #include <sstream>
@@ -62,17 +63,35 @@ vector<FileStackInfo*> IOManager::ScanDirectory(std::string strDirectory) {
 
   std::vector<FileStackInfo*> fileStacks;
 
-  // right now we scan the directory only for DICOM files but in the future other image scanners will be added
-  DICOMParser p;
-  p.GetDirInfo(strDirectory);
+  DICOMParser parseDICOM;
+  parseDICOM.GetDirInfo(strDirectory);
 
-  if (p.m_FileStacks.size() == 1)
+  if (parseDICOM.m_FileStacks.size() == 1)
     m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found a single DICOM stack");
   else
-    m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found %i DICOM stacks", p.m_FileStacks.size());
+    m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found %i DICOM stacks", parseDICOM.m_FileStacks.size());
 
-  for (unsigned int iStackID = 0;iStackID < p.m_FileStacks.size();iStackID++) {    
-    DICOMStackInfo* f = new DICOMStackInfo((DICOMStackInfo*)p.m_FileStacks[iStackID]);
+  for (unsigned int iStackID = 0;iStackID < parseDICOM.m_FileStacks.size();iStackID++) {    
+    DICOMStackInfo* f = new DICOMStackInfo((DICOMStackInfo*)parseDICOM.m_FileStacks[iStackID]);
+
+    stringstream s;
+    s << f->m_strFileType << " Stack: " << f->m_strDesc;
+    f->m_strDesc = s.str();
+
+    fileStacks.push_back(f);
+  }
+
+
+  ImageParser parseImages;
+  parseImages.GetDirInfo(strDirectory);
+
+  if (parseImages.m_FileStacks.size() == 1)
+    m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found a single image stack");
+  else
+    m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found %i image stacks", parseImages.m_FileStacks.size());
+
+  for (unsigned int iStackID = 0;iStackID < parseImages.m_FileStacks.size();iStackID++) {    
+    ImageStackInfo* f = new ImageStackInfo((ImageStackInfo*)parseImages.m_FileStacks[iStackID]);
 
     stringstream s;
     s << f->m_strFileType << " Stack: " << f->m_strDesc;
@@ -385,7 +404,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 	RasterDataBlock dataVolume;
 
   if (strSource == "") 
-    dataVolume.strBlockID = (strDesc!="") ? strDesc + "volume converted by ImageVis3D" : "Volume converted by ImageVis3D";
+    dataVolume.strBlockID = (strDesc!="") ? strDesc + " volume converted by ImageVis3D" : "Volume converted by ImageVis3D";
   else
     dataVolume.strBlockID = (strDesc!="") ? strDesc + " volume converted from " + strSource + " by ImageVis3D" : "Volume converted from " + strSource + " by ImageVis3D";
 
@@ -606,9 +625,52 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
     }
 
     return result;
+  } else {
+     if (pStack->m_strFileType == "IMAGE") {
+        m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Detected Image stack, starting image conversion");
+        m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Stack contains %i files",  pStack->m_Elements.size());
+
+        string strTempMergeFilename = strTargetFilename + "~";
+        m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","    Creating intermediate file %s", strTempMergeFilename.c_str()); 
+
+        ofstream fs;
+        fs.open(strTempMergeFilename.c_str(),fstream::binary);
+        if (fs.fail())  {
+	        m_pMasterController->DebugOut()->Error("IOManager::ConvertDataset","Could not create temp file %s aborted conversion.", strTempMergeFilename.c_str()); 
+	        return false;
+        }
+
+	      char *pData = NULL;
+	      for (uint j = 0;j<pStack->m_Elements.size();j++) {
+          pStack->m_Elements[j]->GetData((void**)&pData); // the first call does a "new" on pData 
+
+          unsigned int iDataSize = pStack->m_Elements[j]->GetDataSize();
+          fs.write(pData, iDataSize);
+        }
+        delete [] pData;
+
+
+		    fs.close();
+        m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","    done creating intermediate file %s", strTempMergeFilename.c_str()); 
+
+		    UINTVECTOR3 iSize = pStack->m_ivSize;
+		    iSize.z *= (unsigned int)pStack->m_Elements.size();
+
+        bool result = ConvertRAWDataset(strTempMergeFilename, strTargetFilename, pStack->m_iAllocated, 
+                                        pStack->m_iComponentCount, 
+                                        false,
+                                        pStack->m_bIsBigEndian != EndianConvert::IsBigEndian(),
+                                        iSize, pStack->m_fvfAspect, 
+                                        "Image stack", SysTools::GetFilename(pStack->m_Elements[0]->m_strFileName)
+                                        + " to " + SysTools::GetFilename(pStack->m_Elements[pStack->m_Elements.size()-1]->m_strFileName));
+
+        if( remove(strTempMergeFilename.c_str()) != 0 ) {
+          m_pMasterController->DebugOut()->Warning("IOManager::ConvertDataset","Unable to remove temp file %s", strTempMergeFilename.c_str());
+        }
+
+     }
   }
 
-  /// \todo more stack converters here
 
   m_pMasterController->DebugOut()->Error("IOManager::ConvertDataset","Unknown source stack type %s", pStack->m_strFileType.c_str());
   return false;

@@ -3,8 +3,8 @@
 #ifndef RASTERDATABLOCK_H
 #define RASTERDATABLOCK_H
 
+#include <DebugOut/AbstrDebugOut.h>
 #include "DataBlock.h"
-
 #include <string>
 
 /*
@@ -121,8 +121,8 @@ public:
 	const std::vector<UINT64> GetSmallestBrickIndex() const;
   const std::vector<UINT64>& GetSmallestBrickSize() const;
 
-	void FlatDataToBrickedLOD(const void* pSourceData, const std::string& strTempFile = "tempFile.tmp", void (*combineFunc)(std::vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut) = CombineAverage<char>);
-  void FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const std::string& strTempFile = "tempFile.tmp", void (*combineFunc)(std::vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut) = CombineAverage<char>);
+	void FlatDataToBrickedLOD(const void* pSourceData, const std::string& strTempFile = "tempFile.tmp", void (*combineFunc)(std::vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut) = CombineAverage<char>, AbstrDebugOut* pDebugOut=NULL);
+  void FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const std::string& strTempFile = "tempFile.tmp", void (*combineFunc)(std::vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut) = CombineAverage<char>, AbstrDebugOut* pDebugOut=NULL);
 	void AllocateTemp(const std::string& strTempFile, bool bBuildOffsetTables=false);
 
 

@@ -711,27 +711,49 @@ bool DICOMParser::GetDICOMFileInfo(const string& strFilename, DICOMFileInfo& inf
 
 SimpleDICOMFileInfo::SimpleDICOMFileInfo(const std::string& strFileName) :
   SimpleFileInfo(strFileName),
-  m_fvPatientPosition(0,0,0)
+  m_fvPatientPosition(0,0,0),
+  m_iOffsetToData(0)
 {
 }
 
 SimpleDICOMFileInfo::SimpleDICOMFileInfo(const std::wstring& wstrFileName) :   
   SimpleFileInfo(wstrFileName),
-  m_fvPatientPosition(0,0,0)
+  m_fvPatientPosition(0,0,0),
+  m_iOffsetToData(0)
 {
 }
 
 SimpleDICOMFileInfo::SimpleDICOMFileInfo() :   
   SimpleFileInfo(),
-  m_fvPatientPosition(0,0,0)
+  m_fvPatientPosition(0,0,0),
+  m_iOffsetToData(0)
 {
-  }
+}
 
 SimpleDICOMFileInfo::SimpleDICOMFileInfo(const SimpleDICOMFileInfo* other) :
   SimpleFileInfo(other), 
-  m_fvPatientPosition(other->m_fvPatientPosition)
+  m_fvPatientPosition(other->m_fvPatientPosition),
+  m_iOffsetToData(other->m_iOffsetToData)
 {
 }
+
+bool SimpleDICOMFileInfo::GetData(void* pData, unsigned int iLength, unsigned int iOffset) {
+  ifstream fs;
+  fs.open(m_strFileName.c_str(),fstream::binary);
+  if (fs.fail()) return false;
+
+  fs.seekg(m_iOffsetToData+iOffset, ios_base::cur);
+  fs.read((char*)pData, iLength);
+
+  fs.close();
+  return true;
+}
+
+SimpleFileInfo* SimpleDICOMFileInfo::clone() {
+  SimpleDICOMFileInfo* pSimpleDICOMFileInfo = new SimpleDICOMFileInfo(this);
+  return (SimpleFileInfo*)pSimpleDICOMFileInfo;
+}
+
 
 /*************************************************************************************/
 

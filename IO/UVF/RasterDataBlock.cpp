@@ -784,7 +784,9 @@ void RasterDataBlock::AllocateTemp(const string& strTempFile, bool bBuildOffsetT
  * \param combineFunc - the function used to compute the LOD, this is mostly an average function
  * \return void
  * \see FlatDataToBrickedLOD
- */void RasterDataBlock::FlatDataToBrickedLOD(const void* pSourceData, const string& strTempFile, void (*combineFunc)(vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut)) {
+ */void RasterDataBlock::FlatDataToBrickedLOD(const void* pSourceData, const string& strTempFile, 
+                                              void (*combineFunc)(vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut),
+                                              AbstrDebugOut* pDebugOut) {
   // size of input data
   UINT64 iInPointerSize = ComputeElementSize()/8;
   for (size_t i = 0;i<ulDomainSize.size();i++) iInPointerSize *= ulDomainSize[i];
@@ -829,7 +831,8 @@ vector<UINT64> RasterDataBlock::GetLODDomainSize(const vector<UINT64>& vLOD) con
  * \see FlatDataToBrickedLOD
  */
 void RasterDataBlock::FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const string& strTempFile,
-                                           void (*combineFunc)(vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut)) {
+                                           void (*combineFunc)(vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut),
+                                           AbstrDebugOut* pDebugOut) {
 	UINT64 uiBytesPerElement = ComputeElementSize()/8;
 
 	if (m_pTempFile == NULL) AllocateTemp(SysTools::AppendFilename(strTempFile,"1"),m_vLODOffsets.size() == 0);
@@ -846,8 +849,9 @@ void RasterDataBlock::FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const stri
 
 	for (size_t i = 0;i<vLODCombis.size();i++) {
 
-		//Console::printf("  Generating data for domain size "); 
-		// compute size of the domain
+		if (pDebugOut) pDebugOut->Message("FlatDataToBrickedLOD", "Generating data for lod level %i of %i",i, vLODCombis.size()); 
+
+    // compute size of the domain
     vReducedDomainSize = GetLODDomainSize(vLODCombis[i]);
 
 		LargeRAWFile* pBrickSource;
@@ -911,6 +915,7 @@ void RasterDataBlock::FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const stri
     unsigned char* pData = new unsigned char[BLOCK_COPY_SIZE];
 		for (size_t j=0;j<vBrickPermutation.size();j++) {
 
+   		if (pDebugOut) pDebugOut->Message("FlatDataToBrickedLOD", "Processing brick %i of %i in lod level %i of %i",j,vBrickPermutation.size(),i, vLODCombis.size()); 
 			//Console::printf("      Brick %i (",j);
 			//for (UINT64 k=0;k<vBrickPermutation[j].size();k++) Console::printf("%i ",vBrickPermutation[j][k]);
 

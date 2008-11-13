@@ -412,6 +412,14 @@
 					RelativePath=".\IO\Images\BMPLoader.h"
 					>
 				</File>
+				<File
+					RelativePath=".\IO\Images\ImageParser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\Images\ImageParser.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="UVF"
@@ -505,6 +513,10 @@
 			</File>
 			<File
 				RelativePath=".\Default.wsp"
+				>
+			</File>
+			<File
+				RelativePath=".\Doxyfile"
 				>
 			</File>
 			<File
@@ -1342,6 +1354,14 @@
 			</File>
 			<File
 				RelativePath=".\DebugOut\MultiplexOut.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DebugOut\QTLabelOut.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DebugOut\QTLabelOut.h"
 				>
 			</File>
 			<File

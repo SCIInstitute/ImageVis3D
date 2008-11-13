@@ -58,12 +58,12 @@ public:
   unsigned int m_iImageIndex;
 
   unsigned int GetDataSize() {  return m_iDataSize; /* = m_iComponentCount*m_ivSize.volume()*m_iAllocated/8; */}
-  bool GetData(void** pData);
-  bool GetData(void* pData, unsigned int iLength, unsigned int iOffset=0);
+  virtual bool GetData(void** pData);
+  virtual bool GetData(void* pData, unsigned int iLength, unsigned int iOffset) = 0;
+  virtual SimpleFileInfo* clone() = 0;
 
 protected:
-  unsigned int m_iOffsetToData;
-  unsigned int m_iDataSize;  
+  unsigned int m_iDataSize;
 };
 
 

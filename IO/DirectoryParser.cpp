@@ -60,7 +60,6 @@ DirectoryParser::~DirectoryParser(void)
 SimpleFileInfo::SimpleFileInfo(const std::string& strFileName) :   
   m_strFileName(strFileName),
   m_iImageIndex(0),
-  m_iOffsetToData(0),
   m_iDataSize(0)
 {
   m_wstrFileName = wstring(strFileName.begin(),strFileName.end());  
@@ -69,7 +68,6 @@ SimpleFileInfo::SimpleFileInfo(const std::string& strFileName) :
 SimpleFileInfo::SimpleFileInfo(const std::wstring& wstrFileName) :   
   m_wstrFileName(wstrFileName),
   m_iImageIndex(0),
-  m_iOffsetToData(0),
   m_iDataSize(0)
 {
   m_strFileName = string(wstrFileName.begin(),wstrFileName.end());  
@@ -79,7 +77,6 @@ SimpleFileInfo::SimpleFileInfo() :
   m_strFileName(""),
   m_wstrFileName(L""),
   m_iImageIndex(0),
-  m_iOffsetToData(0),
   m_iDataSize(0)
 {}
 
@@ -87,21 +84,8 @@ SimpleFileInfo::SimpleFileInfo(const SimpleFileInfo* other) :
   m_strFileName(other->m_strFileName),
   m_wstrFileName(other->m_wstrFileName),
   m_iImageIndex(other->m_iImageIndex),
-  m_iOffsetToData(other->m_iOffsetToData),
   m_iDataSize(other->m_iDataSize)
 {
-}
-
-bool SimpleFileInfo::GetData(void* pData, unsigned int iLength, unsigned int iOffset) {
-  ifstream fs;
-  fs.open(m_strFileName.c_str(),fstream::binary);
-  if (fs.fail()) return false;
-
-  fs.seekg(m_iOffsetToData+iOffset, ios_base::cur);
-  fs.read((char*)pData, iLength);
-
-  fs.close();
-  return true;
 }
 
 bool SimpleFileInfo::GetData(void** pData) {
@@ -136,7 +120,7 @@ FileStackInfo::FileStackInfo(const FileStackInfo* other) :
   m_strFileType(other->m_strFileType)
 {
   for (unsigned int i=0;i<other->m_Elements.size();i++) {
-    SimpleFileInfo* e = new SimpleFileInfo(other->m_Elements[i]);
+    SimpleFileInfo* e = other->m_Elements[i]->clone();
     m_Elements.push_back(e);
   }
 }

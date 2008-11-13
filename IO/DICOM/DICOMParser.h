@@ -62,7 +62,13 @@ public:
   SimpleDICOMFileInfo(const std::wstring& wstrFileName);
   SimpleDICOMFileInfo(const SimpleDICOMFileInfo* info);
 
-  FLOATVECTOR3 m_fvPatientPosition; // this data is needed to fix aspect ratio which is brocken in many DICOM files, idiots
+  FLOATVECTOR3 m_fvPatientPosition; // this data is needed to fix aspect ratio which is brocken in many DICOM files ... idiots
+
+  virtual bool GetData(void* pData, unsigned int iLength, unsigned int iOffset);
+  virtual SimpleFileInfo* clone();
+
+protected:
+  unsigned int m_iOffsetToData;
 };
 
 class DICOMFileInfo : public SimpleDICOMFileInfo {
