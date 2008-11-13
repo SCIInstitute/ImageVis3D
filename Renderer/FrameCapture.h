@@ -60,7 +60,7 @@ class FrameCapture {
 		size_t i = 0;
 		for (int y = 0;y<int(vSize.y);y++)
 		  for (int x = 0;x<int(vSize.x);x++) {
-			qTargetFile.setPixel(x,y,qRgba(int(pData[i+0]),
+			qTargetFile.setPixel(x,(vSize.y-1)-y,qRgba(int(pData[i+0]),
 										   int(pData[i+1]),
 										   int(pData[i+2]),
 										   int(pData[i+3])));

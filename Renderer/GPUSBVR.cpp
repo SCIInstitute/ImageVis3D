@@ -717,13 +717,12 @@ void GPUSBVR::Plan3DFrame() {
     m_FrustumCullingLOD.Update();
 
 
-	if (!m_bLODDisabled) {
-		m_iCurrentLODOffset = m_iMaxLODIndex+1;
-	    ComputeMinLODForCurrentView();
-	} else {
-		m_iMinLODForCurrentView = 0;
-		m_iCurrentLODOffset = 1;
-	}
+    ComputeMinLODForCurrentView();
+	  if (!m_bLODDisabled) {
+		  m_iCurrentLODOffset = m_iMaxLODIndex+1;
+	  } else {
+		  m_iCurrentLODOffset = m_iMinLODForCurrentView+1;
+	  }
   }
 
   // plan if the frame is to be redrawn

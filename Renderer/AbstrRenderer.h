@@ -221,7 +221,7 @@ class AbstrRenderer {
     void SetTimeSlice(unsigned int iMSecs) {m_iTimeSliceMSecs = iMSecs;}
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iStartDelay) {m_iMinFramerate = iMinFramerate; m_iStartDelay = iStartDelay;}
 
-	void DisableLOD(bool bLODDisabled) {m_bLODDisabled = bLODDisabled;}
+	  void DisableLOD(bool bLODDisabled) {m_bLODDisabled = bLODDisabled;}
   protected:
     MasterController*   m_pMasterController;
     bool                m_bPerformRedraw;
