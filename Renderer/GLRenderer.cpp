@@ -78,7 +78,7 @@ bool GLRenderer::Initialize() {
   else
     m_pMasterController->MemMan()->GetEmpty2DTrans(m_pDataset->Get2DHistogram()->GetFilledSize(), this, &m_p2DTrans, &m_p2DTransTex);
 
-  m_pProgramTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("false_Transfer-VS.glsl"),
+  m_pProgramTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("Transfer-VS.glsl"),
                                                                 SysTools::GetFromResourceOnMac("Transfer-FS.glsl"));
 
   m_pProgram1DTransSlice = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("Transfer-VS.glsl"),

@@ -308,7 +308,6 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
 
     if (bIfNotOkShowMessageAndCloseWindow && !bIsOK) {
       m_MasterController.DebugOut()->Error("IOManager::CheckRenderwindowFitness","Unable to initialize the render window, see previous error messages for details.");
-      QMessageBox::critical(this, "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
 
       // find window in mdi area
       for (int i = 0;i<mdiArea->subWindowList().size();i++) {
@@ -322,6 +321,7 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
         }
       }
     }
+    QMessageBox::critical(this, "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
     return bIsOK;
   } return false;
 }
