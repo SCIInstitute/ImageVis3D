@@ -52,7 +52,8 @@ RenderWindow::RenderWindow(MasterController& masterController, QString dataset, 
   m_iTimeSliceMSecsInActive(100),
   m_strDataset(dataset),
   m_vWinDim(0,0),
-  m_bCaptureMode(false)
+  m_bCaptureMode(false),
+  m_bRenderSubsysOK(true)   // be optimistic :-)
 {  
   SetupArcBall();
 
@@ -91,17 +92,20 @@ void RenderWindow::initializeGL()
     int err = glewInit();
     if (err != GLEW_OK) {
       m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "Error initializing GLEW: %s",glewGetErrorString(err));
+      m_bRenderSubsysOK = false;
+      return;
     } else {
       const GLubyte *vendor=glGetString(GL_VENDOR);
       const GLubyte *renderer=glGetString(GL_RENDERER);
       const GLubyte *version=glGetString(GL_VERSION);
       m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Starting up GL! Running on a %s %s with OpenGL version %s",vendor, renderer, version);
+      m_bRenderSubsysOK = true;
     }
 
     bFirstTime = false;
   }
 
-  if (m_Renderer != NULL) m_Renderer->Initialize();
+  if (m_Renderer != NULL) m_bRenderSubsysOK = m_Renderer->Initialize(); else m_bRenderSubsysOK = false;
 }
 
 void RenderWindow::paintGL()

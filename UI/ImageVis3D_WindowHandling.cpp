@@ -298,9 +298,32 @@ bool MainWindow::ApplyWorkspace() {
 // ******************************************
 
 void MainWindow::CloneCurrentView() {
-  RenderWindow *renderWin =
-    CreateNewRenderWindow(GetActiveRenderWindow()->GetDatasetName());
-  renderWin->show();  
+  RenderWindow *renderWin = CreateNewRenderWindow(GetActiveRenderWindow()->GetDatasetName());
+  renderWin->show();
+}
+
+bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow) {
+  if (renderWin) {
+    bool bIsOK = renderWin->IsRenderSubsysOK();
+
+    if (bIfNotOkShowMessageAndCloseWindow && !bIsOK) {
+      m_MasterController.DebugOut()->Error("IOManager::CheckRenderwindowFitness","Unable to initialize the render window, see previous error messages for details.");
+      QMessageBox::critical(this, "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+
+      // find window in mdi area
+      for (int i = 0;i<mdiArea->subWindowList().size();i++) {
+        QWidget* w = mdiArea->subWindowList().at(i)->widget();
+        RenderWindow* subwindow = qobject_cast<RenderWindow*>(w);
+
+        if (subwindow == renderWin)  {
+          mdiArea->setActiveSubWindow(mdiArea->subWindowList().at(i));
+          mdiArea->closeActiveSubWindow();  // we assume that CheckRenderwindowFitness is always called on the active subwindow
+          break;
+        }
+      }
+    }
+    return bIsOK;
+  } return false;
 }
 
 /// \todo ARS Need to be able to CreateNewRenderWindow based on memory only
@@ -336,6 +359,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 	      "ACK that %s is now active",
 	      sender->GetDatasetName().toStdString().c_str());
     m_ActiveRenderWin = sender;
+
+    if (!CheckRenderwindowFitness(m_ActiveRenderWin)) return;
 
     m_1DTransferFunction->
       SetData(sender->GetRenderer()->GetDataSet()->Get1DHistogram(),

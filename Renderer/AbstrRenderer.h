@@ -47,8 +47,6 @@
 #include <IO/VolumeDataset.h>
 #include <IO/TransferFunction1D.h>
 #include <IO/TransferFunction2D.h>
-#include <Renderer/GLTexture1D.h>
-#include <Renderer/GLTexture2D.h>
 #include <Renderer/CullingLOD.h>
 
 class Brick {
@@ -153,6 +151,10 @@ class AbstrRenderer {
      * reuse what is already rendered. */
     virtual bool CheckForRedraw();
 
+    virtual void Paint() = 0;
+
+    virtual bool Initialize();
+
     VolumeDataset*      GetDataSet() {return m_pDataset;}
     TransferFunction1D* Get1DTrans() {return m_p1DTrans;}
     TransferFunction2D* Get2DTrans() {return m_p2DTrans;}
@@ -224,6 +226,7 @@ class AbstrRenderer {
     DOUBLEVECTOR3 GetRescaleFactors() {return m_pDataset->GetInfo()->GetRescaleFactors();}
 
 	  void DisableLOD(bool bLODDisabled) {m_bLODDisabled = bLODDisabled;}
+
   protected:
     MasterController*   m_pMasterController;
     bool                m_bPerformRedraw;
@@ -269,6 +272,10 @@ class AbstrRenderer {
     virtual void ScheduleWindowRedraw(int iIndex);
     void ComputeMinLODForCurrentView();
 
+    FLOATMATRIX4        m_matModelView;
+
+    void                Plan3DFrame();
+    std::vector<Brick>  BuildFrameBrickList();
 
 };
 

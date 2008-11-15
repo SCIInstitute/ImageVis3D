@@ -83,6 +83,7 @@ class RenderWindow : public QGLWidget
     bool CaptureSequenceFrame(const std::string& strFilename);
     void ToggleHQCaptureMode();
     void SetCaptureRotationAngle(float fAngle);
+    bool IsRenderSubsysOK() {return m_bRenderSubsysOK;}
 
   public slots:
     void ToggleRenderWindowView2x2();
@@ -112,10 +113,11 @@ class RenderWindow : public QGLWidget
 
   private:
     MainWindow*       m_MainWindow;
-    GPUSBVR*          m_Renderer;
+    GLRenderer*       m_Renderer;
     MasterController& m_MasterController;
     unsigned int      m_iTimeSliceMSecsActive;
     unsigned int      m_iTimeSliceMSecsInActive;
+    bool              m_bRenderSubsysOK;
     
     ArcBall           m_ArcBall;
     INTVECTOR2        m_viRightClickPos;

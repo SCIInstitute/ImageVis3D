@@ -258,16 +258,13 @@ void MainWindow::FilterImage() {
 
 
   /// \todo ARS -- Need to be able to a CreateNewRenderWindow based on memory
+  RenderWindow *renderWin;
   if( radioButton_FilterUpdate->isChecked() ) {
-
-    RenderWindow *renderWin = CreateNewRenderWindow(fileName);
+    renderWin = CreateNewRenderWindow(fileName);
     renderWin->show();
-
   } else { // if( radioButton_FilterCreate->isChecked() )
-
-    RenderWindowClosing( m_ActiveRenderWin );
-
-    RenderWindow *renderWin = CreateNewRenderWindow(fileName);
+    m_ActiveRenderWin->close();
+    renderWin = CreateNewRenderWindow(fileName);
     renderWin->show();
   }
 }

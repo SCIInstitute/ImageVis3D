@@ -167,6 +167,7 @@ private :
   unsigned int          m_iBlendPrecisionMode;
 
   RenderWindow* CreateNewRenderWindow(QString dataset);
+  bool CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow=true);
   RenderWindow* GetActiveRenderWindow();
 
   void SetupWorkspaceMenu();

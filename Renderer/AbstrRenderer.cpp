@@ -36,6 +36,7 @@
 
 #include "AbstrRenderer.h"
 #include <Controller/MasterController.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -89,6 +90,9 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_bRedrawMask[3] = true;
 }
 
+bool AbstrRenderer::Initialize() {
+  return true; // not too much can go wrong here :-)
+}
 
 bool AbstrRenderer::LoadDataset(const string& strFilename) {
   if (m_pMasterController == NULL) return false;
@@ -307,3 +311,113 @@ void AbstrRenderer::ComputeMinLODForCurrentView() {
   FLOATVECTOR3 vfCenter(0,0,0);
   m_iMinLODForCurrentView = max(0, min<int>(m_pDataset->GetInfo()->GetLODLevelCount()-1,m_FrustumCullingLOD.GetLODLevel(vfCenter,vfExtend,viVoxelCount)));
 } 
+
+
+vector<Brick> AbstrRenderer::BuildFrameBrickList() {
+  vector<Brick> vBrickList;
+
+  UINT64VECTOR3 vOverlap = m_pDataset->GetInfo()->GetBrickOverlapSize();
+  UINT64VECTOR3 vBrickDimension = m_pDataset->GetInfo()->GetBrickCount(m_iCurrentLOD);
+  UINT64VECTOR3 vDomainSize = m_pDataset->GetInfo()->GetDomainSize(m_iCurrentLOD);
+  UINT64 iMaxDomainSize = vDomainSize.maxVal();
+  FLOATVECTOR3 vScale(m_pDataset->GetInfo()->GetScale().x, 
+                      m_pDataset->GetInfo()->GetScale().y, 
+                      m_pDataset->GetInfo()->GetScale().z);
+
+
+  FLOATVECTOR3 vDomainExtend = FLOATVECTOR3(vScale.x*vDomainSize.x, vScale.y*vDomainSize.y, vScale.z*vDomainSize.z) / iMaxDomainSize;
+
+
+  FLOATVECTOR3 vBrickCorner;
+
+  for (UINT64 z = 0;z<vBrickDimension.z;z++) {
+    Brick b;
+    for (UINT64 y = 0;y<vBrickDimension.y;y++) {
+      for (UINT64 x = 0;x<vBrickDimension.x;x++) {
+        
+        UINT64VECTOR3 vSize = m_pDataset->GetInfo()->GetBrickSize(m_iCurrentLOD, UINT64VECTOR3(x,y,z));
+        b = Brick(x,y,z, (unsigned int)(vSize.x), (unsigned int)(vSize.y), (unsigned int)(vSize.z));
+
+
+        FLOATVECTOR3 vEffectiveSize = m_pDataset->GetInfo()->GetEffectiveBrickSize(m_iCurrentLOD, UINT64VECTOR3(x,y,z));
+
+
+        b.vExtension.x = float(vEffectiveSize.x/float(iMaxDomainSize) * vScale.x);
+        b.vExtension.y = float(vEffectiveSize.y/float(iMaxDomainSize) * vScale.y);
+        b.vExtension.z = float(vEffectiveSize.z/float(iMaxDomainSize) * vScale.z);
+        
+        // compute center of the brick
+        b.vCenter = (vBrickCorner + b.vExtension/2.0f)-vDomainExtend*0.5f;
+
+        vBrickCorner.x += b.vExtension.x;
+
+
+        // if the brick is visible (i.e. inside the frustum) continue processing
+        if (m_FrustumCullingLOD.IsVisible(b.vCenter, b.vExtension)) {
+
+          // compute 
+          b.vTexcoordsMin = FLOATVECTOR3((x == 0) ? 0.5f/b.vVoxelCount.x : vOverlap.x*0.5f/b.vVoxelCount.x,
+                                         (y == 0) ? 0.5f/b.vVoxelCount.y : vOverlap.y*0.5f/b.vVoxelCount.y,
+                                         (z == 0) ? 0.5f/b.vVoxelCount.z : vOverlap.z*0.5f/b.vVoxelCount.z);
+          b.vTexcoordsMax = FLOATVECTOR3((x == vBrickDimension.x-1) ? 1.0f-0.5f/b.vVoxelCount.x : 1.0f-vOverlap.x*0.5f/b.vVoxelCount.x,
+                                         (y == vBrickDimension.y-1) ? 1.0f-0.5f/b.vVoxelCount.y : 1.0f-vOverlap.y*0.5f/b.vVoxelCount.y,
+                                         (z == vBrickDimension.z-1) ? 1.0f-0.5f/b.vVoxelCount.z : 1.0f-vOverlap.z*0.5f/b.vVoxelCount.z);
+          
+          /// \todo change this to a more accurate distance compuation
+          b.fDistance = (FLOATVECTOR4(b.vCenter,1.0f)*m_matModelView).xyz().length();
+
+          // add the brick to the list of active bricks
+          vBrickList.push_back(b);
+        }
+      }
+
+      vBrickCorner.x  = 0;
+      vBrickCorner.y += b.vExtension.y;
+    }
+    vBrickCorner.y = 0;
+    vBrickCorner.z += b.vExtension.z;
+  }
+
+  // depth sort bricks
+  sort(vBrickList.begin(), vBrickList.end());
+
+  return vBrickList;
+}
+
+
+void AbstrRenderer::Plan3DFrame() {
+  if (m_bPerformRedraw) {
+    // compute modelviewmatrix and pass it to the culling object
+    m_matModelView = m_mRotation*m_mTranslation;
+    m_FrustumCullingLOD.SetViewMatrix(m_matModelView);
+    m_FrustumCullingLOD.Update();
+
+    ComputeMinLODForCurrentView();
+	  if (!m_bLODDisabled) {
+		  m_iCurrentLODOffset = m_iMaxLODIndex+1;
+	  } else {
+		  m_iCurrentLODOffset = m_iMinLODForCurrentView+1;
+	  }
+  }
+
+  // plan if the frame is to be redrawn
+  // or if we have completed the last subframe but not the entire frame
+  if (m_bPerformRedraw || 
+     (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame && m_iCurrentLODOffset > m_iMinLODForCurrentView)) {
+
+    // compute current LOD level
+    m_iCurrentLODOffset--;
+    m_iCurrentLOD = std::min<UINT64>(m_iCurrentLODOffset,m_pDataset->GetInfo()->GetLODLevelCount()-1);
+    UINT64VECTOR3 vBrickCount = m_pDataset->GetInfo()->GetBrickCount(m_iCurrentLOD);
+
+    // build new brick todo-list
+    m_vCurrentBrickList = BuildFrameBrickList();
+    m_iBricksRenderedInThisSubFrame = 0;
+  }
+
+  if (m_bPerformRedraw) {
+    // update frame states
+    m_iIntraFrameCounter = 0;
+    m_iFrameCounter = m_pMasterController->MemMan()->UpdateFrameCounter();
+  }
+}

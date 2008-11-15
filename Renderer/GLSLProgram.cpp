@@ -211,7 +211,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
     else {
       bVSSuccess=false;
       if (src==GLSLPROGRAM_DISK) {
-        m_pMasterController->DebugOut()->Error("GLSLProgram::Load","ERROR IN: %s");
+        m_pMasterController->DebugOut()->Error("GLSLProgram::Load","ERROR IN: %s", VSFile);
       }
       else {
         m_pMasterController->DebugOut()->Error("GLSLProgram::Load","---------- ERROR -----------");
@@ -623,7 +623,7 @@ bool GLSLProgram::CheckGLError(const char *pcError, const char *pcAdditional) co
  * \date Jun.2005
  */
 bool GLSLProgram::IsValid(void) {
-  return m_bInitialized && m_bGLChecked;
+  return m_bInitialized;
 }
 
 /**

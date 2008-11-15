@@ -43,6 +43,8 @@
 
 #include <string>
 
+#include <Renderer/GLInclude.h>
+#include <Renderer/GPUMemMan/GPUMemMan.h>
 #include "AbstrRenderer.h"
 
 class MasterController;
@@ -56,11 +58,59 @@ class GLRenderer : public AbstrRenderer {
     virtual void Changed2DTrans();
     virtual bool SetBackgroundColors(FLOATVECTOR3 vColors[2]);
 
+    /** Set the bit depth mode of the offscreen buffer used for blending.  Causes a full redraw. */
+    virtual void SetBlendPrecision(EBlendPrecision eBlendPrecision);
+
+    /** Deallocates GPU memory allocated during the rendering process. */
+    virtual void Cleanup();
+
+    /** Paint the image */
+    virtual void Paint();
+
+    /** Change the size of the FBO we render to.  Any previous image is
+     * destroyed, causing a full redraw on the next render.
+     * \param vWinSize  new width and height of the view window */
+    virtual void Resize(const UINTVECTOR2& vWinSize);
+
+    /** Query whether or not we should redraw the next frame, else we should
+     * reuse what is already rendered. */
+    virtual bool CheckForRedraw();
+
   protected:
     GLTexture1D*    m_p1DTransTex;
     GLTexture2D*    m_p2DTransTex;
     unsigned char*  m_p1DData;
     unsigned char*  m_p2DData;
+    GLFBOTex*       m_pFBO3DImageLast;
+    GLFBOTex*       m_pFBO3DImageCurrent;
+    int             m_iFilledBuffers;
+    GLTexture2D*    m_LogoTex;
+
+    void SetRenderTargetArea(ERenderArea eREnderArea);
+    void SetRenderTargetAreaScissor(ERenderArea eREnderArea);
+    void SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight);
+
+    bool Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT64 iSliceIndex);
+    void RenderBBox(const FLOATVECTOR4 vColor = FLOATVECTOR4(1,0,0,1));
+    void RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend);
+    bool Execute3DFrame(ERenderArea eREnderArea);
+    void RerenderPreviousResult(bool bTransferToFramebuffer);
+    void DrawLogo();
+    void DrawBackGradient();
+    
+    virtual const FLOATVECTOR2 SetDataDepShaderVars();
+    virtual void Render3DView() = 0;
+
+    virtual void CreateOffscreenBuffers();
+
+  private:
+    GLSLProgram*    m_pProgramTrans;
+    GLSLProgram*    m_pProgram1DTransSlice;
+    GLSLProgram*    m_pProgram2DTransSlice;
+
+    void SetBrickDepShaderVarsSlice(const UINTVECTOR3& vVoxelCount);
+    void RenderSeperatingLines();
+
 };
 
 #endif // GLRenderer_H
