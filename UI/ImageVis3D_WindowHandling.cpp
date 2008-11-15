@@ -320,8 +320,8 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
           break;
         }
       }
+	  QMessageBox::critical(this, "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
     }
-    QMessageBox::critical(this, "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
     return bIsOK;
   } return false;
 }
