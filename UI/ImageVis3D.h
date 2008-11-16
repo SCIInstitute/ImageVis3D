@@ -56,156 +56,162 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 {
   Q_OBJECT
 
-public:
-  MainWindow(MasterController& masterController,
-	     QWidget* parent = 0,
-	     Qt::WindowFlags flags = 0);
+  public:
+    MainWindow(MasterController& masterController,
+	       QWidget* parent = 0,
+	       Qt::WindowFlags flags = 0);
 
-  virtual ~MainWindow();
-  
-  QTOut* GetDebugOut() {return m_DebugOut;}
-
-public slots:
-  void SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick);
-
-protected slots:
-  void SetCaptureFilename();
-  void CaptureFrame();
-  void CaptureSequence();
-  void CaptureRotation();
-  void LoadDataset();
-  void LoadDirectory();
-  void CloneCurrentView();
-
-  void ToggleRenderWindowView2x2();
-  void ToggleRenderWindowViewSingle();
-
-  void Use1DTrans();
-  void Use2DTrans();
-  void UseIso();
-  void DisableAllTrans();
-
-  void Transfer1DSetColors();
-  void Transfer1DSetGroups();
-  void Transfer1DLoad();
-  void Transfer1DSave();
-  void Transfer1DCopyTo2DTrans();
-
-  void Transfer2DAddGradient();
-  void Transfer2DDeleteGradient();
-  void Transfer2DChooseGradientColor();
-  void Transfer2DChooseGradientOpacity();
-  void Transfer2DLoad();
-  void Transfer2DSave();
-
-  void SetUpdateMode();
-  void ApplyUpdate();
-
-  void Transfer2DSwatchesChanged();
-  void Transfer2DUpdateSwatchButtons();
-  void Transfer2DUpdateGradientBox();
-  void Transfer2DUpdateGradientButtons();
-
-  void FilterImage();
-
-  bool LoadWorkspace();
-  bool SaveWorkspace();
-  bool ApplyWorkspace();
-
-  bool LoadGeometry();
-  bool SaveGeometry();
-
-  void OpenRecentFile();
-  void ClearMRUList();
-
-  void UpdateMenus();
-  void SaveDataset();
-
-  void EditViewLocks();
-  void EditRenderLocks();
-  void EditToolsLocks();
-  void EditFiltersLocks();
-
-  void RenderWindowActive(RenderWindow* sender);
-  void RenderWindowClosing(RenderWindow* sender);
-
-  void ClearDebugWin();
-  void ParseAndExecuteDebugCommand();
-  void SetDebugViewMask();
-
-  void CheckForRedraw();
-  bool ShowSettings();
-  void SetLighting(bool bLighting);
-
-  void Collapse2DWidgets();
-  void Expand2DWidgets();
-  void SetSampleRate(int iValue);
-  void SetIsoValue(int iValue);
-  void ToggleGlobalBBox(bool bRenderBBox);
-  void ToggleLocalBBox(bool bRenderBBox);
-
-  void SetRescaleFactors();
-
-private :
-  MasterController&     m_MasterController;
-  QString               m_strCurrentWorkspaceFilename;
-  Q1DTransferFunction*  m_1DTransferFunction;
-  Q2DTransferFunction*  m_2DTransferFunction;
-  QGLWidget*            m_glShareWidget;
-  QTOut*                m_DebugOut;
-  RenderWindow*         m_ActiveRenderWin;
-  static const unsigned int ms_iMaxRecentFiles = 5;
-  QAction *m_recentFileActs[ms_iMaxRecentFiles];
-  FLOATVECTOR3          m_vBackgroundColors[2];
-  FLOATVECTOR4          m_vTextColor;
-  bool                  m_bQuickopen;
-  unsigned int          m_iMinFramerate;
-  unsigned int          m_iLODDelay;
-  unsigned int          m_iActiveTS;
-  unsigned int          m_iInactiveTS;
-
-  unsigned int          m_iBlendPrecisionMode;
-
-  RenderWindow* CreateNewRenderWindow(QString dataset);
-  bool CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow=true);
-  RenderWindow* GetActiveRenderWindow();
-
-  void SetupWorkspaceMenu();
-  bool LoadWorkspace(QString strFilename,
-		     bool bSilentFail = false,
-		     bool bRetryResource = true);
-
-  bool SaveWorkspace(QString strFilename);
-
-  bool LoadGeometry(QString strFilename,
-		    bool bSilentFail = false,
-		    bool bRetryResource = true);
-
-  bool SaveGeometry(QString strFilename);
-
-
-  void setupUi(QMainWindow *MainWindow);
-
-  void UpdateMRUActions();
-  void AddFileToMRUList(const QString &fileName);
-
-  void GetDebugViewMask();
+    virtual ~MainWindow();
     
-  void LoadDataset(QString fileName);
+    QTOut* GetDebugOut() {return m_DebugOut;}
 
-  QString strippedName(const QString &fullFileName);
-  QString GetConvFilename();
+  public slots:
+    void SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick);
 
-  bool ParseCommand(std::string strCommand, std::string strParam);
-  void CheckSettings();
-  void ApplySettings();
-  void SetSampleRateSlider(int iValue);
-  void UpdateSampleRateLabel(int iValue);
-  void SetIsoValueSlider(int iValue, int iMaxValue);
-  void UpdateIsoValLabel(int iValue, int iMaxValue);
-  void SetToggleGlobalBBoxLabel(bool bRenderBBox);
-  void SetToggleLocalBBoxLabel(bool bRenderBBox);
-  void ClearProgressView();
+  protected slots:
+    void SetCaptureFilename();
+    void CaptureFrame();
+    void CaptureSequence();
+    void CaptureRotation();
+    void LoadDataset();
+    void LoadDirectory();
+    void CloneCurrentView();
+
+    void ToggleRenderWindowView2x2();
+    void ToggleRenderWindowViewSingle();
+
+    void Use1DTrans();
+    void Use2DTrans();
+    void UseIso();
+    void DisableAllTrans();
+
+    void Transfer1DSetColors();
+    void Transfer1DSetGroups();
+    void Transfer1DLoad();
+    void Transfer1DSave();
+    void Transfer1DCopyTo2DTrans();
+
+    void Transfer2DAddGradient();
+    void Transfer2DDeleteGradient();
+    void Transfer2DChooseGradientColor();
+    void Transfer2DChooseGradientOpacity();
+    void Transfer2DLoad();
+    void Transfer2DSave();
+
+    void SetUpdateMode();
+    void ApplyUpdate();
+
+    void Transfer2DSwatchesChanged();
+    void Transfer2DUpdateSwatchButtons();
+    void Transfer2DUpdateGradientBox();
+    void Transfer2DUpdateGradientButtons();
+
+    void FilterImage();
+
+    bool LoadWorkspace();
+    bool SaveWorkspace();
+    bool ApplyWorkspace();
+
+    bool LoadGeometry();
+    bool SaveGeometry();
+
+    void OpenRecentFile();
+    void ClearMRUList();
+
+    void UpdateMenus();
+    void SaveDataset();
+
+    void EditViewLocks();
+    void EditRenderLocks();
+    void EditToolsLocks();
+    void EditFiltersLocks();
+
+    void RenderWindowActive(RenderWindow* sender);
+    void RenderWindowClosing(RenderWindow* sender);
+
+    void ClearDebugWin();
+    void ParseAndExecuteDebugCommand();
+    void SetDebugViewMask();
+
+    void CheckForRedraw();
+    bool ShowSettings();
+    void SetLighting(bool bLighting);
+
+    void Collapse2DWidgets();
+    void Expand2DWidgets();
+    void SetSampleRate(int iValue);
+    void SetIsoValue(int iValue);
+    void ToggleGlobalBBox(bool bRenderBBox);
+    void ToggleLocalBBox(bool bRenderBBox);
+
+    void SetRescaleFactors();
+    virtual void closeEvent(QCloseEvent *event);
+
+
+  private :
+    MasterController&     m_MasterController;
+    QString               m_strCurrentWorkspaceFilename;
+    Q1DTransferFunction*  m_1DTransferFunction;
+    Q2DTransferFunction*  m_2DTransferFunction;
+    QGLWidget*            m_glShareWidget;
+    QTOut*                m_DebugOut;
+    RenderWindow*         m_ActiveRenderWin;
+    static const unsigned int ms_iMaxRecentFiles = 5;
+    QAction *m_recentFileActs[ms_iMaxRecentFiles];
+    FLOATVECTOR3          m_vBackgroundColors[2];
+    FLOATVECTOR4          m_vTextColor;
+    bool                  m_bQuickopen;
+    unsigned int          m_iMinFramerate;
+    unsigned int          m_iLODDelay;
+    unsigned int          m_iActiveTS;
+    unsigned int          m_iInactiveTS;
+
+    unsigned int          m_iBlendPrecisionMode;
+    bool                  m_bAutoSaveGEO;
+    bool                  m_bAutoSaveWSP;
+
+    RenderWindow* CreateNewRenderWindow(QString dataset);
+    bool CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow=true);
+    RenderWindow* GetActiveRenderWindow();
+
+    void SetupWorkspaceMenu();
+    bool LoadWorkspace(QString strFilename,
+		       bool bSilentFail = false,
+		       bool bRetryResource = true);
+
+    bool SaveWorkspace(QString strFilename);
+
+    bool LoadGeometry(QString strFilename,
+		      bool bSilentFail = false,
+		      bool bRetryResource = true);
+
+    bool SaveGeometry(QString strFilename);
+
+
+    void setupUi(QMainWindow *MainWindow);
+
+    void UpdateMRUActions();
+    void AddFileToMRUList(const QString &fileName);
+
+    void GetDebugViewMask();
+      
+    void LoadDataset(QString fileName);
+
+    QString strippedName(const QString &fullFileName);
+    QString GetConvFilename();
+
+    void InitAllWorkspaces();
+
+    bool ParseCommand(std::string strCommand, std::string strParam);
+    void CheckSettings();
+    void ApplySettings();
+    void SetSampleRateSlider(int iValue);
+    void UpdateSampleRateLabel(int iValue);
+    void SetIsoValueSlider(int iValue, int iMaxValue);
+    void UpdateIsoValLabel(int iValue, int iMaxValue);
+    void SetToggleGlobalBBoxLabel(bool bRenderBBox);
+    void SetToggleLocalBBoxLabel(bool bRenderBBox);
+    void ClearProgressView();
 
 };
 

@@ -110,110 +110,63 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
 }
 
 
-UINT64 SettingsDlg::GetGPUMem() {
+UINT64 SettingsDlg::GetGPUMem() const {
   return UINT64(horizontalSlider_GPUMem->value())*1024*1024;
 }
 
-UINT64 SettingsDlg::GetCPUMem() {
+UINT64 SettingsDlg::GetCPUMem() const {
   return UINT64(horizontalSlider_CPUMem->value())*1024*1024;
 }
 
-bool SettingsDlg::GetQuickopen() {
+bool SettingsDlg::GetQuickopen() const {
   return checkBoxQuickload->checkState() == Qt::Checked;
 }
 
-unsigned int SettingsDlg::GetMinFramerate() {
+unsigned int SettingsDlg::GetMinFramerate() const {
   return (unsigned int)(horizontalSlider_MinFramerate->value());
 }
 
-unsigned int SettingsDlg::GetLODDelay() {
+unsigned int SettingsDlg::GetLODDelay() const {
   return (unsigned int)(horizontalSlider_LODDelay->value());
 }
 
-unsigned int SettingsDlg::GetActiveTS() {
+unsigned int SettingsDlg::GetActiveTS() const {
   return (unsigned int)(horizontalSlider_ActTS->value());
 }
 
-unsigned int SettingsDlg::GetInactiveTS() {
+unsigned int SettingsDlg::GetInactiveTS() const {
   return (unsigned int)(horizontalSlider_InactTS->value());
 }
 
-void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
-                            bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
-                            unsigned int iBlendPrecision, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
-    horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
-    horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
-
-    checkBoxQuickload->setChecked(bQuickopen);
-    horizontalSlider_MinFramerate->setValue(iMinFramerate);
-    horizontalSlider_LODDelay->setValue(iLODDelay);
-    horizontalSlider_ActTS->setValue(iActiveTS);
-    horizontalSlider_InactTS->setValue(iInactiveTS);
-    
-    m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
-    m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));
-    m_cTextColor  = QColor(int(vTextColor.x*255), int(vTextColor.y*255),int(vTextColor.z*255),int(vTextColor.w*255));
-
-    switch (iBlendPrecision) {
-      case 2    : radioButton_Prec32Bit->setChecked(true); break;
-      case 1    : radioButton_Prec16Bit->setChecked(true); break;
-      default   : radioButton_Prec8Bit->setChecked(true); break;
-    }
-    
-    QString strStyle =
-    tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
-                                                                             .arg(m_cBackColor1.green())
-                                                                             .arg(m_cBackColor1.blue())
-                                                                             .arg(255-m_cBackColor1.red())
-                                                                             .arg(255-m_cBackColor1.green())
-                                                                             .arg(255-m_cBackColor1.blue());
-
-    pushButtonSelBack1->setStyleSheet( strStyle );
-
-    strStyle =
-    tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor2.red())
-                                                                             .arg(m_cBackColor2.green())
-                                                                             .arg(m_cBackColor2.blue())
-                                                                             .arg(255-m_cBackColor2.red())
-                                                                             .arg(255-m_cBackColor2.green())
-                                                                             .arg(255-m_cBackColor2.blue());
-
-    pushButtonSelBack2->setStyleSheet( strStyle );
-
-    strStyle =
-    tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cTextColor.red())
-                                                                             .arg(m_cTextColor.green())
-                                                                             .arg(m_cTextColor.blue())
-                                                                             .arg(255-m_cTextColor.red())
-                                                                             .arg(255-m_cTextColor.green())
-                                                                             .arg(255-m_cTextColor.blue());
-
-    pushButtonSelText->setStyleSheet( strStyle );
-
+bool  SettingsDlg::GetAutoSaveGEO() const {
+  return checkBox_SaveGEOOnExit->isChecked();
 }
 
+bool  SettingsDlg::GetAutoSaveWSP() const {
+  return checkBox_SaveWSPOnExit->isChecked();
+}
 
-FLOATVECTOR3  SettingsDlg::GetBackgroundColor1() {
+FLOATVECTOR3  SettingsDlg::GetBackgroundColor1() const {
   return FLOATVECTOR3(m_cBackColor1.red()/255.0f,
                       m_cBackColor1.green()/255.0f,
                       m_cBackColor1.blue()/255.0f);
 }
 
 
-FLOATVECTOR3  SettingsDlg::GetBackgroundColor2() {
+FLOATVECTOR3  SettingsDlg::GetBackgroundColor2() const {
   return FLOATVECTOR3(m_cBackColor2.red()/255.0f,
                       m_cBackColor2.green()/255.0f,
                       m_cBackColor2.blue()/255.0f);
 }
 
-FLOATVECTOR4  SettingsDlg::GetTextColor() {
+FLOATVECTOR4  SettingsDlg::GetTextColor() const {
   return FLOATVECTOR4(m_cTextColor.red()/255.0f,
                       m_cTextColor.green()/255.0f,
                       m_cTextColor.blue()/255.0f,
                       m_cTextColor.alpha()/255.0f);
 }
 
-unsigned int SettingsDlg::GetBlendPrecisionMode() {
+unsigned int SettingsDlg::GetBlendPrecisionMode() const {
   if (radioButton_Prec32Bit->isChecked()) return 2; else
     if (radioButton_Prec16Bit->isChecked()) return 1; else
       return 0;
@@ -299,3 +252,63 @@ void SettingsDlg::InactTSChanged() {
   QString text= tr("%1 ms").arg(horizontalSlider_InactTS->value());
   label_InactTSDisplay->setText(text);
 }
+
+void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
+                            bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, unsigned int iBlendPrecision,
+                            bool bAutoSaveGEO, bool bAutoSaveWSP,
+                            const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
+    horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
+    horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
+
+    checkBoxQuickload->setChecked(bQuickopen);
+    horizontalSlider_MinFramerate->setValue(iMinFramerate);
+    horizontalSlider_LODDelay->setValue(iLODDelay);
+    horizontalSlider_ActTS->setValue(iActiveTS);
+    horizontalSlider_InactTS->setValue(iInactiveTS);
+     
+    checkBox_SaveGEOOnExit->setChecked(bAutoSaveGEO);
+    checkBox_SaveWSPOnExit->setChecked(bAutoSaveWSP);
+
+
+    m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
+    m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));
+    m_cTextColor  = QColor(int(vTextColor.x*255), int(vTextColor.y*255),int(vTextColor.z*255),int(vTextColor.w*255));
+
+    switch (iBlendPrecision) {
+      case 2    : radioButton_Prec32Bit->setChecked(true); break;
+      case 1    : radioButton_Prec16Bit->setChecked(true); break;
+      default   : radioButton_Prec8Bit->setChecked(true); break;
+    }
+    
+    QString strStyle =
+    tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
+                                                                             .arg(m_cBackColor1.green())
+                                                                             .arg(m_cBackColor1.blue())
+                                                                             .arg(255-m_cBackColor1.red())
+                                                                             .arg(255-m_cBackColor1.green())
+                                                                             .arg(255-m_cBackColor1.blue());
+
+    pushButtonSelBack1->setStyleSheet( strStyle );
+
+    strStyle =
+    tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor2.red())
+                                                                             .arg(m_cBackColor2.green())
+                                                                             .arg(m_cBackColor2.blue())
+                                                                             .arg(255-m_cBackColor2.red())
+                                                                             .arg(255-m_cBackColor2.green())
+                                                                             .arg(255-m_cBackColor2.blue());
+
+    pushButtonSelBack2->setStyleSheet( strStyle );
+
+    strStyle =
+    tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cTextColor.red())
+                                                                             .arg(m_cTextColor.green())
+                                                                             .arg(m_cTextColor.blue())
+                                                                             .arg(255-m_cTextColor.red())
+                                                                             .arg(255-m_cTextColor.green())
+                                                                             .arg(255-m_cTextColor.blue());
+
+    pushButtonSelText->setStyleSheet( strStyle );
+
+}
+

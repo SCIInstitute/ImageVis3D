@@ -91,8 +91,8 @@ bool SimpleImageFileInfo::GetData(void* pData, unsigned int iLength, unsigned in
   if (qImage.isNull()) return false;
 
   int iCount = 0;
-  for (int y = 0;y<qImage.size().height();y++)
-    for (int x = 0;x<qImage.size().width();x++) {
+  for (int y = 0;y<qImage.height();y++)
+    for (int x = 0;x<qImage.width();x++) {
       if (int(iOffset) > iCount) continue;
       QColor pixel(qImage.pixel(x,y));
       unsigned char cValue = (unsigned char)((pixel.red() + pixel.green() + pixel.blue()) / 3);

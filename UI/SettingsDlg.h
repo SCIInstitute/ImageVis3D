@@ -48,22 +48,26 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     SettingsDlg(MasterController& masterController, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~SettingsDlg();
 
-    UINT64        GetGPUMem();
-    UINT64        GetCPUMem();
-    bool          GetQuickopen();
-    unsigned int  GetMinFramerate();
-    unsigned int  GetLODDelay();
-    unsigned int  GetActiveTS();
-    unsigned int  GetInactiveTS();
+    UINT64        GetGPUMem() const;
+    UINT64        GetCPUMem() const;
+    bool          GetQuickopen() const;
+    unsigned int  GetMinFramerate() const;
+    unsigned int  GetLODDelay() const;
+    unsigned int  GetActiveTS() const;
+    unsigned int  GetInactiveTS() const;
+  
+    bool          GetAutoSaveGEO() const;
+    bool          GetAutoSaveWSP() const;
 
-    FLOATVECTOR3  GetBackgroundColor1();
-    FLOATVECTOR3  GetBackgroundColor2();
-    FLOATVECTOR4  GetTextColor();
-    unsigned int  GetBlendPrecisionMode();
+    FLOATVECTOR3  GetBackgroundColor1() const;
+    FLOATVECTOR3  GetBackgroundColor2() const;
+    FLOATVECTOR4  GetTextColor() const;
+    unsigned int  GetBlendPrecisionMode() const;
 
     void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
-                   bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
-                   unsigned int iBlendPrecision, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
+                   bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, unsigned int iBlendPrecision, 
+                   bool bAutoSaveGEO, bool bAutoSaveWSP,
+                   const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
 
   protected slots:
     void SelectTextColor();

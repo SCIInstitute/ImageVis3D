@@ -40,11 +40,8 @@
 
 #include <QtCore/QTimer>
 #include <QtGui/QMdiSubWindow>
-#include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
-#include <QtGui/QMessageBox>
-#include <QtGui/QInputDialog>
-#include <QtGui/QColorDialog>
+#include <QtGui/QCloseEvent>
 
 #include "PleaseWait.h"
 
@@ -54,6 +51,7 @@
 #include <Basics/SysTools.h>
 
 #include <DebugOut/MultiplexOut.h>
+
 
 using namespace std;
 
@@ -70,19 +68,27 @@ MainWindow::MainWindow(MasterController& masterController,
   m_iMinFramerate(10),
   m_iLODDelay(1000),
   m_iActiveTS(500),
-  m_iInactiveTS(100)
+  m_iInactiveTS(100),
+  m_iBlendPrecisionMode(0),
+  m_bAutoSaveGEO(true),
+  m_bAutoSaveWSP(true)
 {
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
   QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");
   QCoreApplication::setApplicationName("ImageVis3D");
 
-
   setupUi(this);
 
   SetupWorkspaceMenu();
 
-  LoadGeometry("Default.geo", true);
-  LoadWorkspace("Default.wsp", true);
+  if (!LoadGeometry("Default.geo", true)) {
+    SaveGeometry("Default.geo");
+  }
+
+  if (!LoadWorkspace("Default.wsp", true)) {
+    InitAllWorkspaces();
+    SaveWorkspace("Default.wsp");
+  }
   
   UpdateMRUActions();
   UpdateMenus();
@@ -331,51 +337,10 @@ void MainWindow::ToggleLocalBBox(bool bRenderBBox)
   if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetLocalBBox(bRenderBBox);
 }
 
-void MainWindow::CaptureFrame() {
-  if (m_ActiveRenderWin) {
-	  if (!m_ActiveRenderWin->CaptureFrame(lineEditCaptureFile->text().toStdString())) {
-		QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
-		QMessageBox::warning(this, tr("Error"), msg);
-	  }
-  }
-}
 
-void MainWindow::CaptureSequence() {
-  
-  if (m_ActiveRenderWin) {
-	  if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString())) {
-		QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
-		QMessageBox::warning(this, tr("Error"), msg);
-	  }
-  }
-}
-
-void MainWindow::CaptureRotation() {
-  if (m_ActiveRenderWin) {
-    m_ActiveRenderWin->ToggleHQCaptureMode();
-    int iImagesPerAngle = (horizontalSlider_RotSpeed->maximum()+1) - horizontalSlider_RotSpeed->value();
-	int i = 0;
-	float fAngle = 0.0f;
-	while (fAngle < 360) {
-      m_ActiveRenderWin->SetCaptureRotationAngle(fAngle);
-	  m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString());
-	  fAngle = float(i) / float(iImagesPerAngle);
-	  i++;
-	}
-    m_ActiveRenderWin->ToggleHQCaptureMode();
-  }
-}
-
-void MainWindow::SetCaptureFilename() {
-  QFileDialog::Options options;
-#if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
-  options |= QFileDialog::DontUseNativeDialog;
-#endif
-  QString selectedFilter;
-
-  QString fileName = QFileDialog::getSaveFileName(this,"Select Image File", ".",
-					   "All Files (*.*)",&selectedFilter, options);
-
-
-  if (!fileName.isEmpty()) lineEditCaptureFile->setText(fileName);
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+  if (m_bAutoSaveGEO) SaveGeometry("Default.geo");
+  if (m_bAutoSaveWSP) SaveWorkspace("Default.wsp");
+  event->accept();
 }

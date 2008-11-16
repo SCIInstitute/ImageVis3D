@@ -211,7 +211,34 @@ void MainWindow::SetupWorkspaceMenu() {
   menu_Workspace->addAction(dockWidget_IsoSurface->toggleViewAction());
 
   menu_Help->addAction(dockWidget_Debug->toggleViewAction());
+}
 
+void MainWindow::InitAllWorkspaces() {
+  dockWidget_Tools->setVisible(false);
+  dockWidget_Filters->setVisible(false);
+  dockWidget_History->setVisible(false);
+  dockWidget_Information->setVisible(false);
+  dockWidget_Recorder->setVisible(false);
+  dockWidget_LockOptions->setVisible(false);
+  dockWidget_RenderOptions->setVisible(false);
+  dockWidget_ProgressView->setVisible(false);
+  dockWidget_1DTrans->setVisible(false);
+  dockWidget_2DTrans->setVisible(false);
+  dockWidget_IsoSurface->setVisible(false);
+  dockWidget_Debug->setVisible(false);
+
+  dockWidget_Tools->setFloating(false);
+  dockWidget_Filters->setFloating(false);
+  dockWidget_History->setFloating(false);
+  dockWidget_Information->setFloating(false);
+  dockWidget_Recorder->setFloating(false);
+  dockWidget_LockOptions->setFloating(false);
+  dockWidget_RenderOptions->setFloating(false);
+  dockWidget_ProgressView->setFloating(false);
+  dockWidget_1DTrans->setFloating(false);
+  dockWidget_2DTrans->setFloating(false);
+  dockWidget_IsoSurface->setFloating(false);
+  dockWidget_Debug->setFloating(false);
 }
 
 
@@ -333,7 +360,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   static unsigned int iCounter = 0;
 
   RenderWindow *renderWin =
-    new RenderWindow(m_MasterController, dataset,
+    new RenderWindow(m_MasterController,dataset,
 		     iCounter++, m_glShareWidget, this);
   renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
   renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));

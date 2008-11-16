@@ -41,8 +41,7 @@ HEADERS += StdDefines.h \
            IO/Transferfunction1D.h \
            IO/Transferfunction2D.h \
            IO/VolumeDataset.h \
-           IO/IOManager.h \          
-           IO/Images/BMPLoader.h \
+           IO/IOManager.h \
            IO/DICOM/DICOMParser.h \
            IO/Images/ImageParser.h \
            IO/UVF/DataBlock.h \
