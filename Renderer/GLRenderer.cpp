@@ -78,19 +78,13 @@ bool GLRenderer::Initialize() {
   else
     m_pMasterController->MemMan()->GetEmpty2DTrans(m_pDataset->Get2DHistogram()->GetFilledSize(), this, &m_p2DTrans, &m_p2DTransTex);
 
-  m_pProgramTrans = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("Transfer-VS.glsl"),
-                                                                SysTools::GetFromResourceOnMac("Transfer-FS.glsl"));
 
-  m_pProgram1DTransSlice = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("Transfer-VS.glsl"),
-                                                                SysTools::GetFromResourceOnMac("1D-slice-FS.glsl"));
+  if (!LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/Transfer-FS.glsl", &(m_pProgramTrans)) ||
+      !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/1D-slice-FS.glsl", &(m_pProgram1DTransSlice)) ||
+      !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/2D-slice-FS.glsl", &(m_pProgram2DTransSlice))) {
 
-  m_pProgram2DTransSlice = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("Transfer-VS.glsl"),
-                                                                SysTools::GetFromResourceOnMac("2D-slice-FS.glsl"));
-
-  if (m_pProgramTrans == NULL || m_pProgram1DTransSlice == NULL || m_pProgram2DTransSlice == NULL ||
-      !m_pProgramTrans->IsValid() || !m_pProgram1DTransSlice->IsValid() || !m_pProgram2DTransSlice->IsValid()) {
-    m_pMasterController->DebugOut()->Error("GLRenderer::Initialize","Error loading transfer shaders.");
-    return false;
+      m_pMasterController->DebugOut()->Error("GLRenderer::Initialize","Error loading transfer shaders.");
+      return false;
   } else {
     m_pProgramTrans->Enable();
     m_pProgramTrans->SetUniformVector("texColor",0);
@@ -172,8 +166,8 @@ void GLRenderer::RenderSeperatingLines() {
 }
 
 void GLRenderer::Paint() {
-  // if we are redrawing clear the framebuffer (if requested)
-  if (m_bPerformRedraw && m_bClearFramebuffer) glClear(GL_DEPTH_BUFFER_BIT);
+  // clear the framebuffer (if requested)
+  if (m_bClearFramebuffer) glClear(GL_DEPTH_BUFFER_BIT);
 
   bool bNewDataToShow;
   if (m_eViewMode == VM_SINGLE) {
@@ -703,4 +697,16 @@ void GLRenderer::SetBlendPrecision(EBlendPrecision eBlendPrecision) {
     AbstrRenderer::SetBlendPrecision(eBlendPrecision);
     CreateOffscreenBuffers();
   }
+}
+
+
+bool GLRenderer::LoadAndVerifyShader(const string& strVSFile, const string& strFSFile, GLSLProgram** pShaderProgram) {
+
+  (*pShaderProgram) = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac(strVSFile), SysTools::GetFromResourceOnMac(strFSFile));
+
+  if ((*pShaderProgram) == NULL || !(*pShaderProgram)->IsValid()) {
+      m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","Error loading a shader combination VS %s and FS %s.", strVSFile.c_str(), strFSFile.c_str());
+      m_pMasterController->MemMan()->FreeGLSLProgram(*pShaderProgram);
+      return false;
+  } else return true;
 }

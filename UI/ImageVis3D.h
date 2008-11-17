@@ -147,6 +147,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetRescaleFactors();
     virtual void closeEvent(QCloseEvent *event);
 
+    void ShowAbout();
+
 
   private :
     MasterController&     m_MasterController;

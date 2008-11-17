@@ -70,8 +70,8 @@ namespace SysTools {
 
 
     #if defined(macintosh) || (defined(__MACH__) && defined(__APPLE__))
-      CFStringRef cfFilename = CFStringCreateWithCString(kCFAllocatorDefault, RemoveExt(strFileName).c_str(), CFStringGetSystemEncoding());   
-      CFStringRef cfExt = CFStringCreateWithCString(kCFAllocatorDefault, GetExt(strFileName).c_str(), CFStringGetSystemEncoding());   
+      CFStringRef cfFilename = CFStringCreateWithCString(kCFAllocatorDefault, RemoveExt(GetFilename(strFileName)).c_str(), CFStringGetSystemEncoding());   
+      CFStringRef cfExt = CFStringCreateWithCString(kCFAllocatorDefault, GetExt(GetFilename(strFileName)).c_str(), CFStringGetSystemEncoding());   
 
       CFURLRef    imageURL = CFBundleCopyResourceURL( CFBundleGetMainBundle(), cfFilename, cfExt, NULL );
       if (imageURL == NULL) return "";

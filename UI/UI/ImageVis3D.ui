@@ -31,14 +31,6 @@
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::VerticalTabs</set>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <property name="geometry" >
-    <rect>
-     <x>385</x>
-     <y>22</y>
-     <width>620</width>
-     <height>1285</height>
-    </rect>
-   </property>
    <layout class="QHBoxLayout" name="horizontalLayout_7" >
     <item>
      <widget class="QMdiArea" name="mdiArea" />
@@ -138,25 +130,8 @@
    <addaction name="menu_Workspace" />
    <addaction name="menu_Help" />
   </widget>
-  <widget class="QStatusBar" name="statusbar" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>1726</y>
-     <width>1203</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
+  <widget class="QStatusBar" name="statusbar" />
   <widget class="QDockWidget" name="dockWidget_Tools" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>22</y>
-     <width>381</width>
-     <height>307</height>
-    </rect>
-   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
      <horstretch>0</horstretch>
@@ -179,14 +154,6 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>381</width>
-      <height>285</height>
-     </rect>
-    </property>
     <layout class="QHBoxLayout" name="horizontalLayout" >
      <item>
       <widget class="QTabWidget" name="tabWidget_2" >
@@ -203,14 +170,6 @@
         <number>3</number>
        </property>
        <widget class="QWidget" name="tab_3" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>357</width>
-          <height>240</height>
-         </rect>
-        </property>
         <attribute name="title" >
          <string>Polyl-Line</string>
         </attribute>
@@ -333,14 +292,6 @@
         </layout>
        </widget>
        <widget class="QWidget" name="tab_4" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>357</width>
-          <height>240</height>
-         </rect>
-        </property>
         <attribute name="title" >
          <string>Paint Brush</string>
         </attribute>
@@ -435,14 +386,6 @@
         </layout>
        </widget>
        <widget class="QWidget" name="tab_5" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>357</width>
-          <height>240</height>
-         </rect>
-        </property>
         <attribute name="title" >
          <string>Resample</string>
         </attribute>
@@ -626,14 +569,6 @@
         </layout>
        </widget>
        <widget class="QWidget" name="tab_6" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>357</width>
-          <height>240</height>
-         </rect>
-        </property>
         <attribute name="title" >
          <string>Crop</string>
         </attribute>
@@ -864,14 +799,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_Recorder" >
-   <property name="geometry" >
-    <rect>
-     <x>1009</x>
-     <y>22</y>
-     <width>194</width>
-     <height>208</height>
-    </rect>
-   </property>
    <property name="windowTitle" >
     <string>Recorder</string>
    </property>
@@ -879,14 +806,6 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>194</width>
-      <height>186</height>
-     </rect>
-    </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
      <property name="spacing" >
       <number>6</number>
@@ -1122,14 +1041,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_Filters" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>333</y>
-     <width>381</width>
-     <height>225</height>
-    </rect>
-   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
      <horstretch>0</horstretch>
@@ -1143,14 +1054,6 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_5" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>381</width>
-      <height>203</height>
-     </rect>
-    </property>
     <layout class="QGridLayout" name="gridLayout_4" >
      <item row="0" column="0" >
       <widget class="QTabWidget" name="tabWidget_Filter" >
@@ -1182,14 +1085,6 @@
         <number>2</number>
        </property>
        <widget class="QWidget" name="tab" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>357</width>
-          <height>71</height>
-         </rect>
-        </property>
         <attribute name="title" >
          <string>Histogram</string>
         </attribute>
@@ -1281,14 +1176,6 @@
         </layout>
        </widget>
        <widget class="QWidget" name="tab_2" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>357</width>
-          <height>71</height>
-         </rect>
-        </property>
         <attribute name="title" >
          <string>Median</string>
         </attribute>
@@ -1348,14 +1235,6 @@
         </layout>
        </widget>
        <widget class="QWidget" name="Seite" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>357</width>
-          <height>71</height>
-         </rect>
-        </property>
         <attribute name="title" >
          <string>Gaussian</string>
         </attribute>
@@ -1482,18 +1361,10 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_Information" >
-   <property name="geometry" >
-    <rect>
-     <x>1009</x>
-     <y>234</y>
-     <width>194</width>
-     <height>210</height>
-    </rect>
-   </property>
    <property name="minimumSize" >
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>175</width>
+     <height>190</height>
     </size>
    </property>
    <property name="windowTitle" >
@@ -1503,14 +1374,6 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_8" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>194</width>
-      <height>188</height>
-     </rect>
-    </property>
     <layout class="QVBoxLayout" name="verticalLayout_2" >
      <property name="spacing" >
       <number>6</number>
@@ -1684,14 +1547,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_History" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>562</y>
-     <width>381</width>
-     <height>199</height>
-    </rect>
-   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
      <horstretch>0</horstretch>
@@ -1701,7 +1556,7 @@
    <property name="minimumSize" >
     <size>
      <width>174</width>
-     <height>0</height>
+     <height>142</height>
     </size>
    </property>
    <property name="windowTitle" >
@@ -1711,14 +1566,6 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>381</width>
-      <height>177</height>
-     </rect>
-    </property>
     <layout class="QGridLayout" name="gridLayout_2" >
      <item row="0" column="0" colspan="2" >
       <widget class="QListWidget" name="listWidget" />
@@ -1753,18 +1600,10 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_1DTrans" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>1311</y>
-     <width>570</width>
-     <height>415</height>
-    </rect>
-   </property>
    <property name="minimumSize" >
     <size>
      <width>400</width>
-     <height>0</height>
+     <height>374</height>
     </size>
    </property>
    <property name="windowTitle" >
@@ -1774,14 +1613,6 @@
     <number>8</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_6" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>570</width>
-      <height>393</height>
-     </rect>
-    </property>
     <layout class="QHBoxLayout" name="horizontalLayout_13" >
      <item>
       <widget class="QFrame" name="frame_9" >
@@ -2063,18 +1894,10 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_2DTrans" >
-   <property name="geometry" >
-    <rect>
-     <x>574</x>
-     <y>1311</y>
-     <width>629</width>
-     <height>415</height>
-    </rect>
-   </property>
    <property name="minimumSize" >
     <size>
-     <width>0</width>
-     <height>300</height>
+     <width>442</width>
+     <height>415</height>
     </size>
    </property>
    <property name="features" >
@@ -2087,14 +1910,6 @@
     <number>8</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>629</width>
-      <height>393</height>
-     </rect>
-    </property>
     <layout class="QHBoxLayout" name="horizontalLayout_11" >
      <item>
       <widget class="QFrame" name="frame_2DTransEditWrapper" >
@@ -2692,14 +2507,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_RenderOptions" >
-   <property name="geometry" >
-    <rect>
-     <x>1009</x>
-     <y>448</y>
-     <width>194</width>
-     <height>566</height>
-    </rect>
-   </property>
    <property name="windowTitle" >
     <string>Rendering Options</string>
    </property>
@@ -2707,14 +2514,6 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_7" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>194</width>
-      <height>544</height>
-     </rect>
-    </property>
     <layout class="QVBoxLayout" name="verticalLayout_13" >
      <item>
       <widget class="QGroupBox" name="groupBox_8" >
@@ -2996,14 +2795,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_LockOptions" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>765</y>
-     <width>381</width>
-     <height>302</height>
-    </rect>
-   </property>
    <property name="windowTitle" >
     <string>Locking Options</string>
    </property>
@@ -3011,14 +2802,6 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_9" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>381</width>
-      <height>280</height>
-     </rect>
-    </property>
     <layout class="QVBoxLayout" name="verticalLayout_17" >
      <item>
       <widget class="QGroupBox" name="groupBox_10" >
@@ -3116,14 +2899,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_IsoSurface" >
-   <property name="geometry" >
-    <rect>
-     <x>1009</x>
-     <y>1018</y>
-     <width>194</width>
-     <height>91</height>
-    </rect>
-   </property>
    <property name="windowTitle" >
     <string>Isosurface Settings</string>
    </property>
@@ -3131,14 +2906,6 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_10" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>194</width>
-      <height>69</height>
-     </rect>
-    </property>
     <layout class="QVBoxLayout" name="verticalLayout_16" >
      <item>
       <widget class="QCheckBox" name="checkBox_UseIso" >
@@ -3202,14 +2969,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_Debug" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>1071</y>
-     <width>381</width>
-     <height>236</height>
-    </rect>
-   </property>
    <property name="floating" >
     <bool>false</bool>
    </property>
@@ -3220,14 +2979,6 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_11" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>381</width>
-      <height>214</height>
-     </rect>
-    </property>
     <layout class="QVBoxLayout" name="verticalLayout_19" >
      <item>
       <widget class="QFrame" name="frame_13" >
@@ -3382,14 +3133,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_ProgressView" >
-   <property name="geometry" >
-    <rect>
-     <x>1009</x>
-     <y>1113</y>
-     <width>194</width>
-     <height>194</height>
-    </rect>
-   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
      <horstretch>0</horstretch>
@@ -3403,14 +3146,6 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_12" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>194</width>
-      <height>172</height>
-     </rect>
-    </property>
     <layout class="QVBoxLayout" name="verticalLayout_27" >
      <property name="margin" >
       <number>2</number>
@@ -4900,6 +4635,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionAbout</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ShowAbout()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>601</x>
+     <y>873</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>873</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -4954,5 +4705,6 @@
   <slot>SetCaptureFilename()</slot>
   <slot>CaptureRotation()</slot>
   <slot>SetRescaleFactors()</slot>
+  <slot>ShowAbout()</slot>
  </slots>
 </ui>

@@ -227,18 +227,18 @@ void MainWindow::InitAllWorkspaces() {
   dockWidget_IsoSurface->setVisible(false);
   dockWidget_Debug->setVisible(false);
 
-  dockWidget_Tools->setFloating(false);
-  dockWidget_Filters->setFloating(false);
-  dockWidget_History->setFloating(false);
-  dockWidget_Information->setFloating(false);
-  dockWidget_Recorder->setFloating(false);
-  dockWidget_LockOptions->setFloating(false);
-  dockWidget_RenderOptions->setFloating(false);
-  dockWidget_ProgressView->setFloating(false);
-  dockWidget_1DTrans->setFloating(false);
-  dockWidget_2DTrans->setFloating(false);
-  dockWidget_IsoSurface->setFloating(false);
-  dockWidget_Debug->setFloating(false);
+  dockWidget_Tools->setFloating(true);
+  dockWidget_Filters->setFloating(true);
+  dockWidget_History->setFloating(true);
+  dockWidget_Information->setFloating(true);
+  dockWidget_Recorder->setFloating(true);
+  dockWidget_LockOptions->setFloating(true);
+  dockWidget_RenderOptions->setFloating(true);
+  dockWidget_ProgressView->setFloating(true);
+  dockWidget_1DTrans->setFloating(true);
+  dockWidget_2DTrans->setFloating(true);
+  dockWidget_IsoSurface->setFloating(true);
+  dockWidget_Debug->setFloating(true);
 }
 
 
@@ -347,7 +347,7 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
           break;
         }
       }
-	  QMessageBox::critical(this, "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+	    QMessageBox::critical(this, "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
     }
     return bIsOK;
   } return false;
@@ -589,4 +589,11 @@ void MainWindow::Collapse2DWidgets() {
 void MainWindow::Expand2DWidgets() {
   frame_2DTransEditWrapper->show();
   frame_Expand2DWidgets->hide();
+}
+
+
+void MainWindow::ShowAbout()
+{
+  QMessageBox::about(this, "ImageVis3D "IV3D_VERSION,
+    tr("This is <b>ImageVis3D</b> "IV3D_VERSION". Copyrigth 2008 by the Scientific Computing and Imaging (SCI) Institute. This version is for internal testing only. Please report bugs to jens@sci.utah.edu"));
 }

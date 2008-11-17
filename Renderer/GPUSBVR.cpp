@@ -70,31 +70,14 @@ bool GPUSBVR::Initialize() {
   glEnable(GL_TEXTURE_2D);
   glDisable(GL_CULL_FACE);
   
+  if (!LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-1D-FS.glsl",       &(m_pProgram1DTrans[0])) ||
+      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-1D-light-FS.glsl", &(m_pProgram1DTrans[1])) ||
+      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-2D-FS.glsl",       &(m_pProgram2DTrans[0])) ||
+      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-2D-light-FS.glsl", &(m_pProgram2DTrans[1])) ||
+      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-ISO-FS.glsl",      &m_pProgramIso)) {
 
-  m_pProgram1DTrans[0] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
-                                                                       SysTools::GetFromResourceOnMac("GPUSBVR-1D-FS.glsl"));
-  
-  m_pProgram1DTrans[1] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
-                                                                       SysTools::GetFromResourceOnMac("GPUSBVR-1D-light-FS.glsl"));
-
-  m_pProgram2DTrans[0] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
-                                                                       SysTools::GetFromResourceOnMac("GPUSBVR-2D-FS.glsl"));
-
-  m_pProgram2DTrans[1] = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
-                                                                       SysTools::GetFromResourceOnMac("GPUSBVR-2D-light-FS.glsl"));
-
-  m_pProgramIso = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac("GPUSBVR-VS.glsl"),
-                                                                SysTools::GetFromResourceOnMac("GPUSBVR-ISO-FS.glsl"));
-
-
-  if (m_pProgram1DTrans[0] == NULL || m_pProgram1DTrans[1] == NULL ||
-      m_pProgram2DTrans[0] == NULL || m_pProgram2DTrans[1] == NULL || m_pProgramIso == NULL ||
-      !m_pProgram1DTrans[0]->IsValid() || !m_pProgram1DTrans[1]->IsValid() || 
-      !m_pProgram1DTrans[0]->IsValid() || !m_pProgram2DTrans[1]->IsValid() || !m_pProgramIso->IsValid()) {
-  
       m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","Error loading a shader.");
       return false;
-
   } else {
 
     m_pProgram1DTrans[0]->Enable();
@@ -262,7 +245,7 @@ void GPUSBVR::Render3DView() {
     maBricktTrans.Translation(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.x, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.y, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.z);
     FLOATMATRIX4 maBricktModelView = maBricktTrans * m_matModelView;
     maBricktModelView.setModelview();
-    m_SBVRGeogen.SetTransformation(maBricktModelView);
+    m_SBVRGeogen.SetTransformation(maBricktModelView, true);
 
     // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
     vector<UINT64> vLOD; vLOD.push_back(m_iCurrentLOD);
@@ -291,9 +274,12 @@ void GPUSBVR::Render3DView() {
 
     // count the bricks rendered
     m_iBricksRenderedInThisSubFrame++;
-	if (!m_bLODDisabled) timeProbe = clock();
+	  
+    // time this loop
+    if (!m_bLODDisabled) timeProbe = clock();
   }
 
+  // disable the shader
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
     case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
@@ -301,7 +287,7 @@ void GPUSBVR::Render3DView() {
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Render3DView","Invalid rendermode set"); break;
   }
 
-  // at the very end render the global bbox
+  // at the very end render the bboxes
   if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) {
     if (m_eRenderMode != RM_ISOSURFACE) {    
       m_matModelView.setModelview();

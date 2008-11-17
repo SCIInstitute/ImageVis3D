@@ -575,6 +575,8 @@ GLSLProgram* GPUMemMan::GetGLSLProgram(const string& strVSFile, const string& st
 }
 
 void GPUMemMan::FreeGLSLProgram(GLSLProgram* pGLSLProgram) {
+  if (pGLSLProgram == NULL) return;
+
   for (size_t i = 0;i<m_vpGLSLList.size();i++) {
     if (m_vpGLSLList[i]->pGLSLProgram == pGLSLProgram) {
       m_vpGLSLList[i]->iAccessCounter--;

@@ -61,8 +61,8 @@ public:
 	SBVRGeogen(void);
 	virtual ~SBVRGeogen(void);
 
-  void SetSamplingModifier(float fSamplingModifier) {m_fSamplingModifier = fSamplingModifier; ComputeGeometry();}
-  void SetTransformation(const FLOATMATRIX4& matTransform);
+  void SetSamplingModifier(float fSamplingModifier) {m_fSamplingModifier = fSamplingModifier;}
+  void SetTransformation(const FLOATMATRIX4& matTransform, bool bForceUpdate = false);
 	void SetVolumeData(const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize, const FLOATVECTOR3& vTexCoordMin=FLOATVECTOR3(0,0,0), const FLOATVECTOR3& vTexCoordMax=FLOATVECTOR3(1,1,1));
 	void ComputeGeometry();
 	uint ComputeLayerGeometry(float fDepth, POS3TEX3_VERTEX pfLayerPoints[12]);

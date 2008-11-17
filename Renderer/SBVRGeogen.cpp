@@ -69,8 +69,8 @@ SBVRGeogen::~SBVRGeogen(void)
 {
 }
 
-void SBVRGeogen::SetTransformation(const FLOATMATRIX4& matTransform) {
-	if (m_matTransform != matTransform)	{
+void SBVRGeogen::SetTransformation(const FLOATMATRIX4& matTransform, bool bForceUpdate) {
+	if (bForceUpdate || m_matTransform != matTransform)	{
 		m_matTransform = matTransform;
 		InitBBOX();
 		ComputeGeometry();

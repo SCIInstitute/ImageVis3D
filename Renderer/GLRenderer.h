@@ -102,6 +102,7 @@ class GLRenderer : public AbstrRenderer {
     virtual void Render3DView() = 0;
 
     virtual void CreateOffscreenBuffers();
+    virtual bool LoadAndVerifyShader(const std::string& strVSFile, const std::string& strFSFile, GLSLProgram** pShaderProgram);
 
   private:
     GLSLProgram*    m_pProgramTrans;
