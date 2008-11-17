@@ -27,15 +27,15 @@
 */
 
 /**
-  \file    GPUSBVR.h
+  \file    GLRaycaster.cpp
   \author    Jens Krueger
         SCI Institute
         University of Utah
-  \date    August 2008
+  \date    November 2008
 */
 
 
-#include "GPUSBVR.h"
+#include "GLRaycaster.h"
 
 #include <cmath>
 #include <Basics/SysTools.h>
@@ -44,7 +44,7 @@
 
 using namespace std;
 
-GPUSBVR::GPUSBVR(MasterController* pMasterController) :
+GLRaycaster::GLRaycaster(MasterController* pMasterController) :
   GLRenderer(pMasterController)
 {
   m_pProgram1DTrans[0]   = NULL;
@@ -54,15 +54,13 @@ GPUSBVR::GPUSBVR(MasterController* pMasterController) :
   m_pProgramIso          = NULL;
 }
 
-GPUSBVR::~GPUSBVR() {
-  delete [] m_p1DData;
-  delete [] m_p2DData;
+GLRaycaster::~GLRaycaster() {
 }
 
 
-bool GPUSBVR::Initialize() {
+bool GLRaycaster::Initialize() {
   if (!GLRenderer::Initialize()) {
-    m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","Error in parent call -> aborting");
+    m_pMasterController->DebugOut()->Error("GLRaycaster::Initialize","Error in parent call -> aborting");
     return false;
   }
 
@@ -70,13 +68,13 @@ bool GPUSBVR::Initialize() {
   glEnable(GL_TEXTURE_2D);
   glDisable(GL_CULL_FACE);
   
-  if (!LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-1D-FS.glsl",       &(m_pProgram1DTrans[0])) ||
-      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-1D-light-FS.glsl", &(m_pProgram1DTrans[1])) ||
-      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-2D-FS.glsl",       &(m_pProgram2DTrans[0])) ||
-      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-2D-light-FS.glsl", &(m_pProgram2DTrans[1])) ||
-      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-ISO-FS.glsl",      &m_pProgramIso)) {
+  if (!LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-1D-FS.glsl",       &(m_pProgram1DTrans[0])) ||
+      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-1D-light-FS.glsl", &(m_pProgram1DTrans[1])) ||
+      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-2D-FS.glsl",       &(m_pProgram2DTrans[0])) ||
+      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-2D-light-FS.glsl", &(m_pProgram2DTrans[1])) ||
+      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-ISO-FS.glsl",      &m_pProgramIso)) {
 
-      m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","Error loading a shader.");
+      m_pMasterController->DebugOut()->Error("GLRaycaster::Initialize","Error loading a shader.");
       return false;
   } else {
 
@@ -120,11 +118,11 @@ bool GPUSBVR::Initialize() {
   return true;
 }
 
-void GPUSBVR::SetBrickDepShaderVars(const Brick& currentBrick) {
+void GLRaycaster::SetBrickDepShaderVars(const Brick& currentBrick) {
 
   FLOATVECTOR3 vStep(1.0f/currentBrick.vVoxelCount.x, 1.0f/currentBrick.vVoxelCount.y, 1.0f/currentBrick.vVoxelCount.z);
 
-  float fStepScale = m_SBVRGeogen.GetOpacityCorrection();
+  float fStepScale = currentBrick.vVoxelCount.maxVal() * 0.5f * 1.0f/m_fSampleRateModifier * (currentBrick.vExtension/FLOATVECTOR3(currentBrick.vVoxelCount)).minVal();
 
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  {                    
@@ -142,12 +140,12 @@ void GPUSBVR::SetBrickDepShaderVars(const Brick& currentBrick) {
                             m_pProgramIso->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
                             break;
                           }
-    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::SetBrickDepShaderVars","Invalid rendermode set"); break;
+    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLRaycaster::SetBrickDepShaderVars","Invalid rendermode set"); break;
   }
 
 }
 
-const FLOATVECTOR2 GPUSBVR::SetDataDepShaderVars() {
+const FLOATVECTOR2 GLRaycaster::SetDataDepShaderVars() {
   const FLOATVECTOR2 vSizes = GLRenderer::SetDataDepShaderVars();
 
   switch (m_eRenderMode) {
@@ -171,22 +169,22 @@ const FLOATVECTOR2 GPUSBVR::SetDataDepShaderVars() {
                             m_pProgramIso->Disable();
                             break;
                           }
-    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::SetDataDepShaderVars","Invalid rendermode set"); break;
+    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLRaycaster::SetDataDepShaderVars","Invalid rendermode set"); break;
   }
 
 
   return vSizes;
 }
 
-bool GPUSBVR::LoadDataset(const string& strFilename) {
+bool GLRaycaster::LoadDataset(const string& strFilename) {
   if (GLRenderer::LoadDataset(strFilename)) {
     if (m_pProgram1DTrans[0] != NULL) SetDataDepShaderVars();
     return true;
   } else return false;
 }
 
-void GPUSBVR::Render3DView() {
-  // ************** GL States ***********
+void GLRaycaster::Render3DView() {
+  /*// ************** GL States ***********
   // Modelview
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -226,7 +224,7 @@ void GPUSBVR::Render3DView() {
                           break;
     case RM_ISOSURFACE :  m_pProgramIso->Enable(); 
                           break;
-    default    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Render3DView","Invalid rendermode set"); 
+    default    :  m_pMasterController->DebugOut()->Error("GLRaycaster::Render3DView","Invalid rendermode set"); 
                           break;
   }
 
@@ -284,7 +282,7 @@ void GPUSBVR::Render3DView() {
     case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
     case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
     case RM_ISOSURFACE :  m_pProgramIso->Disable(); break;
-    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GPUSBVR::Render3DView","Invalid rendermode set"); break;
+    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLRaycaster::Render3DView","Invalid rendermode set"); break;
   }
 
   // at the very end render the bboxes
@@ -307,23 +305,16 @@ void GPUSBVR::Render3DView() {
   }
 
   glDisable(GL_BLEND);
-
+*/
 }
 
 
-void GPUSBVR::Cleanup() {
+void GLRaycaster::Cleanup() {
   GLRenderer::Cleanup();
 
-  m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast);
-  m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[0]);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[1]);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[1]);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIso);
-}
-
-void GPUSBVR::SetSampleRateModifier(float fSampleRateModifier) {
-  GLRenderer::SetSampleRateModifier(fSampleRateModifier);
-  m_SBVRGeogen.SetSamplingModifier(fSampleRateModifier);
 }

@@ -75,7 +75,8 @@ HEADERS += StdDefines.h \
            Renderer/GLTexture3D.h \
            Renderer/GLRenderer.h \
            Renderer/AbstrRenderer.h \
-           Renderer/GPUSBVR.h \
+           Renderer/GLRaycaster.h \
+           Renderer/GLSBVR.h \
            Renderer/GPUMemMan/GPUMemMan.h \
            Renderer/GPUMemMan/GPUMemManDataStructs.h \
            Renderer/SBVRGeogen.h
@@ -137,7 +138,8 @@ SOURCES += 3rdParty/GLEW/glew.c \
            Renderer/GLTexture3D.cpp \
            Renderer/GLRenderer.cpp \           
            Renderer/AbstrRenderer.cpp \
-           Renderer/GPUSBVR.cpp \
+           Renderer/GLRaycaster.cpp \
+           Renderer/GLSBVR.cpp \
            Renderer/GPUMemMan/GPUMemMan.cpp \
            Renderer/GPUMemMan/GPUMemManDataStructs.cpp \
            Renderer/SBVRGeogen.cpp \  

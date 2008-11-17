@@ -360,7 +360,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   static unsigned int iCounter = 0;
 
   RenderWindow *renderWin =
-    new RenderWindow(m_MasterController,dataset,
+    new RenderWindow(m_MasterController, m_eVolumeRendererType, dataset,
 		     iCounter++, m_glShareWidget, this);
   renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
   renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));

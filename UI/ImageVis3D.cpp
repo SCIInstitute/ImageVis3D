@@ -71,7 +71,8 @@ MainWindow::MainWindow(MasterController& masterController,
   m_iInactiveTS(100),
   m_iBlendPrecisionMode(0),
   m_bAutoSaveGEO(true),
-  m_bAutoSaveWSP(true)
+  m_bAutoSaveWSP(true),
+  m_eVolumeRendererType(MasterController::OPENGL_SBVR)
 {
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
   QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");

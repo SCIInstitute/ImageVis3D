@@ -106,17 +106,22 @@ void MasterController::RemoveDebugOut(AbstrDebugOut* debugOut) {
 
 
 AbstrRenderer* MasterController::
-RequestNewVolumerenderer(VolumeRenderer eRendererType) {
-
-  m_pDebugOut->Message("MasterController::RequestNewVolumerenderer","");
+RequestNewVolumerenderer(EVolumeRendererType eRendererType) {
 
   switch (eRendererType) {
 
   case OPENGL_SBVR :
-    m_vVolumeRenderer.push_back(new GPUSBVR(this));
+    m_pDebugOut->Message("MasterController::RequestNewVolumerenderer","Starting up new renderer (API=OpenGL, Method=Slice Based Volume Rendering)");
+    m_vVolumeRenderer.push_back(new GLSBVR(this));
+    return m_vVolumeRenderer[m_vVolumeRenderer.size()-1];
+
+  case OPENGL_RAYCASTER :
+    m_pDebugOut->Message("MasterController::RequestNewVolumerenderer","Starting up new renderer (API=OpenGL, Method=Raycaster)");
+    m_vVolumeRenderer.push_back(new GLRaycaster(this));
     return m_vVolumeRenderer[m_vVolumeRenderer.size()-1];
 
   default :
+    m_pDebugOut->Error("MasterController::RequestNewVolumerenderer","Unsupported Volume renderer requested");
     return NULL;
   };
 }

@@ -37,6 +37,7 @@
 
 #include "SettingsDlg.h"
 #include <QtGui/QColorDialog>
+#include <QtGui/QMessageBox>
 
 SettingsDlg::SettingsDlg(MasterController& MasterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
   QDialog(parent, flags),
@@ -256,7 +257,7 @@ void SettingsDlg::InactTSChanged() {
 void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
                             bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, unsigned int iBlendPrecision,
                             bool bAutoSaveGEO, bool bAutoSaveWSP,
-                            const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
+                            unsigned int iVolRenType, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
     horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
     horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
@@ -279,6 +280,24 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
       case 1    : radioButton_Prec16Bit->setChecked(true); break;
       default   : radioButton_Prec8Bit->setChecked(true); break;
     }
+
+    switch (iVolRenType) {
+      case 1    : radioButton_APIGL->setChecked(true); 
+                  radioButton_Raycast->setChecked(true);
+                  break;
+      case 2    : radioButton_APIDX->setChecked(true); 
+                  radioButton_SBVR->setChecked(true);
+                  break;
+      case 3    : radioButton_APIDX->setChecked(true); 
+                  radioButton_Raycast->setChecked(true);
+                  break;
+      case 0    : 
+      default   : radioButton_APIGL->setChecked(true); 
+                  radioButton_SBVR->setChecked(true);
+                  break;
+    }
+
+    
     
     QString strStyle =
     tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
@@ -312,3 +331,13 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
 
 }
 
+
+void SettingsDlg::WarnAPIMethodChange() {
+		QMessageBox::warning(this, "Warning", "A change to the render API or the rendermode only affects renderwindows opened from now on.");
+}
+
+unsigned int SettingsDlg::GetVolrenType() const {
+  unsigned int iResult = radioButton_APIGL->isChecked() ? 0 : 2; 
+  iResult += radioButton_SBVR->isChecked() ? 0 : 1;
+  return iResult;
+}

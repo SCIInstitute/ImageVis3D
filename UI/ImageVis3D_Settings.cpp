@@ -88,6 +88,8 @@ bool MainWindow::ShowSettings() {
       settings.endGroup();
 
       settings.beginGroup("Renderer");
+      unsigned int iVolRenType = settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
+
       FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0f).toULongLong(),
                               settings.value("Background1G", 0.0f).toULongLong(),
                               settings.value("Background1B", 0.0f).toULongLong());
@@ -103,7 +105,7 @@ bool MainWindow::ShowSettings() {
       settings.endGroup();
 
       // hand data to form
-      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS, iBlendPrecisionMode, bAutoSaveGEO, bAutoSaveWSP, vBackColor1, vBackColor2, vTextColor);
+      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS, iBlendPrecisionMode, bAutoSaveGEO, bAutoSaveWSP, iVolRenType, vBackColor1, vBackColor2, vTextColor);
     }
 
     if (settingsDlg.exec() == QDialog::Accepted) {
@@ -129,6 +131,7 @@ bool MainWindow::ShowSettings() {
       settings.endGroup();
 
       settings.beginGroup("Renderer");
+      settings.setValue("RendererType", settingsDlg.GetVolrenType());
       settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
       settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
       settings.setValue("Background1B", settingsDlg.GetBackgroundColor1().z);
@@ -172,6 +175,7 @@ void MainWindow::ApplySettings() {
     settings.endGroup();
 
     settings.beginGroup("Renderer");
+    m_eVolumeRendererType = (MasterController::EVolumeRendererType)settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
     m_vBackgroundColors[0] = FLOATVECTOR3(settings.value("Background1R", 0.0f).toULongLong(),
                             settings.value("Background1G", 0.0f).toULongLong(),
                             settings.value("Background1B", 0.0f).toULongLong());

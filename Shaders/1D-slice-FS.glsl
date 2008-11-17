@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    GPUSBVR-1D-FS.glsl
+  \file    GLSBVR-1D-FS.glsl
   \author    Jens Krueger
         SCI Institute
         University of Utah

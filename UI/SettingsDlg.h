@@ -59,6 +59,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetAutoSaveGEO() const;
     bool          GetAutoSaveWSP() const;
 
+    unsigned int  GetVolrenType() const;
     FLOATVECTOR3  GetBackgroundColor1() const;
     FLOATVECTOR3  GetBackgroundColor2() const;
     FLOATVECTOR4  GetTextColor() const;
@@ -67,7 +68,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
                    bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, unsigned int iBlendPrecision, 
                    bool bAutoSaveGEO, bool bAutoSaveWSP,
-                   const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
+                   unsigned int iVolRenType, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
 
   protected slots:
     void SelectTextColor();
@@ -79,6 +80,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void MinFramerateChanged();
     void ActTSChanged();
     void InactTSChanged();
+    void WarnAPIMethodChange();
 
   private:
     MasterController& m_MasterController;

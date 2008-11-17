@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    GPUSBVR-Transfer-VS.glsl
+  \file    GLSBVR-Transfer-VS.glsl
   \author    Jens Krueger
         SCI Institute
         University of Utah

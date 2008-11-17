@@ -57,6 +57,8 @@ GLRenderer::GLRenderer(MasterController* pMasterController) :
 }
 
 GLRenderer::~GLRenderer() {
+  delete [] m_p1DData;
+  delete [] m_p2DData;
 }
 
 bool GLRenderer::Initialize() {
@@ -622,6 +624,9 @@ void GLRenderer::DrawBackGradient() {
 }
 
 void GLRenderer::Cleanup() {
+  m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast);
+  m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent);
+
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramTrans);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTransSlice);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTransSlice);
@@ -685,7 +690,7 @@ void GLRenderer::CreateOffscreenBuffers() {
       case BP_32BIT : m_pFBO3DImageLast = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA32F_ARB, 32*4, true);
                       m_pFBO3DImageCurrent = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA32F_ARB, 32*4, true);
                       break;
-      default       : m_pMasterController->DebugOut()->Message("GPUSBVR::CreateOffscreenBuffer","Invalid Blending Precision");
+      default       : m_pMasterController->DebugOut()->Message("GLSBVR::CreateOffscreenBuffer","Invalid Blending Precision");
                       m_pFBO3DImageLast = NULL; m_pFBO3DImageCurrent = NULL;
                       break;
     }
@@ -705,7 +710,7 @@ bool GLRenderer::LoadAndVerifyShader(const string& strVSFile, const string& strF
   (*pShaderProgram) = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac(strVSFile), SysTools::GetFromResourceOnMac(strFSFile));
 
   if ((*pShaderProgram) == NULL || !(*pShaderProgram)->IsValid()) {
-      m_pMasterController->DebugOut()->Error("GPUSBVR::Initialize","Error loading a shader combination VS %s and FS %s.", strVSFile.c_str(), strFSFile.c_str());
+      m_pMasterController->DebugOut()->Error("GLSBVR::Initialize","Error loading a shader combination VS %s and FS %s.", strVSFile.c_str(), strFSFile.c_str());
       m_pMasterController->MemMan()->FreeGLSLProgram(*pShaderProgram);
       return false;
   } else return true;

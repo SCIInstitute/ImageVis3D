@@ -171,6 +171,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     unsigned int          m_iBlendPrecisionMode;
     bool                  m_bAutoSaveGEO;
     bool                  m_bAutoSaveWSP;
+    MasterController::EVolumeRendererType   m_eVolumeRendererType;
 
     RenderWindow* CreateNewRenderWindow(QString dataset);
     bool CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow=true);

@@ -53,11 +53,12 @@ class RenderWindow : public QGLWidget
   Q_OBJECT  
   public:
     RenderWindow(MasterController& masterController,
-    QString dataset,
-    unsigned int iCounter,
-    QGLWidget* glWidget,
-    QWidget* parent = 0,
-    Qt::WindowFlags flags = 0);
+                 MasterController::EVolumeRendererType eType,
+                 QString dataset,
+                 unsigned int iCounter,
+                 QGLWidget* glWidget,
+                 QWidget* parent = 0,
+                 Qt::WindowFlags flags = 0);
 
     virtual ~RenderWindow();
 

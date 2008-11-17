@@ -27,35 +27,33 @@
 */
 
 /**
-  \file    GPUSBVR.h
+  \file    GLRaycaster.h
   \author  Jens Krueger
            SCI Institute
            University of Utah
   \version 1.0
-  \date    August 2008
+  \date    November 2008
 */
 
 
 #pragma once
 
-#ifndef GPUSBVR_H
-#define GPUSBVR_H
+#ifndef GLRAYCASTER_H
+#define GLRAYCASTER_H
 
 #include <Renderer/GLRenderer.h>
-#include <Renderer/SBVRGeogen.h>
-#include <deque>
 
-/** \class GPUSBVR
- * Slice-based GPU volume renderer.
+/** \class GLRaycaster
+ * GPU Rayster.
  *
- * GPUSBVR is a slice based volume renderer which uses GLSL. */
-class GPUSBVR : public GLRenderer {
+ * GLRaycaster is a GPU based raycaster for volumetric scalar data which uses GLSL. */
+class GLRaycaster : public GLRenderer {
   public:
     /** Constructs a VRer with immediate redraw, and
      * wireframe mode off.
      * \param pMasterController message routing object */
-    GPUSBVR(MasterController* pMasterController);
-    virtual ~GPUSBVR();
+    GLRaycaster(MasterController* pMasterController);
+    virtual ~GLRaycaster();
 
     virtual bool LoadDataset(const std::string& strFilename);
 
@@ -65,22 +63,15 @@ class GPUSBVR : public GLRenderer {
     /** Loads GLSL vertex and fragment shaders. */
     virtual bool Initialize();
 
-    /** Set the oversampling ratio (e.g. 2 means twice the slices as needed).  Causes a full redraw. */
-    virtual void SetSampleRateModifier(float fSampleRateModifier);
-
   protected:
-    SBVRGeogen    m_SBVRGeogen;
-
     GLSLProgram*  m_pProgram1DTrans[2];
     GLSLProgram*  m_pProgram2DTrans[2];
     GLSLProgram*  m_pProgramIso;
 
     void SetBrickDepShaderVars(const Brick& currentBrick);
-
     virtual void Render3DView();
-
     virtual const FLOATVECTOR2 SetDataDepShaderVars();
 
 };
 
-#endif // GPUSBVR_H
+#endif // GLRAYCASTER_H

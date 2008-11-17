@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>358</width>
-    <height>373</height>
+    <width>338</width>
+    <height>414</height>
    </rect>
   </property>
   <property name="contextMenuPolicy" >
@@ -557,6 +557,64 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3" >
        <item>
+        <widget class="QGroupBox" name="groupBox_6" >
+         <property name="title" >
+          <string>Render Method</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_8" >
+          <item>
+           <widget class="QRadioButton" name="radioButton_SBVR" >
+            <property name="text" >
+             <string>Slicing</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButton_Raycast" >
+            <property name="text" >
+             <string>Raycasting</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_7" >
+         <property name="title" >
+          <string>Renderer API</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_7" >
+          <item>
+           <widget class="QRadioButton" name="radioButton_APIGL" >
+            <property name="text" >
+             <string>OpenGL</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButton_APIDX" >
+            <property name="enabled" >
+             <bool>false</bool>
+            </property>
+            <property name="text" >
+             <string>DirectX</string>
+            </property>
+            <property name="checkable" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox_Color" >
          <property name="title" >
           <string>Color</string>
@@ -708,8 +766,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>266</x>
-     <y>363</y>
+     <x>275</x>
+     <y>401</y>
     </hint>
     <hint type="destinationlabel" >
      <x>157</x>
@@ -724,8 +782,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>334</x>
-     <y>363</y>
+     <x>328</x>
+     <y>401</y>
     </hint>
     <hint type="destinationlabel" >
      <x>286</x>
@@ -741,11 +799,11 @@
    <hints>
     <hint type="sourcelabel" >
      <x>209</x>
-     <y>87</y>
+     <y>94</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>303</x>
-     <y>102</y>
+     <x>283</x>
+     <y>109</y>
     </hint>
    </hints>
   </connection>
@@ -760,8 +818,8 @@
      <y>146</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>303</x>
-     <y>146</y>
+     <x>283</x>
+     <y>160</y>
     </hint>
    </hints>
   </connection>
@@ -772,8 +830,8 @@
    <slot>SelectBackColor1()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>216</x>
-     <y>104</y>
+     <x>194</x>
+     <y>198</y>
     </hint>
     <hint type="destinationlabel" >
      <x>319</x>
@@ -788,11 +846,11 @@
    <slot>SelectBackColor2()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>325</x>
-     <y>104</y>
+     <x>305</x>
+     <y>198</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>357</x>
+     <x>337</x>
      <y>8</y>
     </hint>
    </hints>
@@ -804,8 +862,8 @@
    <slot>SelectTextColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>216</x>
-     <y>150</y>
+     <x>194</x>
+     <y>232</y>
     </hint>
     <hint type="destinationlabel" >
      <x>278</x>
@@ -820,11 +878,11 @@
    <slot>SetTextOpacity(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>325</x>
-     <y>147</y>
+     <x>305</x>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>357</x>
+     <x>337</x>
      <y>36</y>
     </hint>
    </hints>
@@ -840,7 +898,7 @@
      <y>146</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>357</x>
+     <x>337</x>
      <y>124</y>
     </hint>
    </hints>
@@ -852,8 +910,8 @@
    <slot>LODDelayChanged()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>214</x>
-     <y>182</y>
+     <x>216</x>
+     <y>233</y>
     </hint>
     <hint type="destinationlabel" >
      <x>119</x>
@@ -868,8 +926,8 @@
    <slot>MinFramerateChanged()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>179</x>
-     <y>195</y>
+     <x>181</x>
+     <y>206</y>
     </hint>
     <hint type="destinationlabel" >
      <x>209</x>
@@ -885,7 +943,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>192</x>
-     <y>232</y>
+     <y>273</y>
     </hint>
     <hint type="destinationlabel" >
      <x>160</x>
@@ -901,11 +959,75 @@
    <hints>
     <hint type="sourcelabel" >
      <x>180</x>
-     <y>260</y>
+     <y>301</y>
     </hint>
     <hint type="destinationlabel" >
      <x>11</x>
      <y>335</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_Raycast</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>WarnAPIMethodChange()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>300</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>35</x>
+     <y>378</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_SBVR</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>WarnAPIMethodChange()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>50</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>3</x>
+     <y>390</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_APIGL</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>WarnAPIMethodChange()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>78</x>
+     <y>131</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>92</x>
+     <y>374</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_APIDX</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>WarnAPIMethodChange()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>305</x>
+     <y>135</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>337</x>
+     <y>375</y>
     </hint>
    </hints>
   </connection>
@@ -920,5 +1042,6 @@
   <slot>MinFramerateChanged()</slot>
   <slot>ActTSChanged()</slot>
   <slot>InactTSChanged()</slot>
+  <slot>WarnAPIMethodChange()</slot>
  </slots>
 </ui>

@@ -516,10 +516,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\dummyVolume.dat"
-				>
-			</File>
-			<File
 				RelativePath=".\ImageVis3D.pro"
 				>
 			</File>
@@ -1308,11 +1304,11 @@
 				Name="SBVR"
 				>
 				<File
-					RelativePath=".\Renderer\GPUSBVR.cpp"
+					RelativePath=".\Renderer\GLSBVR.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Renderer\GPUSBVR.h"
+					RelativePath=".\Renderer\GLSBVR.h"
 					>
 				</File>
 				<File
@@ -1343,6 +1339,14 @@
 			<Filter
 				Name="Raycaster"
 				>
+				<File
+					RelativePath=".\Renderer\GLRaycaster.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Renderer\GLRaycaster.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

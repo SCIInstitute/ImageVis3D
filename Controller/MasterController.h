@@ -42,20 +42,17 @@
 
 #include <vector>
 #include <string>
-#include "../IO/IOManager.h"
-#include "../IO/TransferFunction1D.h"
-#include "../IO/TransferFunction2D.h"
+#include <IO/IOManager.h>
+#include <IO/TransferFunction1D.h>
+#include <IO/TransferFunction2D.h>
 
-#include "../DebugOut/AbstrDebugOut.h"
-#include "../DebugOut/ConsoleOut.h"
+#include <DebugOut/AbstrDebugOut.h>
+#include <DebugOut/ConsoleOut.h>
 
-#include "../Renderer/GPUMemMan/GPUMemMan.h"
-#include "../Renderer/AbstrRenderer.h"
-#include "../Renderer/GPUSBVR.h"
-
-enum VolumeRenderer {
-  OPENGL_SBVR = 0
-};
+#include <Renderer/GPUMemMan/GPUMemMan.h>
+#include <Renderer/AbstrRenderer.h>
+#include <Renderer/GLSBVR.h>
+#include <Renderer/GLRaycaster.h>
 
 /** \class MasterController
  * Centralized controller for ImageVis3D.
@@ -69,12 +66,19 @@ enum VolumeRenderer {
  * handle the resize event. */
 class MasterController {
 public:
+  enum EVolumeRendererType {
+    OPENGL_SBVR = 0,
+    OPENGL_RAYCASTER,
+    DIRECTX_SBVR,
+    DIRECTX_RAYCASTER
+  };
+
   /// Defaults to using a Console-based debug output stream.
   MasterController();
   virtual ~MasterController();
 
   /// Create a new renderer.
-  AbstrRenderer* RequestNewVolumerenderer(VolumeRenderer eRendererType);
+  AbstrRenderer* RequestNewVolumerenderer(EVolumeRendererType eRendererType);
   /// Indicate that a renderer is no longer needed.
   void ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer);
     
