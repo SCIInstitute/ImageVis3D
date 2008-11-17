@@ -35,7 +35,7 @@
 */
 
 #include "GPUMemMan.h"
-#include <QT/QImage.h>
+#include <Qt/qimage.h>
 #include <Controller/MasterController.h>
 
 using namespace std;
