@@ -56,11 +56,6 @@ class GLSBVR : public GLRenderer {
     GLSBVR(MasterController* pMasterController);
     virtual ~GLSBVR();
 
-    virtual bool LoadDataset(const std::string& strFilename);
-
-    /** Deallocates GPU memory allocated during the rendering process. */
-    virtual void Cleanup();
-
     /** Loads GLSL vertex and fragment shaders. */
     virtual bool Initialize();
 
@@ -70,14 +65,8 @@ class GLSBVR : public GLRenderer {
   protected:
     SBVRGeogen    m_SBVRGeogen;
 
-    GLSLProgram*  m_pProgram1DTrans[2];
-    GLSLProgram*  m_pProgram2DTrans[2];
-    GLSLProgram*  m_pProgramIso;
-
     void SetBrickDepShaderVars(const Brick& currentBrick);
-
     virtual void Render3DView();
-
     virtual const FLOATVECTOR2 SetDataDepShaderVars();
 
 };

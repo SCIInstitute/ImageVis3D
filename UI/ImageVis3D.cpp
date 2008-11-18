@@ -77,6 +77,7 @@ MainWindow::MainWindow(MasterController& masterController,
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
   QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");
   QCoreApplication::setApplicationName("ImageVis3D");
+  QCoreApplication::setApplicationVersion(IV3D_VERSION);
 
   setupUi(this);
 
@@ -138,7 +139,6 @@ void MainWindow::Use1DTrans() {
 
   m_1DTransferFunction->setEnabled(true);
   m_2DTransferFunction->setEnabled(false);
-  // todo disable iso controlls
 
   if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(AbstrRenderer::RM_1DTRANS);
 }
@@ -157,7 +157,6 @@ void MainWindow::Use2DTrans() {
 
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(true);
-  // todo disable iso controls
 
   if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(AbstrRenderer::RM_2DTRANS);
 }
@@ -176,7 +175,7 @@ void MainWindow::UseIso() {
 
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(false);
-  // todo enable iso controlls
+
   if (m_ActiveRenderWin) m_ActiveRenderWin->SetRendermode(AbstrRenderer::RM_ISOSURFACE);
 }
 
@@ -192,7 +191,6 @@ void MainWindow::DisableAllTrans() {
 
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(false);
-  // todo disable iso controlls
 }
 
 

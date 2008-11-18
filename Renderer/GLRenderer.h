@@ -56,7 +56,6 @@ class GLRenderer : public AbstrRenderer {
     virtual bool Initialize();
     virtual void Changed1DTrans();
     virtual void Changed2DTrans();
-    virtual bool SetBackgroundColors(FLOATVECTOR3 vColors[2]);
 
     /** Set the bit depth mode of the offscreen buffer used for blending.  Causes a full redraw. */
     virtual void SetBlendPrecision(EBlendPrecision eBlendPrecision);
@@ -67,13 +66,19 @@ class GLRenderer : public AbstrRenderer {
     /** Paint the image */
     virtual void Paint();
 
+    /** Sends a message to the master to ask for a dataset to be loaded.
+     * The dataset is converted to UVF if it is not one already.
+     * @param strFilename path to a file */
+    virtual bool LoadDataset(const std::string& strFilename);
+
     /** Change the size of the FBO we render to.  Any previous image is
      * destroyed, causing a full redraw on the next render.
      * \param vWinSize  new width and height of the view window */
     virtual void Resize(const UINTVECTOR2& vWinSize);
 
     /** Query whether or not we should redraw the next frame, else we should
-     * reuse what is already rendered. */
+     * reuse what is already rendered or cintinue with the current frame if it
+     * is not complete yet. */
     virtual bool CheckForRedraw();
 
   protected:
@@ -85,6 +90,9 @@ class GLRenderer : public AbstrRenderer {
     GLFBOTex*       m_pFBO3DImageCurrent;
     int             m_iFilledBuffers;
     GLTexture2D*    m_LogoTex;
+    GLSLProgram*    m_pProgram1DTrans[2];
+    GLSLProgram*    m_pProgram2DTrans[2];
+    GLSLProgram*    m_pProgramIso;
 
     void SetRenderTargetArea(ERenderArea eREnderArea);
     void SetRenderTargetAreaScissor(ERenderArea eREnderArea);
@@ -103,6 +111,11 @@ class GLRenderer : public AbstrRenderer {
 
     virtual void CreateOffscreenBuffers();
     virtual bool LoadAndVerifyShader(const std::string& strVSFile, const std::string& strFSFile, GLSLProgram** pShaderProgram);
+
+    void BBoxPreRender();
+    void BBoxPostRender();
+    virtual void ClearDepthBuffer();
+    virtual void ClearColorBuffer();
 
   private:
     GLSLProgram*    m_pProgramTrans;

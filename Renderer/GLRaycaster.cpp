@@ -47,11 +47,6 @@ using namespace std;
 GLRaycaster::GLRaycaster(MasterController* pMasterController) :
   GLRenderer(pMasterController)
 {
-  m_pProgram1DTrans[0]   = NULL;
-  m_pProgram1DTrans[1]   = NULL;
-  m_pProgram2DTrans[0]   = NULL;
-  m_pProgram2DTrans[1]   = NULL;
-  m_pProgramIso          = NULL;
 }
 
 GLRaycaster::~GLRaycaster() {
@@ -65,7 +60,6 @@ bool GLRaycaster::Initialize() {
   }
 
   glShadeModel(GL_SMOOTH);
-  glEnable(GL_TEXTURE_2D);
   glDisable(GL_CULL_FACE);
   
   if (!LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-1D-FS.glsl",       &(m_pProgram1DTrans[0])) ||
@@ -176,38 +170,16 @@ const FLOATVECTOR2 GLRaycaster::SetDataDepShaderVars() {
   return vSizes;
 }
 
-bool GLRaycaster::LoadDataset(const string& strFilename) {
-  if (GLRenderer::LoadDataset(strFilename)) {
-    if (m_pProgram1DTrans[0] != NULL) SetDataDepShaderVars();
-    return true;
-  } else return false;
-}
-
 void GLRaycaster::Render3DView() {
-  /*// ************** GL States ***********
+/*  // ************** GL States ***********
   // Modelview
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   m_matModelView.setModelview();
 
   glEnable(GL_DEPTH_TEST);
-  glDisable(GL_TEXTURE_3D);
-  glDisable(GL_TEXTURE_2D);
 
-  if (m_iBricksRenderedInThisSubFrame == 0) {
-    // for rendering modes other than isosurface render the bbox in the first pass once to init the depth buffer
-    // for isosurface rendering we can go ahead and render the bbox directly as isosurfacing 
-    // writes out correct depth values
-    glDisable(GL_BLEND);
-    if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
-    if (m_bRenderGlobalBBox) RenderBBox();
-    if (m_bRenderLocalBBox) {
-      for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
-        RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
-      }
-    }
-    if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
-  }
+  if (m_iBricksRenderedInThisSubFrame == 0) BBoxPreRender();
 
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  m_p1DTransTex->Bind(1); 
@@ -286,35 +258,7 @@ void GLRaycaster::Render3DView() {
   }
 
   // at the very end render the bboxes
-  if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) {
-    if (m_eRenderMode != RM_ISOSURFACE) {    
-      m_matModelView.setModelview();
-      if (m_bRenderGlobalBBox) {
-        glDisable(GL_DEPTH_TEST);
-        RenderBBox();
-      }
-
-      if (m_bRenderLocalBBox) {
-        glDisable(GL_DEPTH_TEST);
-        for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
-          RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
-        }
-      }
-      glDepthMask(GL_TRUE);
-    }
-  }
-
-  glDisable(GL_BLEND);
-*/
-}
-
-
-void GLRaycaster::Cleanup() {
-  GLRenderer::Cleanup();
-
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[0]);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[1]);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[1]);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIso);
+  if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();
+ 
+  glDisable(GL_BLEND);*/
 }

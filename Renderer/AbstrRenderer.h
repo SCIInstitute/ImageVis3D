@@ -148,7 +148,8 @@ class AbstrRenderer {
      * @param strFilename path to a file */
     virtual bool LoadDataset(const std::string& strFilename);
     /** Query whether or not we should redraw the next frame, else we should
-     * reuse what is already rendered. */
+     * reuse what is already rendered or cintinue with the current frame if it
+     * is not complete yet. */
     virtual bool CheckForRedraw();
 
     virtual void Paint() = 0;
@@ -277,6 +278,8 @@ class AbstrRenderer {
     void                Plan3DFrame();
     std::vector<Brick>  BuildFrameBrickList();
 
+    virtual void ClearDepthBuffer() = 0;
+    virtual void ClearColorBuffer() = 0;
 };
 
 #endif // ABSTRRENDERER_H

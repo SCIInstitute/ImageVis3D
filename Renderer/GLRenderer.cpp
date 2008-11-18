@@ -49,11 +49,16 @@ GLRenderer::GLRenderer(MasterController* pMasterController) :
   m_pFBO3DImageLast(NULL),
   m_pFBO3DImageCurrent(NULL),
   m_iFilledBuffers(0),
+  m_LogoTex(NULL),
+  m_pProgramIso(NULL),
   m_pProgramTrans(NULL),
   m_pProgram1DTransSlice(NULL),
-  m_pProgram2DTransSlice(NULL),
-  m_LogoTex(NULL)
+  m_pProgram2DTransSlice(NULL)
 {
+  m_pProgram1DTrans[0]   = NULL;
+  m_pProgram1DTrans[1]   = NULL;
+  m_pProgram2DTrans[0]   = NULL;
+  m_pProgram2DTrans[1]   = NULL;
 }
 
 GLRenderer::~GLRenderer() {
@@ -121,13 +126,6 @@ void GLRenderer::Changed2DTrans() {
   AbstrRenderer::Changed2DTrans();
 }
 
-bool GLRenderer::SetBackgroundColors(FLOATVECTOR3 vColors[2]) {
-  if (AbstrRenderer::SetBackgroundColors(vColors)) {
-    glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
-    return true;
-  } else return false;
-}
-
 void GLRenderer::Resize(const UINTVECTOR2& vWinSize) {
   AbstrRenderer::Resize(vWinSize);
   m_pMasterController->DebugOut()->Message("GLRenderer::Resize","Resizing to %i x %i", vWinSize.x, vWinSize.y);
@@ -135,49 +133,63 @@ void GLRenderer::Resize(const UINTVECTOR2& vWinSize) {
 }
 
 void GLRenderer::RenderSeperatingLines() {
-    // set render area to fullscreen
-    SetRenderTargetAreaScissor(RA_FULLSCREEN);
-    SetRenderTargetArea(RA_FULLSCREEN);
-    glDisable( GL_SCISSOR_TEST );
+  // set render area to fullscreen
+  SetRenderTargetAreaScissor(RA_FULLSCREEN);
+  SetRenderTargetArea(RA_FULLSCREEN);
 
-    // render seperating lines
-    glDisable(GL_BLEND);
+  // render seperating lines
+  glDisable(GL_BLEND);
 
-    glDisable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(-1, 1, 1, -1, 0, 1);
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
+  glDisable(GL_DEPTH_TEST);
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  glOrtho(-1, 1, 1, -1, 0, 1);
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
 
-    glBegin(GL_LINES);
-      glColor4f(1.0f,1.0f,1.0f,1.0f);
-      glVertex3f(0,-1,0);
-      glVertex3f(0,1,0);
-      glVertex3f(-1,0,0);
-      glVertex3f(1,0,0);
-    glEnd();
+  glBegin(GL_LINES);
+    glColor4f(1.0f,1.0f,1.0f,1.0f);
+    glVertex3f(0,-1,0);
+    glVertex3f(0,1,0);
+    glVertex3f(-1,0,0);
+    glVertex3f(1,0,0);
+  glEnd();
 
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
-    glEnable(GL_DEPTH_TEST);
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+  glMatrixMode(GL_MODELVIEW);
+  glPopMatrix();
+}
+
+void GLRenderer::ClearDepthBuffer() {
+  glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+void GLRenderer::ClearColorBuffer() {
+  glDepthMask(GL_FALSE);
+  if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
+    glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
+    glClear(GL_COLOR_BUFFER_BIT); 
+  } else {
+    DrawBackGradient();
+  }
+  DrawLogo();
+  glDepthMask(GL_TRUE);
 }
 
 void GLRenderer::Paint() {
   // clear the framebuffer (if requested)
-  if (m_bClearFramebuffer) glClear(GL_DEPTH_BUFFER_BIT);
+  if (m_bClearFramebuffer) ClearDepthBuffer();
+
+  // bind offscreen buffer
+  m_pFBO3DImageCurrent->Write();
 
   bool bNewDataToShow;
   if (m_eViewMode == VM_SINGLE) {
     // set render area to fullscreen
     SetRenderTargetArea(RA_FULLSCREEN);
-
-    // bind offscreen buffer
-    m_pFBO3DImageCurrent->Write();
 
     switch (m_eFullWindowMode) {
        case WM_3D       : {
@@ -196,21 +208,15 @@ void GLRenderer::Paint() {
 
     }
 
-    // unbind offscreen buffer
-    m_pFBO3DImageCurrent->FinishWrite();
-
   } else { // VM_TWOBYTWO 
     int iActiveRenderWindows = 0;
     int iReadyWindows = 0;
-    for (unsigned int i = 0;i<4;i++) if (m_bRedrawMask[i]) iActiveRenderWindows++;
-
-    // bind offscreen buffer
-    m_pFBO3DImageCurrent->Write();
 
     for (unsigned int i = 0;i<4;i++) {
       ERenderArea eArea = ERenderArea(int(RA_TOPLEFT)+i);
 
       if (m_bRedrawMask[size_t(m_e2x2WindowMode[i])]) {
+        iActiveRenderWindows++;
         SetRenderTargetArea(eArea);
         bool bLocalNewDataToShow;
         switch (m_e2x2WindowMode[i]) {
@@ -235,26 +241,31 @@ void GLRenderer::Paint() {
         
         if (bLocalNewDataToShow) iReadyWindows++;
       } else {
+        // blit the previous result quad to the entire screen but restrict draing to the current subarea
         SetRenderTargetArea(RA_FULLSCREEN);
         SetRenderTargetAreaScissor(eArea);
         RerenderPreviousResult(false);
       }
-
-      bNewDataToShow = (iActiveRenderWindows > 0) && (iReadyWindows==iActiveRenderWindows);
     }
+
+    // if we had at least one renderwindow that was doing something and from those all are finished then 
+    // set a flg so that we can display the result to the user later
+    bNewDataToShow = (iActiveRenderWindows > 0) && (iReadyWindows==iActiveRenderWindows);
 
     // render cross to seperate the four subwindows
     RenderSeperatingLines();
-
-    // unbind offscreen buffer
-    m_pFBO3DImageCurrent->FinishWrite();
   }
+
+  // unbind offscreen buffer
+  m_pFBO3DImageCurrent->FinishWrite();
+
   // if the image is complete swap the offscreen buffers
   if (bNewDataToShow) swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
 
   // show the result
   if (bNewDataToShow || m_iFilledBuffers < 2) RerenderPreviousResult(true);
 
+  // no complete redraw is necessary as we just finished the first pass
   m_bPerformRedraw = false;
 }
 
@@ -272,14 +283,14 @@ void GLRenderer::SetRenderTargetArea(ERenderArea eREnderArea) {
 
 void GLRenderer::SetRenderTargetAreaScissor(ERenderArea eREnderArea) {
   switch (eREnderArea) {
-    case RA_TOPLEFT     : glScissor(0,m_vWinSize.y/2, m_vWinSize.x/2,m_vWinSize.y); break;
-    case RA_TOPRIGHT    : glScissor(m_vWinSize.x/2, m_vWinSize.y/2, m_vWinSize.x, m_vWinSize.y); break;
-    case RA_LOWERLEFT   : glScissor(0,0,m_vWinSize.x/2, m_vWinSize.y/2); break;
-    case RA_LOWERRIGHT  : glScissor(m_vWinSize.x/2,0,m_vWinSize.x,m_vWinSize.y/2); break;
-    case RA_FULLSCREEN  : glScissor(0,0,m_vWinSize.x, m_vWinSize.y); break;
+    case RA_TOPLEFT     : glScissor(0,m_vWinSize.y/2, m_vWinSize.x/2,m_vWinSize.y); glEnable( GL_SCISSOR_TEST ); break;
+    case RA_TOPRIGHT    : glScissor(m_vWinSize.x/2, m_vWinSize.y/2, m_vWinSize.x, m_vWinSize.y); glEnable( GL_SCISSOR_TEST );break;
+    case RA_LOWERLEFT   : glScissor(0,0,m_vWinSize.x/2, m_vWinSize.y/2); glEnable( GL_SCISSOR_TEST );break;
+    case RA_LOWERRIGHT  : glScissor(m_vWinSize.x/2,0,m_vWinSize.x,m_vWinSize.y/2); glEnable( GL_SCISSOR_TEST );break;
+    case RA_FULLSCREEN  : /*glScissor(0,0,m_vWinSize.x, m_vWinSize.y);*/ glDisable( GL_SCISSOR_TEST );break;
     default             : m_pMasterController->DebugOut()->Error("GLRenderer::SetRenderTargetAreaScissor","Invalid render area set"); break;
   }
-  glEnable( GL_SCISSOR_TEST );
+  
 }
 
 void GLRenderer::SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight) {
@@ -301,13 +312,10 @@ void GLRenderer::SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight) 
   m_FrustumCullingLOD.SetProjectionMatrix(mProjection);
   m_FrustumCullingLOD.SetScreenParams(fovy,aspect,nearPlane,viSize.y);
 
-	glMatrixMode(GL_MODELVIEW);
 }
 
 
 bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT64 iSliceIndex) {
-  // clear the depth buffer if instructed
-  if (m_bClearFramebuffer) glClear(GL_DEPTH_BUFFER_BIT);  
    switch (m_eRenderMode) {
     case RM_2DTRANS    :  m_p2DTransTex->Bind(1); 
                           m_pProgram2DTransSlice->Enable();
@@ -490,14 +498,15 @@ bool GLRenderer::Execute3DFrame(ERenderArea eREnderArea) {
     // setup shaders vars
     SetDataDepShaderVars(); 
 
-    // clear target at the beginning
+    // clear the render target at the beginning of a subframe
     if (m_iBricksRenderedInThisSubFrame == 0) {
       SetRenderTargetAreaScissor(eREnderArea);
       glClearColor(0,0,0,0);
       glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-      glDisable( GL_SCISSOR_TEST );
+      glDisable( GL_SCISSOR_TEST ); // since we do not clear anymore in this subframe we do not need the scissor test, maybe disabling it saves performacnce
     }
 
+    // Render a few bricks
     Render3DView();
 
     // if there is nothing left todo in this subframe -> present the result
@@ -508,16 +517,8 @@ bool GLRenderer::Execute3DFrame(ERenderArea eREnderArea) {
 
 void GLRenderer::RerenderPreviousResult(bool bTransferToFramebuffer) {
   // clear the framebuffer
-  if (m_bClearFramebuffer) {
-    glDepthMask(GL_FALSE);
-    if (m_vBackgroundColors[0] == m_vBackgroundColors[1]) {
-      glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
-      glClear(GL_COLOR_BUFFER_BIT); 
-    } else DrawBackGradient();
-    DrawLogo();
-    glDepthMask(GL_TRUE);
-  }
-
+  if (m_bClearFramebuffer) ClearColorBuffer();
+ 
   if (bTransferToFramebuffer) {
     glViewport(0,0,m_vWinSize.x,m_vWinSize.y);
     m_iFilledBuffers++;
@@ -526,7 +527,6 @@ void GLRenderer::RerenderPreviousResult(bool bTransferToFramebuffer) {
   } else {
     glDisable(GL_BLEND);
   }
-
 
   m_pFBO3DImageLast->Read(GL_TEXTURE0);
   m_pFBO3DImageLast->ReadDepth(GL_TEXTURE1);
@@ -630,6 +630,12 @@ void GLRenderer::Cleanup() {
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramTrans);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTransSlice);
   m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTransSlice);
+
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[0]);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[1]);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[1]);
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIso);
 }
 
 
@@ -714,4 +720,45 @@ bool GLRenderer::LoadAndVerifyShader(const string& strVSFile, const string& strF
       m_pMasterController->MemMan()->FreeGLSLProgram(*pShaderProgram);
       return false;
   } else return true;
+}
+
+
+void GLRenderer::BBoxPreRender() {
+  // for rendering modes other than isosurface render the bbox in the first pass once to init the depth buffer
+  // for isosurface rendering we can go ahead and render the bbox directly as isosurfacing 
+  // writes out correct depth values
+  glDisable(GL_BLEND);
+  if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+  if (m_bRenderGlobalBBox) RenderBBox();
+  if (m_bRenderLocalBBox) {
+    for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
+      RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
+    }
+  }
+  if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+}
+
+void GLRenderer::BBoxPostRender() {
+ if (m_eRenderMode != RM_ISOSURFACE) {    
+    m_matModelView.setModelview();
+    if (m_bRenderGlobalBBox) {
+      glDisable(GL_DEPTH_TEST);
+      RenderBBox();
+    }
+
+    if (m_bRenderLocalBBox) {
+      glDisable(GL_DEPTH_TEST);
+      for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
+        RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
+      }
+    }
+    glDepthMask(GL_TRUE);
+  }
+}
+
+bool GLRenderer::LoadDataset(const string& strFilename) {
+  if (AbstrRenderer::LoadDataset(strFilename)) {
+    if (m_pProgram1DTrans[0] != NULL) SetDataDepShaderVars();
+    return true;
+  } else return false;
 }
