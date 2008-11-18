@@ -47,7 +47,9 @@
 #include <IO/UVF/UVF.h>
 #include <Basics/Vectors.h>
 
+typedef VECTOR2<UINT64> UINT64VECTOR2;
 typedef VECTOR3<UINT64> UINT64VECTOR3;
+typedef VECTOR4<UINT64> UINT64VECTOR4;
 
 class VolumeDataset;
 class MasterController;
@@ -68,6 +70,9 @@ class VolumeDatasetInfo {
     UINT64VECTOR3 GetBrickOverlapSize() const;
     UINT64 GetLODLevelCount() const;
     DOUBLEVECTOR3 GetScale() const;
+    bool ContainsData(const UINT64 iLOD, const UINT64VECTOR3& vBrick, double fMin, double fMax) const;
+    bool ContainsData(const UINT64 iLOD, const UINT64VECTOR3& vBrick, double fMin, double fMax, double fMinGrad, double fMaxGrad) const;
+
 
     void SetRescaleFactorsND(std::vector<double> vfRescale) {m_vfRescale = vfRescale;}
     const std::vector<double>& GetRescaleFactorsND() const {return m_vfRescale;};
@@ -88,8 +93,9 @@ class VolumeDatasetInfo {
 
 
   private:
-    VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock);
-    RasterDataBlock*    m_pVolumeDataBlock;
+    VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock, MaxMinDataBlock* pMaxMinData);
+    RasterDataBlock*         m_pVolumeDataBlock;
+    MaxMinDataBlock*         m_pMaxMinData;
 
     // read from the dataset
     std::vector<UINT64VECTOR3>  m_aDomainSize;
@@ -99,6 +105,7 @@ class VolumeDatasetInfo {
     DOUBLEVECTOR3               m_aScale;
     std::vector<UINT64VECTOR3>  m_vaBrickCount;
     std::vector< std::vector< std::vector<std::vector<UINT64VECTOR3> > > >m_vvaBrickSize;
+    std::vector< std::vector< std::vector<std::vector<InternalMaxMinElemen> > > >m_vvaMaxMin;
 
     // set externaly by the user
     std::vector<double>         m_vfRescale;
@@ -124,11 +131,12 @@ public:
   bool GetBrick(unsigned char** ppData, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick) const {return m_pVolumeDataBlock->GetData(ppData, vLOD, vBrick);}
 
 private:
-  MasterController*   m_pMasterController;
-  RasterDataBlock*    m_pVolumeDataBlock;
+  MasterController*        m_pMasterController;
+  RasterDataBlock*         m_pVolumeDataBlock;
   Histogram1DDataBlock*    m_pHist1DDataBlock;
   Histogram2DDataBlock*    m_pHist2DDataBlock;
-  UVF*                m_pDatasetFile;
+  MaxMinDataBlock*         m_pMaxMinData;
+  UVF*                     m_pDatasetFile;
 
   bool                m_bIsOpen;
   std::string         m_strFilename;

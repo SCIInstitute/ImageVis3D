@@ -40,6 +40,7 @@
 #ifndef TRANSFERFUNCTION2D
 #define TRANSFERFUNCTION2D
 
+#include <StdDefines.h>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -50,6 +51,7 @@
 
 #include "TransferFunction1D.h"
 
+typedef VECTOR4<UINT64> UINT64VECTOR4;
 typedef Grid2D<unsigned int> Histogram2D;
 typedef Grid2D<float> NormalizedHistogram2D;
 typedef Grid2D<FLOATVECTOR4> ColorData2D;
@@ -95,6 +97,9 @@ public:
 
   const VECTOR2<size_t> GetSize() const {return m_iSize;}
 
+  void ComputeNonZeroLimits();
+  const UINT64VECTOR4& GetNonZeroLimits() { return m_vValueBBox;}
+
 protected:
   VECTOR2<size_t> m_iSize;
   ColorData2D* RenderTransferFunction();
@@ -105,6 +110,7 @@ private:
   ColorData2D*      m_pColorData;
   QImage*           m_pCanvas;
   QPainter*         m_pPainter;  
+  UINT64VECTOR4     m_vValueBBox;
 
   void DeleteCanvasData();
 };

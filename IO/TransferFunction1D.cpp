@@ -41,7 +41,8 @@
 
 using namespace std;
 
-TransferFunction1D::TransferFunction1D(size_t iSize)
+TransferFunction1D::TransferFunction1D(size_t iSize) :
+  m_vValueBBox(0,0)
 {
   Resize(iSize);
 }
@@ -224,4 +225,16 @@ void TransferFunction1D::GetShortArray(unsigned short** psData, unsigned short s
 void TransferFunction1D::GetFloatArray(float** pfData) {
   if (*pfData == NULL) *pfData = new float[4*vColorData.size()];
   memcpy(*pfData, &pfData[0], sizeof(float)*4*vColorData.size());
+}
+
+
+void TransferFunction1D::ComputeNonZeroLimits() {   
+  m_vValueBBox = UINT64VECTOR2(UINT64(vColorData.size()),0);
+
+  for (size_t i = 0;i<vColorData.size();i++) {
+    if (vColorData[i][3] != 0) {
+      m_vValueBBox.x = MIN(m_vValueBBox.x, i);
+      m_vValueBBox.y = i;
+    }
+  }
 }

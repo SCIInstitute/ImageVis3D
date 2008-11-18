@@ -18,6 +18,7 @@
 #include "KeyValuePairDataBlock.h"
 #include "Histogram1DDataBlock.h"
 #include "Histogram2DDataBlock.h"
+#include "MaxMinDataBlock.h"
 
 
 class UVF

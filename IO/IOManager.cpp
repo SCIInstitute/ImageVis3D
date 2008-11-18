@@ -459,26 +459,28 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 	vScale.push_back(vVolumeAspect.z);
 	dataVolume.SetScaleOnlyTransformation(vScale);
 
+  MaxMinDataBlock MaxMinData;
+
 	switch (iComponentSize) {
 		case 8 :	switch (iComponentCount) {
-    case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,1>, m_pMasterController->DebugOut()); break;
-						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,2>, m_pMasterController->DebugOut()); break;
-						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,3>, m_pMasterController->DebugOut()); break;
-						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,4>, m_pMasterController->DebugOut()); break;
+            case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,1>, SimpleMaxMin<unsigned char>, &MaxMinData, m_pMasterController->DebugOut()); break;
+						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,2>, NULL, NULL, m_pMasterController->DebugOut()); break;
+						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,3>, NULL, NULL, m_pMasterController->DebugOut()); break;
+						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,4>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", iComponentCount, iComponentSize); uvfFile.Close(); SourceData.Close(); return false;
 					} break;
 		case 16 :		switch (iComponentCount) {
-						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,1>, m_pMasterController->DebugOut()); break;
-						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,2>, m_pMasterController->DebugOut()); break;
-						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,3>, m_pMasterController->DebugOut()); break;
-						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,4>, m_pMasterController->DebugOut()); break;
+						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short>, &MaxMinData, m_pMasterController->DebugOut()); break;
+						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,2>, NULL, NULL, m_pMasterController->DebugOut()); break;
+						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,3>, NULL, NULL, m_pMasterController->DebugOut()); break;
+						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,4>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", iComponentCount, iComponentSize); uvfFile.Close(); SourceData.Close(); return false;
 					} break;
 		case 32 :	switch (iComponentCount) {
-						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,1>, m_pMasterController->DebugOut()); break;
-						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,2>, m_pMasterController->DebugOut()); break;
-						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,3>, m_pMasterController->DebugOut()); break;
-						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,4>, m_pMasterController->DebugOut()); break;
+						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,1>, SimpleMaxMin<float>, &MaxMinData, m_pMasterController->DebugOut()); break;
+						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,2>, NULL, NULL, m_pMasterController->DebugOut()); break;
+						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,3>, NULL, NULL, m_pMasterController->DebugOut()); break;
+						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,4>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", iComponentCount, iComponentSize); uvfFile.Close(); SourceData.Close(); return false;
 					} break;
 		default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentSize %i.", iComponentSize); uvfFile.Close(); SourceData.Close(); return false;
@@ -520,6 +522,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 
 	uvfFile.AddDataBlock(&Histogram1D,Histogram1D.ComputeDataSize());
 	uvfFile.AddDataBlock(&Histogram2D,Histogram2D.ComputeDataSize());
+  uvfFile.AddDataBlock(&MaxMinData, MaxMinData.ComputeDataSize());
 
 /*
   /// \todo maybe add information from the source file to the UVF, like DICOM desc etc.

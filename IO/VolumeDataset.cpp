@@ -43,52 +43,68 @@
 
 using namespace std;
 
-VolumeDatasetInfo::VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock) : m_pVolumeDataBlock(pVolumeDataBlock) {
-    vector<double> vfScale;  
-    size_t iSize = m_pVolumeDataBlock->ulDomainSize.size();
+VolumeDatasetInfo::VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock, MaxMinDataBlock* pMaxMinData) : m_pVolumeDataBlock(pVolumeDataBlock), m_pMaxMinData(pMaxMinData) {
+  vector<double> vfScale;  
+  size_t iSize = m_pVolumeDataBlock->ulDomainSize.size();
 
-    // we require the data to be at least 3D
-    assert(iSize >= 3);
+  // we require the data to be at least 3D
+  assert(iSize >= 3);
 
-    // we also assume that x,y,z are in the first 3 components and we have no anisotropy (i.e. ulLODLevelCount.size=1)
-    m_iLODLevel = m_pVolumeDataBlock->ulLODLevelCount[0];
-    for (size_t i = 0;i<3;i++) {
-      m_aOverlap[i] = m_pVolumeDataBlock->ulBrickOverlap[i];
-      m_aMaxBrickSize[i] = m_pVolumeDataBlock->ulBrickSize[i];
-      m_aScale[i] = m_pVolumeDataBlock->dDomainTransformation[i+(iSize+1)*i];
+  // we also assume that x,y,z are in the first 3 components and we have no anisotropy (i.e. ulLODLevelCount.size=1)
+  m_iLODLevel = m_pVolumeDataBlock->ulLODLevelCount[0];
+  for (size_t i = 0;i<3;i++) {
+    m_aOverlap[i] = m_pVolumeDataBlock->ulBrickOverlap[i];
+    m_aMaxBrickSize[i] = m_pVolumeDataBlock->ulBrickSize[i];
+    m_aScale[i] = m_pVolumeDataBlock->dDomainTransformation[i+(iSize+1)*i];
+  }
+
+  m_vvaBrickSize.resize(m_iLODLevel);
+  if (m_pMaxMinData) m_vvaMaxMin.resize(m_iLODLevel);
+  for (size_t j = 0;j<m_iLODLevel;j++) {
+
+    vector<UINT64> vLOD;  vLOD.push_back(j);
+    vector<UINT64> vDomSize = m_pVolumeDataBlock->GetLODDomainSize(vLOD);
+    m_aDomainSize.push_back(UINT64VECTOR3(vDomSize[0], vDomSize[1], vDomSize[2]));
+
+    vector<UINT64> vBrickCount = m_pVolumeDataBlock->GetBrickCount(vLOD);
+    m_vaBrickCount.push_back(UINT64VECTOR3(vBrickCount[0], vBrickCount[1], vBrickCount[2]));
+
+    m_vvaBrickSize[j].resize(m_vaBrickCount[j].x);
+    if (m_pMaxMinData) m_vvaMaxMin[j].resize(m_vaBrickCount[j].x);
+    for (UINT64 x = 0;x<m_vaBrickCount[j].x;x++) {
+      m_vvaBrickSize[j][x].resize(m_vaBrickCount[j].y);
+      if (m_pMaxMinData) m_vvaMaxMin[j][x].resize(m_vaBrickCount[j].y);
+      for (UINT64 y = 0;y<m_vaBrickCount[j].y;y++) {
+        if (m_pMaxMinData) m_vvaMaxMin[j][x][y].resize(m_vaBrickCount[j].z);
+        for (UINT64 z = 0;z<m_vaBrickCount[j].z;z++) {
+
+          vector<UINT64> vBrick;
+          vBrick.push_back(x); vBrick.push_back(y); vBrick.push_back(z);
+          vector<UINT64> vBrickSize = m_pVolumeDataBlock->GetBrickSize(vLOD, vBrick);
+          
+          m_vvaBrickSize[j][x][y].push_back(UINT64VECTOR3(vBrickSize[0], vBrickSize[1], vBrickSize[2]));
+        }
+      }
     }
+  }
 
-    m_vvaBrickSize.resize(m_iLODLevel);
+  size_t iSerial = 0;
+  if (m_pMaxMinData) {
     for (size_t j = 0;j<m_iLODLevel;j++) {
-
-      vector<UINT64> vLOD;  vLOD.push_back(j);
-      vector<UINT64> vDomSize = m_pVolumeDataBlock->GetLODDomainSize(vLOD);
-      m_aDomainSize.push_back(UINT64VECTOR3(vDomSize[0], vDomSize[1], vDomSize[2]));
-
-      vector<UINT64> vBrickCount = m_pVolumeDataBlock->GetBrickCount(vLOD);
-      m_vaBrickCount.push_back(UINT64VECTOR3(vBrickCount[0], vBrickCount[1], vBrickCount[2]));
-
-      m_vvaBrickSize[j].resize(m_vaBrickCount[j].x);
-      for (UINT64 x = 0;x<m_vaBrickCount[j].x;x++) {
-        m_vvaBrickSize[j][x].resize(m_vaBrickCount[j].y);
+      for (UINT64 z = 0;z<m_vaBrickCount[j].z;z++) {
         for (UINT64 y = 0;y<m_vaBrickCount[j].y;y++) {
-          for (UINT64 z = 0;z<m_vaBrickCount[j].z;z++) {
-
-            vector<UINT64> vBrick;
-            vBrick.push_back(x); vBrick.push_back(y); vBrick.push_back(z);
-            vector<UINT64> vBrickSize = m_pVolumeDataBlock->GetBrickSize(vLOD, vBrick);
-            
-            m_vvaBrickSize[j][x][y].push_back(UINT64VECTOR3(vBrickSize[0], vBrickSize[1], vBrickSize[2]));
-
+          for (UINT64 x = 0;x<m_vaBrickCount[j].x;x++) {
+            m_vvaMaxMin[j][x][y][z] = m_pMaxMinData->GetValue(iSerial++);
           }
         }
       }
     }
+  }
 
-    m_vfRescale.resize(m_pVolumeDataBlock->ulDomainSemantics.size());
-    for (size_t i = 0;i<m_pVolumeDataBlock->ulDomainSemantics.size();i++) {
-      m_vfRescale[i] = 1.0;
-    }
+  m_vfRescale.resize(m_pVolumeDataBlock->ulDomainSemantics.size());
+  for (size_t i = 0;i<m_pVolumeDataBlock->ulDomainSemantics.size();i++) {
+    m_vfRescale[i] = 1.0;
+  }
 }
 
 UINT64VECTOR3 VolumeDatasetInfo::GetBrickCount(const UINT64 iLOD) const {
@@ -138,21 +154,27 @@ DOUBLEVECTOR3 VolumeDatasetInfo::GetScale() const {
 const vector<UINT64>& VolumeDatasetInfo::GetBrickCountND(const vector<UINT64>& vLOD) const {
   return m_pVolumeDataBlock->GetBrickCount(vLOD);
 }
+
 const vector<UINT64>& VolumeDatasetInfo::GetBrickSizeND(const vector<UINT64>& vLOD, const vector<UINT64>& vBrick) const {
   return m_pVolumeDataBlock->GetBrickSize(vLOD, vBrick);
 }
+
 const vector<UINT64>& VolumeDatasetInfo::GetDomainSizeND() const {
   return m_pVolumeDataBlock->ulDomainSize;
 }
+
 const vector<UINT64>& VolumeDatasetInfo::GetMaxBrickSizeND() const {
   return m_pVolumeDataBlock->ulBrickSize;
 }
+
 const vector<UINT64>& VolumeDatasetInfo::GetBrickOverlapSizeND() const {
   return m_pVolumeDataBlock->ulBrickOverlap;
 }    
+
 const vector<UINT64>& VolumeDatasetInfo::GetLODLevelCountND() const {
   return m_pVolumeDataBlock->ulLODLevelCount;
 }
+
 const vector<double> VolumeDatasetInfo::GetScaleND() const {
   vector<double> vfScale;  
   size_t iSize = m_pVolumeDataBlock->ulDomainSize.size();
@@ -160,11 +182,30 @@ const vector<double> VolumeDatasetInfo::GetScaleND() const {
   return vfScale;
 }
 
+bool VolumeDatasetInfo::ContainsData(const UINT64 iLOD, const UINT64VECTOR3& vBrick, double fMin, double fMax, double fMinGrad, double fMaxGrad) const {
+  // if we have no max min data we have to assume that every block is visible
+  if (!m_pMaxMinData) return true;
+
+  const InternalMaxMinElemen& maxMinElement = m_vvaMaxMin[iLOD][vBrick.x][vBrick.y][vBrick.z];
+  return (fMax >= maxMinElement.minScalar && fMin <= maxMinElement.maxScalar) && (fMaxGrad >= maxMinElement.minGradient && fMinGrad <= maxMinElement.maxGradient);
+}
+
+bool VolumeDatasetInfo::ContainsData(const UINT64 iLOD, const UINT64VECTOR3& vBrick, double fMin, double fMax) const {
+  // if we have no max min data we have to assume that every block is visible
+  if (!m_pMaxMinData) return true;
+
+  const InternalMaxMinElemen& maxMinElement = m_vvaMaxMin[iLOD][vBrick.x][vBrick.y][vBrick.z];
+  return (fMax >= maxMinElement.minScalar && fMin <= maxMinElement.maxScalar);
+}
+
+// *********************************************************************************************************************************************
+
 VolumeDataset::VolumeDataset(const string& strFilename, bool bVerify, MasterController* pMasterController) : 
   m_pMasterController(pMasterController),
   m_pVolumeDataBlock(NULL),
   m_pHist1DDataBlock(NULL),
   m_pHist2DDataBlock(NULL),
+  m_pMaxMinData(NULL),
   m_pDatasetFile(NULL),
   m_bIsOpen(false),
   m_strFilename(strFilename),
@@ -198,7 +239,7 @@ bool VolumeDataset::Open(bool bVerify)
   if (!m_bIsOpen) return false;
 
   UINT64 iRasterBlockIndex = UINT64(-1);
-  for (size_t iBlocks = 0;iBlocks<m_pDatasetFile->GetDataBlockCount();iBlocks++) {
+  for (size_t iBlocks = 0;iBlocks<m_pDatasetFile->GetDataBlockCount();iBlocks++) { 
     if (m_pDatasetFile->GetDataBlock(iBlocks)->GetBlockSemantic() == UVFTables::BS_1D_Histogram) {
       if (m_pHist1DDataBlock != NULL) {
         m_pMasterController->DebugOut()->Warning("VolumeDataset::Open","Multiple 1D Histograms found using last block.");
@@ -210,6 +251,12 @@ bool VolumeDataset::Open(bool bVerify)
         m_pMasterController->DebugOut()->Warning("VolumeDataset::Open","Multiple 2D Histograms found using last block.");
       }
       m_pHist2DDataBlock = (Histogram2DDataBlock*)m_pDatasetFile->GetDataBlock(iBlocks);
+    } else
+    if (m_pDatasetFile->GetDataBlock(iBlocks)->GetBlockSemantic() == UVFTables::BS_MAXMIN_VALUES) {
+      if (m_pMaxMinData != NULL) {
+        m_pMasterController->DebugOut()->Warning("VolumeDataset::Open","Multiple MaxMinData Blocks found using last block.");
+      }
+      m_pMaxMinData = (MaxMinDataBlock*)m_pDatasetFile->GetDataBlock(iBlocks);
     } else
     if (m_pDatasetFile->GetDataBlock(iBlocks)->GetBlockSemantic() == UVFTables::BS_REG_NDIM_GRID) {
       RasterDataBlock* pVolumeDataBlock = (RasterDataBlock*)m_pDatasetFile->GetDataBlock(iBlocks);
@@ -269,7 +316,7 @@ bool VolumeDataset::Open(bool bVerify)
   m_pMasterController->DebugOut()->Message("VolumeDataset::Open","Open successfully found a suitable data block in the UVF file, analysing data...");
 
   m_pVolumeDataBlock = (RasterDataBlock*)m_pDatasetFile->GetDataBlock(iRasterBlockIndex);
-  m_pVolumeDatasetInfo = new VolumeDatasetInfo(m_pVolumeDataBlock);
+  m_pVolumeDatasetInfo = new VolumeDatasetInfo(m_pVolumeDataBlock, m_pMaxMinData);
 
   stringstream sStreamDomain, sStreamBrick;
 
@@ -328,8 +375,6 @@ bool VolumeDataset::Open(bool bVerify)
 
   return true;
 }
-
-
 
 UINTVECTOR3 VolumeDataset::GetBrickSize(const vector<UINT64>& vLOD, const vector<UINT64>& vBrick) {
   UINTVECTOR3 vSize;

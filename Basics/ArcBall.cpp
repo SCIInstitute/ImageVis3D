@@ -83,13 +83,13 @@ FLOATVECTOR3 ArcBall::MapToSphere(UINTVECTOR2 vPosition) const {
   vNormPosition.x = -(((vPosition.x-m_iWinOffsets.x) / (float(m_iWinDim.x  - 1) / 2.0f)) - 1.0f);
   vNormPosition.y =  (((vPosition.y-m_iWinOffsets.y) / (float(m_iWinDim.y - 1) / 2.0f)) - 1.0f);
 
-  // Compute the square of the length of the vector to the point from the center
+  // Compute the length of the vector to the point from the center
   float length = vNormPosition.length();
 
-  // If the point is mapped outside of the sphere... (length > radius squared)
-  if (length > m_fRadius*m_fRadius) {
-      // Compute a normalizing factor (radius / sqrt(length))
-      float norm = float(m_fRadius / sqrt(length));
+  // If the point is mapped outside of the sphere... (length > radius)
+  if (length > m_fRadius) {
+      // Compute a normalizing factor (radius / length)
+      float norm = float(m_fRadius / length);
 
       // Return the "normalized" vector, a point on the sphere
       vResult.x = vNormPosition.x * norm;
@@ -97,10 +97,10 @@ FLOATVECTOR3 ArcBall::MapToSphere(UINTVECTOR2 vPosition) const {
       vResult.z = 0.0f;
   } else    // Else it's on the inside
   {
-      // Return a vector to a point mapped inside the sphere sqrt(radius squared - length)
+      // Return a vector to a point mapped inside the sphere
       vResult.x = vNormPosition.x;
       vResult.y = vNormPosition.y;
-      vResult.z = float(sqrt(1.0f - length));
+      vResult.z = float(m_fRadius - length);
   }
 
   vResult = vResult * m_mTranslation;

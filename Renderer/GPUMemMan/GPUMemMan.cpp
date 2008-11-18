@@ -230,6 +230,8 @@ void GPUMemMan::FreeTexture(GLTexture2D* pTexture) {
 void GPUMemMan::Changed1DTrans(AbstrRenderer* requester, TransferFunction1D* pTransferFunction1D) {
   m_MasterController->DebugOut()->Message("GPUMemMan::Changed1DTrans","Sending change notification for 1D transfer function");
 
+  pTransferFunction1D->ComputeNonZeroLimits();
+
   for (Trans1DListIter i = m_vpTrans1DList.begin();i<m_vpTrans1DList.end();i++) {
     if (i->pTransferFunction1D == pTransferFunction1D) {
       for (AbstrRendererListIter j = i->qpUser.begin();j<i->qpUser.end();j++) {
@@ -314,6 +316,8 @@ void GPUMemMan::Free1DTrans(TransferFunction1D* pTransferFunction1D, AbstrRender
 
 void GPUMemMan::Changed2DTrans(AbstrRenderer* requester, TransferFunction2D* pTransferFunction2D) {
   m_MasterController->DebugOut()->Message("GPUMemMan::Changed2DTrans","Sending change notification for 2D transfer function");
+
+  pTransferFunction2D->ComputeNonZeroLimits();
 
   for (Trans2DListIter i = m_vpTrans2DList.begin();i<m_vpTrans2DList.end();i++) {
     if (i->pTransferFunction2D == pTransferFunction2D) {

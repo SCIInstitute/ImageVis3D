@@ -210,7 +210,6 @@ class AbstrRenderer {
     void SetLocalBBox(bool bRenderBBox);
     bool GetLocalBBox() {return m_bRenderLocalBBox;}
 
-
     // scheduling routines
     UINT64 GetCurrentSubFrameCount() {return 1+m_iMaxLODIndex-m_iMinLODForCurrentView;}
     unsigned int GetWorkingSubFrame() {return 1+m_iMaxLODIndex-m_iCurrentLOD;}

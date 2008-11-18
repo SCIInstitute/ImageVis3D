@@ -44,7 +44,8 @@ TransferFunction2D::TransferFunction2D() :
   m_iSize(0,0),
   m_pColorData(NULL),
   m_pCanvas(NULL),
-  m_pPainter(NULL)
+  m_pPainter(NULL),
+  m_vValueBBox(0,0)
 {
   Resize(m_iSize);
 }
@@ -276,6 +277,25 @@ ColorData2D* TransferFunction2D::RenderTransferFunction() {
 }
 
 
+void TransferFunction2D::ComputeNonZeroLimits() {   
+  RenderTransferFunction();
+  m_vValueBBox    = UINT64VECTOR4(UINT64(m_pColorData->GetSize().x),0,UINT64(m_pColorData->GetSize().y),0);
+
+  for (size_t y = 0;y<m_pColorData->GetSize().y;y++) {
+    for (size_t x = 0;x<m_pColorData->GetSize().x;x++) {
+      if (m_pColorData->Get(x,y)[3] != 0) {
+        m_vValueBBox.x = MIN(m_vValueBBox.x, x);
+        m_vValueBBox.y = MAX(m_vValueBBox.y, x);
+
+        m_vValueBBox.z = MIN(m_vValueBBox.z, y);
+        m_vValueBBox.w = MAX(m_vValueBBox.w, y);
+      }
+    }
+  }
+}
+
+// ************************************************************************************************************
+
 void TFPolygon::Load(ifstream& file) {
   unsigned int iSize;
   file >> iSize;
@@ -324,3 +344,4 @@ void TFPolygon::Save(ofstream& file) {
     file << endl;
   }  
 }
+

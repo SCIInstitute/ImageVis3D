@@ -7,6 +7,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "MaxMinDataBlock.h"
+
 using namespace std;
 using namespace UVFTables;
 
@@ -652,8 +654,8 @@ const vector<UINT64>& RasterDataBlock::GetBrickCount(const vector<UINT64>& vLOD)
 }
 
 const vector<UINT64>& RasterDataBlock::GetBrickSize(const vector<UINT64>& vLOD, const vector<UINT64>& vBrick) const {
-    UINT64 iLODIndex = Serialize(vLOD, ulLODLevelCount);
-    return m_vBrickSizes[size_t(iLODIndex)][size_t(Serialize(vBrick, m_vBrickCount[size_t(iLODIndex)]))];
+  UINT64 iLODIndex = Serialize(vLOD, ulLODLevelCount);
+  return m_vBrickSizes[size_t(iLODIndex)][size_t(Serialize(vBrick, m_vBrickCount[size_t(iLODIndex)]))];
 }
 
 UINT64 RasterDataBlock::GetLocalDataPointerOffset(const vector<UINT64>& vLOD, const vector<UINT64>& vBrick) const {
@@ -786,7 +788,8 @@ void RasterDataBlock::AllocateTemp(const string& strTempFile, bool bBuildOffsetT
  * \see FlatDataToBrickedLOD
  */void RasterDataBlock::FlatDataToBrickedLOD(const void* pSourceData, const string& strTempFile, 
                                               void (*combineFunc)(vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut),
-                                              AbstrDebugOut* pDebugOut) {
+                                              void (*maxminFunc)(const void* pIn, size_t iStart, size_t iCount, double *pfMin, double *pfMa),
+                                              MaxMinDataBlock* pMaxMinDatBlock, AbstrDebugOut* pDebugOut) {
   // size of input data
   UINT64 iInPointerSize = ComputeElementSize()/8;
   for (size_t i = 0;i<ulDomainSize.size();i++) iInPointerSize *= ulDomainSize[i];
@@ -802,7 +805,7 @@ void RasterDataBlock::AllocateTemp(const string& strTempFile, bool bBuildOffsetT
 
 
   // call FlatDataToBrickedLOD
-  FlatDataToBrickedLOD(&pSourceFile, strTempFile, combineFunc, pDebugOut);
+  FlatDataToBrickedLOD(&pSourceFile, strTempFile, combineFunc, maxminFunc, pMaxMinDatBlock, pDebugOut);
 
   // delete tempfile
   pSourceFile.Delete();
@@ -832,7 +835,8 @@ vector<UINT64> RasterDataBlock::GetLODDomainSize(const vector<UINT64>& vLOD) con
  */
 void RasterDataBlock::FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const string& strTempFile,
                                            void (*combineFunc)(vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut),
-                                           AbstrDebugOut* pDebugOut) {
+                                           void (*maxminFunc)(const void* pIn, size_t iStart, size_t iCount, double *pfMin, double *pfMa),
+                                           MaxMinDataBlock* pMaxMinDatBlock, AbstrDebugOut* pDebugOut) {
 	UINT64 uiBytesPerElement = ComputeElementSize()/8;
 
 	if (m_pTempFile == NULL) AllocateTemp(SysTools::AppendFilename(strTempFile,"1"),m_vLODOffsets.size() == 0);
@@ -929,13 +933,15 @@ void RasterDataBlock::FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const stri
 
 			UINT64 iTargetOffset = GetLocalDataPointerOffset(i,j)/8;
 			UINT64 iSourceOffset = vBrickOffset[j];
-
 			UINT64 iPosTargetArray = 0;
+
+      if (pMaxMinDatBlock) pMaxMinDatBlock->StartNewValue();
 
 			for (UINT64 k=0;k<iBrickSize/vBrickPermutation[j][0];k++) {
 
         m_pTempFile->SeekPos(iTargetOffset);
         pBrickSource->SeekPos(iSourceOffset);
+
 
         UINT64 iDataSize = vBrickPermutation[j][0] * uiBytesPerElement;
 	      for (UINT64 l = 0;l<iDataSize;l+=BLOCK_COPY_SIZE) {
@@ -943,6 +949,13 @@ void RasterDataBlock::FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const stri
 
           pBrickSource->ReadRAW(pData, iCopySize);
           m_pTempFile->WriteRAW(pData, iCopySize);
+
+          if (pMaxMinDatBlock) {
+            double fMin, fMax, fMinGrad=-std::numeric_limits<double>::max(), fMaxGrad=std::numeric_limits<double>::max();
+            /// \todo compute gradients
+            maxminFunc(pData, 0, iCopySize/uiBytesPerElement, &fMin, &fMax);
+            pMaxMinDatBlock->MergeData(fMin, fMax, fMinGrad, fMaxGrad);
+          }
         }
 
         iTargetOffset += vBrickPermutation[j][0] * uiBytesPerElement;

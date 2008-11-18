@@ -40,11 +40,13 @@
 #ifndef TRANSFERFUNCTION1D
 #define TRANSFERFUNCTION1D
 
+#include <StdDefines.h>
 #include <string>
 #include <vector>
 #include <Basics/Vectors.h>
 #include <Basics/Grids.h>
 
+typedef VECTOR2<UINT64> UINT64VECTOR2;
 typedef Grid1D<unsigned int> Histogram1D;
 typedef Grid1D<float> NormalizedHistogram1D;
 
@@ -79,8 +81,14 @@ public:
 
   std::vector< FLOATVECTOR4 > vColorData;
 
+  void ComputeNonZeroLimits();
+  const UINT64VECTOR2& GetNonZeroLimits() { return m_vValueBBox;}
+
 private:
+  UINT64VECTOR2 m_vValueBBox;
+
   float Smoothstep(float x);
+
 };
 
 #endif // TRANSFERFUNCTION1D

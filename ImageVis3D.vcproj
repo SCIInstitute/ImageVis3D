@@ -469,6 +469,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\IO\UVF\MaxMinDataBlock.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IO\UVF\MaxMinDataBlock.h"
+					>
+				</File>
+				<File
 					RelativePath=".\IO\UVF\RasterDataBlock.cpp"
 					>
 				</File>

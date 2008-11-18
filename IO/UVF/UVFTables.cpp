@@ -7,6 +7,7 @@ using namespace std;
 #include "Histogram1DDataBlock.h"
 #include "Histogram2DDataBlock.h"
 #include "KeyValuePairDataBlock.h"
+#include "MaxMinDataBlock.h"
 
 string UVFTables::ChecksumSemanticToCharString(ChecksumSemanticTable uiTable) {
 	switch (uiTable) {
@@ -55,6 +56,7 @@ string UVFTables::BlockSemanticTableToCharString(BlockSemanticTable uiTable) {
 		case (BS_KEY_VALUE_PAIRS)	    : return "8bit String Key/Value Pairs";
 		case (BS_1D_Histogram)	      : return "Histogram (1D)";
 		case (BS_2D_Histogram)	      : return "Histogram (2D)";
+    case (BS_MAXMIN_VALUES)       : return "Brick Max/Min Values";
 		default				                : return "Unknown";
 	}
 }
@@ -74,6 +76,7 @@ DataBlock* UVFTables::CreateBlockFromSemanticEntry(BlockSemanticTable uiTable, L
 		case (BS_1D_Histogram)		    : return new Histogram1DDataBlock(pStreamFile, iOffset, bIsBigEndian);
 		case (BS_2D_Histogram)	      : return new Histogram2DDataBlock(pStreamFile, iOffset, bIsBigEndian);
  		case (BS_KEY_VALUE_PAIRS)	    : return new KeyValuePairDataBlock(pStreamFile, iOffset, bIsBigEndian);
+    case (BS_MAXMIN_VALUES)       : return new MaxMinDataBlock(pStreamFile, iOffset, bIsBigEndian);
 		default				                : throw "CreateBlockFromSemanticEntry: Unknown block semantic";
 	}
 }
