@@ -110,7 +110,7 @@ void RenderWindow::initializeGL()
 
 void RenderWindow::paintGL()
 {
-  if (m_Renderer != NULL) {
+  if (m_Renderer != NULL && m_bRenderSubsysOK) {
     m_Renderer->Paint();
     if (isActiveWindow()) {
       unsigned int iLevelCount        = m_Renderer->GetCurrentSubFrameCount();
