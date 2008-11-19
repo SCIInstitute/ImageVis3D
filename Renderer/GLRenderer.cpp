@@ -701,6 +701,8 @@ void GLRenderer::SetBrickDepShaderVarsSlice(const UINTVECTOR3& vVoxelCount) {
 
 
 const FLOATVECTOR2 GLRenderer::SetDataDepShaderVars() {
+  m_pMasterController->DebugOut()->Message("GLRenderer::SetDataDepShaderVars","Setting up vars");
+
   size_t       iMaxValue = m_p1DTrans->GetSize();
   unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
   float fScale = float(iMaxRange)/float(iMaxValue);
@@ -730,6 +732,7 @@ const FLOATVECTOR2 GLRenderer::SetDataDepShaderVars() {
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLRenderer::SetDataDepShaderVars","Invalid rendermode set"); break;
   }
 
+  m_pMasterController->DebugOut()->Message("GLRenderer::SetDataDepShaderVars","Done");
 
   return FLOATVECTOR2(fScale,fGradientScale);
 }

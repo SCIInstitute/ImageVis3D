@@ -169,6 +169,8 @@ const FLOATVECTOR2 GLSBVR::SetDataDepShaderVars() {
 }
 
 void GLSBVR::Render3DView() {
+  m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","Rendering...");
+  
   // Modelview
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -204,7 +206,9 @@ void GLSBVR::Render3DView() {
   timeStart = timeProbe = clock();
 
   while (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame && float(timeProbe-timeStart)*1000.0f/float(CLOCKS_PER_SEC) < m_iTimeSliceMSecs) {
-  
+
+    m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","  Brick %i of %i",m_vCurrentBrickList.size(), m_iBricksRenderedInThisSubFrame);
+
     // setup the slice generator
     m_SBVRGeogen.SetVolumeData(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vExtension, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vVoxelCount, 
                                m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vTexcoordsMin, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vTexcoordsMax);
