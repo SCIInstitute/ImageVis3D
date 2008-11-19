@@ -180,9 +180,6 @@ void GLRenderer::ClearColorBuffer() {
 }
 
 void GLRenderer::Paint() {
-  // if we need to redraw, consider all data in the framebuffers dirty
-  if (m_bPerformRedraw) m_iFilledBuffers = 0;
-
   // clear the framebuffer (if requested)
   if (m_bClearFramebuffer) ClearDepthBuffer();
 
@@ -263,7 +260,10 @@ void GLRenderer::Paint() {
   m_pFBO3DImageCurrent->FinishWrite();
 
   // if the image is complete swap the offscreen buffers
-  if (bNewDataToShow) swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
+  if (bNewDataToShow) {
+    swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
+    m_iFilledBuffers = 0;
+  }
 
   // show the result
   if (bNewDataToShow || m_iFilledBuffers < 2) RerenderPreviousResult(true);
