@@ -180,12 +180,19 @@ void GLSBVR::Render3DView() {
 
   if (m_iBricksRenderedInThisSubFrame == 0) BBoxPreRender();
 
+  m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","Setting up states");
+
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  m_p1DTransTex->Bind(1); 
+                          m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","1");
                           m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
+                          m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","2");
                           glEnable(GL_BLEND);
+                          m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","3");
                           glBlendEquation(GL_FUNC_ADD);
+                          m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","4");
                           glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+                          m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","5");
                           break;
     case RM_2DTRANS    :  m_p2DTransTex->Bind(1);
                           m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable(); 
