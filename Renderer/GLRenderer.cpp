@@ -534,20 +534,22 @@ bool GLRenderer::CheckForRedraw() {
 
 bool GLRenderer::Execute3DFrame(ERenderArea eREnderArea) {
   // are we starting a new LOD level?
-  if (m_iBricksRenderedInThisSubFrame == 0) m_iFilledBuffers = 0;
+  if (m_iBricksRenderedInThisSubFrame == 0) {
+    m_iFilledBuffers = 0;
+    SetRenderTargetAreaScissor(eREnderArea);
+    glClearColor(0,0,0,0);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    glDisable( GL_SCISSOR_TEST ); // since we do not clear anymore in this subframe we do not need the scissor test, maybe disabling it saves performacnce
+  }
+  
+  // if zero bricks are to be rendered we have completed the draw job
+  if (m_vCurrentBrickList.size() == 0) return true;
 
   // if there is something left in the TODO list
   if (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame) {
+
     // setup shaders vars
     SetDataDepShaderVars(); 
-
-    // clear the render target at the beginning of a subframe
-    if (m_iBricksRenderedInThisSubFrame == 0) {
-      SetRenderTargetAreaScissor(eREnderArea);
-      glClearColor(0,0,0,0);
-      glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-      glDisable( GL_SCISSOR_TEST ); // since we do not clear anymore in this subframe we do not need the scissor test, maybe disabling it saves performacnce
-    }
 
     // Render a few bricks
     Render3DView();
@@ -795,7 +797,6 @@ void GLRenderer::BBoxPostRender() {
         RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
       }
     }
-    glDepthMask(GL_TRUE);
   }
 }
 

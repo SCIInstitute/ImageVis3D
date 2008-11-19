@@ -258,6 +258,7 @@ void GLSBVR::Render3DView() {
   // at the very end render the bboxes
   if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();
 
+  glDepthMask(GL_TRUE);
   glDisable(GL_BLEND);
 
 }
