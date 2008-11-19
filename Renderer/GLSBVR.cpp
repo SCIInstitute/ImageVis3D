@@ -189,7 +189,7 @@ void GLSBVR::Render3DView() {
                           m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","2");
                           glEnable(GL_BLEND);
                           m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","3");
-                          glBlendEquation(GL_FUNC_ADD);
+                          // glBlendEquation(GL_FUNC_ADD);
                           m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","4");
                           glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
                           m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","5");
