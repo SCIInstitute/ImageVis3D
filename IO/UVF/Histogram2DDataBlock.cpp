@@ -107,41 +107,59 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   /// \todo right now only 8 and 16 bit integer data is supported this should be changed to a more general approach
   m_fMaxGradMagnitude = 0.0f;
   if (source->ulElementBitSize[0][0] == 8) {
-    for (size_t z = 1;z<size_t(vSize[2]-1);z++) {
-      for (size_t y = 1;y<size_t(vSize[1]-1);y++) {
-        for (size_t x = 1;x<size_t(vSize[0]-1);x++) {
+    for (size_t z = 0;z<size_t(vSize[2]);z++) {
+      for (size_t y = 0;y<size_t(vSize[1]);y++) {
+        for (size_t x = 0;x<size_t(vSize[0]);x++) {
 
           size_t iCenter = x+size_t(vSize[0])*y+size_t(vSize[0])*size_t(vSize[1])*z;
-          size_t iLeft   = iCenter-1;
-          size_t iRight  = iCenter+1;
-          size_t iTop    = iCenter-size_t(vSize[0]);
-          size_t iBottom = iCenter+size_t(vSize[0]);
-          size_t iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);
-          size_t iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);
+          size_t iLeft   = iCenter;
+          size_t iRight  = iCenter;
+          size_t iTop    = iCenter;
+          size_t iBottom = iCenter;
+          size_t iFront  = iCenter;
+          size_t iBack   = iCenter;
 
-          FLOATVECTOR3   vGradient(float(pcSourceData[iLeft]-pcSourceData[iRight])/255.0f,
-                                   float(pcSourceData[iTop]-pcSourceData[iBottom])/255.0f,
-                                   float(pcSourceData[iFront]-pcSourceData[iBack])/255.0f);
+          FLOATVECTOR3 vScale(0,0,0);
+
+          if (x > 0)          {iLeft   = iCenter-1; vScale.x++;}
+          if (x < vSize[0]-1) {iRight  = iCenter+1; vScale.x++;}
+          if (y > 0)          {iTop    = iCenter-size_t(vSize[0]);vScale.y++;}
+          if (y < vSize[1]-1) {iBottom = iCenter+size_t(vSize[0]);vScale.y++;}
+          if (z > 0)          {iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);vScale.z++;}
+          if (z < vSize[2]-1) {iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);vScale.z++;}
+
+          FLOATVECTOR3   vGradient(float(pcSourceData[iLeft]-pcSourceData[iRight])/(255.0f*vScale.x),
+                                   float(pcSourceData[iTop]-pcSourceData[iBottom])/(255.0f*vScale.y),
+                                   float(pcSourceData[iFront]-pcSourceData[iBack])/(255.0f*vScale.y));
 
           if (vGradient.length() > m_fMaxGradMagnitude) m_fMaxGradMagnitude = vGradient.length();
         }
       }
     }
-    for (size_t z = 1;z<size_t(vSize[2]-1);z++) {
-      for (size_t y = 1;y<size_t(vSize[1]-1);y++) {
-        for (size_t x = 1;x<size_t(vSize[0]-1);x++) {
+    for (size_t z = 0;z<size_t(vSize[2]);z++) {
+      for (size_t y = 0;y<size_t(vSize[1]);y++) {
+        for (size_t x = 0;x<size_t(vSize[0]);x++) {
 
           size_t iCenter = x+size_t(vSize[0])*y+size_t(vSize[0])*size_t(vSize[1])*z;
-          size_t iLeft   = iCenter-1;
-          size_t iRight  = iCenter+1;
-          size_t iTop    = iCenter-size_t(vSize[0]);
-          size_t iBottom = iCenter+size_t(vSize[0]);
-          size_t iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);
-          size_t iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);
+          size_t iLeft   = iCenter;
+          size_t iRight  = iCenter;
+          size_t iTop    = iCenter;
+          size_t iBottom = iCenter;
+          size_t iFront  = iCenter;
+          size_t iBack   = iCenter;
 
-          FLOATVECTOR3   vGradient(float(pcSourceData[iLeft]-pcSourceData[iRight])/255.0f,
-                                   float(pcSourceData[iTop]-pcSourceData[iBottom])/255.0f,
-                                   float(pcSourceData[iFront]-pcSourceData[iBack])/255.0f);
+          FLOATVECTOR3 vScale(0,0,0);
+
+          if (x > 0)          {iLeft   = iCenter-1; vScale.x++;}
+          if (x < vSize[0]-1) {iRight  = iCenter+1; vScale.x++;}
+          if (y > 0)          {iTop    = iCenter-size_t(vSize[0]);vScale.y++;}
+          if (y < vSize[1]-1) {iBottom = iCenter+size_t(vSize[0]);vScale.y++;}
+          if (z > 0)          {iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);vScale.z++;}
+          if (z < vSize[2]-1) {iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);vScale.z++;}
+
+          FLOATVECTOR3   vGradient(float(pcSourceData[iLeft]-pcSourceData[iRight])/(255.0f*vScale.x),
+                                   float(pcSourceData[iTop]-pcSourceData[iBottom])/(255.0f*vScale.y),
+                                   float(pcSourceData[iFront]-pcSourceData[iBack])/(255.0f*vScale.y));
 
           unsigned char iGardientMagnitudeIndex = (unsigned char)(vGradient.length()/m_fMaxGradMagnitude*255);
           vTmpHist[pcSourceData[iCenter]][iGardientMagnitudeIndex]++;
@@ -151,41 +169,59 @@ bool Histogram2DDataBlock::Compute(RasterDataBlock* source) {
   } else {
     if (source->ulElementBitSize[0][0] == 16) {
       unsigned short *psSourceData = (unsigned short*)pcSourceData;
-      for (size_t z = 1;z<size_t(vSize[2]-1);z++) {
-        for (size_t y = 1;y<size_t(vSize[1]-1);y++) {
-          for (size_t x = 1;x<size_t(vSize[0]-1);x++) {
+      for (size_t z = 0;z<size_t(vSize[2]);z++) {
+        for (size_t y = 0;y<size_t(vSize[1]);y++) {
+          for (size_t x = 0;x<size_t(vSize[0]);x++) {
 
             size_t iCenter = x+size_t(vSize[0])*y+size_t(vSize[0])*size_t(vSize[1])*z;
-            size_t iLeft   = iCenter-1;
-            size_t iRight  = iCenter+1;
-            size_t iTop    = iCenter-size_t(vSize[0]);
-            size_t iBottom = iCenter+size_t(vSize[0]);
-            size_t iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);
-            size_t iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);
- 
-            FLOATVECTOR3   vGradient(float(psSourceData[iLeft]-psSourceData[iRight])/65536.0f,
-                                     float(psSourceData[iTop]-psSourceData[iBottom])/65536.0f,
-                                     float(psSourceData[iFront]-psSourceData[iBack])/65536.0f);
+            size_t iLeft   = iCenter;
+            size_t iRight  = iCenter;
+            size_t iTop    = iCenter;
+            size_t iBottom = iCenter;
+            size_t iFront  = iCenter;
+            size_t iBack   = iCenter;
+
+            FLOATVECTOR3 vScale(0,0,0);
+
+            if (x > 0)          {iLeft   = iCenter-1; vScale.x++;}
+            if (x < vSize[0]-1) {iRight  = iCenter+1; vScale.x++;}
+            if (y > 0)          {iTop    = iCenter-size_t(vSize[0]);vScale.y++;}
+            if (y < vSize[1]-1) {iBottom = iCenter+size_t(vSize[0]);vScale.y++;}
+            if (z > 0)          {iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);vScale.z++;}
+            if (z < vSize[2]-1) {iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);vScale.z++;}
+
+            FLOATVECTOR3   vGradient(float(pcSourceData[iLeft]-pcSourceData[iRight])/(65536.0f*vScale.x),
+                                     float(pcSourceData[iTop]-pcSourceData[iBottom])/(65536.0f*vScale.y),
+                                     float(pcSourceData[iFront]-pcSourceData[iBack])/(65536.0f*vScale.y));
 
             if (vGradient.length() > m_fMaxGradMagnitude) m_fMaxGradMagnitude = vGradient.length();
           }
         }
       }
-      for (size_t z = 1;z<size_t(vSize[2]-1);z++) {
-        for (size_t y = 1;y<size_t(vSize[1]-1);y++) {
-          for (size_t x = 1;x<size_t(vSize[0]-1);x++) {
+      for (size_t z = 0;z<size_t(vSize[2]);z++) {
+        for (size_t y = 0;y<size_t(vSize[1]);y++) {
+          for (size_t x = 0;x<size_t(vSize[0]);x++) {
 
             size_t iCenter = x+size_t(vSize[0])*y+size_t(vSize[0])*size_t(vSize[1])*z;
-            size_t iLeft   = iCenter-1;
-            size_t iRight  = iCenter+1;
-            size_t iTop    = iCenter-size_t(vSize[0]);
-            size_t iBottom = iCenter+size_t(vSize[0]);
-            size_t iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);
-            size_t iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);
+            size_t iLeft   = iCenter;
+            size_t iRight  = iCenter;
+            size_t iTop    = iCenter;
+            size_t iBottom = iCenter;
+            size_t iFront  = iCenter;
+            size_t iBack   = iCenter;
 
-            FLOATVECTOR3   vGradient(float(psSourceData[iLeft]-psSourceData[iRight])/65536.0f,
-                                     float(psSourceData[iTop]-psSourceData[iBottom])/65536.0f,
-                                     float(psSourceData[iFront]-psSourceData[iBack])/65536.0f);
+            FLOATVECTOR3 vScale(0,0,0);
+
+            if (x > 0)          {iLeft   = iCenter-1; vScale.x++;}
+            if (x < vSize[0]-1) {iRight  = iCenter+1; vScale.x++;}
+            if (y > 0)          {iTop    = iCenter-size_t(vSize[0]);vScale.y++;}
+            if (y < vSize[1]-1) {iBottom = iCenter+size_t(vSize[0]);vScale.y++;}
+            if (z > 0)          {iFront  = iCenter-size_t(vSize[0])*size_t(vSize[1]);vScale.z++;}
+            if (z < vSize[2]-1) {iBack   = iCenter+size_t(vSize[0])*size_t(vSize[1]);vScale.z++;}
+
+            FLOATVECTOR3   vGradient(float(pcSourceData[iLeft]-pcSourceData[iRight])/(65536.0f*vScale.x),
+                                     float(pcSourceData[iTop]-pcSourceData[iBottom])/(65536.0f*vScale.y),
+                                     float(pcSourceData[iFront]-pcSourceData[iBack])/(65536.0f*vScale.y));
 
             unsigned char iGardientMagnitudeIndex = (unsigned char)(vGradient.length()/m_fMaxGradMagnitude*255);
             vTmpHist[psSourceData[iCenter]][iGardientMagnitudeIndex]++;
@@ -252,7 +288,7 @@ UINT64 Histogram2DDataBlock::GetOffsetToNextBlock() const {
 UINT64 Histogram2DDataBlock::ComputeDataSize() const {
 
 	UINT64 ulElementCountX = UINT64(m_vHistData.size());
-	UINT64 ulElementCountY = UINT64(m_vHistData[0].size());
+  UINT64 ulElementCountY = UINT64((ulElementCountX == 0) ? 0 : m_vHistData[0].size());
 
 	return 1*sizeof(float) +                                // the m_fMaxGradMagnitude value
          2*sizeof(UINT64) +						            		    // length of the vectors

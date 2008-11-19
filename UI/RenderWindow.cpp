@@ -221,7 +221,6 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
 
   if (event->key() == Qt::Key_Space) {
     AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
-
     AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode((int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
     m_Renderer->SetViewmode(eMode);
 
@@ -230,6 +229,22 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
     SetupArcBall();
     emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
     updateGL();    
+  }
+
+  if (event->key() == Qt::Key_X) {
+    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+    bool bFlipX, bFlipY;
+    m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
+    bFlipX = !bFlipX;
+    m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);
+  }
+
+  if (event->key() == Qt::Key_Y) {
+    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+    bool bFlipX, bFlipY;
+    m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
+    bFlipY = !bFlipY;
+    m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);
   }
 
 }
@@ -241,7 +256,7 @@ void RenderWindow::SetupArcBall() {
     // find the 3D window
     int i3DWindowIndex = 0;
     for (unsigned int i = 0;i<4;i++) {
-      if (m_Renderer->Get2x2Windowmode(i) == AbstrRenderer::WM_3D) {
+      if (m_Renderer->Get2x2Windowmode(AbstrRenderer::ERenderArea(i)) == AbstrRenderer::WM_3D) {
         i3DWindowIndex = i;
         break;
       }

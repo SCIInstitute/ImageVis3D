@@ -428,6 +428,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 }
 
 void MainWindow::SetRescaleFactors() {
+  if (!m_ActiveRenderWin) return;
   DOUBLEVECTOR3 vfRescaleFactors;
   vfRescaleFactors.x = doubleSpinBox_RescaleX->value();
   vfRescaleFactors.y = doubleSpinBox_RescaleY->value();

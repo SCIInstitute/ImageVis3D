@@ -84,6 +84,10 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_piSlice[1]     = 0.0f;
   m_piSlice[2]     = 0.0f;
 
+  m_bFlipView[0]   = VECTOR2<bool>(false, false);
+  m_bFlipView[1]   = VECTOR2<bool>(false, false);
+  m_bFlipView[2]   = VECTOR2<bool>(false, false);
+
   m_bRedrawMask[0] = true;
   m_bRedrawMask[1] = true;
   m_bRedrawMask[2] = true;
@@ -148,12 +152,12 @@ void AbstrRenderer::SetViewmode(EViewMode eViewMode)
   }  
 }
 
-void AbstrRenderer::Set2x2Windowmode(unsigned int iWindowIndex, EWindowMode eWindowMode)
+void AbstrRenderer::Set2x2Windowmode(ERenderArea eArea, EWindowMode eWindowMode)
 {
   /// \todo make sure every view is only assigned to one subwindow
-  if (m_e2x2WindowMode[iWindowIndex] != eWindowMode) {
-    m_e2x2WindowMode[iWindowIndex] = eWindowMode; 
-    ScheduleWindowRedraw(iWindowIndex);
+  if (m_e2x2WindowMode[size_t(eArea)] != eWindowMode) {
+    m_e2x2WindowMode[size_t(eArea)] = eWindowMode; 
+    ScheduleWindowRedraw(eWindowMode);
   }  
 }
 
@@ -264,7 +268,7 @@ void AbstrRenderer::SetTranslation(const FLOATMATRIX4& mTranslation) {
 void AbstrRenderer::SetSliceDepth(EWindowMode eWindow, UINT64 iSliceDepth) {
   if (eWindow < WM_3D) {
     m_piSlice[size_t(eWindow)] = iSliceDepth;
-    ScheduleWindowRedraw(size_t(eWindow));
+    ScheduleWindowRedraw(eWindow);
   }
 }
 
@@ -296,10 +300,10 @@ void AbstrRenderer::ScheduleCompleteRedraw() {
 }
 
 
-void AbstrRenderer::ScheduleWindowRedraw(int iIndex) {
+void AbstrRenderer::ScheduleWindowRedraw(EWindowMode eWindow) {
   m_bPerformRedraw      = true;
   m_iCheckCounter       = m_iStartDelay;
-  m_bRedrawMask[iIndex] = true;
+  m_bRedrawMask[size_t(eWindow)] = true;
 }
 
 void AbstrRenderer::ComputeMinLODForCurrentView() {

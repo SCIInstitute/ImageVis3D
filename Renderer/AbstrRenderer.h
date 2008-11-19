@@ -120,8 +120,8 @@ class AbstrRenderer {
       WM_3D,
       WM_INVALID
     };
-    EWindowMode Get2x2Windowmode(unsigned int iWindowIndex) {return m_e2x2WindowMode[iWindowIndex];}
-    virtual void Set2x2Windowmode(unsigned int iWindowIndex, EWindowMode eWindowMode);
+    EWindowMode Get2x2Windowmode(ERenderArea eArea) {return m_e2x2WindowMode[size_t(eArea)];}
+    virtual void Set2x2Windowmode(ERenderArea eArea, EWindowMode eWindowMode);
     EWindowMode GetFullWindowmode() {return m_eFullWindowMode;}
     virtual void SetFullWindowmode(EWindowMode eWindowMode);
     EWindowMode GetWindowUnderCursor(FLOATVECTOR2 vPos);
@@ -209,6 +209,20 @@ class AbstrRenderer {
     bool GetGlobalBBox() {return m_bRenderGlobalBBox;}
     void SetLocalBBox(bool bRenderBBox);
     bool GetLocalBBox() {return m_bRenderLocalBBox;}
+  
+    void Set2DFlipMode(EWindowMode eWindow, bool bFlipX, bool bFlipY) {
+      // flipping is only possible for 2D views
+      if (eWindow > WM_SAGITTAL) return;
+      m_bFlipView[size_t(eWindow)] = VECTOR2<bool>(bFlipX, bFlipY);
+      ScheduleWindowRedraw(eWindow);
+    }
+
+    void Get2DFlipMode(EWindowMode eWindow, bool& bFlipX, bool& bFlipY) {
+      // flipping is only possible for 2D views
+      if (eWindow > WM_SAGITTAL) return;
+      bFlipX = m_bFlipView[size_t(eWindow)].x;
+      bFlipY = m_bFlipView[size_t(eWindow)].y;
+    }
 
     // scheduling routines
     UINT64 GetCurrentSubFrameCount() {return 1+m_iMaxLODIndex-m_iMinLODForCurrentView;}
@@ -234,6 +248,7 @@ class AbstrRenderer {
     ERenderMode         m_eRenderMode;
     EViewMode           m_eViewMode;
     EWindowMode         m_e2x2WindowMode[4];
+    VECTOR2<bool>       m_bFlipView[3];
     EWindowMode         m_eFullWindowMode;
     UINT64              m_piSlice[3];
     EBlendPrecision     m_eBlendPrecision;
@@ -269,7 +284,7 @@ class AbstrRenderer {
   	bool				        m_bLODDisabled;
 
     virtual void ScheduleCompleteRedraw();
-    virtual void ScheduleWindowRedraw(int iIndex);
+    virtual void ScheduleWindowRedraw(EWindowMode eWindow);
     void ComputeMinLODForCurrentView();
 
     FLOATMATRIX4        m_matModelView;

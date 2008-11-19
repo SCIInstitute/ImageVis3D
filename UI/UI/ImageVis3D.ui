@@ -36,7 +36,7 @@
      <widget class="QMdiArea" name="mdiArea" />
     </item>
    </layout>
-   <widget class="QWidget" name="" >
+   <widget class="QWidget" name="layoutWidget" >
     <property name="geometry" >
      <rect>
       <x>0</x>
@@ -1698,7 +1698,7 @@
                  <string>Red</string>
                 </property>
                 <property name="checked" >
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1714,7 +1714,7 @@
                  <string>Green</string>
                 </property>
                 <property name="checked" >
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1730,7 +1730,7 @@
                  <string>Blue</string>
                 </property>
                 <property name="checked" >
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1744,6 +1744,9 @@
                 </property>
                 <property name="text" >
                  <string>Alpha</string>
+                </property>
+                <property name="checked" >
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1774,7 +1777,7 @@
                  <string>User</string>
                 </property>
                 <property name="checked" >
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -1804,6 +1807,9 @@
                 </property>
                 <property name="text" >
                  <string>Intensity</string>
+                </property>
+                <property name="checked" >
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>

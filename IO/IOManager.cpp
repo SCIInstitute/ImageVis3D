@@ -511,6 +511,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
     if (bConvertEndianness) remove(tmpFilename.c_str());
 		return false;
   }
+
   Histogram2DDataBlock Histogram2D;
   if (!Histogram2D.Compute(&dataVolume)) {
     m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Computation of 2D Histogram failed!"); 

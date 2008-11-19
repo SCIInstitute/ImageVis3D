@@ -180,13 +180,16 @@ void GLRenderer::ClearColorBuffer() {
 }
 
 void GLRenderer::Paint() {
+  // if we need to redraw, consider all data in the framebuffers dirty
+  if (m_bPerformRedraw) m_iFilledBuffers = 0;
+
   // clear the framebuffer (if requested)
   if (m_bClearFramebuffer) ClearDepthBuffer();
 
   // bind offscreen buffer
   m_pFBO3DImageCurrent->Write();
 
-  bool bNewDataToShow;
+  bool bNewDataToShow = false;
   if (m_eViewMode == VM_SINGLE) {
     // set render area to fullscreen
     SetRenderTargetArea(RA_FULLSCREEN);
@@ -201,7 +204,7 @@ void GLRenderer::Paint() {
                           }
        case WM_SAGITTAL : 
        case WM_AXIAL    : 
-       case WM_CORONAL  : bNewDataToShow = Render2DView(RA_FULLSCREEN, m_eFullWindowMode, m_piSlice[size_t(m_eFullWindowMode)]); break;
+       case WM_CORONAL  : if (m_bPerformRedraw) bNewDataToShow = Render2DView(RA_FULLSCREEN, m_eFullWindowMode, m_piSlice[size_t(m_eFullWindowMode)]); break;
        default          : m_pMasterController->DebugOut()->Error("GLRenderer::Paint","Invalid Windowmode");
                           bNewDataToShow = false;
                           break;
@@ -316,7 +319,10 @@ void GLRenderer::SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight) 
 
 
 bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT64 iSliceIndex) {
-   switch (m_eRenderMode) {
+
+  GLRenderer::SetDataDepShaderVars();
+
+  switch (m_eRenderMode) {
     case RM_2DTRANS    :  m_p2DTransTex->Bind(1); 
                           m_pProgram2DTransSlice->Enable();
                           break;
@@ -359,6 +365,7 @@ bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, U
   FLOATVECTOR3 vMinCoords(0.5f/FLOATVECTOR3(vVoxelCount));
   FLOATVECTOR3 vMaxCoords(1.0f-vMinCoords);
 
+
   UINT64VECTOR3 vDomainSize = m_pDataset->GetInfo()->GetDomainSize();
   DOUBLEVECTOR3 vAspectRatio = m_pDataset->GetInfo()->GetScale() * DOUBLEVECTOR3(vDomainSize);  
 
@@ -367,6 +374,18 @@ bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, U
 
   switch (eDirection) {
     case WM_CORONAL : {
+                          if (m_bFlipView[int(eDirection)].x) {
+                              float fTemp = vMinCoords.x;
+                              vMinCoords.x = vMaxCoords.x;
+                              vMaxCoords.x = fTemp;
+                          }
+
+                          if (m_bFlipView[int(eDirection)].y) {
+                              float fTemp = vMinCoords.z;
+                              vMinCoords.z = vMaxCoords.z;
+                              vMaxCoords.z = fTemp;
+                          }
+
                           DOUBLEVECTOR2 v2AspectRatio = vAspectRatio.xz()*DOUBLEVECTOR2(vWinAspectRatio);
                           v2AspectRatio = v2AspectRatio / v2AspectRatio.maxVal();
                           double fSliceIndex = double(iSliceIndex)/double(vDomainSize.y);
@@ -383,6 +402,18 @@ bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, U
                           break;
                       }
     case WM_AXIAL : {
+                          if (m_bFlipView[int(eDirection)].x) {
+                              float fTemp = vMinCoords.x;
+                              vMinCoords.x = vMaxCoords.x;
+                              vMaxCoords.x = fTemp;
+                          }
+
+                          if (m_bFlipView[int(eDirection)].y) {
+                              float fTemp = vMinCoords.y;
+                              vMinCoords.y = vMaxCoords.y;
+                              vMaxCoords.y = fTemp;
+                          }
+
                           DOUBLEVECTOR2 v2AspectRatio = vAspectRatio.xy()*DOUBLEVECTOR2(vWinAspectRatio);
                           v2AspectRatio = v2AspectRatio / v2AspectRatio.maxVal();
                           double fSliceIndex = double(iSliceIndex)/double(vDomainSize.z);
@@ -399,6 +430,18 @@ bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, U
                           break;
                       }
     case WM_SAGITTAL : {
+                          if (m_bFlipView[int(eDirection)].x) {
+                              float fTemp = vMinCoords.y;
+                              vMinCoords.y = vMaxCoords.y;
+                              vMaxCoords.y = fTemp;
+                          }
+
+                          if (m_bFlipView[int(eDirection)].y) {
+                              float fTemp = vMinCoords.z;
+                              vMinCoords.z = vMaxCoords.z;
+                              vMaxCoords.z = fTemp;
+                          }
+
                           DOUBLEVECTOR2 v2AspectRatio = vAspectRatio.yz()*DOUBLEVECTOR2(vWinAspectRatio);
                           v2AspectRatio = v2AspectRatio / v2AspectRatio.maxVal();
                           double fSliceIndex = double(iSliceIndex)/double(vDomainSize.x);

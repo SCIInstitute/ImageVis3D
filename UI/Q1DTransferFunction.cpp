@@ -52,7 +52,7 @@ using namespace std;
 Q1DTransferFunction::Q1DTransferFunction(MasterController& masterController, QWidget *parent) :
   QTransferFunction(masterController, parent),
   m_pTrans(NULL),
-  m_iPaintMode(PAINT_NONE),
+  m_iPaintMode(PAINT_RED | PAINT_GREEN | PAINT_BLUE | PAINT_ALPHA),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
   m_pBackdropCache(NULL),
@@ -66,7 +66,7 @@ Q1DTransferFunction::Q1DTransferFunction(MasterController& masterController, QWi
   // automatically computed borders
   m_iRightBorder(0),
   m_iTopBorder(0),
-  // scale apearance, may be changed arbitrarily (except for the marker length wich should both be less or equal to m_iLeftBorder and m_iBottomBorder)
+  // scale apearance, may be changed arbitrarily (except for the marker length wich should be less or equal to both m_iLeftBorder and m_iBottomBorder)
   m_iMarkersX(40),
   m_iMarkersY (40),
   m_iBigMarkerSpacingX(5),
