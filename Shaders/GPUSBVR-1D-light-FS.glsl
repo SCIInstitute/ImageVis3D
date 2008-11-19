@@ -67,11 +67,13 @@ void main(void)
   // compute lighting
   vec3 vViewDir    = normalize(vec3(0,0,0)-vPosition);
   vec3 vReflection = reflect(vViewDir, vNormal);
-  vec3 vLightColor = clamp(vLightAmbient+clamp(dot(vNormal, -vLightDir),0.0,1.0)*vTransVal.xyz*vLightDiffuse+pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0)*vLightSpecular);
+  vec3 vLightColor = vLightAmbient+
+                     vLightDiffuse*clamp(dot(vNormal, -vLightDir),0.0,1.0)*vTransVal.xyz+
+                     vLightSpecular*pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0);
 
   /// apply opacity correction
   vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
 
   /// write result to fragment color
-	gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, 1.0)*vTransVal.a;
+	gl_FragColor    = clamp(vec4(vLightColor.x, vLightColor.y, vLightColor.z, 1.0)*vTransVal.a,0.0,1.0);
 }
