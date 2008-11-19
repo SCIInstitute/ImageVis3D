@@ -535,6 +535,7 @@ bool GLRenderer::CheckForRedraw() {
 bool GLRenderer::Execute3DFrame(ERenderArea eREnderArea) {
   // are we starting a new LOD level?
   if (m_iBricksRenderedInThisSubFrame == 0) {
+    m_pMasterController->DebugOut()->Message("GLRenderer::Execute3DFrame","Starting a new subframe ...");
     m_iFilledBuffers = 0;
     SetRenderTargetAreaScissor(eREnderArea);
     glClearColor(0,0,0,0);
@@ -543,10 +544,14 @@ bool GLRenderer::Execute3DFrame(ERenderArea eREnderArea) {
   }
   
   // if zero bricks are to be rendered we have completed the draw job
-  if (m_vCurrentBrickList.size() == 0) return true;
+  if (m_vCurrentBrickList.size() == 0) {
+    m_pMasterController->DebugOut()->Message("GLRenderer::Execute3DFrame","zero bricks are to be rendered, completed the draw job");
+    return true;
+  }
 
   // if there is something left in the TODO list
   if (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame) {
+    m_pMasterController->DebugOut()->Message("GLRenderer::Execute3DFrame","%i bricks left to render", m_vCurrentBrickList.size()-m_iBricksRenderedInThisSubFrame);
 
     // setup shaders vars
     SetDataDepShaderVars(); 
@@ -555,7 +560,10 @@ bool GLRenderer::Execute3DFrame(ERenderArea eREnderArea) {
     Render3DView();
 
     // if there is nothing left todo in this subframe -> present the result
-    if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) return true;
+    if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) {
+      m_pMasterController->DebugOut()->Message("GLRenderer::Execute3DFrame","Subframe completed.");
+      return true;
+    }
   } 
   return false;
 }

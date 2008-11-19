@@ -80,14 +80,18 @@ GLFBOTex::GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum
 		m_LastAttachment[i]=GL_COLOR_ATTACHMENT0_EXT;
 		m_hTexture[i]=0;
 	}
-	if (m_hFBO==0) initFBO();
+	if (m_hFBO==0) 
+    initFBO();
+
 	if (GL_NO_ERROR!=glGetError()) {
+    m_pMasterController->DebugOut()->Error("GLFBOTex:GLFBOTex","Error during creation!");
 		glDeleteFramebuffersEXT(1,&m_hFBO);
 		m_hFBO=0;
 		return;
 	}
 	initTextures(minfilter,magfilter,wrapmode,width,height,intformat);
 	if (GL_NO_ERROR!=glGetError()) {
+    m_pMasterController->DebugOut()->Error("GLFBOTex:GLFBOTex","Error during texture init!");
 		glDeleteTextures(m_iNumBuffers,m_hTexture);
 		delete[] m_hTexture;
 		m_hTexture=NULL;
