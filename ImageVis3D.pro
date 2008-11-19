@@ -54,6 +54,7 @@ HEADERS += StdDefines.h \
            IO/UVF/UVFTables.h \
            IO/UVF/Histogram1DDataBlock.h \
            IO/UVF/Histogram2DDataBlock.h \
+           IO/UVF/MaxMinDataBlock.h \
            Controller/MasterController.h \
            DebugOut/AbstrDebugOut.h \
            DebugOut/TextfileOut.h \
@@ -123,6 +124,7 @@ SOURCES += 3rdParty/GLEW/glew.c \
            IO/UVF/UVFTables.cpp \
            IO/UVF/Histogram1DDataBlock.cpp \
            IO/UVF/Histogram2DDataBlock.cpp \                     
+           IO/UVF/MaxMinDataBlock.cpp \
            Controller/MasterController.cpp \
            DebugOut/TextfileOut.cpp \
            DebugOut/QTOut.cpp \
