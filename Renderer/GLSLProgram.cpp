@@ -312,7 +312,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
       // check for errors
       GLint iLinked;
       glGetProgramiv(m_hProgram,GL_LINK_STATUS,&iLinked);
-      WriteInfoLog(m_hProgram,true);
+      WriteInfoLog(ShaderDesc, m_hProgram,true);
         
       // flag shaders such that they can be deleted when they get detached
       if (hVS) glDeleteShader(hVS);
@@ -352,7 +352,7 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
  * \author <a href="mailto:jens.schneider@in.tum.de">Jens Schneider</a>
  * \date Aug.2004
  */
-bool GLSLProgram::WriteInfoLog(GLuint hObject, bool bProgram) {
+bool GLSLProgram::WriteInfoLog(const char* shaderdesc, GLuint hObject, bool bProgram) {
   // Check for errors
   GLint iLength;
   if (bProgram)  glGetProgramiv(hObject,GL_INFO_LOG_LENGTH,&iLength);
@@ -368,7 +368,8 @@ bool GLSLProgram::WriteInfoLog(GLuint hObject, bool bProgram) {
     else {
       glGetShaderInfoLog(hObject,iLength,&iLength,pcLogInfo);
       bAtMostWarnings=glIsShader(hObject);
-    }
+    }    
+    m_pMasterController->DebugOut()->Error("GLSLProgram::WriteInfoLog",shaderdesc);
     m_pMasterController->DebugOut()->Error("GLSLProgram::WriteInfoLog",pcLogInfo);
     delete[] pcLogInfo;  
 #ifdef GLSLPROGRAM_STRICT
@@ -415,7 +416,7 @@ bool GLSLProgram::WriteError(GLhandleARB hObject) {
  * \date Mar.2005
  * \see GLSLPROGRAM_SOURCE
  */
-GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SOURCE src) {
+GLuint GLSLProgram::LoadShader(const char *ShaderDesc, GLenum Type, GLSLPROGRAM_SOURCE src) {
   // assert right type
   assert(Type==GL_VERTEX_SHADER || Type==GL_FRAGMENT_SHADER);
 
@@ -482,7 +483,7 @@ GLuint GLSLProgram::LoadShader(const char *ShaderDesc,GLenum Type,GLSLPROGRAM_SO
     glGetShaderiv(hShader,GL_COMPILE_STATUS,&iCompiled);
 
     // Check for errors
-    if (WriteInfoLog(hShader,false)) {
+    if (WriteInfoLog(ShaderDesc, hShader,false)) {
       glDeleteShader(hShader);
       bError=true;
     }

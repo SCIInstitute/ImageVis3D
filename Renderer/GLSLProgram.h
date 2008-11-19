@@ -121,7 +121,7 @@ public:
 private:
   bool    Initialize(void);
   GLuint  LoadShader(const char*,GLenum,GLSLPROGRAM_SOURCE src);
-  bool    WriteInfoLog(GLuint,bool);
+  bool    WriteInfoLog(const char*, GLuint, bool);
   bool    WriteError(GLhandleARB hObject);
   bool    CheckGLError(const char *pcError=NULL,const char *pcAdditional=NULL) const;
   MasterController*   m_pMasterController;
