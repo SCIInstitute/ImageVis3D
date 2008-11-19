@@ -312,7 +312,9 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
       // check for errors
       GLint iLinked;
       glGetProgramiv(m_hProgram,GL_LINK_STATUS,&iLinked);
-      WriteInfoLog(ShaderDesc, m_hProgram,true);
+
+      std::string fileDesc = std::string("VS: ") + std::string(VSFile) + std::string("  FS:") + std::string(FSFile);
+      WriteInfoLog(fileDesc.c_str(), m_hProgram, true);
         
       // flag shaders such that they can be deleted when they get detached
       if (hVS) glDeleteShader(hVS);
