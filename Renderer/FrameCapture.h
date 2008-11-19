@@ -46,6 +46,9 @@
 
 class FrameCapture {
   public:
+    FrameCapture() {}
+    virtual ~FrameCapture() {}
+
 	  virtual bool CaptureSingleFrame(const std::string& strFilename) = 0;
 	    bool CaptureSequenceFrame(const std::string& strFilename) {
       std::string strDirectory = SysTools::GetPath(strFilename);

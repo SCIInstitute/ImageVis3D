@@ -50,10 +50,10 @@ RenderWindow::RenderWindow(MasterController& masterController, MasterController:
   m_MasterController(masterController),
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),
+  m_bRenderSubsysOK(true),   // be optimistic :-)
   m_strDataset(dataset),
   m_vWinDim(0,0),
-  m_bCaptureMode(false),
-  m_bRenderSubsysOK(true)   // be optimistic :-)
+  m_bCaptureMode(false)
 {  
   SetupArcBall();
 
@@ -233,7 +233,7 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
 
   if (event->key() == Qt::Key_X) {
     AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
-    bool bFlipX, bFlipY;
+    bool bFlipX=false, bFlipY=false;
     m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
     bFlipX = !bFlipX;
     m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);
@@ -241,7 +241,7 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
 
   if (event->key() == Qt::Key_Y) {
     AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
-    bool bFlipX, bFlipY;
+    bool bFlipX=false, bFlipY=false;
     m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
     bFlipY = !bFlipY;
     m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);

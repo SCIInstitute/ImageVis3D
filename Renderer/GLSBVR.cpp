@@ -149,7 +149,6 @@ const FLOATVECTOR2 GLSBVR::SetDataDepShaderVars() {
                             break;
                           }
     case RM_2DTRANS    :  {
-                            float fGradientScale = 1.0f/m_pDataset->GetMaxGradMagnitude();
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable();
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",vSizes.x);
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fGradientScale",vSizes.y);

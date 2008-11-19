@@ -31,7 +31,7 @@
   \author    Jens Krueger
         SCI Institute
         University of Utah
-  \date    November 2008
+  \date    August 2008
 */
 
 
@@ -71,7 +71,6 @@ bool GLRaycaster::Initialize() {
       m_pMasterController->DebugOut()->Error("GLRaycaster::Initialize","Error loading a shader.");
       return false;
   } else {
-
     m_pProgram1DTrans[0]->Enable();
     m_pProgram1DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram1DTrans[0]->SetUniformVector("texTrans1D",1);
@@ -150,7 +149,6 @@ const FLOATVECTOR2 GLRaycaster::SetDataDepShaderVars() {
                             break;
                           }
     case RM_2DTRANS    :  {
-                            float fGradientScale = 1.0f/m_pDataset->GetMaxGradMagnitude();
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable();
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",vSizes.x);
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fGradientScale",vSizes.y);
@@ -171,8 +169,7 @@ const FLOATVECTOR2 GLRaycaster::SetDataDepShaderVars() {
 }
 
 void GLRaycaster::Render3DView() {
-/*  // ************** GL States ***********
-  // Modelview
+/*  // Modelview
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   m_matModelView.setModelview();
@@ -259,6 +256,8 @@ void GLRaycaster::Render3DView() {
 
   // at the very end render the bboxes
   if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();
- 
-  glDisable(GL_BLEND);*/
+
+  glDepthMask(GL_TRUE);
+  glDisable(GL_BLEND);
+*/
 }
