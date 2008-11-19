@@ -371,8 +371,13 @@ bool GLSLProgram::WriteInfoLog(const char* shaderdesc, GLuint hObject, bool bPro
       glGetShaderInfoLog(hObject,iLength,&iLength,pcLogInfo);
       bAtMostWarnings=glIsShader(hObject);
     }    
-    m_pMasterController->DebugOut()->Error("GLSLProgram::WriteInfoLog",shaderdesc);
-    m_pMasterController->DebugOut()->Error("GLSLProgram::WriteInfoLog",pcLogInfo);
+    if (bAtMostWarnings) {
+      m_pMasterController->DebugOut()->Warning("GLSLProgram::WriteInfoLog",shaderdesc);
+      m_pMasterController->DebugOut()->Warning("GLSLProgram::WriteInfoLog",pcLogInfo);
+    } else {
+      m_pMasterController->DebugOut()->Error("GLSLProgram::WriteInfoLog",shaderdesc);
+      m_pMasterController->DebugOut()->Error("GLSLProgram::WriteInfoLog",pcLogInfo);
+    }
     delete[] pcLogInfo;  
 #ifdef GLSLPROGRAM_STRICT
     return true;
