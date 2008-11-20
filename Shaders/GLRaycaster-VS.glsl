@@ -27,51 +27,16 @@
 */
 
 /**
-  \file    GLSBVR.h
-  \author  Jens Krueger
-           SCI Institute
-           University of Utah
-  \version 1.0
-  \date    August 2008
+  \file    GLSBVR-VS.glsl
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    October 2008
 */
 
-
-#pragma once
-
-#ifndef GLSBVR_H
-#define GLSBVR_H
-
-#include <Renderer/GLRenderer.h>
-#include <Renderer/SBVRGeogen.h>
-
-/** \class GLSBVR
- * Slice-based GPU volume renderer.
- *
- * GLSBVR is a slice based volume renderer which uses GLSL. */
-class GLSBVR : public GLRenderer {
-  public:
-    /** Constructs a VRer with immediate redraw, and
-     * wireframe mode off.
-     * \param pMasterController message routing object */
-    GLSBVR(MasterController* pMasterController);
-    virtual ~GLSBVR();
-
-    /** Loads GLSL vertex and fragment shaders. */
-    virtual bool Initialize();
-
-    /** Set the oversampling ratio (e.g. 2 means twice the slices as needed).  Causes a full redraw. */
-    virtual void SetSampleRateModifier(float fSampleRateModifier);
-
-  protected:
-    SBVRGeogen    m_SBVRGeogen;
-
-    void SetBrickDepShaderVars(const Brick& currentBrick);
-    virtual const FLOATVECTOR2 SetDataDepShaderVars();
-
-    virtual void Render3DPreLoop();
-    virtual void Render3DInLoop(size_t iCurrentBrick);
-    virtual void Render3DPostLoop();
-
-};
-
-#endif // GLSBVR_H
+void main(void)
+{
+  gl_Position = gl_ModelViewProjectionMatrix * vec4(gl_Vertex.xyz,1.0);
+  gl_TexCoord[0] = gl_MultiTexCoord0;
+}

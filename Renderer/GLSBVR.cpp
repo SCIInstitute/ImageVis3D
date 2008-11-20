@@ -40,7 +40,6 @@
 #include <cmath>
 #include <Basics/SysTools.h>
 #include <Controller/MasterController.h>
-#include <ctime>
 
 using namespace std;
 
@@ -111,6 +110,11 @@ bool GLSBVR::Initialize() {
   return true;
 }
 
+void GLSBVR::SetSampleRateModifier(float fSampleRateModifier) {
+  GLRenderer::SetSampleRateModifier(fSampleRateModifier);
+  m_SBVRGeogen.SetSamplingModifier(fSampleRateModifier);
+}
+
 void GLSBVR::SetBrickDepShaderVars(const Brick& currentBrick) {
 
   FLOATVECTOR3 vStep(1.0f/currentBrick.vVoxelCount.x, 1.0f/currentBrick.vVoxelCount.y, 1.0f/currentBrick.vVoxelCount.z);
@@ -168,36 +172,17 @@ const FLOATVECTOR2 GLSBVR::SetDataDepShaderVars() {
   return vSizes;
 }
 
-void GLSBVR::Render3DView() {
-  m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","Rendering...");
-  
-  // Modelview
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  m_matModelView.setModelview();
 
-  glEnable(GL_DEPTH_TEST);
-
-  if (m_iBricksRenderedInThisSubFrame == 0) BBoxPreRender();
-
-  m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","Setting up states");
-
+void GLSBVR::Render3DPreLoop() {
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  m_p1DTransTex->Bind(1); 
-                          m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","1");
                           m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
-                          m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","2");
                           glEnable(GL_BLEND);
-                          m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","3");
-                          // glBlendEquation(GL_FUNC_ADD);
-                          m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","4");
                           glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
-                          m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","5");
                           break;
     case RM_2DTRANS    :  m_p2DTransTex->Bind(1);
                           m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable(); 
                           glEnable(GL_BLEND);
-                          glBlendEquation(GL_FUNC_ADD);
                           glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
                           break;
     case RM_ISOSURFACE :  m_pProgramIso->Enable(); 
@@ -207,56 +192,32 @@ void GLSBVR::Render3DView() {
   }
 
   if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_FALSE);
+}
 
-  // loop over all bricks in the current LOD level
-  clock_t timeStart, timeProbe;
-  timeStart = timeProbe = clock();
+void GLSBVR::Render3DInLoop(UINT64 iCurrentBrick) {
+  // setup the slice generator
+  m_SBVRGeogen.SetVolumeData(m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vVoxelCount, 
+                             m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax);
+  FLOATMATRIX4 maBricktTrans; 
+  maBricktTrans.Translation(m_vCurrentBrickList[iCurrentBrick].vCenter.x, m_vCurrentBrickList[iCurrentBrick].vCenter.y, m_vCurrentBrickList[iCurrentBrick].vCenter.z);
+  FLOATMATRIX4 maBricktModelView = maBricktTrans * m_matModelView;
+  maBricktModelView.setModelview();
+  m_SBVRGeogen.SetTransformation(maBricktModelView, true);
 
-  while (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame && float(timeProbe-timeStart)*1000.0f/float(CLOCKS_PER_SEC) < m_iTimeSliceMSecs) {
+  // update the shader parameter
+  SetBrickDepShaderVars(m_vCurrentBrickList[iCurrentBrick]);
 
-    m_pMasterController->DebugOut()->Message("GLSBVR::Render3DView","  Brick %i of %i",m_vCurrentBrickList.size(), m_iBricksRenderedInThisSubFrame);
+  // render the slices
+  glBegin(GL_TRIANGLES);
+    for (int i = int(m_SBVRGeogen.m_vSliceTriangles.size())-1;i>=0;i--) {
+      glTexCoord3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vTex);
+      glVertex3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vPos);
+    }
+  glEnd();
+}
 
-    // setup the slice generator
-    m_SBVRGeogen.SetVolumeData(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vExtension, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vVoxelCount, 
-                               m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vTexcoordsMin, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vTexcoordsMax);
-    FLOATMATRIX4 maBricktTrans; 
-    maBricktTrans.Translation(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.x, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.y, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.z);
-    FLOATMATRIX4 maBricktModelView = maBricktTrans * m_matModelView;
-    maBricktModelView.setModelview();
-    m_SBVRGeogen.SetTransformation(maBricktModelView, true);
 
-    // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
-    vector<UINT64> vLOD; vLOD.push_back(m_iCurrentLOD);
-    vector<UINT64> vBrick; 
-    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.x);
-    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.y);
-    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.z);
-
-    // get the 3D texture from the memory manager
-    GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, m_iIntraFrameCounter++, m_iFrameCounter);
-    if(t!=NULL) t->Bind(0);
-
-    // update the shader parameter
-    SetBrickDepShaderVars(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame]);
-
-    // render the slices
-    glBegin(GL_TRIANGLES);
-      for (int i = int(m_SBVRGeogen.m_vSliceTriangles.size())-1;i>=0;i--) {
-        glTexCoord3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vTex);
-        glVertex3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vPos);
-      }
-    glEnd();
-
-    // release the 3D texture
-    m_pMasterController->MemMan()->Release3DTexture(t);
-
-    // count the bricks rendered
-    m_iBricksRenderedInThisSubFrame++;
-	  
-    // time this loop
-    if (!m_bLODDisabled) timeProbe = clock();
-  }
-
+void GLSBVR::Render3DPostLoop() {
   // disable the shader
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
@@ -264,16 +225,5 @@ void GLSBVR::Render3DView() {
     case RM_ISOSURFACE :  m_pProgramIso->Disable(); break;
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLSBVR::Render3DView","Invalid rendermode set"); break;
   }
-
-  // at the very end render the bboxes
-  if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();
-
-  glDepthMask(GL_TRUE);
-  glDisable(GL_BLEND);
-
 }
 
-void GLSBVR::SetSampleRateModifier(float fSampleRateModifier) {
-  GLRenderer::SetSampleRateModifier(fSampleRateModifier);
-  m_SBVRGeogen.SetSamplingModifier(fSampleRateModifier);
-}

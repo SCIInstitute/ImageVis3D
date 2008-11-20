@@ -53,6 +53,24 @@ GLRaycaster::~GLRaycaster() {
 }
 
 
+void GLRaycaster::Cleanup() {
+  GLRenderer::Cleanup();
+
+  m_pMasterController->MemMan()->FreeFBO(m_pFBOScratchpad);  
+  m_pMasterController->MemMan()->FreeGLSLProgram(m_pRenderFrontFaces);
+}
+
+void GLRaycaster::CreateOffscreenBuffers() {
+  GLRenderer::CreateOffscreenBuffers();
+
+  if (m_pFBOScratchpad != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBOScratchpad);
+
+  if (m_vWinSize.area() > 0) {
+    m_pFBOScratchpad = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false);
+  }
+}
+
+
 bool GLRaycaster::Initialize() {
   if (!GLRenderer::Initialize()) {
     m_pMasterController->DebugOut()->Error("GLRaycaster::Initialize","Error in parent call -> aborting");
@@ -60,13 +78,13 @@ bool GLRaycaster::Initialize() {
   }
 
   glShadeModel(GL_SMOOTH);
-  glDisable(GL_CULL_FACE);
-  
-  if (!LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-1D-FS.glsl",       &(m_pProgram1DTrans[0])) ||
-      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-1D-light-FS.glsl", &(m_pProgram1DTrans[1])) ||
-      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-2D-FS.glsl",       &(m_pProgram2DTrans[0])) ||
-      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-2D-light-FS.glsl", &(m_pProgram2DTrans[1])) ||
-      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-ISO-FS.glsl",      &m_pProgramIso)) {
+ 
+  if (!LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-frontfaces-FS.glsl",&(m_pRenderFrontFaces)) ||
+      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-1D-FS.glsl",        &(m_pProgram1DTrans[0])) ||
+      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-1D-light-FS.glsl",  &(m_pProgram1DTrans[1])) ||
+      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-2D-FS.glsl",        &(m_pProgram2DTrans[0])) ||
+      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-2D-light-FS.glsl",  &(m_pProgram2DTrans[1])) ||
+      !LoadAndVerifyShader("Shaders/GLRaycaster-VS.glsl", "Shaders/GLRaycaster-ISO-FS.glsl",       &m_pProgramIso)) {
 
       m_pMasterController->DebugOut()->Error("GLRaycaster::Initialize","Error loading a shader.");
       return false;
@@ -168,96 +186,88 @@ const FLOATVECTOR2 GLRaycaster::SetDataDepShaderVars() {
   return vSizes;
 }
 
-void GLRaycaster::Render3DView() {
-/*  // Modelview
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  m_matModelView.setModelview();
-
-  glEnable(GL_DEPTH_TEST);
-
-  if (m_iBricksRenderedInThisSubFrame == 0) BBoxPreRender();
-
-  switch (m_eRenderMode) {
-    case RM_1DTRANS    :  m_p1DTransTex->Bind(1); 
-                          m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
-                          glEnable(GL_BLEND);
-                          glBlendEquation(GL_FUNC_ADD);
-                          glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
-                          break;
-    case RM_2DTRANS    :  m_p2DTransTex->Bind(1);
-                          m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable(); 
-                          glEnable(GL_BLEND);
-                          glBlendEquation(GL_FUNC_ADD);
-                          glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
-                          break;
-    case RM_ISOSURFACE :  m_pProgramIso->Enable(); 
-                          break;
-    default    :  m_pMasterController->DebugOut()->Error("GLRaycaster::Render3DView","Invalid rendermode set"); 
-                          break;
+void GLRaycaster::RenderBox(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend, const FLOATVECTOR3& vMinCoords, const FLOATVECTOR3& vMaxCoords, bool bCullBack) {
+  if (bCullBack) {
+    glCullFace(GL_BACK);
+  } else {
+    glCullFace(GL_FRONT);
   }
 
-  if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_FALSE);
+  FLOATVECTOR3 vMinPoint, vMaxPoint;
+  vMinPoint = (vCenter - vExtend/2.0);
+  vMaxPoint = (vCenter + vExtend/2.0);
 
-  // loop over all bricks in the current LOD level
-  clock_t timeStart, timeProbe;
-  timeStart = timeProbe = clock();
+  glBegin(GL_QUADS);        
+    // BACK
+    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMaxCoords.z);
+    glVertex3f( vMaxPoint.x, vMinPoint.y, vMinPoint.z);
+    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMaxCoords.z);
+    glVertex3f( vMinPoint.x, vMinPoint.y, vMinPoint.z);
+    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMaxCoords.z);
+    glVertex3f( vMinPoint.x, vMaxPoint.y, vMinPoint.z);
+    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMaxCoords.z);
+    glVertex3f( vMaxPoint.x, vMaxPoint.y, vMinPoint.z);
+    // FRONT
+    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMinCoords.z);
+    glVertex3f( vMaxPoint.x, vMaxPoint.y, vMaxPoint.z);
+    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMinCoords.z);
+    glVertex3f( vMinPoint.x, vMaxPoint.y, vMaxPoint.z);
+    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMinCoords.z);
+    glVertex3f( vMinPoint.x, vMinPoint.y, vMaxPoint.z);
+    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMinCoords.z);
+    glVertex3f( vMaxPoint.x, vMinPoint.y, vMaxPoint.z);
+    // LEFT
+    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMaxCoords.z);
+    glVertex3f( vMinPoint.x, vMaxPoint.y, vMinPoint.z);
+    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMaxCoords.z);
+    glVertex3f( vMinPoint.x, vMinPoint.y, vMinPoint.z);
+    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMinCoords.z);
+    glVertex3f( vMinPoint.x, vMinPoint.y, vMaxPoint.z);
+    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMinCoords.z);
+    glVertex3f( vMinPoint.x, vMaxPoint.y, vMaxPoint.z);
+    // RIGHT
+    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMinCoords.z);
+    glVertex3f( vMaxPoint.x, vMaxPoint.y, vMaxPoint.z);
+    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMinCoords.z);
+    glVertex3f( vMaxPoint.x, vMinPoint.y, vMaxPoint.z);
+    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMaxCoords.z);
+    glVertex3f( vMaxPoint.x, vMinPoint.y, vMinPoint.z);
+    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMaxCoords.z);
+    glVertex3f( vMaxPoint.x, vMaxPoint.y, vMinPoint.z);
+    // BOTTOM
+    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMinCoords.z);
+    glVertex3f( vMaxPoint.x, vMinPoint.y, vMaxPoint.z);
+    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMinCoords.z);
+    glVertex3f( vMinPoint.x, vMinPoint.y, vMaxPoint.z);
+    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMaxCoords.z);
+    glVertex3f( vMinPoint.x, vMinPoint.y, vMinPoint.z);
+    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMaxCoords.z);
+    glVertex3f( vMaxPoint.x, vMinPoint.y, vMinPoint.z);
+    // TOP
+    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMaxCoords.z);
+    glVertex3f( vMaxPoint.x, vMaxPoint.y, vMinPoint.z);
+    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMaxCoords.z);
+    glVertex3f( vMinPoint.x, vMaxPoint.y, vMinPoint.z);
+    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMinCoords.z);
+    glVertex3f( vMinPoint.x, vMaxPoint.y, vMaxPoint.z);
+    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMinCoords.z);
+    glVertex3f( vMaxPoint.x, vMaxPoint.y, vMaxPoint.z);
+  glEnd();
+}
 
-  while (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame && float(timeProbe-timeStart)*1000.0f/float(CLOCKS_PER_SEC) < m_iTimeSliceMSecs) {
-  
-    // setup the slice generator
-    m_SBVRGeogen.SetVolumeData(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vExtension, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vVoxelCount, 
-                               m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vTexcoordsMin, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vTexcoordsMax);
-    FLOATMATRIX4 maBricktTrans; 
-    maBricktTrans.Translation(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.x, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.y, m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCenter.z);
-    FLOATMATRIX4 maBricktModelView = maBricktTrans * m_matModelView;
-    maBricktModelView.setModelview();
-    m_SBVRGeogen.SetTransformation(maBricktModelView, true);
 
-    // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
-    vector<UINT64> vLOD; vLOD.push_back(m_iCurrentLOD);
-    vector<UINT64> vBrick; 
-    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.x);
-    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.y);
-    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.z);
 
-    // get the 3D texture from the memory manager
-    GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, m_iIntraFrameCounter++, m_iFrameCounter);
-    if(t!=NULL) t->Bind(0);
+void GLRaycaster::Render3DPreLoop() {
+  glEnable(GL_CULL_FACE);
+}
 
-    // update the shader parameter
-    SetBrickDepShaderVars(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame]);
+void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
+  m_pRenderFrontFaces->Enable();
+  RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
+  m_pRenderFrontFaces->Disable();
+}
 
-    // render the slices
-    glBegin(GL_TRIANGLES);
-      for (int i = int(m_SBVRGeogen.m_vSliceTriangles.size())-1;i>=0;i--) {
-        glTexCoord3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vTex);
-        glVertex3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vPos);
-      }
-    glEnd();
 
-    // release the 3D texture
-    m_pMasterController->MemMan()->Release3DTexture(t);
-
-    // count the bricks rendered
-    m_iBricksRenderedInThisSubFrame++;
-	  
-    // time this loop
-    if (!m_bLODDisabled) timeProbe = clock();
-  }
-
-  // disable the shader
-  switch (m_eRenderMode) {
-    case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
-    case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
-    case RM_ISOSURFACE :  m_pProgramIso->Disable(); break;
-    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLRaycaster::Render3DView","Invalid rendermode set"); break;
-  }
-
-  // at the very end render the bboxes
-  if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();
-
-  glDepthMask(GL_TRUE);
-  glDisable(GL_BLEND);
-*/
+void GLRaycaster::Render3DPostLoop() {
+  glDisable(GL_CULL_FACE);
 }

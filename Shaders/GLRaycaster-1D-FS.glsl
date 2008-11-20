@@ -27,51 +27,33 @@
 */
 
 /**
-  \file    GLSBVR.h
-  \author  Jens Krueger
-           SCI Institute
-           University of Utah
-  \version 1.0
-  \date    August 2008
+  \file    GLSBVR-1D-FS.glsl
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    October 2008
 */
 
+uniform sampler3D texVolume;  ///< the data volume
+uniform sampler1D texTrans1D; ///< the 1D Transfer function
+uniform float fTransScale;    ///< scale for 1D Transfer function lookup
+uniform float fStepScale;   ///< quotient of nyquist and actual stepsize
 
-#pragma once
+void main(void)
+{
+  /// get volume value
+	float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
 
-#ifndef GLSBVR_H
-#define GLSBVR_H
+  /// apply 1D transfer function
+	vec4  vTransVal = texture1D(texTrans1D, fVolumVal*fTransScale);
 
-#include <Renderer/GLRenderer.h>
-#include <Renderer/SBVRGeogen.h>
+  /// apply opacity correction
+  vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
+  
+  // premultiply color with alpha (for front to back)
+  vTransVal.xyz *= vTransVal.a;
 
-/** \class GLSBVR
- * Slice-based GPU volume renderer.
- *
- * GLSBVR is a slice based volume renderer which uses GLSL. */
-class GLSBVR : public GLRenderer {
-  public:
-    /** Constructs a VRer with immediate redraw, and
-     * wireframe mode off.
-     * \param pMasterController message routing object */
-    GLSBVR(MasterController* pMasterController);
-    virtual ~GLSBVR();
-
-    /** Loads GLSL vertex and fragment shaders. */
-    virtual bool Initialize();
-
-    /** Set the oversampling ratio (e.g. 2 means twice the slices as needed).  Causes a full redraw. */
-    virtual void SetSampleRateModifier(float fSampleRateModifier);
-
-  protected:
-    SBVRGeogen    m_SBVRGeogen;
-
-    void SetBrickDepShaderVars(const Brick& currentBrick);
-    virtual const FLOATVECTOR2 SetDataDepShaderVars();
-
-    virtual void Render3DPreLoop();
-    virtual void Render3DInLoop(size_t iCurrentBrick);
-    virtual void Render3DPostLoop();
-
-};
-
-#endif // GLSBVR_H
+  /// write result to fragment color
+	gl_FragColor    = vTransVal;
+}

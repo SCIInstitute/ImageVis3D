@@ -107,7 +107,11 @@ class GLRenderer : public AbstrRenderer {
     void DrawBackGradient();
     
     virtual const FLOATVECTOR2 SetDataDepShaderVars();
-    virtual void Render3DView() = 0;
+
+    virtual void Render3DView();
+    virtual void Render3DPreLoop() = 0;
+    virtual void Render3DInLoop(UINT64 iCurentBrick) = 0;
+    virtual void Render3DPostLoop() = 0;
 
     virtual void CreateOffscreenBuffers();
     virtual bool LoadAndVerifyShader(const std::string& strVSFile, const std::string& strFSFile, GLSLProgram** pShaderProgram);
@@ -124,6 +128,7 @@ class GLRenderer : public AbstrRenderer {
 
     void SetBrickDepShaderVarsSlice(const UINTVECTOR3& vVoxelCount);
     void RenderSeperatingLines();
+
 
 };
 

@@ -37,6 +37,7 @@
 #include "GLRenderer.h"
 #include <Controller/MasterController.h>
 #include <Basics/SysTools.h>
+#include <ctime>
 
 using namespace std;
 
@@ -816,4 +817,58 @@ bool GLRenderer::LoadDataset(const string& strFilename) {
     if (m_pProgram1DTrans[0] != NULL) SetDataDepShaderVars();
     return true;
   } else return false;
+}
+
+
+void GLRenderer::Render3DView() {
+  m_pMasterController->DebugOut()->Message("GLRenderer::Render3DView","Rendering...");
+  
+  // Modelview
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  m_matModelView.setModelview();
+
+  glEnable(GL_DEPTH_TEST);
+
+  if (m_iBricksRenderedInThisSubFrame == 0) BBoxPreRender();
+
+  Render3DPreLoop();
+
+  // loop over all bricks in the current LOD level
+  clock_t timeStart, timeProbe;
+  timeStart = timeProbe = clock();
+
+  while (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame && float(timeProbe-timeStart)*1000.0f/float(CLOCKS_PER_SEC) < m_iTimeSliceMSecs) {
+    m_pMasterController->DebugOut()->Message("GLRenderer::Render3DView","  Brick %i of %i",m_vCurrentBrickList.size(), m_iBricksRenderedInThisSubFrame);
+
+    // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
+    vector<UINT64> vLOD; vLOD.push_back(m_iCurrentLOD);
+    vector<UINT64> vBrick; 
+    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.x);
+    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.y);
+    vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.z);
+
+    // get the 3D texture from the memory manager
+    GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, m_iIntraFrameCounter++, m_iFrameCounter);
+    if(t!=NULL) t->Bind(0);
+
+    Render3DInLoop(m_iBricksRenderedInThisSubFrame);
+  
+    // release the 3D texture
+    m_pMasterController->MemMan()->Release3DTexture(t);
+
+    // count the bricks rendered
+    m_iBricksRenderedInThisSubFrame++;
+	  
+    // time this loop
+    if (!m_bLODDisabled) timeProbe = clock();
+  }
+
+  Render3DPostLoop();
+
+  // at the very end render the bboxes
+  if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();
+
+  glDepthMask(GL_TRUE);
+  glDisable(GL_BLEND);
 }

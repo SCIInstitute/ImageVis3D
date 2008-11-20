@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    GLRaycaster.h
+  \file    GLRaycaster-frontfaces-FS.glsl
   \author  Jens Krueger
            SCI Institute
            University of Utah
@@ -35,45 +35,7 @@
   \date    November 2008
 */
 
-
-#pragma once
-
-#ifndef GLRAYCASTER_H
-#define GLRAYCASTER_H
-
-#include <Renderer/GLRenderer.h>
-
-/** \class GLRaycaster
- * GPU Rayster.
- *
- * GLRaycaster is a GPU based raycaster for volumetric scalar data which uses GLSL. */
-class GLRaycaster : public GLRenderer {
-  public:
-    /** Constructs a VRer with immediate redraw, and
-     * wireframe mode off.
-     * \param pMasterController message routing object */
-    GLRaycaster(MasterController* pMasterController);
-    virtual ~GLRaycaster();
-
-    /** Loads GLSL vertex and fragment shaders. */
-    virtual bool Initialize();
-
-    /** Deallocates GPU memory allocated during the rendering process. */
-    virtual void Cleanup();
-
-  protected:
-    GLFBOTex*       m_pFBOScratchpad;
-    GLSLProgram*    m_pRenderFrontFaces;
-
-    void SetBrickDepShaderVars(const Brick& currentBrick);
-    virtual const FLOATVECTOR2 SetDataDepShaderVars();
-
-    virtual void CreateOffscreenBuffers();
-    void RenderBox(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend, const FLOATVECTOR3& vMinCoords, const FLOATVECTOR3& vMaxCoords, bool bCullBack);
-
-    virtual void Render3DPreLoop();
-    virtual void Render3DInLoop(size_t iCurrentBrick);
-    virtual void Render3DPostLoop();
-};
-
-#endif // GLRAYCASTER_H
+void main(void)
+{
+  gl_FragColor = vec4(gl_TexCoord[0].xyz,1);
+}
