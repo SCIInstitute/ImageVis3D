@@ -37,6 +37,7 @@
 
 uniform sampler3D texVolume;  ///< the data volume
 uniform sampler2D texTrans2D; ///< the 2D Transfer function
+uniform sampler2D texRayEntry; ///< the forntface or ray entry point texture
 uniform float fTransScale;    ///< value scale for 2D Transfer function lookup
 uniform float fGradientScale; ///< gradient scale for 2D Transfer function lookup
 uniform float fStepScale;     ///< quotient of nyquist and actual stepsize

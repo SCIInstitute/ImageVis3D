@@ -194,7 +194,7 @@ void GLSBVR::Render3DPreLoop() {
   if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_FALSE);
 }
 
-void GLSBVR::Render3DInLoop(UINT64 iCurrentBrick) {
+void GLSBVR::Render3DInLoop(size_t iCurrentBrick) {
   // setup the slice generator
   m_SBVRGeogen.SetVolumeData(m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vVoxelCount, 
                              m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax);

@@ -110,7 +110,7 @@ class GLRenderer : public AbstrRenderer {
 
     virtual void Render3DView();
     virtual void Render3DPreLoop() = 0;
-    virtual void Render3DInLoop(UINT64 iCurentBrick) = 0;
+    virtual void Render3DInLoop(size_t iCurentBrick) = 0;
     virtual void Render3DPostLoop() = 0;
 
     virtual void CreateOffscreenBuffers();

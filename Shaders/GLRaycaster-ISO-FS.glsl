@@ -36,6 +36,7 @@
 */
 
 uniform sampler3D texVolume;  ///< the data volume
+uniform sampler2D texRayEntry; ///< the forntface or ray entry point texture
 uniform vec3 vVoxelStepsize;  ///< Stepsize (in texcoord) to get to the next voxel
 uniform float fIsoval;        ///< the isovalue
 
@@ -48,8 +49,11 @@ varying vec3 vPosition;
 
 void main(void)
 {
+  gl_FragColor = vec4(1.0,1.0,1.0,1.0);
+  
+  /*
   /// get volume value
-	float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
+  float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
 
   // if we hit (or shot over) an isosurface
   if (fVolumVal >= fIsoval) {
@@ -76,4 +80,5 @@ void main(void)
   } else {
     discard;
   }
+  */
 }

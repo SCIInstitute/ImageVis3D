@@ -37,13 +37,14 @@
 
 uniform sampler3D texVolume;  ///< the data volume
 uniform sampler1D texTrans1D; ///< the 1D Transfer function
+uniform sampler2D texRayEntry; ///< the forntface or ray entry point texture
 uniform float fTransScale;    ///< scale for 1D Transfer function lookup
 uniform float fStepScale;   ///< quotient of nyquist and actual stepsize
 
 void main(void)
 {
   /// get volume value
-	float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
+  float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
 
   /// apply 1D transfer function
 	vec4  vTransVal = texture1D(texTrans1D, fVolumVal*fTransScale);

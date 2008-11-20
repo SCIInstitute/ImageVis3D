@@ -92,11 +92,13 @@ bool GLRaycaster::Initialize() {
     m_pProgram1DTrans[0]->Enable();
     m_pProgram1DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram1DTrans[0]->SetUniformVector("texTrans1D",1);
+    m_pProgram1DTrans[0]->SetUniformVector("texRayEntry",2);
     m_pProgram1DTrans[0]->Disable();
 
     m_pProgram1DTrans[1]->Enable();
     m_pProgram1DTrans[1]->SetUniformVector("texVolume",0);
     m_pProgram1DTrans[1]->SetUniformVector("texTrans1D",1);
+    m_pProgram1DTrans[1]->SetUniformVector("texRayEntry",2);
     m_pProgram1DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
     m_pProgram1DTrans[1]->SetUniformVector("vLightDiffuse",1.0f,1.0f,1.0f);
     m_pProgram1DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
@@ -106,11 +108,13 @@ bool GLRaycaster::Initialize() {
     m_pProgram2DTrans[0]->Enable();
     m_pProgram2DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram2DTrans[0]->SetUniformVector("texTrans2D",1);
+    m_pProgram2DTrans[0]->SetUniformVector("texRayEntry",2);
     m_pProgram2DTrans[0]->Disable();
 
     m_pProgram2DTrans[1]->Enable();
     m_pProgram2DTrans[1]->SetUniformVector("texVolume",0);
     m_pProgram2DTrans[1]->SetUniformVector("texTrans2D",1);
+    m_pProgram2DTrans[1]->SetUniformVector("texRayEntry",2);
     m_pProgram2DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
     m_pProgram2DTrans[1]->SetUniformVector("vLightDiffuse",1.0f,1.0f,1.0f);
     m_pProgram2DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
@@ -119,6 +123,7 @@ bool GLRaycaster::Initialize() {
 
     m_pProgramIso->Enable();
     m_pProgramIso->SetUniformVector("texVolume",0);
+    m_pProgramIso->SetUniformVector("texRayEntry",2);
     m_pProgramIso->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
     m_pProgramIso->SetUniformVector("vLightDiffuse",0.8f,0.8f,0.8f);
     m_pProgramIso->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
@@ -255,16 +260,51 @@ void GLRaycaster::RenderBox(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vEx
   glEnd();
 }
 
-
-
 void GLRaycaster::Render3DPreLoop() {
   glEnable(GL_CULL_FACE);
 }
 
 void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
+  m_pFBO3DImageCurrent->FinishWrite();
+
+  // write frontfaces (ray entry points) into scratchpad
+  m_pFBOScratchpad->Write();
   m_pRenderFrontFaces->Enable();
   RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
   m_pRenderFrontFaces->Disable();
+  m_pFBOScratchpad->FinishWrite();
+  m_pFBO3DImageCurrent->Write();
+
+  // do the raycasting
+  m_pFBOScratchpad->Read(2);
+  switch (m_eRenderMode) {
+    case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
+                          glEnable(GL_BLEND);
+                          glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+                          break;
+    case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable(); 
+                          glEnable(GL_BLEND);
+                          glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+                          break;
+    case RM_ISOSURFACE :  m_pProgramIso->Enable(); 
+                          break;
+    default            :  m_pMasterController->DebugOut()->Error("GLRaycaster::Render3DInLoop","Invalid rendermode set"); 
+                          break;
+  }
+  RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
+  switch (m_eRenderMode) {
+    case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
+                          glDisable(GL_BLEND);
+                          break;
+    case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); 
+                          glDisable(GL_BLEND);
+                          break;
+    case RM_ISOSURFACE :  m_pProgramIso->Disable(); 
+                          break;
+    default            :  m_pMasterController->DebugOut()->Error("GLRaycaster::Render3DInLoop","Invalid rendermode set"); 
+                          break;
+  }
+  m_pFBOScratchpad->FinishRead();
 }
 
 

@@ -291,7 +291,6 @@ void GLFBOTex::Write(GLenum target,int iBuffer) {
 	assert(iBuffer<m_iNumBuffers);
 	m_LastAttachment[iBuffer]=target;
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, target, GL_TEXTURE_2D, m_hTexture[iBuffer], 0);
-	//if (m_hDepthBuffer) glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,m_hDepthBuffer);
 	if (m_hDepthBuffer) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,m_hDepthBuffer,0);
 #ifdef _DEBUG
 	if (!CheckFBO("Write")) return;
@@ -302,9 +301,8 @@ void GLFBOTex::FinishWrite(int iBuffer) {
 	assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,m_LastAttachment[iBuffer],GL_TEXTURE_2D,0,0);
-	//if (m_hDepthBuffer) glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,0);
 	if (m_hDepthBuffer) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,0,0);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,0,0);
+//	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,0,0);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
 }
 
