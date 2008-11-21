@@ -67,7 +67,7 @@ class GLRaycaster : public GLRenderer {
     virtual void Resize(const UINTVECTOR2& vWinSize);
 
   protected:
-    GLFBOTex*       m_pFBOScratchpad;
+    GLFBOTex*       m_pFBORayEntry;
     GLFBOTex*       m_pFBOIsoHit;
     GLSLProgram*    m_pProgramRenderFrontFaces;
     GLSLProgram*    m_pProgramIsoCompose;

@@ -589,15 +589,14 @@ void GLRenderer::RerenderPreviousResult(bool bTransferToFramebuffer) {
   glDisable(GL_DEPTH_TEST);
 
   glBegin(GL_QUADS);
-    glColor4d(1,1,1,1);
-    glTexCoord2d(0,1);
-    glVertex3d(-1.0,  1.0, -0.5);
-    glTexCoord2d(1,1);
-    glVertex3d( 1.0,  1.0, -0.5);
-    glTexCoord2d(1,0);
-    glVertex3d( 1.0, -1.0, -0.5);
     glTexCoord2d(0,0);
     glVertex3d(-1.0, -1.0, -0.5);
+    glTexCoord2d(1,0);
+    glVertex3d( 1.0, -1.0, -0.5);
+    glTexCoord2d(1,1);
+    glVertex3d( 1.0,  1.0, -0.5);
+    glTexCoord2d(0,1);
+    glVertex3d(-1.0,  1.0, -0.5);
   glEnd();
 
   m_pProgramTrans->Disable();
@@ -660,12 +659,12 @@ void GLRenderer::DrawBackGradient() {
   glDisable(GL_TEXTURE_2D);
 
   glBegin(GL_QUADS);
-    glColor4d(m_vBackgroundColors[1].x,m_vBackgroundColors[1].y,m_vBackgroundColors[1].z,1);
-    glVertex3d(-1.0,  1.0, -0.5);
-    glVertex3d( 1.0,  1.0, -0.5);
     glColor4d(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,1);
-    glVertex3d( 1.0, -1.0, -0.5);
     glVertex3d(-1.0, -1.0, -0.5);
+    glVertex3d( 1.0, -1.0, -0.5);
+    glColor4d(m_vBackgroundColors[1].x,m_vBackgroundColors[1].y,m_vBackgroundColors[1].z,1);
+    glVertex3d( 1.0,  1.0, -0.5);
+    glVertex3d(-1.0,  1.0, -0.5);
   glEnd();
 
   glMatrixMode(GL_PROJECTION);

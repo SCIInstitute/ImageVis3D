@@ -54,13 +54,10 @@ void main(void){
   // get hitposition and check if a isosurface hit for this ray was found
   vec4  vPosition = texture2D(texRayHitPos, vFragCoords);
   
-  //if (vPosition.a == 0.0) discard;
+  if (vPosition.a == 0.0) discard;
   
   // get hit normal
   vec3  vNormal  = texture2D(texRayHitNormal, vFragCoords).xyz;  
-
-  gl_FragColor = vec4(vNormal.x, vNormal.y, vNormal.z,1.0);
-  return;
 
 	// compute lighting
 	vec3 vViewDir    = normalize(vec3(0.0,0.0,0.0)-vPosition.xyz);

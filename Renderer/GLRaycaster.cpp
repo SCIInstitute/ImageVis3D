@@ -46,7 +46,7 @@ using namespace std;
 
 GLRaycaster::GLRaycaster(MasterController* pMasterController) :
   GLRenderer(pMasterController),
-  m_pFBOScratchpad(NULL),
+  m_pFBORayEntry(NULL),
   m_pFBOIsoHit(NULL),
   m_pProgramRenderFrontFaces(NULL),
   m_pProgramIsoCompose(NULL)
@@ -60,7 +60,7 @@ GLRaycaster::~GLRaycaster() {
 void GLRaycaster::Cleanup() {
   GLRenderer::Cleanup();
 
-  if (m_pFBOScratchpad)    {m_pMasterController->MemMan()->FreeFBO(m_pFBOScratchpad);  m_pFBOScratchpad = NULL;}
+  if (m_pFBORayEntry)    {m_pMasterController->MemMan()->FreeFBO(m_pFBORayEntry);  m_pFBORayEntry = NULL;}
   if (m_pFBOIsoHit)        {m_pMasterController->MemMan()->FreeFBO(m_pFBOIsoHit);  m_pFBOIsoHit = NULL;}
   if (m_pProgramRenderFrontFaces) {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramRenderFrontFaces); m_pProgramRenderFrontFaces = NULL;}
   if (m_pProgramIsoCompose)       {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIsoCompose); m_pProgramIsoCompose = NULL;}
@@ -69,11 +69,11 @@ void GLRaycaster::Cleanup() {
 void GLRaycaster::CreateOffscreenBuffers() {
   GLRenderer::CreateOffscreenBuffers();
 
-  if (m_pFBOScratchpad) {m_pMasterController->MemMan()->FreeFBO(m_pFBOScratchpad); m_pFBOIsoHit = NULL;}
+  if (m_pFBORayEntry) {m_pMasterController->MemMan()->FreeFBO(m_pFBORayEntry); m_pFBOIsoHit = NULL;}
   if (m_pFBOIsoHit)     {m_pMasterController->MemMan()->FreeFBO(m_pFBOIsoHit);  m_pFBOIsoHit = NULL;}
 
   if (m_vWinSize.area() > 0) {
-    m_pFBOScratchpad = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false, 2);
+    m_pFBORayEntry = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false, 2);
     m_pFBOIsoHit     = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false, 2);
   }
 }
@@ -312,64 +312,52 @@ void GLRaycaster::Render3DPreLoop() {
 
 void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
   glDisable(GL_BLEND);
-
-  GLenum e = glGetError();
   
   // disable writing to the main offscreen buffer
   m_pFBO3DImageCurrent->FinishWrite();
 
-  e = glGetError();
-  // write frontfaces (ray entry points) into scratchpad
-  m_pFBOScratchpad->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
-  e = glGetError();
-  m_pFBOScratchpad->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
-  e = glGetError();
+  // write frontfaces (ray entry points)
+  m_pFBORayEntry->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
+  m_pFBORayEntry->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
+
+  GLenum buffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT };
+  glDrawBuffers(2, buffers);
+
   m_pProgramRenderFrontFaces->Enable();
-  e = glGetError();
   RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
-  e = glGetError();
   m_pProgramRenderFrontFaces->Disable();
-  e = glGetError();
-  m_pFBOScratchpad->FinishWrite(0);
-  e = glGetError();
-  m_pFBOScratchpad->FinishWrite(1);
-  e = glGetError();
+
+  glDrawBuffer(GL_NONE);
+
+  m_pFBORayEntry->FinishWrite(1);
+  m_pFBORayEntry->FinishWrite(0);
 
   if (m_eRenderMode == RM_ISOSURFACE) {    
-
-    GLenum e = glGetError();
-
     m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
-    e = glGetError();
     m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
-    e = glGetError();
+
+    glDrawBuffers(2, buffers);
+
     glClear(GL_COLOR_BUFFER_BIT);
-    e = glGetError();
     m_pProgramIso->Enable();
-    e = glGetError();
     SetBrickDepShaderVars(m_vCurrentBrickList[iCurrentBrick]);
-    e = glGetError();
-    // compute the hit position and normal
-    m_pFBOScratchpad->Read(GL_TEXTURE2, 0);
-    e = glGetError();
-    m_pFBOScratchpad->Read(GL_TEXTURE3, 1);
-    e = glGetError();
+    m_pFBORayEntry->Read(GL_TEXTURE2_ARB, 0);
+    m_pFBORayEntry->Read(GL_TEXTURE3_ARB, 1);
     RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
-    e = glGetError();
-    m_pFBOScratchpad->FinishRead(0);
-    e = glGetError();
-    m_pFBOScratchpad->FinishRead(1);
-    e = glGetError();
-
-
+    m_pFBORayEntry->FinishRead(1);
+    m_pFBORayEntry->FinishRead(0);
     m_pProgramIso->Disable(); 
 
-    m_pFBOIsoHit->FinishWrite(0);
+    glDrawBuffer(GL_NONE);
+
     m_pFBOIsoHit->FinishWrite(1);
+    m_pFBOIsoHit->FinishWrite(0);
 
     m_pFBO3DImageCurrent->Write();
+    glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
   } else {
     m_pFBO3DImageCurrent->Write();
+    glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
 
     // do the raycasting
     switch (m_eRenderMode) {
@@ -387,11 +375,11 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 
     SetBrickDepShaderVars(m_vCurrentBrickList[iCurrentBrick]);
 
-    m_pFBOScratchpad->Read(GL_TEXTURE2_ARB, 0);
-    m_pFBOScratchpad->Read(GL_TEXTURE3_ARB, 1);
+    m_pFBORayEntry->Read(GL_TEXTURE2_ARB, 0);
+    m_pFBORayEntry->Read(GL_TEXTURE3_ARB, 1);
     RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
-    m_pFBOScratchpad->FinishRead(0);
-    m_pFBOScratchpad->FinishRead(1);
+    m_pFBORayEntry->FinishRead(0);
+    m_pFBORayEntry->FinishRead(1);
 
     switch (m_eRenderMode) {
       case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
@@ -416,6 +404,7 @@ void GLRaycaster::Render3DPostLoop() {
     m_pFBOIsoHit->Read(GL_TEXTURE1, 1);
 
     m_pProgramIsoCompose->Enable();
+
     glDisable(GL_DEPTH_TEST);
     glBegin(GL_QUADS);
       glColor4d(1,1,1,1);
