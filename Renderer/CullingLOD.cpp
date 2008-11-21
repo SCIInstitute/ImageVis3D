@@ -60,7 +60,7 @@ void CullingLOD::SetScreenParams(float fFOVY, float fAspect, float fNearPlane, f
   m_fFOVY = fFOVY;
   m_fAspect = fAspect;
   m_fNearPlane = fNearPlane;
-  m_fFarPlane = m_fFarPlane;
+  m_fFarPlane = fFarPlane;
   m_iPixelCountY = iPixelCountY;
 
   m_fLODFactor = 2.0f * tan(fFOVY * ((3.1416f/180.0f) / 2.0f)) * m_fScreenSpaceError / float(m_iPixelCountY);
