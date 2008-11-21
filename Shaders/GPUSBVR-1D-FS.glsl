@@ -38,7 +38,7 @@
 uniform sampler3D texVolume;  ///< the data volume
 uniform sampler1D texTrans1D; ///< the 1D Transfer function
 uniform float fTransScale;    ///< scale for 1D Transfer function lookup
-uniform float fStepScale;   ///< quotient of nyquist and actual stepsize
+uniform float fStepScale;     ///< opacity correction quotient
 
 void main(void)
 {

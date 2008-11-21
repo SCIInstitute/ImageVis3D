@@ -598,6 +598,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Shaders\GLRaycaster-compose-FS.glsl"
+						>
+					</File>
+					<File
 						RelativePath=".\Shaders\GLRaycaster-frontfaces-FS.glsl"
 						>
 					</File>

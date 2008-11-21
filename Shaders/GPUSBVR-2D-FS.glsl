@@ -39,7 +39,7 @@ uniform sampler3D texVolume;  ///< the data volume
 uniform sampler2D texTrans2D; ///< the 2D Transfer function
 uniform float fTransScale;    ///< value scale for 2D Transfer function lookup
 uniform float fGradientScale; ///< gradient scale for 2D Transfer function lookup
-uniform float fStepScale;   ///< quotient of nyquist and actual stepsize
+uniform float fStepScale;   ///< opacity correction quotient
 uniform vec3 vVoxelStepsize;  ///< Stepsize (in texcoord) to get to the next voxel
 
 void main(void)

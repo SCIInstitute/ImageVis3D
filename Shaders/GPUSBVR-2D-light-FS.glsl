@@ -39,7 +39,7 @@ uniform sampler3D texVolume;  ///< the data volume
 uniform sampler2D texTrans2D; ///< the 2D Transfer function
 uniform float fTransScale;    ///< value scale for 2D Transfer function lookup
 uniform float fGradientScale; ///< gradient scale for 2D Transfer function lookup
-uniform float fStepScale;     ///< quotient of nyquist and actual stepsize
+uniform float fStepScale;     ///< opacity correction quotient
 uniform vec3 vVoxelStepsize;  ///< Stepsize (in texcoord) to get to the next voxel
 
 uniform vec3 vLightAmbient;
@@ -69,7 +69,7 @@ void main(void)
 
   /// compute lighting
   vec3 vNormal     = gl_NormalMatrix * vGradient;
-  float l = length(vNormal); if (l>0.0) vNormal /= l; // save normalization
+  float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
   vec3 vViewDir    = normalize(vec3(0,0,0)-vPosition);
   vec3 vReflection = normalize(reflect(vViewDir, vNormal));
   vec3 vLightColor = vLightAmbient+

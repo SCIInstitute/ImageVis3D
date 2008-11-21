@@ -44,7 +44,10 @@ SBVRGeogen::SBVRGeogen(void) :
 	m_vSize(1,1,1),
   m_vTexCoordMin(0,0,0),
   m_vTexCoordMax(1,1,1),
-  m_iMinLayers(100)
+  m_iMinLayers(100),
+  m_vGlobalAspect(1,1,1),
+  m_vGlobalSize(1,1,1),
+  m_vLODSize(1,1,1)
 {
 	m_pfBBOXStaticVertex[0] = FLOATVECTOR3(-0.5, 0.5,-0.5);
 	m_pfBBOXStaticVertex[1] = FLOATVECTOR3( 0.5, 0.5,-0.5);
@@ -233,7 +236,7 @@ float SBVRGeogen::GetLayerDistance() {
 
 
 float SBVRGeogen::GetOpacityCorrection() {
-  return GetLayerDistance()*m_vSize.maxVal();
+  return 1.0f/m_fSamplingModifier * (FLOATVECTOR3(m_vGlobalSize)/FLOATVECTOR3(m_vLODSize)).maxVal();//  GetLayerDistance()*m_vSize.maxVal();
 }
 
 void SBVRGeogen::ComputeGeometry() {
@@ -245,8 +248,17 @@ void SBVRGeogen::ComputeGeometry() {
 	while (ComputeLayerGeometry(fDepth)) fDepth += fLayerDistance;
 }
 
+void SBVRGeogen::SetVolumeData(const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize) {
+  m_vGlobalAspect = vAspect;
+  m_vGlobalSize = vSize;
+}
 
-void SBVRGeogen::SetVolumeData(const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize, const FLOATVECTOR3& vTexCoordMin, const FLOATVECTOR3& vTexCoordMax) {
+void SBVRGeogen::SetLODData(const UINTVECTOR3& vSize) {
+  m_vLODSize = vSize;
+}
+
+
+void SBVRGeogen::SetBrickData(const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize, const FLOATVECTOR3& vTexCoordMin, const FLOATVECTOR3& vTexCoordMax) {
   m_vAspect       = vAspect; 
   m_vSize         = vSize;
   m_vTexCoordMin  = vTexCoordMin;

@@ -105,7 +105,17 @@ void RenderWindow::initializeGL()
     bFirstTime = false;
   }
 
-  if (m_Renderer != NULL) m_bRenderSubsysOK = m_Renderer->Initialize(); else m_bRenderSubsysOK = false;
+  if (m_Renderer == NULL) 
+    m_bRenderSubsysOK = false;
+  else
+    m_bRenderSubsysOK = m_Renderer->Initialize();
+
+
+  if (!m_bRenderSubsysOK) {
+    m_Renderer->Cleanup();
+    m_MasterController.ReleaseVolumerenderer(m_Renderer);
+    m_Renderer = NULL;
+  } 
 }
 
 void RenderWindow::paintGL()
@@ -312,7 +322,7 @@ void RenderWindow::closeEvent(QCloseEvent *event) {
 void RenderWindow::focusInEvent ( QFocusEvent * event ) {
   // call superclass method
   QGLWidget::focusInEvent(event);
-  m_Renderer->SetTimeSlice(m_iTimeSliceMSecsActive);
+  if (m_Renderer) m_Renderer->SetTimeSlice(m_iTimeSliceMSecsActive);
 
   if (event->gotFocus()) {
     emit WindowActive(this);
@@ -322,7 +332,7 @@ void RenderWindow::focusInEvent ( QFocusEvent * event ) {
 void RenderWindow::focusOutEvent ( QFocusEvent * event ) {
   // call superclass method
   QGLWidget::focusOutEvent(event);
-  m_Renderer->SetTimeSlice(m_iTimeSliceMSecsInActive);
+  if (m_Renderer) m_Renderer->SetTimeSlice(m_iTimeSliceMSecsInActive);
 
   if (!event->gotFocus()) {
     emit WindowInActive(this);

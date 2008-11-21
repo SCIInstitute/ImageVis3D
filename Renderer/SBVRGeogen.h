@@ -63,7 +63,9 @@ public:
 
   void SetSamplingModifier(float fSamplingModifier) {m_fSamplingModifier = fSamplingModifier;}
   void SetTransformation(const FLOATMATRIX4& matTransform, bool bForceUpdate = false);
-	void SetVolumeData(const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize, const FLOATVECTOR3& vTexCoordMin=FLOATVECTOR3(0,0,0), const FLOATVECTOR3& vTexCoordMax=FLOATVECTOR3(1,1,1));
+  void SetVolumeData(const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize);
+  void SetLODData(const UINTVECTOR3& vSize);
+	void SetBrickData(const FLOATVECTOR3& vAspect, const UINTVECTOR3& vSize, const FLOATVECTOR3& vTexCoordMin=FLOATVECTOR3(0,0,0), const FLOATVECTOR3& vTexCoordMax=FLOATVECTOR3(1,1,1));
 	void ComputeGeometry();
 	uint ComputeLayerGeometry(float fDepth, POS3TEX3_VERTEX pfLayerPoints[12]);
   float GetOpacityCorrection();
@@ -82,6 +84,10 @@ protected:
   FLOATVECTOR3		  m_vTexCoordMin;
   FLOATVECTOR3		  m_vTexCoordMax;
   unsigned int      m_iMinLayers; ///< allows the user to specifiy a minimum layer count to prevent small volumes from beeing sparsely sampled
+
+  FLOATVECTOR3      m_vGlobalAspect;
+  UINTVECTOR3       m_vGlobalSize;
+  UINTVECTOR3       m_vLODSize;
 
 	void InitBBOX();
 	bool EpsilonEqual(float a, float b);

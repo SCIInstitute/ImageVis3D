@@ -47,7 +47,7 @@ class CullingLOD
 {
   public:
     CullingLOD(float fScreenSpaceError=1.0f);
-    void SetScreenParams(float fFOVY, float fAspect, float fNearPlane, unsigned int iPixelCountY);
+    void SetScreenParams(float fFOVY, float fAspect, float fNearPlane, float fFarPlane, unsigned int iPixelCountY);
 	  void SetProjectionMatrix(const FLOATMATRIX4& mProjectionMatrix);
     void SetModelMatrix(const FLOATMATRIX4& mModelMatrix);
     void SetViewMatrix(const FLOATMATRIX4& mViewMatrix);
@@ -55,6 +55,8 @@ class CullingLOD
     
     int GetLODLevel(const FLOATVECTOR3& vfCenter, const FLOATVECTOR3& vfExtent, const UINTVECTOR3& viVoxelCount) const;
 	  bool IsVisible(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vfExtent) const;
+
+    FLOATVECTOR2 GetDepthScaleParams();
 
   private:
     FLOATMATRIX4 m_mModelViewProjectionMatrix;
@@ -66,6 +68,7 @@ class CullingLOD
     float        m_fFOVY;
     float        m_fAspect;
     float        m_fNearPlane;
+    float        m_fFarPlane;
     unsigned int m_iPixelCountY;
     float        m_fScreenSpaceError;
     float        m_fLODFactor;          /// < the magic LOD factor !

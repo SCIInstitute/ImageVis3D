@@ -314,8 +314,7 @@ void GLRenderer::SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight) 
   FLOATMATRIX4 mProjection;
   mProjection.getProjection();
   m_FrustumCullingLOD.SetProjectionMatrix(mProjection);
-  m_FrustumCullingLOD.SetScreenParams(fovy,aspect,nearPlane,viSize.y);
-
+  m_FrustumCullingLOD.SetScreenParams(fovy,aspect,nearPlane,farPlane,viSize.y);
 }
 
 
@@ -678,18 +677,18 @@ void GLRenderer::DrawBackGradient() {
 }
 
 void GLRenderer::Cleanup() {
-  m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast);
-  m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent);
+  if (m_pFBO3DImageLast)      {m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast); m_pFBO3DImageLast =NULL;}
+  if (m_pFBO3DImageCurrent)   {m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent); m_pFBO3DImageCurrent =NULL;}
 
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramTrans);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTransSlice);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTransSlice);
+  if (m_pProgramTrans)        {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramTrans); m_pProgramTrans =NULL;}
+  if (m_pProgram1DTransSlice) {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTransSlice); m_pProgram1DTransSlice =NULL;}
+  if (m_pProgram2DTransSlice) {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTransSlice); m_pProgram2DTransSlice =NULL;}
 
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[0]);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[1]);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[1]);
-  m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIso);
+  if (m_pProgram1DTrans[0])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[0]); m_pProgram1DTrans[0] =NULL;}
+  if (m_pProgram1DTrans[1])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[1]); m_pProgram1DTrans[1] =NULL;}
+  if (m_pProgram2DTrans[0])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]); m_pProgram2DTrans[0] =NULL;}
+  if (m_pProgram2DTrans[1])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[1]); m_pProgram2DTrans[1] =NULL;}
+  if (m_pProgramIso)          {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIso); m_pProgramIso =NULL;}
 }
 
 
@@ -869,6 +868,5 @@ void GLRenderer::Render3DView() {
   // at the very end render the bboxes
   if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();
 
-  glDepthMask(GL_TRUE);
   glDisable(GL_BLEND);
 }

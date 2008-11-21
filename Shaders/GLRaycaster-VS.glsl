@@ -35,8 +35,11 @@
   \date    October 2008
 */
 
+varying float fEyeDepth;
+
 void main(void)
 {
   gl_Position = gl_ModelViewProjectionMatrix * vec4(gl_Vertex.xyz,1.0);
   gl_TexCoord[0] = gl_MultiTexCoord0;
+  fEyeDepth = (gl_ModelViewMatrix * vec4(gl_Vertex.xyz,1.0)).z;
 }

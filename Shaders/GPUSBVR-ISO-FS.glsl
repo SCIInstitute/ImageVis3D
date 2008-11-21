@@ -64,7 +64,7 @@ void main(void)
 
     // compute lighting
     vec3 vNormal     = gl_NormalMatrix * vGradient;
-    float l = length(vNormal); if (l>0.0) vNormal /= l; // save normalization
+    float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
     vec3 vViewDir    = normalize(vec3(0,0,0)-vPosition);
     vec3 vReflection = normalize(reflect(vViewDir, vNormal));
     vec3 vLightColor = vLightAmbient+

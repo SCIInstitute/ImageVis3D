@@ -27,17 +27,18 @@
 */
 
 /**
-  \file    GLRaycaster-frontfaces-FS.glsl
-  \author  Jens Krueger
-           SCI Institute
-           University of Utah
-  \version 1.0
-  \date    November 2008
+  \file    GLSBVR-Transfer-FS.glsl
+  \author    Jens Krueger
+        SCI Institute
+        University of Utah
+  \version  1.0
+  \date    October 2008
 */
 
-varying float fEyeDepth;
+uniform sampler2D texColor;  
+uniform sampler2D texDepth;
 
-void main(void)
-{
-  gl_FragColor = vec4(gl_TexCoord[0].xyz,fEyeDepth);
+void main(void){
+  gl_FragColor = texture2D(texColor, gl_TexCoord[0].xy);
+  gl_FragDepth = texture2D(texDepth, gl_TexCoord[0].xy).r;
 }

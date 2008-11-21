@@ -65,7 +65,9 @@ bool GLSBVR::Initialize() {
       !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-1D-light-FS.glsl", &(m_pProgram1DTrans[1])) ||
       !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-2D-FS.glsl",       &(m_pProgram2DTrans[0])) ||
       !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-2D-light-FS.glsl", &(m_pProgram2DTrans[1])) ||
-      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-ISO-FS.glsl",      &m_pProgramIso)) {
+      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-ISO-FS.glsl",      &(m_pProgramIso))) {
+
+      Cleanup();
 
       m_pMasterController->DebugOut()->Error("GLSBVR::Initialize","Error loading a shader.");
       return false;
@@ -116,7 +118,6 @@ void GLSBVR::SetSampleRateModifier(float fSampleRateModifier) {
 }
 
 void GLSBVR::SetBrickDepShaderVars(const Brick& currentBrick) {
-
   FLOATVECTOR3 vStep(1.0f/currentBrick.vVoxelCount.x, 1.0f/currentBrick.vVoxelCount.y, 1.0f/currentBrick.vVoxelCount.z);
 
   float fStepScale = m_SBVRGeogen.GetOpacityCorrection();
@@ -192,12 +193,14 @@ void GLSBVR::Render3DPreLoop() {
   }
 
   if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_FALSE);
+
+  m_SBVRGeogen.SetLODData( UINTVECTOR3(m_pDataset->GetInfo()->GetDomainSize(m_iCurrentLOD))  );
 }
 
 void GLSBVR::Render3DInLoop(size_t iCurrentBrick) {
   // setup the slice generator
-  m_SBVRGeogen.SetVolumeData(m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vVoxelCount, 
-                             m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax);
+  m_SBVRGeogen.SetBrickData(m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vVoxelCount, 
+                            m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax);
   FLOATMATRIX4 maBricktTrans; 
   maBricktTrans.Translation(m_vCurrentBrickList[iCurrentBrick].vCenter.x, m_vCurrentBrickList[iCurrentBrick].vCenter.y, m_vCurrentBrickList[iCurrentBrick].vCenter.z);
   FLOATMATRIX4 maBricktModelView = maBricktTrans * m_matModelView;
@@ -225,5 +228,18 @@ void GLSBVR::Render3DPostLoop() {
     case RM_ISOSURFACE :  m_pProgramIso->Disable(); break;
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLSBVR::Render3DView","Invalid rendermode set"); break;
   }
+
+  glDepthMask(GL_TRUE);
 }
 
+
+bool GLSBVR::LoadDataset(const string& strFilename) {
+  if (GLRenderer::LoadDataset(strFilename)) {
+    UINTVECTOR3    vSize = UINTVECTOR3(m_pDataset->GetInfo()->GetDomainSize());
+    FLOATVECTOR3 vAspect = FLOATVECTOR3(m_pDataset->GetInfo()->GetScale());
+    vAspect /= vAspect.maxVal();
+    
+    m_SBVRGeogen.SetVolumeData(vAspect, vSize);
+    return true;
+  } else return false;
+}

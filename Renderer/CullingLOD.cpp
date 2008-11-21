@@ -49,20 +49,27 @@ CullingLOD::CullingLOD(float fScreenSpaceError) :
     m_fFOVY(1.0f),
     m_fAspect(1.0f),
     m_fNearPlane(0.1f),
+    m_fFarPlane(100.0f),
     m_iPixelCountY(1),
     m_fScreenSpaceError(fScreenSpaceError),
     m_fLODFactor(1.0f)
 {
 }
 
-void CullingLOD::SetScreenParams(float fFOVY, float fAspect, float fNearPlane, unsigned int iPixelCountY) {
+void CullingLOD::SetScreenParams(float fFOVY, float fAspect, float fNearPlane, float fFarPlane, unsigned int iPixelCountY) {
   m_fFOVY = fFOVY;
   m_fAspect = fAspect;
   m_fNearPlane = fNearPlane;
+  m_fFarPlane = m_fFarPlane;
   m_iPixelCountY = iPixelCountY;
 
   m_fLODFactor = 2.0f * tan(fFOVY * ((3.1416f/180.0f) / 2.0f)) * m_fScreenSpaceError / float(m_iPixelCountY);
 }
+
+FLOATVECTOR2 CullingLOD::GetDepthScaleParams() {
+  return FLOATVECTOR2(m_fFarPlane / (m_fFarPlane - m_fNearPlane), (m_fFarPlane * m_fNearPlane / (m_fNearPlane - m_fFarPlane)));
+}
+
 
 void CullingLOD::SetProjectionMatrix(const FLOATMATRIX4& mProjectionMatrix)
 {

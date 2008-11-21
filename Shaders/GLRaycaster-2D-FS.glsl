@@ -37,35 +37,63 @@
 
 uniform sampler3D texVolume;  ///< the data volume
 uniform sampler2D texTrans2D; ///< the 2D Transfer function
-uniform sampler2D texRayEntry; ///< the forntface or ray entry point texture
+uniform sampler2D texRayEntry; ///< the frontface or ray entry point texture
 uniform float fTransScale;    ///< value scale for 2D Transfer function lookup
 uniform float fGradientScale; ///< gradient scale for 2D Transfer function lookup
-uniform float fStepScale;   ///< quotient of nyquist and actual stepsize
+uniform float fStepScale;   ///< opacity correction quotient
 uniform vec3 vVoxelStepsize;  ///< Stepsize (in texcoord) to get to the next voxel
+uniform vec2 vScreensize;      ///< the size of the screen in pixels
+uniform float fRayStepsize;     ///< stepsize along the ray
+
+
+vec4 ColorBlend(vec4 src, vec4 dst) {
+	vec4 result = dst;
+	result.rgb   += src.rgb*(1.0-dst.a)*src.a;
+	result.a     += (1.0-dst.a)*src.a;
+	return result;
+}
+
 
 void main(void)
 {
-  /// get volume value
-	float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
+  // compute the coordinates to look up the previous pass
+  vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
-  /// compute the gradient
-	float fVolumValXp  = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(+vVoxelStepsize.x,0,0)).x;
-	float fVolumValXm  = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(-vVoxelStepsize.x,0,0)).x;
-	float fVolumValYp  = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,-vVoxelStepsize.y,0)).x;
-	float fVolumValYm  = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,+vVoxelStepsize.y,0)).x;
-	float fVolumValZp  = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,+vVoxelStepsize.z)).x;
-	float fVolumValZm  = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,-vVoxelStepsize.z)).x;
-  float fGradientMag = length(vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp)); 
+  // compute the ray parameters
+  vec3  vRayExit   = gl_TexCoord[0].xyz;
+  vec4  vRayEntry  = texture2D(texRayEntry, vFragCoords);
+  vec3  vRayDir    = vRayExit - vRayEntry.xyz;
+  float fRayLength = length(vRayDir);
+  vRayDir /= fRayLength;
 
-  /// apply 2D transfer function
-	vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale));
+  // compute the maximum number of steps before the domain is left
+  int iStepCount = int(fRayLength / length(fRayStepsize * vRayDir));
 
-  /// apply opacity correction
-  vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
+  // do the actual raycasting
+  vec4  vColor = vec4(0.0,0.0,0.0,0.0);
+  vec3  vCurrentPos = vRayEntry.xyz;
+  for (int i = 0;i<iStepCount+1;i++) {
+    float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
 
-  // premultiply color with alpha (for front to back)
-  vTransVal.xyz *= vTransVal.a;
+    // compute the gradient/normal
+    float fVolumValXp = texture3D(texVolume, vCurrentPos+vec3(+vVoxelStepsize.x,0,0)).x;
+    float fVolumValXm = texture3D(texVolume, vCurrentPos+vec3(-vVoxelStepsize.x,0,0)).x;
+    float fVolumValYp = texture3D(texVolume, vCurrentPos+vec3(0,-vVoxelStepsize.y,0)).x;
+    float fVolumValYm = texture3D(texVolume, vCurrentPos+vec3(0,+vVoxelStepsize.y,0)).x;
+    float fVolumValZp = texture3D(texVolume, vCurrentPos+vec3(0,0,+vVoxelStepsize.z)).x;
+    float fVolumValZm = texture3D(texVolume, vCurrentPos+vec3(0,0,-vVoxelStepsize.z)).x;
+    float fGradientMag = length(vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp)); 
 
-  /// write result to fragment color
-  gl_FragColor    = vTransVal;
+    /// apply 2D transfer function
+	  vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale));
+
+    /// apply opacity correction
+    vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
+    
+    vColor = ColorBlend(vTransVal,vColor);
+
+    vCurrentPos    += fRayStepsize * vRayDir;
+  }
+  
+  gl_FragColor  = vColor;
 }

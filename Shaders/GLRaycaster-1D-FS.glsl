@@ -35,26 +35,54 @@
   \date    October 2008
 */
 
-uniform sampler3D texVolume;  ///< the data volume
-uniform sampler1D texTrans1D; ///< the 1D Transfer function
-uniform sampler2D texRayEntry; ///< the forntface or ray entry point texture
-uniform float fTransScale;    ///< scale for 1D Transfer function lookup
-uniform float fStepScale;   ///< quotient of nyquist and actual stepsize
+uniform sampler3D texVolume;   ///< the data volume
+uniform sampler1D texTrans1D;  ///< the 1D Transfer function
+uniform sampler2D texRayEntry; ///< the frontface or ray entry point texture
+uniform float fTransScale;     ///< scale for 1D Transfer function lookup
+uniform float fStepScale;      ///< opacity correction quotient
+uniform vec2 vScreensize;      ///< the size of the screen in pixels
+uniform float fRayStepsize;     ///< stepsize along the ray
+
+
+vec4 ColorBlend(vec4 src, vec4 dst) {
+	vec4 result = dst;
+	result.rgb   += src.rgb*(1.0-dst.a)*src.a;
+	result.a     += (1.0-dst.a)*src.a;
+	return result;
+}
+
 
 void main(void)
 {
-  /// get volume value
-  float fVolumVal = texture3D(texVolume, gl_TexCoord[0].xyz).x;	
+  // compute the coordinates to look up the previous pass
+  vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
-  /// apply 1D transfer function
-	vec4  vTransVal = texture1D(texTrans1D, fVolumVal*fTransScale);
+  // compute the ray parameters
+  vec3  vRayExit   = gl_TexCoord[0].xyz;
+  vec4  vRayEntry  = texture2D(texRayEntry, vFragCoords);
+  vec3  vRayDir    = vRayExit - vRayEntry.xyz;
+  float fRayLength = length(vRayDir);
+  vRayDir /= fRayLength;
 
-  /// apply opacity correction
-  vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
+  // compute the maximum number of steps before the domain is left
+  int iStepCount = int(fRayLength / length(fRayStepsize * vRayDir));
+
+  // do the actual raycasting
+  vec4  vColor = vec4(0.0,0.0,0.0,0.0);
+  vec3  vCurrentPos = vRayEntry.xyz;
+  for (int i = 0;i<iStepCount+1;i++) {
+    float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
+
+    /// apply 1D transfer function
+	  vec4  vTransVal = texture1D(texTrans1D, fVolumVal*fTransScale);
+
+    /// apply opacity correction
+    vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
+    
+    vColor = ColorBlend(vTransVal,vColor);
+
+    vCurrentPos    += fRayStepsize * vRayDir;
+  }
   
-  // premultiply color with alpha (for front to back)
-  vTransVal.xyz *= vTransVal.a;
-
-  /// write result to fragment color
-	gl_FragColor    = vTransVal;
+  gl_FragColor  = vColor;
 }

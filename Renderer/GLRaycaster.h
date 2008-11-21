@@ -61,9 +61,16 @@ class GLRaycaster : public GLRenderer {
     /** Deallocates GPU memory allocated during the rendering process. */
     virtual void Cleanup();
 
+    /** Change the size of the render window.  Any previous image is
+     * destroyed, causing a full redraw on the next render.
+     * \param vWinSize  new width and height of the view window */
+    virtual void Resize(const UINTVECTOR2& vWinSize);
+
   protected:
     GLFBOTex*       m_pFBOScratchpad;
+    GLFBOTex*       m_pFBOIsoHit;
     GLSLProgram*    m_pRenderFrontFaces;
+    GLSLProgram*    m_pIsoCompose;
 
     void SetBrickDepShaderVars(const Brick& currentBrick);
     virtual const FLOATVECTOR2 SetDataDepShaderVars();
