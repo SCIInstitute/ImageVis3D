@@ -38,7 +38,6 @@
 uniform sampler3D texVolume;  ///< the data volume
 uniform sampler2D texTrans2D; ///< the 2D Transfer function
 uniform sampler2D texRayEntry; ///< the frontface or ray entry point texture
-uniform sampler2D texRayEntryPos; ///< the frontface or ray entry point texture
 uniform float fTransScale;    ///< value scale for 2D Transfer function lookup
 uniform float fGradientScale; ///< gradient scale for 2D Transfer function lookup
 uniform float fStepScale;   ///< opacity correction quotient
@@ -64,7 +63,6 @@ void main(void)
   // compute the ray parameters
   vec3  vRayExit   = gl_TexCoord[0].xyz;
   vec3  vRayEntry  = texture2D(texRayEntry, vFragCoords).xyz;
-  vec3  vRayEntryPos  = texture2D(texRayEntryPos, vFragCoords).xyz;  
   vec3  vRayDir    = vRayExit - vRayEntry;
   float fRayLength = length(vRayDir);
   vRayDir /= fRayLength;

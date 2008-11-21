@@ -953,7 +953,7 @@ void RasterDataBlock::FlatDataToBrickedLOD(LargeRAWFile* pSourceData, const stri
           if (pMaxMinDatBlock) {
             double fMin, fMax, fMinGrad=-std::numeric_limits<double>::max(), fMaxGrad=std::numeric_limits<double>::max();
             /// \todo compute gradients
-            maxminFunc(pData, 0, iCopySize/uiBytesPerElement, &fMin, &fMax);
+            maxminFunc(pData, 0, size_t(iCopySize/uiBytesPerElement), &fMin, &fMax);
             pMaxMinDatBlock->MergeData(fMin, fMax, fMinGrad, fMaxGrad);
           }
         }

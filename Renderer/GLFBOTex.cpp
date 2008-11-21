@@ -302,7 +302,7 @@ void GLFBOTex::FinishWrite(int iBuffer) {
 	assert(iBuffer<m_iNumBuffers);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,m_LastAttachment[iBuffer],GL_TEXTURE_2D,0,0);
 	if (m_hDepthBuffer) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,0,0);
-//	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,0,0);
+//glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,0,0);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
 }
 

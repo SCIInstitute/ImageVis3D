@@ -35,10 +35,43 @@
   \date    October 2008
 */
 
-uniform sampler2D texColor;  
-uniform sampler2D texDepth;
+uniform sampler2D texRayHitPos;    ///< the hitposition of the ray (alpha flags hit yes/no)
+uniform sampler2D texRayHitNormal; ///< the surface normal at the hit position
+
+uniform vec3 vLightAmbient;
+uniform vec3 vLightDiffuse;
+uniform vec3 vLightSpecular;
+uniform vec3 vLightDir;
+
+
+uniform vec2 vScreensize;      ///< the size of the screen in pixels
+uniform vec2 vProjParam;       ///< X = far / (far - near)  / Y = (far * near / (near - far))
 
 void main(void){
-  gl_FragColor = texture2D(texColor, gl_TexCoord[0].xy);
-  gl_FragDepth = texture2D(texDepth, gl_TexCoord[0].xy).r;
+  // compute the coordinates to look up the previous pass
+  vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
+
+  // get hitposition and check if a isosurface hit for this ray was found
+  vec4  vPosition = texture2D(texRayHitPos, vFragCoords);
+  
+  //if (vPosition.a == 0.0) discard;
+  
+  // get hit normal
+  vec3  vNormal  = texture2D(texRayHitNormal, vFragCoords).xyz;  
+
+  gl_FragColor = vec4(vNormal.x, vNormal.y, vNormal.z,1.0);
+  return;
+
+	// compute lighting
+	vec3 vViewDir    = normalize(vec3(0.0,0.0,0.0)-vPosition.xyz);
+	vec3 vReflection = normalize(reflect(vViewDir, vNormal));
+	vec3 vLightColor = vLightAmbient+
+					   vLightDiffuse*clamp(dot(vNormal, -vLightDir),0.0,1.0)+
+					   vLightSpecular*pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0);
+
+	/// write result to fragment color
+	gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, 1.0);
+
+  // compute linear eye depth
+  gl_FragDepth = vProjParam.x + (vProjParam.y / -vPosition.z);
 }
