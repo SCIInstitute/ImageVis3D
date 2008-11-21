@@ -74,7 +74,7 @@ void GLRaycaster::CreateOffscreenBuffers() {
 
   if (m_vWinSize.area() > 0) {
     m_pFBORayEntry = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false, 2);
-    m_pFBOIsoHit     = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false, 2);
+    m_pFBOIsoHit     = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true, 2);
   }
 }
 
@@ -307,7 +307,7 @@ void GLRaycaster::Render3DPreLoop() {
                           break;
   }
 
-  if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_FALSE);
+  if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_FALSE); else glDepthMask(GL_TRUE);
 }
 
 void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
@@ -324,7 +324,7 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
   glDrawBuffers(2, buffers);
 
   m_pProgramRenderFrontFaces->Enable();
-  RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
+  RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
   m_pProgramRenderFrontFaces->Disable();
 
   glDrawBuffer(GL_NONE);
@@ -332,18 +332,19 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
   m_pFBORayEntry->FinishWrite(1);
   m_pFBORayEntry->FinishWrite(0);
 
-  if (m_eRenderMode == RM_ISOSURFACE) {    
+  
+  if (m_eRenderMode == RM_ISOSURFACE) { 
     m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
     m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
 
     glDrawBuffers(2, buffers);
 
-    glClear(GL_COLOR_BUFFER_BIT);
+    if (m_iBricksRenderedInThisSubFrame == 0) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_pProgramIso->Enable();
     SetBrickDepShaderVars(m_vCurrentBrickList[iCurrentBrick]);
     m_pFBORayEntry->Read(GL_TEXTURE2_ARB, 0);
     m_pFBORayEntry->Read(GL_TEXTURE3_ARB, 1);
-    RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
+    RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
     m_pFBORayEntry->FinishRead(1);
     m_pFBORayEntry->FinishRead(0);
     m_pProgramIso->Disable(); 
@@ -377,7 +378,7 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 
     m_pFBORayEntry->Read(GL_TEXTURE2_ARB, 0);
     m_pFBORayEntry->Read(GL_TEXTURE3_ARB, 1);
-    RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
+    RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
     m_pFBORayEntry->FinishRead(0);
     m_pFBORayEntry->FinishRead(1);
 
@@ -398,6 +399,7 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 void GLRaycaster::Render3DPostLoop() {
   glDisable(GL_CULL_FACE);
   glDepthMask(GL_TRUE);
+  glEnable(GL_BLEND);
 
   if (m_eRenderMode == RM_ISOSURFACE && m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) {    
     m_pFBOIsoHit->Read(GL_TEXTURE0, 0);
@@ -405,7 +407,6 @@ void GLRaycaster::Render3DPostLoop() {
 
     m_pProgramIsoCompose->Enable();
 
-    glDisable(GL_DEPTH_TEST);
     glBegin(GL_QUADS);
       glColor4d(1,1,1,1);
       glTexCoord2d(0,1);
@@ -417,7 +418,6 @@ void GLRaycaster::Render3DPostLoop() {
       glTexCoord2d(0,0);
       glVertex3d(-1.0, -1.0, -0.5);
     glEnd();
-    glEnable(GL_DEPTH_TEST);
 
     m_pProgramIsoCompose->Disable(); 
 

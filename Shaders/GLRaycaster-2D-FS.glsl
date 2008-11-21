@@ -61,8 +61,8 @@ void main(void)
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // compute the ray parameters
-  vec3  vRayExit   = gl_TexCoord[0].xyz;
-  vec3  vRayEntry  = texture2D(texRayEntry, vFragCoords).xyz;
+  vec3  vRayEntry  = gl_TexCoord[0].xyz;
+  vec3  vRayExit   = texture2D(texRayEntry, vFragCoords).xyz;
   vec3  vRayDir    = vRayExit - vRayEntry;
   float fRayLength = length(vRayDir);
   vRayDir /= fRayLength;
@@ -94,6 +94,8 @@ void main(void)
     vColor = ColorBlend(vTransVal,vColor);
 
     vCurrentPos    += fRayStepsize * vRayDir;
+
+    if (vColor.a >= 0.95) break;
   }
   
   gl_FragColor  = vColor;

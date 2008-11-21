@@ -67,8 +67,8 @@ void main(void)
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // compute the ray parameters
-  vec3  vRayExit   = gl_TexCoord[0].xyz;
-  vec3  vRayEntry  = texture2D(texRayEntry, vFragCoords).xyz;
+  vec3  vRayEntry  = gl_TexCoord[0].xyz;
+  vec3  vRayExit   = texture2D(texRayEntry, vFragCoords).xyz;
   vec3  vRayExitPos  = vEyePos;  
   vec3  vRayEntryPos  = texture2D(texRayEntryPos, vFragCoords).xyz;  
   vec3  vRayDir    = vRayExit - vRayEntry;
@@ -98,7 +98,7 @@ void main(void)
     float fGradientMag = length(vGradient); 
 
     /// apply 2D transfer function
-	vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale));
+	  vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale));
 
     /// compute lighting
     vec3 vNormal     = gl_NormalMatrix * vGradient;
@@ -117,6 +117,8 @@ void main(void)
 
     vCurrentPos    += fRayStepsize * vRayDir;
     vCurrentEyePos += vRayPosInc;
+
+    if (vColor.a >= 0.95) break;
   }
   
   gl_FragColor  = vColor;

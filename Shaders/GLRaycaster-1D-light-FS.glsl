@@ -65,8 +65,8 @@ void main(void)
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // compute the ray parameters
-  vec3  vRayExit   = gl_TexCoord[0].xyz;
-  vec3  vRayEntry  = texture2D(texRayEntry, vFragCoords).xyz;
+  vec3  vRayEntry  = gl_TexCoord[0].xyz;
+  vec3  vRayExit   = texture2D(texRayEntry, vFragCoords).xyz;
   vec3  vRayExitPos  = vEyePos;  
   vec3  vRayEntryPos  = texture2D(texRayEntryPos, vFragCoords).xyz;  
   vec3  vRayDir    = vRayExit - vRayEntry;
@@ -111,12 +111,14 @@ void main(void)
     /// apply opacity correction
     vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
     
-	vTransVal = clamp(vec4(vLightColor.x, vLightColor.y, vLightColor.z, vTransVal.a),0.0,1.0);
+	  vTransVal = clamp(vec4(vLightColor.x, vLightColor.y, vLightColor.z, vTransVal.a),0.0,1.0);
 
     vColor = ColorBlend(vTransVal,vColor);
 
     vCurrentPos    += fRayStepsize * vRayDir;
     vCurrentEyePos += vRayPosInc;
+
+    if (vColor.a >= 0.95) break;
   }
   
   gl_FragColor  = vColor;
