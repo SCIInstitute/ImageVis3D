@@ -38,6 +38,7 @@
 uniform sampler3D texVolume;  ///< the data volume
 uniform sampler2D texTrans2D; ///< the 2D Transfer function
 uniform sampler2D texRayEntry; ///< the frontface or ray entry point texture
+uniform sampler2D texRayEntryPos; ///< the frontface or ray entry point texture
 uniform float fTransScale;    ///< value scale for 2D Transfer function lookup
 uniform float fGradientScale; ///< gradient scale for 2D Transfer function lookup
 uniform float fStepScale;     ///< opacity correction quotient
@@ -51,9 +52,7 @@ uniform vec3 vLightSpecular;
 uniform vec3 vLightDiffuse;
 uniform vec3 vLightDir;
 
-varying vec3 vPosition;
-
-
+varying vec3 vEyePos;
 
 vec4 ColorBlend(vec4 src, vec4 dst) {
 	vec4 result = dst;
@@ -62,7 +61,6 @@ vec4 ColorBlend(vec4 src, vec4 dst) {
 	return result;
 }
 
-
 void main(void)
 {
   // compute the coordinates to look up the previous pass
@@ -70,17 +68,22 @@ void main(void)
 
   // compute the ray parameters
   vec3  vRayExit   = gl_TexCoord[0].xyz;
-  vec4  vRayEntry  = texture2D(texRayEntry, vFragCoords);
-  vec3  vRayDir    = vRayExit - vRayEntry.xyz;
+  vec3  vRayEntry  = texture2D(texRayEntry, vFragCoords).xyz;
+  vec3  vRayExitPos  = vEyePos;  
+  vec3  vRayEntryPos  = texture2D(texRayEntryPos, vFragCoords).xyz;  
+  vec3  vRayDir    = vRayExit - vRayEntry;
   float fRayLength = length(vRayDir);
   vRayDir /= fRayLength;
 
   // compute the maximum number of steps before the domain is left
   int iStepCount = int(fRayLength / length(fRayStepsize * vRayDir));
 
+  vec3  vRayPosInc    = (vRayExitPos - vRayEntryPos)/ float(iStepCount); 
+
   // do the actual raycasting
   vec4  vColor = vec4(0.0,0.0,0.0,0.0);
-  vec3  vCurrentPos = vRayEntry.xyz;
+  vec3  vCurrentPos = vRayEntry;
+  vec3  vCurrentEyePos = vRayEntryPos;
   for (int i = 0;i<iStepCount+1;i++) {
     float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
 
@@ -95,25 +98,25 @@ void main(void)
     float fGradientMag = length(vGradient); 
 
     /// apply 2D transfer function
-	  vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale));
+	vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale));
 
     /// compute lighting
     vec3 vNormal     = gl_NormalMatrix * vGradient;
     float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
-    vec3 vViewDir    = normalize(vec3(0,0,0)-vPosition);
+    vec3 vViewDir    = normalize(vec3(0,0,0)-vCurrentEyePos);
     vec3 vReflection = normalize(reflect(vViewDir, vNormal));
     vec3 vLightColor = vLightAmbient+
                        vLightDiffuse*clamp(dot(vNormal, -vLightDir),0.0,1.0)*vTransVal.xyz+
                        vLightSpecular*pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0);
 
-    vTransVal = clamp(vec4(vLightColor.x, vLightColor.y, vLightColor.z, 1.0)*vTransVal.a,0.0,1.0);
-
     /// apply opacity correction
     vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
     
+    vTransVal = clamp(vec4(vLightColor.x, vLightColor.y, vLightColor.z, vTransVal.a),0.0,1.0);
     vColor = ColorBlend(vTransVal,vColor);
 
     vCurrentPos    += fRayStepsize * vRayDir;
+    vCurrentEyePos += vRayPosInc;
   }
   
   gl_FragColor  = vColor;

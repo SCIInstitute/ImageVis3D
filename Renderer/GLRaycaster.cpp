@@ -73,7 +73,7 @@ void GLRaycaster::CreateOffscreenBuffers() {
   if (m_pFBOIsoHit)     {m_pMasterController->MemMan()->FreeFBO(m_pFBOIsoHit);  m_pFBOIsoHit = NULL;}
 
   if (m_vWinSize.area() > 0) {
-    m_pFBOScratchpad = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false);
+    m_pFBOScratchpad = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false,2);
     m_pFBOIsoHit     = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false, 2);
   }
 }
@@ -104,12 +104,14 @@ bool GLRaycaster::Initialize() {
     m_pProgram1DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram1DTrans[0]->SetUniformVector("texTrans1D",1);
     m_pProgram1DTrans[0]->SetUniformVector("texRayEntry",2);
+    m_pProgram1DTrans[0]->SetUniformVector("texRayEntryPos",3);
     m_pProgram1DTrans[0]->Disable();
 
     m_pProgram1DTrans[1]->Enable();
     m_pProgram1DTrans[1]->SetUniformVector("texVolume",0);
     m_pProgram1DTrans[1]->SetUniformVector("texTrans1D",1);
     m_pProgram1DTrans[1]->SetUniformVector("texRayEntry",2);
+    m_pProgram1DTrans[1]->SetUniformVector("texRayEntryPos",3);
     m_pProgram1DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
     m_pProgram1DTrans[1]->SetUniformVector("vLightDiffuse",1.0f,1.0f,1.0f);
     m_pProgram1DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
@@ -120,12 +122,14 @@ bool GLRaycaster::Initialize() {
     m_pProgram2DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram2DTrans[0]->SetUniformVector("texTrans2D",1);
     m_pProgram2DTrans[0]->SetUniformVector("texRayEntry",2);
+    m_pProgram2DTrans[0]->SetUniformVector("texRayEntryPos",3);
     m_pProgram2DTrans[0]->Disable();
 
     m_pProgram2DTrans[1]->Enable();
     m_pProgram2DTrans[1]->SetUniformVector("texVolume",0);
     m_pProgram2DTrans[1]->SetUniformVector("texTrans2D",1);
     m_pProgram2DTrans[1]->SetUniformVector("texRayEntry",2);
+    m_pProgram2DTrans[1]->SetUniformVector("texRayEntryPos",3);
     m_pProgram2DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
     m_pProgram2DTrans[1]->SetUniformVector("vLightDiffuse",1.0f,1.0f,1.0f);
     m_pProgram2DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
@@ -135,6 +139,7 @@ bool GLRaycaster::Initialize() {
     m_pProgramIso->Enable();
     m_pProgramIso->SetUniformVector("texVolume",0);
     m_pProgramIso->SetUniformVector("texRayEntry",2);
+    m_pProgramIso->SetUniformVector("texRayEntryPos",3);
     m_pProgramIso->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
     m_pProgramIso->SetUniformVector("vLightDiffuse",0.8f,0.8f,0.8f);
     m_pProgramIso->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
@@ -300,24 +305,32 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
   m_pFBO3DImageCurrent->FinishWrite();
 
   // write frontfaces (ray entry points) into scratchpad
-  m_pFBOScratchpad->Write();
+  m_pFBOScratchpad->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
+  m_pFBOScratchpad->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
+
+//  glClearColor(0,0,0,0);
+//  glClear(GL_COLOR_BUFFER_BIT);
+  glDisable(GL_BLEND);
+
   m_pRenderFrontFaces->Enable();
   RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
   m_pRenderFrontFaces->Disable();
-  m_pFBOScratchpad->FinishWrite();
-
+  m_pFBOScratchpad->FinishWrite(0);
+  m_pFBOScratchpad->FinishWrite(1);
 
   if (m_eRenderMode == RM_ISOSURFACE) {
-    m_pProgramIso->Enable(); 
+    m_pProgramIso->Enable();
     SetBrickDepShaderVars(m_vCurrentBrickList[iCurrentBrick]);
     
     m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
     m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
 
     // compute the hit position and normal
-    m_pFBOScratchpad->Read(GL_TEXTURE2);
+    m_pFBOScratchpad->Read(GL_TEXTURE2, 0);
+    m_pFBOScratchpad->Read(GL_TEXTURE3, 1);
     RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
-    m_pFBOScratchpad->FinishRead();
+    m_pFBOScratchpad->FinishRead(0);
+    m_pFBOScratchpad->FinishRead(1);
 
     m_pProgramIso->Disable(); 
 
@@ -344,9 +357,12 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 
     SetBrickDepShaderVars(m_vCurrentBrickList[iCurrentBrick]);
 
-    m_pFBOScratchpad->Read(GL_TEXTURE2);
+    m_pFBOScratchpad->Read(GL_TEXTURE2_ARB, 0);
+    m_pFBOScratchpad->Read(GL_TEXTURE3_ARB, 1);
     RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
-    m_pFBOScratchpad->FinishRead();
+    m_pFBOScratchpad->FinishRead(0);
+    m_pFBOScratchpad->FinishRead(1);
+
     switch (m_eRenderMode) {
       case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
                             glDisable(GL_BLEND);

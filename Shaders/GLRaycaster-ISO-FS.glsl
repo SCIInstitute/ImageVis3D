@@ -37,6 +37,7 @@
 
 uniform sampler3D texVolume;   ///< the data volume
 uniform sampler2D texRayEntry; ///< the frontface or ray entry point texture
+uniform sampler2D texRayEntryPos; ///< the frontface or ray entry point texture
 uniform vec3 vVoxelStepsize;   ///< Stepsize (in texcoord) to get to the next voxel
 uniform float fRayStepsize;    ///< stepsize along the ray
 uniform float fIsoval;         ///< the isovalue
@@ -48,7 +49,7 @@ uniform vec3 vLightDiffuse;
 uniform vec3 vLightSpecular;
 uniform vec3 vLightDir;
 
-varying float fEyeDepth;
+varying vec3 vEyePos;
 
 vec3 RefineIsosurface(vec3 vRayDir, vec3 vCurrentPos) {
 	vRayDir /= 2.0;
@@ -72,8 +73,9 @@ void main(void)
 
   // compute the ray parameters
   vec3  vRayExit   = gl_TexCoord[0].xyz;
-  vec4  vRayEntry  = texture2D(texRayEntry, vFragCoords);
-  vec3  vRayDir    = vRayExit - vRayEntry.xyz;
+  vec3  vRayEntry  = texture2D(texRayEntry, vFragCoords).xyz;
+  vec3  vRayEntryPos  = texture2D(texRayEntryPos, vFragCoords).xyz;  
+  vec3  vRayDir    = vRayExit - vRayEntry;
   float fRayLength = length(vRayDir);
   vRayDir /= fRayLength;
 
@@ -81,7 +83,7 @@ void main(void)
   int iStepCount = int(fRayLength / length(fRayStepsize * vRayDir));
 
   // do the actual raycasting
-  vec3  vCurrentPos = vRayEntry.xyz;
+  vec3  vCurrentPos = vRayEntry;
   vec4  vHitPos     = vec4(0.0,0.0,0.0,0.0);
   for (int i = 0;i<iStepCount+1;i++) {
     float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
@@ -100,8 +102,8 @@ void main(void)
   gl_FragData[0] = vHitPos;
   
   // compute linear eye depth
-  float fInterpolParam = length(vHitPos.xyz-vRayEntry.xyz) / fRayLength;
-  fEyeDepth = vRayEntry.a * (1.0-fInterpolParam) + fEyeDepth *  fInterpolParam;
+  float fInterpolParam = length(vHitPos.xyz-vRayEntry) / fRayLength;
+  float fEyeDepth = vRayEntryPos.z * (1.0-fInterpolParam) + vEyePos.z *  fInterpolParam;
   gl_FragDepth = vProjParam.x + (vProjParam.y / -fEyeDepth);
 
   // compute normal

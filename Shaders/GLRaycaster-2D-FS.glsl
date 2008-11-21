@@ -38,6 +38,7 @@
 uniform sampler3D texVolume;  ///< the data volume
 uniform sampler2D texTrans2D; ///< the 2D Transfer function
 uniform sampler2D texRayEntry; ///< the frontface or ray entry point texture
+uniform sampler2D texRayEntryPos; ///< the frontface or ray entry point texture
 uniform float fTransScale;    ///< value scale for 2D Transfer function lookup
 uniform float fGradientScale; ///< gradient scale for 2D Transfer function lookup
 uniform float fStepScale;   ///< opacity correction quotient
@@ -46,13 +47,14 @@ uniform vec2 vScreensize;      ///< the size of the screen in pixels
 uniform float fRayStepsize;     ///< stepsize along the ray
 
 
+varying vec3 vEyePos;
+
 vec4 ColorBlend(vec4 src, vec4 dst) {
 	vec4 result = dst;
 	result.rgb   += src.rgb*(1.0-dst.a)*src.a;
 	result.a     += (1.0-dst.a)*src.a;
 	return result;
 }
-
 
 void main(void)
 {
@@ -61,8 +63,9 @@ void main(void)
 
   // compute the ray parameters
   vec3  vRayExit   = gl_TexCoord[0].xyz;
-  vec4  vRayEntry  = texture2D(texRayEntry, vFragCoords);
-  vec3  vRayDir    = vRayExit - vRayEntry.xyz;
+  vec3  vRayEntry  = texture2D(texRayEntry, vFragCoords).xyz;
+  vec3  vRayEntryPos  = texture2D(texRayEntryPos, vFragCoords).xyz;  
+  vec3  vRayDir    = vRayExit - vRayEntry;
   float fRayLength = length(vRayDir);
   vRayDir /= fRayLength;
 
@@ -71,7 +74,7 @@ void main(void)
 
   // do the actual raycasting
   vec4  vColor = vec4(0.0,0.0,0.0,0.0);
-  vec3  vCurrentPos = vRayEntry.xyz;
+  vec3  vCurrentPos = vRayEntry;
   for (int i = 0;i<iStepCount+1;i++) {
     float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
 

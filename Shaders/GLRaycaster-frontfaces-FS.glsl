@@ -35,9 +35,10 @@
   \date    November 2008
 */
 
-varying float fEyeDepth;
+varying vec3 vEyePos;
 
 void main(void)
 {
-  gl_FragColor = vec4(gl_TexCoord[0].xyz,fEyeDepth);
+  gl_FragData[0] = vec4(gl_TexCoord[0].xyz,0);
+  gl_FragData[1] = vec4(vEyePos,0);
 }
