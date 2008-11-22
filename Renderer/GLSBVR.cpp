@@ -103,7 +103,7 @@ bool GLSBVR::Initialize() {
     m_pProgramIso->Enable();
     m_pProgramIso->SetUniformVector("texVolume",0);
     m_pProgramIso->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
-    m_pProgramIso->SetUniformVector("vLightDiffuse",0.8f,0.8f,0.8f);
+    m_pProgramIso->SetUniformVector("vLightDiffuse",m_vIsoColor.x,m_vIsoColor.y,m_vIsoColor.z);
     m_pProgramIso->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
     m_pProgramIso->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
     m_pProgramIso->Disable();
@@ -187,6 +187,7 @@ void GLSBVR::Render3DPreLoop() {
                           glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
                           break;
     case RM_ISOSURFACE :  m_pProgramIso->Enable(); 
+                          m_pProgramIso->SetUniformVector("vLightDiffuse",m_vIsoColor.x,m_vIsoColor.y,m_vIsoColor.z);
                           break;
     default    :  m_pMasterController->DebugOut()->Error("GLSBVR::Render3DView","Invalid rendermode set"); 
                           break;

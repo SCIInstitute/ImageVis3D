@@ -424,6 +424,18 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     SetToggleGlobalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetGlobalBBox());
     SetToggleLocalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetLocalBBox());
     ClearProgressView();
+
+    ToggleClearViewControls();
+  }
+}
+
+void MainWindow::ToggleClearViewControls() {
+  if (m_ActiveRenderWin->GetRenderer()->SupportsClearView()) {
+    checkBox_ClearView->setVisible(true);
+    frame_ClearView->setVisible(true);
+  } else {
+    checkBox_ClearView->setVisible(false);
+    frame_ClearView->setVisible(false);
   }
 }
 

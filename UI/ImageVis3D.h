@@ -149,6 +149,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void ShowAbout();
 
+    void ChooseIsoColor();
 
   private :
     MasterController&     m_MasterController;
@@ -215,6 +216,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetToggleGlobalBBoxLabel(bool bRenderBBox);
     void SetToggleLocalBBoxLabel(bool bRenderBBox);
     void ClearProgressView();
+    void ToggleClearViewControls();
 
 };
 

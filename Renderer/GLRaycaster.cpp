@@ -302,7 +302,10 @@ void GLRaycaster::Render3DPreLoop() {
     case RM_2DTRANS    :  m_p2DTransTex->Bind(1);
                           glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
                           break;
-    case RM_ISOSURFACE :  break;
+    case RM_ISOSURFACE :  m_pProgramIso->Enable(); 
+                          m_pProgramIso->SetUniformVector("vLightDiffuse",m_vIsoColor.x, m_vIsoColor.y, m_vIsoColor.z);
+                          m_pProgramIso->Disable(); 
+                          break;
     default    :          m_pMasterController->DebugOut()->Error("GLSBVR::Render3DView","Invalid rendermode set"); 
                           break;
   }

@@ -193,6 +193,10 @@ class AbstrRenderer {
     virtual void SetIsoValue(float fIsovalue);
     float GetIsoValue() {return m_fIsovalue;}
 
+    virtual void SetIsosufaceColor(FLOATVECTOR3 vColor) {m_vIsoColor = vColor; if (m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
+    virtual FLOATVECTOR3 GetIsosufaceColor()  const {return m_vIsoColor;}
+
+
     /** Change the size of the render window.  Any previous image is
      * destroyed, causing a full redraw on the next render.
      * \param vWinSize  new width and height of the view window */
@@ -241,6 +245,20 @@ class AbstrRenderer {
 
 	  void DisableLOD(bool bLODDisabled) {m_bLODDisabled = bLODDisabled;}
 
+    // ClearView
+    virtual bool SupportsClearView() {return false;}
+    virtual void SetCV(bool bEnable) {m_bDoClearView = bEnable; if (m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
+    virtual bool GetCV() const {return m_bDoClearView;}
+    virtual void SetCVIsoValue(float fIsovalue) {m_fCVIsovalue = fIsovalue; if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
+    virtual float GetCVIsoValue() const {return m_fCVIsovalue;}
+    virtual void SetCVColor(FLOATVECTOR3 vColor) {m_vCVColor = vColor; if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
+    virtual FLOATVECTOR3 GetCVColor() const {return m_vCVColor;}
+    virtual void SetCVSize(float fSize) {m_vCVSize = fSize; if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
+    virtual float GetSVSize() const {return m_vCVSize;}
+    virtual void SetCVFocusScale(float fScale) {m_vCVFocusScale = fScale; if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
+    virtual float GetCVFocusScale() const {return m_vCVFocusScale;}
+
+
   protected:
     MasterController*   m_pMasterController;
     bool                m_bPerformRedraw;
@@ -258,6 +276,7 @@ class AbstrRenderer {
     TransferFunction2D* m_p2DTrans;
     float               m_fSampleRateModifier;
     float               m_fIsovalue;
+    FLOATVECTOR3        m_vIsoColor;
     FLOATVECTOR3        m_vBackgroundColors[2];
     FLOATVECTOR4        m_vTextColor;
     FLOATMATRIX4        m_mRotation;
@@ -282,6 +301,12 @@ class AbstrRenderer {
     UINT64              m_iBricksRenderedInThisSubFrame;
     std::vector<Brick>  m_vCurrentBrickList;
   	bool				        m_bLODDisabled;
+
+    bool                m_bDoClearView;
+    float               m_fCVIsovalue;
+    FLOATVECTOR3        m_vCVColor;
+    float               m_vCVSize;
+    float               m_vCVFocusScale;
 
     virtual void ScheduleCompleteRedraw();
     virtual void ScheduleWindowRedraw(EWindowMode eWindow);

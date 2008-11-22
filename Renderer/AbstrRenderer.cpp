@@ -52,6 +52,7 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_p2DTrans(NULL),
   m_fSampleRateModifier(1.0f),
   m_fIsovalue(0.5f),
+  m_vIsoColor(1,1,1),
   m_vTextColor(1,1,1,1),
   m_bRenderGlobalBBox(false),
   m_bRenderLocalBBox(false),
@@ -68,7 +69,12 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_bClearFramebuffer(true),
   m_iCurrentLOD(0),
   m_iBricksRenderedInThisSubFrame(0),
-  m_bLODDisabled(false)
+  m_bLODDisabled(false),
+  m_bDoClearView(false),
+  m_fCVIsovalue(0.8f),
+  m_vCVColor(1,0,0),
+  m_vCVSize(0.5f),
+  m_vCVFocusScale(0.5f)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);

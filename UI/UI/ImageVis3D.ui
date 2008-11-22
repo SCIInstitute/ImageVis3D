@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1203</width>
-    <height>1719</height>
+    <height>1924</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -2904,22 +2904,154 @@
        <property name="frameShadow" >
         <enum>QFrame::Raised</enum>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2" >
+       <layout class="QVBoxLayout" name="verticalLayout_30" >
         <property name="margin" >
          <number>0</number>
         </property>
         <item>
-         <widget class="QSlider" name="horizontalSlider_Isovalue" >
-          <property name="orientation" >
-           <enum>Qt::Horizontal</enum>
+         <widget class="QFrame" name="frame_21" >
+          <property name="frameShape" >
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow" >
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_2" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QSlider" name="horizontalSlider_Isovalue" >
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_IsoValue" >
+             <property name="text" >
+              <string>0/255</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_SelColorIso1" >
+          <property name="text" >
+           <string>Choose Color</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_IsoValue" >
+         <widget class="QCheckBox" name="checkBox_ClearView" >
           <property name="text" >
-           <string>0/255</string>
+           <string>ClearView</string>
           </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_ClearView" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
+          <property name="frameShape" >
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow" >
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_31" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label" >
+             <property name="text" >
+              <string>Focus Isovalue</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_22" >
+             <property name="frameShape" >
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow" >
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_22" >
+              <property name="margin" >
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSlider" name="horizontalSlider_CVFocusIsoValue" >
+                <property name="orientation" >
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_CVFocusIsoValue" >
+                <property name="text" >
+                 <string>0/255</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_SelColorIso2" >
+             <property name="text" >
+              <string>Choose Focus Color</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2" >
+             <property name="text" >
+              <string>Focus Size</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="horizontalSlider_CVFocusSize" >
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_8" >
+             <property name="text" >
+              <string>Context Scale</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="horizontalSlider_CVContextScale" >
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_11" >
+             <property name="text" >
+              <string>Border</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="horizontalSlider_CVBorder" >
+             <property name="orientation" >
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -3424,7 +3556,6 @@
  <tabstops>
   <tabstop>checkBox_3</tabstop>
   <tabstop>pushButton_3</tabstop>
-  <tabstop>horizontalSlider_Isovalue</tabstop>
   <tabstop>pushButton_4</tabstop>
   <tabstop>pushButton_19</tabstop>
   <tabstop>pushButton_20</tabstop>
@@ -3696,7 +3827,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>156</x>
-     <y>1360</y>
+     <y>1537</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3711,8 +3842,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>628</x>
-     <y>1362</y>
+     <x>901</x>
+     <y>1539</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3792,7 +3923,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>156</x>
-     <y>1657</y>
+     <y>1834</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3808,7 +3939,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>156</x>
-     <y>1686</y>
+     <y>1863</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3823,8 +3954,8 @@
    <slot>Transfer2DLoad()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>650</x>
-     <y>1715</y>
+     <x>755</x>
+     <y>1892</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3840,7 +3971,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>932</x>
-     <y>1715</y>
+     <y>1892</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3855,8 +3986,8 @@
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1138</x>
-     <y>1066</y>
+     <x>1193</x>
+     <y>967</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3872,7 +4003,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1183</x>
-     <y>659</y>
+     <y>560</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3888,7 +4019,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1183</x>
-     <y>680</y>
+     <y>581</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3904,7 +4035,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1183</x>
-     <y>701</y>
+     <y>602</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3919,8 +4050,8 @@
    <slot>EditViewLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>219</x>
-     <y>837</y>
+     <x>239</x>
+     <y>919</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3935,8 +4066,8 @@
    <slot>EditRenderLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>199</x>
-     <y>861</y>
+     <x>219</x>
+     <y>943</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3951,8 +4082,8 @@
    <slot>EditToolsLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>188</x>
-     <y>885</y>
+     <x>208</x>
+     <y>967</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3967,8 +4098,8 @@
    <slot>EditFiltersLocks()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>188</x>
-     <y>909</y>
+     <x>208</x>
+     <y>991</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -3984,7 +4115,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>147</x>
-     <y>1408</y>
+     <y>1585</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4000,7 +4131,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>147</x>
-     <y>1432</y>
+     <y>1609</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4016,7 +4147,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>147</x>
-     <y>1456</y>
+     <y>1633</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4032,7 +4163,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>147</x>
-     <y>1480</y>
+     <y>1657</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4048,7 +4179,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>147</x>
-     <y>1611</y>
+     <y>1788</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4064,7 +4195,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>147</x>
-     <y>1580</y>
+     <y>1757</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4080,7 +4211,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>362</x>
-     <y>1133</y>
+     <y>1267</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4096,7 +4227,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>69</x>
-     <y>1133</y>
+     <y>1267</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4112,7 +4243,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>224</x>
-     <y>1133</y>
+     <y>1267</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4128,7 +4259,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>145</x>
-     <y>1133</y>
+     <y>1267</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4144,7 +4275,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>281</x>
-     <y>1133</y>
+     <y>1267</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4160,7 +4291,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>156</x>
-     <y>1715</y>
+     <y>1892</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4176,11 +4307,11 @@
    <hints>
     <hint type="sourcelabel" >
      <x>156</x>
-     <y>1360</y>
+     <y>1537</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>155</x>
-     <y>1688</y>
+     <x>156</x>
+     <y>1687</y>
     </hint>
    </hints>
   </connection>
@@ -4192,7 +4323,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>931</x>
-     <y>1629</y>
+     <y>1806</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4208,7 +4339,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>931</x>
-     <y>1660</y>
+     <y>1837</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4223,8 +4354,8 @@
    <slot>Transfer2DUpdateGradientBox()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>814</x>
-     <y>1362</y>
+     <x>901</x>
+     <y>1539</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4239,8 +4370,8 @@
    <slot>Transfer2DChooseGradientColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>727</x>
-     <y>1692</y>
+     <x>732</x>
+     <y>1869</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4256,7 +4387,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>932</x>
-     <y>1690</y>
+     <y>1867</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4271,8 +4402,8 @@
    <slot>ApplyUpdate()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1165</x>
-     <y>813</y>
+     <x>1174</x>
+     <y>714</y>
     </hint>
     <hint type="destinationlabel" >
      <x>687</x>
@@ -4288,7 +4419,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1174</x>
-     <y>745</y>
+     <y>646</y>
     </hint>
     <hint type="destinationlabel" >
      <x>685</x>
@@ -4304,7 +4435,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1174</x>
-     <y>766</y>
+     <y>667</y>
     </hint>
     <hint type="destinationlabel" >
      <x>683</x>
@@ -4320,7 +4451,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1174</x>
-     <y>787</y>
+     <y>688</y>
     </hint>
     <hint type="destinationlabel" >
      <x>680</x>
@@ -4336,7 +4467,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>147</x>
-     <y>1549</y>
+     <y>1726</y>
     </hint>
     <hint type="destinationlabel" >
      <x>415</x>
@@ -4352,7 +4483,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>182</x>
-     <y>548</y>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel" >
      <x>419</x>
@@ -4368,7 +4499,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>371</x>
-     <y>1297</y>
+     <y>1474</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4400,7 +4531,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1173</x>
-     <y>867</y>
+     <y>768</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -4416,7 +4547,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>932</x>
-     <y>1365</y>
+     <y>1542</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -4431,8 +4562,8 @@
    <slot>Expand2DWidgets()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>953</x>
-     <y>1366</y>
+     <x>964</x>
+     <y>1543</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -4447,8 +4578,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>703</x>
-     <y>1362</y>
+     <x>901</x>
+     <y>1539</y>
     </hint>
     <hint type="destinationlabel" >
      <x>714</x>
@@ -4464,7 +4595,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1164</x>
-     <y>969</y>
+     <y>870</y>
     </hint>
     <hint type="destinationlabel" >
      <x>389</x>
@@ -4479,8 +4610,8 @@
    <slot>SetIsoValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1111</x>
-     <y>1092</y>
+     <x>1156</x>
+     <y>994</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -4495,12 +4626,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1055</x>
-     <y>1066</y>
+     <x>1193</x>
+     <y>967</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1193</x>
-     <y>1093</y>
+     <y>1012</y>
     </hint>
    </hints>
   </connection>
@@ -4512,7 +4643,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1173</x>
-     <y>891</y>
+     <y>792</y>
     </hint>
     <hint type="destinationlabel" >
      <x>990</x>
@@ -4527,8 +4658,8 @@
    <slot>ToggleLocalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1157</x>
-     <y>915</y>
+     <x>1173</x>
+     <y>816</y>
     </hint>
     <hint type="destinationlabel" >
      <x>989</x>
@@ -4607,8 +4738,8 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1047</x>
-     <y>589</y>
+     <x>1074</x>
+     <y>502</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1008</x>
@@ -4623,8 +4754,8 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1099</x>
-     <y>586</y>
+     <x>1128</x>
+     <y>502</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1005</x>
@@ -4639,8 +4770,8 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1153</x>
-     <y>589</y>
+     <x>1183</x>
+     <y>502</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1007</x>
@@ -4661,6 +4792,22 @@
     <hint type="destinationlabel" >
      <x>601</x>
      <y>873</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_SelColorIso1</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ChooseIsoColor()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1098</x>
+     <y>1012</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>1004</x>
+     <y>997</y>
     </hint>
    </hints>
   </connection>
@@ -4719,5 +4866,6 @@
   <slot>CaptureRotation()</slot>
   <slot>SetRescaleFactors()</slot>
   <slot>ShowAbout()</slot>
+  <slot>ChooseIsoColor()</slot>
  </slots>
 </ui>

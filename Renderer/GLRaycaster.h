@@ -66,6 +66,8 @@ class GLRaycaster : public GLRenderer {
      * \param vWinSize  new width and height of the view window */
     virtual void Resize(const UINTVECTOR2& vWinSize);
 
+    virtual bool SupportsClearView() {return true;}
+
   protected:
     GLFBOTex*       m_pFBORayEntry;
     GLFBOTex*       m_pFBOIsoHit;

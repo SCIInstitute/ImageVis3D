@@ -42,6 +42,7 @@
 #include <QtGui/QMdiSubWindow>
 #include <QtCore/QSettings>
 #include <QtGui/QCloseEvent>
+#include <QtGui/QColorDialog>
 
 #include "PleaseWait.h"
 
@@ -342,4 +343,22 @@ void MainWindow::closeEvent(QCloseEvent *event)
   if (m_bAutoSaveGEO) SaveGeometry("Default.geo");
   if (m_bAutoSaveWSP) SaveWorkspace("Default.wsp");
   event->accept();
+}
+
+
+void MainWindow::ChooseIsoColor()
+{
+  if (m_ActiveRenderWin)  {
+    FLOATVECTOR3 vIsoColor = m_ActiveRenderWin->GetRenderer()->GetIsosufaceColor();
+    QColor color = QColorDialog::getColor(qRgba(int(vIsoColor.x*255),
+                                                int(vIsoColor.y*255),
+                                                int(vIsoColor.z*255),
+                                                255),
+                                                this);
+    if (color.isValid()) {
+
+      vIsoColor = FLOATVECTOR3(color.red() / 255.0f, color.green() / 255.0f, color.blue() / 255.0f);
+      m_ActiveRenderWin->GetRenderer()->SetIsosufaceColor(vIsoColor);
+    }
+  }
 }
