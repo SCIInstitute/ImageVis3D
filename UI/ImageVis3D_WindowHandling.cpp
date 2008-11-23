@@ -433,6 +433,8 @@ void MainWindow::ToggleClearViewControls() {
   if (m_ActiveRenderWin->GetRenderer()->SupportsClearView()) {
     checkBox_ClearView->setVisible(true);
     frame_ClearView->setVisible(true);
+
+    checkBox_ClearView->setChecked(m_ActiveRenderWin->GetRenderer()->GetCV());
   } else {
     checkBox_ClearView->setVisible(false);
     frame_ClearView->setVisible(false);

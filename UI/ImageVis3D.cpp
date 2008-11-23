@@ -362,3 +362,8 @@ void MainWindow::ChooseIsoColor()
     }
   }
 }
+
+void MainWindow::ToggleClearView() {
+  if (m_ActiveRenderWin)
+    m_ActiveRenderWin->GetRenderer()->SetCV(checkBox_ClearView->isChecked());
+}

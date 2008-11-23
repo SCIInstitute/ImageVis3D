@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    GLRaycaster-compose-FS.glsl
+  \file    GLRaycaster-compose-CV-FS.glsl
   \author    Jens Krueger
         SCI Institute
         University of Utah
@@ -37,12 +37,14 @@
 
 uniform sampler2D texRayHitPos;    ///< the hitposition of the ray (alpha flags hit yes/no)
 uniform sampler2D texRayHitNormal; ///< the surface normal at the hit position
+uniform sampler2D texRayHitPos2;    ///< the hitposition of the ray (alpha flags hit yes/no)
+uniform sampler2D texRayHitNormal2; ///< the surface normal at the hit position
 
 uniform vec3 vLightAmbient;
 uniform vec3 vLightDiffuse;
+uniform vec3 vLightDiffuse2;
 uniform vec3 vLightSpecular;
 uniform vec3 vLightDir;
-
 
 uniform vec2 vScreensize;      ///< the size of the screen in pixels
 uniform vec2 vProjParam;       ///< X = far / (far - near)  / Y = (far * near / (near - far))
@@ -52,12 +54,12 @@ void main(void){
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // get hitposition and check if a isosurface hit for this ray was found
-  vec4  vPosition = texture2D(texRayHitPos, vFragCoords);
+  vec4  vPosition = texture2D(texRayHitPos2, vFragCoords);
   
   if (vPosition.a == 0.0) discard;
   
   // get hit normal
-  vec3  vNormal  = texture2D(texRayHitNormal, vFragCoords).xyz;  
+  vec3  vNormal  = texture2D(texRayHitNormal2, vFragCoords).xyz;  
 
 	// compute lighting
 	vec3 vViewDir    = normalize(vec3(0.0,0.0,0.0)-vPosition.xyz);

@@ -150,6 +150,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void ShowAbout();
 
     void ChooseIsoColor();
+    void ToggleClearView();
 
   private :
     MasterController&     m_MasterController;

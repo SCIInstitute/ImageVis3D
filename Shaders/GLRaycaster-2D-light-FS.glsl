@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    GLSBVR-2D-light-FS.glsl
+  \file    GLRaycaster-2D-light-FS.glsl
   \author    Jens Krueger
         SCI Institute
         University of Utah

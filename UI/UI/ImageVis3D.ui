@@ -3826,7 +3826,7 @@
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>156</x>
+     <x>155</x>
      <y>1537</y>
     </hint>
     <hint type="destinationlabel" >
@@ -3922,7 +3922,7 @@
    <slot>Transfer1DLoad()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>156</x>
+     <x>155</x>
      <y>1834</y>
     </hint>
     <hint type="destinationlabel" >
@@ -3938,7 +3938,7 @@
    <slot>Transfer1DSave()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>156</x>
+     <x>155</x>
      <y>1863</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4114,7 +4114,7 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>147</x>
+     <x>146</x>
      <y>1585</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4130,7 +4130,7 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>147</x>
+     <x>146</x>
      <y>1609</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4146,7 +4146,7 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>147</x>
+     <x>146</x>
      <y>1633</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4162,7 +4162,7 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>147</x>
+     <x>146</x>
      <y>1657</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4178,7 +4178,7 @@
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>147</x>
+     <x>146</x>
      <y>1788</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4194,7 +4194,7 @@
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>147</x>
+     <x>146</x>
      <y>1757</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4290,7 +4290,7 @@
    <slot>Transfer1DCopyTo2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>156</x>
+     <x>155</x>
      <y>1892</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4306,12 +4306,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>156</x>
+     <x>155</x>
      <y>1537</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>156</x>
-     <y>1687</y>
+     <x>155</x>
+     <y>1892</y>
     </hint>
    </hints>
   </connection>
@@ -4370,7 +4370,7 @@
    <slot>Transfer2DChooseGradientColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>732</x>
+     <x>731</x>
      <y>1869</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4466,7 +4466,7 @@
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>147</x>
+     <x>146</x>
      <y>1726</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4738,7 +4738,7 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1074</x>
+     <x>1070</x>
      <y>502</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4754,7 +4754,7 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1128</x>
+     <x>1127</x>
      <y>502</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4808,6 +4808,22 @@
     <hint type="destinationlabel" >
      <x>1004</x>
      <y>997</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_ClearView</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ToggleClearView()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1053</x>
+     <y>1038</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>1000</x>
+     <y>1051</y>
     </hint>
    </hints>
   </connection>
@@ -4867,5 +4883,6 @@
   <slot>SetRescaleFactors()</slot>
   <slot>ShowAbout()</slot>
   <slot>ChooseIsoColor()</slot>
+  <slot>ToggleClearView()</slot>
  </slots>
 </ui>

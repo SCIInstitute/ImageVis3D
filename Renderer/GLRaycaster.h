@@ -71,8 +71,12 @@ class GLRaycaster : public GLRenderer {
   protected:
     GLFBOTex*       m_pFBORayEntry;
     GLFBOTex*       m_pFBOIsoHit;
+    GLFBOTex*       m_pFBOCVHit;
     GLSLProgram*    m_pProgramRenderFrontFaces;
     GLSLProgram*    m_pProgramIsoCompose;
+    GLSLProgram*    m_pProgramCV;
+    GLSLProgram*    m_pProgramCVCompose;
+
 
     void SetBrickDepShaderVars(const Brick& currentBrick);
     virtual const FLOATVECTOR2 SetDataDepShaderVars();

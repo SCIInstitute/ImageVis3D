@@ -74,7 +74,7 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_fCVIsovalue(0.8f),
   m_vCVColor(1,0,0),
   m_vCVSize(0.5f),
-  m_vCVFocusScale(0.5f)
+  m_vCVFocusScale(0.8f)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);

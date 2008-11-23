@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    GLRaycaster-ISO-FS.glsl
+  \file    GLRaycaster-ISO-CV-FS.glsl
   \author    Jens Krueger
         SCI Institute
         University of Utah
@@ -41,6 +41,7 @@ uniform sampler2D texRayEntryPos; ///< the frontface or ray entry point texture
 uniform vec3 vVoxelStepsize;   ///< Stepsize (in texcoord) to get to the next voxel
 uniform float fRayStepsize;    ///< stepsize along the ray
 uniform float fIsoval;         ///< the isovalue
+uniform float fIsovalFocus;    ///< the 2nd isovalue
 uniform vec2 vScreensize;      ///< the size of the screen in pixels
 uniform vec2 vProjParam;       ///< X = far / (far - near)  / Y = (far * near / (near - far))
 
@@ -61,6 +62,21 @@ vec3 RefineIsosurface(vec3 vRayDir, vec3 vCurrentPos) {
 	return vCurrentPos;
 }
 
+
+vec3 ComputeNormal(vec3 vHitPosTex) { 
+  float fVolumValXp = texture3D(texVolume, vHitPosTex+vec3(+vVoxelStepsize.x,0,0)).x;
+  float fVolumValXm = texture3D(texVolume, vHitPosTex+vec3(-vVoxelStepsize.x,0,0)).x;
+  float fVolumValYp = texture3D(texVolume, vHitPosTex+vec3(0,-vVoxelStepsize.y,0)).x;
+  float fVolumValYm = texture3D(texVolume, vHitPosTex+vec3(0,+vVoxelStepsize.y,0)).x;
+  float fVolumValZp = texture3D(texVolume, vHitPosTex+vec3(0,0,+vVoxelStepsize.z)).x;
+  float fVolumValZm = texture3D(texVolume, vHitPosTex+vec3(0,0,-vVoxelStepsize.z)).x;
+  vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
+  vec3 vNormal     = gl_NormalMatrix * vGradient;
+  float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
+  return vNormal;
+}
+  
+
 void main(void)
 {
   // compute the coordinates to look up the previous pass
@@ -80,7 +96,8 @@ void main(void)
   // do the actual raycasting
   vec3  vCurrentPos = vRayEntry;
   vec4  vHitPosTex     = vec4(0.0,0.0,0.0,0.0);
-  for (int i = 0;i<iStepCount+1;i++) {
+  int i = 0;
+  for (;i<iStepCount+1;i++) {
     float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
     if (fVolumVal >= fIsoval) {
       vHitPosTex = vec4(vCurrentPos.x, vCurrentPos.y, vCurrentPos.z, 1);
@@ -102,16 +119,35 @@ void main(void)
 
   gl_FragData[0] = vec4(vHitPos,1);
 
-  // compute normal
-  float fVolumValXp = texture3D(texVolume, vHitPosTex.xyz+vec3(+vVoxelStepsize.x,0,0)).x;
-  float fVolumValXm = texture3D(texVolume, vHitPosTex.xyz+vec3(-vVoxelStepsize.x,0,0)).x;
-  float fVolumValYp = texture3D(texVolume, vHitPosTex.xyz+vec3(0,-vVoxelStepsize.y,0)).x;
-  float fVolumValYm = texture3D(texVolume, vHitPosTex.xyz+vec3(0,+vVoxelStepsize.y,0)).x;
-  float fVolumValZp = texture3D(texVolume, vHitPosTex.xyz+vec3(0,0,+vVoxelStepsize.z)).x;
-  float fVolumValZm = texture3D(texVolume, vHitPosTex.xyz+vec3(0,0,-vVoxelStepsize.z)).x;
-  vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
-  vec3 vNormal     = gl_NormalMatrix * vGradient;
-  float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
-  
+  // store normal
+  vec3 vNormal   = ComputeNormal(vHitPosTex.xyz);  
   gl_FragData[1] = vec4(vNormal,1);
+  
+
+  // do the raycasting for the second isovalue
+  vHitPosTex = vec4(0.0,0.0,0.0,0.0);
+  for (;i<iStepCount+1;i++) {
+    float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
+    if (fVolumVal >= fIsovalFocus) {
+      vHitPosTex = vec4(vCurrentPos.x, vCurrentPos.y, vCurrentPos.z, 1);
+      break;
+    }
+    vCurrentPos    += fRayStepsize * vRayDir;
+  }
+    
+  if (vHitPosTex.a != 0.0) {
+    vHitPosTex.xyz = RefineIsosurface(fRayStepsize * vRayDir, vHitPosTex.xyz); 
+     
+    // interpolate eye space position
+    fInterpolParam = length(vHitPosTex.xyz-vRayEntry)/fRayLength;
+    vHitPos = vRayEntryPos.xyz * (1.0-fInterpolParam) + vEyePos.xyz *  fInterpolParam;
+    gl_FragData[2] = vec4(vHitPos,1);    
+     
+    // store normal
+    vNormal   = ComputeNormal(vHitPosTex.xyz);  
+    gl_FragData[3] = vec4(vNormal,1);
+  } else {
+    gl_FragData[2] = vec4(0.0,0.0,0.0,0.0);
+    gl_FragData[3] = vec4(0.0,0.0,0.0,0.0);
+  }
 }
