@@ -73,8 +73,10 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_bDoClearView(false),
   m_fCVIsovalue(0.8f),
   m_vCVColor(1,0,0),
-  m_vCVSize(0.5f),
-  m_vCVFocusScale(0.8f)
+  m_fCVSize(5.5f),
+  m_fCVContextScale(1.0f),
+  m_fCVBorderScale(60.0f),
+  m_vCVPos(0.5f, 0.5f)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -177,15 +179,14 @@ void AbstrRenderer::SetFullWindowmode(EWindowMode eWindowMode) {
 void AbstrRenderer::SetUseLigthing(bool bUseLigthing) {
   if (m_bUseLigthing != bUseLigthing) {
     m_bUseLigthing = bUseLigthing; 
-    ScheduleCompleteRedraw();
-    /// \todo only redraw the windows dependent on this change
+    ScheduleWindowRedraw(WM_3D);
   }
 }
 
 void AbstrRenderer::SetBlendPrecision(EBlendPrecision eBlendPrecision) {
   if (m_eBlendPrecision != eBlendPrecision) {
     m_eBlendPrecision = eBlendPrecision;
-    ScheduleCompleteRedraw();
+    ScheduleWindowRedraw(WM_3D);
   }
 }
 
@@ -212,14 +213,14 @@ void AbstrRenderer::Changed2DTrans() {
 void AbstrRenderer::SetSampleRateModifier(float fSampleRateModifier) {
   if(m_fSampleRateModifier != fSampleRateModifier) {
     m_fSampleRateModifier = fSampleRateModifier;
-    ScheduleCompleteRedraw();
+    ScheduleWindowRedraw(WM_3D);
   }
 }
 
 void AbstrRenderer::SetIsoValue(float fIsovalue) {
   if(m_fIsovalue != fIsovalue) {
     m_fIsovalue = fIsovalue;
-    ScheduleCompleteRedraw();
+    ScheduleWindowRedraw(WM_3D);
   }
 }
 
@@ -263,12 +264,12 @@ void AbstrRenderer::Resize(const UINTVECTOR2& vWinSize) {
 
 void AbstrRenderer::SetRotation(const FLOATMATRIX4& mRotation) {
   m_mRotation = mRotation;
-  ScheduleCompleteRedraw();
+  ScheduleWindowRedraw(WM_3D);
 }
 
 void AbstrRenderer::SetTranslation(const FLOATMATRIX4& mTranslation) {
   m_mTranslation = mTranslation;
-  ScheduleCompleteRedraw();
+  ScheduleWindowRedraw(WM_3D);
 }
 
 void AbstrRenderer::SetSliceDepth(EWindowMode eWindow, UINT64 iSliceDepth) {
@@ -287,12 +288,12 @@ UINT64 AbstrRenderer::GetSliceDepth(EWindowMode eWindow) {
 
 void AbstrRenderer::SetGlobalBBox(bool bRenderBBox) {
   m_bRenderGlobalBBox = bRenderBBox;
-  ScheduleCompleteRedraw();
+  ScheduleWindowRedraw(WM_3D);
 }
 
 void AbstrRenderer::SetLocalBBox(bool bRenderBBox) {
   m_bRenderLocalBBox = bRenderBBox;
-  ScheduleCompleteRedraw();
+  ScheduleWindowRedraw(WM_3D);
 }
 
 void AbstrRenderer::ScheduleCompleteRedraw() {
@@ -444,4 +445,61 @@ void AbstrRenderer::Plan3DFrame() {
     m_iIntraFrameCounter = 0;
     m_iFrameCounter = m_pMasterController->MemMan()->UpdateFrameCounter();
   }
+}
+
+
+void AbstrRenderer::SetCV(bool bEnable) {
+  if (m_bDoClearView != bEnable) {
+    m_bDoClearView = bEnable; 
+    if (m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);
+  }
+}
+
+void AbstrRenderer::SetCVIsoValue(float fIsovalue) {
+  if (m_fCVIsovalue != fIsovalue) {
+    m_fCVIsovalue = fIsovalue; 
+    if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);
+  }
+}
+
+void AbstrRenderer::SetCVColor(FLOATVECTOR3 vColor) {
+  if (m_vCVColor != vColor) {
+    m_vCVColor = vColor; 
+    if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
+      ScheduleWindowRedraw(WM_3D); /// \todo only recomposite do not redraw
+  }
+}
+
+void AbstrRenderer::SetCVSize(float fSize) {
+  if (m_fCVSize != fSize) {
+    m_fCVSize = fSize;
+    if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
+      ScheduleWindowRedraw(WM_3D); /// \todo only recomposite do not redraw
+  }
+}
+
+void AbstrRenderer::SetCVContextScale(float fScale) {
+  if (m_fCVContextScale != fScale) {
+    m_fCVContextScale = fScale;
+    if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
+      ScheduleWindowRedraw(WM_3D); /// \todo only recomposite do not redraw
+  }
+}
+
+void AbstrRenderer::SetCVBorderScale(float fScale) {
+  if (m_fCVBorderScale != fScale) {
+    m_fCVBorderScale = fScale; 
+    if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
+      ScheduleWindowRedraw(WM_3D); /// \todo only recomposite do not redraw
+  }
+}
+
+void AbstrRenderer::SetCVMousePos(FLOATVECTOR2 vPos) {
+  vPos.y = 1.0f-vPos.y;
+  if (m_vCVPos!= vPos) {
+    m_vCVPos = vPos; 
+    if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
+      ScheduleWindowRedraw(WM_3D);  /// \todo only recomposite do not redraw
+  }
+
 }

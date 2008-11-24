@@ -247,16 +247,20 @@ class AbstrRenderer {
 
     // ClearView
     virtual bool SupportsClearView() {return false;}
-    virtual void SetCV(bool bEnable) {m_bDoClearView = bEnable; if (m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
+    virtual void SetCV(bool bEnable);
     virtual bool GetCV() const {return m_bDoClearView;}
-    virtual void SetCVIsoValue(float fIsovalue) {m_fCVIsovalue = fIsovalue; if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
+    virtual void SetCVIsoValue(float fIsovalue);
     virtual float GetCVIsoValue() const {return m_fCVIsovalue;}
-    virtual void SetCVColor(FLOATVECTOR3 vColor) {m_vCVColor = vColor; if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
+    virtual void SetCVColor(FLOATVECTOR3 vColor);
     virtual FLOATVECTOR3 GetCVColor() const {return m_vCVColor;}
-    virtual void SetCVSize(float fSize) {m_vCVSize = fSize; if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
-    virtual float GetSVSize() const {return m_vCVSize;}
-    virtual void SetCVFocusScale(float fScale) {m_vCVFocusScale = fScale; if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
-    virtual float GetCVFocusScale() const {return m_vCVFocusScale;}
+    virtual void SetCVSize(float fSize);
+    virtual float GetCVSize() const {return m_fCVSize;}
+    virtual void SetCVContextScale(float fScale);
+    virtual float GetCVContextScale() const {return m_fCVContextScale;}
+    virtual void SetCVBorderScale(float fScale);
+    virtual float GetCVBorderScale() const {return m_fCVBorderScale;}
+    virtual void SetCVMousePos(FLOATVECTOR2 vPos);
+    virtual FLOATVECTOR2 GetCVMousePos() const {return m_vCVPos;}
 
 
   protected:
@@ -305,8 +309,10 @@ class AbstrRenderer {
     bool                m_bDoClearView;
     float               m_fCVIsovalue;
     FLOATVECTOR3        m_vCVColor;
-    float               m_vCVSize;
-    float               m_vCVFocusScale;
+    float               m_fCVSize;
+    float               m_fCVContextScale;
+    float               m_fCVBorderScale;
+    FLOATVECTOR2        m_vCVPos;
 
     virtual void ScheduleCompleteRedraw();
     virtual void ScheduleWindowRedraw(EWindowMode eWindow);

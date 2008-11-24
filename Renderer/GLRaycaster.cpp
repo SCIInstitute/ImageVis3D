@@ -48,6 +48,7 @@ GLRaycaster::GLRaycaster(MasterController* pMasterController) :
   GLRenderer(pMasterController),
   m_pFBORayEntry(NULL),
   m_pFBOIsoHit(NULL),
+  m_pFBOCVHit(NULL),
   m_pProgramRenderFrontFaces(NULL),
   m_pProgramIsoCompose(NULL),
   m_pProgramCV(NULL),
@@ -66,9 +67,13 @@ void GLRaycaster::Cleanup() {
     m_pMasterController->MemMan()->FreeFBO(m_pFBORayEntry); 
     m_pFBORayEntry = NULL;
   }
-  if (m_pFBOIsoHit)               {
+  if (m_pFBOIsoHit){
     m_pMasterController->MemMan()->FreeFBO(m_pFBOIsoHit);                      
     m_pFBOIsoHit = NULL;
+  }
+  if (m_pFBOCVHit){
+    m_pMasterController->MemMan()->FreeFBO(m_pFBOCVHit);                      
+    m_pFBOCVHit = NULL;
   }
   if (m_pProgramRenderFrontFaces){
     m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramRenderFrontFaces); 
@@ -99,9 +104,14 @@ void GLRaycaster::CreateOffscreenBuffers() {
     m_pMasterController->MemMan()->FreeFBO(m_pFBOIsoHit);
     m_pFBOIsoHit = NULL;
   }
+  if (m_pFBOCVHit){
+    m_pMasterController->MemMan()->FreeFBO(m_pFBOCVHit);                      
+    m_pFBOCVHit = NULL;
+  }
   if (m_vWinSize.area() > 0) {
     m_pFBORayEntry = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false, 2);
-    m_pFBOIsoHit   = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true, 4);
+    m_pFBOIsoHit   = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true, 2);
+    m_pFBOCVHit    = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true, 2);
   }
 }
 
@@ -133,15 +143,15 @@ bool GLRaycaster::Initialize() {
     m_pProgram1DTrans[0]->Enable();
     m_pProgram1DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram1DTrans[0]->SetUniformVector("texTrans1D",1);
-    m_pProgram1DTrans[0]->SetUniformVector("texRayEntry",2);
+    m_pProgram1DTrans[0]->SetUniformVector("texRayExit",2);
     m_pProgram1DTrans[0]->Disable();
 
 
     m_pProgram1DTrans[1]->Enable();
     m_pProgram1DTrans[1]->SetUniformVector("texVolume",0);
     m_pProgram1DTrans[1]->SetUniformVector("texTrans1D",1);
-    m_pProgram1DTrans[1]->SetUniformVector("texRayEntry",2);
-    m_pProgram1DTrans[1]->SetUniformVector("texRayEntryPos",3);
+    m_pProgram1DTrans[1]->SetUniformVector("texRayExit",2);
+    m_pProgram1DTrans[1]->SetUniformVector("texRayExitPos",3);
     m_pProgram1DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
     m_pProgram1DTrans[1]->SetUniformVector("vLightDiffuse",1.0f,1.0f,1.0f);
     m_pProgram1DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
@@ -151,14 +161,14 @@ bool GLRaycaster::Initialize() {
     m_pProgram2DTrans[0]->Enable();
     m_pProgram2DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram2DTrans[0]->SetUniformVector("texTrans2D",1);
-    m_pProgram2DTrans[0]->SetUniformVector("texRayEntry",2);
+    m_pProgram2DTrans[0]->SetUniformVector("texRayExit",2);
     m_pProgram2DTrans[0]->Disable();
 
     m_pProgram2DTrans[1]->Enable();
     m_pProgram2DTrans[1]->SetUniformVector("texVolume",0);
     m_pProgram2DTrans[1]->SetUniformVector("texTrans2D",1);
-    m_pProgram2DTrans[1]->SetUniformVector("texRayEntry",2);
-    m_pProgram2DTrans[1]->SetUniformVector("texRayEntryPos",3);
+    m_pProgram2DTrans[1]->SetUniformVector("texRayExit",2);
+    m_pProgram2DTrans[1]->SetUniformVector("texRayExitPos",3);
     m_pProgram2DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
     m_pProgram2DTrans[1]->SetUniformVector("vLightDiffuse",1.0f,1.0f,1.0f);
     m_pProgram2DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
@@ -167,8 +177,8 @@ bool GLRaycaster::Initialize() {
 
     m_pProgramIso->Enable();
     m_pProgramIso->SetUniformVector("texVolume",0);
-    m_pProgramIso->SetUniformVector("texRayEntry",2);
-    m_pProgramIso->SetUniformVector("texRayEntryPos",3);
+    m_pProgramIso->SetUniformVector("texRayExit",2);
+    m_pProgramIso->SetUniformVector("texRayExitPos",3);
     FLOATVECTOR2 vParams = m_FrustumCullingLOD.GetDepthScaleParams();
     m_pProgramIso->SetUniformVector("vProjParam",vParams.x, vParams.y);
     m_pProgramIso->Disable();
@@ -197,15 +207,19 @@ bool GLRaycaster::Initialize() {
 
     m_pProgramCV->Enable();
     m_pProgramCV->SetUniformVector("texVolume",0);
-    m_pProgramCV->SetUniformVector("texRayEntry",2);
-    m_pProgramCV->SetUniformVector("texRayEntryPos",3);
+    m_pProgramCV->SetUniformVector("texRayExit",2);
+    m_pProgramCV->SetUniformVector("texRayExitPos",3);
+    m_pProgramCV->SetUniformVector("texLastHit",4);
+    m_pProgramCV->SetUniformVector("texLastHitPos",5);
     m_pProgramCV->Disable();    
   }
 
   return true;
 }
 
-void GLRaycaster::SetBrickDepShaderVars(const Brick& currentBrick) {
+void GLRaycaster::SetBrickDepShaderVars(size_t iCurrentBrick) {
+  const Brick& currentBrick = m_vCurrentBrickList[iCurrentBrick];
+
   FLOATVECTOR3 vStep(1.0f/currentBrick.vVoxelCount.x, 1.0f/currentBrick.vVoxelCount.y, 1.0f/currentBrick.vVoxelCount.z);
   float fRayStep = (vStep * 0.5f * 1.0f/m_fSampleRateModifier).minVal();
   float fStepScale = 1.0f/m_fSampleRateModifier * (FLOATVECTOR3(m_pDataset->GetInfo()->GetDomainSize())/FLOATVECTOR3(m_pDataset->GetInfo()->GetDomainSize(m_iCurrentLOD))).maxVal();;
@@ -225,13 +239,17 @@ void GLRaycaster::SetBrickDepShaderVars(const Brick& currentBrick) {
                             break;
                           }
     case RM_ISOSURFACE : {
-                            if (m_bDoClearView) {                     
+                            if (m_bDoClearView) {      
+                              m_pProgramCV->Enable();
                               m_pProgramCV->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
                               m_pProgramCV->SetUniformVector("fRayStepsize", fRayStep);
-                            } else {
-                              m_pProgramIso->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
-                              m_pProgramIso->SetUniformVector("fRayStepsize", fRayStep);
-                            }
+                              m_pProgramCV->SetUniformVector("iTileID", int(iCurrentBrick));
+                              m_pProgramCV->Disable();
+                              m_pProgramIso->Enable();
+                            } 
+                            m_pProgramIso->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
+                            m_pProgramIso->SetUniformVector("fRayStepsize", fRayStep);
+                            m_pProgramIso->SetUniformVector("iTileID", int(iCurrentBrick));
                             break;
                           }
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLRaycaster::SetBrickDepShaderVars","Invalid rendermode set"); break;
@@ -259,14 +277,12 @@ const FLOATVECTOR2 GLRaycaster::SetDataDepShaderVars() {
     case RM_ISOSURFACE : {
                             if (m_bDoClearView) {
                               m_pProgramCV->Enable();
-                              m_pProgramCV->SetUniformVector("fIsoval",m_fIsovalue/vSizes.x);
-                              m_pProgramCV->SetUniformVector("fIsovalFocus",m_fCVIsovalue/vSizes.x);
+                              m_pProgramCV->SetUniformVector("fIsoval",m_fCVIsovalue/vSizes.x);
                               m_pProgramCV->Disable();
-                            } else {
-                              m_pProgramIso->Enable();
-                              m_pProgramIso->SetUniformVector("fIsoval",m_fIsovalue/vSizes.x);
-                              m_pProgramIso->Disable();
-                            }
+                            } 
+                            m_pProgramIso->Enable();
+                            m_pProgramIso->SetUniformVector("fIsoval",m_fIsovalue/vSizes.x);
+                            m_pProgramIso->Disable();
                             break;
                           }
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLRaycaster::SetDataDepShaderVars","Invalid rendermode set"); break;
@@ -359,6 +375,8 @@ void GLRaycaster::Render3DPreLoop() {
                             m_pProgramCVCompose->Enable(); 
                             m_pProgramCVCompose->SetUniformVector("vLightDiffuse",m_vIsoColor.x, m_vIsoColor.y, m_vIsoColor.z);
                             m_pProgramCVCompose->SetUniformVector("vLightDiffuse2",m_vCVColor.x, m_vCVColor.y, m_vCVColor.z);
+                            m_pProgramCVCompose->SetUniformVector("vCVParam",m_fCVSize, m_fCVContextScale, m_fCVBorderScale);
+                            m_pProgramCVCompose->SetUniformVector("vCVPickPos", m_vCVPos.x, m_vCVPos.y);
                             m_pProgramCVCompose->Disable(); 
                             glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
                           } else {
@@ -393,7 +411,6 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 
   glDrawBuffer(GL_NONE);
 
-
   GLenum e = glGetError();
   if (GL_NO_ERROR!= e) {
     m_pMasterController->DebugOut()->Error("GLFBOTex:FinishWrite","Error unbinding FBO 1!");
@@ -401,46 +418,49 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
   m_pFBORayEntry->FinishWrite(1);
   m_pFBORayEntry->FinishWrite(0);
  
-
   if (m_eRenderMode == RM_ISOSURFACE) { 
-    if (m_bDoClearView) {
-      glEnable(GL_BLEND);
-      m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
-      m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
-      m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT2_EXT, 2);
-      m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT3_EXT, 3);
-      GLenum fourbuffers[] = { GL_COLOR_ATTACHMENT0_EXT, GL_COLOR_ATTACHMENT1_EXT, 
-                               GL_COLOR_ATTACHMENT2_EXT, GL_COLOR_ATTACHMENT3_EXT };
-      glDrawBuffers(4, fourbuffers);
-      glDepthMask(GL_FALSE);
-    } else {
-      m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
-      m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
-      glDrawBuffers(2, twobuffers);
-      glDepthMask(GL_TRUE);
-    }
+    glDepthMask(GL_TRUE);
+    m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
+    m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
+    glDrawBuffers(2, twobuffers);
 
     if (m_iBricksRenderedInThisSubFrame == 0) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    if (m_bDoClearView) m_pProgramCV->Enable(); else m_pProgramIso->Enable();
-    SetBrickDepShaderVars(m_vCurrentBrickList[iCurrentBrick]);
+    m_pProgramIso->Enable();
+    SetBrickDepShaderVars(iCurrentBrick);
     m_pFBORayEntry->Read(GL_TEXTURE2_ARB, 0);
     m_pFBORayEntry->Read(GL_TEXTURE3_ARB, 1);
     RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
     m_pFBORayEntry->FinishRead(1);
     m_pFBORayEntry->FinishRead(0);
-    if (m_bDoClearView) {
-      m_pProgramCV->Disable();
-      glDisable(GL_BLEND);
-    } else m_pProgramIso->Disable();
+    m_pProgramIso->Disable();
 
     glDrawBuffer(GL_NONE);
 
-    if (m_bDoClearView) {
-      m_pFBOIsoHit->FinishWrite(3);
-      m_pFBOIsoHit->FinishWrite(2);
-    }
     m_pFBOIsoHit->FinishWrite(1);
     m_pFBOIsoHit->FinishWrite(0);
+
+    if (m_bDoClearView) {
+      m_pFBOCVHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
+      m_pFBOCVHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
+      glDrawBuffers(2, twobuffers);
+
+      if (m_iBricksRenderedInThisSubFrame == 0) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      m_pProgramCV->Enable();
+      m_pFBORayEntry->Read(GL_TEXTURE2_ARB, 0);
+      m_pFBORayEntry->Read(GL_TEXTURE3_ARB, 1);
+      m_pFBOIsoHit->Read(GL_TEXTURE4_ARB, 0);
+      m_pFBOIsoHit->Read(GL_TEXTURE5_ARB, 1);
+      RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
+      m_pFBOIsoHit->FinishRead(1);
+      m_pFBOIsoHit->FinishRead(0);
+      m_pFBORayEntry->FinishRead(1);
+      m_pFBORayEntry->FinishRead(0);
+      m_pProgramCV->Disable();
+      glDrawBuffer(GL_NONE);
+
+      m_pFBOCVHit->FinishWrite(1);
+      m_pFBOCVHit->FinishWrite(0);
+    }
 
     m_pFBO3DImageCurrent->Write();
     glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
@@ -462,7 +482,7 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
                             break;
     }
 
-    SetBrickDepShaderVars(m_vCurrentBrickList[iCurrentBrick]);
+    SetBrickDepShaderVars(iCurrentBrick);
 
     m_pFBORayEntry->Read(GL_TEXTURE2_ARB, 0);
     m_pFBORayEntry->Read(GL_TEXTURE3_ARB, 1);
@@ -494,8 +514,8 @@ void GLRaycaster::Render3DPostLoop() {
     m_pFBOIsoHit->Read(GL_TEXTURE1, 1);
 
     if (m_bDoClearView) {
-      m_pFBOIsoHit->Read(GL_TEXTURE2, 2);
-      m_pFBOIsoHit->Read(GL_TEXTURE3, 3);
+      m_pFBOCVHit->Read(GL_TEXTURE2, 0);
+      m_pFBOCVHit->Read(GL_TEXTURE3, 1);
       m_pProgramCVCompose->Enable();
     } else m_pProgramIsoCompose->Enable();
 
@@ -512,8 +532,8 @@ void GLRaycaster::Render3DPostLoop() {
     glEnd();
 
     if (m_bDoClearView) {
-      m_pFBOIsoHit->FinishRead(3);
-      m_pFBOIsoHit->FinishRead(2);
+      m_pFBOCVHit->FinishRead(0);
+      m_pFBOCVHit->FinishRead(1);
       m_pProgramCVCompose->Disable();
     } else m_pProgramIsoCompose->Disable();
 
@@ -523,16 +543,6 @@ void GLRaycaster::Render3DPostLoop() {
 }
 
 void GLRaycaster::StartFrame() {
-  // call write and finishwrite to avoid error on faulty NVIDIA openGL drivers
-  m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT3_EXT, 3, false);
-  m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT2_EXT, 2, false);
-  m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1, false);
-  m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
-  m_pFBOIsoHit->FinishWrite(3);
-  m_pFBOIsoHit->FinishWrite(2);
-  m_pFBOIsoHit->FinishWrite(1);
-  m_pFBOIsoHit->FinishWrite(0);
-
   FLOATVECTOR2 vfWinSize = FLOATVECTOR2(m_vWinSize);
 
   switch (m_eRenderMode) {
@@ -553,22 +563,21 @@ void GLRaycaster::StartFrame() {
                           m_pProgram2DTrans[1]->Disable();
                           break;
     case RM_ISOSURFACE :  if (m_bDoClearView) {
-                            m_pProgramCV->Enable();
-                            m_pProgramCV->SetUniformVector("vScreensize",vfWinSize.x, vfWinSize.y);
-                            m_pProgramCV->Disable();
-
                             m_pProgramCVCompose->Enable();
                             m_pProgramCVCompose->SetUniformVector("vScreensize",vfWinSize.x, vfWinSize.y);
                             m_pProgramCVCompose->Disable();
-                          } else {
-                            m_pProgramIso->Enable();
-                            m_pProgramIso->SetUniformVector("vScreensize",vfWinSize.x, vfWinSize.y);
-                            m_pProgramIso->Disable();
 
+                            m_pProgramCV->Enable();
+                            m_pProgramCV->SetUniformVector("vScreensize",vfWinSize.x, vfWinSize.y);
+                            m_pProgramCV->Disable();
+                          } else {
                             m_pProgramIsoCompose->Enable();
                             m_pProgramIsoCompose->SetUniformVector("vScreensize",vfWinSize.x, vfWinSize.y);
                             m_pProgramIsoCompose->Disable();
                           } 
+                          m_pProgramIso->Enable();
+                          m_pProgramIso->SetUniformVector("vScreensize",vfWinSize.x, vfWinSize.y);
+                          m_pProgramIso->Disable();
                           break;
     default    :          m_pMasterController->DebugOut()->Error("GLSBVR::StartFrame","Invalid rendermode set"); 
                           break;

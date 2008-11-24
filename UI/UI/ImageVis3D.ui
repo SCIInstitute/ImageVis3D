@@ -36,17 +36,6 @@
      <widget class="QMdiArea" name="mdiArea" />
     </item>
    </layout>
-   <widget class="QWidget" name="layoutWidget" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>100</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_19" />
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar" >
    <property name="geometry" >
@@ -4859,6 +4848,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>horizontalSlider_CVFocusSize</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetFocusSize(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1062</x>
+     <y>1161</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>1003</x>
+     <y>1201</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_CVContextScale</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetContextScale(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1073</x>
+     <y>1203</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>1004</x>
+     <y>1241</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_CVBorder</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetBorderSize(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1039</x>
+     <y>1253</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>1000</x>
+     <y>1277</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -4918,5 +4955,8 @@
   <slot>ToggleClearView()</slot>
   <slot>SetFocusIsoValue(int)</slot>
   <slot>ChooseFocusColor()</slot>
+  <slot>SetFocusSize(int)</slot>
+  <slot>SetContextScale(int)</slot>
+  <slot>SetBorderSize(int)</slot>
  </slots>
 </ui>

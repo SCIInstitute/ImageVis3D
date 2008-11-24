@@ -154,7 +154,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void ToggleClearView();
     void SetFocusIsoValue(int iValue);
     void ChooseFocusColor();
-
+    void SetFocusSize(int iValue);
+    void SetContextScale(int iValue);
+    void SetBorderSize(int iValue);
 
   private :
     MasterController&     m_MasterController;
@@ -225,6 +227,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void ToggleClearViewControls(int iRange);
     void SetFocusIsoValueSlider(int iValue, int iMaxValue);
     void UpdateFocusIsoValLabel(int iValue, int iMaxValue);
+    void SetFocusSizeValueSlider(int iValue);
+    void SetContextScaleValueSlider(int iValue);
+    void SetBorderSizeValueSlider(int iValue);
 };
 
 #endif // IMAGEVIS3D_H

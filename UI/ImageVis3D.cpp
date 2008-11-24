@@ -328,6 +328,30 @@ void MainWindow::SetFocusIsoValueSlider(int iValue, int iMaxValue) {
   horizontalSlider_CVFocusIsoValue->setValue(iValue);
 }
 
+void MainWindow::SetFocusSizeValueSlider(int iValue){
+  horizontalSlider_CVFocusSize->setValue(iValue);
+}
+
+void MainWindow::SetContextScaleValueSlider(int iValue){
+  horizontalSlider_CVContextScale->setValue(iValue);
+}
+
+void MainWindow::SetBorderSizeValueSlider(int iValue) {
+  horizontalSlider_CVBorder->setValue(iValue);
+}
+
+void MainWindow::SetFocusSize(int iValue) {
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetCVSize(float(99-iValue)/9.9f);
+}
+
+void MainWindow::SetContextScale(int iValue) {
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetCVContextScale(float(iValue)/10.0f);
+}
+
+void MainWindow::SetBorderSize(int iValue) {
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetCVBorderScale(float(99-iValue));
+}
+
 void MainWindow::UpdateFocusIsoValLabel(int iValue, int iMaxValue) {
   QString desc;
   desc = tr("%1/%2").arg(iValue).arg(iMaxValue);

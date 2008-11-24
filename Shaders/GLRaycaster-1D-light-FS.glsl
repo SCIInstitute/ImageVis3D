@@ -37,8 +37,8 @@
 
 uniform sampler3D texVolume;  ///< the data volume
 uniform sampler1D texTrans1D; ///< the 1D Transfer function
-uniform sampler2D texRayEntry; ///< the frontface or ray entry point texture
-uniform sampler2D texRayEntryPos; ///< the frontface or ray entry point texture
+uniform sampler2D texRayExit; ///< the frontface or ray entry point texture
+uniform sampler2D texRayExitPos; ///< the frontface or ray entry point texture
 uniform float fTransScale;    ///< scale for 1D Transfer function lookup
 uniform float fStepScale;   ///< opacity correction quotient
 uniform vec3 vVoxelStepsize;  ///< Stepsize (in texcoord) to get to the next voxel
@@ -66,9 +66,9 @@ void main(void)
 
   // compute the ray parameters
   vec3  vRayEntry  = gl_TexCoord[0].xyz;
-  vec3  vRayExit   = texture2D(texRayEntry, vFragCoords).xyz;
-  vec3  vRayExitPos  = vEyePos;  
-  vec3  vRayEntryPos  = texture2D(texRayEntryPos, vFragCoords).xyz;  
+  vec3  vRayExit   = texture2D(texRayExit, vFragCoords).xyz;
+  vec3  vRayEntryPos  = vEyePos;  
+  vec3  vRayExitPos  = texture2D(texRayExitPos, vFragCoords).xyz;  
   vec3  vRayDir    = vRayExit - vRayEntry;
   
   float fRayLength = length(vRayDir);
@@ -118,7 +118,7 @@ void main(void)
     vCurrentPos    += fRayStepsize * vRayDir;
     vCurrentEyePos += vRayPosInc;
 
-    if (vColor.a >= 0.95) break;
+    if (vColor.a >= 0.99) break;
   }
   
   gl_FragColor  = vColor;

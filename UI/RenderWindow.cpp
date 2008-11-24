@@ -186,6 +186,10 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
   if (eWinMode == AbstrRenderer::WM_3D ) {
     bool bPerformUpdate = false;
 
+    if (event->modifiers() & Qt::ShiftModifier) {
+      m_Renderer->SetCVMousePos(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+    }
+
     if (event->buttons() & Qt::LeftButton) {
       m_mCurrentRotation = m_mAccumulatedRotation * m_ArcBall.Drag(UINTVECTOR2(event->pos().x(), event->pos().y())).ComputeRotation();
       m_Renderer->SetRotation(m_mCurrentRotation);

@@ -70,7 +70,7 @@ class GLSBVR : public GLRenderer {
   protected:
     SBVRGeogen    m_SBVRGeogen;
 
-    void SetBrickDepShaderVars(const Brick& currentBrick);
+    void SetBrickDepShaderVars(size_t iCurrentBrick);
     virtual const FLOATVECTOR2 SetDataDepShaderVars();
 
     virtual void Render3DPreLoop();

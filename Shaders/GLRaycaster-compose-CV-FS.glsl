@@ -48,6 +48,8 @@ uniform vec3 vLightDir;
 
 uniform vec2 vScreensize;      ///< the size of the screen in pixels
 uniform vec2 vProjParam;       ///< X = far / (far - near)  / Y = (far * near / (near - far))
+uniform vec3 vCVParam;         ///< X = m_fCVSize / Y = m_fCVContextScale / Z =  m_fCVBorderScale
+uniform vec2 vCVPickPos;       ///< pick position of the mouse
 
 vec3 Lighting(vec3 vPosition, vec3 vNormal, vec3 vLightAmbient, vec3 vLightDiffuse, vec3 vLightSpecular) {
 	vec3 vViewDir    = normalize(vec3(0.0,0.0,0.0)-vPosition);
@@ -71,19 +73,34 @@ void main(void){
   vec3  vNormal  = texture2D(texRayHitNormal, vFragCoords).xyz;  
 
 	// compute lighting
-	vec3 vContextColor = Lighting(vPosition.xyz, vNormal, vLightAmbient, vLightDiffuse, vLightSpecular);
+	vec4 vContextColor = vec4(Lighting(vPosition.xyz, vNormal, vLightAmbient, vLightDiffuse, vLightSpecular),1.0);
 
   // compute non linear depth from linear eye depth
   gl_FragDepth = vProjParam.x + (vProjParam.y / -vPosition.z);  
   
-   // get 2nd hitposition and normal
+  // get 2nd hitposition and normal
   vec4  vPosition2 = texture2D(texRayHitPos2, vFragCoords);
   vec3  vNormal2   = texture2D(texRayHitNormal2, vFragCoords).xyz;  
 
+  // estimate the curvature of the context surface
+	float fCurvatureEstimate = length(
+	                              abs(texture2D(texRayHitNormal,vFragCoords+vec2(+1.0/vScreensize.x,0.0)).xyz-vNormal.xyz) +
+	                              abs(texture2D(texRayHitNormal,vFragCoords+vec2(-1.0/vScreensize.x,0.0)).xyz-vNormal.xyz) +
+	                              abs(texture2D(texRayHitNormal,vFragCoords+vec2(0.0,+1.0/vScreensize.y)).xyz-vNormal.xyz) +
+	                              abs(texture2D(texRayHitNormal,vFragCoords+vec2(0.0,-1.0/vScreensize.y)).xyz-vNormal.xyz)
+				                      );
+
+  float fDistWeight  = length((vPosition.xyz-texture2D(texRayHitPos, vCVPickPos).xyz)) * vCVParam.x;
+	float blendFac = saturate(max(fCurvatureEstimate * vCVParam.y, saturate(fDistWeight)));	
+
+  vec4 vFocusColor = vec4(0,0,0,0);
   if (vPosition2.a != 0.0) {
-	  vec3 vFocusColor = Lighting(vPosition2.xyz, vNormal2, vLightAmbient, vLightDiffuse2, vLightSpecular); 
-	  gl_FragColor    = vec4(vFocusColor.x+vContextColor.x, vFocusColor.y+vContextColor.y, vFocusColor.z+vContextColor.z, 1.0);
-  } else {
-	  gl_FragColor    = vec4(vContextColor.x, vContextColor.y, vContextColor.z, 1.0);  
+	  vFocusColor = vec4(Lighting(vPosition2.xyz, vNormal2, vLightAmbient, vLightDiffuse2, vLightSpecular),1.0);
   }
+
+  vec4 vColor = saturate(vContextColor * blendFac + vFocusColor * (1.0-blendFac));
+
+  vColor.xyz -= 0.5 * (1.0-saturate(abs(fDistWeight-1.0) * vCVParam.z ));
+
+  gl_FragColor = vColor;
 }

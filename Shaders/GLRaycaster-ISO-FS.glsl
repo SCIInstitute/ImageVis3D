@@ -36,13 +36,14 @@
 */
 
 uniform sampler3D texVolume;   ///< the data volume
-uniform sampler2D texRayEntry; ///< the frontface or ray entry point texture
-uniform sampler2D texRayEntryPos; ///< the frontface or ray entry point texture
+uniform sampler2D texRayExit; ///< the frontface or ray entry point texture
+uniform sampler2D texRayExitPos; ///< the frontface or ray entry point texture
 uniform vec3 vVoxelStepsize;   ///< Stepsize (in texcoord) to get to the next voxel
 uniform float fRayStepsize;    ///< stepsize along the ray
 uniform float fIsoval;         ///< the isovalue
 uniform vec2 vScreensize;      ///< the size of the screen in pixels
 uniform vec2 vProjParam;       ///< X = far / (far - near)  / Y = (far * near / (near - far))
+uniform int  iTileID;          ///< ID of the current tile
 
 varying vec3 vEyePos;
 
@@ -68,8 +69,8 @@ void main(void)
 
   // compute the ray parameters
   vec3  vRayEntry  = gl_TexCoord[0].xyz;
-  vec3  vRayExit   = texture2D(texRayEntry, vFragCoords).xyz;
-  vec3  vRayEntryPos  = texture2D(texRayEntryPos, vFragCoords).xyz;  
+  vec3  vRayExit   = texture2D(texRayExit, vFragCoords).xyz;
+  vec3  vRayExitPos  = texture2D(texRayExitPos, vFragCoords).xyz;  
   vec3  vRayDir    = vRayExit - vRayEntry;
   float fRayLength = length(vRayDir);
   vRayDir /= fRayLength;
@@ -97,10 +98,10 @@ void main(void)
   
   // interpolate eye space position
   float fInterpolParam = length(vHitPosTex.xyz-vRayEntry)/fRayLength;
-  vec3 vHitPos = vRayEntryPos.xyz * (1.0-fInterpolParam) + vEyePos.xyz *  fInterpolParam;
+  vec3 vHitPos = vEyePos.xyz * (1.0-fInterpolParam) + vRayExitPos.xyz * fInterpolParam;
   gl_FragDepth = vProjParam.x + (vProjParam.y / -vHitPos.z);
 
-  gl_FragData[0] = vec4(vHitPos,1);
+  gl_FragData[0] = vec4(vHitPos.xyz,fInterpolParam);
 
   // compute normal
   float fVolumValXp = texture3D(texVolume, vHitPosTex.xyz+vec3(+vVoxelStepsize.x,0,0)).x;
@@ -113,5 +114,5 @@ void main(void)
   vec3 vNormal     = gl_NormalMatrix * vGradient;
   float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
   
-  gl_FragData[1] = vec4(vNormal,1);
+  gl_FragData[1] = vec4(vNormal,float(iTileID));
 }

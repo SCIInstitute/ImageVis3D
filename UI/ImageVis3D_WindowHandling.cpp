@@ -439,7 +439,11 @@ void MainWindow::ToggleClearViewControls(int iRange) {
     checkBox_ClearView->setVisible(false);
     frame_ClearView->setVisible(false);
   }
+
   SetFocusIsoValueSlider(int(m_ActiveRenderWin->GetRenderer()->GetCVIsoValue()*iRange), iRange);
+  SetFocusSizeValueSlider(99-int(m_ActiveRenderWin->GetRenderer()->GetCVSize()*9.9f));
+  SetContextScaleValueSlider(int(m_ActiveRenderWin->GetRenderer()->GetCVContextScale()*10.0f));
+  SetBorderSizeValueSlider(int(99-m_ActiveRenderWin->GetRenderer()->GetCVBorderScale()));
 }
 
 void MainWindow::SetRescaleFactors() {

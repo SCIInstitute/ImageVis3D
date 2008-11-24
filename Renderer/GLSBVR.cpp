@@ -117,7 +117,8 @@ void GLSBVR::SetSampleRateModifier(float fSampleRateModifier) {
   m_SBVRGeogen.SetSamplingModifier(fSampleRateModifier);
 }
 
-void GLSBVR::SetBrickDepShaderVars(const Brick& currentBrick) {
+void GLSBVR::SetBrickDepShaderVars(size_t iCurrentBrick) {
+  const Brick& currentBrick = m_vCurrentBrickList[iCurrentBrick];
   FLOATVECTOR3 vStep(1.0f/currentBrick.vVoxelCount.x, 1.0f/currentBrick.vVoxelCount.y, 1.0f/currentBrick.vVoxelCount.z);
 
   float fStepScale = m_SBVRGeogen.GetOpacityCorrection();
@@ -209,7 +210,7 @@ void GLSBVR::Render3DInLoop(size_t iCurrentBrick) {
   m_SBVRGeogen.SetTransformation(maBricktModelView, true);
 
   // update the shader parameter
-  SetBrickDepShaderVars(m_vCurrentBrickList[iCurrentBrick]);
+  SetBrickDepShaderVars(iCurrentBrick);
 
   // render the slices
   glBegin(GL_TRIANGLES);

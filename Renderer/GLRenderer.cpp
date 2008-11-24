@@ -810,7 +810,7 @@ void GLRenderer::BBoxPreRender() {
 }
 
 void GLRenderer::BBoxPostRender() {
- if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) {    
+ if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) {
     m_matModelView.setModelview();
     if (m_bRenderGlobalBBox) {
       glDisable(GL_DEPTH_TEST);
