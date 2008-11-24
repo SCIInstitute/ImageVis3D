@@ -425,11 +425,11 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     SetToggleLocalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetLocalBBox());
     ClearProgressView();
 
-    ToggleClearViewControls();
+    ToggleClearViewControls(iRange);
   }
 }
 
-void MainWindow::ToggleClearViewControls() {
+void MainWindow::ToggleClearViewControls(int iRange) {
   if (m_ActiveRenderWin->GetRenderer()->SupportsClearView()) {
     checkBox_ClearView->setVisible(true);
     frame_ClearView->setVisible(true);
@@ -439,6 +439,7 @@ void MainWindow::ToggleClearViewControls() {
     checkBox_ClearView->setVisible(false);
     frame_ClearView->setVisible(false);
   }
+  SetFocusIsoValueSlider(int(m_ActiveRenderWin->GetRenderer()->GetCVIsoValue()*iRange), iRange);
 }
 
 void MainWindow::SetRescaleFactors() {

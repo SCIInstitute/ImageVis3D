@@ -48,7 +48,7 @@ class GLFBOTex : public GLObject {
 public:
 	GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth=false, int iNumBuffers=1);
 	virtual ~GLFBOTex(void);
-	virtual void Write(GLenum target=GL_COLOR_ATTACHMENT0_EXT,int iBuffer=0);
+	virtual void Write(GLenum target=GL_COLOR_ATTACHMENT0_EXT, int iBuffer=0, bool bCheckBuffer=true);
 	virtual void Read(GLenum texunit,int iBuffer=0);
 	virtual void FinishWrite(int iBuffer=0);
 	virtual void FinishRead(int iBuffer=0);
@@ -58,9 +58,8 @@ public:
 	virtual operator GLuint*(void) { return m_hTexture; }
 
   /// \todo check how much mem an FBO really occupies
-  virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}
-  /// \todo check how much mem an FBO really occupies
-  virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}
+  virtual UINT64 GetCPUSize() {return m_iNumBuffers*m_iSizeX*m_iSizeY*m_iSizePerElement/8 + ((m_hDepthBuffer) ? m_iSizeX*m_iSizeY*4 : 0);}
+  virtual UINT64 GetGPUSize() {return GetCPUSize();}
 
 private:
   MasterController    *m_pMasterController;

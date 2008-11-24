@@ -121,6 +121,8 @@ class GLRenderer : public AbstrRenderer {
     virtual void ClearDepthBuffer();
     virtual void ClearColorBuffer();
 
+    virtual void StartFrame();
+    virtual void EndFrame(bool bNewDataToShow);
   private:
     GLSLProgram*    m_pProgramTrans;
     GLSLProgram*    m_pProgram1DTransSlice;

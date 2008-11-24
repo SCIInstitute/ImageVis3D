@@ -317,6 +317,23 @@ void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {
 }
 
 
+void MainWindow::SetFocusIsoValue(int iValue) {
+  int iMaxSize = int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetCVIsoValue(float(iValue)/float(iMaxSize));
+  UpdateFocusIsoValLabel(iValue, iMaxSize);
+}
+
+void MainWindow::SetFocusIsoValueSlider(int iValue, int iMaxValue) {
+  horizontalSlider_CVFocusIsoValue->setMaximum(iMaxValue);
+  horizontalSlider_CVFocusIsoValue->setValue(iValue);
+}
+
+void MainWindow::UpdateFocusIsoValLabel(int iValue, int iMaxValue) {
+  QString desc;
+  desc = tr("%1/%2").arg(iValue).arg(iMaxValue);
+  label_CVFocusIsoValue->setText(desc);
+}
+
 void MainWindow::SetToggleGlobalBBoxLabel(bool bRenderBBox)
 {
   this->checkBox_GBBox->setChecked(bRenderBBox);
@@ -363,7 +380,26 @@ void MainWindow::ChooseIsoColor()
   }
 }
 
+void MainWindow::ChooseFocusColor()
+{
+  if (m_ActiveRenderWin)  {
+    FLOATVECTOR3 vIsoColor = m_ActiveRenderWin->GetRenderer()->GetCVColor();
+    QColor color = QColorDialog::getColor(qRgba(int(vIsoColor.x*255),
+                                                int(vIsoColor.y*255),
+                                                int(vIsoColor.z*255),
+                                                255),
+                                                this);
+    if (color.isValid()) {
+
+      vIsoColor = FLOATVECTOR3(color.red() / 255.0f, color.green() / 255.0f, color.blue() / 255.0f);
+      m_ActiveRenderWin->GetRenderer()->SetCVColor(vIsoColor);
+    }
+  }
+}
+
 void MainWindow::ToggleClearView() {
-  if (m_ActiveRenderWin)
+  if (m_ActiveRenderWin) {
     m_ActiveRenderWin->GetRenderer()->SetCV(checkBox_ClearView->isChecked());
+    frame_ClearView->setEnabled(checkBox_ClearView->isChecked());
+  }
 }

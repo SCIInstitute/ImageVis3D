@@ -150,7 +150,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void ShowAbout();
 
     void ChooseIsoColor();
+
     void ToggleClearView();
+    void SetFocusIsoValue(int iValue);
+    void ChooseFocusColor();
+
 
   private :
     MasterController&     m_MasterController;
@@ -217,8 +221,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetToggleGlobalBBoxLabel(bool bRenderBBox);
     void SetToggleLocalBBoxLabel(bool bRenderBBox);
     void ClearProgressView();
-    void ToggleClearViewControls();
 
+    void ToggleClearViewControls(int iRange);
+    void SetFocusIsoValueSlider(int iValue, int iMaxValue);
+    void UpdateFocusIsoValLabel(int iValue, int iMaxValue);
 };
 
 #endif // IMAGEVIS3D_H

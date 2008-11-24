@@ -180,12 +180,17 @@ void GLRenderer::ClearColorBuffer() {
   glDepthMask(GL_TRUE);
 }
 
-void GLRenderer::Paint() {
+
+void GLRenderer::StartFrame() {
   // clear the framebuffer (if requested)
   if (m_bClearFramebuffer) ClearDepthBuffer();
 
   // bind offscreen buffer
   m_pFBO3DImageCurrent->Write();
+}
+
+void GLRenderer::Paint() {
+  StartFrame();
 
   bool bNewDataToShow = false;
   if (m_eViewMode == VM_SINGLE) {
@@ -257,8 +262,13 @@ void GLRenderer::Paint() {
     RenderSeperatingLines();
   }
 
+  EndFrame(bNewDataToShow);
+}
+
+void GLRenderer::EndFrame(bool bNewDataToShow) {
   // unbind offscreen buffer
   m_pFBO3DImageCurrent->FinishWrite();
+
 
   // if the image is complete swap the offscreen buffers
   if (bNewDataToShow) {
@@ -737,8 +747,14 @@ const FLOATVECTOR2 GLRenderer::SetDataDepShaderVars() {
 }
 
 void GLRenderer::CreateOffscreenBuffers() {
-  if (m_pFBO3DImageLast != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast);
-  if (m_pFBO3DImageCurrent != NULL) m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent);
+  if (m_pFBO3DImageLast) {
+    m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast);
+    m_pFBO3DImageLast = NULL;
+  }
+  if (m_pFBO3DImageCurrent) {
+    m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent);
+    m_pFBO3DImageCurrent = NULL;
+  }
 
   if (m_vWinSize.area() > 0) {
     switch (m_eBlendPrecision) {
@@ -783,18 +799,18 @@ void GLRenderer::BBoxPreRender() {
   // for isosurface rendering we can go ahead and render the bbox directly as isosurfacing 
   // writes out correct depth values
   glDisable(GL_BLEND);
-  if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+  if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
   if (m_bRenderGlobalBBox) RenderBBox();
   if (m_bRenderLocalBBox) {
     for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
       RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
     }
   }
-  if (m_eRenderMode != RM_ISOSURFACE) glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+  if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
 }
 
 void GLRenderer::BBoxPostRender() {
- if (m_eRenderMode != RM_ISOSURFACE) {    
+ if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) {    
     m_matModelView.setModelview();
     if (m_bRenderGlobalBBox) {
       glDisable(GL_DEPTH_TEST);

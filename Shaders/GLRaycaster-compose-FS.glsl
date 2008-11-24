@@ -43,7 +43,6 @@ uniform vec3 vLightDiffuse;
 uniform vec3 vLightSpecular;
 uniform vec3 vLightDir;
 
-
 uniform vec2 vScreensize;      ///< the size of the screen in pixels
 uniform vec2 vProjParam;       ///< X = far / (far - near)  / Y = (far * near / (near - far))
 
@@ -69,6 +68,6 @@ void main(void){
 	/// write result to fragment color
 	gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, 1.0);
 
-  // compute linear eye depth
+  // compute non linear depth from linear eye depth
   gl_FragDepth = vProjParam.x + (vProjParam.y / -vPosition.z);
 }

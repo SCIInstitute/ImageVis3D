@@ -115,8 +115,9 @@ void main(void)
   // interpolate eye space position
   float fInterpolParam = length(vHitPosTex.xyz-vRayEntry)/fRayLength;
   vec3 vHitPos = vRayEntryPos.xyz * (1.0-fInterpolParam) + vEyePos.xyz *  fInterpolParam;
-  gl_FragDepth = vProjParam.x + (vProjParam.y / -vHitPos.z);
 
+  gl_FragDepth = vProjParam.x + (vProjParam.y / -vEyePos.z);  // as the surface maybe transparent set depth to the ray exit pos, so we get at least the bbox correct
+  
   gl_FragData[0] = vec4(vHitPos,1);
 
   // store normal

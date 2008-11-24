@@ -49,28 +49,41 @@ uniform vec3 vLightDir;
 uniform vec2 vScreensize;      ///< the size of the screen in pixels
 uniform vec2 vProjParam;       ///< X = far / (far - near)  / Y = (far * near / (near - far))
 
+vec3 Lighting(vec3 vPosition, vec3 vNormal, vec3 vLightAmbient, vec3 vLightDiffuse, vec3 vLightSpecular) {
+	vec3 vViewDir    = normalize(vec3(0.0,0.0,0.0)-vPosition);
+	vec3 vReflection = normalize(reflect(vViewDir, vNormal));
+	return vLightAmbient+
+				 vLightDiffuse*clamp(dot(vNormal, -vLightDir),0.0,1.0)+
+			   vLightSpecular*pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0);
+}
+
+
 void main(void){
   // compute the coordinates to look up the previous pass
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // get hitposition and check if a isosurface hit for this ray was found
-  vec4  vPosition = texture2D(texRayHitPos2, vFragCoords);
+  vec4  vPosition = texture2D(texRayHitPos, vFragCoords);
   
   if (vPosition.a == 0.0) discard;
   
   // get hit normal
-  vec3  vNormal  = texture2D(texRayHitNormal2, vFragCoords).xyz;  
+  vec3  vNormal  = texture2D(texRayHitNormal, vFragCoords).xyz;  
 
 	// compute lighting
-	vec3 vViewDir    = normalize(vec3(0.0,0.0,0.0)-vPosition.xyz);
-	vec3 vReflection = normalize(reflect(vViewDir, vNormal));
-	vec3 vLightColor = vLightAmbient+
-					   vLightDiffuse*clamp(dot(vNormal, -vLightDir),0.0,1.0)+
-					   vLightSpecular*pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0);
+	vec3 vContextColor = Lighting(vPosition.xyz, vNormal, vLightAmbient, vLightDiffuse, vLightSpecular);
 
-	/// write result to fragment color
-	gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, 1.0);
+  // compute non linear depth from linear eye depth
+  gl_FragDepth = vProjParam.x + (vProjParam.y / -vPosition.z);  
+  
+   // get 2nd hitposition and normal
+  vec4  vPosition2 = texture2D(texRayHitPos2, vFragCoords);
+  vec3  vNormal2   = texture2D(texRayHitNormal2, vFragCoords).xyz;  
 
-  // compute linear eye depth
-  gl_FragDepth = vProjParam.x + (vProjParam.y / -vPosition.z);
+  if (vPosition2.a != 0.0) {
+	  vec3 vFocusColor = Lighting(vPosition2.xyz, vNormal2, vLightAmbient, vLightDiffuse2, vLightSpecular); 
+	  gl_FragColor    = vec4(vFocusColor.x+vContextColor.x, vFocusColor.y+vContextColor.y, vFocusColor.z+vContextColor.z, 1.0);
+  } else {
+	  gl_FragColor    = vec4(vContextColor.x, vContextColor.y, vContextColor.z, 1.0);  
+  }
 }

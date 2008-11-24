@@ -77,7 +77,7 @@ GLFBOTex::GLFBOTex(MasterController* pMasterController, GLenum minfilter, GLenum
 	m_LastAttachment=new GLenum[iNumBuffers];
 	for (int i=0; i<m_iNumBuffers; i++) {
 		m_LastTexUnit[i]=0;
-		m_LastAttachment[i]=GL_COLOR_ATTACHMENT0_EXT;
+		m_LastAttachment[i]=GL_COLOR_ATTACHMENT0_EXT+i;
 		m_hTexture[i]=0;
 	}
 	if (m_hFBO==0) 
@@ -275,34 +275,37 @@ VBOTex::~VBOTex() {
 	glDeleteBuffersARB(1,&m_hPBO);
 }
 
-
 /**
  * Lock texture for writing. Texture may not be bound any more!
  */
-void GLFBOTex::Write(GLenum target,int iBuffer) {
+void GLFBOTex::Write(GLenum target, int iBuffer, bool bCheckBuffer) {
 #ifdef _DEBUG
 	if (!m_hFBO) {
 		m_pMasterController->DebugOut()->Error("GLFBOTex:Write","FBO not initialized!");
     return;
 	}
 #endif
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,m_hFBO);
+
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,m_hFBO);
 	assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);
 	m_LastAttachment[iBuffer]=target;
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, target, GL_TEXTURE_2D, m_hTexture[iBuffer], 0);
 	if (m_hDepthBuffer) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,m_hDepthBuffer,0);
+  if (bCheckBuffer) {
 #ifdef _DEBUG
 	if (!CheckFBO("Write")) return;
 #endif
+  }
 }
 
 void GLFBOTex::FinishWrite(int iBuffer) {
-	assert(iBuffer>=0);
+  glGetError();
+  assert(iBuffer>=0);
 	assert(iBuffer<m_iNumBuffers);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,m_LastAttachment[iBuffer],GL_TEXTURE_2D,0,0);
-	if (m_hDepthBuffer) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,0,0);
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
+  glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,m_LastAttachment[iBuffer],GL_TEXTURE_2D,0,0);
+  if (m_hDepthBuffer) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_TEXTURE_2D,0,0);
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
 }
 
 void GLFBOTex::Read(GLenum texunit, int iBuffer) {

@@ -61,17 +61,11 @@ class GLRaycaster : public GLRenderer {
     /** Deallocates GPU memory allocated during the rendering process. */
     virtual void Cleanup();
 
-    /** Change the size of the render window.  Any previous image is
-     * destroyed, causing a full redraw on the next render.
-     * \param vWinSize  new width and height of the view window */
-    virtual void Resize(const UINTVECTOR2& vWinSize);
-
     virtual bool SupportsClearView() {return true;}
 
   protected:
     GLFBOTex*       m_pFBORayEntry;
     GLFBOTex*       m_pFBOIsoHit;
-    GLFBOTex*       m_pFBOCVHit;
     GLSLProgram*    m_pProgramRenderFrontFaces;
     GLSLProgram*    m_pProgramIsoCompose;
     GLSLProgram*    m_pProgramCV;
@@ -87,6 +81,8 @@ class GLRaycaster : public GLRenderer {
     virtual void Render3DPreLoop();
     virtual void Render3DInLoop(size_t iCurrentBrick);
     virtual void Render3DPostLoop();
+
+    virtual void StartFrame();
 };
 
 #endif // GLRAYCASTER_H

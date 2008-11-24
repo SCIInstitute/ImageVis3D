@@ -4827,6 +4827,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_SelColorIso2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ChooseFocusColor()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1068</x>
+     <y>1109</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>998</x>
+     <y>1157</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_CVFocusIsoValue</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetFocusIsoValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1034</x>
+     <y>1082</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>1000</x>
+     <y>1107</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -4884,5 +4916,7 @@
   <slot>ShowAbout()</slot>
   <slot>ChooseIsoColor()</slot>
   <slot>ToggleClearView()</slot>
+  <slot>SetFocusIsoValue(int)</slot>
+  <slot>ChooseFocusColor()</slot>
  </slots>
 </ui>
