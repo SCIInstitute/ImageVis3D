@@ -199,10 +199,15 @@ void GLRenderer::Paint() {
 
     switch (m_eFullWindowMode) {
        case WM_3D       : {
-                              // plan the frame
-                              Plan3DFrame();
-                              // execute the frame
-                              bNewDataToShow = Execute3DFrame(RA_FULLSCREEN); 
+                              if (!m_bPerformRedraw && m_bPerformReCompose){
+                                Recompose3DView(RA_FULLSCREEN);
+                                bNewDataToShow = true;
+                              } else {
+                                // plan the frame
+                                Plan3DFrame();
+                                // execute the frame
+                                bNewDataToShow = Execute3DFrame(RA_FULLSCREEN); 
+                              }
                               break;
                           }
        case WM_SAGITTAL : 
@@ -227,10 +232,15 @@ void GLRenderer::Paint() {
         bool bLocalNewDataToShow;
         switch (m_e2x2WindowMode[i]) {
            case WM_3D       : {
-                                // plan the frame
-                                Plan3DFrame();
-                                // execute the frame
-                                bLocalNewDataToShow = Execute3DFrame(eArea);
+                                if (!m_bPerformRedraw && m_bPerformReCompose){
+                                  Recompose3DView(eArea);
+                                  bLocalNewDataToShow = true;
+                                } else {
+                                  // plan the frame
+                                  Plan3DFrame();
+                                  // execute the frame
+                                  bLocalNewDataToShow = Execute3DFrame(eArea);
+                                }
                                 // are we done traversing the LOD levels
                                 m_bRedrawMask[size_t(m_e2x2WindowMode[i])] = (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame) || (m_iCurrentLODOffset > m_iMinLODForCurrentView);
                                 break;
@@ -269,7 +279,6 @@ void GLRenderer::EndFrame(bool bNewDataToShow) {
   // unbind offscreen buffer
   m_pFBO3DImageCurrent->FinishWrite();
 
-
   // if the image is complete swap the offscreen buffers
   if (bNewDataToShow) {
     swap(m_pFBO3DImageLast, m_pFBO3DImageCurrent);
@@ -277,7 +286,8 @@ void GLRenderer::EndFrame(bool bNewDataToShow) {
   }
 
   // show the result
-  if (bNewDataToShow || m_iFilledBuffers < 2) RerenderPreviousResult(true);
+  if (bNewDataToShow || m_iFilledBuffers < 2) 
+    RerenderPreviousResult(true);
 
   // no complete redraw is necessary as we just finished the first pass
   m_bPerformRedraw = false;
@@ -531,27 +541,18 @@ void GLRenderer::RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCent
 
 }
 
-bool GLRenderer::CheckForRedraw() {
-  if (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame || m_iCurrentLODOffset > m_iMinLODForCurrentView) {
-    if (m_iCheckCounter == 0)  {
-      m_pMasterController->DebugOut()->Message("GLRenderer::CheckForRedraw","Still drawing...");
-      return true;
-    } else m_iCheckCounter--;
-  }
-  return m_bPerformRedraw;
+void GLRenderer::NewFrameClear(ERenderArea eREnderArea) {
+  m_pMasterController->DebugOut()->Message("GLRenderer::NewFrameClear","Starting a new subframe ...");
+  m_iFilledBuffers = 0;
+  SetRenderTargetAreaScissor(eREnderArea);
+  glClearColor(0,0,0,0);
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  glDisable( GL_SCISSOR_TEST ); // since we do not clear anymore in this subframe we do not need the scissor test, maybe disabling it saves performacnce
 }
-
 
 bool GLRenderer::Execute3DFrame(ERenderArea eREnderArea) {
   // are we starting a new LOD level?
-  if (m_iBricksRenderedInThisSubFrame == 0) {
-    m_pMasterController->DebugOut()->Message("GLRenderer::Execute3DFrame","Starting a new subframe ...");
-    m_iFilledBuffers = 0;
-    SetRenderTargetAreaScissor(eREnderArea);
-    glClearColor(0,0,0,0);
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-    glDisable( GL_SCISSOR_TEST ); // since we do not clear anymore in this subframe we do not need the scissor test, maybe disabling it saves performacnce
-  }
+  if (m_iBricksRenderedInThisSubFrame == 0) NewFrameClear(eREnderArea);
   
   // if zero bricks are to be rendered we have completed the draw job
   if (m_vCurrentBrickList.size() == 0) {
@@ -833,6 +834,25 @@ bool GLRenderer::LoadDataset(const string& strFilename) {
   } else return false;
 }
 
+void GLRenderer::Recompose3DView(ERenderArea eArea) {
+  m_pMasterController->DebugOut()->Message("GLRenderer::Recompose3DView","Recomposing...");
+  
+  NewFrameClear(eArea);
+
+  // Modelview
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  m_matModelView.setModelview();
+
+  glEnable(GL_DEPTH_TEST);
+  BBoxPreRender();
+
+  Render3DPreLoop();
+  Render3DPostLoop();
+
+  // at the very end render the bboxes
+  BBoxPostRender();
+}
 
 void GLRenderer::Render3DView() {
   m_pMasterController->DebugOut()->Message("GLRenderer::Render3DView","Rendering...");
@@ -853,7 +873,7 @@ void GLRenderer::Render3DView() {
   timeStart = timeProbe = clock();
 
   while (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame && float(timeProbe-timeStart)*1000.0f/float(CLOCKS_PER_SEC) < m_iTimeSliceMSecs) {
-    m_pMasterController->DebugOut()->Message("GLRenderer::Render3DView","  Brick %i of %i",m_vCurrentBrickList.size(), m_iBricksRenderedInThisSubFrame);
+    m_pMasterController->DebugOut()->Message("GLRenderer::Render3DView","  Brick %i of %i", m_iBricksRenderedInThisSubFrame+1,m_vCurrentBrickList.size());
 
     // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
     vector<UINT64> vLOD; vLOD.push_back(m_iCurrentLOD);

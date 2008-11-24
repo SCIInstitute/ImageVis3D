@@ -186,7 +186,9 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
   if (eWinMode == AbstrRenderer::WM_3D ) {
     bool bPerformUpdate = false;
 
-    if (event->modifiers() & Qt::ShiftModifier) {
+    if (m_Renderer->GetRendermode() == AbstrRenderer::RM_ISOSURFACE &&
+        m_Renderer->GetCV() &&
+        event->modifiers() & Qt::ShiftModifier) {
       m_Renderer->SetCVMousePos(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
     }
 

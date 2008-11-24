@@ -503,7 +503,6 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
   }
 }
 
-
 void GLRaycaster::Render3DPostLoop() {
   glDisable(GL_CULL_FACE);
   glDepthMask(GL_TRUE);
@@ -539,6 +538,8 @@ void GLRaycaster::Render3DPostLoop() {
 
     m_pFBOIsoHit->FinishRead(1);
     m_pFBOIsoHit->FinishRead(0);
+
+    m_bPerformReCompose = false;
   }
 }
 

@@ -76,7 +76,8 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_fCVSize(5.5f),
   m_fCVContextScale(1.0f),
   m_fCVBorderScale(60.0f),
-  m_vCVPos(0.5f, 0.5f)
+  m_vCVPos(0.5f, 0.5f),
+  m_bPerformReCompose(false)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -225,13 +226,13 @@ void AbstrRenderer::SetIsoValue(float fIsovalue) {
 }
 
 bool AbstrRenderer::CheckForRedraw() {
-  if (m_iCurrentLODOffset > m_iMinLODForCurrentView) {
+  if (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame || m_iCurrentLODOffset > m_iMinLODForCurrentView) {
     if (m_iCheckCounter == 0)  {
-      m_bPerformRedraw = true;
-      m_pMasterController->DebugOut()->Message("AbstrRenderer::CheckForRedraw","Scheduled redraw as LOD is %i > 0", m_iCurrentLODOffset);
+      m_pMasterController->DebugOut()->Message("GLRenderer::CheckForRedraw","Still drawing...");
+      return true;
     } else m_iCheckCounter--;
   }
-  return m_bPerformRedraw;
+  return m_bPerformRedraw || m_bPerformReCompose;
 }
 
 AbstrRenderer::EWindowMode AbstrRenderer::GetWindowUnderCursor(FLOATVECTOR2 vPos) {
@@ -256,6 +257,27 @@ AbstrRenderer::EWindowMode AbstrRenderer::GetWindowUnderCursor(FLOATVECTOR2 vPos
   }
 }
 
+FLOATVECTOR2 AbstrRenderer::GetLocalCursorPos(FLOATVECTOR2 vPos) {
+  switch (m_eViewMode) {
+    case VM_SINGLE   : return vPos;
+    case VM_TWOBYTWO : {
+                          if (vPos.y < 0.5f) {
+                            if (vPos.x < 0.5f) {
+                                return vPos*2.0f;
+                            } else {
+                                return FLOATVECTOR2(vPos.x-0.5f,vPos.y)*2.0f;
+                            }
+                          } else {
+                            if (vPos.x < 0.5f) {
+                                return FLOATVECTOR2(vPos.x,vPos.y-0.5f)*2.0f;
+                            } else {
+                                return FLOATVECTOR2(vPos.x-0.5f,vPos.y-0.5f)*2.0f;
+                            }
+                          }
+                       }
+    default          : return vPos;
+  }
+}
 
 void AbstrRenderer::Resize(const UINTVECTOR2& vWinSize) {
   m_vWinSize = vWinSize;
@@ -311,6 +333,11 @@ void AbstrRenderer::ScheduleWindowRedraw(EWindowMode eWindow) {
   m_bPerformRedraw      = true;
   m_iCheckCounter       = m_iStartDelay;
   m_bRedrawMask[size_t(eWindow)] = true;
+}
+
+void AbstrRenderer::ScheduleRecompose() {
+  m_bPerformReCompose = true;
+  m_bRedrawMask[WM_3D]  = true;
 }
 
 void AbstrRenderer::ComputeMinLODForCurrentView() {
@@ -447,12 +474,18 @@ void AbstrRenderer::Plan3DFrame() {
   }
 }
 
-
 void AbstrRenderer::SetCV(bool bEnable) {
   if (m_bDoClearView != bEnable) {
     m_bDoClearView = bEnable; 
-    if (m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);
+    if (m_eRenderMode == RM_ISOSURFACE) 
+      ScheduleWindowRedraw(WM_3D);
   }
+}
+
+void AbstrRenderer::SetIsosufaceColor(FLOATVECTOR3 vColor) {
+  m_vIsoColor = vColor; 
+  if (m_eRenderMode == RM_ISOSURFACE) 
+    ScheduleWindowRedraw(WM_3D);
 }
 
 void AbstrRenderer::SetCVIsoValue(float fIsovalue) {
@@ -466,7 +499,7 @@ void AbstrRenderer::SetCVColor(FLOATVECTOR3 vColor) {
   if (m_vCVColor != vColor) {
     m_vCVColor = vColor; 
     if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
-      ScheduleWindowRedraw(WM_3D); /// \todo only recomposite do not redraw
+      ScheduleRecompose();
   }
 }
 
@@ -474,7 +507,7 @@ void AbstrRenderer::SetCVSize(float fSize) {
   if (m_fCVSize != fSize) {
     m_fCVSize = fSize;
     if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
-      ScheduleWindowRedraw(WM_3D); /// \todo only recomposite do not redraw
+      ScheduleRecompose();
   }
 }
 
@@ -482,7 +515,7 @@ void AbstrRenderer::SetCVContextScale(float fScale) {
   if (m_fCVContextScale != fScale) {
     m_fCVContextScale = fScale;
     if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
-      ScheduleWindowRedraw(WM_3D); /// \todo only recomposite do not redraw
+      ScheduleRecompose();
   }
 }
 
@@ -490,7 +523,7 @@ void AbstrRenderer::SetCVBorderScale(float fScale) {
   if (m_fCVBorderScale != fScale) {
     m_fCVBorderScale = fScale; 
     if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
-      ScheduleWindowRedraw(WM_3D); /// \todo only recomposite do not redraw
+      ScheduleRecompose();
   }
 }
 
@@ -499,7 +532,7 @@ void AbstrRenderer::SetCVMousePos(FLOATVECTOR2 vPos) {
   if (m_vCVPos!= vPos) {
     m_vCVPos = vPos; 
     if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
-      ScheduleWindowRedraw(WM_3D);  /// \todo only recomposite do not redraw
+      ScheduleRecompose();
   }
 
 }

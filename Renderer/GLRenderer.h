@@ -76,11 +76,6 @@ class GLRenderer : public AbstrRenderer {
      * \param vWinSize  new width and height of the view window */
     virtual void Resize(const UINTVECTOR2& vWinSize);
 
-    /** Query whether or not we should redraw the next frame, else we should
-     * reuse what is already rendered or cintinue with the current frame if it
-     * is not complete yet. */
-    virtual bool CheckForRedraw();
-
   protected:
     GLTexture1D*    m_p1DTransTex;
     GLTexture2D*    m_p2DTransTex;
@@ -101,6 +96,7 @@ class GLRenderer : public AbstrRenderer {
     bool Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT64 iSliceIndex);
     void RenderBBox(const FLOATVECTOR4 vColor = FLOATVECTOR4(1,0,0,1));
     void RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend);
+    void NewFrameClear(ERenderArea eREnderArea);
     bool Execute3DFrame(ERenderArea eREnderArea);
     void RerenderPreviousResult(bool bTransferToFramebuffer);
     void DrawLogo();
@@ -112,6 +108,7 @@ class GLRenderer : public AbstrRenderer {
     virtual void Render3DPreLoop() = 0;
     virtual void Render3DInLoop(size_t iCurentBrick) = 0;
     virtual void Render3DPostLoop() = 0;
+    virtual void Recompose3DView(ERenderArea eArea);
 
     virtual void CreateOffscreenBuffers();
     virtual bool LoadAndVerifyShader(const std::string& strVSFile, const std::string& strFSFile, GLSLProgram** pShaderProgram);

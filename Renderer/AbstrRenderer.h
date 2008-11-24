@@ -125,6 +125,7 @@ class AbstrRenderer {
     EWindowMode GetFullWindowmode() {return m_eFullWindowMode;}
     virtual void SetFullWindowmode(EWindowMode eWindowMode);
     EWindowMode GetWindowUnderCursor(FLOATVECTOR2 vPos);
+    FLOATVECTOR2 GetLocalCursorPos(FLOATVECTOR2 vPos);
     
     enum EBlendPrecision {
       BP_8BIT = 0,      
@@ -193,7 +194,7 @@ class AbstrRenderer {
     virtual void SetIsoValue(float fIsovalue);
     float GetIsoValue() {return m_fIsovalue;}
 
-    virtual void SetIsosufaceColor(FLOATVECTOR3 vColor) {m_vIsoColor = vColor; if (m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);}
+    virtual void SetIsosufaceColor(FLOATVECTOR3 vColor);
     virtual FLOATVECTOR3 GetIsosufaceColor()  const {return m_vIsoColor;}
 
 
@@ -313,7 +314,9 @@ class AbstrRenderer {
     float               m_fCVContextScale;
     float               m_fCVBorderScale;
     FLOATVECTOR2        m_vCVPos;
+    bool                m_bPerformReCompose;
 
+    virtual void ScheduleRecompose();
     virtual void ScheduleCompleteRedraw();
     virtual void ScheduleWindowRedraw(EWindowMode eWindow);
     void ComputeMinLODForCurrentView();
