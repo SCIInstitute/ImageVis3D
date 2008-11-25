@@ -91,16 +91,19 @@ void main(void){
 				                      );
 
   float fDistWeight  = length((vPosition.xyz-texture2D(texRayHitPos, vCVPickPos).xyz)) * vCVParam.x;
-	float blendFac = saturate(max(fCurvatureEstimate * vCVParam.y, saturate(fDistWeight)));	
+	//float blendFac = saturate(max(fCurvatureEstimate * vCVParam.y, saturate(fDistWeight)));	
+	float blendFac = clamp(max(fCurvatureEstimate * vCVParam.y, clamp(fDistWeight,0.0,1.0)), 0.0,1.0);	
 
   vec4 vFocusColor = vec4(0,0,0,0);
   if (vPosition2.a != 0.0) {
 	  vFocusColor = vec4(Lighting(vPosition2.xyz, vNormal2, vLightAmbient, vLightDiffuse2, vLightSpecular),1.0);
   }
 
-  vec4 vColor = saturate(vContextColor * blendFac + vFocusColor * (1.0-blendFac));
+  //vec4 vColor = saturate(vContextColor * blendFac + vFocusColor * (1.0-blendFac));
+  vec4 vColor = clamp(vContextColor * blendFac + vFocusColor * (1.0-blendFac), 0.0,1.0);
 
-  vColor.xyz -= 0.5 * (1.0-saturate(abs(fDistWeight-1.0) * vCVParam.z ));
+  //vColor.xyz -= 0.5 * (1.0-saturate(abs(fDistWeight-1.0) * vCVParam.z ));
+  vColor.xyz -= 0.5 * (1.0-clamp(abs(fDistWeight-1.0) * vCVParam.z,  0.0, 1.0));
 
   gl_FragColor = vColor;
 }
