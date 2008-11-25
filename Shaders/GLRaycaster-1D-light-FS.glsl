@@ -35,15 +35,15 @@
   \date    October 2008
 */
 
-uniform sampler3D texVolume;  ///< the data volume
-uniform sampler1D texTrans1D; ///< the 1D Transfer function
-uniform sampler2D texRayExit; ///< the frontface or ray entry point texture
-uniform sampler2D texRayExitPos; ///< the frontface or ray entry point texture
-uniform float fTransScale;    ///< scale for 1D Transfer function lookup
-uniform float fStepScale;   ///< opacity correction quotient
-uniform vec3 vVoxelStepsize;  ///< Stepsize (in texcoord) to get to the next voxel
-uniform vec2 vScreensize;      ///< the size of the screen in pixels
-uniform float fRayStepsize;     ///< stepsize along the ray
+uniform sampler3D texVolume;     ///< the data volume
+uniform sampler1D texTrans1D;    ///< the 1D Transfer function
+uniform sampler2D texRayExit; ///< the backface (or ray exit point) texture in texcoords
+uniform sampler2D texRayExitPos; ///< the backface (or ray exit point) texture in eyecoords
+uniform float fTransScale;       ///< scale for 1D Transfer function lookup
+uniform float fStepScale;        ///< opacity correction quotient
+uniform vec3 vVoxelStepsize;     ///< Stepsize (in texcoord) to get to the next voxel
+uniform vec2 vScreensize;        ///< the size of the screen in pixels
+uniform float fRayStepsize;      ///< stepsize along the ray
 
 uniform vec3 vLightAmbient;
 uniform vec3 vLightDiffuse;
@@ -59,49 +59,53 @@ vec4 ColorBlend(vec4 src, vec4 dst) {
 	return result;
 }
 
+vec3 ComputeNormal(vec3 vHitPosTex) { 
+  float fVolumValXp = texture3D(texVolume, vHitPosTex+vec3(+vVoxelStepsize.x,0,0)).x;
+  float fVolumValXm = texture3D(texVolume, vHitPosTex+vec3(-vVoxelStepsize.x,0,0)).x;
+  float fVolumValYp = texture3D(texVolume, vHitPosTex+vec3(0,-vVoxelStepsize.y,0)).x;
+  float fVolumValYm = texture3D(texVolume, vHitPosTex+vec3(0,+vVoxelStepsize.y,0)).x;
+  float fVolumValZp = texture3D(texVolume, vHitPosTex+vec3(0,0,+vVoxelStepsize.z)).x;
+  float fVolumValZm = texture3D(texVolume, vHitPosTex+vec3(0,0,-vVoxelStepsize.z)).x;
+  vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
+  vec3 vNormal     = gl_NormalMatrix * vGradient;
+  float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
+  return vNormal;
+}
+
 void main(void)
 {
   // compute the coordinates to look up the previous pass
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // compute the ray parameters
-  vec3  vRayEntry  = gl_TexCoord[0].xyz;
-  vec3  vRayExit   = texture2D(texRayExit, vFragCoords).xyz;
-  vec3  vRayEntryPos  = vEyePos;  
-  vec3  vRayExitPos  = texture2D(texRayExitPos, vFragCoords).xyz;  
-  vec3  vRayDir    = vRayExit - vRayEntry;
+  vec3  vRayEntryTex = gl_TexCoord[0].xyz;
+  vec3  vRayExitTex  = texture2D(texRayExit, vFragCoords).xyz;
+  vec3  vRayEntry    = vEyePos;  
+  vec3  vRayExit     = texture2D(texRayExitPos, vFragCoords).xyz;  
+  vec3  vRayDir      = vRayExit - vRayEntry;
   
   float fRayLength = length(vRayDir);
   vRayDir /= fRayLength;
 
   // compute the maximum number of steps before the domain is left
-  int iStepCount = int(fRayLength / length(fRayStepsize * vRayDir));
+  int iStepCount = int(fRayLength/fRayStepsize)+1;
   
-  vec3  vRayPosInc    = (vRayExitPos - vRayEntryPos)/ float(iStepCount); 
+  vec3  fRayInc    = vRayDir*fRayStepsize;
+  vec3  vRayIncTex = (vRayExitTex-vRayEntryTex)/(fRayLength/fRayStepsize);
 
   // do the actual raycasting
   vec4  vColor = vec4(0.0,0.0,0.0,0.0);
-  vec3  vCurrentPos = vRayEntry;
-  vec3  vCurrentEyePos = vRayEntryPos;
-  for (int i = 0;i<iStepCount+1;i++) {
-    float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
+  vec3  vCurrentPosTex = vRayEntryTex;
+  vec3  vCurrentPos    = vRayEntry;
+  for (int i = 0;i<iStepCount;i++) {
+    float fVolumVal = texture3D(texVolume, vCurrentPosTex).x;	
 
     /// apply 1D transfer function
-	vec4  vTransVal = texture1D(texTrans1D, fVolumVal*fTransScale);
+	  vec4  vTransVal = texture1D(texTrans1D, fVolumVal*fTransScale);
   
-    // compute the gradient/normal
-    float fVolumValXp = texture3D(texVolume, vCurrentPos+vec3(+vVoxelStepsize.x,0,0)).x;
-    float fVolumValXm = texture3D(texVolume, vCurrentPos+vec3(-vVoxelStepsize.x,0,0)).x;
-    float fVolumValYp = texture3D(texVolume, vCurrentPos+vec3(0,-vVoxelStepsize.y,0)).x;
-    float fVolumValYm = texture3D(texVolume, vCurrentPos+vec3(0,+vVoxelStepsize.y,0)).x;
-    float fVolumValZp = texture3D(texVolume, vCurrentPos+vec3(0,0,+vVoxelStepsize.z)).x;
-    float fVolumValZm = texture3D(texVolume, vCurrentPos+vec3(0,0,-vVoxelStepsize.z)).x;
-    vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
-
     // compute lighting
-    vec3 vNormal     = gl_NormalMatrix * vGradient;
-    float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
-    vec3 vViewDir    = normalize(vec3(0,0,0)-vCurrentEyePos);
+    vec3 vNormal     = ComputeNormal(vCurrentPosTex);
+    vec3 vViewDir    = normalize(vec3(0,0,0)-vCurrentPos);
     vec3 vReflection = normalize(reflect(vViewDir, vNormal));
     vec3 vLightColor = vLightAmbient+
                        vLightDiffuse*clamp(dot(vNormal, -vLightDir),0.0,1.0)*vTransVal.xyz+
@@ -109,14 +113,12 @@ void main(void)
     
     
     /// apply opacity correction
-    vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
-    
+    vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);    
 	  vTransVal = clamp(vec4(vLightColor.x, vLightColor.y, vLightColor.z, vTransVal.a),0.0,1.0);
-
     vColor = ColorBlend(vTransVal,vColor);
 
-    vCurrentPos    += fRayStepsize * vRayDir;
-    vCurrentEyePos += vRayPosInc;
+    vCurrentPos    += fRayInc;
+    vCurrentPosTex += vRayIncTex;
 
     if (vColor.a >= 0.99) break;
   }

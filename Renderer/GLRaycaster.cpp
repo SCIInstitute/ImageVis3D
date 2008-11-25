@@ -144,8 +144,8 @@ bool GLRaycaster::Initialize() {
     m_pProgram1DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram1DTrans[0]->SetUniformVector("texTrans1D",1);
     m_pProgram1DTrans[0]->SetUniformVector("texRayExit",2);
+    m_pProgram1DTrans[0]->SetUniformVector("texRayExitPos",3);
     m_pProgram1DTrans[0]->Disable();
-
 
     m_pProgram1DTrans[1]->Enable();
     m_pProgram1DTrans[1]->SetUniformVector("texVolume",0);
@@ -162,6 +162,7 @@ bool GLRaycaster::Initialize() {
     m_pProgram2DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram2DTrans[0]->SetUniformVector("texTrans2D",1);
     m_pProgram2DTrans[0]->SetUniformVector("texRayExit",2);
+    m_pProgram2DTrans[0]->SetUniformVector("texRayExitPos",3);
     m_pProgram2DTrans[0]->Disable();
 
     m_pProgram2DTrans[1]->Enable();
@@ -220,34 +221,34 @@ bool GLRaycaster::Initialize() {
 void GLRaycaster::SetBrickDepShaderVars(size_t iCurrentBrick) {
   const Brick& currentBrick = m_vCurrentBrickList[iCurrentBrick];
 
-  FLOATVECTOR3 vStep(1.0f/currentBrick.vVoxelCount.x, 1.0f/currentBrick.vVoxelCount.y, 1.0f/currentBrick.vVoxelCount.z);
-  float fRayStep = (vStep * 0.5f * 1.0f/m_fSampleRateModifier).minVal();
+  FLOATVECTOR3 vVoxelSizeTexSpace = 1.0f/FLOATVECTOR3(currentBrick.vVoxelCount);
+  float fRayStep = (currentBrick.vExtension*vVoxelSizeTexSpace * 0.5f * 1.0f/m_fSampleRateModifier).minVal();
   float fStepScale = 1.0f/m_fSampleRateModifier * (FLOATVECTOR3(m_pDataset->GetInfo()->GetDomainSize())/FLOATVECTOR3(m_pDataset->GetInfo()->GetDomainSize(m_iCurrentLOD))).maxVal();
 
   switch (m_eRenderMode) {
-    case RM_1DTRANS    :  {                    
+    case RM_1DTRANS    :  {
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fStepScale", fStepScale);
                             m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fRayStepsize", fRayStep);
                             if (m_bUseLigthing)
-                                m_pProgram1DTrans[1]->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
+                                m_pProgram1DTrans[1]->SetUniformVector("vVoxelStepsize", vVoxelSizeTexSpace.x, vVoxelSizeTexSpace.y, vVoxelSizeTexSpace.z);
                             break;
                           }
     case RM_2DTRANS    :  {
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fStepScale", fStepScale);
-                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("vVoxelStepsize", vVoxelSizeTexSpace.x, vVoxelSizeTexSpace.y, vVoxelSizeTexSpace.z);
                             m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fRayStepsize", fRayStep);
                             break;
                           }
     case RM_ISOSURFACE : {
-                            if (m_bDoClearView) {      
+                            if (m_bDoClearView) {
                               m_pProgramCV->Enable();
-                              m_pProgramCV->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
+                              m_pProgramCV->SetUniformVector("vVoxelStepsize", vVoxelSizeTexSpace.x, vVoxelSizeTexSpace.y, vVoxelSizeTexSpace.z);
                               m_pProgramCV->SetUniformVector("fRayStepsize", fRayStep);
                               m_pProgramCV->SetUniformVector("iTileID", int(iCurrentBrick));
                               m_pProgramCV->Disable();
                               m_pProgramIso->Enable();
                             } 
-                            m_pProgramIso->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
+                            m_pProgramIso->SetUniformVector("vVoxelStepsize", vVoxelSizeTexSpace.x, vVoxelSizeTexSpace.y, vVoxelSizeTexSpace.z);
                             m_pProgramIso->SetUniformVector("fRayStepsize", fRayStep);
                             m_pProgramIso->SetUniformVector("iTileID", int(iCurrentBrick));
                             break;

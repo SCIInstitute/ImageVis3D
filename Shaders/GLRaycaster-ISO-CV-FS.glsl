@@ -36,8 +36,8 @@
 */
 
 uniform sampler3D texVolume;   ///< the data volume
-uniform sampler2D texRayExit; ///< the frontface or ray entry point texture
-uniform sampler2D texRayExitPos; ///< the frontface or ray entry point texture
+uniform sampler2D texRayExit; ///< the backface (or ray exit point) texture in texcoords
+uniform sampler2D texRayExitPos; ///< the backface (or ray exit point) texture in eyecoords
 uniform sampler2D texLastHit;   ///< the texcoords hit + ray param from the first pass
 uniform sampler2D texLastHitPos; ///< the worldspace pos + tile ID from the first pass
 uniform vec3 vVoxelStepsize;   ///< Stepsize (in texcoord) to get to the next voxel
@@ -86,53 +86,55 @@ void main(void)
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // compute the ray parameters
-  vec3  vRayEntry  = gl_TexCoord[0].xyz;
-  vec3  vRayExit   = texture2D(texRayExit, vFragCoords).xyz;
-  vec3  vRayEntryPos  = texture2D(texRayExitPos, vFragCoords).xyz;  
-
+  vec3  vRayEntryTex  = gl_TexCoord[0].xyz;
+  vec3  vRayExitTex   = texture2D(texRayExit, vFragCoords).xyz;
+  vec3  vRayEntry     = vEyePos;  
+  vec3  vRayExit      = texture2D(texRayExitPos, vFragCoords).xyz;  
+  
+  // if in the first iso pass we found a hit in the same tile as we are processing now
+  // we can start from the last position
   float fLastTileID = texture2D(texLastHitPos, vFragCoords).w;
   if (float(iTileID) == fLastTileID) {
     // update entry point to last stop
     float fLastHitParam = texture2D(texLastHit, vFragCoords).w;
-    vRayEntryPos = vRayEntryPos * (1.0-fLastHitParam) + vEyePos.xyz * fLastHitParam;
-    vRayEntry    = vRayEntry    * (1.0-fLastHitParam) + vRayExit    * fLastHitParam;
+    vRayEntry    = vRayEntry    * (1.0-fLastHitParam) + vRayEntry   * fLastHitParam;
+    vRayEntryTex = vRayEntryTex * (1.0-fLastHitParam) + vRayExitTex * fLastHitParam;
   }
 
-  vec3  vRayDir    = vRayExit - vRayEntry;
-  float fRayLength = length(vRayDir);
-  vRayDir /= fRayLength;
+  float fRayLength    = length(vRayExit - vRayEntry);
+  float fRayLengthTex = length(vRayExitTex - vRayEntryTex);
 
   // compute the maximum number of steps before the domain is left
-  int iStepCount = int(fRayLength / length(fRayStepsize * vRayDir));
+  int   iStepCount = int(fRayLength/fRayStepsize)+1; 
+  vec3  vRayIncTex = (vRayExitTex-vRayEntryTex)/(fRayLength/fRayStepsize);
 
   // do the actual raycasting
-  vec3  vCurrentPos = vRayEntry;
   vec4  vHitPosTex     = vec4(0.0,0.0,0.0,0.0);
-  int i = 0;
-  for (;i<iStepCount+1;i++) {
-    float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
+  vec3  vCurrentPosTex = vRayEntryTex;
+  for (int i = 0;i<iStepCount;i++) {
+    float fVolumVal = texture3D(texVolume, vCurrentPosTex).x;	
     if (fVolumVal >= fIsoval) {
-      vHitPosTex = vec4(vCurrentPos.x, vCurrentPos.y, vCurrentPos.z, 1);
+      vHitPosTex = vec4(vCurrentPosTex.x, vCurrentPosTex.y, vCurrentPosTex.z, 1);
       break;
     }
-    vCurrentPos    += fRayStepsize * vRayDir;
+    vCurrentPosTex += vRayIncTex;
   }
   
   // store surface hit if one is found
   if (vHitPosTex.a != 0.0) 
-    vHitPosTex.xyz = RefineIsosurface(fRayStepsize * vRayDir, vHitPosTex.xyz); 
+    vHitPosTex.xyz = RefineIsosurface(vRayIncTex, vHitPosTex.xyz); 
   else 
     discard;
-  
-  // interpolate eye space position
-  float fInterpolParam = length(vHitPosTex.xyz-vRayEntry)/fRayLength;
-  vec3 vHitPos = vRayEntryPos.xyz * (1.0-fInterpolParam) + vEyePos.xyz *  fInterpolParam;
 
+  // interpolate eye space position
+  float fInterpolParam = length(vHitPosTex.xyz-vRayEntryTex)/fRayLengthTex;
+  vec3 vHitPos = vRayEntry * (1.0-fInterpolParam) + vRayExit * fInterpolParam;
+  gl_FragData[0] = vec4(vHitPos.xyz,fInterpolParam);
+
+  // store non-linear depth
   gl_FragDepth = vProjParam.x + (vProjParam.y / -vEyePos.z);  // as the surface maybe transparent set depth to the ray exit pos, so we get at least the bbox correct
-  
-  gl_FragData[0] = vec4(vHitPos,1);
 
   // store normal
-  vec3 vNormal   = ComputeNormal(vHitPosTex.xyz);  
-  gl_FragData[1] = vec4(vNormal,1);
+  vec3 vNormal =  ComputeNormal(vHitPosTex.xyz);  
+  gl_FragData[1] = vec4(vNormal,float(iTileID));
 }

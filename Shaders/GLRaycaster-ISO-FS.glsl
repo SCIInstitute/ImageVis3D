@@ -36,8 +36,8 @@
 */
 
 uniform sampler3D texVolume;   ///< the data volume
-uniform sampler2D texRayExit; ///< the frontface or ray entry point texture
-uniform sampler2D texRayExitPos; ///< the frontface or ray entry point texture
+uniform sampler2D texRayExit; ///< the backface (or ray exit point) texture in texcoords
+uniform sampler2D texRayExitPos; ///< the backface (or ray exit point) texture in eyecoords
 uniform vec3 vVoxelStepsize;   ///< Stepsize (in texcoord) to get to the next voxel
 uniform float fRayStepsize;    ///< stepsize along the ray
 uniform float fIsoval;         ///< the isovalue
@@ -62,57 +62,64 @@ vec3 RefineIsosurface(vec3 vRayDir, vec3 vCurrentPos) {
 	return vCurrentPos;
 }
 
+vec3 ComputeNormal(vec3 vHitPosTex) { 
+  float fVolumValXp = texture3D(texVolume, vHitPosTex+vec3(+vVoxelStepsize.x,0,0)).x;
+  float fVolumValXm = texture3D(texVolume, vHitPosTex+vec3(-vVoxelStepsize.x,0,0)).x;
+  float fVolumValYp = texture3D(texVolume, vHitPosTex+vec3(0,-vVoxelStepsize.y,0)).x;
+  float fVolumValYm = texture3D(texVolume, vHitPosTex+vec3(0,+vVoxelStepsize.y,0)).x;
+  float fVolumValZp = texture3D(texVolume, vHitPosTex+vec3(0,0,+vVoxelStepsize.z)).x;
+  float fVolumValZm = texture3D(texVolume, vHitPosTex+vec3(0,0,-vVoxelStepsize.z)).x;
+  vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
+  vec3 vNormal     = gl_NormalMatrix * vGradient;
+  float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
+  return vNormal;
+}
+
 void main(void)
 {
   // compute the coordinates to look up the previous pass
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // compute the ray parameters
-  vec3  vRayEntry  = gl_TexCoord[0].xyz;
-  vec3  vRayExit   = texture2D(texRayExit, vFragCoords).xyz;
-  vec3  vRayExitPos  = texture2D(texRayExitPos, vFragCoords).xyz;  
-  vec3  vRayDir    = vRayExit - vRayEntry;
-  float fRayLength = length(vRayDir);
-  vRayDir /= fRayLength;
-
+  vec3  vRayEntryTex  = gl_TexCoord[0].xyz;
+  vec3  vRayExitTex   = texture2D(texRayExit, vFragCoords).xyz;
+  vec3  vRayEntry     = vEyePos;  
+  vec3  vRayExit      = texture2D(texRayExitPos, vFragCoords).xyz;  
+  float fRayLength    = length(vRayExit - vRayEntry);
+  float fRayLengthTex = length(vRayExitTex - vRayEntryTex);
+  
   // compute the maximum number of steps before the domain is left
-  int iStepCount = int(fRayLength / length(fRayStepsize * vRayDir));
+  int iStepCount = int(fRayLength/fRayStepsize)+1; 
+  vec3  vRayIncTex = (vRayExitTex-vRayEntryTex)/(fRayLength/fRayStepsize);
 
   // do the actual raycasting
-  vec3  vCurrentPos = vRayEntry;
   vec4  vHitPosTex     = vec4(0.0,0.0,0.0,0.0);
-  for (int i = 0;i<iStepCount+1;i++) {
-    float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
+  vec3  vCurrentPosTex = vRayEntryTex;
+  for (int i = 0;i<iStepCount;i++) {
+    float fVolumVal = texture3D(texVolume, vCurrentPosTex).x;	
+
     if (fVolumVal >= fIsoval) {
-      vHitPosTex = vec4(vCurrentPos.x, vCurrentPos.y, vCurrentPos.z, 1);
+      vHitPosTex = vec4(vCurrentPosTex.x, vCurrentPosTex.y, vCurrentPosTex.z, 1);
       break;
     }
-    vCurrentPos    += fRayStepsize * vRayDir;
+    vCurrentPosTex += vRayIncTex;
   }
   
   // store surface hit if one is found
   if (vHitPosTex.a != 0.0) 
-    vHitPosTex.xyz = RefineIsosurface(fRayStepsize * vRayDir, vHitPosTex.xyz); 
+    vHitPosTex.xyz = RefineIsosurface(vRayIncTex, vHitPosTex.xyz); 
   else 
     discard;
   
   // interpolate eye space position
-  float fInterpolParam = length(vHitPosTex.xyz-vRayEntry)/fRayLength;
-  vec3 vHitPos = vEyePos.xyz * (1.0-fInterpolParam) + vRayExitPos.xyz * fInterpolParam;
-  gl_FragDepth = vProjParam.x + (vProjParam.y / -vHitPos.z);
-
+  float fInterpolParam = length(vHitPosTex.xyz-vRayEntryTex)/fRayLengthTex;
+  vec3 vHitPos = vRayEntry * (1.0-fInterpolParam) + vRayExit * fInterpolParam;
   gl_FragData[0] = vec4(vHitPos.xyz,fInterpolParam);
 
-  // compute normal
-  float fVolumValXp = texture3D(texVolume, vHitPosTex.xyz+vec3(+vVoxelStepsize.x,0,0)).x;
-  float fVolumValXm = texture3D(texVolume, vHitPosTex.xyz+vec3(-vVoxelStepsize.x,0,0)).x;
-  float fVolumValYp = texture3D(texVolume, vHitPosTex.xyz+vec3(0,-vVoxelStepsize.y,0)).x;
-  float fVolumValYm = texture3D(texVolume, vHitPosTex.xyz+vec3(0,+vVoxelStepsize.y,0)).x;
-  float fVolumValZp = texture3D(texVolume, vHitPosTex.xyz+vec3(0,0,+vVoxelStepsize.z)).x;
-  float fVolumValZm = texture3D(texVolume, vHitPosTex.xyz+vec3(0,0,-vVoxelStepsize.z)).x;
-  vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
-  vec3 vNormal     = gl_NormalMatrix * vGradient;
-  float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
-  
+  // store non-linear depth
+  gl_FragDepth = vProjParam.x + (vProjParam.y / -vHitPos.z);
+
+  // store normal
+  vec3 vNormal =  ComputeNormal(vHitPosTex.xyz);  
   gl_FragData[1] = vec4(vNormal,float(iTileID));
 }

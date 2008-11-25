@@ -35,13 +35,14 @@
   \date    October 2008
 */
 
-uniform sampler3D texVolume;   ///< the data volume
-uniform sampler1D texTrans1D;  ///< the 1D Transfer function
-uniform sampler2D texRayExit; ///< the frontface or ray entry point texture
-uniform float fTransScale;     ///< scale for 1D Transfer function lookup
-uniform float fStepScale;      ///< opacity correction quotient
-uniform vec2 vScreensize;      ///< the size of the screen in pixels
-uniform float fRayStepsize;     ///< stepsize along the ray
+uniform sampler3D texVolume;  ///< the data volume
+uniform sampler1D texTrans1D; ///< the 1D Transfer function
+uniform sampler2D texRayExit; ///< the backface (or ray exit point) texture in texcoords
+uniform sampler2D texRayExitPos; ///< the backface (or ray exit point) texture in eyecoords
+uniform float fTransScale;    ///< scale for 1D Transfer function lookup
+uniform float fStepScale;     ///< opacity correction quotient
+uniform vec2 vScreensize;     ///< the size of the screen in pixels
+uniform float fRayStepsize;   ///< stepsize along the ray
 
 varying vec3 vEyePos;
 
@@ -58,20 +59,21 @@ void main(void)
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // compute the ray parameters
-  vec3  vRayEntry  = gl_TexCoord[0].xyz;
-  vec3  vRayExit   = texture2D(texRayExit, vFragCoords).xyz;
-  vec3  vRayDir    = vRayExit - vRayEntry;
-  float fRayLength = length(vRayDir);
-  vRayDir /= fRayLength;
-
+  vec3  vRayEntryTex = gl_TexCoord[0].xyz;
+  vec3  vRayExitTex  = texture2D(texRayExit, vFragCoords).xyz;
+  vec3  vRayEntry    = vEyePos;  
+  vec3  vRayExit     = texture2D(texRayExitPos, vFragCoords).xyz;  
+  float fRayLength   = length(vRayExit - vRayEntry);
+  
   // compute the maximum number of steps before the domain is left
-  int iStepCount = int(fRayLength / length(fRayStepsize * vRayDir));
+  int iStepCount = int(fRayLength/fRayStepsize)+1; 
+  vec3  vRayIncTex = (vRayExitTex-vRayEntryTex)/(fRayLength/fRayStepsize);
 
   // do the actual raycasting
   vec4  vColor = vec4(0.0,0.0,0.0,0.0);
-  vec3  vCurrentPos = vRayEntry;
-  for (int i = 0;i<iStepCount+1;i++) {
-    float fVolumVal = texture3D(texVolume, vCurrentPos).x;	
+  vec3  vCurrentPosTex = vRayEntryTex;
+  for (int i = 0;i<iStepCount;i++) {
+    float fVolumVal = texture3D(texVolume, vCurrentPosTex).x;	
 
     /// apply 1D transfer function
 	  vec4  vTransVal = texture1D(texTrans1D, fVolumVal*fTransScale);
@@ -81,9 +83,9 @@ void main(void)
     
     vColor = ColorBlend(vTransVal,vColor);
 
-    vCurrentPos    += fRayStepsize * vRayDir;
-
     if (vColor.a >= 0.99) break;
+
+    vCurrentPosTex += vRayIncTex;
   }
   
   gl_FragColor  = vColor;
