@@ -49,7 +49,6 @@ HEADERS += StdDefines.h \
            IO/UVF/KeyValuePairDataBlock.h \
            IO/UVF/LargeRAWFile.h \
            IO/UVF/RasterDataBlock.h \
-           IO/UVF/MinMaxDataBlock.h \
            IO/UVF/UVF.h \
            IO/UVF/UVFBasic.h \
            IO/UVF/UVFTables.h \
