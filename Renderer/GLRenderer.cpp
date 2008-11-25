@@ -174,6 +174,7 @@ void GLRenderer::ClearColorBuffer() {
     glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
     glClear(GL_COLOR_BUFFER_BIT); 
   } else {
+    glDisable(GL_BLEND);    
     DrawBackGradient();
   }
   DrawLogo();
@@ -542,7 +543,6 @@ void GLRenderer::RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCent
 }
 
 void GLRenderer::NewFrameClear(ERenderArea eREnderArea) {
-  m_pMasterController->DebugOut()->Message("GLRenderer::NewFrameClear","Starting a new subframe ...");
   m_iFilledBuffers = 0;
   SetRenderTargetAreaScissor(eREnderArea);
   glClearColor(0,0,0,0);
@@ -581,7 +581,8 @@ bool GLRenderer::Execute3DFrame(ERenderArea eREnderArea) {
 
 void GLRenderer::RerenderPreviousResult(bool bTransferToFramebuffer) {
   // clear the framebuffer
-  if (m_bClearFramebuffer) ClearColorBuffer();
+  if (m_bClearFramebuffer) 
+    ClearColorBuffer();
  
   if (bTransferToFramebuffer) {
     glViewport(0,0,m_vWinSize.x,m_vWinSize.y);
