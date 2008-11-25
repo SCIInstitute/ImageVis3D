@@ -221,23 +221,30 @@ void MainWindow::Transfer2DDeleteGradient() {
 
 
 void MainWindow::Transfer2DLoad() {
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/Transfer2DLoad", ".").toString();
+
   QString fileName =
-    QFileDialog::getOpenFileName(this, "Load 2D Transferfunction", ".",
+    QFileDialog::getOpenFileName(this, "Load 2D Transferfunction", strLastDir,
 				 "2D Transferfunction File (*.2dt)");
 
-  if (fileName != "") {
+  if (!fileName.isEmpty()) {
+    settings.setValue("Folders/Transfer2DLoad", QFileInfo(fileName).absoluteDir().path());
     m_2DTransferFunction->LoadFromFile(fileName);
   }
 }
 
 
 void MainWindow::Transfer2DSave() {
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/Transfer2DSave", ".").toString();
 
   QString fileName =
-    QFileDialog::getSaveFileName(this, "Save 2D Transferfunction", ".",
+    QFileDialog::getSaveFileName(this, "Save 2D Transferfunction", strLastDir,
 				 "2D Transferfunction File (*.2dt)");
 
-  if (fileName != "") {
+  if (!fileName.isEmpty()) {
+    settings.setValue("Folders/Transfer2DSave", QFileInfo(fileName).absoluteDir().path());
     m_2DTransferFunction->SaveToFile(fileName);
   }
 }

@@ -39,6 +39,7 @@
 #include <Basics/SysTools.h>
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
+#include <QtCore/QSettings>
 
 
 using namespace std;
@@ -85,7 +86,10 @@ void MainWindow::SetCaptureFilename() {
 #endif
   QString selectedFilter;
 
-  QString fileName = QFileDialog::getSaveFileName(this,"Select Image File", ".",
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/SetCaptureFilename", ".").toString();
+
+  QString fileName = QFileDialog::getSaveFileName(this,"Select Image File", strLastDir,
 					   "All Files (*.*)",&selectedFilter, options);
 
 
@@ -93,6 +97,8 @@ void MainWindow::SetCaptureFilename() {
 	  // add png as the default filetype if the user forgot to enter one
 	  if (SysTools::GetExt(fileName.toStdString()) == "")
 		  fileName = fileName + ".png";
+
+    settings.setValue("Folders/SetCaptureFilename", QFileInfo(fileName).absoluteDir().path());
 	  lineEditCaptureFile->setText(fileName);
   }
 

@@ -135,23 +135,31 @@ void MainWindow::ApplyUpdate() {
 }
 
 void MainWindow::Transfer1DLoad() {
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/Transfer1DLoad", ".").toString();
+
   QString fileName =
     QFileDialog::getOpenFileName(this,
-				 "Load 1D Transferfunction", ".",
+				 "Load 1D Transferfunction", strLastDir,
 				 "1D Transferfunction File (*.1dt)");
 
-  if (fileName != "") {
+  if (!fileName.isEmpty()) {
+    settings.setValue("Folders/Transfer1DLoad", QFileInfo(fileName).absoluteDir().path());
     m_1DTransferFunction->LoadFromFile(fileName);
   }
 }
 
 void MainWindow::Transfer1DSave() {
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/Transfer1DSave", ".").toString();
+
   QString fileName =
     QFileDialog::getSaveFileName(this,
-				 "Save 1D Transferfunction", ".",
+				 "Save 1D Transferfunction", strLastDir,
 				 "1D Transferfunction File (*.1dt)");
 
-  if (fileName != "") {
+  if (!fileName.isEmpty()) {
+    settings.setValue("Folders/Transfer1DSave", QFileInfo(fileName).absoluteDir().path());
     m_1DTransferFunction->SaveToFile(fileName);
   }
 }

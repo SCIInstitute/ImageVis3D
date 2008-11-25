@@ -61,21 +61,29 @@ using namespace std;
 // ******************************************
 
 bool MainWindow::LoadGeometry() {
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/LoadGeometry", ".").toString();
+
   QString fileName =
     QFileDialog::getOpenFileName(this, "Load Geometry",
-				 ".",
+				 strLastDir,
 				 "Geometry Files (*.geo)");
   if (!fileName.isEmpty()) {
+    settings.setValue("Folders/LoadGeometry", QFileInfo(fileName).absoluteDir().path());
     return LoadGeometry(fileName);
   } else return false;
 }
 
 bool MainWindow::SaveGeometry() {
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/SaveGeometry", ".").toString();
+
   QString fileName = QFileDialog::getSaveFileName(this,
 						  "Save Current Geometry",
-						  ".",
+						  strLastDir,
 						  "Geometry Files (*.geo)");
   if (!fileName.isEmpty()) {
+    settings.setValue("Folders/SaveGeometry", QFileInfo(fileName).absoluteDir().path());
     return SaveGeometry(fileName);
   } return false;
 }
@@ -243,21 +251,29 @@ void MainWindow::InitAllWorkspaces() {
 
 
 bool MainWindow::LoadWorkspace() {
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/LoadWorkspace", ".").toString();
+
   QString fileName = QFileDialog::getOpenFileName(this,
 						  "Load Workspace",
-						  ".",
+						  strLastDir,
 						  "Workspace Files (*.wsp)");
   if (!fileName.isEmpty()) {
+    settings.setValue("Folders/LoadWorkspace", QFileInfo(fileName).absoluteDir().path());
     return LoadWorkspace(fileName);
   } else return false;
 }
 
 bool MainWindow::SaveWorkspace() {
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/SaveWorkspace", ".").toString();
+
   QString fileName = QFileDialog::getSaveFileName(this,
 						  "Save Current Workspace",
-						  ".",
+						  strLastDir,
 						  "Workspace Files (*.wsp)");
   if (!fileName.isEmpty()) {
+    settings.setValue("Folders/SaveWorkspace", QFileInfo(fileName).absoluteDir().path());
     return SaveWorkspace(fileName);
   } else return false;
 }
@@ -518,9 +534,34 @@ void MainWindow::CheckForRedraw() {
 // ******************************************
 
 void MainWindow::OpenRecentFile(){
-
   QAction *action = qobject_cast<QAction *>(sender());
-  if (action) LoadDataset(action->data().toString());
+
+  if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
+    if (action) LoadDataset(action->data().toString());
+  } else {
+    QString strText = tr("File %1 not found.").arg(action->data().toString());
+    m_MasterController.DebugOut()->Error("MainWindow::OpenRecentFile", strText.toStdString().c_str());
+    strText = strText + " Do you want to remove the file from the MRU list?";
+    if (QMessageBox::Yes == QMessageBox::question(this, "Load Error", strText, QMessageBox::Yes, QMessageBox::No)) {
+
+      int iIndex = -1;
+      for (int i = 0; i < ms_iMaxRecentFiles; ++i) {
+        if (m_recentFileActs[i] == action) {
+          iIndex = i;
+          break;
+        }
+      }
+
+      if (iIndex > -1) {
+        QSettings settings;
+        QStringList files = settings.value("Menu/MRU").toStringList();
+        files.removeAt(iIndex);
+        settings.setValue("Menu/MRU", files);
+        UpdateMRUActions();
+      }
+    }
+    return;
+  }
 }
 
 void MainWindow::UpdateMenus() {

@@ -66,9 +66,17 @@ void MainWindow::LoadDataset() {
 #endif
   QString selectedFilter;
 
-  LoadDataset(QFileDialog::getOpenFileName(this,
-					   "Load Dataset", ".",
-					   "All known Files (*.uvf *.nhdr *.dat);;Universal Volume Format (*.uvf);;Nearly Raw Raster Data (*.nhdr);;QVis Data (*.dat)",&selectedFilter, options));
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/LoadDataset", ".").toString();
+
+  QString fileName = QFileDialog::getOpenFileName(this,
+	  				   "Load Dataset", strLastDir,
+		  			   "All known Files (*.uvf *.nhdr *.dat);;Universal Volume Format (*.uvf);;Nearly Raw Raster Data (*.nhdr);;QVis Data (*.dat)",&selectedFilter, options);
+
+  if (!fileName.isEmpty()) {
+    settings.setValue("Folders/LoadDataset", QFileInfo(fileName).absoluteDir().path());
+    LoadDataset(fileName);
+  };
 }
 
 
@@ -79,10 +87,16 @@ QString MainWindow::GetConvFilename() {
     #endif
     QString selectedFilter;
 
+    QSettings settings;
+    QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
+
     QString targetFileName =
       QFileDialog::getSaveFileName(this, "Select filename for converted data",
-           ".",
+           strLastDir,
            "Universal Volume Format (*.uvf)",&selectedFilter, options);
+
+    if (!targetFileName.isEmpty())
+      settings.setValue("Folders/GetConvFilename", QFileInfo(targetFileName).absoluteDir().path());
 
     return targetFileName;
 }
@@ -91,6 +105,13 @@ void MainWindow::LoadDataset(QString fileName) {
   PleaseWaitDialog pleaseWait(this);
 
   if (!fileName.isEmpty()) {
+
+    if (!SysTools::FileExists(string(fileName.toAscii()))) {
+        QString strText = tr("File %1 not found.").arg(fileName);
+        m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
+        QMessageBox::critical(this, "Load Error", strText);
+        return;
+    }
 
     bool bChecksumFail=false;
     if ((m_bQuickopen && !m_MasterController.IOMan()->NeedsConversion(fileName.toStdString())) || 
@@ -126,12 +147,16 @@ void MainWindow::LoadDataset(QString fileName) {
 
 void MainWindow::LoadDirectory() {
   PleaseWaitDialog pleaseWait(this);
+
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/LoadDirectory", ".").toString();
+
   QString directoryName =
-    QFileDialog::getExistingDirectory(this, "Load Dataset from Directory");
+    QFileDialog::getExistingDirectory(this, "Load Dataset from Directory",strLastDir);
 
   if (!directoryName.isEmpty()) {
     pleaseWait.SetText("Scanning directory for files, please wait  ...");
-
+    settings.setValue("Folders/LoadDirectory", directoryName);
     QString fileName;
     BrowseData browseDataDialog(m_MasterController, (QDialog*)&pleaseWait,directoryName, this);
 
@@ -176,8 +201,15 @@ void MainWindow::SaveDataset() {
 #endif
   QString selectedFilter;
 
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/SaveDataset", ".").toString();
+
   QString fileName =
     QFileDialog::getSaveFileName(this, "Save Current Dataset",
-				 ".",
+				 strLastDir,
 				 "Universal Volume Format (*.uvf)",&selectedFilter, options);
+
+  if (!fileName.isEmpty())
+    settings.setValue("Folders/SaveDataset", QFileInfo(fileName).absoluteDir().path());
+
 }
