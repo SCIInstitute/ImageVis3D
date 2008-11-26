@@ -240,7 +240,8 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
     else {
       bFSSuccess=false;
       if (src==GLSLPROGRAM_DISK) {
-        m_pMasterController->DebugOut()->Message("GLSLProgram::Load","ERROR IN: %s",FSFile);
+        m_pMasterController->DebugOut()->Error("GLSLProgram::Load",
+                                               "ERROR IN: %s",FSFile);
       }
       else {
         m_pMasterController->DebugOut()->Error("GLSLProgram::Load","---------- ERROR -----------");
