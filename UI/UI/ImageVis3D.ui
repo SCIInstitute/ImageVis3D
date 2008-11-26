@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1203</width>
-    <height>1924</height>
+    <height>1974</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -2911,6 +2911,12 @@
            </property>
            <item>
             <widget class="QSlider" name="horizontalSlider_Isovalue" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>19</height>
+              </size>
+             </property>
              <property name="orientation" >
               <enum>Qt::Horizontal</enum>
              </property>
@@ -2918,6 +2924,12 @@
            </item>
            <item>
             <widget class="QLabel" name="label_IsoValue" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>19</height>
+              </size>
+             </property>
              <property name="text" >
               <string>0/255</string>
              </property>
@@ -2928,6 +2940,12 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_SelColorIso1" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>23</height>
+           </size>
+          </property>
           <property name="text" >
            <string>Choose Color</string>
           </property>
@@ -2935,6 +2953,12 @@
         </item>
         <item>
          <widget class="QCheckBox" name="checkBox_ClearView" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+            <horstretch>0</horstretch>
+            <verstretch>19</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text" >
            <string>ClearView</string>
           </property>
@@ -2957,6 +2981,12 @@
            </property>
            <item>
             <widget class="QLabel" name="label" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+               <horstretch>0</horstretch>
+               <verstretch>19</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text" >
               <string>Focus Isovalue</string>
              </property>
@@ -2976,6 +3006,12 @@
               </property>
               <item>
                <widget class="QSlider" name="horizontalSlider_CVFocusIsoValue" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>19</height>
+                 </size>
+                </property>
                 <property name="orientation" >
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -2983,6 +3019,12 @@
               </item>
               <item>
                <widget class="QLabel" name="label_CVFocusIsoValue" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>0</width>
+                  <height>19</height>
+                 </size>
+                </property>
                 <property name="text" >
                  <string>0/255</string>
                 </property>
@@ -2993,6 +3035,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_SelColorIso2" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
              <property name="text" >
               <string>Choose Focus Color</string>
              </property>
@@ -3007,6 +3055,12 @@
            </item>
            <item>
             <widget class="QSlider" name="horizontalSlider_CVFocusSize" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>19</height>
+              </size>
+             </property>
              <property name="orientation" >
               <enum>Qt::Horizontal</enum>
              </property>
@@ -3021,6 +3075,12 @@
            </item>
            <item>
             <widget class="QSlider" name="horizontalSlider_CVContextScale" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>19</height>
+              </size>
+             </property>
              <property name="orientation" >
               <enum>Qt::Horizontal</enum>
              </property>
@@ -3035,6 +3095,12 @@
            </item>
            <item>
             <widget class="QSlider" name="horizontalSlider_CVBorder" >
+             <property name="minimumSize" >
+              <size>
+               <width>0</width>
+               <height>19</height>
+              </size>
+             </property>
              <property name="orientation" >
               <enum>Qt::Horizontal</enum>
              </property>
