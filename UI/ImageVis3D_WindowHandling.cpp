@@ -377,7 +377,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
   RenderWindow *renderWin =
     new RenderWindow(m_MasterController, m_eVolumeRendererType, dataset,
-		     iCounter++, m_glShareWidget, this);
+		     iCounter++, m_bPowerOfTwo, m_glShareWidget, this);
   renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
   renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
   renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/10, m_iActiveTS, m_iInactiveTS);

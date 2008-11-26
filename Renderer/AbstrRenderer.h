@@ -141,7 +141,7 @@ class AbstrRenderer {
 
     /** Default settings: 1D transfer function, one by three view, white text, black BG.
      * @param pMasterController message router */
-    AbstrRenderer(MasterController* pMasterController);
+    AbstrRenderer(MasterController* pMasterController, bool bUseOnlyPowerOfTwo);
     /** Deallocates dataset and transfer functions. */
     virtual ~AbstrRenderer();
     /** Sends a message to the master to ask for a dataset to be loaded.
@@ -315,6 +315,8 @@ class AbstrRenderer {
     float               m_fCVBorderScale;
     FLOATVECTOR2        m_vCVPos;
     bool                m_bPerformReCompose;
+
+    bool                m_bUseOnlyPowerOfTwo;
 
     virtual void ScheduleRecompose();
     virtual void ScheduleCompleteRedraw();

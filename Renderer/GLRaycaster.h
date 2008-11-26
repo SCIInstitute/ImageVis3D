@@ -52,7 +52,7 @@ class GLRaycaster : public GLRenderer {
     /** Constructs a VRer with immediate redraw, and
      * wireframe mode off.
      * \param pMasterController message routing object */
-    GLRaycaster(MasterController* pMasterController);
+    GLRaycaster(MasterController* pMasterController, bool bUseOnlyPowerOfTwo);
     virtual ~GLRaycaster();
 
     /** Loads GLSL vertex and fragment shaders. */

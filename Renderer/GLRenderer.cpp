@@ -41,8 +41,8 @@
 
 using namespace std;
 
-GLRenderer::GLRenderer(MasterController* pMasterController) : 
-  AbstrRenderer(pMasterController),
+GLRenderer::GLRenderer(MasterController* pMasterController, bool bUseOnlyPowerOfTwo) : 
+  AbstrRenderer(pMasterController, bUseOnlyPowerOfTwo),
   m_p1DTransTex(NULL),
   m_p2DTransTex(NULL),
   m_p1DData(NULL),
@@ -374,7 +374,7 @@ bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, U
   vBrick.push_back(0);vBrick.push_back(0);vBrick.push_back(0);
 
   // get the 3D texture from the memory manager
-  GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, 0, m_iFrameCounter);
+  GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, m_bUseOnlyPowerOfTwo, 0, m_iFrameCounter);
   if(t!=NULL) t->Bind(0);
 
   // clear the target at the beginning
@@ -884,7 +884,7 @@ void GLRenderer::Render3DView() {
     vBrick.push_back(m_vCurrentBrickList[m_iBricksRenderedInThisSubFrame].vCoords.z);
 
     // get the 3D texture from the memory manager
-    GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, m_iIntraFrameCounter++, m_iFrameCounter);
+    GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, m_bUseOnlyPowerOfTwo, m_iIntraFrameCounter++, m_iFrameCounter);
     if(t!=NULL) t->Bind(0);
 
     Render3DInLoop(m_iBricksRenderedInThisSubFrame);

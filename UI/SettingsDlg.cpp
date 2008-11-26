@@ -59,6 +59,8 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   unsigned int iProcCount = m_MasterController.SysInfo()->GetNumberOfCPUs();
   unsigned int iBitWith   = m_MasterController.SysInfo()->GetProgrammBitWith();
 
+  label_Warning32Bit->setVisible(iBitWith == 32);
+
   // init stats labels
   QString desc;
   if (iMaxCPUMemSize==0) 
@@ -255,9 +257,10 @@ void SettingsDlg::InactTSChanged() {
 }
 
 void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
-                            bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, unsigned int iBlendPrecision,
+                            bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
                             bool bAutoSaveGEO, bool bAutoSaveWSP,
-                            unsigned int iVolRenType, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
+                            unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, 
+                            const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
     horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
     horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
@@ -269,7 +272,6 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
      
     checkBox_SaveGEOOnExit->setChecked(bAutoSaveGEO);
     checkBox_SaveWSPOnExit->setChecked(bAutoSaveWSP);
-
 
     m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
     m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));
@@ -297,7 +299,7 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
                   break;
     }
 
-    
+    checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
     
     QString strStyle =
     tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
@@ -328,7 +330,6 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
                                                                              .arg(255-m_cTextColor.blue());
 
     pushButtonSelText->setStyleSheet( strStyle );
-
 }
 
 
@@ -340,4 +341,8 @@ unsigned int SettingsDlg::GetVolrenType() const {
   unsigned int iResult = radioButton_APIGL->isChecked() ? 0 : 2; 
   iResult += radioButton_SBVR->isChecked() ? 0 : 1;
   return iResult;
+}
+
+bool SettingsDlg::GetUseOnlyPowerOfTwo() const {
+  return checkBox_PowerOfTwo->isChecked();
 }

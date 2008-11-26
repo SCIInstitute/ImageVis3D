@@ -65,10 +65,13 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     FLOATVECTOR4  GetTextColor() const;
     unsigned int  GetBlendPrecisionMode() const;
 
+    bool          GetUseOnlyPowerOfTwo() const;
+
     void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
-                   bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, unsigned int iBlendPrecision, 
+                   bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
                    bool bAutoSaveGEO, bool bAutoSaveWSP,
-                   unsigned int iVolRenType, const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
+                   unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, 
+                   const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
 
   protected slots:
     void SelectTextColor();

@@ -43,10 +43,17 @@
 #include <assert.h>
 #include <Renderer/GLFrameCapture.h>
 
-RenderWindow::RenderWindow(MasterController& masterController, MasterController::EVolumeRendererType eType, QString dataset, unsigned int iCounter, QGLWidget* glShareWidget, QWidget* parent, Qt::WindowFlags flags) :
+RenderWindow::RenderWindow(MasterController& masterController,
+                 MasterController::EVolumeRendererType eType,
+                 QString dataset,
+                 unsigned int iCounter,
+                 bool bUseOnlyPowerOfTwo,
+                 QGLWidget* glShareWidget,
+                 QWidget* parent,
+                 Qt::WindowFlags flags) :
   QGLWidget(parent, glShareWidget, flags),
   m_MainWindow((MainWindow*)parent),
-  m_Renderer((GLRenderer*)masterController.RequestNewVolumerenderer(eType)),
+  m_Renderer((GLRenderer*)masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo)),
   m_MasterController(masterController),
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),

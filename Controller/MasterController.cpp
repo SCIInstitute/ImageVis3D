@@ -106,18 +106,18 @@ void MasterController::RemoveDebugOut(AbstrDebugOut* debugOut) {
 
 
 AbstrRenderer* MasterController::
-RequestNewVolumerenderer(EVolumeRendererType eRendererType) {
+RequestNewVolumerenderer(EVolumeRendererType eRendererType, bool bUseOnlyPowerOfTwo) {
 
   switch (eRendererType) {
 
   case OPENGL_SBVR :
     m_pDebugOut->Message("MasterController::RequestNewVolumerenderer","Starting up new renderer (API=OpenGL, Method=Slice Based Volume Rendering)");
-    m_vVolumeRenderer.push_back(new GLSBVR(this));
+    m_vVolumeRenderer.push_back(new GLSBVR(this, bUseOnlyPowerOfTwo));
     return m_vVolumeRenderer[m_vVolumeRenderer.size()-1];
 
   case OPENGL_RAYCASTER :
     m_pDebugOut->Message("MasterController::RequestNewVolumerenderer","Starting up new renderer (API=OpenGL, Method=Raycaster)");
-    m_vVolumeRenderer.push_back(new GLRaycaster(this));
+    m_vVolumeRenderer.push_back(new GLRaycaster(this, bUseOnlyPowerOfTwo));
     return m_vVolumeRenderer[m_vVolumeRenderer.size()-1];
 
   default :

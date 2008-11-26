@@ -44,8 +44,8 @@
 
 using namespace std;
 
-GLRaycaster::GLRaycaster(MasterController* pMasterController) :
-  GLRenderer(pMasterController),
+GLRaycaster::GLRaycaster(MasterController* pMasterController, bool bUseOnlyPowerOfTwo) :
+  GLRenderer(pMasterController,bUseOnlyPowerOfTwo),
   m_pFBORayEntry(NULL),
   m_pFBOIsoHit(NULL),
   m_pFBOCVHit(NULL),

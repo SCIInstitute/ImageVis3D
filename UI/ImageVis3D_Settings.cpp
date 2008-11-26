@@ -75,7 +75,6 @@ bool MainWindow::ShowSettings() {
   
       settings.beginGroup("Performance");
       bool bQuickopen = settings.value("Quickopen", m_bQuickopen).toBool();
-      unsigned int iBlendPrecisionMode = settings.value("BlendPrecisionMode", 0).toUInt();
       unsigned int iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
       unsigned int iLODDelay = settings.value("LODDelay", m_iLODDelay).toUInt();
       unsigned int iActiveTS = settings.value("ActiveTS", m_iActiveTS).toUInt();
@@ -89,6 +88,9 @@ bool MainWindow::ShowSettings() {
 
       settings.beginGroup("Renderer");
       unsigned int iVolRenType = settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
+      unsigned int iBlendPrecisionMode = settings.value("BlendPrecisionMode", 0).toUInt();
+      bool bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
+      
 
       FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0f).toULongLong(),
                               settings.value("Background1G", 0.0f).toULongLong(),
@@ -105,7 +107,7 @@ bool MainWindow::ShowSettings() {
       settings.endGroup();
 
       // hand data to form
-      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS, iBlendPrecisionMode, bAutoSaveGEO, bAutoSaveWSP, iVolRenType, vBackColor1, vBackColor2, vTextColor);
+      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS, bAutoSaveGEO, bAutoSaveWSP, iVolRenType, iBlendPrecisionMode, bPowerOfTwo, vBackColor1, vBackColor2, vTextColor);
     }
 
     if (settingsDlg.exec() == QDialog::Accepted) {
@@ -122,7 +124,6 @@ bool MainWindow::ShowSettings() {
       settings.setValue("LODDelay", settingsDlg.GetLODDelay());
       settings.setValue("ActiveTS", settingsDlg.GetActiveTS());
       settings.setValue("InactiveTS", settingsDlg.GetInactiveTS());
-      settings.setValue("BlendPrecisionMode", settingsDlg.GetBlendPrecisionMode());
       settings.endGroup();
 
       settings.beginGroup("UI");
@@ -132,6 +133,8 @@ bool MainWindow::ShowSettings() {
 
       settings.beginGroup("Renderer");
       settings.setValue("RendererType", settingsDlg.GetVolrenType());
+      settings.setValue("BlendPrecisionMode", settingsDlg.GetBlendPrecisionMode());
+      settings.setValue("PowerOfTwo", settingsDlg.GetUseOnlyPowerOfTwo());
       settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
       settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
       settings.setValue("Background1B", settingsDlg.GetBackgroundColor1().z);
@@ -165,8 +168,6 @@ void MainWindow::ApplySettings() {
     m_iLODDelay     = settings.value("LODDelay", m_iLODDelay).toUInt();
     m_iActiveTS     = settings.value("ActiveTS", m_iActiveTS).toUInt();
     m_iInactiveTS   = settings.value("InactiveTS", m_iInactiveTS).toUInt();
-
-    m_iBlendPrecisionMode = settings.value("BlendPrecisionMode", m_iBlendPrecisionMode).toUInt();
     settings.endGroup();
 
     settings.beginGroup("UI");
@@ -176,6 +177,9 @@ void MainWindow::ApplySettings() {
 
     settings.beginGroup("Renderer");
     m_eVolumeRendererType = (MasterController::EVolumeRendererType)settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
+    m_iBlendPrecisionMode = settings.value("BlendPrecisionMode", m_iBlendPrecisionMode).toUInt();
+    m_bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
+
     m_vBackgroundColors[0] = FLOATVECTOR3(settings.value("Background1R", 0.0f).toULongLong(),
                             settings.value("Background1G", 0.0f).toULongLong(),
                             settings.value("Background1B", 0.0f).toULongLong());

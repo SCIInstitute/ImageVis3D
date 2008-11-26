@@ -40,7 +40,7 @@
 
 using namespace std;
 
-AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :   
+AbstrRenderer::AbstrRenderer(MasterController* pMasterController, bool bUseOnlyPowerOfTwo) : 
   m_pMasterController(pMasterController),
   m_bPerformRedraw(true), 
   m_eRenderMode(RM_1DTRANS),
@@ -77,7 +77,8 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController) :
   m_fCVContextScale(1.0f),
   m_fCVBorderScale(60.0f),
   m_vCVPos(0.5f, 0.5f),
-  m_bPerformReCompose(false)
+  m_bPerformReCompose(false),
+  m_bUseOnlyPowerOfTwo(bUseOnlyPowerOfTwo)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);
@@ -406,14 +407,33 @@ vector<Brick> AbstrRenderer::BuildFrameBrickList() {
           // if the brick is visible under the current transfer function continue processing
           if (bContainsData) {
 
-            // compute 
-            b.vTexcoordsMin = FLOATVECTOR3((x == 0) ? 0.5f/b.vVoxelCount.x : vOverlap.x*0.5f/b.vVoxelCount.x,
-                                           (y == 0) ? 0.5f/b.vVoxelCount.y : vOverlap.y*0.5f/b.vVoxelCount.y,
-                                           (z == 0) ? 0.5f/b.vVoxelCount.z : vOverlap.z*0.5f/b.vVoxelCount.z);
-            b.vTexcoordsMax = FLOATVECTOR3((x == vBrickDimension.x-1) ? 1.0f-0.5f/b.vVoxelCount.x : 1.0f-vOverlap.x*0.5f/b.vVoxelCount.x,
-                                           (y == vBrickDimension.y-1) ? 1.0f-0.5f/b.vVoxelCount.y : 1.0f-vOverlap.y*0.5f/b.vVoxelCount.y,
-                                           (z == vBrickDimension.z-1) ? 1.0f-0.5f/b.vVoxelCount.z : 1.0f-vOverlap.z*0.5f/b.vVoxelCount.z);
-            
+            // compute texture coordinates
+            if (m_bUseOnlyPowerOfTwo) {
+              UINTVECTOR3 vRealVoxelCount(MathTools::NextPow2(b.vVoxelCount.x),
+                                          MathTools::NextPow2(b.vVoxelCount.y),
+                                          MathTools::NextPow2(b.vVoxelCount.z));
+              b.vTexcoordsMin = FLOATVECTOR3((x == 0) ? 0.5f/vRealVoxelCount.x : vOverlap.x*0.5f/vRealVoxelCount.x,
+                                             (y == 0) ? 0.5f/vRealVoxelCount.y : vOverlap.y*0.5f/vRealVoxelCount.y,
+                                             (z == 0) ? 0.5f/vRealVoxelCount.z : vOverlap.z*0.5f/vRealVoxelCount.z);
+              b.vTexcoordsMax = FLOATVECTOR3((x == vBrickDimension.x-1) ? 1.0f-0.5f/vRealVoxelCount.x : 1.0f-vOverlap.x*0.5f/vRealVoxelCount.x,
+                                             (y == vBrickDimension.y-1) ? 1.0f-0.5f/vRealVoxelCount.y : 1.0f-vOverlap.y*0.5f/vRealVoxelCount.y,
+                                             (z == vBrickDimension.z-1) ? 1.0f-0.5f/vRealVoxelCount.z : 1.0f-vOverlap.z*0.5f/vRealVoxelCount.z);
+
+              b.vTexcoordsMax -= FLOATVECTOR3(vRealVoxelCount - b.vVoxelCount) / FLOATVECTOR3(vRealVoxelCount);
+            } else {
+              // compute texture coordinates
+              b.vTexcoordsMin = FLOATVECTOR3((x == 0) ? 0.5f/b.vVoxelCount.x : vOverlap.x*0.5f/b.vVoxelCount.x,
+                                             (y == 0) ? 0.5f/b.vVoxelCount.y : vOverlap.y*0.5f/b.vVoxelCount.y,
+                                             (z == 0) ? 0.5f/b.vVoxelCount.z : vOverlap.z*0.5f/b.vVoxelCount.z);
+              
+              // for padded volume adjust texcoords
+              b.vTexcoordsMax = FLOATVECTOR3((x == vBrickDimension.x-1) ? 1.0f-0.5f/b.vVoxelCount.x : 1.0f-vOverlap.x*0.5f/b.vVoxelCount.x,
+                                             (y == vBrickDimension.y-1) ? 1.0f-0.5f/b.vVoxelCount.y : 1.0f-vOverlap.y*0.5f/b.vVoxelCount.y,
+                                             (z == vBrickDimension.z-1) ? 1.0f-0.5f/b.vVoxelCount.z : 1.0f-vOverlap.z*0.5f/b.vVoxelCount.z);
+
+            }
+
+
             /// \todo change this to a more accurate distance compuation
             b.fDistance = (FLOATVECTOR4(b.vCenter,1.0f)*m_matModelView).xyz().length();
 

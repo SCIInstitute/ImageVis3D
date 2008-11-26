@@ -53,7 +53,7 @@ class GLSBVR : public GLRenderer {
     /** Constructs a VRer with immediate redraw, and
      * wireframe mode off.
      * \param pMasterController message routing object */
-    GLSBVR(MasterController* pMasterController);
+    GLSBVR(MasterController* pMasterController, bool bUseOnlyPowerOfTwo);
     virtual ~GLSBVR();
 
     /** Loads GLSL vertex and fragment shaders. */

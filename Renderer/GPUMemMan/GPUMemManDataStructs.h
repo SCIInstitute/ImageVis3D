@@ -122,11 +122,11 @@ typedef Trans2DList::iterator Trans2DListIter;
 // 3D textures
 class Texture3DListElem {
 public:
-  Texture3DListElem(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter);
+  Texture3DListElem(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, bool bIsPaddedToPowerOfTwo, UINT64 iIntraFrameCounter, UINT64 iFrameCounter);
   ~Texture3DListElem();
-  bool Equals(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick);
-  bool Replace(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter);
-  bool BestMatch(const std::vector<UINT64>& vDimension, UINT64& iIntraFrameCounter, UINT64& iFrameCounter);
+  bool Equals(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, bool bIsPaddedToPowerOfTwo);
+  bool Replace(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, bool bIsPaddedToPowerOfTwo, UINT64 iIntraFrameCounter, UINT64 iFrameCounter);
+  bool BestMatch(const std::vector<UINT64>& vDimension, bool bIsPaddedToPowerOfTwo, UINT64& iIntraFrameCounter, UINT64& iFrameCounter);
   GLTexture3D* Access(UINT64& iIntraFrameCounter, UINT64& iFrameCounter);
 
   bool LoadData();
@@ -150,6 +150,7 @@ private:
 
   std::vector<UINT64> vLOD;
   std::vector<UINT64> vBrick;
+  bool m_bIsPaddedToPowerOfTwo;
 
 };
 typedef std::deque<Texture3DListElem*> Texture3DList;

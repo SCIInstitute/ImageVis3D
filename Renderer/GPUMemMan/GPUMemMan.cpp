@@ -401,9 +401,9 @@ void GPUMemMan::Free2DTrans(TransferFunction2D* pTransferFunction2D, AbstrRender
 
 // ******************** 3D Textures
 
-GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter) {
+GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<UINT64>& vLOD, const std::vector<UINT64>& vBrick, bool bUseOnlyPowerOfTwo, UINT64 iIntraFrameCounter, UINT64 iFrameCounter) {
   for (Texture3DListIter i = m_vpTex3DList.begin();i<m_vpTex3DList.end();i++) {
-    if ((*i)->Equals(pDataset, vLOD, vBrick)) {
+    if ((*i)->Equals(pDataset, vLOD, vBrick, bUseOnlyPowerOfTwo)) {
       m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Reusing 3D texture");
       return (*i)->Access(iIntraFrameCounter, iFrameCounter);
     }
@@ -425,14 +425,14 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
     UINT64 iTargetIntraFrameCounter = UINT64_INVALID;
     Texture3DListIter iBestMatch;
     for (Texture3DListIter i = m_vpTex3DList.begin();i<m_vpTex3DList.end();i++) {
-      if ((*i)->BestMatch(vSize,iTargetIntraFrameCounter,iTargetFrameCounter)) iBestMatch = i;
+      if ((*i)->BestMatch(vSize, bUseOnlyPowerOfTwo, iTargetIntraFrameCounter,iTargetFrameCounter)) iBestMatch = i;
     }
 
     if (iTargetFrameCounter != UINT64_INVALID) {
       // found a suitable brick that can be replaced
       m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","  Found suitable target brick from frame %i with intraframe counter %i (current frame %i / current intraframe %i)",
                                               iTargetFrameCounter, iTargetIntraFrameCounter , iFrameCounter, iIntraFrameCounter);
-      (*iBestMatch)->Replace(pDataset, vLOD, vBrick, iIntraFrameCounter, iFrameCounter);
+      (*iBestMatch)->Replace(pDataset, vLOD, vBrick, bUseOnlyPowerOfTwo, iIntraFrameCounter, iFrameCounter);
       (*iBestMatch)->iUserCount++;
       return (*iBestMatch)->pTexture;
     } else {
@@ -452,7 +452,7 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
 
   m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Creating new texture %i x %i x %i, bitsize=%i, componentcount=%i", vSize[0], vSize[1], vSize[2], iBitWidth, iCompCount);
 
-  Texture3DListElem* pNew3DTex = new Texture3DListElem(pDataset, vLOD, vBrick, iIntraFrameCounter, iFrameCounter);
+  Texture3DListElem* pNew3DTex = new Texture3DListElem(pDataset, vLOD, vBrick, bUseOnlyPowerOfTwo, iIntraFrameCounter, iFrameCounter);
 
   if (pNew3DTex->pTexture == NULL) {
     m_MasterController->DebugOut()->Error("GPUMemMan::Get3DTexture","Failed to create OpenGL texture.");

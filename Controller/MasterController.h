@@ -78,7 +78,7 @@ public:
   virtual ~MasterController();
 
   /// Create a new renderer.
-  AbstrRenderer* RequestNewVolumerenderer(EVolumeRendererType eRendererType);
+  AbstrRenderer* RequestNewVolumerenderer(EVolumeRendererType eRendererType, bool bUseOnlyPowerOfTwo);
   /// Indicate that a renderer is no longer needed.
   void ReleaseVolumerenderer(AbstrRenderer* pVolumeRenderer);
     

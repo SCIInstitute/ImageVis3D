@@ -51,7 +51,7 @@ class MasterController;
 
 class GLRenderer : public AbstrRenderer {
   public:
-    GLRenderer(MasterController* pMasterController);
+    GLRenderer(MasterController* pMasterController, bool bUseOnlyPowerOfTwo);
     virtual ~GLRenderer();
     virtual bool Initialize();
     virtual void Changed1DTrans();

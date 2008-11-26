@@ -56,7 +56,8 @@ class RenderWindow : public QGLWidget
                  MasterController::EVolumeRendererType eType,
                  QString dataset,
                  unsigned int iCounter,
-                 QGLWidget* glWidget,
+                 bool bUseOnlyPowerOfTwo,
+                 QGLWidget* glShareWidget,
                  QWidget* parent = 0,
                  Qt::WindowFlags flags = 0);
 

@@ -71,6 +71,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_iActiveTS(500),
   m_iInactiveTS(100),
   m_iBlendPrecisionMode(0),
+  m_bPowerOfTwo(false),
   m_bAutoSaveGEO(true),
   m_bAutoSaveWSP(true),
   m_eVolumeRendererType(MasterController::OPENGL_SBVR)

@@ -36,7 +36,7 @@
 
 #include "GPUMemManDataStructs.h"
 
-Texture3DListElem::Texture3DListElem(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter) :
+Texture3DListElem::Texture3DListElem(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, bool bIsPaddedToPowerOfTwo, UINT64 iIntraFrameCounter, UINT64 iFrameCounter) :
   pData(NULL),
   pTexture(NULL),
   pDataset(_pDataset),
@@ -44,7 +44,8 @@ Texture3DListElem::Texture3DListElem(VolumeDataset* _pDataset, const std::vector
   m_iIntraFrameCounter(iIntraFrameCounter),
   m_iFrameCounter(iFrameCounter),
   vLOD(_vLOD),
-  vBrick(_vBrick)
+  vBrick(_vBrick),
+  m_bIsPaddedToPowerOfTwo(bIsPaddedToPowerOfTwo)
 {
   if (!CreateTexture()) {
     pTexture->Delete();
@@ -58,8 +59,8 @@ Texture3DListElem::~Texture3DListElem() {
   FreeTexture();
 }
 
-bool Texture3DListElem::Equals(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick) {
-  if (_pDataset != pDataset || _vLOD.size() != vLOD.size() || _vBrick.size() != vBrick.size()) return false;
+bool Texture3DListElem::Equals(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, bool bIsPaddedToPowerOfTwo) {
+  if (_pDataset != pDataset || _vLOD.size() != vLOD.size() || _vBrick.size() != vBrick.size() || m_bIsPaddedToPowerOfTwo != bIsPaddedToPowerOfTwo) return false;
 
   for (size_t i = 0;i<vLOD.size();i++)   if (vLOD[i] != _vLOD[i]) return false;
   for (size_t i = 0;i<vBrick.size();i++) if (vBrick[i] != _vBrick[i]) return false;
@@ -75,8 +76,8 @@ GLTexture3D* Texture3DListElem::Access(UINT64& iIntraFrameCounter, UINT64& iFram
   return pTexture;
 }
 
-bool Texture3DListElem::BestMatch(const std::vector<UINT64>& vDimension, UINT64& iIntraFrameCounter, UINT64& iFrameCounter) {
-  if (!Match(vDimension) || iUserCount > 0) return false;
+bool Texture3DListElem::BestMatch(const std::vector<UINT64>& vDimension, bool bIsPaddedToPowerOfTwo, UINT64& iIntraFrameCounter, UINT64& iFrameCounter) {
+  if (!Match(vDimension) || iUserCount > 0 || m_bIsPaddedToPowerOfTwo != bIsPaddedToPowerOfTwo) return false;
 
   // framewise older data as before found -> use this object
   if (iFrameCounter > m_iFrameCounter) {
@@ -111,12 +112,13 @@ bool Texture3DListElem::Match(const std::vector<UINT64>& vDimension) {
   return true;
 }
 
-bool Texture3DListElem::Replace(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, UINT64 iIntraFrameCounter, UINT64 iFrameCounter) {
+bool Texture3DListElem::Replace(VolumeDataset* _pDataset, const std::vector<UINT64>& _vLOD, const std::vector<UINT64>& _vBrick, bool bIsPaddedToPowerOfTwo, UINT64 iIntraFrameCounter, UINT64 iFrameCounter) {
   if (pTexture == NULL) return false;
 
   pDataset = _pDataset;
   vLOD     = _vLOD;
   vBrick   = _vBrick;
+  m_bIsPaddedToPowerOfTwo = bIsPaddedToPowerOfTwo;
 
   m_iIntraFrameCounter = iIntraFrameCounter;
   m_iFrameCounter = iFrameCounter;
@@ -186,7 +188,43 @@ bool Texture3DListElem::CreateTexture(bool bDeleteOldTexture) {
   }
 
   glGetError();
-  pTexture = new GLTexture3D(GLuint(vSize[0]), GLuint(vSize[1]), GLuint(vSize[2]), glInternalformat, glFormat, glType, (unsigned int)(iBitWidth*iCompCount), pData, GL_LINEAR, GL_LINEAR);
+  if (!m_bIsPaddedToPowerOfTwo || (MathTools::IsPow2(vSize[0]) && MathTools::IsPow2(vSize[1]) && MathTools::IsPow2(vSize[2]))) {   
+    pTexture = new GLTexture3D(GLuint(vSize[0]), GLuint(vSize[1]), GLuint(vSize[2]), glInternalformat, glFormat, glType, (unsigned int)(iBitWidth*iCompCount), pData, GL_LINEAR, GL_LINEAR);
+  } else {
+    // pad the data to a power of two
+    UINTVECTOR3 vPaddedSize(MathTools::NextPow2(vSize[0]), MathTools::NextPow2(vSize[1]), MathTools::NextPow2(vSize[2]));
+
+
+
+    size_t iTarget = 0;
+    size_t iSource = 0;
+    size_t iElementSize = iBitWidth/8*iCompCount; 
+    size_t iRowSizeSource = vSize[0]*iElementSize; 
+    size_t iRowSizeTarget = vPaddedSize[0]*iElementSize;
+
+    unsigned char* pPaddedData = new unsigned char[iRowSizeTarget*vPaddedSize[1]*vPaddedSize[2]];
+    for (size_t z = 0;z<vSize[2];z++) {
+      for (size_t y = 0;y<vSize[1];y++) {
+        memcpy(pPaddedData+iTarget, pData+iSource, iRowSizeSource);
+        
+        // if the x sizes differ copy one more element to make the texture behave like clamp
+        if (iRowSizeTarget > iRowSizeSource) memcpy(pPaddedData+iTarget+iRowSizeSource, pPaddedData+iTarget+iRowSizeSource-iElementSize, iElementSize);
+        iTarget += iRowSizeTarget;
+        iSource += iRowSizeSource;
+      }
+      if (vPaddedSize[1] > vSize[1]) {
+        memcpy(pPaddedData+iTarget, pPaddedData+iTarget-iRowSizeTarget, iRowSizeTarget);
+        iTarget += (vPaddedSize[1]-vSize[1])*iRowSizeTarget;
+      }
+    }
+    // if the z sizes differ copy one more slice to make the texture behave like clamp
+    if (vPaddedSize[2] > vSize[2])
+      memcpy(pPaddedData+iTarget, pPaddedData+iTarget-vPaddedSize[1]*iRowSizeTarget, vPaddedSize[1]*iRowSizeTarget);
+
+    pTexture = new GLTexture3D(GLuint(vPaddedSize[0]), GLuint(vPaddedSize[1]), GLuint(vPaddedSize[2]), glInternalformat, glFormat, glType, (unsigned int)(iBitWidth*iCompCount), pPaddedData, GL_LINEAR, GL_LINEAR);
+
+    delete [] pPaddedData;
+  }
   FreeData();
 	return GL_NO_ERROR==glGetError();
 }
