@@ -545,7 +545,7 @@ void MainWindow::OpenRecentFile(){
     if (QMessageBox::Yes == QMessageBox::question(this, "Load Error", strText, QMessageBox::Yes, QMessageBox::No)) {
 
       int iIndex = -1;
-      for (int i = 0; i < ms_iMaxRecentFiles; ++i) {
+      for (int i = 0; i < int(ms_iMaxRecentFiles); ++i) {
         if (m_recentFileActs[i] == action) {
           iIndex = i;
           break;
