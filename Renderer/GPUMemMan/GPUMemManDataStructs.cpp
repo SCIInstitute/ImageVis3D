@@ -194,8 +194,6 @@ bool Texture3DListElem::CreateTexture(bool bDeleteOldTexture) {
     // pad the data to a power of two
     UINTVECTOR3 vPaddedSize(MathTools::NextPow2(vSize[0]), MathTools::NextPow2(vSize[1]), MathTools::NextPow2(vSize[2]));
 
-
-
     size_t iTarget = 0;
     size_t iSource = 0;
     size_t iElementSize = iBitWidth/8*iCompCount; 
@@ -203,6 +201,8 @@ bool Texture3DListElem::CreateTexture(bool bDeleteOldTexture) {
     size_t iRowSizeTarget = vPaddedSize[0]*iElementSize;
 
     unsigned char* pPaddedData = new unsigned char[iRowSizeTarget*vPaddedSize[1]*vPaddedSize[2]];
+    memset(pPaddedData, 0, iRowSizeTarget*vPaddedSize[1]*vPaddedSize[2]);
+
     for (size_t z = 0;z<vSize[2];z++) {
       for (size_t y = 0;y<vSize[1];y++) {
         memcpy(pPaddedData+iTarget, pData+iSource, iRowSizeSource);
