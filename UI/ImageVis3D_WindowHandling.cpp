@@ -352,7 +352,7 @@ void MainWindow::CloneCurrentView() {
   renderWin->CloneViewState(m_ActiveRenderWin);
   renderWin->CloneRendermode(m_ActiveRenderWin);
 
-  for (int i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_ActiveRenderWin); 
+  for (size_t i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_ActiveRenderWin); 
 
   renderWin->show();
 }
