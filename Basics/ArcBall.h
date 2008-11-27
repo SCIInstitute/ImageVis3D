@@ -48,6 +48,7 @@ public:
 
   void SetRadius(float fRadius) {m_fRadius = fRadius;}
   void SetTranslation(const FLOATMATRIX4& mTranslation) {m_mTranslation = mTranslation;}
+  const FLOATMATRIX4& GetTranslation() const {return m_mTranslation;}
   void SetWindowSize(unsigned int iWinWidth, unsigned int iWinHeight);
   void SetWindowOffset(int iWinOffsetX, int iWinOffsetY);
   void Click(UINTVECTOR2 vPosition);

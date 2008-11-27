@@ -87,6 +87,15 @@ class RenderWindow : public QGLWidget
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() {return m_bRenderSubsysOK;}
 
+    static const unsigned int         ms_iLockCount = 4;
+    std::vector<RenderWindow*>        m_vpLocks[ms_iLockCount];
+
+    void SetTranslationDelta(FLOATVECTOR3 trans, bool bPropagate);
+    void SetRotationDelta(FLOATMATRIX4 rotDelta, bool bPropagate);
+    void CloneViewState(RenderWindow* other);
+    void FinalizeRotation(bool bPropagate);
+
+
   public slots:
     void ToggleRenderWindowView2x2();
     void ToggleRenderWindowViewSingle();

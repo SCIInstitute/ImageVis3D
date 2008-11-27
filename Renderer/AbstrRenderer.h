@@ -263,6 +263,9 @@ class AbstrRenderer {
     virtual void SetCVMousePos(FLOATVECTOR2 vPos);
     virtual FLOATVECTOR2 GetCVMousePos() const {return m_vCVPos;}
 
+    virtual void ScheduleCompleteRedraw();
+    virtual void ScheduleWindowRedraw(EWindowMode eWindow);
+
 
   protected:
     MasterController*   m_pMasterController;
@@ -319,8 +322,6 @@ class AbstrRenderer {
     bool                m_bUseOnlyPowerOfTwo;
 
     virtual void ScheduleRecompose();
-    virtual void ScheduleCompleteRedraw();
-    virtual void ScheduleWindowRedraw(EWindowMode eWindow);
     void ComputeMinLODForCurrentView();
 
     FLOATMATRIX4        m_matModelView;

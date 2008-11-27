@@ -151,8 +151,6 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     new Q2DTransferFunction(m_MasterController, frame_2DTrans);
   verticalLayout_2DTrans->addWidget(m_2DTransferFunction);
 
-  Use2DTrans();
-
   connect(verticalSlider_2DTransHistScale, SIGNAL(valueChanged(int)),
 	  m_2DTransferFunction, SLOT(SetHistogtramScale(int)));
   connect(verticalSlider_1DTransHistScale, SIGNAL(valueChanged(int)),
@@ -197,6 +195,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   GetDebugViewMask();
 
   frame_Expand2DWidgets->hide();
+  UpdateLockView();
 }
 
 // ******************************************
@@ -204,19 +203,26 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 // ******************************************
 
 void MainWindow::SetupWorkspaceMenu() {
-  menu_Workspace->addAction(dockWidget_Tools->toggleViewAction());
-  menu_Workspace->addAction(dockWidget_Filters->toggleViewAction());
-  menu_Workspace->addSeparator();
-  menu_Workspace->addAction(dockWidget_History->toggleViewAction());
-  menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
-  menu_Workspace->addAction(dockWidget_Recorder->toggleViewAction());
-  menu_Workspace->addAction(dockWidget_LockOptions->toggleViewAction());
+
+/// \todo Implement more functionality of the other workspaces
+
+//  menu_Workspace->addAction(dockWidget_Tools->toggleViewAction());
+//  menu_Workspace->addAction(dockWidget_Filters->toggleViewAction());
+//  menu_Workspace->addSeparator();
+//  menu_Workspace->addAction(dockWidget_History->toggleViewAction());
+//  menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
+  radioButton_ToolsLock->setVisible(false);
+  radioButton_FiltersLock->setVisible(false);
+
   menu_Workspace->addAction(dockWidget_RenderOptions->toggleViewAction());
   menu_Workspace->addAction(dockWidget_ProgressView->toggleViewAction());
   menu_Workspace->addSeparator();
   menu_Workspace->addAction(dockWidget_1DTrans->toggleViewAction());
   menu_Workspace->addAction(dockWidget_2DTrans->toggleViewAction());
   menu_Workspace->addAction(dockWidget_IsoSurface->toggleViewAction());
+  menu_Workspace->addSeparator();
+  menu_Workspace->addAction(dockWidget_LockOptions->toggleViewAction());
+  menu_Workspace->addAction(dockWidget_Recorder->toggleViewAction());
 
   menu_Help->addAction(dockWidget_Debug->toggleViewAction());
 }
@@ -342,6 +348,14 @@ bool MainWindow::ApplyWorkspace() {
 
 void MainWindow::CloneCurrentView() {
   RenderWindow *renderWin = CreateNewRenderWindow(GetActiveRenderWindow()->GetDatasetName());
+
+  renderWin->CloneViewState(m_ActiveRenderWin);
+
+  for (int i = 0;i<RenderWindow::ms_iLockCount;i++) {
+    renderWin->m_vpLocks[i].push_back(m_ActiveRenderWin);
+    m_ActiveRenderWin->m_vpLocks[i].push_back(renderWin);
+  }
+
   renderWin->show();
 }
 
@@ -383,7 +397,6 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/10, m_iActiveTS, m_iInactiveTS);
 
   mdiArea->addSubWindow(renderWin);
-  listWidget_Lock->addItem(renderWin->GetWindowID());
 
   connect(renderWin, SIGNAL(WindowActive(RenderWindow*)),
 	  this, SLOT(RenderWindowActive(RenderWindow*)));
@@ -442,6 +455,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     ClearProgressView();
 
     ToggleClearViewControls(iRange);
+    UpdateLockView();
   }
 }
 
@@ -478,11 +492,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 	    "ACK that %s is now closing",
 	    sender->GetDatasetName().toStdString().c_str());
 
-  QList<QListWidgetItem*> l =
-    listWidget_Lock->findItems(sender->GetWindowID(),  Qt::MatchExactly);
-  assert(l.size() == 1); // if l.size() != 1 something went wrong
-			                   // during the creation of the list
-  delete l[0];
+  RemoveAllLocks(sender);
 
   m_ActiveRenderWin = NULL;
   disconnect(sender, SIGNAL(WindowActive(RenderWindow*)),
@@ -497,6 +507,8 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
   DisableAllTrans();
   ClearProgressView();
+
+  UpdateLockView();
 }
 
 

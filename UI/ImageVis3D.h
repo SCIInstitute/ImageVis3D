@@ -121,11 +121,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void UpdateMenus();
     void SaveDataset();
 
-    void EditViewLocks();
-    void EditRenderLocks();
-    void EditToolsLocks();
-    void EditFiltersLocks();
-
     void RenderWindowActive(RenderWindow* sender);
     void RenderWindowClosing(RenderWindow* sender);
 
@@ -158,29 +153,34 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetContextScale(int iValue);
     void SetBorderSize(int iValue);
 
-  private :
-    MasterController&     m_MasterController;
-    QString               m_strCurrentWorkspaceFilename;
-    Q1DTransferFunction*  m_1DTransferFunction;
-    Q2DTransferFunction*  m_2DTransferFunction;
-    QGLWidget*            m_glShareWidget;
-    QTOut*                m_DebugOut;
-    RenderWindow*         m_ActiveRenderWin;
-    static const unsigned int ms_iMaxRecentFiles = 5;
-    QAction *m_recentFileActs[ms_iMaxRecentFiles];
-    FLOATVECTOR3          m_vBackgroundColors[2];
-    FLOATVECTOR4          m_vTextColor;
-    bool                  m_bQuickopen;
-    unsigned int          m_iMinFramerate;
-    unsigned int          m_iLODDelay;
-    unsigned int          m_iActiveTS;
-    unsigned int          m_iInactiveTS;
+    void UpdateLockView();
+    void LockModalityChange();
+    void ChangeLocks();
 
-    unsigned int          m_iBlendPrecisionMode;
-    bool                  m_bPowerOfTwo;
-    bool                  m_bAutoSaveGEO;
-    bool                  m_bAutoSaveWSP;
-    MasterController::EVolumeRendererType   m_eVolumeRendererType;
+  private :
+    MasterController&                         m_MasterController;
+    QString                                   m_strCurrentWorkspaceFilename;
+    Q1DTransferFunction*                      m_1DTransferFunction;
+    Q2DTransferFunction*                      m_2DTransferFunction;
+    QGLWidget*                                m_glShareWidget;
+    QTOut*                                    m_DebugOut;
+    RenderWindow*                             m_ActiveRenderWin;
+    static const unsigned int                 ms_iMaxRecentFiles = 5;
+    QAction*                                  m_recentFileActs[ms_iMaxRecentFiles];
+    FLOATVECTOR3                              m_vBackgroundColors[2];
+    FLOATVECTOR4                              m_vTextColor;
+    bool                                      m_bQuickopen;
+    unsigned int                              m_iMinFramerate;
+    unsigned int                              m_iLODDelay;
+    unsigned int                              m_iActiveTS;
+    unsigned int                              m_iInactiveTS;
+
+    unsigned int                              m_iBlendPrecisionMode;
+    bool                                      m_bPowerOfTwo;
+    bool                                      m_bAutoSaveGEO;
+    bool                                      m_bAutoSaveWSP;
+    MasterController::EVolumeRendererType     m_eVolumeRendererType;
+    bool                                      m_bUpdatingLockView;
 
     RenderWindow* CreateNewRenderWindow(QString dataset);
     bool CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow=true);
@@ -231,6 +231,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetFocusSizeValueSlider(int iValue);
     void SetContextScaleValueSlider(int iValue);
     void SetBorderSizeValueSlider(int iValue);
+
+    void RemoveAllLocks(RenderWindow* sender);
 };
 
 #endif // IMAGEVIS3D_H

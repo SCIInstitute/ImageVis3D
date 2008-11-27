@@ -163,7 +163,7 @@ void RenderWindow::mousePressEvent(QMouseEvent *event)
 }
 
 void RenderWindow::mouseReleaseEvent(QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton) m_mAccumulatedRotation = m_mCurrentRotation;
+  if (event->button() == Qt::LeftButton) FinalizeRotation(true);
 }
 
 void RenderWindow::ToggleHQCaptureMode() {
@@ -200,26 +200,20 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
     }
 
     if (event->buttons() & Qt::LeftButton) {
-      m_mCurrentRotation = m_mAccumulatedRotation * m_ArcBall.Drag(UINTVECTOR2(event->pos().x(), event->pos().y())).ComputeRotation();
-      m_Renderer->SetRotation(m_mCurrentRotation);
+      SetRotationDelta(m_ArcBall.Drag(UINTVECTOR2(event->pos().x(), event->pos().y())).ComputeRotation(),true);
       bPerformUpdate = true;
     }
 
     if (event->buttons() & Qt::RightButton) {
       INTVECTOR2 viPosDelta = m_viMousePos - m_viRightClickPos;
       m_viRightClickPos = m_viMousePos;
-
-      m_mAccumulatedTranslation.m41 += float(viPosDelta.x*2) / m_vWinDim.x;
-      m_mAccumulatedTranslation.m42 -= float(viPosDelta.y*2) / m_vWinDim.y;
-      m_Renderer->SetTranslation(m_mAccumulatedTranslation);
-      m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+      SetTranslationDelta(FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x, float(viPosDelta.y*2) / m_vWinDim.y,0),true);
       bPerformUpdate = true;
     }
 
     if (bPerformUpdate) updateGL();
   }
 }
-
 
 void RenderWindow::wheelEvent(QWheelEvent *event) {
   QGLWidget::wheelEvent(event);
@@ -229,9 +223,7 @@ void RenderWindow::wheelEvent(QWheelEvent *event) {
   // mouse is over the 3D window
   if (eWinMode == AbstrRenderer::WM_3D ) {
     float fZoom = event->delta()/1000.0f;
-    m_mAccumulatedTranslation.m43 += fZoom;
-    m_Renderer->SetTranslation(m_mAccumulatedTranslation);
-    m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+    SetTranslationDelta(FLOATVECTOR3(0,0,fZoom),true);
   } else {
     int iZoom = event->delta()/120;  // this returns 1 for "most" mice if the wheel is turned one "click"
     m_Renderer->SetSliceDepth(eWinMode, int(m_Renderer->GetSliceDepth(eWinMode))+iZoom);
@@ -384,4 +376,48 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename)
 	GLFrameCapture f;
 	makeCurrent();
 	return f.CaptureSequenceFrame(strFilename);
+}
+
+void RenderWindow::SetTranslationDelta(FLOATVECTOR3 trans, bool bPropagate) {
+  m_mAccumulatedTranslation.m41 += trans.x;
+  m_mAccumulatedTranslation.m42 -= trans.y;
+  m_mAccumulatedTranslation.m43 += trans.z;
+  m_Renderer->SetTranslation(m_mAccumulatedTranslation);
+  m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[0].size();i++) {
+      m_vpLocks[0][i]->SetTranslationDelta(trans, false);
+    }
+  }
+}
+
+void RenderWindow::FinalizeRotation(bool bPropagate) {
+  m_mAccumulatedRotation = m_mCurrentRotation;
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[0].size();i++) {
+      m_vpLocks[0][i]->FinalizeRotation(false);
+    }
+  }
+}
+
+void RenderWindow::SetRotationDelta(FLOATMATRIX4 rotDelta, bool bPropagate) {
+  m_mCurrentRotation = m_mAccumulatedRotation * rotDelta;
+  m_Renderer->SetRotation(m_mCurrentRotation);
+
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[0].size();i++) {
+      m_vpLocks[0][i]->SetRotationDelta(rotDelta, false);
+    }
+  }
+}
+
+
+void RenderWindow::CloneViewState(RenderWindow* other) {
+  m_mAccumulatedTranslation = other->m_mAccumulatedTranslation;
+  m_mAccumulatedRotation    = other->m_mAccumulatedRotation;  
+  m_ArcBall.SetTranslation(other->m_ArcBall.GetTranslation());
+
+  m_Renderer->SetRotation(m_mAccumulatedRotation);
+  m_Renderer->SetTranslation(m_mAccumulatedTranslation);
 }

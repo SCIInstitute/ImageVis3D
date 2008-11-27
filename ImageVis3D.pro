@@ -100,6 +100,7 @@ SOURCES += 3rdParty/GLEW/glew.c \
            UI/ImageVis3D_WindowHandling.cpp \
            UI/ImageVis3D_DebugWindow.cpp \
            UI/ImageVis3D_Settings.cpp \
+           UI/ImageVis3D_Locking.cpp \
            UI/PleaseWait.cpp \
            UI/QTransferFunction.cpp \
            UI/Q1DTransferFunction.cpp \

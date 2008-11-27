@@ -74,7 +74,8 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bPowerOfTwo(false),
   m_bAutoSaveGEO(true),
   m_bAutoSaveWSP(true),
-  m_eVolumeRendererType(MasterController::OPENGL_SBVR)
+  m_eVolumeRendererType(MasterController::OPENGL_SBVR),
+  m_bUpdatingLockView(false)
 {
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
   QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");
@@ -195,26 +196,6 @@ void MainWindow::DisableAllTrans() {
   m_2DTransferFunction->setEnabled(false);
 }
 
-
-// ******************************************
-// Locks
-// ******************************************
- 
-void MainWindow::EditViewLocks() {
-  pushButton_RelativeLock->setEnabled(true);  
-}
-
-void MainWindow::EditRenderLocks() {
-  pushButton_RelativeLock->setEnabled(false);
-}
-
-void MainWindow::EditToolsLocks() {
-  pushButton_RelativeLock->setEnabled(false);
-}
-
-void MainWindow::EditFiltersLocks() {
-  pushButton_RelativeLock->setEnabled(false);
-}
 
 // ******************************************
 // Filtering
