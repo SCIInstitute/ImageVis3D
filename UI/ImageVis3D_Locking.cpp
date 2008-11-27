@@ -98,7 +98,6 @@ void MainWindow::ChangeLocks() {
   size_t iLocksInVector = m_ActiveRenderWin->m_vpLocks[iLockType].size();
 
   // otherwise update the locklists
-  m_ActiveRenderWin->m_vpLocks[iLockType].clear();
   RemoveAllLocks(m_ActiveRenderWin, iLockType);
 
   // if we removed one lock we have to remove all locks, as they would be restored via transitivity otherwise
@@ -170,7 +169,6 @@ void MainWindow::RemoveAllLocks(RenderWindow* sender) {
 }
 
 void MainWindow::RemoveAllLocks(RenderWindow* sender, int iLockType) {
-  RenderWindow* otherWin = NULL;
   for (int j = 0;j<mdiArea->subWindowList().size();j++) {
     QWidget* w = mdiArea->subWindowList().at(j)->widget();
     RenderWindow* otherWin = qobject_cast<RenderWindow*>(w);
@@ -182,4 +180,5 @@ void MainWindow::RemoveAllLocks(RenderWindow* sender, int iLockType) {
       } else k++;
     }
   }
+  sender->m_vpLocks[iLockType].clear();
 }

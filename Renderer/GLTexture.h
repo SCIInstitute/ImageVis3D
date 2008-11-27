@@ -53,7 +53,7 @@ class GLTexture : public GLObject {
      * texture in their constructor[s].
      * @param iSizePerElement bits per texel.  Used to track memory size of the
                               texture. */
-    GLTexture(unsigned int iSizePerElement) : m_iGLID(-1),
+    GLTexture(unsigned int iSizePerElement) : m_iGLID(GLuint(-1)),
                                               m_iSizePerElement(iSizePerElement) {}
     virtual ~GLTexture();
 

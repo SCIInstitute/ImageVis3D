@@ -196,7 +196,7 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
     if (m_Renderer->GetRendermode() == AbstrRenderer::RM_ISOSURFACE &&
         m_Renderer->GetCV() &&
         event->modifiers() & Qt::ShiftModifier) {
-      m_Renderer->SetCVMousePos(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+      SetCVFocusPos(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
     }
 
     if (event->buttons() & Qt::LeftButton) {
@@ -424,7 +424,20 @@ void RenderWindow::CloneViewState(RenderWindow* other) {
 
 void RenderWindow::CloneRendermode(RenderWindow* other) {
   SetRendermode(other->GetRendermode());
+
+  m_Renderer->SetUseLigthing(other->m_Renderer->GetUseLigthing());
+  m_Renderer->SetSampleRateModifier(other->m_Renderer->GetSampleRateModifier()); 
+  m_Renderer->SetGlobalBBox(other->m_Renderer->GetGlobalBBox());
+  m_Renderer->SetLocalBBox(other->m_Renderer->GetLocalBBox());
+  m_Renderer->SetIsosufaceColor(other->m_Renderer->GetIsosufaceColor());
+  m_Renderer->SetIsoValue(other->m_Renderer->GetIsoValue());
+  m_Renderer->SetCVIsoValue(other->m_Renderer->GetCVIsoValue());
+  m_Renderer->SetCVSize(other->m_Renderer->GetCVSize());
+  m_Renderer->SetCVContextScale(other->m_Renderer->GetCVContextScale());
+  m_Renderer->SetCVBorderScale(other->m_Renderer->GetCVBorderScale());
+  m_Renderer->SetCVColor(other->m_Renderer->GetCVColor());
   m_Renderer->SetCV(other->m_Renderer->GetCV());
+  m_Renderer->SetCVFocusPos(other->m_Renderer->GetCVFocusPos());
 }
 
 void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate) {
@@ -437,9 +450,138 @@ void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bP
   }
 }
 
-
 void RenderWindow::SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor) {
   makeCurrent();
   m_Renderer->SetBackgroundColors(vBackColors); 
   m_Renderer->SetTextColor(vTextColor); 
+}
+
+void RenderWindow::SetUseLigthing(bool bLighting, bool bPropagate) {
+  m_Renderer->SetUseLigthing(bLighting); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetUseLigthing(bLighting, false);
+    }
+  }
+}
+
+void RenderWindow::SetSampleRateModifier(float fSampleRateModifier, bool bPropagate) {
+  m_Renderer->SetSampleRateModifier(fSampleRateModifier); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetSampleRateModifier(fSampleRateModifier, false);
+    }
+  }
+}
+
+void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
+  m_Renderer->SetIsoValue(fIsoVal); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetIsoValue(fIsoVal, false);
+    }
+  }
+}
+
+void RenderWindow::SetCVIsoValue(float fIsoVal, bool bPropagate) {
+  m_Renderer->SetCVIsoValue(fIsoVal); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetCVIsoValue(fIsoVal, false);
+    }
+  }
+}
+
+void RenderWindow::SetCVSize(float fSize, bool bPropagate) {
+  m_Renderer->SetCVSize(fSize); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetCVSize(fSize, false);
+    }
+  }
+}
+
+void RenderWindow::SetCVContextScale(float fScale, bool bPropagate) {
+  m_Renderer->SetCVContextScale(fScale); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetCVContextScale(fScale, false);
+    }
+  }
+}
+
+void RenderWindow::SetCVBorderScale(float fScale, bool bPropagate) {
+  m_Renderer->SetCVBorderScale(fScale); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetCVBorderScale(fScale, false);
+    }
+  }
+}
+
+void RenderWindow::SetGlobalBBox(bool bRenderBBox, bool bPropagate) {
+  m_Renderer->SetGlobalBBox(bRenderBBox); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetGlobalBBox(bRenderBBox, false);
+    }
+  }
+}
+
+void RenderWindow::SetLocalBBox(bool bRenderBBox, bool bPropagate) {
+  m_Renderer->SetLocalBBox(bRenderBBox); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetLocalBBox(bRenderBBox, false);
+    }
+  }
+}
+
+void RenderWindow::SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
+  m_Renderer->SetIsosufaceColor(vIsoColor); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetIsosufaceColor(vIsoColor, false);
+    }
+  }
+}
+
+void RenderWindow::SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
+  m_Renderer->SetCVColor(vIsoColor); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetCVColor(vIsoColor, false);
+    }
+  }
+}
+
+void RenderWindow::SetCV(bool bDoClearView, bool bPropagate) {
+  m_Renderer->SetCV(bDoClearView); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetCV(bDoClearView, false);
+    }
+  }
+}
+
+void RenderWindow::SetCVFocusPos(FLOATVECTOR2 vMousePos, bool bPropagate) {
+  m_Renderer->SetCVFocusPos(vMousePos);
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetCVFocusPos(vMousePos, false);
+    }
+  }
+}
+
+
+UINTVECTOR2 RenderWindow::GetDynamicRange() const {
+  return UINTVECTOR2(m_Renderer->Get2DTrans()->GetSize());
+}
+
+FLOATVECTOR3 RenderWindow::GetIsosufaceColor() const {
+  return m_Renderer->GetIsosufaceColor();
+}
+
+FLOATVECTOR3 RenderWindow::GetCVColor() const {
+  return m_Renderer->GetCVColor();
 }

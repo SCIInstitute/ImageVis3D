@@ -504,7 +504,7 @@ void AbstrRenderer::SetCV(bool bEnable) {
   }
 }
 
-void AbstrRenderer::SetIsosufaceColor(FLOATVECTOR3 vColor) {
+void AbstrRenderer::SetIsosufaceColor(const FLOATVECTOR3& vColor) {
   m_vIsoColor = vColor; 
   if (m_eRenderMode == RM_ISOSURFACE) 
     ScheduleWindowRedraw(WM_3D);
@@ -517,7 +517,7 @@ void AbstrRenderer::SetCVIsoValue(float fIsovalue) {
   }
 }
 
-void AbstrRenderer::SetCVColor(FLOATVECTOR3 vColor) {
+void AbstrRenderer::SetCVColor(const FLOATVECTOR3& vColor) {
   if (m_vCVColor != vColor) {
     m_vCVColor = vColor; 
     if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
@@ -549,7 +549,7 @@ void AbstrRenderer::SetCVBorderScale(float fScale) {
   }
 }
 
-void AbstrRenderer::SetCVMousePos(FLOATVECTOR2 vPos) {
+void AbstrRenderer::SetCVFocusPos(FLOATVECTOR2 vPos) {
   vPos.y = 1.0f-vPos.y;
   if (m_vCVPos!= vPos) {
     m_vCVPos = vPos; 

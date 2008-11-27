@@ -89,6 +89,24 @@ class RenderWindow : public QGLWidget
     void FinalizeRotation(bool bPropagate);
     void CloneRendermode(RenderWindow* other);
 
+    void SetUseLigthing(bool bLighting, bool bPropagate=true);
+    void SetSampleRateModifier(float fSampleRateModifier, bool bPropagate=true); 
+    void SetIsoValue(float fIsoVal, bool bPropagate=true);
+    void SetCVIsoValue(float fIsoVal, bool bPropagate=true);
+    void SetCVSize(float fSize, bool bPropagate=true);
+    void SetCVContextScale(float fScale, bool bPropagate=true);
+    void SetCVBorderScale(float fScale, bool bPropagate=true);
+    void SetGlobalBBox(bool bRenderBBox, bool bPropagate=true);
+    void SetLocalBBox(bool bRenderBBox, bool bPropagate=true);
+    void SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
+    void SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
+    void SetCV(bool bDoClearView, bool bPropagate=true);
+    void SetCVFocusPos(FLOATVECTOR2 vMousePos, bool bPropagate=true);
+
+    UINTVECTOR2 GetDynamicRange() const;
+    FLOATVECTOR3 GetIsosufaceColor() const;
+    FLOATVECTOR3 GetCVColor() const;
+
   public slots:
     void ToggleRenderWindowView2x2();
     void ToggleRenderWindowViewSingle();

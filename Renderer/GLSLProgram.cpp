@@ -177,7 +177,6 @@ bool GLSLProgram::Initialize(void) {
       m_bGLUseARB = true;
     }
     return false;
-    m_bGLChecked = true;
   } 
   return true;
 }

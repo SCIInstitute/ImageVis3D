@@ -261,12 +261,12 @@ void MainWindow::FilterImage() {
 void MainWindow::SetLighting(bool bLighting) {
   RenderWindow* w = GetActiveRenderWindow();
   if (w != NULL) {
-    w->GetRenderer()->SetUseLigthing(bLighting);
+    w->SetUseLigthing(bLighting);
   }
 }
 
 void MainWindow::SetSampleRate(int iValue) {
-  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetSampleRateModifier(iValue/100.0f); 
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetSampleRateModifier(iValue/100.0f); 
   UpdateSampleRateLabel(iValue);
 }
 
@@ -282,8 +282,8 @@ void MainWindow::SetSampleRateSlider(int iValue) {
 }
 
 void MainWindow::SetIsoValue(int iValue) {
-  int iMaxSize = int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
-  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetIsoValue(float(iValue)/float(iMaxSize));
+  int iMaxSize = int(m_ActiveRenderWin->GetDynamicRange().x);
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetIsoValue(float(iValue)/float(iMaxSize));
   UpdateIsoValLabel(iValue, iMaxSize);
 }
 
@@ -300,8 +300,8 @@ void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {
 
 
 void MainWindow::SetFocusIsoValue(int iValue) {
-  int iMaxSize = int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
-  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetCVIsoValue(float(iValue)/float(iMaxSize));
+  int iMaxSize = int(m_ActiveRenderWin->GetDynamicRange().x);
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetCVIsoValue(float(iValue)/float(iMaxSize));
   UpdateFocusIsoValLabel(iValue, iMaxSize);
 }
 
@@ -323,15 +323,15 @@ void MainWindow::SetBorderSizeValueSlider(int iValue) {
 }
 
 void MainWindow::SetFocusSize(int iValue) {
-  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetCVSize(float(99-iValue)/9.9f);
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetCVSize(float(99-iValue)/9.9f);
 }
 
 void MainWindow::SetContextScale(int iValue) {
-  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetCVContextScale(float(iValue)/10.0f);
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetCVContextScale(float(iValue)/10.0f);
 }
 
 void MainWindow::SetBorderSize(int iValue) {
-  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetCVBorderScale(float(99-iValue));
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetCVBorderScale(float(99-iValue));
 }
 
 void MainWindow::UpdateFocusIsoValLabel(int iValue, int iMaxValue) {
@@ -352,12 +352,12 @@ void MainWindow::SetToggleLocalBBoxLabel(bool bRenderBBox)
 
 void MainWindow::ToggleGlobalBBox(bool bRenderBBox)
 {
-  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetGlobalBBox(bRenderBBox);
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetGlobalBBox(bRenderBBox);
 }
 
 void MainWindow::ToggleLocalBBox(bool bRenderBBox)
 {
-  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->GetRenderer()->SetLocalBBox(bRenderBBox);
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetLocalBBox(bRenderBBox);
 }
 
 
@@ -372,7 +372,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::ChooseIsoColor()
 {
   if (m_ActiveRenderWin)  {
-    FLOATVECTOR3 vIsoColor = m_ActiveRenderWin->GetRenderer()->GetIsosufaceColor();
+    FLOATVECTOR3 vIsoColor = m_ActiveRenderWin->GetIsosufaceColor();
     QColor color = QColorDialog::getColor(qRgba(int(vIsoColor.x*255),
                                                 int(vIsoColor.y*255),
                                                 int(vIsoColor.z*255),
@@ -381,7 +381,7 @@ void MainWindow::ChooseIsoColor()
     if (color.isValid()) {
 
       vIsoColor = FLOATVECTOR3(color.red() / 255.0f, color.green() / 255.0f, color.blue() / 255.0f);
-      m_ActiveRenderWin->GetRenderer()->SetIsosufaceColor(vIsoColor);
+      m_ActiveRenderWin->SetIsosufaceColor(vIsoColor);
     }
   }
 }
@@ -389,7 +389,7 @@ void MainWindow::ChooseIsoColor()
 void MainWindow::ChooseFocusColor()
 {
   if (m_ActiveRenderWin)  {
-    FLOATVECTOR3 vIsoColor = m_ActiveRenderWin->GetRenderer()->GetCVColor();
+    FLOATVECTOR3 vIsoColor = m_ActiveRenderWin->GetCVColor();
     QColor color = QColorDialog::getColor(qRgba(int(vIsoColor.x*255),
                                                 int(vIsoColor.y*255),
                                                 int(vIsoColor.z*255),
@@ -398,14 +398,14 @@ void MainWindow::ChooseFocusColor()
     if (color.isValid()) {
 
       vIsoColor = FLOATVECTOR3(color.red() / 255.0f, color.green() / 255.0f, color.blue() / 255.0f);
-      m_ActiveRenderWin->GetRenderer()->SetCVColor(vIsoColor);
+      m_ActiveRenderWin->SetCVColor(vIsoColor);
     }
   }
 }
 
 void MainWindow::ToggleClearView() {
   if (m_ActiveRenderWin) {
-    m_ActiveRenderWin->GetRenderer()->SetCV(checkBox_ClearView->isChecked());
+    m_ActiveRenderWin->SetCV(checkBox_ClearView->isChecked());
     frame_ClearView->setEnabled(checkBox_ClearView->isChecked());
   }
 }

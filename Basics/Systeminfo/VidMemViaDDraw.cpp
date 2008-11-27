@@ -44,7 +44,7 @@ struct DDRAW_MATCH
 
 
 //-----------------------------------------------------------------------------
-BOOL WINAPI DDEnumCallbackEx( GUID FAR* lpGUID, LPSTR lpDriverDescription, LPSTR lpDriverName, LPVOID lpContext, HMONITOR hm )
+BOOL WINAPI DDEnumCallbackEx( GUID FAR* lpGUID, LPSTR , LPSTR lpDriverName, LPVOID lpContext, HMONITOR hm )
  {
     DDRAW_MATCH* pDDMatch = ( DDRAW_MATCH* ) lpContext;
     if( pDDMatch->hMonitor == hm )

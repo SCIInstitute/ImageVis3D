@@ -592,15 +592,15 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
 			if (pDICOMStack->m_iComponentCount == 3) {
 				unsigned int iRGBADataSize = (iDataSize / 3 ) * 4;
 				
-				char *pRGBAData = new char[ iRGBADataSize ];
+				unsigned char *pRGBAData = new unsigned char[ iRGBADataSize ];
 				for (uint k = 0;k<iDataSize/3;k++) {
 					pRGBAData[k*4+0] = pData[k*3+0];
 					pRGBAData[k*4+1] = pData[k*3+1];
 					pRGBAData[k*4+2] = pData[k*3+2];
-					pRGBAData[k*4+3] = char(255);
+					pRGBAData[k*4+3] = 255;
 				}
 
-				fs.write(pRGBAData, iRGBADataSize);
+				fs.write((char*)pRGBAData, iRGBADataSize);
 				delete [] pRGBAData;				
 			} else {
 				fs.write(pData, iDataSize);

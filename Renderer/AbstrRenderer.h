@@ -194,7 +194,7 @@ class AbstrRenderer {
     virtual void SetIsoValue(float fIsovalue);
     float GetIsoValue() {return m_fIsovalue;}
 
-    virtual void SetIsosufaceColor(FLOATVECTOR3 vColor);
+    virtual void SetIsosufaceColor(const FLOATVECTOR3& vColor);
     virtual FLOATVECTOR3 GetIsosufaceColor()  const {return m_vIsoColor;}
 
 
@@ -252,7 +252,7 @@ class AbstrRenderer {
     virtual bool GetCV() const {return m_bDoClearView;}
     virtual void SetCVIsoValue(float fIsovalue);
     virtual float GetCVIsoValue() const {return m_fCVIsovalue;}
-    virtual void SetCVColor(FLOATVECTOR3 vColor);
+    virtual void SetCVColor(const FLOATVECTOR3& vColor);
     virtual FLOATVECTOR3 GetCVColor() const {return m_vCVColor;}
     virtual void SetCVSize(float fSize);
     virtual float GetCVSize() const {return m_fCVSize;}
@@ -260,8 +260,8 @@ class AbstrRenderer {
     virtual float GetCVContextScale() const {return m_fCVContextScale;}
     virtual void SetCVBorderScale(float fScale);
     virtual float GetCVBorderScale() const {return m_fCVBorderScale;}
-    virtual void SetCVMousePos(FLOATVECTOR2 vPos);
-    virtual FLOATVECTOR2 GetCVMousePos() const {return m_vCVPos;}
+    virtual void SetCVFocusPos(FLOATVECTOR2 vPos);
+    virtual FLOATVECTOR2 GetCVFocusPos() const {return FLOATVECTOR2(m_vCVPos.x, 1.0f-m_vCVPos.y);}
 
     virtual void ScheduleCompleteRedraw();
     virtual void ScheduleWindowRedraw(EWindowMode eWindow);
