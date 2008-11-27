@@ -233,9 +233,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetBorderSizeValueSlider(int iValue);
 
     void RemoveAllLocks(RenderWindow* sender);
-    void RemoveAllLocks(RenderWindow* sender, int iLockType);
-    bool SetLock(int iLockType, RenderWindow* winA, RenderWindow* winB);
-    bool IsLockedWith(int iLockType, RenderWindow* winA, RenderWindow* winB);
+    void RemoveAllLocks(RenderWindow* sender, size_t iLockType);
+    bool SetLock(size_t iLockType, RenderWindow* winA, RenderWindow* winB);
+    bool IsLockedWith(size_t iLockType, RenderWindow* winA, RenderWindow* winB);
 
 };
 

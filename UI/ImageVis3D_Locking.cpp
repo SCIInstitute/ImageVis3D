@@ -125,7 +125,7 @@ void MainWindow::ChangeLocks() {
 }
 
 
-bool MainWindow::SetLock(int iLockType, RenderWindow* winA, RenderWindow* winB) {
+bool MainWindow::SetLock(size_t iLockType, RenderWindow* winA, RenderWindow* winB) {
   bool bAddedTransitiveLocks = false;
 
   winA->m_vpLocks[iLockType].push_back(winB);
@@ -154,7 +154,7 @@ bool MainWindow::SetLock(int iLockType, RenderWindow* winA, RenderWindow* winB) 
   return bAddedTransitiveLocks;
 }
 
-bool MainWindow::IsLockedWith(int iLockType, RenderWindow* winA, RenderWindow* winB) {
+bool MainWindow::IsLockedWith(size_t iLockType, RenderWindow* winA, RenderWindow* winB) {
   if (winA == winB) return true;
   for (size_t i = 0;i<winA->m_vpLocks[iLockType].size();i++) {
     if (winA->m_vpLocks[iLockType][i] == winB) 
@@ -168,7 +168,7 @@ void MainWindow::RemoveAllLocks(RenderWindow* sender) {
     RemoveAllLocks(sender, i);
 }
 
-void MainWindow::RemoveAllLocks(RenderWindow* sender, int iLockType) {
+void MainWindow::RemoveAllLocks(RenderWindow* sender, size_t iLockType) {
   for (int j = 0;j<mdiArea->subWindowList().size();j++) {
     QWidget* w = mdiArea->subWindowList().at(j)->widget();
     RenderWindow* otherWin = qobject_cast<RenderWindow*>(w);

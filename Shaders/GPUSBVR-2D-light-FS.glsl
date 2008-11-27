@@ -65,7 +65,7 @@ void main(void)
   float fGradientMag = length(vGradient); 
 
   /// apply 2D transfer function
-	vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale));
+	vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, 1.0-fGradientMag*fGradientScale));
 
   /// compute lighting
   vec3 vNormal     = gl_NormalMatrix * vGradient;

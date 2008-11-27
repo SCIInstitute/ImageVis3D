@@ -57,7 +57,7 @@ void main(void)
   float fGradientMag = length(vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp)); 
 
   /// apply 2D transfer function
-	vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, fGradientMag*fGradientScale));
+	vec4  vTransVal = texture2D(texTrans2D, vec2(fVolumVal*fTransScale, 1.0-fGradientMag*fGradientScale));
 
   /// apply opacity correction
   vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
