@@ -84,17 +84,28 @@ void MainWindow::LockModalityChange() {
 
 void MainWindow::ChangeLocks() {
   if (m_bUpdatingLockView) return;
-  bool bAddedNewLocks = false;
+  bool bAddedTransitiveLocks = false;
   // find correct lock mode
   size_t iLockType = 0;
     if (radioButton_RenderModeLock->isChecked()) iLockType = 1; else
       if (radioButton_ToolsLock->isChecked()) iLockType = 2; else
         if (radioButton_FiltersLock->isChecked()) iLockType = 3;
-  // update lock arrays
+
+  size_t iLocksInList = 0;
+  for (int i = 0;i<listWidget_Lock->count();i++)
+    if (listWidget_Lock->item(i)->isSelected()) iLocksInList++;
+
+  size_t iLocksInVector = m_ActiveRenderWin->m_vpLocks[iLockType].size();
+
+  // otherwise update the locklists
   m_ActiveRenderWin->m_vpLocks[iLockType].clear();
+  RemoveAllLocks(m_ActiveRenderWin, iLockType);
 
-  RemoveAllLocks(m_ActiveRenderWin);
-
+  // if we removed one lock we have to remove all locks, as they would be restored via transitivity otherwise
+  if (iLocksInList < iLocksInVector) {
+    UpdateLockView();
+    return;
+  }
 
   for (int i = 0;i<listWidget_Lock->count();i++) {
     if (listWidget_Lock->item(i)->isSelected()) {
@@ -108,55 +119,63 @@ void MainWindow::ChangeLocks() {
             break;
          } 
       }
-      if (otherWin != NULL) {
-        m_ActiveRenderWin->m_vpLocks[iLockType].push_back(otherWin);
-        // if renderwin is not in the list of the other window yet
-        bool bFound = false;
-        for (size_t j = 0;j<otherWin->m_vpLocks[iLockType].size();j++) {
-          if (otherWin->m_vpLocks[iLockType][j] == m_ActiveRenderWin) {
-            bFound = true;
-            break;
-          }
-        }
-        if (!bFound) otherWin->m_vpLocks[iLockType].push_back(m_ActiveRenderWin);
-
-        // resolve transitive locks by adding all the other locks of the other window to this one
-
-        for (size_t j = 0;j<otherWin->m_vpLocks[iLockType].size();j++) {
-          bFound = false;
-          for (size_t k = 0;k<m_ActiveRenderWin->m_vpLocks[iLockType].size();k++) {
-            if (otherWin->m_vpLocks[iLockType][j] == m_ActiveRenderWin->m_vpLocks[iLockType][k]) {
-              bFound = true;
-              break;
-            }
-          }
-          if (!bFound) {
-            m_ActiveRenderWin->m_vpLocks[iLockType].push_back(otherWin->m_vpLocks[iLockType][j]);
-            otherWin->m_vpLocks[iLockType][j]->m_vpLocks[iLockType].push_back(m_ActiveRenderWin);
-            bAddedNewLocks = true;
-          }
-
-        }
-      }
+      if (otherWin != NULL) bAddedTransitiveLocks = SetLock(iLockType, m_ActiveRenderWin, otherWin);
     }
   }
-  if (bAddedNewLocks) UpdateLockView();
+  if (bAddedTransitiveLocks) UpdateLockView();
+}
+
+
+bool MainWindow::SetLock(int iLockType, RenderWindow* winA, RenderWindow* winB) {
+  bool bAddedTransitiveLocks = false;
+
+  winA->m_vpLocks[iLockType].push_back(winB);
+  // if renderwin is not in the list of the other window yet
+  bool bFound = false;
+  for (size_t j = 0;j<winB->m_vpLocks[iLockType].size();j++) {
+    if (winB->m_vpLocks[iLockType][j] == winA) {
+      bFound = true;
+      break;
+    }
+  }
+  if (!bFound) winB->m_vpLocks[iLockType].push_back(winA);
+
+  // resolve transitive locks by adding all the other locks of the other window to this one
+
+  for (size_t j = 0;j<winB->m_vpLocks[iLockType].size();j++) {
+    bFound = false;
+    for (size_t k = 0;k<winA->m_vpLocks[iLockType].size();k++) {
+      if (winB->m_vpLocks[iLockType][j] == winA->m_vpLocks[iLockType][k]) {
+        bFound = true;
+        break;
+      }
+    }
+    if (!bFound) {
+      winA->m_vpLocks[iLockType].push_back(winB->m_vpLocks[iLockType][j]);
+      winB->m_vpLocks[iLockType][j]->m_vpLocks[iLockType].push_back(winA);
+      bAddedTransitiveLocks = true;
+    }
+  }
+
+  return bAddedTransitiveLocks;
 }
 
 void MainWindow::RemoveAllLocks(RenderWindow* sender) {
-  for (int i = 0;i<RenderWindow::ms_iLockCount;i++) {
-    RenderWindow* otherWin = NULL;
-    for (int j = 0;j<mdiArea->subWindowList().size();j++) {
-      QWidget* w = mdiArea->subWindowList().at(j)->widget();
-      RenderWindow* otherWin = qobject_cast<RenderWindow*>(w);
-      if (otherWin == sender) continue;
+  for (size_t i = 0;i<RenderWindow::ms_iLockCount;i++)
+    RemoveAllLocks(sender, i);
+}
 
-      for (int k = 0;k<otherWin->m_vpLocks[i].size();k++) {
-        if (otherWin->m_vpLocks[i][k] == sender) {
-           otherWin->m_vpLocks[i].erase(otherWin->m_vpLocks[i].begin()+k);
-        }
-      }
+void MainWindow::RemoveAllLocks(RenderWindow* sender, int iLockType) {
+  RenderWindow* otherWin = NULL;
+  for (int j = 0;j<mdiArea->subWindowList().size();j++) {
+    QWidget* w = mdiArea->subWindowList().at(j)->widget();
+    RenderWindow* otherWin = qobject_cast<RenderWindow*>(w);
+    if (otherWin == sender) continue;
 
+    for (size_t k = 0;k<otherWin->m_vpLocks[iLockType].size();) {
+      if (otherWin->m_vpLocks[iLockType][k] == sender) {
+         otherWin->m_vpLocks[iLockType].erase(otherWin->m_vpLocks[iLockType].begin()+k);
+      } else k++;
     }
   }
 }

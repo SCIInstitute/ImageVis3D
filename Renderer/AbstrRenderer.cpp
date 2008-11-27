@@ -495,6 +495,8 @@ void AbstrRenderer::Plan3DFrame() {
 }
 
 void AbstrRenderer::SetCV(bool bEnable) {
+  if (!SupportsClearView()) return;
+
   if (m_bDoClearView != bEnable) {
     m_bDoClearView = bEnable; 
     if (m_eRenderMode == RM_ISOSURFACE) 

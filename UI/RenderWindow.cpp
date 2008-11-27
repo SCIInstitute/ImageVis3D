@@ -421,3 +421,25 @@ void RenderWindow::CloneViewState(RenderWindow* other) {
   m_Renderer->SetRotation(m_mAccumulatedRotation);
   m_Renderer->SetTranslation(m_mAccumulatedTranslation);
 }
+
+void RenderWindow::CloneRendermode(RenderWindow* other) {
+  SetRendermode(other->GetRendermode());
+  m_Renderer->SetCV(other->m_Renderer->GetCV());
+}
+
+void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate) {
+  makeCurrent();
+  m_Renderer->SetRendermode(eRenderMode); 
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetRendermode(eRenderMode, false);
+    }
+  }
+}
+
+
+void RenderWindow::SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor) {
+  makeCurrent();
+  m_Renderer->SetBackgroundColors(vBackColors); 
+  m_Renderer->SetTextColor(vTextColor); 
+}

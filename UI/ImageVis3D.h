@@ -233,6 +233,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetBorderSizeValueSlider(int iValue);
 
     void RemoveAllLocks(RenderWindow* sender);
+    void RemoveAllLocks(RenderWindow* sender, int iLockType);
+    bool SetLock(int iLockType, RenderWindow* winA, RenderWindow* winB);
+
 };
 
 #endif // IMAGEVIS3D_H

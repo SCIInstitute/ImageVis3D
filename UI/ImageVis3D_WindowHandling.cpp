@@ -350,11 +350,9 @@ void MainWindow::CloneCurrentView() {
   RenderWindow *renderWin = CreateNewRenderWindow(GetActiveRenderWindow()->GetDatasetName());
 
   renderWin->CloneViewState(m_ActiveRenderWin);
+  renderWin->CloneRendermode(m_ActiveRenderWin);
 
-  for (int i = 0;i<RenderWindow::ms_iLockCount;i++) {
-    renderWin->m_vpLocks[i].push_back(m_ActiveRenderWin);
-    m_ActiveRenderWin->m_vpLocks[i].push_back(renderWin);
-  }
+  for (int i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_ActiveRenderWin); 
 
   renderWin->show();
 }
@@ -427,7 +425,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 	      sender->GetRenderer()->Get2DTrans());
     m_2DTransferFunction->update();
 
-    AbstrRenderer::ERenderMode e = m_ActiveRenderWin->GetRenderer()->GetRendermode();
+    AbstrRenderer::ERenderMode e = m_ActiveRenderWin->GetRendermode();
 
     switch (e) {
       case AbstrRenderer::RM_1DTRANS    : Use1DTrans(); break;

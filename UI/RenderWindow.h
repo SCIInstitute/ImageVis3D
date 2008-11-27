@@ -69,16 +69,9 @@ class RenderWindow : public QGLWidget
     QSize sizeHint() const;
     AbstrRenderer* GetRenderer() {return m_Renderer;}
     void CheckForRedraw();
-    void SetRendermode(AbstrRenderer::ERenderMode eRenderMode) {
-      makeCurrent();
-      m_Renderer->SetRendermode(eRenderMode); }
-
-    void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor) {
-      makeCurrent();
-      m_Renderer->SetBackgroundColors(vBackColors); 
-      m_Renderer->SetTextColor(vTextColor); 
-    }
-
+    void SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate=true);
+    AbstrRenderer::ERenderMode GetRendermode() {return m_Renderer->GetRendermode();}
+    void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor);
     void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
     bool CaptureFrame(const std::string& strFilename);
@@ -87,14 +80,14 @@ class RenderWindow : public QGLWidget
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() {return m_bRenderSubsysOK;}
 
-    static const unsigned int         ms_iLockCount = 4;
+    static const size_t               ms_iLockCount = 4;
     std::vector<RenderWindow*>        m_vpLocks[ms_iLockCount];
 
     void SetTranslationDelta(FLOATVECTOR3 trans, bool bPropagate);
     void SetRotationDelta(FLOATMATRIX4 rotDelta, bool bPropagate);
     void CloneViewState(RenderWindow* other);
     void FinalizeRotation(bool bPropagate);
-
+    void CloneRendermode(RenderWindow* other);
 
   public slots:
     void ToggleRenderWindowView2x2();

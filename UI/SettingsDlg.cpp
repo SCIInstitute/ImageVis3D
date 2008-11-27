@@ -334,7 +334,7 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
 
 
 void SettingsDlg::WarnAPIMethodChange() {
-		QMessageBox::warning(this, "Warning", "A change to the render API or the rendermode only affects renderwindows opened from now on.");
+		QMessageBox::warning(this, "Warning", "A change to the render API, the rendermode, or the compatibiliy settings only affects renderwindows opened from now on.");
 }
 
 unsigned int SettingsDlg::GetVolrenType() const {

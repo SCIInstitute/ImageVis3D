@@ -2810,7 +2810,7 @@
         <item>
          <widget class="QRadioButton" name="radioButton_RenderModeLock" >
           <property name="text" >
-           <string>Rendermode (includes Transferfunction)</string>
+           <string>Rendermode</string>
           </property>
          </widget>
         </item>
