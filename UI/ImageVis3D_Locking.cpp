@@ -130,34 +130,38 @@ bool MainWindow::SetLock(int iLockType, RenderWindow* winA, RenderWindow* winB) 
   bool bAddedTransitiveLocks = false;
 
   winA->m_vpLocks[iLockType].push_back(winB);
-  // if renderwin is not in the list of the other window yet
-  bool bFound = false;
-  for (size_t j = 0;j<winB->m_vpLocks[iLockType].size();j++) {
-    if (winB->m_vpLocks[iLockType][j] == winA) {
-      bFound = true;
-      break;
-    }
-  }
-  if (!bFound) winB->m_vpLocks[iLockType].push_back(winA);
+  winB->m_vpLocks[iLockType].push_back(winA);
 
   // resolve transitive locks by adding all the other locks of the other window to this one
-
   for (size_t j = 0;j<winB->m_vpLocks[iLockType].size();j++) {
-    bFound = false;
-    for (size_t k = 0;k<winA->m_vpLocks[iLockType].size();k++) {
-      if (winB->m_vpLocks[iLockType][j] == winA->m_vpLocks[iLockType][k]) {
-        bFound = true;
-        break;
-      }
-    }
-    if (!bFound) {
+    if (!IsLockedWith(iLockType, winB->m_vpLocks[iLockType][j], winA)) {
       winA->m_vpLocks[iLockType].push_back(winB->m_vpLocks[iLockType][j]);
       winB->m_vpLocks[iLockType][j]->m_vpLocks[iLockType].push_back(winA);
       bAddedTransitiveLocks = true;
     }
   }
 
+  // check if the lock subgraph is clique
+  for (size_t j = 0;j<winA->m_vpLocks[iLockType].size();j++) {
+    for (size_t k = j;k<winA->m_vpLocks[iLockType].size();k++) {
+      if (!IsLockedWith(iLockType, winA->m_vpLocks[iLockType][j], winA->m_vpLocks[iLockType][k])) {
+        winA->m_vpLocks[iLockType][j]->m_vpLocks[iLockType].push_back(winA->m_vpLocks[iLockType][k]);
+        winA->m_vpLocks[iLockType][k]->m_vpLocks[iLockType].push_back(winA->m_vpLocks[iLockType][j]);
+        bAddedTransitiveLocks = true;
+      }
+    }
+  }
+
   return bAddedTransitiveLocks;
+}
+
+bool MainWindow::IsLockedWith(int iLockType, RenderWindow* winA, RenderWindow* winB) {
+  if (winA == winB) return true;
+  for (size_t i = 0;i<winA->m_vpLocks[iLockType].size();i++) {
+    if (winA->m_vpLocks[iLockType][i] == winB) 
+      return true;
+  }
+  return false;
 }
 
 void MainWindow::RemoveAllLocks(RenderWindow* sender) {
