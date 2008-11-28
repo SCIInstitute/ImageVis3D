@@ -573,6 +573,9 @@ void RenderWindow::SetCVFocusPos(FLOATVECTOR2 vMousePos, bool bPropagate) {
   }
 }
 
+void RenderWindow::SetLogoParams(QString strLogoFilename, int iLogoPos) {
+  m_Renderer->SetLogoParams(std::string(strLogoFilename.toAscii()), iLogoPos);
+}
 
 UINTVECTOR2 RenderWindow::GetDynamicRange() const {
   return UINTVECTOR2(m_Renderer->Get2DTrans()->GetSize());

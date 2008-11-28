@@ -50,7 +50,7 @@ GLRenderer::GLRenderer(MasterController* pMasterController, bool bUseOnlyPowerOf
   m_pFBO3DImageLast(NULL),
   m_pFBO3DImageCurrent(NULL),
   m_iFilledBuffers(0),
-  m_LogoTex(NULL),
+  m_pLogoTex(NULL),
   m_pProgramIso(NULL),
   m_pProgramTrans(NULL),
   m_pProgram1DTransSlice(NULL),
@@ -174,7 +174,7 @@ void GLRenderer::ClearColorBuffer() {
     glClearColor(m_vBackgroundColors[0].x,m_vBackgroundColors[0].y,m_vBackgroundColors[0].z,0);
     glClear(GL_COLOR_BUFFER_BIT); 
   } else {
-    glDisable(GL_BLEND);    
+    glDisable(GL_BLEND);
     DrawBackGradient();
   }
   DrawLogo();
@@ -620,32 +620,49 @@ void GLRenderer::RerenderPreviousResult(bool bTransferToFramebuffer) {
 
 
 void GLRenderer::DrawLogo() {
-  // \todo add the whole logo handling and positioning code
+  if (m_pLogoTex == NULL) return;
 
-  if (m_LogoTex == NULL) return;
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
-  glOrtho(-0.5, +0.5, +0.5, -0.5, 0.0, 1.0);
+  glOrtho(-0.5, +0.5, -0.5, +0.5, 0.0, 1.0);
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   glLoadIdentity();
 
-  m_LogoTex->Bind();
+  m_pLogoTex->Bind();
   glDisable(GL_TEXTURE_3D);
   glEnable(GL_TEXTURE_2D);
 
+
+  UINTVECTOR2 vSizes(m_pLogoTex->GetSize());
+  FLOATVECTOR2 vTexelSize(1.0f/FLOATVECTOR2(vSizes));
+  FLOATVECTOR2 vImageAspect(FLOATVECTOR2(vSizes)/FLOATVECTOR2(m_vWinSize));
+  vImageAspect /= vImageAspect.maxVal();
+
+  FLOATVECTOR2 vExtend(vImageAspect*0.25f);
+
+  FLOATVECTOR2 vCenter;
+  switch (m_iLogoPos) {
+    case 0  : vCenter = FLOATVECTOR2(-0.50f+vExtend.x,  0.50f-vExtend.y); break;
+    case 1  : vCenter = FLOATVECTOR2( 0.50f-vExtend.x,  0.50f-vExtend.y); break;
+    case 2  : vCenter = FLOATVECTOR2(-0.50f+vExtend.x, -0.50f+vExtend.y); break;
+    default : vCenter = FLOATVECTOR2( 0.50f-vExtend.x, -0.50f+vExtend.y); break;
+  }
+
   glBegin(GL_QUADS);
     glColor4d(1,1,1,1);
-    glTexCoord2d(0,0);
-    glVertex3d(0.2, 0.4, -0.5);
-    glTexCoord2d(1,0);
-    glVertex3d(0.4, 0.4, -0.5);
-    glTexCoord2d(1,1);
-    glVertex3d(0.4, 0.2, -0.5);
-    glTexCoord2d(0,1);
-    glVertex3d(0.2, 0.2, -0.5);
+    glTexCoord2d(0+vTexelSize.x,1-vTexelSize.y);
+    glVertex3f(vCenter.x-vExtend.x, vCenter.y+vExtend.y, -0.5);
+    glTexCoord2d(1-vTexelSize.x,1-vTexelSize.y);
+    glVertex3f(vCenter.x+vExtend.x, vCenter.y+vExtend.y, -0.5);
+    glTexCoord2d(1-vTexelSize.x,0+vTexelSize.y);
+    glVertex3f(vCenter.x+vExtend.x, vCenter.y-vExtend.y, -0.5);
+    glTexCoord2d(0+vTexelSize.x,0+vTexelSize.y);
+    glVertex3f(vCenter.x-vExtend.x, vCenter.y-vExtend.y, -0.5);
   glEnd();
 
   glDisable(GL_TEXTURE_2D);
@@ -662,7 +679,7 @@ void GLRenderer::DrawBackGradient() {
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
-  glOrtho(-0.5, +0.5, +0.5, -0.5, 0.0, 1.0);
+  glOrtho(-1.0, +1.0, +1.0, -1.0, 0.0, 1.0);
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   glLoadIdentity();
@@ -700,6 +717,8 @@ void GLRenderer::Cleanup() {
   if (m_pProgram2DTrans[0])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]); m_pProgram2DTrans[0] =NULL;}
   if (m_pProgram2DTrans[1])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[1]); m_pProgram2DTrans[1] =NULL;}
   if (m_pProgramIso)          {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIso); m_pProgramIso =NULL;}
+
+  if (m_pLogoTex)             {m_pMasterController->MemMan()->FreeTexture(m_pLogoTex); m_pLogoTex =NULL;}
 }
 
 
@@ -905,4 +924,12 @@ void GLRenderer::Render3DView() {
   if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();
 
   glDisable(GL_BLEND);
+}
+
+void GLRenderer::SetLogoParams(std::string strLogoFilename, int iLogoPos) {
+  AbstrRenderer::SetLogoParams(strLogoFilename, iLogoPos);
+
+  if (m_pLogoTex) m_pMasterController->MemMan()->FreeTexture(m_pLogoTex);
+  m_pLogoTex = m_pMasterController->MemMan()->Load2DTextureFromFile(m_strLogoFilename);
+  ScheduleWindowRedraw(WM_3D);
 }

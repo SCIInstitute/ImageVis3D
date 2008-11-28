@@ -390,9 +390,8 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   RenderWindow *renderWin =
     new RenderWindow(m_MasterController, m_eVolumeRendererType, dataset,
 		     iCounter++, m_bPowerOfTwo, m_glShareWidget, this);
-  renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
-  renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
-  renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/10, m_iActiveTS, m_iInactiveTS);
+
+  ApplySettings(renderWin);
 
   mdiArea->addSubWindow(renderWin);
 
@@ -628,11 +627,6 @@ void MainWindow::AddFileToMRUList(const QString &fileName)
 }
 
 
-QString MainWindow::strippedName(const QString &fullFileName)
-{
-  return QFileInfo(fullFileName).fileName();
-}
-
 void MainWindow::UpdateMRUActions()
 {
   QSettings settings;
@@ -641,7 +635,7 @@ void MainWindow::UpdateMRUActions()
   int numRecentFiles = qMin(files.size(), (int)ms_iMaxRecentFiles);
 
   for (int i = 0; i < numRecentFiles; ++i) {
-    QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
+    QString text = tr("&%1 %2").arg(i + 1).arg(QFileInfo(files[i]).fileName());
     m_recentFileActs[i]->setText(text);
     m_recentFileActs[i]->setData(files[i]);
     m_recentFileActs[i]->setVisible(true);

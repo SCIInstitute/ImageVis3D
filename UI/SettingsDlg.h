@@ -67,11 +67,15 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     bool          GetUseOnlyPowerOfTwo() const;
 
+    QString       GetLogoFilename() const;
+    int           GetLogoPos() const;
+
+
     void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
                    bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
                    bool bAutoSaveGEO, bool bAutoSaveWSP,
-                   unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, 
-                   const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor);
+                   unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo,
+                   const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos);
 
   protected slots:
     void SelectTextColor();
@@ -84,15 +88,19 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void ActTSChanged();
     void InactTSChanged();
     void WarnAPIMethodChange();
+    void SelectLogo();
+    void RemoveLogo();
 
   private:
     MasterController& m_MasterController;
     QColor            m_cBackColor1;
     QColor            m_cBackColor2;
     QColor            m_cTextColor;
+    QString           m_strLogoFilename;
 
     int               m_InitialGPUMemMax;
     void setupUi(QDialog *SettingsDlg);
+    void SetLogoLabel();
 
 };
 

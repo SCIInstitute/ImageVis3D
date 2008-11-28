@@ -76,6 +76,8 @@ class GLRenderer : public AbstrRenderer {
      * \param vWinSize  new width and height of the view window */
     virtual void Resize(const UINTVECTOR2& vWinSize);
 
+    virtual void SetLogoParams(std::string strLogoFilename, int iLogoPos);
+
   protected:
     GLTexture1D*    m_p1DTransTex;
     GLTexture2D*    m_p2DTransTex;
@@ -84,7 +86,7 @@ class GLRenderer : public AbstrRenderer {
     GLFBOTex*       m_pFBO3DImageLast;
     GLFBOTex*       m_pFBO3DImageCurrent;
     int             m_iFilledBuffers;
-    GLTexture2D*    m_LogoTex;
+    GLTexture2D*    m_pLogoTex;
     GLSLProgram*    m_pProgram1DTrans[2];
     GLSLProgram*    m_pProgram2DTrans[2];
     GLSLProgram*    m_pProgramIso;

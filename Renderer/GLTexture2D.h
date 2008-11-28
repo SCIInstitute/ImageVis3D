@@ -41,6 +41,7 @@
 #define GLTEXTURE2D_H
 
 #include "GLTexture.h"
+#include <Basics/Vectors.h>
 
 class GLTexture2D : public GLTexture {
   public:
@@ -58,6 +59,8 @@ class GLTexture2D : public GLTexture {
 
     virtual UINT64 GetCPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}
     virtual UINT64 GetGPUSize() {return m_iSizeX*m_iSizeY*m_iSizePerElement/8;}
+
+    UINTVECTOR2 GetSize() {return UINTVECTOR2(m_iSizeX, m_iSizeY);}
 
   protected:
     GLuint m_iSizeX;

@@ -60,6 +60,9 @@ class GLTexture1D : public GLTexture {
     virtual UINT64 GetCPUSize() {return m_iSize*m_iSizePerElement/8;}
     virtual UINT64 GetGPUSize() {return m_iSize*m_iSizePerElement/8;} 
 
+    unsigned int GetSize() {return m_iSize;}
+
+
   protected:
     GLuint m_iSize;
     GLint  m_internalformat;

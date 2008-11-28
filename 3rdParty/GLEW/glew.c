@@ -31,10 +31,11 @@
 
 #include "glew.h"
 #if defined(_WIN32)
-#pragma warning(disable:4217)
-#  include "wglew.h"
+  #pragma warning(disable:4217)
+  #pragma warning(disable:4706)
+  #include "wglew.h"
 #elif !defined(__APPLE__) || defined(GLEW_APPLE_GLX)
-#  include "glxew.h"
+  #include "glxew.h"
 #endif
 
 /*

@@ -215,19 +215,9 @@ class AbstrRenderer {
     void SetLocalBBox(bool bRenderBBox);
     bool GetLocalBBox() {return m_bRenderLocalBBox;}
   
-    void Set2DFlipMode(EWindowMode eWindow, bool bFlipX, bool bFlipY) {
-      // flipping is only possible for 2D views
-      if (eWindow > WM_SAGITTAL) return;
-      m_bFlipView[size_t(eWindow)] = VECTOR2<bool>(bFlipX, bFlipY);
-      ScheduleWindowRedraw(eWindow);
-    }
-
-    void Get2DFlipMode(EWindowMode eWindow, bool& bFlipX, bool& bFlipY) {
-      // flipping is only possible for 2D views
-      if (eWindow > WM_SAGITTAL) return;
-      bFlipX = m_bFlipView[size_t(eWindow)].x;
-      bFlipY = m_bFlipView[size_t(eWindow)].y;
-    }
+    virtual void SetLogoParams(std::string strLogoFilename, int iLogoPos);
+    void Set2DFlipMode(EWindowMode eWindow, bool bFlipX, bool bFlipY);
+    void Get2DFlipMode(EWindowMode eWindow, bool& bFlipX, bool& bFlipY);
 
     // scheduling routines
     UINT64 GetCurrentSubFrameCount() {return 1+m_iMaxLODIndex-m_iMinLODForCurrentView;}
@@ -292,6 +282,8 @@ class AbstrRenderer {
     bool                m_bRenderGlobalBBox;
     bool                m_bRenderLocalBBox;
     UINTVECTOR2         m_vWinSize;
+    int                 m_iLogoPos;
+    std::string         m_strLogoFilename;
 
     unsigned int        m_iMinFramerate;
     unsigned int        m_iStartDelay;

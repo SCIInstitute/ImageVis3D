@@ -51,7 +51,7 @@ typedef unsigned int UINT32;
 #define UNUSED 0
 #define UNUSED_FLOAT 0.0f
 #define UNUSED_DOUBLE 0.0f
-#define IV3D_VERSION "0.01 alpha"
+#define IV3D_VERSION "0.02 beta"
 #define UINT32_INVALID (std::numeric_limits<UINT>::max())
 #define UINT64_INVALID (std::numeric_limits<UINT64>::max())
 

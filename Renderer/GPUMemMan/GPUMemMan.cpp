@@ -36,6 +36,8 @@
 
 #include "GPUMemMan.h"
 #include <QtGui/QImage>
+#include <QtOpenGL/QGLWidget>
+#include <QtGui/QImageReader>
 #include <Controller/MasterController.h>
 
 using namespace std;
@@ -179,22 +181,11 @@ GLTexture2D* GPUMemMan::Load2DTextureFromFile(const std::string& strFilename) {
     m_MasterController->DebugOut()->Error("GPUMemMan::Load2DTextureFromFile","Unable to load file %s", strFilename.c_str());
     return NULL;
   }
-  m_MasterController->DebugOut()->Message("GPUMemMan::Load2DTextureFromFile","Loading %s", strFilename.c_str());
+  m_MasterController->DebugOut()->Message("GPUMemMan::Load2DTextureFromFile","Loaded %s, now creating OpenGL resources ..", strFilename.c_str());
 
-  unsigned char* pData = new unsigned char[image.height()*image.width()*4];
-  unsigned char* pCurrentData = pData;
+  QImage glimage = QGLWidget::convertToGLFormat(image);
 
-  for (int y = 0;y<image.height();y++)
-    for (int x = 0;x<image.width();x++) {
-      QColor pixel(image.pixel(x,y));
-      (*pCurrentData++) = (unsigned char)pixel.red();
-      (*pCurrentData++) = (unsigned char)pixel.green();
-      (*pCurrentData++) = (unsigned char)pixel.blue();
-	  (*pCurrentData++) = (unsigned char)pixel.alpha();
-    }
-
-  GLTexture2D* tex = new GLTexture2D(image.width(),image.height(), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, 3*8, pData, GL_LINEAR, GL_LINEAR);
-  delete [] pData;
+  GLTexture2D* tex = new GLTexture2D(glimage.width(),glimage.height(), GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, 4*8, glimage.bits(), GL_LINEAR, GL_LINEAR);
 
   m_iAllocatedGPUMemory += tex->GetCPUSize();
   m_iAllocatedCPUMemory += tex->GetGPUSize();

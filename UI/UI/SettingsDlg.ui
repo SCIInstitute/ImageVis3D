@@ -9,7 +9,7 @@
     <x>0</x>
     <y>0</y>
     <width>358</width>
-    <height>474</height>
+    <height>497</height>
    </rect>
   </property>
   <property name="contextMenuPolicy" >
@@ -28,7 +28,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget" >
      <property name="currentIndex" >
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabMem" >
       <attribute name="title" >
@@ -729,60 +729,75 @@
          <property name="title" >
           <string>Logo</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_2" >
-          <item row="0" column="0" >
-           <widget class="QLabel" name="label_4" >
+         <layout class="QVBoxLayout" name="verticalLayout_9" >
+          <item>
+           <widget class="QLabel" name="label_LogoFile" >
             <property name="text" >
-             <string>Logo File</string>
+             <string>No Logo Selected</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1" >
-           <widget class="QPushButton" name="pushButtonSelLogo" >
-            <property name="text" >
-             <string>Select File</string>
+          <item>
+           <widget class="QFrame" name="frame_6" >
+            <property name="frameShape" >
+             <enum>QFrame::StyledPanel</enum>
             </property>
-           </widget>
-          </item>
-          <item row="0" column="2" >
-           <widget class="QPushButton" name="pushButtonNoLogo" >
-            <property name="text" >
-             <string>None</string>
+            <property name="frameShadow" >
+             <enum>QFrame::Raised</enum>
             </property>
-           </widget>
-          </item>
-          <item row="2" column="2" >
-           <widget class="QRadioButton" name="radioButton_4" >
-            <property name="text" >
-             <string>Top Right</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2" >
-           <widget class="QRadioButton" name="radioButton_2" >
-            <property name="text" >
-             <string>Bottom Right</string>
-            </property>
-            <property name="checked" >
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1" >
-           <widget class="QRadioButton" name="radioButton" >
-            <property name="text" >
-             <string>Top Left</string>
-            </property>
-            <property name="checked" >
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1" >
-           <widget class="QRadioButton" name="radioButton_3" >
-            <property name="text" >
-             <string>Bottom Left</string>
-            </property>
+            <layout class="QGridLayout" name="gridLayout_2" >
+             <property name="margin" >
+              <number>0</number>
+             </property>
+             <item row="0" column="0" >
+              <widget class="QPushButton" name="pushButtonSelLogo" >
+               <property name="text" >
+                <string>Select File</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0" >
+              <widget class="QPushButton" name="pushButtonNoLogo" >
+               <property name="text" >
+                <string>None</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" >
+              <widget class="QRadioButton" name="radioButton_logoTL" >
+               <property name="text" >
+                <string>Top Left</string>
+               </property>
+               <property name="checked" >
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1" >
+              <widget class="QRadioButton" name="radioButton_logoBL" >
+               <property name="text" >
+                <string>Bottom Left</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2" >
+              <widget class="QRadioButton" name="radioButton_logoTR" >
+               <property name="text" >
+                <string>Top Right</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2" >
+              <widget class="QRadioButton" name="radioButton_logoBR" >
+               <property name="text" >
+                <string>Bottom Right</string>
+               </property>
+               <property name="checked" >
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -852,7 +867,7 @@
      <y>65</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>305</x>
+     <x>292</x>
      <y>65</y>
     </hint>
    </hints>
@@ -868,8 +883,8 @@
      <y>107</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>305</x>
-     <y>108</y>
+     <x>292</x>
+     <y>90</y>
     </hint>
    </hints>
   </connection>
@@ -960,8 +975,8 @@
    <slot>LODDelayChanged()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>227</x>
-     <y>440</y>
+     <x>278</x>
+     <y>307</y>
     </hint>
     <hint type="destinationlabel" >
      <x>119</x>
@@ -976,8 +991,8 @@
    <slot>MinFramerateChanged()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>192</x>
-     <y>440</y>
+     <x>278</x>
+     <y>267</y>
     </hint>
     <hint type="destinationlabel" >
      <x>209</x>
@@ -992,8 +1007,8 @@
    <slot>ActTSChanged()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>203</x>
-     <y>440</y>
+     <x>278</x>
+     <y>347</y>
     </hint>
     <hint type="destinationlabel" >
      <x>160</x>
@@ -1008,8 +1023,8 @@
    <slot>InactTSChanged()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>191</x>
-     <y>440</y>
+     <x>278</x>
+     <y>387</y>
     </hint>
     <hint type="destinationlabel" >
      <x>11</x>
@@ -1056,7 +1071,7 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>192</x>
+     <x>258</x>
      <y>66</y>
     </hint>
     <hint type="destinationlabel" >
@@ -1097,6 +1112,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButtonNoLogo</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>RemoveLogo()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>75</x>
+     <y>399</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>26</x>
+     <y>439</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelLogo</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>SelectLogo()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>101</x>
+     <y>370</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>351</x>
+     <y>431</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>SelectBackColor1()</slot>
@@ -1109,5 +1156,7 @@
   <slot>ActTSChanged()</slot>
   <slot>InactTSChanged()</slot>
   <slot>WarnAPIMethodChange()</slot>
+  <slot>RemoveLogo()</slot>
+  <slot>SelectLogo()</slot>
  </slots>
 </ui>

@@ -83,6 +83,8 @@ class RenderWindow : public QGLWidget
     static const size_t               ms_iLockCount = 4;
     std::vector<RenderWindow*>        m_vpLocks[ms_iLockCount];
 
+    void SetLogoParams(QString strLogoFilename, int iLogoPos);
+
     void SetTranslationDelta(FLOATVECTOR3 trans, bool bPropagate);
     void SetRotationDelta(FLOATMATRIX4 rotDelta, bool bPropagate);
     void CloneViewState(RenderWindow* other);

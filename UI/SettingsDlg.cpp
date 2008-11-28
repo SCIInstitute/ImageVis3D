@@ -38,6 +38,12 @@
 #include "SettingsDlg.h"
 #include <QtGui/QColorDialog>
 #include <QtGui/QMessageBox>
+#include <Basics/SysTools.h>
+#include <QtGui/QFileDialog>
+#include <QtCore/QSettings>
+
+
+using namespace std;
 
 SettingsDlg::SettingsDlg(MasterController& MasterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
   QDialog(parent, flags),
@@ -98,6 +104,9 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
     horizontalSlider_CPUMem->setMaximum(iMaxCPUMemSize);
     horizontalSlider_CPUMem->setValue(iMaxCPUMemSize*0.8f);
   }
+
+  if (iBitWith == 32) 
+    horizontalSlider_CPUMem->setMaximum(min(horizontalSlider_CPUMem->maximum(), 2048));
 
   if (iMaxGPUMemSize == 0) {
     iMaxGPUMemSize = 4*1024;
@@ -233,7 +242,7 @@ void SettingsDlg::SetMaxMemCheck() {
     horizontalSlider_GPUMem->setValue(horizontalSlider_CPUMem->value());
   }
 
-  horizontalSlider_GPUMem->setMaximum(std::min<int> (horizontalSlider_CPUMem->value(),m_InitialGPUMemMax)  );
+  horizontalSlider_GPUMem->setMaximum(min<int>(horizontalSlider_CPUMem->value(),m_InitialGPUMemMax)  );
 }
 
 void SettingsDlg::LODDelayChanged() {
@@ -256,11 +265,24 @@ void SettingsDlg::InactTSChanged() {
   label_InactTSDisplay->setText(text);
 }
 
+
+void SettingsDlg::SetLogoLabel() {
+  if (m_strLogoFilename.isEmpty()) {
+    label_LogoFile->setText("No logo selected");
+  } else {
+    if (SysTools::FileExists(string(m_strLogoFilename.toAscii())) ) {
+      label_LogoFile->setText(m_strLogoFilename);
+    } else {
+      label_LogoFile->setText(m_strLogoFilename + " [File not found]");
+    }
+  }
+}
+
 void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
                             bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
                             bool bAutoSaveGEO, bool bAutoSaveWSP,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, 
-                            const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor) {
+                            const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
     horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
     horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
@@ -293,11 +315,24 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
       case 3    : radioButton_APIDX->setChecked(true); 
                   radioButton_Raycast->setChecked(true);
                   break;
-      case 0    : 
       default   : radioButton_APIGL->setChecked(true); 
                   radioButton_SBVR->setChecked(true);
                   break;
     }
+
+    switch (iLogoPos) {
+      case 0    : radioButton_logoTL->setChecked(true); 
+                  break;
+      case 1    : radioButton_logoTR->setChecked(true); 
+                  break;
+      case 2    : radioButton_logoBL->setChecked(true); 
+                  break;
+      default   : radioButton_logoBR->setChecked(true); 
+                  break;
+    }
+
+    m_strLogoFilename = strLogo.toAscii();
+    SetLogoLabel();
 
     checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
     
@@ -345,4 +380,42 @@ unsigned int SettingsDlg::GetVolrenType() const {
 
 bool SettingsDlg::GetUseOnlyPowerOfTwo() const {
   return checkBox_PowerOfTwo->isChecked();
+}
+
+QString SettingsDlg::GetLogoFilename() const {
+  return m_strLogoFilename;
+}
+
+int SettingsDlg::GetLogoPos() const {
+  if (radioButton_logoTL->isChecked()) return 0;
+  if (radioButton_logoTR->isChecked()) return 1;
+  if (radioButton_logoBL->isChecked()) return 2;
+  return 3;
+}
+
+void SettingsDlg::SelectLogo() {
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/LogoLoad", ".").toString();
+
+  QString fileName =
+    QFileDialog::getOpenFileName(this, "Select Logo", strLastDir,
+				 "All Files (*.*)");
+
+  if (!fileName.isEmpty()) {
+
+    QDir qdir(QDir::current());
+    QString strRelFilename = qdir.relativeFilePath(fileName);
+
+    if (!strRelFilename.contains("..")) fileName = strRelFilename;
+
+    settings.setValue("Folders/LogoLoad", QFileInfo(fileName).absoluteDir().path());
+    m_strLogoFilename = fileName;
+  }
+
+  SetLogoLabel();
+}
+
+void SettingsDlg::RemoveLogo() {
+  m_strLogoFilename = "";
+  SetLogoLabel();  
 }

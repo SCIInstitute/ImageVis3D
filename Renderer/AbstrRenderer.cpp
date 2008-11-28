@@ -57,6 +57,8 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController, bool bUseOnlyP
   m_bRenderGlobalBBox(false),
   m_bRenderLocalBBox(false),
   m_vWinSize(0,0),
+  m_iLogoPos(3),
+  m_strLogoFilename(""),
   m_iMinFramerate(10),
   m_iStartDelay(1000),
   m_iMinLODForCurrentView(0),
@@ -569,5 +571,23 @@ void AbstrRenderer::SetCVFocusPos(FLOATVECTOR2 vPos) {
     if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) 
       ScheduleRecompose();
   }
+}
 
+void AbstrRenderer::SetLogoParams(string strLogoFilename, int iLogoPos) {
+  m_strLogoFilename = strLogoFilename;
+  m_iLogoPos        = iLogoPos;
+}
+
+void AbstrRenderer::Set2DFlipMode(EWindowMode eWindow, bool bFlipX, bool bFlipY) {
+  // flipping is only possible for 2D views
+  if (eWindow > WM_SAGITTAL) return;
+  m_bFlipView[size_t(eWindow)] = VECTOR2<bool>(bFlipX, bFlipY);
+  ScheduleWindowRedraw(eWindow);
+}
+
+void AbstrRenderer::Get2DFlipMode(EWindowMode eWindow, bool& bFlipX, bool& bFlipY) {
+  // flipping is only possible for 2D views
+  if (eWindow > WM_SAGITTAL) return;
+  bFlipX = m_bFlipView[size_t(eWindow)].x;
+  bFlipY = m_bFlipView[size_t(eWindow)].y;
 }

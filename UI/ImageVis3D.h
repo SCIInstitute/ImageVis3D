@@ -181,6 +181,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     bool                                      m_bAutoSaveWSP;
     MasterController::EVolumeRendererType     m_eVolumeRendererType;
     bool                                      m_bUpdatingLockView;
+    QString                                   m_strLogoFilename;
+    int                                       m_iLogoPos;
 
     RenderWindow* CreateNewRenderWindow(QString dataset);
     bool CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow=true);
@@ -209,7 +211,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
       
     void LoadDataset(QString fileName);
 
-    QString strippedName(const QString &fullFileName);
     QString GetConvFilename();
 
     void InitAllWorkspaces();
@@ -217,6 +218,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     bool ParseCommand(std::string strCommand, std::string strParam);
     void CheckSettings();
     void ApplySettings();
+    void ApplySettings(RenderWindow* renderWin);
     void SetSampleRateSlider(int iValue);
     void UpdateSampleRateLabel(int iValue);
     void SetIsoValueSlider(int iValue, int iMaxValue);

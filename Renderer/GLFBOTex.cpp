@@ -39,6 +39,13 @@
 #include "GLFBOTex.h"
 #include <Controller/MasterController.h>
 
+#ifdef WIN32
+  #ifndef DEBUG
+    #pragma warning( disable : 4189 ) // disable unused var warning
+  #endif
+#endif
+
+
 GLuint	GLFBOTex::m_hFBO = 0;
 int		GLFBOTex::m_iCount = 0;
 bool	GLFBOTex::m_bInitialized = true;

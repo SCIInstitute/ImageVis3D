@@ -104,10 +104,17 @@ bool MainWindow::ShowSettings() {
                               settings.value("TextG", 1.0f).toULongLong(),
                               settings.value("TextB", 1.0f).toULongLong(),
                               settings.value("TextA", 1.0f).toULongLong());
+
+      QString strLogoFilename = settings.value("LogoFilename", m_strLogoFilename).toString();
+      int iLogoPos            = settings.value("LogoPosition", m_iLogoPos).toInt();
       settings.endGroup();
 
       // hand data to form
-      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS, bAutoSaveGEO, bAutoSaveWSP, iVolRenType, iBlendPrecisionMode, bPowerOfTwo, vBackColor1, vBackColor2, vTextColor);
+      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, 
+                            bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS, 
+                            bAutoSaveGEO, bAutoSaveWSP, 
+                            iVolRenType, iBlendPrecisionMode, bPowerOfTwo, 
+                            vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
     }
 
     if (settingsDlg.exec() == QDialog::Accepted) {
@@ -145,6 +152,9 @@ bool MainWindow::ShowSettings() {
       settings.setValue("TextG", settingsDlg.GetTextColor().y);
       settings.setValue("TextB", settingsDlg.GetTextColor().z);
       settings.setValue("TextA", settingsDlg.GetTextColor().w);
+      settings.setValue("LogoFilename", settingsDlg.GetLogoFilename());
+      settings.setValue("LogoPosition", settingsDlg.GetLogoPos());
+
       settings.endGroup();
 
       ApplySettings();
@@ -153,57 +163,68 @@ bool MainWindow::ShowSettings() {
 
 }
 
-
 void MainWindow::ApplySettings() {
-    QSettings settings;
+  QSettings settings;
 
-    settings.beginGroup("Memory");
-    UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
-    UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
-    settings.endGroup();
+  // Read settings 
+  settings.beginGroup("Performance");
+  m_bQuickopen    = settings.value("Quickopen", m_bQuickopen).toBool();
+  m_iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
+  m_iLODDelay     = settings.value("LODDelay", m_iLODDelay).toUInt();
+  m_iActiveTS     = settings.value("ActiveTS", m_iActiveTS).toUInt();
+  m_iInactiveTS   = settings.value("InactiveTS", m_iInactiveTS).toUInt();
+  settings.endGroup();
 
-    settings.beginGroup("Performance");
-    m_bQuickopen    = settings.value("Quickopen", m_bQuickopen).toBool();
-    m_iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
-    m_iLODDelay     = settings.value("LODDelay", m_iLODDelay).toUInt();
-    m_iActiveTS     = settings.value("ActiveTS", m_iActiveTS).toUInt();
-    m_iInactiveTS   = settings.value("InactiveTS", m_iInactiveTS).toUInt();
-    settings.endGroup();
+  settings.beginGroup("UI");
+  m_bAutoSaveGEO = settings.value("AutoSaveGEO", m_bAutoSaveGEO).toBool();
+  m_bAutoSaveWSP = settings.value("AutoSaveWSP", m_bAutoSaveWSP).toBool();
+  settings.endGroup();
 
-    settings.beginGroup("UI");
-    m_bAutoSaveGEO = settings.value("AutoSaveGEO", m_bAutoSaveGEO).toBool();
-    m_bAutoSaveWSP = settings.value("AutoSaveWSP", m_bAutoSaveWSP).toBool();
-    settings.endGroup();
+  settings.beginGroup("Renderer");
+  m_eVolumeRendererType = (MasterController::EVolumeRendererType)settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
+  m_iBlendPrecisionMode = settings.value("BlendPrecisionMode", m_iBlendPrecisionMode).toUInt();
+  m_bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
 
-    settings.beginGroup("Renderer");
-    m_eVolumeRendererType = (MasterController::EVolumeRendererType)settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
-    m_iBlendPrecisionMode = settings.value("BlendPrecisionMode", m_iBlendPrecisionMode).toUInt();
-    m_bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
+  m_vBackgroundColors[0] = FLOATVECTOR3(settings.value("Background1R", 0.0f).toULongLong(),
+                          settings.value("Background1G", 0.0f).toULongLong(),
+                          settings.value("Background1B", 0.0f).toULongLong());
 
-    m_vBackgroundColors[0] = FLOATVECTOR3(settings.value("Background1R", 0.0f).toULongLong(),
-                            settings.value("Background1G", 0.0f).toULongLong(),
-                            settings.value("Background1B", 0.0f).toULongLong());
+  m_vBackgroundColors[1] = FLOATVECTOR3(settings.value("Background2R", 0.0f).toULongLong(),
+                          settings.value("Background2G", 0.0f).toULongLong(),
+                          settings.value("Background2B", 0.0f).toULongLong());
 
-    m_vBackgroundColors[1] = FLOATVECTOR3(settings.value("Background2R", 0.0f).toULongLong(),
-                            settings.value("Background2G", 0.0f).toULongLong(),
-                            settings.value("Background2B", 0.0f).toULongLong());
+  m_vTextColor = FLOATVECTOR4(settings.value("TextR", 1.0f).toULongLong(),
+                          settings.value("TextG", 1.0f).toULongLong(),
+                          settings.value("TextB", 1.0f).toULongLong(),
+                          settings.value("TextA", 1.0f).toULongLong());
+  m_strLogoFilename = settings.value("LogoFilename", m_strLogoFilename).toString();
+  m_iLogoPos        = settings.value("LogoPosition", m_iLogoPos).toInt();
 
-    m_vTextColor = FLOATVECTOR4(settings.value("TextR", 1.0f).toULongLong(),
-                            settings.value("TextG", 1.0f).toULongLong(),
-                            settings.value("TextB", 1.0f).toULongLong(),
-                            settings.value("TextA", 1.0f).toULongLong());
-    settings.endGroup();
+  settings.endGroup();
 
-    for (int i = 0;i<mdiArea->subWindowList().size();i++) {
-      QWidget* w = mdiArea->subWindowList().at(i)->widget();
-      RenderWindow* renderWin = qobject_cast<RenderWindow*>(w);
-      renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
-      renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
-      renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/10, m_iActiveTS, m_iInactiveTS);
-    }
+  settings.beginGroup("Memory");
+  UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+  UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
+  settings.endGroup();
 
-    m_MasterController.SysInfo()->SetMaxUsableCPUMem(iMaxCPU);
-    m_MasterController.SysInfo()->SetMaxUsableGPUMem(iMaxGPU);
-    m_MasterController.MemMan()->MemSizesChanged();
+  // Apply window settings
+  for (int i = 0;i<mdiArea->subWindowList().size();i++) {
+    QWidget* w = mdiArea->subWindowList().at(i)->widget();
+    ApplySettings(qobject_cast<RenderWindow*>(w));
+  }
 
+  // Apply global settings
+
+  m_MasterController.SysInfo()->SetMaxUsableCPUMem(iMaxCPU);
+  m_MasterController.SysInfo()->SetMaxUsableGPUMem(iMaxGPU);
+  m_MasterController.MemMan()->MemSizesChanged();
+}
+
+void MainWindow::ApplySettings(RenderWindow* renderWin) {
+  QSettings settings;
+
+  renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
+  renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
+  renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/10, m_iActiveTS, m_iInactiveTS);
+  renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
 }
