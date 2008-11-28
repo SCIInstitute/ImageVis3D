@@ -434,8 +434,21 @@ vector<Brick> AbstrRenderer::BuildFrameBrickList() {
             }
 
 
-            /// \todo change this to a more accurate distance compuation
-            b.fDistance = (FLOATVECTOR4(b.vCenter,1.0f)*m_matModelView).xyz().length();
+            /// compute minimum distance to brick corners (offset slightly to the center to resolve ambiguities) 
+            b.fDistance = numeric_limits<float>::max();
+            float fEpsilon = 0.499999f;
+            FLOATVECTOR3 vEpsilonEdges[8] = {b.vCenter+FLOATVECTOR3(-b.vExtension.x, -b.vExtension.y, -b.vExtension.z)* fEpsilon, 
+                                             b.vCenter+FLOATVECTOR3(-b.vExtension.x, -b.vExtension.y, +b.vExtension.z)* fEpsilon, 
+                                             b.vCenter+FLOATVECTOR3(-b.vExtension.x, +b.vExtension.y, -b.vExtension.z)* fEpsilon, 
+                                             b.vCenter+FLOATVECTOR3(-b.vExtension.x, +b.vExtension.y, +b.vExtension.z)* fEpsilon, 
+                                             b.vCenter+FLOATVECTOR3(+b.vExtension.x, -b.vExtension.y, -b.vExtension.z)* fEpsilon, 
+                                             b.vCenter+FLOATVECTOR3(+b.vExtension.x, -b.vExtension.y, +b.vExtension.z)* fEpsilon, 
+                                             b.vCenter+FLOATVECTOR3(+b.vExtension.x, +b.vExtension.y, -b.vExtension.z)* fEpsilon, 
+                                             b.vCenter+FLOATVECTOR3(+b.vExtension.x, +b.vExtension.y, +b.vExtension.z)* fEpsilon};
+      
+            for (size_t i = 0;i<8;i++) {
+              b.fDistance = min(b.fDistance,(FLOATVECTOR4(vEpsilonEdges[i],1.0f)*m_matModelView).xyz().length());
+            }
 
             // add the brick to the list of active bricks
             vBrickList.push_back(b);
