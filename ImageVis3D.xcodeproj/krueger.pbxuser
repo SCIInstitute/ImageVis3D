@@ -33,10 +33,10 @@
 	};
 	14C6B3600AF482B4B106D697 /* ImageVis3D_WindowHandling.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1859, 8246}}";
-			sepNavSelRange = "{10911, 0}";
-			sepNavVisRange = "{10325, 979}";
-			sepNavWindowFrame = "{{38, 174}, {1739, 978}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1680, 9772}}";
+			sepNavSelRange = "{21878, 0}";
+			sepNavVisRange = "{20759, 1595}";
+			sepNavWindowFrame = "{{95, 110}, {1739, 978}}";
 		};
 	};
 	1AFF5E40DBA2AB863E40B0E0 /* Transferfunction1D.h */ = {
@@ -50,7 +50,7 @@
 	1D830425BF351FAA1C7C054A /* ImageVis3D */ = {
 		activeExec = 0;
 		executables = (
-			568C8B1A0EDD08A50033278C /* ImageVis3D */,
+			568C8BAB0EDF6E530033278C /* ImageVis3D */,
 		);
 	};
 	2D35139F03183DA58A907984 /* RenderWindow.cpp */ = {
@@ -85,9 +85,10 @@
 	};
 	42C4A4D153B2B116249852FE /* ImageVis3D.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1859, 4662}}";
-			sepNavSelRange = "{8983, 61}";
-			sepNavVisRange = "{7862, 1421}";
+			sepNavIntBoundsRect = "{{0, 0}, {1680, 5824}}";
+			sepNavSelRange = "{3017, 16}";
+			sepNavVisRange = "{2158, 1688}";
+			sepNavWindowFrame = "{{44, 42}, {1739, 978}}";
 		};
 	};
 	4662D990210813C8B0FED48F /* GLObject.h */ = {
@@ -173,19 +174,20 @@
 		modificationTime = 248809913.64925;
 		state = 2;
 	};
-	568C8B1A0EDD08A50033278C /* ImageVis3D */ = {
+	568C8BAB0EDF6E530033278C /* ImageVis3D */ = {
 		isa = PBXExecutable;
 		activeArgIndices = (
 		);
 		argumentStrings = (
 		);
 		autoAttachOnCrash = 1;
-		breakpointsEnabled = 1;
+		breakpointsEnabled = 0;
 		configStateDict = {
 		};
 		customDataFormattersEnabled = 1;
 		debuggerPlugin = GDBDebugging;
 		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
 		enableDebugStr = 1;
 		environmentEntries = (
 		);
@@ -195,6 +197,40 @@
 		name = ImageVis3D;
 		sourceDirectories = (
 		);
+	};
+	568C8BB80EDF6E9C0033278C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "warning: comparison between signed and unsigned integer expressions";
+		fRef = 14C6B3600AF482B4B106D697 /* ImageVis3D_WindowHandling.cpp */;
+		rLen = 1;
+		rLoc = 354;
+		rType = 1;
+	};
+	568C8BB90EDF6E9C0033278C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 14C6B3600AF482B4B106D697 /* ImageVis3D_WindowHandling.cpp */;
+		name = "ImageVis3D_WindowHandling.cpp: 355";
+		rLen = 96;
+		rLoc = 11898;
+		rType = 0;
+		vrLen = 1959;
+		vrLoc = 11215;
+	};
+	568C8BF40EDF72310033278C /* ImageVis3D_WindowHandling.cpp:638 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 14C6B3600AF482B4B106D697 /* ImageVis3D_WindowHandling.cpp */;
+		functionName = "MainWindow::UpdateMRUActions()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 638;
+		modificationTime = 249524805.602768;
+		state = 2;
 	};
 	56FBC5720E26914A0095419D /* Source Control */ = {
 		isa = PBXSourceControlManager;
@@ -247,8 +283,8 @@
 	};
 	91B15E841AA80083484172DE /* Project object */ = {
 		activeArchitecture = i386;
-		activeBuildConfigurationName = Release;
-		activeExecutable = 568C8B1A0EDD08A50033278C /* ImageVis3D */;
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 568C8BAB0EDF6E530033278C /* ImageVis3D */;
 		activeTarget = 1D830425BF351FAA1C7C054A /* ImageVis3D */;
 		addToTargets = (
 			1D830425BF351FAA1C7C054A /* ImageVis3D */,
@@ -258,10 +294,11 @@
 			5626458F0ED487CE00E30742 /* GLRenderer.cpp:89 */,
 			562645910ED487D000E30742 /* GLRenderer.cpp:70 */,
 			5626459C0ED4885300E30742 /* ImageVis3D_WindowHandling.cpp:333 */,
+			568C8BF40EDF72310033278C /* ImageVis3D_WindowHandling.cpp:638 */,
 		);
 		codeSenseManager = 56FBC5730E26914A0095419D /* Code sense */;
 		executables = (
-			568C8B1A0EDD08A50033278C /* ImageVis3D */,
+			568C8BAB0EDF6E530033278C /* ImageVis3D */,
 		);
 		perUserDictionary = {
 			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA1AED706398EBD00589147" = {
@@ -338,6 +375,22 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXSymbolsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXSymbolsDataSource_SymbolNameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					16,
+					200,
+					50,
+					894.20849609375,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXSymbolsDataSource_SymbolTypeIconID,
+					PBXSymbolsDataSource_SymbolNameID,
+					PBXSymbolsDataSource_SymbolTypeID,
+					PBXSymbolsDataSource_ReferenceNameID,
+				);
+			};
 			PBXConfiguration.PBXFileTableDataSource3.XCSCMDataSource = {
 				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
@@ -384,8 +437,12 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 249366693;
-			PBXWorkspaceStateSaveDate = 249366693;
+			PBXPerProjectTemplateStateSaveDate = 249523795;
+			PBXWorkspaceStateSaveDate = 249523795;
+		};
+		perUserProjectItems = {
+			568C8BB80EDF6E9C0033278C /* PBXTextBookmark */ = 568C8BB80EDF6E9C0033278C /* PBXTextBookmark */;
+			568C8BB90EDF6E9C0033278C /* PBXTextBookmark */ = 568C8BB90EDF6E9C0033278C /* PBXTextBookmark */;
 		};
 		sourceControlManager = 56FBC5720E26914A0095419D /* Source Control */;
 		userBuildSettings = {

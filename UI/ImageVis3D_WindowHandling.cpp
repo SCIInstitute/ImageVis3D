@@ -636,7 +636,7 @@ QString MainWindow::strippedName(const QString &fullFileName)
 void MainWindow::UpdateMRUActions()
 {
   QSettings settings;
-  QStringList files = settings.value("menu/MRU").toStringList();
+  QStringList files = settings.value("Menu/MRU").toStringList();
 
   int numRecentFiles = qMin(files.size(), (int)ms_iMaxRecentFiles);
 

@@ -36,7 +36,27 @@
 		5187820FB299C26E5477D662 /* GLTexture1D.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = D2F466B18F96F398C2977D64 /* GLTexture1D.cpp */; settings = {ATTRIBUTES = (); }; };
 		51D4DBF7CB8537BE86EBD055 /* AppKit.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = 821416211D63F190AAAD016A /* AppKit.framework */; };
 		534C51AB117993C3AD373D2A /* QTransferFunction.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = A0A5FC70F6192DC22F6653E9 /* QTransferFunction.cpp */; settings = {ATTRIBUTES = (); }; };
-		568C8B1B0EDD08A50033278C /* ImageVis3D.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 568C8B180EDD08A50033278C /* ImageVis3D.app */; };
+		568C8BAC0EDF6E530033278C /* ImageVis3D.app in Project Copy */ = {isa = PBXBuildFile; fileRef = 568C8BA90EDF6E530033278C /* ImageVis3D.app */; };
+		568C8BDB0EDF6EFF0033278C /* 1D-slice-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BC70EDF6EFF0033278C /* 1D-slice-FS.glsl */; };
+		568C8BDC0EDF6EFF0033278C /* 2D-slice-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BC80EDF6EFF0033278C /* 2D-slice-FS.glsl */; };
+		568C8BDD0EDF6EFF0033278C /* GLRaycaster-1D-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BC90EDF6EFF0033278C /* GLRaycaster-1D-FS.glsl */; };
+		568C8BDE0EDF6EFF0033278C /* GLRaycaster-1D-light-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BCA0EDF6EFF0033278C /* GLRaycaster-1D-light-FS.glsl */; };
+		568C8BDF0EDF6EFF0033278C /* GLRaycaster-2D-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BCB0EDF6EFF0033278C /* GLRaycaster-2D-FS.glsl */; };
+		568C8BE00EDF6EFF0033278C /* GLRaycaster-2D-light-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BCC0EDF6EFF0033278C /* GLRaycaster-2D-light-FS.glsl */; };
+		568C8BE10EDF6EFF0033278C /* GLRaycaster-compose-CV-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BCD0EDF6EFF0033278C /* GLRaycaster-compose-CV-FS.glsl */; };
+		568C8BE20EDF6EFF0033278C /* GLRaycaster-compose-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BCE0EDF6EFF0033278C /* GLRaycaster-compose-FS.glsl */; };
+		568C8BE30EDF6EFF0033278C /* GLRaycaster-frontfaces-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BCF0EDF6EFF0033278C /* GLRaycaster-frontfaces-FS.glsl */; };
+		568C8BE40EDF6EFF0033278C /* GLRaycaster-ISO-CV-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BD00EDF6EFF0033278C /* GLRaycaster-ISO-CV-FS.glsl */; };
+		568C8BE50EDF6EFF0033278C /* GLRaycaster-ISO-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BD10EDF6EFF0033278C /* GLRaycaster-ISO-FS.glsl */; };
+		568C8BE60EDF6EFF0033278C /* GLRaycaster-VS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BD20EDF6EFF0033278C /* GLRaycaster-VS.glsl */; };
+		568C8BE70EDF6EFF0033278C /* GPUSBVR-1D-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BD30EDF6EFF0033278C /* GPUSBVR-1D-FS.glsl */; };
+		568C8BE80EDF6EFF0033278C /* GPUSBVR-1D-light-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BD40EDF6EFF0033278C /* GPUSBVR-1D-light-FS.glsl */; };
+		568C8BE90EDF6EFF0033278C /* GPUSBVR-2D-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BD50EDF6EFF0033278C /* GPUSBVR-2D-FS.glsl */; };
+		568C8BEA0EDF6EFF0033278C /* GPUSBVR-2D-light-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BD60EDF6EFF0033278C /* GPUSBVR-2D-light-FS.glsl */; };
+		568C8BEB0EDF6EFF0033278C /* GPUSBVR-ISO-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BD70EDF6EFF0033278C /* GPUSBVR-ISO-FS.glsl */; };
+		568C8BEC0EDF6EFF0033278C /* GPUSBVR-VS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BD80EDF6EFF0033278C /* GPUSBVR-VS.glsl */; };
+		568C8BED0EDF6EFF0033278C /* Transfer-FS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BD90EDF6EFF0033278C /* Transfer-FS.glsl */; };
+		568C8BEE0EDF6EFF0033278C /* Transfer-VS.glsl in Bundle Resources */ = {isa = PBXBuildFile; fileRef = 568C8BDA0EDF6EFF0033278C /* Transfer-VS.glsl */; };
 		58DC7FC5A53A82BA121CBD41 /* ImageVis3D_WindowHandling.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 14C6B3600AF482B4B106D697 /* ImageVis3D_WindowHandling.cpp */; settings = {ATTRIBUTES = (); }; };
 		6078053DD5EF512AF811C511 /* moc_BrowseData.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 9E1E82F691A084D7A3931FC2 /* moc_BrowseData.cpp */; settings = {ATTRIBUTES = (); }; };
 		63BB7BAC53ED344642482534 /* QTOut.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = FB0B293620834E59430642CA /* QTOut.cpp */; settings = {ATTRIBUTES = (); }; };
@@ -71,6 +91,7 @@
 		C1CE207A9D3A3B10A3EA966D /* moc_RenderWindow.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 40C0DA1B4335F681242D4183 /* moc_RenderWindow.cpp */; settings = {ATTRIBUTES = (); }; };
 		C8FD4A1AAA37CF2CA2824CCF /* Carbon.framework in Frameworks & Libraries */ = {isa = PBXBuildFile; fileRef = DA138F75C9F545CDAE7FB264 /* Carbon.framework */; };
 		CAA8FA63CBB88EE3FE20EB5F /* SettingsDlg.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 918AAF30FE9F429450DD7331 /* SettingsDlg.cpp */; settings = {ATTRIBUTES = (); }; };
+		CEF217857A7A9B2D10B0CE4E /* ImageVis3D_Locking.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 37256F6EBCDA2965BFD2C477 /* ImageVis3D_Locking.cpp */; settings = {ATTRIBUTES = (); }; };
 		D17946D91B5A7AD03703D4F2 /* GPUMemManDataStructs.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = BFE3AF24B5BCE047EA1D751B /* GPUMemManDataStructs.cpp */; settings = {ATTRIBUTES = (); }; };
 		DC04348B886A7D2A2896752F /* VolumeDataset.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = C457F29B59D7E094F5065BDC /* VolumeDataset.cpp */; settings = {ATTRIBUTES = (); }; };
 		DC59377F9BD55CE23CA7C0BB /* GLTexture2D.cpp in Build Sources */ = {isa = PBXBuildFile; fileRef = 69BB139B7EAA186012AE4B27 /* GLTexture2D.cpp */; settings = {ATTRIBUTES = (); }; };
@@ -96,7 +117,7 @@
 			dstPath = /Users/krueger/Documents/Projects/ImageVis3D/Build/OSX/Bin;
 			dstSubfolderSpec = 0;
 			files = (
-				568C8B1B0EDD08A50033278C /* ImageVis3D.app in Project Copy */,
+				568C8BAC0EDF6E530033278C /* ImageVis3D.app in Project Copy */,
 			);
 			name = "Project Copy";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -133,6 +154,7 @@
 		32387813571BC286F89FB00F /* GLRaycaster.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GLRaycaster.cpp; path = Renderer/GLRaycaster.cpp; sourceTree = "<group>"; };
 		351CD9FB2D3C5C85B496A430 /* UVFBasic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UVFBasic.h; path = IO/UVF/UVFBasic.h; sourceTree = "<group>"; };
 		35EEAD83B47D913489333138 /* MasterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MasterController.h; path = Controller/MasterController.h; sourceTree = "<group>"; };
+		37256F6EBCDA2965BFD2C477 /* ImageVis3D_Locking.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ImageVis3D_Locking.cpp; path = UI/ImageVis3D_Locking.cpp; sourceTree = "<group>"; };
 		39F8E48ABF1DFC3D74406FCE /* UVF.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UVF.cpp; path = IO/UVF/UVF.cpp; sourceTree = "<group>"; };
 		3A9AEE976CABFD5A154FCBFF /* MathTools.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MathTools.cpp; path = Basics/MathTools.cpp; sourceTree = "<group>"; };
 		3C369E9B35CA998E6753D9D1 /* TextfileOut.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TextfileOut.cpp; path = DebugOut/TextfileOut.cpp; sourceTree = "<group>"; };
@@ -151,7 +173,27 @@
 		4F39292F119643BE52630A4B /* UVF.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UVF.h; path = IO/UVF/UVF.h; sourceTree = "<group>"; };
 		4F5DE0355A7601CFCC203133 /* GLTexture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GLTexture.h; path = Renderer/GLTexture.h; sourceTree = "<group>"; };
 		517345D954671A2FD0A1C64C /* GLTexture3D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GLTexture3D.cpp; path = Renderer/GLTexture3D.cpp; sourceTree = "<group>"; };
-		568C8B180EDD08A50033278C /* ImageVis3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageVis3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		568C8BA90EDF6E530033278C /* ImageVis3D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageVis3D.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		568C8BC70EDF6EFF0033278C /* 1D-slice-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "1D-slice-FS.glsl"; sourceTree = "<group>"; };
+		568C8BC80EDF6EFF0033278C /* 2D-slice-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "2D-slice-FS.glsl"; sourceTree = "<group>"; };
+		568C8BC90EDF6EFF0033278C /* GLRaycaster-1D-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GLRaycaster-1D-FS.glsl"; sourceTree = "<group>"; };
+		568C8BCA0EDF6EFF0033278C /* GLRaycaster-1D-light-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GLRaycaster-1D-light-FS.glsl"; sourceTree = "<group>"; };
+		568C8BCB0EDF6EFF0033278C /* GLRaycaster-2D-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GLRaycaster-2D-FS.glsl"; sourceTree = "<group>"; };
+		568C8BCC0EDF6EFF0033278C /* GLRaycaster-2D-light-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GLRaycaster-2D-light-FS.glsl"; sourceTree = "<group>"; };
+		568C8BCD0EDF6EFF0033278C /* GLRaycaster-compose-CV-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GLRaycaster-compose-CV-FS.glsl"; sourceTree = "<group>"; };
+		568C8BCE0EDF6EFF0033278C /* GLRaycaster-compose-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GLRaycaster-compose-FS.glsl"; sourceTree = "<group>"; };
+		568C8BCF0EDF6EFF0033278C /* GLRaycaster-frontfaces-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GLRaycaster-frontfaces-FS.glsl"; sourceTree = "<group>"; };
+		568C8BD00EDF6EFF0033278C /* GLRaycaster-ISO-CV-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GLRaycaster-ISO-CV-FS.glsl"; sourceTree = "<group>"; };
+		568C8BD10EDF6EFF0033278C /* GLRaycaster-ISO-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GLRaycaster-ISO-FS.glsl"; sourceTree = "<group>"; };
+		568C8BD20EDF6EFF0033278C /* GLRaycaster-VS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GLRaycaster-VS.glsl"; sourceTree = "<group>"; };
+		568C8BD30EDF6EFF0033278C /* GPUSBVR-1D-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GPUSBVR-1D-FS.glsl"; sourceTree = "<group>"; };
+		568C8BD40EDF6EFF0033278C /* GPUSBVR-1D-light-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GPUSBVR-1D-light-FS.glsl"; sourceTree = "<group>"; };
+		568C8BD50EDF6EFF0033278C /* GPUSBVR-2D-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GPUSBVR-2D-FS.glsl"; sourceTree = "<group>"; };
+		568C8BD60EDF6EFF0033278C /* GPUSBVR-2D-light-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GPUSBVR-2D-light-FS.glsl"; sourceTree = "<group>"; };
+		568C8BD70EDF6EFF0033278C /* GPUSBVR-ISO-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GPUSBVR-ISO-FS.glsl"; sourceTree = "<group>"; };
+		568C8BD80EDF6EFF0033278C /* GPUSBVR-VS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "GPUSBVR-VS.glsl"; sourceTree = "<group>"; };
+		568C8BD90EDF6EFF0033278C /* Transfer-FS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Transfer-FS.glsl"; sourceTree = "<group>"; };
+		568C8BDA0EDF6EFF0033278C /* Transfer-VS.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Transfer-VS.glsl"; sourceTree = "<group>"; };
 		56E68DDC07EE3E157D77EF94 /* glew.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = glew.h; path = 3rdParty/GLEW/glew.h; sourceTree = "<group>"; };
 		57642517CD31AA70C457172E /* Q1DTransferFunction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Q1DTransferFunction.cpp; path = UI/Q1DTransferFunction.cpp; sourceTree = "<group>"; };
 		5AC0772431568BACAD4559FF /* Histogram2DDataBlock.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Histogram2DDataBlock.cpp; path = IO/UVF/Histogram2DDataBlock.cpp; sourceTree = "<group>"; };
@@ -288,13 +330,14 @@
 		05596AB53D8D521C69802C27 /* ImageVis3D */ = {
 			isa = PBXGroup;
 			children = (
+				568C8BC60EDF6EFF0033278C /* Shaders */,
 				FB61758D0F0FDA4BA867C3D5 /* Sources */,
 				46E892BBB6BB6952967E0561 /* Temporary Sources */,
 				883D7615C4D2DE3FA1218F12 /* Headers */,
 				7CABE3C80E79AD2B307756D2 /* Sources [qmake] */,
 				EEC299C65D5017EB9DD513B0 /* Sources [UIC] */,
 				ED1E82605DD74B483AF3C982 /* External Frameworks and Libraries */,
-				568C8B190EDD08A50033278C /* Products */,
+				568C8BAA0EDF6E530033278C /* Products */,
 			);
 			name = ImageVis3D;
 			sourceTree = "<group>";
@@ -383,12 +426,39 @@
 			name = IO;
 			sourceTree = "<group>";
 		};
-		568C8B190EDD08A50033278C /* Products */ = {
+		568C8BAA0EDF6E530033278C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				568C8B180EDD08A50033278C /* ImageVis3D.app */,
+				568C8BA90EDF6E530033278C /* ImageVis3D.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		568C8BC60EDF6EFF0033278C /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				568C8BC70EDF6EFF0033278C /* 1D-slice-FS.glsl */,
+				568C8BC80EDF6EFF0033278C /* 2D-slice-FS.glsl */,
+				568C8BC90EDF6EFF0033278C /* GLRaycaster-1D-FS.glsl */,
+				568C8BCA0EDF6EFF0033278C /* GLRaycaster-1D-light-FS.glsl */,
+				568C8BCB0EDF6EFF0033278C /* GLRaycaster-2D-FS.glsl */,
+				568C8BCC0EDF6EFF0033278C /* GLRaycaster-2D-light-FS.glsl */,
+				568C8BCD0EDF6EFF0033278C /* GLRaycaster-compose-CV-FS.glsl */,
+				568C8BCE0EDF6EFF0033278C /* GLRaycaster-compose-FS.glsl */,
+				568C8BCF0EDF6EFF0033278C /* GLRaycaster-frontfaces-FS.glsl */,
+				568C8BD00EDF6EFF0033278C /* GLRaycaster-ISO-CV-FS.glsl */,
+				568C8BD10EDF6EFF0033278C /* GLRaycaster-ISO-FS.glsl */,
+				568C8BD20EDF6EFF0033278C /* GLRaycaster-VS.glsl */,
+				568C8BD30EDF6EFF0033278C /* GPUSBVR-1D-FS.glsl */,
+				568C8BD40EDF6EFF0033278C /* GPUSBVR-1D-light-FS.glsl */,
+				568C8BD50EDF6EFF0033278C /* GPUSBVR-2D-FS.glsl */,
+				568C8BD60EDF6EFF0033278C /* GPUSBVR-2D-light-FS.glsl */,
+				568C8BD70EDF6EFF0033278C /* GPUSBVR-ISO-FS.glsl */,
+				568C8BD80EDF6EFF0033278C /* GPUSBVR-VS.glsl */,
+				568C8BD90EDF6EFF0033278C /* Transfer-FS.glsl */,
+				568C8BDA0EDF6EFF0033278C /* Transfer-VS.glsl */,
+			);
+			path = Shaders;
 			sourceTree = "<group>";
 		};
 		61CB14BB2AAED346147D27DE /* UI */ = {
@@ -696,6 +766,7 @@
 				14C6B3600AF482B4B106D697 /* ImageVis3D_WindowHandling.cpp */,
 				248FFD14E2898068F4DF8D9A /* ImageVis3D_DebugWindow.cpp */,
 				D34CBB5673F95024FACB0322 /* ImageVis3D_Settings.cpp */,
+				37256F6EBCDA2965BFD2C477 /* ImageVis3D_Locking.cpp */,
 				78BAC5CC6048063D7B1FF4BD /* PleaseWait.cpp */,
 				A0A5FC70F6192DC22F6653E9 /* QTransferFunction.cpp */,
 				57642517CD31AA70C457172E /* Q1DTransferFunction.cpp */,
@@ -736,7 +807,7 @@
 /* Begin PBXNativeTarget section */
 		1D830425BF351FAA1C7C054A /* ImageVis3D */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 568C8B220EDD08C40033278C /* Build configuration list for PBXNativeTarget "ImageVis3D" */;
+			buildConfigurationList = 568C8BB60EDF6E830033278C /* Build configuration list for PBXNativeTarget "ImageVis3D" */;
 			buildPhases = (
 				D7BA7D76DAB5DD13389D6332 /* Qt Qmake */,
 				A0A52A2ADF7A1E2A99738674 /* Qt Preprocessors */,
@@ -752,7 +823,7 @@
 			name = ImageVis3D;
 			productInstallPath = Build/OSX/Bin/;
 			productName = ImageVis3D;
-			productReference = 568C8B180EDD08A50033278C /* ImageVis3D.app */;
+			productReference = 568C8BA90EDF6E530033278C /* ImageVis3D.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -764,7 +835,7 @@
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 05596AB53D8D521C69802C27 /* ImageVis3D */;
-			productRefGroup = 568C8B190EDD08A50033278C /* Products */;
+			productRefGroup = 568C8BAA0EDF6E530033278C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -778,6 +849,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				568C8BDB0EDF6EFF0033278C /* 1D-slice-FS.glsl in Bundle Resources */,
+				568C8BDC0EDF6EFF0033278C /* 2D-slice-FS.glsl in Bundle Resources */,
+				568C8BDD0EDF6EFF0033278C /* GLRaycaster-1D-FS.glsl in Bundle Resources */,
+				568C8BDE0EDF6EFF0033278C /* GLRaycaster-1D-light-FS.glsl in Bundle Resources */,
+				568C8BDF0EDF6EFF0033278C /* GLRaycaster-2D-FS.glsl in Bundle Resources */,
+				568C8BE00EDF6EFF0033278C /* GLRaycaster-2D-light-FS.glsl in Bundle Resources */,
+				568C8BE10EDF6EFF0033278C /* GLRaycaster-compose-CV-FS.glsl in Bundle Resources */,
+				568C8BE20EDF6EFF0033278C /* GLRaycaster-compose-FS.glsl in Bundle Resources */,
+				568C8BE30EDF6EFF0033278C /* GLRaycaster-frontfaces-FS.glsl in Bundle Resources */,
+				568C8BE40EDF6EFF0033278C /* GLRaycaster-ISO-CV-FS.glsl in Bundle Resources */,
+				568C8BE50EDF6EFF0033278C /* GLRaycaster-ISO-FS.glsl in Bundle Resources */,
+				568C8BE60EDF6EFF0033278C /* GLRaycaster-VS.glsl in Bundle Resources */,
+				568C8BE70EDF6EFF0033278C /* GPUSBVR-1D-FS.glsl in Bundle Resources */,
+				568C8BE80EDF6EFF0033278C /* GPUSBVR-1D-light-FS.glsl in Bundle Resources */,
+				568C8BE90EDF6EFF0033278C /* GPUSBVR-2D-FS.glsl in Bundle Resources */,
+				568C8BEA0EDF6EFF0033278C /* GPUSBVR-2D-light-FS.glsl in Bundle Resources */,
+				568C8BEB0EDF6EFF0033278C /* GPUSBVR-ISO-FS.glsl in Bundle Resources */,
+				568C8BEC0EDF6EFF0033278C /* GPUSBVR-VS.glsl in Bundle Resources */,
+				568C8BED0EDF6EFF0033278C /* Transfer-FS.glsl in Bundle Resources */,
+				568C8BEE0EDF6EFF0033278C /* Transfer-VS.glsl in Bundle Resources */,
 			);
 			name = "Bundle Resources";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -828,6 +919,7 @@
 				58DC7FC5A53A82BA121CBD41 /* ImageVis3D_WindowHandling.cpp in Build Sources */,
 				107343977E061C75AE8CCC78 /* ImageVis3D_DebugWindow.cpp in Build Sources */,
 				7C79BC3DB804B7BC8C37F1C3 /* ImageVis3D_Settings.cpp in Build Sources */,
+				CEF217857A7A9B2D10B0CE4E /* ImageVis3D_Locking.cpp in Build Sources */,
 				7A5438E038EB8FC6F3F239AC /* PleaseWait.cpp in Build Sources */,
 				534C51AB117993C3AD373D2A /* QTransferFunction.cpp in Build Sources */,
 				EEB4E9F2ECBE9A630C684795 /* Q1DTransferFunction.cpp in Build Sources */,
@@ -890,7 +982,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		568C8B1E0EDD08A60033278C /* Debug */ = {
+		568C8BB00EDF6E550033278C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
@@ -961,7 +1053,7 @@
 			};
 			name = Debug;
 		};
-		568C8B1F0EDD08A60033278C /* Release */ = {
+		568C8BB10EDF6E550033278C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
@@ -1031,7 +1123,7 @@
 			};
 			name = Release;
 		};
-		568C8B200EDD08A60033278C /* Default */ = {
+		568C8BB20EDF6E550033278C /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_ROOT = /Users/krueger/Documents/Projects/ImageVis3D;
@@ -1128,12 +1220,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		568C8B220EDD08C40033278C /* Build configuration list for PBXNativeTarget "ImageVis3D" */ = {
+		568C8BB60EDF6E830033278C /* Build configuration list for PBXNativeTarget "ImageVis3D" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				568C8B1E0EDD08A60033278C /* Debug */,
-				568C8B1F0EDD08A60033278C /* Release */,
-				568C8B200EDD08A60033278C /* Default */,
+				568C8BB00EDF6E550033278C /* Debug */,
+				568C8BB10EDF6E550033278C /* Release */,
+				568C8BB20EDF6E550033278C /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
