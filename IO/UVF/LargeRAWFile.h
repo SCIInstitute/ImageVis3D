@@ -32,8 +32,8 @@
 
 class LargeRAWFile {
 public:
-	LargeRAWFile(const std::string& strFilename);
-	LargeRAWFile(const std::wstring& wstrFilename);
+	LargeRAWFile(const std::string& strFilename, UINT64 iHeaderSize=0);
+	LargeRAWFile(const std::wstring& wstrFilename, UINT64 iHeaderSize=0);
 	LargeRAWFile(LargeRAWFile &other);
   virtual ~LargeRAWFile() {Close();}
 
@@ -44,7 +44,7 @@ public:
   void Close();
   void Delete();
   UINT64 GetCurrentSize();
-  std::string GetFilename() {return m_strFilename;}
+  std::string GetFilename() {return m_strFilename;} 
 
   void SeekStart();
   UINT64 SeekEnd();
@@ -107,6 +107,7 @@ protected:
   std::string   m_strFilename;
   bool          m_bIsOpen;
   bool          m_bWritable;
+  UINT64        m_iHeaderSize;
 
 };
 

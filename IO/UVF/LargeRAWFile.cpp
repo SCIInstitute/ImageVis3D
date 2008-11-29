@@ -4,16 +4,18 @@ using namespace std;
 
 #define BLOCK_COPY_SIZE (UINT64(128*1024*1024))
 
-LargeRAWFile::LargeRAWFile(const std::string& strFilename) :
+LargeRAWFile::LargeRAWFile(const std::string& strFilename, UINT64 iHeaderSize) :
   m_strFilename(strFilename),
   m_bIsOpen(false),
-  m_bWritable(false)
+  m_bWritable(false),
+  m_iHeaderSize(iHeaderSize)
 {
 }
 
-LargeRAWFile::LargeRAWFile(const std::wstring& wstrFilename) :
+LargeRAWFile::LargeRAWFile(const std::wstring& wstrFilename, UINT64 iHeaderSize) :
   m_bIsOpen(false),
-  m_bWritable(false)
+  m_bWritable(false),
+  m_iHeaderSize(iHeaderSize)
 {
   string strFilename(wstrFilename.begin(), wstrFilename.end());
   m_strFilename = strFilename;
@@ -21,7 +23,8 @@ LargeRAWFile::LargeRAWFile(const std::wstring& wstrFilename) :
 
 LargeRAWFile::LargeRAWFile(LargeRAWFile &other) :
   m_strFilename(other.m_strFilename+"~"),
-  m_bIsOpen(other.m_bIsOpen)
+  m_bIsOpen(other.m_bIsOpen),
+  m_iHeaderSize(other.m_iHeaderSize)
 {
   if (m_bIsOpen) {
     UINT64 iDataSize = other.GetCurrentSize();
@@ -97,22 +100,17 @@ UINT64 LargeRAWFile::GetCurrentSize() {
 }
 
 void LargeRAWFile::SeekStart(){
-  #ifdef _WIN32
-    LARGE_INTEGER liTarget; liTarget.QuadPart = 0;
-    SetFilePointerEx(m_StreamFile, liTarget, NULL, FILE_BEGIN);
-  #else
-    fseeko(m_StreamFile, 0, SEEK_SET);
-  #endif
+  SeekPos(0);
 }
 
 UINT64 LargeRAWFile::SeekEnd(){
   #ifdef _WIN32
     LARGE_INTEGER liTarget, liRealTarget; liTarget.QuadPart = 0;
     SetFilePointerEx(m_StreamFile, liTarget, &liRealTarget, FILE_END);
-    return UINT64(liRealTarget.QuadPart); 
+    return UINT64(liRealTarget.QuadPart)-m_iHeaderSize; 
   #else
     if(fseeko(m_StreamFile, 0, SEEK_END)==0)
-      return ftello(m_StreamFile);//get current position=file size!
+      return ftello(m_StreamFile)-m_iHeaderSize;//get current position=file size!
     else
       return 0;
   #endif
@@ -122,18 +120,18 @@ UINT64 LargeRAWFile::GetPos(){
   #ifdef _WIN32
     LARGE_INTEGER liTarget, liRealTarget; liTarget.QuadPart = 0;
     SetFilePointerEx(m_StreamFile, liTarget, &liRealTarget, FILE_CURRENT);
-    return UINT64(liRealTarget.QuadPart);
+    return UINT64(liRealTarget.QuadPart)-m_iHeaderSize;
   #else
-      return ftello(m_StreamFile);//get current position=file size!
+      return ftello(m_StreamFile)-m_iHeaderSize;//get current position=file size!
   #endif
 }
 
 void LargeRAWFile::SeekPos(UINT64 iPos){
   #ifdef _WIN32
-    LARGE_INTEGER liTarget; liTarget.QuadPart = LONGLONG(iPos);
+    LARGE_INTEGER liTarget; liTarget.QuadPart = LONGLONG(iPos+m_iHeaderSize);
     SetFilePointerEx(m_StreamFile, liTarget, NULL, FILE_BEGIN);
   #else
-    fseeko(m_StreamFile, off_t(iPos), SEEK_SET);
+    fseeko(m_StreamFile, off_t(iPos+m_iHeaderSize), SEEK_SET);
   #endif
 }
 

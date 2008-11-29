@@ -232,7 +232,7 @@ bool IOManager::ConvertNHDRDataset(const std::string& strFilename, const std::st
   KeyValPair* kvpEndian = parser.GetData("ENDIAN");
   if (kvpEndian != NULL && kvpEndian->strValueUpper == "BIG") bBigEndian = true;
 
-  return ConvertRAWDataset(strRAWFile, strTargetFilename, iComponentSize, iComponentCount, bSigned, bBigEndian != EndianConvert::IsBigEndian(),
+  return ConvertRAWDataset(strRAWFile, strTargetFilename, 0, iComponentSize, iComponentCount, bSigned, bBigEndian != EndianConvert::IsBigEndian(),
                            vVolumeSize, vVolumeAspect, "NRRD data", SysTools::GetFilename(strFilename));
 
 }
@@ -291,13 +291,13 @@ bool IOManager::ConvertDATDataset(const std::string& strFilename, const std::str
 	  strRAWFile = SysTools::GetPath(strFilename) + strRAWFile;
 
     /// \todo  detect big endian DAT/RAW combinations and set the conversion parameter accordingly instead of always converting if the machine is big endian 
-    return ConvertRAWDataset(strRAWFile, strTargetFilename, iComponentSize, iComponentCount, bSigned, EndianConvert::IsBigEndian(),
+    return ConvertRAWDataset(strRAWFile, strTargetFilename, 0, iComponentSize, iComponentCount, bSigned, EndianConvert::IsBigEndian(),
                              vVolumeSize, vVolumeAspect, "Qvis data", SysTools::GetFilename(strFilename));
 
   } else return false;
 }
 
-bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::string& strTargetFilename,
+bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::string& strTargetFilename, UINT64 iHeaderSkip,
 				                         UINT64	iComponentSize, UINT64 iComponentCount, bool bSigned, bool bConvertEndianness,
                                  UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect, string strDesc, string strSource, UVFTables::ElementSemanticTable eType)
 {
@@ -377,7 +377,7 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
   } else strSourceFilename = strFilename;
 
 
-  LargeRAWFile SourceData(strSourceFilename);
+  LargeRAWFile SourceData(strSourceFilename, iHeaderSkip);
   SourceData.Open(false);
 
   if (!SourceData.IsOpen()) {
@@ -616,8 +616,8 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
 
     /// \todo evaluate pDICOMStack->m_strModality
 
-    bool result = ConvertRAWDataset(strTempMergeFilename, strTargetFilename, pDICOMStack->m_iAllocated, 
-                                    pDICOMStack->m_iComponentCount, 
+    bool result = ConvertRAWDataset(strTempMergeFilename, strTargetFilename, 0,
+                                    pDICOMStack->m_iAllocated, pDICOMStack->m_iComponentCount, 
                                     false,
                                     pDICOMStack->m_bIsBigEndian != EndianConvert::IsBigEndian(),
                                     iSize, pDICOMStack->m_fvfAspect, 
@@ -660,8 +660,8 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
 		    UINTVECTOR3 iSize = pStack->m_ivSize;
 		    iSize.z *= (unsigned int)pStack->m_Elements.size();
 
-        bool result = ConvertRAWDataset(strTempMergeFilename, strTargetFilename, pStack->m_iAllocated, 
-                                        pStack->m_iComponentCount, 
+        bool result = ConvertRAWDataset(strTempMergeFilename, strTargetFilename, 0,
+                                        pStack->m_iAllocated, pStack->m_iComponentCount, 
                                         false,
                                         pStack->m_bIsBigEndian != EndianConvert::IsBigEndian(),
                                         iSize, pStack->m_fvfAspect, 
