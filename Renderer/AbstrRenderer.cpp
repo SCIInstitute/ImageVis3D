@@ -438,7 +438,7 @@ vector<Brick> AbstrRenderer::BuildFrameBrickList() {
 
             /// compute minimum distance to brick corners (offset slightly to the center to resolve ambiguities) 
             b.fDistance = numeric_limits<float>::max();
-            float fEpsilon = 0.499999f;
+            float fEpsilon = 0.4999f;
             FLOATVECTOR3 vEpsilonEdges[8] = {b.vCenter+FLOATVECTOR3(-b.vExtension.x, -b.vExtension.y, -b.vExtension.z)* fEpsilon, 
                                              b.vCenter+FLOATVECTOR3(-b.vExtension.x, -b.vExtension.y, +b.vExtension.z)* fEpsilon, 
                                              b.vCenter+FLOATVECTOR3(-b.vExtension.x, +b.vExtension.y, -b.vExtension.z)* fEpsilon, 

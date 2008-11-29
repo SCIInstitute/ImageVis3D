@@ -368,6 +368,7 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename)
 {
 	GLFrameCapture f;
 	makeCurrent();
+  paintGL(); // make sure we have the same results in the front and in the backbuffer
 	return f.CaptureSingleFrame(strFilename);
 }
 
@@ -375,6 +376,7 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename)
 {
 	GLFrameCapture f;
 	makeCurrent();
+  paintGL(); // make sure we have the same results in the front and in the backbuffer
 	return f.CaptureSequenceFrame(strFilename);
 }
 

@@ -67,14 +67,14 @@ void MainWindow::CaptureRotation() {
   if (m_ActiveRenderWin) {
     m_ActiveRenderWin->ToggleHQCaptureMode();
     int iImagesPerAngle = (horizontalSlider_RotSpeed->maximum()+1) - horizontalSlider_RotSpeed->value();
-	int i = 0;
-	float fAngle = 0.0f;
-	while (fAngle < 360) {
+	  int i = 0;
+	  float fAngle = 0.0f;
+	  while (fAngle < 360) {
       m_ActiveRenderWin->SetCaptureRotationAngle(fAngle);
-	  m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString());
-	  fAngle = float(i) / float(iImagesPerAngle);
-	  i++;
-	}
+	    m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString());
+	    fAngle = float(i) / float(iImagesPerAngle);
+	    i++;
+	  }
     m_ActiveRenderWin->ToggleHQCaptureMode();
   }
 }
