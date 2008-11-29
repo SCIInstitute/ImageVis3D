@@ -183,6 +183,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     bool                                      m_bUpdatingLockView;
     QString                                   m_strLogoFilename;
     int                                       m_iLogoPos;
+    bool                                      m_bAutoLockClonedWindow;
+    bool                                      m_bAbsoluteViewLocks;
 
     RenderWindow* CreateNewRenderWindow(QString dataset);
     bool CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow=true);

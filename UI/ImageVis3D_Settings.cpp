@@ -84,6 +84,8 @@ bool MainWindow::ShowSettings() {
       settings.beginGroup("UI");
       bool bAutoSaveGEO = settings.value("AutoSaveGEO", m_bAutoSaveGEO).toBool();
       bool bAutoSaveWSP = settings.value("AutoSaveWSP", m_bAutoSaveWSP).toBool();
+      bool bAutoLockClonedWindow = settings.value("AutoLockClonedWindow", m_bAutoLockClonedWindow).toBool();
+      bool bAbsoluteViewLocks = settings.value("AbsoluteViewLocks", m_bAbsoluteViewLocks).toBool();
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -112,7 +114,7 @@ bool MainWindow::ShowSettings() {
       // hand data to form
       settingsDlg.Data2Form(iMaxCPU, iMaxGPU, 
                             bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS, 
-                            bAutoSaveGEO, bAutoSaveWSP, 
+                            bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
                             iVolRenType, iBlendPrecisionMode, bPowerOfTwo, 
                             vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
     }
@@ -136,6 +138,8 @@ bool MainWindow::ShowSettings() {
       settings.beginGroup("UI");
       settings.setValue("AutoSaveGEO", settingsDlg.GetAutoSaveGEO());
       settings.setValue("AutoSaveWSP", settingsDlg.GetAutoSaveWSP());
+      settings.setValue("AutoLockClonedWindow", settingsDlg.GetAutoLockClonedWindow());
+      settings.setValue("AbsoluteViewLocks", settingsDlg.GetAbsoluteViewLocks());
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -178,6 +182,8 @@ void MainWindow::ApplySettings() {
   settings.beginGroup("UI");
   m_bAutoSaveGEO = settings.value("AutoSaveGEO", m_bAutoSaveGEO).toBool();
   m_bAutoSaveWSP = settings.value("AutoSaveWSP", m_bAutoSaveWSP).toBool();
+  m_bAutoLockClonedWindow = settings.value("AutoLockClonedWindow", m_bAutoLockClonedWindow).toBool();
+  m_bAbsoluteViewLocks = settings.value("AbsoluteViewLocks", m_bAbsoluteViewLocks).toBool();
   settings.endGroup();
 
   settings.beginGroup("Renderer");
@@ -227,4 +233,5 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
   renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
   renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/10, m_iActiveTS, m_iInactiveTS);
   renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
+  renderWin->SetAbsoluteViewLock(m_bAbsoluteViewLocks);
 }

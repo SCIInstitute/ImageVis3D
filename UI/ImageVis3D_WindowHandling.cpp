@@ -352,9 +352,12 @@ void MainWindow::CloneCurrentView() {
   renderWin->CloneViewState(m_ActiveRenderWin);
   renderWin->CloneRendermode(m_ActiveRenderWin);
 
-  for (size_t i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_ActiveRenderWin); 
+  if (m_bAutoLockClonedWindow) 
+    for (size_t i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_ActiveRenderWin); 
 
+  QMdiSubWindow * pActiveWin = mdiArea->activeSubWindow(); // as "show" toggles the active renderwin we need to remeber it
   renderWin->show();
+  mdiArea->activeSubWindow()->resize(pActiveWin->size().width(), pActiveWin->size().height());
 }
 
 bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow) {

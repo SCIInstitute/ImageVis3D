@@ -58,6 +58,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
   
     bool          GetAutoSaveGEO() const;
     bool          GetAutoSaveWSP() const;
+    bool          GetAutoLockClonedWindow() const;
+    bool          GetAbsoluteViewLocks() const;
 
     unsigned int  GetVolrenType() const;
     FLOATVECTOR3  GetBackgroundColor1() const;
@@ -73,7 +75,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
                    bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
-                   bool bAutoSaveGEO, bool bAutoSaveWSP,
+                   bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                    unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo,
                    const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos);
 

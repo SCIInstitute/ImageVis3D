@@ -58,6 +58,9 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),
   m_bRenderSubsysOK(true),   // be optimistic :-)
+  m_bAbsoluteViewLock(true),
+  m_viRightClickPos(0,0),
+  m_viMousePos(0,0),
   m_strDataset(dataset),
   m_vWinDim(0,0),
   m_bCaptureMode(false)
@@ -380,7 +383,13 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename)
 	return f.CaptureSequenceFrame(strFilename);
 }
 
-void RenderWindow::SetTranslationDelta(FLOATVECTOR3 trans, bool bPropagate) {
+void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation) {
+  m_mAccumulatedTranslation = mAccumulatedTranslation;
+  m_Renderer->SetTranslation(m_mAccumulatedTranslation);
+  m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+}
+
+void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate) {
   m_mAccumulatedTranslation.m41 += trans.x;
   m_mAccumulatedTranslation.m42 -= trans.y;
   m_mAccumulatedTranslation.m43 += trans.z;
@@ -389,7 +398,10 @@ void RenderWindow::SetTranslationDelta(FLOATVECTOR3 trans, bool bPropagate) {
 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
-      m_vpLocks[0][i]->SetTranslationDelta(trans, false);
+      if (m_bAbsoluteViewLock) 
+        m_vpLocks[0][i]->SetTranslation(m_mAccumulatedTranslation);
+      else
+        m_vpLocks[0][i]->SetTranslationDelta(trans, false);
     }
   }
 }
@@ -403,17 +415,28 @@ void RenderWindow::FinalizeRotation(bool bPropagate) {
   }
 }
 
-void RenderWindow::SetRotationDelta(FLOATMATRIX4 rotDelta, bool bPropagate) {
+void RenderWindow::SetRotation(const FLOATMATRIX4& mAccumulatedRotation, 
+                               const FLOATMATRIX4& mCurrentRotation) {
+  m_mAccumulatedRotation = mAccumulatedRotation;
+  m_mCurrentRotation = mCurrentRotation;
+
+  m_Renderer->SetRotation(m_mCurrentRotation);
+}
+
+
+void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate) {
   m_mCurrentRotation = m_mAccumulatedRotation * rotDelta;
   m_Renderer->SetRotation(m_mCurrentRotation);
 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
-      m_vpLocks[0][i]->SetRotationDelta(rotDelta, false);
+      if (m_bAbsoluteViewLock) 
+        m_vpLocks[0][i]->SetRotation(m_mAccumulatedRotation, m_mCurrentRotation);
+      else
+        m_vpLocks[0][i]->SetRotationDelta(rotDelta, false);
     }
   }
 }
-
 
 void RenderWindow::CloneViewState(RenderWindow* other) {
   m_mAccumulatedTranslation = other->m_mAccumulatedTranslation;
@@ -566,7 +589,7 @@ void RenderWindow::SetCV(bool bDoClearView, bool bPropagate) {
   }
 }
 
-void RenderWindow::SetCVFocusPos(FLOATVECTOR2 vMousePos, bool bPropagate) {
+void RenderWindow::SetCVFocusPos(const FLOATVECTOR2& vMousePos, bool bPropagate) {
   m_Renderer->SetCVFocusPos(vMousePos);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
@@ -577,6 +600,10 @@ void RenderWindow::SetCVFocusPos(FLOATVECTOR2 vMousePos, bool bPropagate) {
 
 void RenderWindow::SetLogoParams(QString strLogoFilename, int iLogoPos) {
   m_Renderer->SetLogoParams(std::string(strLogoFilename.toAscii()), iLogoPos);
+}
+
+void RenderWindow::SetAbsoluteViewLock(bool bAbsoluteViewLock) {
+  m_bAbsoluteViewLock = bAbsoluteViewLock;
 }
 
 UINTVECTOR2 RenderWindow::GetDynamicRange() const {

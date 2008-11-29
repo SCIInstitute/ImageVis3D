@@ -85,11 +85,12 @@ class RenderWindow : public QGLWidget
 
     void SetLogoParams(QString strLogoFilename, int iLogoPos);
 
-    void SetTranslationDelta(FLOATVECTOR3 trans, bool bPropagate);
-    void SetRotationDelta(FLOATMATRIX4 rotDelta, bool bPropagate);
+    void SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate);
+    void SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate);
     void CloneViewState(RenderWindow* other);
     void FinalizeRotation(bool bPropagate);
     void CloneRendermode(RenderWindow* other);
+    void SetAbsoluteViewLock(bool bAbsoluteViewLock);
 
     void SetUseLigthing(bool bLighting, bool bPropagate=true);
     void SetSampleRateModifier(float fSampleRateModifier, bool bPropagate=true); 
@@ -103,7 +104,7 @@ class RenderWindow : public QGLWidget
     void SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCV(bool bDoClearView, bool bPropagate=true);
-    void SetCVFocusPos(FLOATVECTOR2 vMousePos, bool bPropagate=true);
+    void SetCVFocusPos(const FLOATVECTOR2& vMousePos, bool bPropagate=true);
 
     UINTVECTOR2 GetDynamicRange() const;
     FLOATVECTOR3 GetIsosufaceColor() const;
@@ -134,7 +135,6 @@ class RenderWindow : public QGLWidget
     virtual void keyPressEvent ( QKeyEvent * event );
     virtual void Cleanup();
 
-
   private:
     MainWindow*       m_MainWindow;
     GLRenderer*       m_Renderer;
@@ -150,6 +150,8 @@ class RenderWindow : public QGLWidget
     FLOATMATRIX4      m_mAccumulatedRotation;
     FLOATMATRIX4      m_mCaptureStartRotation;
     FLOATMATRIX4      m_mAccumulatedTranslation;
+    bool              m_bAbsoluteViewLock;
+
        
     QString           m_strDataset;
     QString           m_strID;
@@ -158,6 +160,8 @@ class RenderWindow : public QGLWidget
 	  bool			        m_bCaptureMode;
 
     void SetupArcBall();
+    void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);
+    void SetRotation(const FLOATMATRIX4& mAccumulatedRotation, const FLOATMATRIX4& mCurrentRotation);
 };
 
 #endif // RENDERWINDOW_H

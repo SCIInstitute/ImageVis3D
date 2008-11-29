@@ -77,7 +77,9 @@ MainWindow::MainWindow(MasterController& masterController,
   m_eVolumeRendererType(MasterController::OPENGL_SBVR),
   m_bUpdatingLockView(false),
   m_strLogoFilename(""),
-  m_iLogoPos(3)
+  m_iLogoPos(3),
+  m_bAutoLockClonedWindow(false),
+  m_bAbsoluteViewLocks(true)
 {
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
   QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");
