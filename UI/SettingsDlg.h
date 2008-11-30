@@ -99,6 +99,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     QColor            m_cBackColor2;
     QColor            m_cTextColor;
     QString           m_strLogoFilename;
+	bool			  m_bInit;
 
     int               m_InitialGPUMemMax;
     void setupUi(QDialog *SettingsDlg);

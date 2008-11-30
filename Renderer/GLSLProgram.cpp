@@ -357,8 +357,10 @@ void GLSLProgram::Load(const char *VSFile, const char *FSFile, GLSLPROGRAM_SOURC
 bool GLSLProgram::WriteInfoLog(const char* shaderdesc, GLuint hObject, bool bProgram) {
   // Check for errors
   GLint iLength;
-  if (bProgram)  glGetProgramiv(hObject,GL_INFO_LOG_LENGTH,&iLength);
-  else      glGetShaderiv(hObject,GL_INFO_LOG_LENGTH,&iLength);
+  if (bProgram)
+	  glGetProgramiv(hObject,GL_INFO_LOG_LENGTH,&iLength);
+  else
+	  glGetShaderiv(hObject,GL_INFO_LOG_LENGTH,&iLength);
 
   GLboolean bAtMostWarnings=true;
   if (iLength>1) {    
@@ -374,14 +376,16 @@ bool GLSLProgram::WriteInfoLog(const char* shaderdesc, GLuint hObject, bool bPro
     if (bAtMostWarnings) {
       m_pMasterController->DebugOut()->Warning("GLSLProgram::WriteInfoLog",shaderdesc);
       m_pMasterController->DebugOut()->Warning("GLSLProgram::WriteInfoLog",pcLogInfo);
+	  delete[] pcLogInfo;  
+	  return false;
     } else {
       m_pMasterController->DebugOut()->Error("GLSLProgram::WriteInfoLog",shaderdesc);
       m_pMasterController->DebugOut()->Error("GLSLProgram::WriteInfoLog",pcLogInfo);
-    }
-    delete[] pcLogInfo;  
+	  delete[] pcLogInfo;  
 #ifdef GLSLPROGRAM_STRICT
     return true;
 #endif
+    }
   }
   return !bool(bAtMostWarnings==GL_TRUE); // error occured?  
 }

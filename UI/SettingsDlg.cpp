@@ -48,7 +48,8 @@ using namespace std;
 SettingsDlg::SettingsDlg(MasterController& MasterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
   QDialog(parent, flags),
   m_MasterController(MasterController),
-  m_InitialGPUMemMax(0)
+  m_InitialGPUMemMax(0),
+  m_bInit(true)
 {
   setupUi(this);
 }
@@ -291,7 +292,8 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, 
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
-    horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
+	m_bInit = true;
+	horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
     horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
     checkBoxQuickload->setChecked(bQuickopen);
@@ -375,10 +377,12 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
                                                                              .arg(255-m_cTextColor.blue());
 
     pushButtonSelText->setStyleSheet( strStyle );
+	m_bInit = false;
 }
 
 
 void SettingsDlg::WarnAPIMethodChange() {
+	if (!m_bInit)
 		QMessageBox::warning(this, "Warning", "A change to the render API, the rendermode, or the compatibiliy settings only affects renderwindows opened from now on.");
 }
 
