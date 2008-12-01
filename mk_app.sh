@@ -74,7 +74,7 @@ for fw in QtCore QtGui QtOpenGL ; do
     install_name_tool -change \
         ${fw}.framework/Versions/4/QtCore \
         @executable_path../Frameworks/${fw}.framework/Versions/4/${fw} \
-        ${PREFIX}/Contents/MacOs/ImageVis3D
+        ${PREFIX}/Contents/MacOS/ImageVis3D
 done
 
 # change "pointers" within the frameworks cross referencing to core
