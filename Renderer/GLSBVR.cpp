@@ -183,7 +183,6 @@ void GLSBVR::Render3DInLoop(size_t iCurrentBrick) {
     // disable writing to the main offscreen buffer
     m_pFBO3DImageCurrent->FinishWrite();
   
-    glDepthMask(GL_TRUE);
     m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
     m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
     GLFBOTex::TwoDrawBuffers();
@@ -221,6 +220,7 @@ void GLSBVR::Render3DInLoop(size_t iCurrentBrick) {
     glDepthMask(GL_FALSE);
     SetBrickDepShaderVars(iCurrentBrick);
     RenderProxyGeometry();
+	glDepthMask(GL_TRUE);
   }
 }
 
@@ -230,8 +230,12 @@ void GLSBVR::Render3DPostLoop() {
 
   // disable the shader
   switch (m_eRenderMode) {
-    case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
-    case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
+    case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
+						  glDisable(GL_BLEND);
+						  break;						  
+    case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); 
+						  glDisable(GL_BLEND);
+					      break;
     case RM_ISOSURFACE :  break;
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLSBVR::Render3DView","Invalid rendermode set"); break;
   }

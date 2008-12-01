@@ -522,7 +522,7 @@ void AbstrRenderer::SetCV(bool bEnable) {
 void AbstrRenderer::SetIsosufaceColor(const FLOATVECTOR3& vColor) {
   m_vIsoColor = vColor; 
   if (m_eRenderMode == RM_ISOSURFACE) 
-    ScheduleWindowRedraw(WM_3D);
+    ScheduleRecompose();
 }
 
 void AbstrRenderer::SetCVIsoValue(float fIsovalue) {

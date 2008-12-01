@@ -901,17 +901,16 @@ void GLRenderer::BBoxPreRender() {
 void GLRenderer::BBoxPostRender() {
  if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) {
     m_matModelView.setModelview();
-    if (m_bRenderGlobalBBox) {
-      glDisable(GL_DEPTH_TEST);
-      RenderBBox();
-    }
-
+	glEnable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    if (m_bRenderGlobalBBox) RenderBBox();
     if (m_bRenderLocalBBox) {
-      glDisable(GL_DEPTH_TEST);
       for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
         RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
       }
     }
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
   }
 }
 
@@ -952,10 +951,8 @@ void GLRenderer::Render3DView() {
   glLoadIdentity();
   m_matModelView.setModelview();
 
-  glEnable(GL_DEPTH_TEST);
-
+  // in the first frame of a new lod level write the bounding boxes into depthbuffer (and for isosurfacing also into colorbuffer)
   if (m_iBricksRenderedInThisSubFrame == 0) BBoxPreRender();
-
   Render3DPreLoop();
 
   // loop over all bricks in the current LOD level
@@ -993,8 +990,6 @@ void GLRenderer::Render3DView() {
 
   // at the very end render the bboxes
   if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();
-
-  glDisable(GL_BLEND);
 }
 
 void GLRenderer::SetLogoParams(std::string strLogoFilename, int iLogoPos) {

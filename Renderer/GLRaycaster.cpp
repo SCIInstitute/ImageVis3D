@@ -342,11 +342,8 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 
     m_pFBO3DImageCurrent->Write();
     GLFBOTex::OneDrawBuffer();
-    glDepthFunc(GL_LESS);
 
   } else {
-    glDepthMask(GL_FALSE);
-
     m_pFBO3DImageCurrent->Write();
     GLFBOTex::OneDrawBuffer();
 
