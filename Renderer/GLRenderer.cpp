@@ -43,18 +43,24 @@ using namespace std;
 
 GLRenderer::GLRenderer(MasterController* pMasterController, bool bUseOnlyPowerOfTwo) : 
   AbstrRenderer(pMasterController, bUseOnlyPowerOfTwo),
+  m_fScaledIsovalue(0.0f),    // set by StartFrame
+  m_fScaledCVIsovalue(0.0f),  // set by StartFrame
   m_p1DTransTex(NULL),
   m_p2DTransTex(NULL),
   m_p1DData(NULL),
   m_p2DData(NULL),
   m_pFBO3DImageLast(NULL),
   m_pFBO3DImageCurrent(NULL),
+  m_pFBOIsoHit(NULL),
+  m_pFBOCVHit(NULL),
   m_iFilledBuffers(0),
   m_pLogoTex(NULL),
   m_pProgramIso(NULL),
   m_pProgramTrans(NULL),
   m_pProgram1DTransSlice(NULL),
-  m_pProgram2DTransSlice(NULL)
+  m_pProgram2DTransSlice(NULL),
+  m_pProgramIsoCompose(NULL),
+  m_pProgramCVCompose(NULL)
 {
   m_pProgram1DTrans[0]   = NULL;
   m_pProgram1DTrans[1]   = NULL;
@@ -87,9 +93,12 @@ bool GLRenderer::Initialize() {
     m_pMasterController->MemMan()->GetEmpty2DTrans(m_pDataset->Get2DHistogram()->GetFilledSize(), this, &m_p2DTrans, &m_p2DTransTex);
 
 
-  if (!LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/Transfer-FS.glsl", &(m_pProgramTrans)) ||
-      !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/1D-slice-FS.glsl", &(m_pProgram1DTransSlice)) ||
-      !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/2D-slice-FS.glsl", &(m_pProgram2DTransSlice))) {
+
+  if (!LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/Transfer-FS.glsl",  &(m_pProgramTrans))        ||
+      !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/1D-slice-FS.glsl",  &(m_pProgram1DTransSlice)) ||
+      !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/2D-slice-FS.glsl",  &(m_pProgram2DTransSlice)) ||
+      !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/Compose-FS.glsl",   &(m_pProgramIsoCompose))   ||
+      !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/Compose-CV-FS.glsl",&(m_pProgramCVCompose)))   {
 
       m_pMasterController->DebugOut()->Error("GLRenderer::Initialize","Error loading transfer shaders.");
       return false;
@@ -108,6 +117,30 @@ bool GLRenderer::Initialize() {
     m_pProgram2DTransSlice->SetUniformVector("texVolume",0);
     m_pProgram2DTransSlice->SetUniformVector("texTrans2D",1);
     m_pProgram2DTransSlice->Disable();
+
+    FLOATVECTOR2 vParams = m_FrustumCullingLOD.GetDepthScaleParams();
+
+    m_pProgramIsoCompose->Enable();
+    m_pProgramIsoCompose->SetUniformVector("texRayHitPos",0);
+    m_pProgramIsoCompose->SetUniformVector("texRayHitNormal",1);
+    m_pProgramIsoCompose->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
+    m_pProgramIsoCompose->SetUniformVector("vLightDiffuse",0.8f,0.8f,0.8f);
+    m_pProgramIsoCompose->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
+    m_pProgramIsoCompose->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
+    m_pProgramIsoCompose->SetUniformVector("vProjParam",vParams.x, vParams.y);
+    m_pProgramIsoCompose->Disable();
+
+    m_pProgramCVCompose->Enable();
+    m_pProgramCVCompose->SetUniformVector("texRayHitPos",0);
+    m_pProgramCVCompose->SetUniformVector("texRayHitNormal",1);
+    m_pProgramCVCompose->SetUniformVector("texRayHitPos2",2);
+    m_pProgramCVCompose->SetUniformVector("texRayHitNormal2",3);
+    m_pProgramCVCompose->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
+    m_pProgramCVCompose->SetUniformVector("vLightDiffuse",0.8f,0.8f,0.8f);
+    m_pProgramCVCompose->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
+    m_pProgramCVCompose->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
+    m_pProgramCVCompose->SetUniformVector("vProjParam",vParams.x, vParams.y);
+    m_pProgramCVCompose->Disable();
   }
 
   return true;
@@ -188,6 +221,26 @@ void GLRenderer::StartFrame() {
 
   // bind offscreen buffer
   m_pFBO3DImageCurrent->Write();
+
+  if (m_eRenderMode == RM_ISOSURFACE) {
+    FLOATVECTOR2 vfWinSize = FLOATVECTOR2(m_vWinSize);
+    if (m_bDoClearView) {
+      m_pProgramCVCompose->Enable();
+      m_pProgramCVCompose->SetUniformVector("vScreensize",vfWinSize.x, vfWinSize.y);
+      m_pProgramCVCompose->Disable();
+    } else {
+      m_pProgramIsoCompose->Enable();
+      m_pProgramIsoCompose->SetUniformVector("vScreensize",vfWinSize.x, vfWinSize.y);
+      m_pProgramIsoCompose->Disable();
+    } 
+
+    size_t       iMaxValue = m_p1DTrans->GetSize();
+    unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
+    m_fScaledIsovalue = m_fIsovalue * float(iMaxValue)/float(iMaxRange);
+    m_fScaledCVIsovalue = m_fCVIsovalue * float(iMaxValue)/float(iMaxRange);
+
+
+  }
 }
 
 void GLRenderer::Paint() {
@@ -341,7 +394,7 @@ void GLRenderer::SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight) 
 
 bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT64 iSliceIndex) {
 
-  GLRenderer::SetDataDepShaderVars();
+  SetDataDepShaderVars();
 
   switch (m_eRenderMode) {
     case RM_2DTRANS    :  m_p2DTransTex->Bind(1); 
@@ -707,75 +760,28 @@ void GLRenderer::DrawBackGradient() {
 void GLRenderer::Cleanup() {
   if (m_pFBO3DImageLast)      {m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast); m_pFBO3DImageLast =NULL;}
   if (m_pFBO3DImageCurrent)   {m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent); m_pFBO3DImageCurrent =NULL;}
+  if (m_pFBOIsoHit)           {m_pMasterController->MemMan()->FreeFBO(m_pFBOIsoHit);m_pFBOIsoHit = NULL;}
+  if (m_pFBOCVHit)            {m_pMasterController->MemMan()->FreeFBO(m_pFBOCVHit);m_pFBOCVHit = NULL;}
 
   if (m_pProgramTrans)        {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramTrans); m_pProgramTrans =NULL;}
   if (m_pProgram1DTransSlice) {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTransSlice); m_pProgram1DTransSlice =NULL;}
   if (m_pProgram2DTransSlice) {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTransSlice); m_pProgram2DTransSlice =NULL;}
-
   if (m_pProgram1DTrans[0])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[0]); m_pProgram1DTrans[0] =NULL;}
   if (m_pProgram1DTrans[1])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[1]); m_pProgram1DTrans[1] =NULL;}
   if (m_pProgram2DTrans[0])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]); m_pProgram2DTrans[0] =NULL;}
   if (m_pProgram2DTrans[1])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[1]); m_pProgram2DTrans[1] =NULL;}
   if (m_pProgramIso)          {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIso); m_pProgramIso =NULL;}
+  if (m_pProgramIsoCompose)   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramIsoCompose); m_pProgramIsoCompose = NULL;}
+  if (m_pProgramCVCompose)    {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramCVCompose); m_pProgramCVCompose = NULL;}
 
   if (m_pLogoTex)             {m_pMasterController->MemMan()->FreeTexture(m_pLogoTex); m_pLogoTex =NULL;}
 }
 
-
-void GLRenderer::SetBrickDepShaderVarsSlice(const UINTVECTOR3& vVoxelCount) {
-  if (m_eRenderMode ==  RM_2DTRANS) {
-    FLOATVECTOR3 vStep = 1.0f/FLOATVECTOR3(vVoxelCount);
-    m_pProgram2DTransSlice->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
-  }
-}
-
-
-const FLOATVECTOR2 GLRenderer::SetDataDepShaderVars() {
-  m_pMasterController->DebugOut()->Message("GLRenderer::SetDataDepShaderVars","Setting up vars");
-
-  size_t       iMaxValue = m_p1DTrans->GetSize();
-  unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
-  float fScale = float(iMaxRange)/float(iMaxValue);
-  float fGradientScale = 1.0f/m_pDataset->GetMaxGradMagnitude();
-
-  switch (m_eRenderMode) {
-    case RM_1DTRANS    :  {
-                            m_pProgram1DTransSlice->Enable();
-                            m_pProgram1DTransSlice->SetUniformVector("fTransScale",fScale);
-                            m_pProgram1DTransSlice->Disable();
-                            break;
-                          }
-    case RM_2DTRANS    :  {
-                            m_pProgram2DTransSlice->Enable();
-                            m_pProgram2DTransSlice->SetUniformVector("fTransScale",fScale);
-                            m_pProgram2DTransSlice->SetUniformVector("fGradientScale",fGradientScale);
-                            m_pProgram2DTransSlice->Disable();
-                            break;
-                          }
-    case RM_ISOSURFACE : {
-                            m_pProgram2DTransSlice->Enable();
-                            m_pProgram2DTransSlice->SetUniformVector("fTransScale",fScale);
-                            m_pProgram2DTransSlice->SetUniformVector("fGradientScale",fGradientScale);
-                            m_pProgram2DTransSlice->Disable();
-                            break;
-                          }
-    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLRenderer::SetDataDepShaderVars","Invalid rendermode set"); break;
-  }
-
-  m_pMasterController->DebugOut()->Message("GLRenderer::SetDataDepShaderVars","Done");
-
-  return FLOATVECTOR2(fScale,fGradientScale);
-}
-
 void GLRenderer::CreateOffscreenBuffers() {
-  if (m_pFBO3DImageLast) {
-    m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast);
-    m_pFBO3DImageLast = NULL;
-  }
-  if (m_pFBO3DImageCurrent) {
-    m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent);
-    m_pFBO3DImageCurrent = NULL;
-  }
+  if (m_pFBO3DImageLast)      {m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageLast); m_pFBO3DImageLast =NULL;}
+  if (m_pFBO3DImageCurrent)   {m_pMasterController->MemMan()->FreeFBO(m_pFBO3DImageCurrent); m_pFBO3DImageCurrent =NULL;}
+  if (m_pFBOIsoHit)           {m_pMasterController->MemMan()->FreeFBO(m_pFBOIsoHit);m_pFBOIsoHit = NULL;}
+  if (m_pFBOCVHit)            {m_pMasterController->MemMan()->FreeFBO(m_pFBOCVHit);m_pFBOCVHit = NULL;}
 
   if (m_vWinSize.area() > 0) {
     switch (m_eBlendPrecision) {
@@ -788,12 +794,71 @@ void GLRenderer::CreateOffscreenBuffers() {
       case BP_32BIT : m_pFBO3DImageLast = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA32F_ARB, 32*4, true);
                       m_pFBO3DImageCurrent = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA32F_ARB, 32*4, true);
                       break;
-      default       : m_pMasterController->DebugOut()->Message("GLSBVR::CreateOffscreenBuffer","Invalid Blending Precision");
+      default       : m_pMasterController->DebugOut()->Message("GLRenderer::CreateOffscreenBuffer","Invalid Blending Precision");
                       m_pFBO3DImageLast = NULL; m_pFBO3DImageCurrent = NULL;
                       break;
     }
+    m_pFBOIsoHit   = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true, 2);
+    m_pFBOCVHit    = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true, 2);
   }
 }
+
+void GLRenderer::SetBrickDepShaderVarsSlice(const UINTVECTOR3& vVoxelCount) {
+  if (m_eRenderMode ==  RM_2DTRANS) {
+    FLOATVECTOR3 vStep = 1.0f/FLOATVECTOR3(vVoxelCount);
+    m_pProgram2DTransSlice->SetUniformVector("vVoxelStepsize", vStep.x, vStep.y, vStep.z);
+  }
+}
+
+void GLRenderer::SetDataDepShaderVars() {
+  m_pMasterController->DebugOut()->Message("GLRenderer::SetDataDepShaderVars","Setting up vars");
+
+  size_t       iMaxValue = m_p1DTrans->GetSize();
+  unsigned int iMaxRange = (unsigned int)(1<<m_pDataset->GetInfo()->GetBitwith());
+  float fScale = float(iMaxRange)/float(iMaxValue);
+  float fGradientScale = 1.0f/m_pDataset->GetMaxGradMagnitude();
+
+  switch (m_eRenderMode) {
+    case RM_1DTRANS    :  {
+                            m_pProgram1DTransSlice->Enable();
+                            m_pProgram1DTransSlice->SetUniformVector("fTransScale",fScale);
+                            m_pProgram1DTransSlice->Disable();
+
+                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
+                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",fScale);
+                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
+                            break;
+                          }
+    case RM_2DTRANS    :  {
+                            m_pProgram2DTransSlice->Enable();
+                            m_pProgram2DTransSlice->SetUniformVector("fTransScale",fScale);
+                            m_pProgram2DTransSlice->SetUniformVector("fGradientScale",fGradientScale);
+                            m_pProgram2DTransSlice->Disable();
+
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable();
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",fScale);
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fGradientScale",fGradientScale);
+                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable();
+                            break;
+                          }
+    case RM_ISOSURFACE : {
+                            // as we are rendering the 2 slices with the 1d transferfunction in iso mode update that shader also
+                            m_pProgram1DTransSlice->Enable();
+                            m_pProgram1DTransSlice->SetUniformVector("fTransScale",fScale);
+                            m_pProgram1DTransSlice->Disable();
+
+                            m_pProgramIso->Enable();
+                            m_pProgramIso->SetUniformVector("fIsoval",m_fScaledIsovalue);
+                            m_pProgramIso->Disable();
+                            break;
+                          }
+    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLRenderer::SetDataDepShaderVars","Invalid rendermode set");
+                          break;
+  }
+
+  m_pMasterController->DebugOut()->Message("GLRenderer::SetDataDepShaderVars","Done");
+}
+
 
 void GLRenderer::SetBlendPrecision(EBlendPrecision eBlendPrecision) {
   if (eBlendPrecision != m_eBlendPrecision) {
@@ -808,7 +873,7 @@ bool GLRenderer::LoadAndVerifyShader(const string& strVSFile, const string& strF
   (*pShaderProgram) = m_pMasterController->MemMan()->GetGLSLProgram(SysTools::GetFromResourceOnMac(strVSFile), SysTools::GetFromResourceOnMac(strFSFile));
 
   if ((*pShaderProgram) == NULL || !(*pShaderProgram)->IsValid()) {
-      m_pMasterController->DebugOut()->Error("GLSBVR::Initialize","Error loading a shader combination VS %s and FS %s.", strVSFile.c_str(), strFSFile.c_str());
+      m_pMasterController->DebugOut()->Error("GLRenderer::Initialize","Error loading a shader combination VS %s and FS %s.", strVSFile.c_str(), strFSFile.c_str());
       m_pMasterController->MemMan()->FreeGLSLProgram(*pShaderProgram);
       return false;
   } else return true;
@@ -870,6 +935,8 @@ void GLRenderer::Recompose3DView(ERenderArea eArea) {
   Render3DPreLoop();
   Render3DPostLoop();
 
+  ComposeSurfaceImage();
+
   // at the very end render the bboxes
   BBoxPostRender();
 }
@@ -919,6 +986,7 @@ void GLRenderer::Render3DView() {
   }
 
   Render3DPostLoop();
+  ComposeSurfaceImage();
 
   // at the very end render the bboxes
   if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();
@@ -933,4 +1001,49 @@ void GLRenderer::SetLogoParams(std::string strLogoFilename, int iLogoPos) {
   if (m_strLogoFilename != "")
 	m_pLogoTex = m_pMasterController->MemMan()->Load2DTextureFromFile(m_strLogoFilename);
   ScheduleWindowRedraw(WM_3D);
+}
+
+void GLRenderer::ComposeSurfaceImage() {
+  if (m_eRenderMode == RM_ISOSURFACE && m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) {    
+
+    m_pFBOIsoHit->Read(GL_TEXTURE0, 0);
+    m_pFBOIsoHit->Read(GL_TEXTURE1, 1);
+
+    if (m_bDoClearView) {
+      m_pProgramCVCompose->Enable(); 
+      m_pProgramCVCompose->SetUniformVector("vLightDiffuse",m_vIsoColor.x, m_vIsoColor.y, m_vIsoColor.z);
+      m_pProgramCVCompose->SetUniformVector("vLightDiffuse2",m_vCVColor.x, m_vCVColor.y, m_vCVColor.z);
+      m_pProgramCVCompose->SetUniformVector("vCVParam",m_fCVSize, m_fCVContextScale, m_fCVBorderScale);
+      m_pProgramCVCompose->SetUniformVector("vCVPickPos", m_vCVPos.x, m_vCVPos.y);
+      m_pFBOCVHit->Read(GL_TEXTURE2, 0);
+      m_pFBOCVHit->Read(GL_TEXTURE3, 1);
+      glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+    } else {
+      m_pProgramIsoCompose->Enable();
+      m_pProgramIsoCompose->SetUniformVector("vLightDiffuse",m_vIsoColor.x, m_vIsoColor.y, m_vIsoColor.z);
+    }
+
+    glBegin(GL_QUADS);
+      glColor4d(1,1,1,1);
+      glTexCoord2d(0,1);
+      glVertex3d(-1.0,  1.0, -0.5);
+      glTexCoord2d(1,1);
+      glVertex3d( 1.0,  1.0, -0.5);
+      glTexCoord2d(1,0);
+      glVertex3d( 1.0, -1.0, -0.5);
+      glTexCoord2d(0,0);
+      glVertex3d(-1.0, -1.0, -0.5);
+    glEnd();
+
+    if (m_bDoClearView) {
+      m_pFBOCVHit->FinishRead(0);
+      m_pFBOCVHit->FinishRead(1);
+      m_pProgramCVCompose->Disable();
+    } else m_pProgramIsoCompose->Disable();
+
+    m_pFBOIsoHit->FinishRead(1);
+    m_pFBOIsoHit->FinishRead(0);
+
+    m_bPerformReCompose = false;
+  }
 }

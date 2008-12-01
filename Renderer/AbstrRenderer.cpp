@@ -527,7 +527,7 @@ void AbstrRenderer::SetIsosufaceColor(const FLOATVECTOR3& vColor) {
 
 void AbstrRenderer::SetCVIsoValue(float fIsovalue) {
   if (m_fCVIsovalue != fIsovalue) {
-    m_fCVIsovalue = fIsovalue; 
+    m_fCVIsovalue = fIsovalue;
     if (m_bDoClearView && m_eRenderMode == RM_ISOSURFACE) ScheduleWindowRedraw(WM_3D);
   }
 }

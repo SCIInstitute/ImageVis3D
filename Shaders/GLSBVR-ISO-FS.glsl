@@ -39,12 +39,20 @@ uniform sampler3D texVolume;  ///< the data volume
 uniform vec3 vVoxelStepsize;  ///< Stepsize (in texcoord) to get to the next voxel
 uniform float fIsoval;        ///< the isovalue
 
-uniform vec3 vLightAmbient;
-uniform vec3 vLightDiffuse;
-uniform vec3 vLightSpecular;
-uniform vec3 vLightDir;
-
 varying vec3 vPosition;
+
+vec3 ComputeNormal(vec3 vHitPosTex) { 
+  float fVolumValXp = texture3D(texVolume, vHitPosTex+vec3(+vVoxelStepsize.x,0,0)).x;
+  float fVolumValXm = texture3D(texVolume, vHitPosTex+vec3(-vVoxelStepsize.x,0,0)).x;
+  float fVolumValYp = texture3D(texVolume, vHitPosTex+vec3(0,-vVoxelStepsize.y,0)).x;
+  float fVolumValYm = texture3D(texVolume, vHitPosTex+vec3(0,+vVoxelStepsize.y,0)).x;
+  float fVolumValZp = texture3D(texVolume, vHitPosTex+vec3(0,0,+vVoxelStepsize.z)).x;
+  float fVolumValZm = texture3D(texVolume, vHitPosTex+vec3(0,0,-vVoxelStepsize.z)).x;
+  vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
+  vec3 vNormal     = gl_NormalMatrix * vGradient;
+  float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
+  return vNormal;
+}
 
 void main(void)
 {
@@ -53,26 +61,11 @@ void main(void)
 
   // if we hit (or shot over) an isosurface
   if (fVolumVal >= fIsoval) {
-    // compute the gradient/normal
-	  float fVolumValXp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(+vVoxelStepsize.x,0,0)).x;
-	  float fVolumValXm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(-vVoxelStepsize.x,0,0)).x;
-	  float fVolumValYp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,-vVoxelStepsize.y,0)).x;
-	  float fVolumValYm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,+vVoxelStepsize.y,0)).x;
-	  float fVolumValZp = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,+vVoxelStepsize.z)).x;
-	  float fVolumValZm = texture3D(texVolume, gl_TexCoord[0].xyz+vec3(0,0,-vVoxelStepsize.z)).x;
-    vec3  vGradient = vec3(fVolumValXm-fVolumValXp, fVolumValYp-fVolumValYm, fVolumValZm-fVolumValZp); 
+    // store surface position
+    gl_FragData[0] = vec4(vPosition.xyz,1.0);
 
-    // compute lighting
-    vec3 vNormal     = gl_NormalMatrix * vGradient;
-    float l = length(vNormal); if (l>0.0) vNormal /= l; // secure normalization
-    vec3 vViewDir    = normalize(vec3(0,0,0)-vPosition);
-    vec3 vReflection = normalize(reflect(vViewDir, vNormal));
-    vec3 vLightColor = vLightAmbient+
-                       vLightDiffuse*clamp(dot(vNormal, -vLightDir),0.0,1.0)+
-                       vLightSpecular*pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0);
-
-    /// write result to fragment color
-	  gl_FragColor    = vec4(vLightColor.x, vLightColor.y, vLightColor.z, 1);
+    // store normal
+    gl_FragData[1] = vec4(ComputeNormal(gl_TexCoord[0].xyz),1.0);
   } else {
     discard;
   }

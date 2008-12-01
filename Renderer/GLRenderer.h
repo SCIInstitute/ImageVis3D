@@ -79,12 +79,16 @@ class GLRenderer : public AbstrRenderer {
     virtual void SetLogoParams(std::string strLogoFilename, int iLogoPos);
 
   protected:
+    float           m_fScaledIsovalue;
+    float           m_fScaledCVIsovalue;
     GLTexture1D*    m_p1DTransTex;
     GLTexture2D*    m_p2DTransTex;
     unsigned char*  m_p1DData;
     unsigned char*  m_p2DData;
     GLFBOTex*       m_pFBO3DImageLast;
     GLFBOTex*       m_pFBO3DImageCurrent;
+    GLFBOTex*       m_pFBOIsoHit;
+    GLFBOTex*       m_pFBOCVHit;
     int             m_iFilledBuffers;
     GLTexture2D*    m_pLogoTex;
     GLSLProgram*    m_pProgram1DTrans[2];
@@ -104,12 +108,13 @@ class GLRenderer : public AbstrRenderer {
     void DrawLogo();
     void DrawBackGradient();
     
-    virtual const FLOATVECTOR2 SetDataDepShaderVars();
+    virtual void SetDataDepShaderVars();
 
     virtual void Render3DView();
-    virtual void Render3DPreLoop() = 0;
+    virtual void Render3DPreLoop() {};
     virtual void Render3DInLoop(size_t iCurentBrick) = 0;
-    virtual void Render3DPostLoop() = 0;
+    virtual void Render3DPostLoop() {}
+    virtual void ComposeSurfaceImage();
     virtual void Recompose3DView(ERenderArea eArea);
 
     virtual void CreateOffscreenBuffers();
@@ -126,6 +131,8 @@ class GLRenderer : public AbstrRenderer {
     GLSLProgram*    m_pProgramTrans;
     GLSLProgram*    m_pProgram1DTransSlice;
     GLSLProgram*    m_pProgram2DTransSlice;
+    GLSLProgram*    m_pProgramIsoCompose;
+    GLSLProgram*    m_pProgramCVCompose;
 
     void SetBrickDepShaderVarsSlice(const UINTVECTOR3& vVoxelCount);
     void RenderSeperatingLines();

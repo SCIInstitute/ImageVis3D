@@ -65,16 +65,10 @@ class GLRaycaster : public GLRenderer {
 
   protected:
     GLFBOTex*       m_pFBORayEntry;
-    GLFBOTex*       m_pFBOIsoHit;
-    GLFBOTex*       m_pFBOCVHit;
     GLSLProgram*    m_pProgramRenderFrontFaces;
-    GLSLProgram*    m_pProgramIsoCompose;
-    GLSLProgram*    m_pProgramCV;
-    GLSLProgram*    m_pProgramCVCompose;
-
+    GLSLProgram*    m_pProgramIso2;
 
     void SetBrickDepShaderVars(size_t iCurrentBrick);
-    virtual const FLOATVECTOR2 SetDataDepShaderVars();
 
     virtual void CreateOffscreenBuffers();
     void RenderBox(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend, const FLOATVECTOR3& vMinCoords, const FLOATVECTOR3& vMaxCoords, bool bCullBack);
@@ -84,6 +78,7 @@ class GLRaycaster : public GLRenderer {
     virtual void Render3DPostLoop();
 
     virtual void StartFrame();
+    virtual void SetDataDepShaderVars();
 };
 
 #endif // GLRAYCASTER_H

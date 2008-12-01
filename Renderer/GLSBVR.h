@@ -67,15 +67,17 @@ class GLSBVR : public GLRenderer {
      * @param strFilename path to a file */
     virtual bool LoadDataset(const std::string& strFilename);
 
+    virtual bool SupportsClearView() {return true;}
+
   protected:
     SBVRGeogen    m_SBVRGeogen;
 
     void SetBrickDepShaderVars(size_t iCurrentBrick);
-    virtual const FLOATVECTOR2 SetDataDepShaderVars();
 
     virtual void Render3DPreLoop();
     virtual void Render3DInLoop(size_t iCurrentBrick);
     virtual void Render3DPostLoop();
+    void RenderProxyGeometry();
 
 };
 

@@ -61,11 +61,11 @@ bool GLSBVR::Initialize() {
   glShadeModel(GL_SMOOTH);
   glDisable(GL_CULL_FACE);
   
-  if (!LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-1D-FS.glsl",       &(m_pProgram1DTrans[0])) ||
-      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-1D-light-FS.glsl", &(m_pProgram1DTrans[1])) ||
-      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-2D-FS.glsl",       &(m_pProgram2DTrans[0])) ||
-      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-2D-light-FS.glsl", &(m_pProgram2DTrans[1])) ||
-      !LoadAndVerifyShader("Shaders/GPUSBVR-VS.glsl", "Shaders/GPUSBVR-ISO-FS.glsl",      &(m_pProgramIso))) {
+  if (!LoadAndVerifyShader("Shaders/GLSBVR-VS.glsl", "Shaders/GLSBVR-1D-FS.glsl",       &(m_pProgram1DTrans[0])) ||
+      !LoadAndVerifyShader("Shaders/GLSBVR-VS.glsl", "Shaders/GLSBVR-1D-light-FS.glsl", &(m_pProgram1DTrans[1])) ||
+      !LoadAndVerifyShader("Shaders/GLSBVR-VS.glsl", "Shaders/GLSBVR-2D-FS.glsl",       &(m_pProgram2DTrans[0])) ||
+      !LoadAndVerifyShader("Shaders/GLSBVR-VS.glsl", "Shaders/GLSBVR-2D-light-FS.glsl", &(m_pProgram2DTrans[1])) ||
+      !LoadAndVerifyShader("Shaders/GLSBVR-VS.glsl", "Shaders/GLSBVR-ISO-FS.glsl",      &(m_pProgramIso))) {
 
       Cleanup();
 
@@ -102,10 +102,6 @@ bool GLSBVR::Initialize() {
 
     m_pProgramIso->Enable();
     m_pProgramIso->SetUniformVector("texVolume",0);
-    m_pProgramIso->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
-    m_pProgramIso->SetUniformVector("vLightDiffuse",m_vIsoColor.x,m_vIsoColor.y,m_vIsoColor.z);
-    m_pProgramIso->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
-    m_pProgramIso->SetUniformVector("vLightDir",0.0f,0.0f,-1.0f);
     m_pProgramIso->Disable();
   }
 
@@ -144,37 +140,6 @@ void GLSBVR::SetBrickDepShaderVars(size_t iCurrentBrick) {
 
 }
 
-const FLOATVECTOR2 GLSBVR::SetDataDepShaderVars() {
-  const FLOATVECTOR2 vSizes = GLRenderer::SetDataDepShaderVars();
-
-  switch (m_eRenderMode) {
-    case RM_1DTRANS    :  {
-                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Enable();
-                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",vSizes.x);
-                            m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
-                            break;
-                          }
-    case RM_2DTRANS    :  {
-                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Enable();
-                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fTransScale",vSizes.x);
-                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->SetUniformVector("fGradientScale",vSizes.y);
-                            m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable();
-                            break;
-                          }
-    case RM_ISOSURFACE : {
-                            m_pProgramIso->Enable();
-                            m_pProgramIso->SetUniformVector("fIsoval",m_fIsovalue/vSizes.x);
-                            m_pProgramIso->Disable();
-                            break;
-                          }
-    case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLSBVR::SetDataDepShaderVars","Invalid rendermode set"); break;
-  }
-
-
-  return vSizes;
-}
-
-
 void GLSBVR::Render3DPreLoop() {
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  m_p1DTransTex->Bind(1); 
@@ -187,16 +152,21 @@ void GLSBVR::Render3DPreLoop() {
                           glEnable(GL_BLEND);
                           glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
                           break;
-    case RM_ISOSURFACE :  m_pProgramIso->Enable(); 
-                          m_pProgramIso->SetUniformVector("vLightDiffuse",m_vIsoColor.x,m_vIsoColor.y,m_vIsoColor.z);
-                          break;
+    case RM_ISOSURFACE :  break;
     default    :  m_pMasterController->DebugOut()->Error("GLSBVR::Render3DView","Invalid rendermode set"); 
                           break;
   }
 
-  if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_FALSE);
-
   m_SBVRGeogen.SetLODData( UINTVECTOR3(m_pDataset->GetInfo()->GetDomainSize(m_iCurrentLOD))  );
+}
+
+void GLSBVR::RenderProxyGeometry() {
+    glBegin(GL_TRIANGLES);
+      for (int i = int(m_SBVRGeogen.m_vSliceTriangles.size())-1;i>=0;i--) {
+        glTexCoord3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vTex);
+        glVertex3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vPos);
+      }
+    glEnd();
 }
 
 void GLSBVR::Render3DInLoop(size_t iCurrentBrick) {
@@ -209,29 +179,62 @@ void GLSBVR::Render3DInLoop(size_t iCurrentBrick) {
   maBricktModelView.setModelview();
   m_SBVRGeogen.SetTransformation(maBricktModelView, true);
 
-  // update the shader parameter
-  SetBrickDepShaderVars(iCurrentBrick);
+  if (m_eRenderMode == RM_ISOSURFACE) {
+    // disable writing to the main offscreen buffer
+    m_pFBO3DImageCurrent->FinishWrite();
+  
+    glDepthMask(GL_TRUE);
+    m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
+    m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
+    GLFBOTex::TwoDrawBuffers();
 
-  // render the slices
-  glBegin(GL_TRIANGLES);
-    for (int i = int(m_SBVRGeogen.m_vSliceTriangles.size())-1;i>=0;i--) {
-      glTexCoord3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vTex);
-      glVertex3fv(m_SBVRGeogen.m_vSliceTriangles[i].m_vPos);
+    if (m_iBricksRenderedInThisSubFrame == 0) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    m_pProgramIso->Enable();
+    SetBrickDepShaderVars(iCurrentBrick);
+    m_pProgramIso->SetUniformVector("fIsoval",m_fScaledIsovalue);
+    RenderProxyGeometry();
+    m_pProgramIso->Disable();
+
+    GLFBOTex::NoDrawBuffer();
+    m_pFBOIsoHit->FinishWrite(1);
+    m_pFBOIsoHit->FinishWrite(0);
+
+    if (m_bDoClearView) {
+      m_pFBOCVHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
+      m_pFBOCVHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
+      GLFBOTex::TwoDrawBuffers();
+
+      if (m_iBricksRenderedInThisSubFrame == 0) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      m_pProgramIso->Enable();
+      m_pProgramIso->SetUniformVector("fIsoval",m_fScaledCVIsovalue);
+      RenderProxyGeometry();
+      m_pProgramIso->Disable();
+      GLFBOTex::NoDrawBuffer();
+
+      m_pFBOCVHit->FinishWrite(1);
+      m_pFBOCVHit->FinishWrite(0);
     }
-  glEnd();
+
+    m_pFBO3DImageCurrent->Write();
+    GLFBOTex::OneDrawBuffer();
+  } else {
+    glDepthMask(GL_FALSE);
+    SetBrickDepShaderVars(iCurrentBrick);
+    RenderProxyGeometry();
+  }
 }
 
 
 void GLSBVR::Render3DPostLoop() {
+  GLRenderer::Render3DPostLoop(); 
+
   // disable the shader
   switch (m_eRenderMode) {
     case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
     case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); break;
-    case RM_ISOSURFACE :  m_pProgramIso->Disable(); break;
+    case RM_ISOSURFACE :  break;
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLSBVR::Render3DView","Invalid rendermode set"); break;
   }
-
-  glDepthMask(GL_TRUE);
 }
 
 
