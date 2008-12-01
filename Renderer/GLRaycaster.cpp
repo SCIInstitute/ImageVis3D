@@ -68,7 +68,7 @@ void GLRaycaster::CreateOffscreenBuffers() {
   GLRenderer::CreateOffscreenBuffers();
   if (m_pFBORayEntry){m_pMasterController->MemMan()->FreeFBO(m_pFBORayEntry); m_pFBORayEntry = NULL;}
   if (m_vWinSize.area() > 0) {
-    m_pFBORayEntry = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, true);
+    m_pFBORayEntry = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false);
   }
 }
 
@@ -252,16 +252,13 @@ void GLRaycaster::Render3DPreLoop() {
                           break;
   }
 
+  /*
   if (m_iBricksRenderedInThisSubFrame == 0) {
     m_pFBO3DImageCurrent->FinishWrite();
     m_pFBORayEntry->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
 
-    glClearDepth(0);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    glClearDepth(1);
-
     // render nearplane into buffer
-    float fNear = m_FrustumCullingLOD.GetNearPlane() + 0.0001f;
+    float fNear = m_FrustumCullingLOD.GetNearPlane() + 0.01f;
 
     FLOATMATRIX4 mInvModelView = m_matModelView.inverse();
 
@@ -281,17 +278,15 @@ void GLRaycaster::Render3DPreLoop() {
     m_pProgramRenderFrontFaces->Disable();
 
     m_pFBORayEntry->FinishWrite(0);
-    m_pFBO3DImageCurrent->Write();
-    
-    glEnable(GL_CULL_FACE);
-  }
+    m_pFBO3DImageCurrent->Write();    
+  }*/
+
+  glEnable(GL_CULL_FACE);
 }
 
 void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
   glDisable(GL_BLEND);
-  glDepthMask(GL_TRUE);
-  glDepthFunc(GL_GEQUAL);
-  glEnable(GL_DEPTH_TEST);
+  glDepthMask(GL_FALSE);
 
   // disable writing to the main offscreen buffer
   m_pFBO3DImageCurrent->FinishWrite();
@@ -300,7 +295,7 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
   m_pFBORayEntry->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
 
   m_pProgramRenderFrontFaces->Enable();
-  RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
+  RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
   m_pProgramRenderFrontFaces->Disable();
 
   GLenum e = glGetError();
@@ -309,10 +304,8 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 	}
   m_pFBORayEntry->FinishWrite(0);
  
-  glDepthFunc(GL_LEQUAL);
-  glDisable(GL_DEPTH_TEST);
-
   if (m_eRenderMode == RM_ISOSURFACE) { 
+    glDepthMask(GL_TRUE);
     m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
     m_pFBOIsoHit->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
     GLFBOTex::TwoDrawBuffers();
@@ -321,7 +314,7 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
     m_pProgramIso->Enable();
     SetBrickDepShaderVars(iCurrentBrick);
     m_pFBORayEntry->Read(GL_TEXTURE2_ARB);
-    RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
+    RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
     m_pFBORayEntry->FinishRead();
     m_pProgramIso->Disable();
 
@@ -340,7 +333,7 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
       m_pFBORayEntry->Read(GL_TEXTURE2_ARB);
       m_pFBOIsoHit->Read(GL_TEXTURE4_ARB, 0);
       m_pFBOIsoHit->Read(GL_TEXTURE5_ARB, 1);
-      RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
+      RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
       m_pFBOIsoHit->FinishRead(1);
       m_pFBOIsoHit->FinishRead(0);
       m_pFBORayEntry->FinishRead();
@@ -353,9 +346,10 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 
     m_pFBO3DImageCurrent->Write();
     GLFBOTex::OneDrawBuffer();
+    glDepthFunc(GL_LESS);
+
   } else {
     glDepthMask(GL_FALSE);
-   // glEnable(GL_DEPTH_TEST);
 
     m_pFBO3DImageCurrent->Write();
     GLFBOTex::OneDrawBuffer();
@@ -377,7 +371,7 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
     SetBrickDepShaderVars(iCurrentBrick);
 
     m_pFBORayEntry->Read(GL_TEXTURE2_ARB);
-    RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
+    RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
     m_pFBORayEntry->FinishRead();
 
     switch (m_eRenderMode) {
@@ -391,7 +385,6 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
                             break;
     }
   }
-  glEnable(GL_DEPTH_TEST);
 }
 
 void GLRaycaster::StartFrame() {
@@ -436,6 +429,7 @@ void GLRaycaster::Render3DPostLoop() {
   glDisable(GL_CULL_FACE);
   glDepthMask(GL_TRUE);
   glEnable(GL_BLEND);
+
 }
 
 void GLRaycaster::SetDataDepShaderVars() {

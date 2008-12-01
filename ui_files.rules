@@ -7,7 +7,7 @@
 		<CustomBuildRule
 			Name="UI"
 			DisplayName="Compile QT UserInterface File (*.ui)"
-			CommandLine="$(QTDIR)\bin\uic.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)..\AutoGen\ui_$(InputName).h&quot;"
+			CommandLine="$(QTDIR)bin32\uic.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)..\AutoGen\ui_$(InputName).h&quot;"
 			Outputs="$(InputDir)..\AutoGen\ui_$(InputName).h"
 			FileExtensions="*.ui"
 			ExecutionDescription="Creating UI File ui_$(InputName).h ..."

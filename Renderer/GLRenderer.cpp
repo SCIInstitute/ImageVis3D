@@ -691,6 +691,8 @@ void GLRenderer::DrawLogo() {
   glDisable(GL_TEXTURE_3D);
   glEnable(GL_TEXTURE_2D);
 
+  glMatrixMode(GL_TEXTURE);
+  glLoadIdentity();
 
   UINTVECTOR2 vSizes(m_pLogoTex->GetSize());
   FLOATVECTOR2 vTexelSize(1.0f/FLOATVECTOR2(vSizes));
