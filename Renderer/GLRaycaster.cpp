@@ -298,10 +298,6 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
   RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
   m_pProgramRenderFrontFaces->Disable();
 
-  GLenum e = glGetError();
-  if (GL_NO_ERROR!= e) {
-    m_pMasterController->DebugOut()->Error("GLFBOTex:FinishWrite","Error unbinding FBO 1!");
-	}
   m_pFBORayEntry->FinishWrite(0);
  
   if (m_eRenderMode == RM_ISOSURFACE) { 
