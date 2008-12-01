@@ -84,3 +84,7 @@ for fw in QtCore QtGui QtOpenGL ; do
         @executable_path/../Frameworks/${fw}.framework/Versions/4/${fw} \
         ${PREFIX}/Contents/Frameworks/${fw}.framework/Versions/4/${fw}
 done
+
+echo -en "Removing subversion garbage ...\t"
+find "${PREFIX}" -iname .svn -exec rm -fr {} +
+echo "done!"
