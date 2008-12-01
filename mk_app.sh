@@ -4,6 +4,11 @@ TARGETPATH=Build/OSX/Bin
 TARGETAPP=ImageVis3D.app
 PREFIX="${TARGETPATH}/${TARGETAPP}"
 
+if test -n "$1" -a -d "$1" ; then
+    echo "Using '$1' as .app directory."
+    PREFIX="$1"
+fi
+
 function error
 {
     echo "$@"
@@ -39,6 +44,14 @@ cp -R /Library/Frameworks/QtGui.framework "${PREFIX}/Contents/Frameworks"
 
 echo -e "\t QtOpenGL"
 cp -R /Library/Frameworks/QtOpenGL.framework "${PREFIX}/Contents/Frameworks"
+
+echo -e "\t .. removing headers."
+pushd "${PREFIX}/Contents/Frameworks" &>/dev/null
+    for fw in QtCore QtGui QtOpenGL ; do
+        rm -r ${fw}.framework/Versions/4/Headers
+        rm ${fw}.framework/Headers
+    done
+popd &>/dev/null
 
 echo "Copying Shaders ..."
 rm -fr "${PREFIX}/Contents/Resources"
