@@ -85,8 +85,8 @@ void main(void)
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // compute the ray parameters
-  vec3  vRayEntry    = vEyePos;  
-  vec3  vRayExit     = texture2D(texRayExitPos, vFragCoords).xyz;  
+  vec3  vRayExit    = vEyePos;  
+  vec3  vRayEntry     = texture2D(texRayExitPos, vFragCoords).xyz;  
   vec3  vRayEntryTex = (gl_TextureMatrix[0] * vec4(vRayEntry,1.0)).xyz;
   vec3  vRayExitTex  = (gl_TextureMatrix[0] * vec4(vRayExit,1.0)).xyz;
   

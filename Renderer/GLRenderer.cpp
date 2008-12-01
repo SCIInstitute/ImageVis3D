@@ -557,6 +557,7 @@ void GLRenderer::RenderBBox(const FLOATVECTOR4 vColor) {
 
 void GLRenderer::RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend) {
   FLOATVECTOR3 vMinPoint, vMaxPoint;
+
   vMinPoint = (vCenter - vExtend/2.0);
   vMaxPoint = (vCenter + vExtend/2.0);
 

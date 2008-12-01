@@ -39,6 +39,6 @@ varying vec3 vEyePos;
 
 void main(void)
 {
-  gl_Position = gl_ModelViewProjectionMatrix * vec4(gl_Vertex.xyz,1.0);
-  vEyePos = (gl_ModelViewMatrix * vec4(gl_Vertex.xyz,1.0)).xyz;
+  gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+  vEyePos = (gl_ModelViewMatrix * gl_Vertex).xyz;
 }

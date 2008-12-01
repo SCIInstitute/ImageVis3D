@@ -66,7 +66,7 @@ void CullingLOD::SetScreenParams(float fFOVY, float fAspect, float fNearPlane, f
   m_fLODFactor = 2.0f * tan(fFOVY * ((3.1416f/180.0f) / 2.0f)) * m_fScreenSpaceError / float(m_iPixelCountY);
 }
 
-FLOATVECTOR2 CullingLOD::GetDepthScaleParams() {
+FLOATVECTOR2 CullingLOD::GetDepthScaleParams() const {
   return FLOATVECTOR2(m_fFarPlane / (m_fFarPlane - m_fNearPlane), (m_fFarPlane * m_fNearPlane / (m_fNearPlane - m_fFarPlane)));
 }
 

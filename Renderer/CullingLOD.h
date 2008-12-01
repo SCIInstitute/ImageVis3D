@@ -56,7 +56,9 @@ class CullingLOD
     int GetLODLevel(const FLOATVECTOR3& vfCenter, const FLOATVECTOR3& vfExtent, const UINTVECTOR3& viVoxelCount) const;
 	  bool IsVisible(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vfExtent) const;
 
-    FLOATVECTOR2 GetDepthScaleParams();
+    FLOATVECTOR2 GetDepthScaleParams() const;
+    float        GetNearPlane() const {return m_fNearPlane;}
+    float        GetFarPlane() const {return m_fFarPlane;}
 
   private:
     FLOATMATRIX4 m_mModelViewProjectionMatrix;
