@@ -558,8 +558,10 @@ void GLRenderer::RenderBBox(const FLOATVECTOR4 vColor) {
 void GLRenderer::RenderBBox(const FLOATVECTOR4 vColor, const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vExtend) {
   FLOATVECTOR3 vMinPoint, vMaxPoint;
 
-  vMinPoint = (vCenter - vExtend/2.0);
-  vMaxPoint = (vCenter + vExtend/2.0);
+  FLOATVECTOR3 vEExtend(vExtend+0.001f);
+
+  vMinPoint = (vCenter - vEExtend/2.0);
+  vMaxPoint = (vCenter + vEExtend/2.0);
 
   glBegin(GL_LINES);
     glColor4f(vColor.x,vColor.y,vColor.z,vColor.w);
@@ -887,21 +889,32 @@ void GLRenderer::BBoxPreRender() {
   // for rendering modes other than isosurface render the bbox in the first pass once to init the depth buffer
   // for isosurface rendering we can go ahead and render the bbox directly as isosurfacing 
   // writes out correct depth values
-  glDisable(GL_BLEND);
-  if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
-  if (m_bRenderGlobalBBox) RenderBBox();
-  if (m_bRenderLocalBBox) {
-    for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
-      RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
+  if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) {
+	  glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+	  if (m_bRenderGlobalBBox) 
+      RenderBBox();
+	  if (m_bRenderLocalBBox) {
+	    for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
+	      RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
+	    }
+    }
+	  glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+  } else {
+    glDisable(GL_BLEND);
+	  if (m_bRenderGlobalBBox) 
+      RenderBBox();
+	  if (m_bRenderLocalBBox) {
+	    for (UINT64 iCurrentBrick = 0;iCurrentBrick<m_vCurrentBrickList.size();iCurrentBrick++) {
+	      RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
+	    }
     }
   }
-  if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
 }
 
 void GLRenderer::BBoxPostRender() {
- if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) {
+  if (m_eRenderMode != RM_ISOSURFACE || m_bDoClearView) {
     m_matModelView.setModelview();
-	glEnable(GL_BLEND);
+    glEnable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
     if (m_bRenderGlobalBBox) RenderBBox();
     if (m_bRenderLocalBBox) {
@@ -909,8 +922,8 @@ void GLRenderer::BBoxPostRender() {
         RenderBBox(FLOATVECTOR4(0,1,0,1), m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension);
       }
     }
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
   }
 }
 
