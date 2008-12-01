@@ -14,6 +14,8 @@ if test -d .git ; then
     else
         svn="git svn"
     fi
+else
+    svn="svn"
 fi
 
 function update
@@ -44,7 +46,7 @@ update
 
 # manual clean.
 find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
-	-exec rm {} +
+    -exec rm {} +
 
 try qmake -spec ${spec}
 make clean
@@ -54,12 +56,12 @@ try make
 revision=`$svn info | grep Revision | awk '{print $2}'`
 echo "revision: $revision"
 if test `uname` = "Darwin" ; then
-	echo "Building app file ..."
+    echo "Building app file ..."
     try bash mk_app.sh
-	pushd Build/OSX/Bin &>/dev/null
-	tar zcf iv3d-osx-r${revision}.tar.gz ImageVis3D.app
-	popd &>/dev/null
-	mv Build/OSX/Bin/iv3d-osx-r${revision}.tar.gz .
+    pushd Build/OSX/Bin &>/dev/null
+    tar zcf iv3d-osx-r${revision}.tar.gz ImageVis3D.app
+    popd &>/dev/null
+    mv Build/OSX/Bin/iv3d-osx-r${revision}.tar.gz .
 elif test `uname` = "Linux" ; then
     mv Build/Linux/Bin/ImageVis3D ./ImageVis3D-r${revision}
 fi
