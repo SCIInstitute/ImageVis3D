@@ -930,6 +930,7 @@ void GLRenderer::SetLogoParams(std::string strLogoFilename, int iLogoPos) {
   AbstrRenderer::SetLogoParams(strLogoFilename, iLogoPos);
 
   if (m_pLogoTex) m_pMasterController->MemMan()->FreeTexture(m_pLogoTex);
-  m_pLogoTex = m_pMasterController->MemMan()->Load2DTextureFromFile(m_strLogoFilename);
+  if (m_strLogoFilename != "")
+	m_pLogoTex = m_pMasterController->MemMan()->Load2DTextureFromFile(m_strLogoFilename);
   ScheduleWindowRedraw(WM_3D);
 }

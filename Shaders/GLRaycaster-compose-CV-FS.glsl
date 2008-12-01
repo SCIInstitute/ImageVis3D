@@ -55,8 +55,8 @@ vec3 Lighting(vec3 vPosition, vec3 vNormal, vec3 vLightAmbient, vec3 vLightDiffu
 	vec3 vViewDir    = normalize(vec3(0.0,0.0,0.0)-vPosition);
 	vec3 vReflection = normalize(reflect(vViewDir, vNormal));
 	return vLightAmbient+
-				 vLightDiffuse*clamp(dot(vNormal, -vLightDir),0.0,1.0)+
-			   vLightSpecular*pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0);
+		   vLightDiffuse*max(dot(vNormal, -vLightDir),0.0)+
+		   vLightSpecular*pow(max(dot(vReflection, vLightDir),0.0),8.0);
 }
 
 

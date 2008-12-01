@@ -73,8 +73,8 @@ void main(void)
   vec3 vViewDir    = normalize(vec3(0,0,0)-vPosition);
   vec3 vReflection = normalize(reflect(vViewDir, vNormal));
   vec3 vLightColor = vLightAmbient+
-                     vLightDiffuse*clamp(dot(vNormal, -vLightDir),0.0,1.0)*vTransVal.xyz+
-                     vLightSpecular*pow(clamp(dot(vReflection, vLightDir),0.0,1.0),8.0);
+                     vLightDiffuse*max(dot(vNormal, -vLightDir),0.0)*vTransVal.xyz+
+                     vLightSpecular*pow(max(dot(vReflection, vLightDir),0.0),8.0);
 
   /// apply opacity correction
   vTransVal.a = 1.0 - pow(1.0 - vTransVal.a, fStepScale);
