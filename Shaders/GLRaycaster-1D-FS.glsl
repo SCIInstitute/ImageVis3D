@@ -37,7 +37,6 @@
 
 uniform sampler3D texVolume;  ///< the data volume
 uniform sampler1D texTrans1D; ///< the 1D Transfer function
-uniform sampler2D texRayExit; ///< the backface (or ray exit point) texture in texcoords
 uniform sampler2D texRayExitPos; ///< the backface (or ray exit point) texture in eyecoords
 uniform float fTransScale;    ///< scale for 1D Transfer function lookup
 uniform float fStepScale;     ///< opacity correction quotient
@@ -59,10 +58,10 @@ void main(void)
   vec2 vFragCoords = vec2(gl_FragCoord.x / vScreensize.x , gl_FragCoord.y / vScreensize.y);
 
   // compute the ray parameters
-  vec3  vRayEntryTex = gl_TexCoord[0].xyz;
-  vec3  vRayExitTex  = texture2D(texRayExit, vFragCoords).xyz;
   vec3  vRayEntry    = vEyePos;  
   vec3  vRayExit     = texture2D(texRayExitPos, vFragCoords).xyz;  
+  vec3  vRayEntryTex = (gl_TextureMatrix[0] * vec4(vRayEntry,1.0)).xyz;
+  vec3  vRayExitTex  = (gl_TextureMatrix[0] * vec4(vRayExit,1.0)).xyz;
   float fRayLength   = length(vRayExit - vRayEntry);
   
   // compute the maximum number of steps before the domain is left

@@ -1132,6 +1132,13 @@ public:
       glLoadMatrixf(M);
     }
 
+    void setTextureMatrix() {
+      float M[16];
+      for (int i=0;i<16;i++) M[i] = array[i];
+      glMatrixMode(GL_TEXTURE);
+      glLoadMatrixf(M);
+    }
+
   #endif
 };
 

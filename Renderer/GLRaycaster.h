@@ -79,6 +79,9 @@ class GLRaycaster : public GLRenderer {
 
     virtual void StartFrame();
     virtual void SetDataDepShaderVars();
+
+    FLOATMATRIX4 ComputeEyeToTextureMatrix(FLOATVECTOR3 p1, FLOATVECTOR3 t1, 
+                                           FLOATVECTOR3 p2, FLOATVECTOR3 t2);
 };
 
 #endif // GLRAYCASTER_H

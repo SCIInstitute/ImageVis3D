@@ -39,6 +39,5 @@ varying vec3 vEyePos;
 
 void main(void)
 {
-  gl_FragData[0] = vec4(gl_TexCoord[0].xyz,0);
-  gl_FragData[1] = vec4(vEyePos,0);
+  gl_FragColor = vec4(vEyePos,0);
 }

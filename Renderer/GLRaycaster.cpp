@@ -68,7 +68,7 @@ void GLRaycaster::CreateOffscreenBuffers() {
   GLRenderer::CreateOffscreenBuffers();
   if (m_pFBORayEntry){m_pMasterController->MemMan()->FreeFBO(m_pFBORayEntry); m_pFBORayEntry = NULL;}
   if (m_vWinSize.area() > 0) {
-    m_pFBORayEntry = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false, 2);
+    m_pFBORayEntry = m_pMasterController->MemMan()->GetFBO(GL_NEAREST, GL_NEAREST, GL_CLAMP, m_vWinSize.x, m_vWinSize.y, GL_RGBA16F_ARB, 16*4, false);
   }
 }
 
@@ -97,15 +97,13 @@ bool GLRaycaster::Initialize() {
     m_pProgram1DTrans[0]->Enable();
     m_pProgram1DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram1DTrans[0]->SetUniformVector("texTrans1D",1);
-    m_pProgram1DTrans[0]->SetUniformVector("texRayExit",2);
-    m_pProgram1DTrans[0]->SetUniformVector("texRayExitPos",3);
+    m_pProgram1DTrans[0]->SetUniformVector("texRayExitPos",2);
     m_pProgram1DTrans[0]->Disable();
 
     m_pProgram1DTrans[1]->Enable();
     m_pProgram1DTrans[1]->SetUniformVector("texVolume",0);
     m_pProgram1DTrans[1]->SetUniformVector("texTrans1D",1);
-    m_pProgram1DTrans[1]->SetUniformVector("texRayExit",2);
-    m_pProgram1DTrans[1]->SetUniformVector("texRayExitPos",3);
+    m_pProgram1DTrans[1]->SetUniformVector("texRayExitPos",2);
     m_pProgram1DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
     m_pProgram1DTrans[1]->SetUniformVector("vLightDiffuse",1.0f,1.0f,1.0f);
     m_pProgram1DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
@@ -115,15 +113,13 @@ bool GLRaycaster::Initialize() {
     m_pProgram2DTrans[0]->Enable();
     m_pProgram2DTrans[0]->SetUniformVector("texVolume",0);
     m_pProgram2DTrans[0]->SetUniformVector("texTrans2D",1);
-    m_pProgram2DTrans[0]->SetUniformVector("texRayExit",2);
-    m_pProgram2DTrans[0]->SetUniformVector("texRayExitPos",3);
+    m_pProgram2DTrans[0]->SetUniformVector("texRayExitPos",2);
     m_pProgram2DTrans[0]->Disable();
 
     m_pProgram2DTrans[1]->Enable();
     m_pProgram2DTrans[1]->SetUniformVector("texVolume",0);
     m_pProgram2DTrans[1]->SetUniformVector("texTrans2D",1);
-    m_pProgram2DTrans[1]->SetUniformVector("texRayExit",2);
-    m_pProgram2DTrans[1]->SetUniformVector("texRayExitPos",3);
+    m_pProgram2DTrans[1]->SetUniformVector("texRayExitPos",2);
     m_pProgram2DTrans[1]->SetUniformVector("vLightAmbient",0.2f,0.2f,0.2f);
     m_pProgram2DTrans[1]->SetUniformVector("vLightDiffuse",1.0f,1.0f,1.0f);
     m_pProgram2DTrans[1]->SetUniformVector("vLightSpecular",1.0f,1.0f,1.0f);
@@ -134,15 +130,13 @@ bool GLRaycaster::Initialize() {
 
     m_pProgramIso->Enable();
     m_pProgramIso->SetUniformVector("texVolume",0);
-    m_pProgramIso->SetUniformVector("texRayExit",2);
-    m_pProgramIso->SetUniformVector("texRayExitPos",3);
+    m_pProgramIso->SetUniformVector("texRayExitPos",2);
     m_pProgramIso->SetUniformVector("vProjParam",vParams.x, vParams.y);
     m_pProgramIso->Disable();
 
     m_pProgramIso2->Enable();
     m_pProgramIso2->SetUniformVector("texVolume",0);
-    m_pProgramIso2->SetUniformVector("texRayExit",2);
-    m_pProgramIso2->SetUniformVector("texRayExitPos",3);
+    m_pProgramIso2->SetUniformVector("texRayExitPos",2);
     m_pProgramIso2->SetUniformVector("texLastHit",4);
     m_pProgramIso2->SetUniformVector("texLastHitPos",5);
     m_pProgramIso2->Disable();    
@@ -202,60 +196,45 @@ void GLRaycaster::RenderBox(const FLOATVECTOR3& vCenter, const FLOATVECTOR3& vEx
   vMinPoint = (vCenter - vExtend/2.0);
   vMaxPoint = (vCenter + vExtend/2.0);
 
+  // \todo compute this only once per brick
+  FLOATMATRIX4 m = ComputeEyeToTextureMatrix(FLOATVECTOR3(vMaxPoint.x, vMaxPoint.y, vMaxPoint.z),
+                                             FLOATVECTOR3(vMaxCoords.x, vMaxCoords.y, vMaxCoords.z),
+                                             FLOATVECTOR3(vMinPoint.x, vMinPoint.y, vMinPoint.z),
+                                             FLOATVECTOR3(vMinCoords.x, vMinCoords.y, vMinCoords.z));
+
+
+  m.setTextureMatrix();
+
   glBegin(GL_QUADS);        
     // BACK
-    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMinCoords.z);
     glVertex3f( vMaxPoint.x, vMinPoint.y, vMinPoint.z);
-    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMinCoords.z);
     glVertex3f( vMinPoint.x, vMinPoint.y, vMinPoint.z);
-    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMinCoords.z);
     glVertex3f( vMinPoint.x, vMaxPoint.y, vMinPoint.z);
-    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMinCoords.z);
     glVertex3f( vMaxPoint.x, vMaxPoint.y, vMinPoint.z);
     // FRONT
-    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMaxCoords.z);
     glVertex3f( vMaxPoint.x, vMaxPoint.y, vMaxPoint.z);
-    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMaxCoords.z);
     glVertex3f( vMinPoint.x, vMaxPoint.y, vMaxPoint.z);
-    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMaxCoords.z);
     glVertex3f( vMinPoint.x, vMinPoint.y, vMaxPoint.z);
-    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMaxCoords.z);
     glVertex3f( vMaxPoint.x, vMinPoint.y, vMaxPoint.z);
     // LEFT
-    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMinCoords.z);
     glVertex3f( vMinPoint.x, vMaxPoint.y, vMinPoint.z);
-    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMinCoords.z);
     glVertex3f( vMinPoint.x, vMinPoint.y, vMinPoint.z);
-    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMaxCoords.z);
     glVertex3f( vMinPoint.x, vMinPoint.y, vMaxPoint.z);
-    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMaxCoords.z);
     glVertex3f( vMinPoint.x, vMaxPoint.y, vMaxPoint.z);
     // RIGHT
-    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMaxCoords.z);
     glVertex3f( vMaxPoint.x, vMaxPoint.y, vMaxPoint.z);
-    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMaxCoords.z);
     glVertex3f( vMaxPoint.x, vMinPoint.y, vMaxPoint.z);
-    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMinCoords.z);
     glVertex3f( vMaxPoint.x, vMinPoint.y, vMinPoint.z);
-    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMinCoords.z);
     glVertex3f( vMaxPoint.x, vMaxPoint.y, vMinPoint.z);
     // BOTTOM
-    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMaxCoords.z);
     glVertex3f( vMaxPoint.x, vMinPoint.y, vMaxPoint.z);
-    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMaxCoords.z);
     glVertex3f( vMinPoint.x, vMinPoint.y, vMaxPoint.z);
-    glTexCoord3f( vMinCoords.x, vMinCoords.y, vMinCoords.z);
     glVertex3f( vMinPoint.x, vMinPoint.y, vMinPoint.z);
-    glTexCoord3f( vMaxCoords.x, vMinCoords.y, vMinCoords.z);
     glVertex3f( vMaxPoint.x, vMinPoint.y, vMinPoint.z);
     // TOP
-    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMinCoords.z);
     glVertex3f( vMaxPoint.x, vMaxPoint.y, vMinPoint.z);
-    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMinCoords.z);
     glVertex3f( vMinPoint.x, vMaxPoint.y, vMinPoint.z);
-    glTexCoord3f( vMinCoords.x, vMaxCoords.y, vMaxCoords.z);
     glVertex3f( vMinPoint.x, vMaxPoint.y, vMaxPoint.z);
-    glTexCoord3f( vMaxCoords.x, vMaxCoords.y, vMaxCoords.z);
     glVertex3f( vMaxPoint.x, vMaxPoint.y, vMaxPoint.z);
   glEnd();
 }
@@ -285,20 +264,15 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 
   // write frontfaces (ray entry points)
   m_pFBORayEntry->Write(GL_COLOR_ATTACHMENT0_EXT, 0);
-  m_pFBORayEntry->Write(GL_COLOR_ATTACHMENT1_EXT, 1);
-  GLFBOTex::TwoDrawBuffers();
 
   m_pProgramRenderFrontFaces->Enable();
   RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, false);
   m_pProgramRenderFrontFaces->Disable();
 
-  GLFBOTex::NoDrawBuffer();
-
   GLenum e = glGetError();
   if (GL_NO_ERROR!= e) {
     m_pMasterController->DebugOut()->Error("GLFBOTex:FinishWrite","Error unbinding FBO 1!");
 	}
-  m_pFBORayEntry->FinishWrite(1);
   m_pFBORayEntry->FinishWrite(0);
  
   if (m_eRenderMode == RM_ISOSURFACE) { 
@@ -310,11 +284,9 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
     if (m_iBricksRenderedInThisSubFrame == 0) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_pProgramIso->Enable();
     SetBrickDepShaderVars(iCurrentBrick);
-    m_pFBORayEntry->Read(GL_TEXTURE2_ARB, 0);
-    m_pFBORayEntry->Read(GL_TEXTURE3_ARB, 1);
+    m_pFBORayEntry->Read(GL_TEXTURE2_ARB);
     RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
-    m_pFBORayEntry->FinishRead(1);
-    m_pFBORayEntry->FinishRead(0);
+    m_pFBORayEntry->FinishRead();
     m_pProgramIso->Disable();
 
     GLFBOTex::NoDrawBuffer();
@@ -329,15 +301,13 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 
       if (m_iBricksRenderedInThisSubFrame == 0) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       m_pProgramIso2->Enable();
-      m_pFBORayEntry->Read(GL_TEXTURE2_ARB, 0);
-      m_pFBORayEntry->Read(GL_TEXTURE3_ARB, 1);
+      m_pFBORayEntry->Read(GL_TEXTURE2_ARB);
       m_pFBOIsoHit->Read(GL_TEXTURE4_ARB, 0);
       m_pFBOIsoHit->Read(GL_TEXTURE5_ARB, 1);
       RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
       m_pFBOIsoHit->FinishRead(1);
       m_pFBOIsoHit->FinishRead(0);
-      m_pFBORayEntry->FinishRead(1);
-      m_pFBORayEntry->FinishRead(0);
+      m_pFBORayEntry->FinishRead();
       m_pProgramIso2->Disable();
       GLFBOTex::NoDrawBuffer();
 
@@ -367,11 +337,9 @@ void GLRaycaster::Render3DInLoop(size_t iCurrentBrick) {
 
     SetBrickDepShaderVars(iCurrentBrick);
 
-    m_pFBORayEntry->Read(GL_TEXTURE2_ARB, 0);
-    m_pFBORayEntry->Read(GL_TEXTURE3_ARB, 1);
+    m_pFBORayEntry->Read(GL_TEXTURE2_ARB);
     RenderBox(m_vCurrentBrickList[iCurrentBrick].vCenter, m_vCurrentBrickList[iCurrentBrick].vExtension, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMin, m_vCurrentBrickList[iCurrentBrick].vTexcoordsMax, true);
-    m_pFBORayEntry->FinishRead(0);
-    m_pFBORayEntry->FinishRead(1);
+    m_pFBORayEntry->FinishRead();
 
     switch (m_eRenderMode) {
       case RM_1DTRANS    :  m_pProgram1DTrans[m_bUseLigthing ? 1 : 0]->Disable();
@@ -437,4 +405,28 @@ void GLRaycaster::SetDataDepShaderVars() {
     m_pProgramIso2->SetUniformVector("fIsoval",m_fScaledCVIsovalue);
     m_pProgramIso2->Disable();
   } 
+}
+
+
+FLOATMATRIX4 GLRaycaster::ComputeEyeToTextureMatrix(FLOATVECTOR3 p1, FLOATVECTOR3 t1, 
+                                                    FLOATVECTOR3 p2, FLOATVECTOR3 t2) {
+  FLOATMATRIX4 m;
+
+  FLOATMATRIX4 mInvModelView = m_matModelView.inverse();
+
+  FLOATVECTOR3 vTrans1 = -p1;
+  FLOATVECTOR3 vScale  = (t2-t1) / (p2-p1);
+  FLOATVECTOR3 vTrans2 =  t1;
+
+  FLOATMATRIX4 mTrans1;
+  FLOATMATRIX4 mScale;
+  FLOATMATRIX4 mTrans2;
+
+  mTrans1.Translation(vTrans1.x,vTrans1.y,vTrans1.z);
+  mScale.Scaling(vScale.x,vScale.y,vScale.z);
+  mTrans2.Translation(vTrans2.x,vTrans2.y,vTrans2.z);
+
+  m = mInvModelView * mTrans1 * mScale * mTrans2;
+
+  return m;
 }

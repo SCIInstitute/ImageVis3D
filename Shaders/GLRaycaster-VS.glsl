@@ -40,6 +40,5 @@ varying vec3 vEyePos;
 void main(void)
 {
   gl_Position = gl_ModelViewProjectionMatrix * vec4(gl_Vertex.xyz,1.0);
-  gl_TexCoord[0] = gl_MultiTexCoord0;
   vEyePos = (gl_ModelViewMatrix * vec4(gl_Vertex.xyz,1.0)).xyz;
 }
