@@ -67,13 +67,19 @@ for fw in QtCore QtGui QtOpenGL ; do
     install_name_tool -id \
         @executable_path/../Frameworks/${fw}.framework/Versions/4/${fw} \
         ${PREFIX}/Contents/Frameworks/${fw}.framework/Versions/4/${fw}
+    if test "${fw}" != "QtCore" ; then
+        install_name_tool -change \
+            QtCore.framework/Versions/4/QtCore \
+            @executable_path/../Frameworks/QtCore.framework/Versions/4/${fw} \
+            ${PREFIX}/Contents/Frameworks/${fw}.framework/Versions/4/${fw}
+    fi
 done
 
 # change "pointers" to the frameworks
 for fw in QtCore QtGui QtOpenGL ; do
     install_name_tool -change \
-        ${fw}.framework/Versions/4/QtCore \
-        @executable_path../Frameworks/${fw}.framework/Versions/4/${fw} \
+        ${fw}.framework/Versions/4/${fw} \
+        @executable_path/../Frameworks/${fw}.framework/Versions/4/${fw} \
         ${PREFIX}/Contents/MacOS/ImageVis3D
 done
 
