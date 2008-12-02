@@ -49,10 +49,10 @@ using namespace std;
 QTOut::QTOut(QListWidget *listWidget) :
   m_listWidget(listWidget)
 {
-  Message("QTOut::QTOut","Starting up QTListviewDebug out");
   m_bRecordLists[0] = false;
   m_bRecordLists[1] = false;
   m_bRecordLists[2] = false;
+  Message("QTOut::QTOut","Starting up QTListviewDebug out");
 }
 
 QTOut::~QTOut() {
