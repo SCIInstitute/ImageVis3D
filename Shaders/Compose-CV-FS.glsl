@@ -72,8 +72,8 @@ void main(void){
   // get hit normal
   vec3  vNormal  = texture2D(texRayHitNormal, vFragCoords).xyz;  
 
-	// compute lighting
-	vec4 vContextColor = vec4(Lighting(vPosition.xyz, vNormal, vLightAmbient, vLightDiffuse, vLightSpecular),1.0);
+  // compute lighting
+  vec4 vContextColor = vec4(Lighting(vPosition.xyz, vNormal, vLightAmbient, vLightDiffuse, vLightSpecular),1.0);
 
   // compute non linear depth from linear eye depth
   gl_FragDepth = vProjParam.x + (vProjParam.y / -vPosition.z);  
@@ -91,16 +91,16 @@ void main(void){
 				                      );
 
   float fDistWeight  = length((vPosition.xyz-texture2D(texRayHitPos, vCVPickPos).xyz)) * vCVParam.x;
-	float blendFac = clamp(max(fCurvatureEstimate * vCVParam.y, clamp(fDistWeight,0.0,1.0)), 0.0,1.0);	
+  float blendFac = clamp(max(fCurvatureEstimate * vCVParam.y, clamp(fDistWeight,0.0,1.0)), 0.0,1.0);	
 
   vec4 vFocusColor = vec4(0,0,0,0);
   if (vPosition2.a != 0.0) {
-	  vFocusColor = vec4(Lighting(vPosition2.xyz, vNormal2, vLightAmbient, vLightDiffuse2, vLightSpecular),1.0);
+    vFocusColor = vec4(Lighting(vPosition2.xyz, vNormal2, vLightAmbient, vLightDiffuse2, vLightSpecular),1.0);
   }
 
-  vec4 vColor = clamp(vContextColor * blendFac + vFocusColor * (1.0-blendFac), 0.0,1.0);
+  vec4 vColor = min(max(vContextColor * blendFac + vFocusColor * (1.0-blendFac), 0.0),1.0);
 
-  vColor.xyz -= 0.5 * (1.0-clamp(abs(fDistWeight-1.0) * vCVParam.z,  0.0, 1.0));
+  vColor.xyz -= 0.5 * (1.0-min(max(abs(fDistWeight-1.0) * vCVParam.z,  0.0), 1.0));
 
   gl_FragColor = vColor;
 }
