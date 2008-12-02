@@ -67,12 +67,12 @@ for fw in QtCore QtGui QtOpenGL ; do
     install_name_tool -id \
         @executable_path/../Frameworks/${fw}.framework/Versions/4/${fw} \
         ${PREFIX}/Contents/Frameworks/${fw}.framework/Versions/4/${fw}
-    if test "${fw}" != "QtCore" ; then
+    for sublib in QtGui QtOpenGL QtCore ; do
         install_name_tool -change \
-            QtCore.framework/Versions/4/QtCore \
-            @executable_path/../Frameworks/QtCore.framework/Versions/4/${fw} \
+            ${sublib}.framework/Versions/4/${sublib} \
+            @executable_path/../Frameworks/${sublib}.framework/Versions/4/${sublib} \
             ${PREFIX}/Contents/Frameworks/${fw}.framework/Versions/4/${fw}
-    fi
+    done
 done
 
 # change "pointers" to the frameworks
