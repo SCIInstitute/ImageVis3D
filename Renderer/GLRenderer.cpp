@@ -944,7 +944,6 @@ void GLRenderer::Recompose3DView(ERenderArea eArea) {
   glLoadIdentity();
   m_matModelView.setModelview();
 
-  glEnable(GL_DEPTH_TEST);
   BBoxPreRender();
 
   Render3DPreLoop();
@@ -1016,6 +1015,8 @@ void GLRenderer::SetLogoParams(std::string strLogoFilename, int iLogoPos) {
 
 void GLRenderer::ComposeSurfaceImage() {
   if (m_eRenderMode == RM_ISOSURFACE && m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) {    
+
+    glDisable(GL_DEPTH_TEST);
 
     m_pFBOIsoHit->Read(GL_TEXTURE0, 0);
     m_pFBOIsoHit->Read(GL_TEXTURE1, 1);

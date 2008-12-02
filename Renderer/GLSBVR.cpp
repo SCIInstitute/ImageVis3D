@@ -220,7 +220,7 @@ void GLSBVR::Render3DInLoop(size_t iCurrentBrick) {
     glDepthMask(GL_FALSE);
     SetBrickDepShaderVars(iCurrentBrick);
     RenderProxyGeometry();
-	glDepthMask(GL_TRUE);
+	  glDepthMask(GL_TRUE);
   }
 }
 
