@@ -91,13 +91,15 @@ class VolumeDatasetInfo {
     /// \todo change this if we want to support color data
     UINT64 GetComponentCount() const {return 1;}
 
+    bool IsSameEndianess() const {return m_bIsSameEndianess;}
 
   private:
-    VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock, MaxMinDataBlock* pMaxMinData);
+    VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock, MaxMinDataBlock* pMaxMinData, bool bIsSameEndianess);
     RasterDataBlock*         m_pVolumeDataBlock;
     MaxMinDataBlock*         m_pMaxMinData;
 
     // read from the dataset
+    bool                        m_bIsSameEndianess;
     std::vector<UINT64VECTOR3>  m_aDomainSize;
     UINT64VECTOR3               m_aOverlap;
     UINT64VECTOR3               m_aMaxBrickSize;

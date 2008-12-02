@@ -409,7 +409,7 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
 
   // for OpenGL we ignore the GPU memory load and let GL do the paging
   if (m_iAllocatedCPUMemory + iNeededCPUMemory > m_SystemInfo->GetMaxUsableCPUMem()) {
-    m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Not enougth memory for texture %i x %i x %i (%ibit * %i), paging ...", vSize[0], vSize[1], vSize[2], iBitWidth, iCompCount);
+    m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Not enougth memory for texture %i x %i x %i (%ibit * %i), paging ...", int(vSize[0]), int(vSize[1]), int(vSize[2]), int(iBitWidth), int(iCompCount));
 
     // search for best brick to replace with this brick
     UINT64 iTargetFrameCounter = UINT64_INVALID;
@@ -422,7 +422,7 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
     if (iTargetFrameCounter != UINT64_INVALID) {
       // found a suitable brick that can be replaced
       m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","  Found suitable target brick from frame %i with intraframe counter %i (current frame %i / current intraframe %i)",
-                                              iTargetFrameCounter, iTargetIntraFrameCounter , iFrameCounter, iIntraFrameCounter);
+                                              int(iTargetFrameCounter), int(iTargetIntraFrameCounter), int(iFrameCounter), int(iIntraFrameCounter));
       (*iBestMatch)->Replace(pDataset, vLOD, vBrick, bUseOnlyPowerOfTwo, iIntraFrameCounter, iFrameCounter);
       (*iBestMatch)->iUserCount++;
       return (*iBestMatch)->pTexture;
@@ -434,14 +434,14 @@ GLTexture3D* GPUMemMan::Get3DTexture(VolumeDataset* pDataset, const std::vector<
         size_t iIndex = size_t(rand()%m_vpTex3DList.size());  // theoretically this means that if we have more than MAX_RAND bricks we always pick the first, but who cares ...
 
         if (m_vpTex3DList[iIndex]->iUserCount == 0) {
-          m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","   Deleting texture %i", iIndex);
+          m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","   Deleting texture %i", int(iIndex));
           Delete3DTexture(iIndex);
         }
       }     
     }
   }
 
-  m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Creating new texture %i x %i x %i, bitsize=%i, componentcount=%i", vSize[0], vSize[1], vSize[2], iBitWidth, iCompCount);
+  m_MasterController->DebugOut()->Message("GPUMemMan::Get3DTexture","Creating new texture %i x %i x %i, bitsize=%i, componentcount=%i", int(vSize[0]), int(vSize[1]), int(vSize[2]), int(iBitWidth), int(iCompCount));
 
   Texture3DListElem* pNew3DTex = new Texture3DListElem(pDataset, vLOD, vBrick, bUseOnlyPowerOfTwo, iIntraFrameCounter, iFrameCounter);
 
@@ -520,7 +520,7 @@ void GPUMemMan::MemSizesChanged() {
 
 GLFBOTex* GPUMemMan::GetFBO(GLenum minfilter, GLenum magfilter, GLenum wrapmode, GLsizei width, GLsizei height, GLenum intformat, unsigned int iSizePerElement, bool bHaveDepth, int iNumBuffers) {
 
-  m_MasterController->DebugOut()->Message("GPUMemMan::GetFBO","Creating new FBO of size %i x %i", width, height);
+  m_MasterController->DebugOut()->Message("GPUMemMan::GetFBO","Creating new FBO of size %i x %i", int(width), int(height));
 
   FBOListElem* e = new FBOListElem(m_MasterController,minfilter, magfilter, wrapmode, width, height, intformat, iSizePerElement, bHaveDepth, iNumBuffers);
 

@@ -43,7 +43,11 @@
 
 using namespace std;
 
-VolumeDatasetInfo::VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock, MaxMinDataBlock* pMaxMinData) : m_pVolumeDataBlock(pVolumeDataBlock), m_pMaxMinData(pMaxMinData) {
+VolumeDatasetInfo::VolumeDatasetInfo(RasterDataBlock* pVolumeDataBlock, MaxMinDataBlock* pMaxMinData, bool bIsSameEndianess) : 
+  m_pVolumeDataBlock(pVolumeDataBlock), 
+  m_pMaxMinData(pMaxMinData),
+  m_bIsSameEndianess(bIsSameEndianess)
+{
   vector<double> vfScale;  
   size_t iSize = m_pVolumeDataBlock->ulDomainSize.size();
 
@@ -263,7 +267,7 @@ bool VolumeDataset::Open(bool bVerify)
 
       // check if the block is at least 3 dimensional
       if (pVolumeDataBlock->ulDomainSize.size() < 3) {
-        m_pMasterController->DebugOut()->Message("VolumeDataset::Open","%i-D raster data block found in UVF file, skipping.", pVolumeDataBlock->ulDomainSize.size());
+        m_pMasterController->DebugOut()->Message("VolumeDataset::Open","%i-D raster data block found in UVF file, skipping.", int(pVolumeDataBlock->ulDomainSize.size()));
         continue;
       }
 
@@ -316,7 +320,7 @@ bool VolumeDataset::Open(bool bVerify)
   m_pMasterController->DebugOut()->Message("VolumeDataset::Open","Open successfully found a suitable data block in the UVF file, analysing data...");
 
   m_pVolumeDataBlock = (RasterDataBlock*)m_pDatasetFile->GetDataBlock(iRasterBlockIndex);
-  m_pVolumeDatasetInfo = new VolumeDatasetInfo(m_pVolumeDataBlock, m_pMaxMinData);
+  m_pVolumeDatasetInfo = new VolumeDatasetInfo(m_pVolumeDataBlock, m_pMaxMinData, m_pDatasetFile->GetGlobalHeader().bIsBigEndian == EndianConvert::IsBigEndian());
 
   stringstream sStreamDomain, sStreamBrick;
 
@@ -370,7 +374,7 @@ bool VolumeDataset::Open(bool bVerify)
   }
 
   m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  Size %s", sStreamDomain.str().c_str());
-  m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  %i Bit, %i components", m_pVolumeDatasetInfo->GetBitwith(), m_pVolumeDatasetInfo->GetComponentCount());
+  m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  %i Bit, %i components", int(m_pVolumeDatasetInfo->GetBitwith()), int(m_pVolumeDatasetInfo->GetComponentCount()));
   m_pMasterController->DebugOut()->Message("VolumeDataset::Open","  LOD down to %s found", sStreamBrick.str().c_str());
 
   return true;

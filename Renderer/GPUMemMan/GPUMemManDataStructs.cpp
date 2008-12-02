@@ -149,6 +149,8 @@ bool Texture3DListElem::CreateTexture(bool bDeleteOldTexture) {
 
   const std::vector<UINT64> vSize = pDataset->GetInfo()->GetBrickSizeND(vLOD, vBrick);
 
+  bool bToggleEndian = !pDataset->GetInfo()->IsSameEndianess();
+
   UINT64 iBitWidth  = pDataset->GetInfo()->GetBitwith();
   UINT64 iCompCount = pDataset->GetInfo()->GetComponentCount();
 
@@ -165,7 +167,6 @@ bool Texture3DListElem::CreateTexture(bool bDeleteOldTexture) {
 
   if (iBitWidth == 8) {
       glType = GL_UNSIGNED_BYTE;
-    
       switch (iCompCount) {
         case 1 : glInternalformat = GL_LUMINANCE8; break;
         case 3 : glInternalformat = GL_RGB8; break;
@@ -175,6 +176,16 @@ bool Texture3DListElem::CreateTexture(bool bDeleteOldTexture) {
   } else {
     if (iBitWidth == 16) {
       glType = GL_UNSIGNED_SHORT;
+
+      if (bToggleEndian) {
+        UINT64 iElemCount = vSize[0];
+        for (size_t i = 1;i<vSize.size();i++) iElemCount *= vSize[i];
+        short* pShorData = (short*)pData;
+        for (UINT64 i = 0;i<iCompCount*iElemCount;i++) {
+          EndianConvert::Swap<short>(pShorData+i);
+        }
+      }
+
       switch (iCompCount) {
         case 1 : glInternalformat = GL_LUMINANCE16; break;
         case 3 : glInternalformat = GL_RGB16; break;
@@ -208,18 +219,18 @@ bool Texture3DListElem::CreateTexture(bool bDeleteOldTexture) {
         memcpy(pPaddedData+iTarget, pData+iSource, iRowSizeSource);
         
         // if the x sizes differ copy one more element to make the texture behave like clamp
-        if (iRowSizeTarget > iRowSizeSource) memcpy(pPaddedData+iTarget+iRowSizeSource, pPaddedData+iTarget+iRowSizeSource-iElementSize, iElementSize);
+   //     if (iRowSizeTarget > iRowSizeSource) memcpy(pPaddedData+iTarget+iRowSizeSource, pPaddedData+iTarget+iRowSizeSource-iElementSize, iElementSize);
         iTarget += iRowSizeTarget;
         iSource += iRowSizeSource;
       }
       if (vPaddedSize[1] > vSize[1]) {
-        memcpy(pPaddedData+iTarget, pPaddedData+iTarget-iRowSizeTarget, iRowSizeTarget);
+     //   memcpy(pPaddedData+iTarget, pPaddedData+iTarget-iRowSizeTarget, iRowSizeTarget);
         iTarget += (vPaddedSize[1]-vSize[1])*iRowSizeTarget;
       }
     }
     // if the z sizes differ copy one more slice to make the texture behave like clamp
-    if (vPaddedSize[2] > vSize[2])
-      memcpy(pPaddedData+iTarget, pPaddedData+iTarget-vPaddedSize[1]*iRowSizeTarget, vPaddedSize[1]*iRowSizeTarget);
+   // if (vPaddedSize[2] > vSize[2])
+     // memcpy(pPaddedData+iTarget, pPaddedData+iTarget-vPaddedSize[1]*iRowSizeTarget, vPaddedSize[1]*iRowSizeTarget);
 
     pTexture = new GLTexture3D(GLuint(vPaddedSize[0]), GLuint(vPaddedSize[1]), GLuint(vPaddedSize[2]), glInternalformat, glFormat, glType, (unsigned int)(iBitWidth*iCompCount), pPaddedData, GL_LINEAR, GL_LINEAR);
 

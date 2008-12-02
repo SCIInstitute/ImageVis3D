@@ -69,7 +69,7 @@ vector<FileStackInfo*> IOManager::ScanDirectory(std::string strDirectory) {
   if (parseDICOM.m_FileStacks.size() == 1)
     m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found a single DICOM stack");
   else
-    m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found %i DICOM stacks", parseDICOM.m_FileStacks.size());
+    m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found %i DICOM stacks", int(parseDICOM.m_FileStacks.size()));
 
   for (unsigned int iStackID = 0;iStackID < parseDICOM.m_FileStacks.size();iStackID++) {    
     DICOMStackInfo* f = new DICOMStackInfo((DICOMStackInfo*)parseDICOM.m_FileStacks[iStackID]);
@@ -88,7 +88,7 @@ vector<FileStackInfo*> IOManager::ScanDirectory(std::string strDirectory) {
   if (parseImages.m_FileStacks.size() == 1)
     m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found a single image stack");
   else
-    m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found %i image stacks", parseImages.m_FileStacks.size());
+    m_pMasterController->DebugOut()->Message("IOManager::ScanDirectory","  found %i image stacks", int(parseImages.m_FileStacks.size()));
 
   for (unsigned int iStackID = 0;iStackID < parseImages.m_FileStacks.size();iStackID++) {    
     ImageStackInfo* f = new ImageStackInfo((ImageStackInfo*)parseImages.m_FileStacks[iStackID]);
@@ -467,23 +467,23 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,2>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,3>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,4>, NULL, NULL, m_pMasterController->DebugOut()); break;
-						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", iComponentCount, iComponentSize); uvfFile.Close(); SourceData.Close(); return false;
+						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", int(iComponentCount), int(iComponentSize)); uvfFile.Close(); SourceData.Close(); return false;
 					} break;
 		case 16 :		switch (iComponentCount) {
 						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short>, &MaxMinData, m_pMasterController->DebugOut()); break;
 						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,2>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,3>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,4>, NULL, NULL, m_pMasterController->DebugOut()); break;
-						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", iComponentCount, iComponentSize); uvfFile.Close(); SourceData.Close(); return false;
+						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", int(iComponentCount), int(iComponentSize)); uvfFile.Close(); SourceData.Close(); return false;
 					} break;
 		case 32 :	switch (iComponentCount) {
 						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,1>, SimpleMaxMin<float>, &MaxMinData, m_pMasterController->DebugOut()); break;
 						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,2>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,3>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,4>, NULL, NULL, m_pMasterController->DebugOut()); break;
-						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", iComponentCount, iComponentSize); uvfFile.Close(); SourceData.Close(); return false;
+						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", int(iComponentCount), int(iComponentSize)); uvfFile.Close(); SourceData.Close(); return false;
 					} break;
-		default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentSize %i.", iComponentSize); uvfFile.Close(); SourceData.Close(); return false;
+		default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentSize %i.", int(iComponentSize)); uvfFile.Close(); SourceData.Close(); return false;
 	}
 
 	string strProblemDesc;
@@ -551,7 +551,7 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
 
     DICOMStackInfo* pDICOMStack = ((DICOMStackInfo*)pStack);
 
-		m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Stack contains %i files",  pDICOMStack->m_Elements.size());
+		m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Stack contains %i files",  int(pDICOMStack->m_Elements.size()));
 		m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","    Series: %i  Bits: %i (%i)", pDICOMStack->m_iSeries, pDICOMStack->m_iAllocated, pDICOMStack->m_iStored);
 		m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","    Date: %s  Time: %s", pDICOMStack->m_strAcquDate.c_str(), pDICOMStack->m_strAcquTime.c_str());
 		m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","    Modality: %s  Description: %s", pDICOMStack->m_strModality.c_str(), pDICOMStack->m_strDesc.c_str());
@@ -632,7 +632,7 @@ bool IOManager::ConvertDataset(FileStackInfo* pStack, const std::string& strTarg
   } else {
      if (pStack->m_strFileType == "IMAGE") {
         m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Detected Image stack, starting image conversion");
-        m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Stack contains %i files",  pStack->m_Elements.size());
+        m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Stack contains %i files",  int(pStack->m_Elements.size()));
 
         string strTempMergeFilename = strTargetFilename + "~";
         m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","    Creating intermediate file %s", strTempMergeFilename.c_str()); 
