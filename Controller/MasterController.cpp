@@ -56,8 +56,9 @@ MasterController::~MasterController() {
 
   m_vVolumeRenderer.resize(0);
 
-  delete m_pGPUMemMan;
   delete m_pSystemInfo;
+  delete m_pIOManager;
+  delete m_pGPUMemMan;
 
   if (m_bDeleteDebugOutOnExit) delete m_pDebugOut;
 }
