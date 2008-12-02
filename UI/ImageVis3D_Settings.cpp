@@ -166,7 +166,7 @@ bool MainWindow::ShowSettings() {
 
       // as the "avoid compositing" setting may enable/disable the ability to do clearview
       // we must doublecheck the state of the controls 
-      ToggleClearViewControls(int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize()));
+      if (m_ActiveRenderWin) ToggleClearViewControls(int(m_ActiveRenderWin->GetDynamicRange().x));
 
       return true;
     } else return false;

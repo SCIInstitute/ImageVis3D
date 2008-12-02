@@ -340,8 +340,12 @@ void AbstrRenderer::ScheduleWindowRedraw(EWindowMode eWindow) {
 }
 
 void AbstrRenderer::ScheduleRecompose() {
-  m_bPerformReCompose = true;
-  m_bRedrawMask[WM_3D]  = true;
+  if (!m_bAvoidSeperateCompositing) {
+    m_bPerformReCompose = true;
+    m_bRedrawMask[WM_3D]  = true;
+  } else {
+    ScheduleWindowRedraw(WM_3D);
+  }
 }
 
 void AbstrRenderer::ComputeMinLODForCurrentView() {

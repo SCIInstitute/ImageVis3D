@@ -955,9 +955,7 @@ void GLRenderer::Recompose3DView(ERenderArea eArea) {
   BBoxPostRender();
 }
 
-void GLRenderer::Render3DView() {
-  m_pMasterController->DebugOut()->Message("GLRenderer::Render3DView","Rendering...");
-  
+void GLRenderer::Render3DView() {  
   // Modelview
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -972,7 +970,7 @@ void GLRenderer::Render3DView() {
   timeStart = timeProbe = clock();
 
   while (m_vCurrentBrickList.size() > m_iBricksRenderedInThisSubFrame && float(timeProbe-timeStart)*1000.0f/float(CLOCKS_PER_SEC) < m_iTimeSliceMSecs) {
-    m_pMasterController->DebugOut()->Message("GLRenderer::Render3DView","  Brick %i of %i", m_iBricksRenderedInThisSubFrame+1,m_vCurrentBrickList.size());
+    m_pMasterController->DebugOut()->Message("GLRenderer::Render3DView","  Brick %i of %i", m_iBricksRenderedInThisSubFrame+1,int(m_vCurrentBrickList.size()));
 
     // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
     vector<UINT64> vLOD; vLOD.push_back(m_iCurrentLOD);
