@@ -72,6 +72,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_iInactiveTS(100),
   m_iBlendPrecisionMode(0),
   m_bPowerOfTwo(false),
+  m_bAvoidCompositing(false),
   m_bAutoSaveGEO(true),
   m_bAutoSaveWSP(true),
   m_eVolumeRendererType(MasterController::OPENGL_SBVR),
@@ -144,6 +145,8 @@ void MainWindow::Use1DTrans() {
   checkBox_Use1DTrans->setChecked(true);
   radioButton_1DTrans->setChecked(true);
 
+  checkBox_Lighting->setEnabled(true);
+
   m_1DTransferFunction->setEnabled(true);
   m_2DTransferFunction->setEnabled(false);
 
@@ -162,6 +165,8 @@ void MainWindow::Use2DTrans() {
   checkBox_Use2DTrans->setChecked(true);
   radioButton_2DTrans->setChecked(true);
 
+  checkBox_Lighting->setEnabled(true);
+
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(true);
 
@@ -179,6 +184,8 @@ void MainWindow::UseIso() {
   checkBox_UseIso->setEnabled(false);
   checkBox_UseIso->setChecked(true);
   radioButton_Iso->setChecked(true);
+
+  checkBox_Lighting->setEnabled(false);
 
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(false);

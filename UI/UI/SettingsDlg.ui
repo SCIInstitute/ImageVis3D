@@ -675,6 +675,13 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="checkBox_AvoidCompositing" >
+            <property name="text" >
+             <string>Avoid Compositing</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

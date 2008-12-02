@@ -408,7 +408,6 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
 
 void MainWindow::RenderWindowActive(RenderWindow* sender) {
-
   if (m_ActiveRenderWin != sender) {
     m_MasterController.DebugOut()->
       Message("MainWindow::RenderWindowActive",

@@ -290,93 +290,94 @@ void SettingsDlg::SetLogoLabel() {
 void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
                             bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
-                            unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, 
+                            unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bAvoidCompositing,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
 	m_bInit = true;
 	horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
-    horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
+  horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
-    checkBoxQuickload->setChecked(bQuickopen);
-    horizontalSlider_MinFramerate->setValue(iMinFramerate);
-    horizontalSlider_LODDelay->setValue(iLODDelay);
-    horizontalSlider_ActTS->setValue(iActiveTS);
-    horizontalSlider_InactTS->setValue(iInactiveTS);
-     
-    checkBox_SaveGEOOnExit->setChecked(bAutoSaveGEO);
-    checkBox_SaveWSPOnExit->setChecked(bAutoSaveWSP);
-    checkBox_AutoLockClonedWindow->setChecked(bAutoLockClonedWindow);
-    checkBox_AbsoluteViewLocks->setChecked(bAbsoluteViewLocks);
+  checkBoxQuickload->setChecked(bQuickopen);
+  horizontalSlider_MinFramerate->setValue(iMinFramerate);
+  horizontalSlider_LODDelay->setValue(iLODDelay);
+  horizontalSlider_ActTS->setValue(iActiveTS);
+  horizontalSlider_InactTS->setValue(iInactiveTS);
+   
+  checkBox_SaveGEOOnExit->setChecked(bAutoSaveGEO);
+  checkBox_SaveWSPOnExit->setChecked(bAutoSaveWSP);
+  checkBox_AutoLockClonedWindow->setChecked(bAutoLockClonedWindow);
+  checkBox_AbsoluteViewLocks->setChecked(bAbsoluteViewLocks);
 
-    m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
-    m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));
-    m_cTextColor  = QColor(int(vTextColor.x*255), int(vTextColor.y*255),int(vTextColor.z*255),int(vTextColor.w*255));
+  m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
+  m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));
+  m_cTextColor  = QColor(int(vTextColor.x*255), int(vTextColor.y*255),int(vTextColor.z*255),int(vTextColor.w*255));
 
-    switch (iBlendPrecision) {
-      case 2    : radioButton_Prec32Bit->setChecked(true); break;
-      case 1    : radioButton_Prec16Bit->setChecked(true); break;
-      default   : radioButton_Prec8Bit->setChecked(true); break;
-    }
+  switch (iBlendPrecision) {
+    case 2    : radioButton_Prec32Bit->setChecked(true); break;
+    case 1    : radioButton_Prec16Bit->setChecked(true); break;
+    default   : radioButton_Prec8Bit->setChecked(true); break;
+  }
 
-    switch (iVolRenType) {
-      case 1    : radioButton_APIGL->setChecked(true); 
-                  radioButton_Raycast->setChecked(true);
-                  break;
-      case 2    : radioButton_APIDX->setChecked(true); 
-                  radioButton_SBVR->setChecked(true);
-                  break;
-      case 3    : radioButton_APIDX->setChecked(true); 
-                  radioButton_Raycast->setChecked(true);
-                  break;
-      default   : radioButton_APIGL->setChecked(true); 
-                  radioButton_SBVR->setChecked(true);
-                  break;
-    }
+  switch (iVolRenType) {
+    case 1    : radioButton_APIGL->setChecked(true); 
+                radioButton_Raycast->setChecked(true);
+                break;
+    case 2    : radioButton_APIDX->setChecked(true); 
+                radioButton_SBVR->setChecked(true);
+                break;
+    case 3    : radioButton_APIDX->setChecked(true); 
+                radioButton_Raycast->setChecked(true);
+                break;
+    default   : radioButton_APIGL->setChecked(true); 
+                radioButton_SBVR->setChecked(true);
+                break;
+  }
 
-    switch (iLogoPos) {
-      case 0    : radioButton_logoTL->setChecked(true); 
-                  break;
-      case 1    : radioButton_logoTR->setChecked(true); 
-                  break;
-      case 2    : radioButton_logoBL->setChecked(true); 
-                  break;
-      default   : radioButton_logoBR->setChecked(true); 
-                  break;
-    }
+  switch (iLogoPos) {
+    case 0    : radioButton_logoTL->setChecked(true); 
+                break;
+    case 1    : radioButton_logoTR->setChecked(true); 
+                break;
+    case 2    : radioButton_logoBL->setChecked(true); 
+                break;
+    default   : radioButton_logoBR->setChecked(true); 
+                break;
+  }
 
-    m_strLogoFilename = strLogo.toAscii();
-    SetLogoLabel();
+  m_strLogoFilename = strLogo.toAscii();
+  SetLogoLabel();
 
-    checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
-    
-    QString strStyle =
-    tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
-                                                                             .arg(m_cBackColor1.green())
-                                                                             .arg(m_cBackColor1.blue())
-                                                                             .arg(255-m_cBackColor1.red())
-                                                                             .arg(255-m_cBackColor1.green())
-                                                                             .arg(255-m_cBackColor1.blue());
+  checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
+  checkBox_AvoidCompositing->setChecked(bAvoidCompositing);
+  
+  QString strStyle =
+  tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
+                                                                           .arg(m_cBackColor1.green())
+                                                                           .arg(m_cBackColor1.blue())
+                                                                           .arg(255-m_cBackColor1.red())
+                                                                           .arg(255-m_cBackColor1.green())
+                                                                           .arg(255-m_cBackColor1.blue());
 
-    pushButtonSelBack1->setStyleSheet( strStyle );
+  pushButtonSelBack1->setStyleSheet( strStyle );
 
-    strStyle =
-    tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor2.red())
-                                                                             .arg(m_cBackColor2.green())
-                                                                             .arg(m_cBackColor2.blue())
-                                                                             .arg(255-m_cBackColor2.red())
-                                                                             .arg(255-m_cBackColor2.green())
-                                                                             .arg(255-m_cBackColor2.blue());
+  strStyle =
+  tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor2.red())
+                                                                           .arg(m_cBackColor2.green())
+                                                                           .arg(m_cBackColor2.blue())
+                                                                           .arg(255-m_cBackColor2.red())
+                                                                           .arg(255-m_cBackColor2.green())
+                                                                           .arg(255-m_cBackColor2.blue());
 
-    pushButtonSelBack2->setStyleSheet( strStyle );
+  pushButtonSelBack2->setStyleSheet( strStyle );
 
-    strStyle =
-    tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cTextColor.red())
-                                                                             .arg(m_cTextColor.green())
-                                                                             .arg(m_cTextColor.blue())
-                                                                             .arg(255-m_cTextColor.red())
-                                                                             .arg(255-m_cTextColor.green())
-                                                                             .arg(255-m_cTextColor.blue());
+  strStyle =
+  tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cTextColor.red())
+                                                                           .arg(m_cTextColor.green())
+                                                                           .arg(m_cTextColor.blue())
+                                                                           .arg(255-m_cTextColor.red())
+                                                                           .arg(255-m_cTextColor.green())
+                                                                           .arg(255-m_cTextColor.blue());
 
-    pushButtonSelText->setStyleSheet( strStyle );
+  pushButtonSelText->setStyleSheet( strStyle );
 	m_bInit = false;
 }
 
@@ -395,6 +396,11 @@ unsigned int SettingsDlg::GetVolrenType() const {
 bool SettingsDlg::GetUseOnlyPowerOfTwo() const {
   return checkBox_PowerOfTwo->isChecked();
 }
+
+bool SettingsDlg::GetAvoidCompositing() const {
+  return checkBox_AvoidCompositing->isChecked();
+}
+
 
 QString SettingsDlg::GetLogoFilename() const {
   return m_strLogoFilename;

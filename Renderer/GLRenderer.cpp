@@ -998,7 +998,7 @@ void GLRenderer::Render3DView() {
   }
 
   Render3DPostLoop();
-  ComposeSurfaceImage();
+  if (!m_bAvoidSeperateCompositing) ComposeSurfaceImage();
 
   // at the very end render the bboxes
   if (m_vCurrentBrickList.size() == m_iBricksRenderedInThisSubFrame) BBoxPostRender();

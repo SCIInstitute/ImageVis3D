@@ -92,8 +92,8 @@ bool MainWindow::ShowSettings() {
       unsigned int iVolRenType = settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
       unsigned int iBlendPrecisionMode = settings.value("BlendPrecisionMode", 0).toUInt();
       bool bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
+      bool bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
       
-
       FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0f).toULongLong(),
                               settings.value("Background1G", 0.0f).toULongLong(),
                               settings.value("Background1B", 0.0f).toULongLong());
@@ -115,7 +115,7 @@ bool MainWindow::ShowSettings() {
       settingsDlg.Data2Form(iMaxCPU, iMaxGPU, 
                             bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS, 
                             bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
-                            iVolRenType, iBlendPrecisionMode, bPowerOfTwo, 
+                            iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bAvoidCompositing,
                             vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
     }
 
@@ -146,6 +146,7 @@ bool MainWindow::ShowSettings() {
       settings.setValue("RendererType", settingsDlg.GetVolrenType());
       settings.setValue("BlendPrecisionMode", settingsDlg.GetBlendPrecisionMode());
       settings.setValue("PowerOfTwo", settingsDlg.GetUseOnlyPowerOfTwo());
+      settings.setValue("AvoidCompositing", settingsDlg.GetAvoidCompositing());
       settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
       settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
       settings.setValue("Background1B", settingsDlg.GetBackgroundColor1().z);
@@ -162,6 +163,11 @@ bool MainWindow::ShowSettings() {
       settings.endGroup();
 
       ApplySettings();
+
+      // as the "avoid compositing" setting may enable/disable the ability to do clearview
+      // we must doublecheck the state of the controls 
+      ToggleClearViewControls(int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize()));
+
       return true;
     } else return false;
 
@@ -190,6 +196,7 @@ void MainWindow::ApplySettings() {
   m_eVolumeRendererType = (MasterController::EVolumeRendererType)settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
   m_iBlendPrecisionMode = settings.value("BlendPrecisionMode", m_iBlendPrecisionMode).toUInt();
   m_bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
+  m_bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
 
   m_vBackgroundColors[0] = FLOATVECTOR3(settings.value("Background1R", 0.0f).toULongLong(),
                           settings.value("Background1G", 0.0f).toULongLong(),
@@ -234,4 +241,5 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
   renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/10, m_iActiveTS, m_iInactiveTS);
   renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
   renderWin->SetAbsoluteViewLock(m_bAbsoluteViewLocks);
+  renderWin->SetAvoidCompositing(m_bAvoidCompositing);
 }

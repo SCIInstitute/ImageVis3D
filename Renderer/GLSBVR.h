@@ -62,15 +62,18 @@ class GLSBVR : public GLRenderer {
     /** Set the oversampling ratio (e.g. 2 means twice the slices as needed).  Causes a full redraw. */
     virtual void SetSampleRateModifier(float fSampleRateModifier);
 
+    virtual void SetDataDepShaderVars();
+
     /** Sends a message to the master to ask for a dataset to be loaded.
      * The dataset is converted to UVF if it is not one already.
      * @param strFilename path to a file */
     virtual bool LoadDataset(const std::string& strFilename);
 
-    virtual bool SupportsClearView() {return true;}
+    virtual bool SupportsClearView() {return !m_bAvoidSeperateCompositing;}
 
   protected:
     SBVRGeogen    m_SBVRGeogen;
+    GLSLProgram*  m_pProgramIsoNoCompose;
 
     void SetBrickDepShaderVars(size_t iCurrentBrick);
 
@@ -78,6 +81,7 @@ class GLSBVR : public GLRenderer {
     virtual void Render3DInLoop(size_t iCurrentBrick);
     virtual void Render3DPostLoop();
     void RenderProxyGeometry();
+    virtual void Cleanup();
 
 };
 

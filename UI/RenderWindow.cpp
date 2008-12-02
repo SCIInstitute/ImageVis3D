@@ -90,6 +90,15 @@ QSize RenderWindow::minimumSizeHint() const
   return QSize(50, 50);
 }
 
+void RenderWindow::SetAvoidCompositing(bool bAvoidCompositing) {
+  m_Renderer->SetAvoidSeperateCompositing(bAvoidCompositing);
+}
+
+bool RenderWindow::GetAvoidCompositing() const {
+  return m_Renderer->GetAvoidSeperateCompositing();
+}
+
+
 QSize RenderWindow::sizeHint() const
 {
   return QSize(400, 400);

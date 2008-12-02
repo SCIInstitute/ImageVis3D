@@ -52,7 +52,7 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController, bool bUseOnlyP
   m_p2DTrans(NULL),
   m_fSampleRateModifier(1.0f),
   m_fIsovalue(0.5f),
-  m_vIsoColor(1,1,1),
+  m_vIsoColor(0.5,0.5,0.5),
   m_vTextColor(1,1,1,1),
   m_bRenderGlobalBBox(false),
   m_bRenderLocalBBox(false),
@@ -80,7 +80,8 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController, bool bUseOnlyP
   m_fCVBorderScale(60.0f),
   m_vCVPos(0.5f, 0.5f),
   m_bPerformReCompose(false),
-  m_bUseOnlyPowerOfTwo(bUseOnlyPowerOfTwo)
+  m_bUseOnlyPowerOfTwo(bUseOnlyPowerOfTwo),
+  m_bAvoidSeperateCompositing(true)
 {
   m_vBackgroundColors[0] = FLOATVECTOR3(0,0,0);
   m_vBackgroundColors[1] = FLOATVECTOR3(0,0,0);

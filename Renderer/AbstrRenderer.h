@@ -256,6 +256,8 @@ class AbstrRenderer {
     virtual void ScheduleCompleteRedraw();
     virtual void ScheduleWindowRedraw(EWindowMode eWindow);
 
+    void SetAvoidSeperateCompositing(bool bAvoidSeperateCompositing) {m_bAvoidSeperateCompositing = bAvoidSeperateCompositing;}
+    bool GetAvoidSeperateCompositing() const {return m_bAvoidSeperateCompositing;}
 
   protected:
     MasterController*   m_pMasterController;
@@ -311,7 +313,9 @@ class AbstrRenderer {
     FLOATVECTOR2        m_vCVPos;
     bool                m_bPerformReCompose;
 
+    // compatibility settings
     bool                m_bUseOnlyPowerOfTwo;
+    bool                m_bAvoidSeperateCompositing;
 
     virtual void ScheduleRecompose();
     void ComputeMinLODForCurrentView();

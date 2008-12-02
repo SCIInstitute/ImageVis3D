@@ -92,6 +92,9 @@ class RenderWindow : public QGLWidget
     void CloneRendermode(RenderWindow* other);
     void SetAbsoluteViewLock(bool bAbsoluteViewLock);
 
+    void SetAvoidCompositing(bool bAvoidCompositing);
+    bool GetAvoidCompositing() const;
+
     void SetUseLigthing(bool bLighting, bool bPropagate=true);
     void SetSampleRateModifier(float fSampleRateModifier, bool bPropagate=true); 
     void SetIsoValue(float fIsoVal, bool bPropagate=true);

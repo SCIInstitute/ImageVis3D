@@ -598,6 +598,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Shaders\GLSBVR-ISO-NC-FS.glsl"
+						>
+					</File>
+					<File
 						RelativePath=".\Shaders\GLSBVR-VS.glsl"
 						>
 					</File>
