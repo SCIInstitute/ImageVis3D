@@ -83,6 +83,8 @@ class GLSBVR : public GLRenderer {
     void RenderProxyGeometry();
     virtual void Cleanup();
 
+    virtual void ComposeSurfaceImage();
+
 };
 
 #endif // GLSBVR_H

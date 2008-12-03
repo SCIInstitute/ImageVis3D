@@ -182,8 +182,11 @@ void GLSBVR::Render3DPreLoop() {
                           glEnable(GL_BLEND);
                           glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
                           break;
-    case RM_ISOSURFACE :  if (m_bAvoidSeperateCompositing)
-                             m_pProgramIsoNoCompose->Enable();
+    case RM_ISOSURFACE :  if (m_bAvoidSeperateCompositing) {
+                            m_pProgramIsoNoCompose->Enable();
+                            glEnable(GL_BLEND);
+                            glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+                          }
                           break;
     default    :  m_pMasterController->DebugOut()->Error("GLSBVR::Render3DView","Invalid rendermode set"); 
                           break;
@@ -249,10 +252,10 @@ void GLSBVR::Render3DInLoop(size_t iCurrentBrick) {
     m_pFBO3DImageCurrent->Write();
     GLFBOTex::OneDrawBuffer();
   } else {
-    if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_FALSE);
+    glDepthMask(GL_FALSE);
     SetBrickDepShaderVars(iCurrentBrick);
     RenderProxyGeometry();
-	  if (m_eRenderMode != RM_ISOSURFACE) glDepthMask(GL_TRUE);
+	  glDepthMask(GL_TRUE);
   }
 }
 
@@ -268,8 +271,10 @@ void GLSBVR::Render3DPostLoop() {
     case RM_2DTRANS    :  m_pProgram2DTrans[m_bUseLigthing ? 1 : 0]->Disable(); 
 						              glDisable(GL_BLEND);
 					                break;
-    case RM_ISOSURFACE :  if (m_bAvoidSeperateCompositing)
+    case RM_ISOSURFACE :  if (m_bAvoidSeperateCompositing) {
                              m_pProgramIsoNoCompose->Disable(); 
+                             glDisable(GL_BLEND);
+                          }
                           break;
     case RM_INVALID    :  m_pMasterController->DebugOut()->Error("GLSBVR::Render3DView","Invalid rendermode set"); break;
   }
@@ -285,4 +290,8 @@ bool GLSBVR::LoadDataset(const string& strFilename) {
     m_SBVRGeogen.SetVolumeData(vAspect, vSize);
     return true;
   } else return false;
+}
+
+void GLSBVR::ComposeSurfaceImage() {
+  if (!m_bAvoidSeperateCompositing) GLRenderer::ComposeSurfaceImage();
 }
