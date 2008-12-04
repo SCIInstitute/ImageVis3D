@@ -89,10 +89,26 @@ bool GLRenderer::Initialize() {
 
   if (SysTools::FileExists(strPotential2DTransName)) 
     m_pMasterController->MemMan()->Get2DTransFromFile(strPotential2DTransName, this, &m_p2DTrans, &m_p2DTransTex);
-  else
+  else {
     m_pMasterController->MemMan()->GetEmpty2DTrans(m_pDataset->Get2DHistogram()->GetFilledSize(), this, &m_p2DTrans, &m_p2DTransTex);
 
+    TFPolygon newSwatch;
+    newSwatch.pPoints.push_back(FLOATVECTOR2(0.1f,0.1f));
+    newSwatch.pPoints.push_back(FLOATVECTOR2(0.1f,0.9f));
+    newSwatch.pPoints.push_back(FLOATVECTOR2(0.9f,0.9f));
+    newSwatch.pPoints.push_back(FLOATVECTOR2(0.9f,0.1f));
 
+    newSwatch.pGradientCoords[0] = FLOATVECTOR2(0.1f,0.5f);
+    newSwatch.pGradientCoords[1] = FLOATVECTOR2(0.9f,0.5f);
+
+    GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),g2(0.5f,FLOATVECTOR4(1,1,1,1)),g3(1,FLOATVECTOR4(0,0,0,0));
+    newSwatch.pGradientStops.push_back(g1);
+    newSwatch.pGradientStops.push_back(g2);
+    newSwatch.pGradientStops.push_back(g3);
+
+    m_p2DTrans->m_Swatches.push_back(newSwatch);
+    m_pMasterController->MemMan()->Changed2DTrans(NULL, m_p2DTrans);
+  }
 
   if (!LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/Transfer-FS.glsl",  &(m_pProgramTrans))        ||
       !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/1D-slice-FS.glsl",  &(m_pProgram1DTransSlice)) ||
