@@ -212,8 +212,6 @@ void MainWindow::SetupWorkspaceMenu() {
 //  menu_Workspace->addAction(dockWidget_History->toggleViewAction());
 //  menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
 
-  menu_Edit->setVisible(false);
-
   radioButton_ToolsLock->setVisible(false);
   radioButton_FiltersLock->setVisible(false);
 
@@ -599,6 +597,18 @@ void MainWindow::UpdateMenus() {
   actionStastistcs->setEnabled(bHasMdiChild);
   actionUndo->setEnabled(bHasMdiChild);
   actionRedo->setEnabled(bHasMdiChild);  
+
+  /// \todo implement all of the features we are hiding here
+  actionBox->setVisible(false);
+  actionPoly_Line->setVisible(false);
+  actionSelect_All->setVisible(false);
+  actionDelete_Selection->setVisible(false);
+  actionInvert_Selection->setVisible(false);
+  actionStastistcs->setVisible(false);
+  actionUndo->setVisible(false);
+  actionRedo->setVisible(false); 
+  actionSave_Dataset->setVisible(false); 
+
 }
 
 // ******************************************
