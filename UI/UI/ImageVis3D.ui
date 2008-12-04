@@ -3466,7 +3466,7 @@
   </widget>
   <action name="actionLoadDataset" >
    <property name="text" >
-    <string>Load Dataset Frome File</string>
+    <string>Load Dataset from File</string>
    </property>
   </action>
   <action name="actionSave_Dataset" >

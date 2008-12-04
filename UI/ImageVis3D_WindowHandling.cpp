@@ -211,6 +211,9 @@ void MainWindow::SetupWorkspaceMenu() {
 //  menu_Workspace->addSeparator();
 //  menu_Workspace->addAction(dockWidget_History->toggleViewAction());
 //  menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
+
+  menu_Edit->setVisible(false);
+
   radioButton_ToolsLock->setVisible(false);
   radioButton_FiltersLock->setVisible(false);
 
