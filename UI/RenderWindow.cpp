@@ -274,6 +274,13 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
     m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);
   }
 
+  if (event->key() == Qt::Key_M) {
+    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+    bool bUseMIP=false;
+    m_Renderer->GetUseMIP(eWinMode, bUseMIP);
+    bUseMIP = !bUseMIP;
+    m_Renderer->SetUseMIP(eWinMode, bUseMIP);
+  }
 }
 
 void RenderWindow::SetupArcBall() {

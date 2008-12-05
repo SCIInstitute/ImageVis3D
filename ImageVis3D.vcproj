@@ -72,91 +72,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
+				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(QTDIR)lib32&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)Build\Win32\$(ConfigurationName)\bin"
-			IntermediateDirectory="Build\Win32\$(ConfigurationName)"
-			ConfigurationType="1"
-			CharacterSet="1"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="UI"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(QTDIR)include&quot;;."
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="4"
-				DebugInformationFormat="3"
-				DisableSpecificWarnings="4127;4512"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(QTDIR)lib32&quot;"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -232,11 +152,94 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
+				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(QTDIR)lib64&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)Build\Win32\$(ConfigurationName)\bin"
+			IntermediateDirectory="Build\Win32\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="UI"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="&quot;$(QTDIR)include&quot;;."
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4127;4512"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
+				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)lib32&quot;"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -312,6 +315,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
+				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(QTDIR)lib64&quot;"
 				GenerateDebugInformation="true"
@@ -566,6 +570,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Shaders\MIP-slice-FS.glsl"
+						>
+					</File>
+					<File
 						RelativePath=".\Shaders\Transfer-FS.glsl"
 						>
 					</File>
@@ -741,7 +749,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32"
+						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -751,7 +759,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -789,7 +797,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32"
+						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -799,7 +807,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -837,7 +845,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32"
+						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -847,7 +855,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -885,7 +893,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32"
+						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -895,7 +903,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -941,7 +949,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32"
+						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -951,7 +959,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -989,7 +997,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32"
+						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -999,7 +1007,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1037,7 +1045,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32"
+						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1047,7 +1055,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1088,7 +1096,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Release|Win32"
+							Name="Debug|x64"
 							>
 							<Tool
 								Name="VCCustomBuildTool"
@@ -1098,7 +1106,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug|x64"
+							Name="Release|Win32"
 							>
 							<Tool
 								Name="VCCustomBuildTool"

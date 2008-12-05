@@ -78,6 +78,11 @@ class GLRenderer : public AbstrRenderer {
 
     virtual void SetLogoParams(std::string strLogoFilename, int iLogoPos);
 
+    void RenderSlice(EWindowMode eDirection, UINT64 iSliceIndex, 
+                     FLOATVECTOR3 vMinCoords, FLOATVECTOR3 vMaxCoords, 
+                     UINT64VECTOR3 vDomainSize, DOUBLEVECTOR3 vAspectRatio,
+                     DOUBLEVECTOR2 vWinAspectRatio);
+
   protected:
     float           m_fScaledIsovalue;
     float           m_fScaledCVIsovalue;
@@ -131,6 +136,7 @@ class GLRenderer : public AbstrRenderer {
     GLSLProgram*    m_pProgramTrans;
     GLSLProgram*    m_pProgram1DTransSlice;
     GLSLProgram*    m_pProgram2DTransSlice;
+    GLSLProgram*    m_pProgramMIPSlice;
     GLSLProgram*    m_pProgramIsoCompose;
     GLSLProgram*    m_pProgramCVCompose;
 

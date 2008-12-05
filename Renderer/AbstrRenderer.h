@@ -218,6 +218,8 @@ class AbstrRenderer {
     virtual void SetLogoParams(std::string strLogoFilename, int iLogoPos);
     void Set2DFlipMode(EWindowMode eWindow, bool bFlipX, bool bFlipY);
     void Get2DFlipMode(EWindowMode eWindow, bool& bFlipX, bool& bFlipY);
+    void GetUseMIP(EWindowMode eWindow, bool& bUseMIP);
+    void SetUseMIP(EWindowMode eWindow, bool bUseMIP);
 
     // scheduling routines
     UINT64 GetCurrentSubFrameCount() {return 1+m_iMaxLODIndex-m_iMinLODForCurrentView;}
@@ -267,6 +269,7 @@ class AbstrRenderer {
     EViewMode           m_eViewMode;
     EWindowMode         m_e2x2WindowMode[4];
     VECTOR2<bool>       m_bFlipView[3];
+    bool                m_bUseMIP[3];
     EWindowMode         m_eFullWindowMode;
     UINT64              m_piSlice[3];
     EBlendPrecision     m_eBlendPrecision;

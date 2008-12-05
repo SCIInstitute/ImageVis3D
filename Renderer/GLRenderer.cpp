@@ -59,6 +59,7 @@ GLRenderer::GLRenderer(MasterController* pMasterController, bool bUseOnlyPowerOf
   m_pProgramTrans(NULL),
   m_pProgram1DTransSlice(NULL),
   m_pProgram2DTransSlice(NULL),
+  m_pProgramMIPSlice(NULL),
   m_pProgramIsoCompose(NULL),
   m_pProgramCVCompose(NULL)
 {
@@ -113,6 +114,7 @@ bool GLRenderer::Initialize() {
   if (!LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/Transfer-FS.glsl",  &(m_pProgramTrans))        ||
       !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/1D-slice-FS.glsl",  &(m_pProgram1DTransSlice)) ||
       !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/2D-slice-FS.glsl",  &(m_pProgram2DTransSlice)) ||
+      !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/MIP-slice-FS.glsl", &(m_pProgramMIPSlice))     ||
       !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/Compose-FS.glsl",   &(m_pProgramIsoCompose))   ||
       !LoadAndVerifyShader("Shaders/Transfer-VS.glsl", "Shaders/Compose-CV-FS.glsl",&(m_pProgramCVCompose)))   {
 
@@ -133,6 +135,10 @@ bool GLRenderer::Initialize() {
     m_pProgram2DTransSlice->SetUniformVector("texVolume",0);
     m_pProgram2DTransSlice->SetUniformVector("texTrans2D",1);
     m_pProgram2DTransSlice->Disable();
+
+    m_pProgramMIPSlice->Enable();
+    m_pProgramMIPSlice->SetUniformVector("texVolume",0);
+    m_pProgramMIPSlice->Disable();
 
     FLOATVECTOR2 vParams = m_FrustumCullingLOD.GetDepthScaleParams();
 
@@ -408,59 +414,10 @@ void GLRenderer::SetViewPort(UINTVECTOR2 viLowerLeft, UINTVECTOR2 viUpperRight) 
 }
 
 
-bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT64 iSliceIndex) {
-
-  SetDataDepShaderVars();
-
-  switch (m_eRenderMode) {
-    case RM_2DTRANS    :  m_p2DTransTex->Bind(1); 
-                          m_pProgram2DTransSlice->Enable();
-                          break;
-    default            :  m_p1DTransTex->Bind(1); 
-                          m_pProgram1DTransSlice->Enable();
-                          break;
-  }
-
-  glDisable(GL_BLEND);
-  glDisable(GL_DEPTH_TEST);
-
-  UINT64 iCurrentLOD = 0;
-  UINTVECTOR3 vVoxelCount;
-
-  /// \todo change this code to use something better than the biggest single brick LOD level
-  for (UINT64 i = 0;i<m_pDataset->GetInfo()->GetLODLevelCount();i++) {
-    if (m_pDataset->GetInfo()->GetBrickCount(i).volume() == 1) {
-        iCurrentLOD = i;
-        vVoxelCount = UINTVECTOR3(m_pDataset->GetInfo()->GetDomainSize(i));
-    }
-  }
-
-  SetBrickDepShaderVarsSlice(vVoxelCount);
-
-  // convert 3D variables to the more general ND scheme used in the memory manager, e.i. convert 3-vectors to stl vectors
-  vector<UINT64> vLOD; vLOD.push_back(iCurrentLOD);
-  vector<UINT64> vBrick; 
-  vBrick.push_back(0);vBrick.push_back(0);vBrick.push_back(0);
-
-  // get the 3D texture from the memory manager
-  GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, m_bUseOnlyPowerOfTwo, 0, m_iFrameCounter);
-  if(t!=NULL) t->Bind(0);
-
-  // clear the target at the beginning
-  SetRenderTargetAreaScissor(eREnderArea);
-  glClearColor(0,0,0,1);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glDisable(GL_SCISSOR_TEST);
-
-  FLOATVECTOR3 vMinCoords(0.5f/FLOATVECTOR3(vVoxelCount));
-  FLOATVECTOR3 vMaxCoords(1.0f-vMinCoords);
-
-
-  UINT64VECTOR3 vDomainSize = m_pDataset->GetInfo()->GetDomainSize();
-  DOUBLEVECTOR3 vAspectRatio = m_pDataset->GetInfo()->GetScale() * DOUBLEVECTOR3(vDomainSize);  
-
-  DOUBLEVECTOR2 vWinAspectRatio = 1.0 / DOUBLEVECTOR2(m_vWinSize);
-  vWinAspectRatio = vWinAspectRatio / vWinAspectRatio.maxVal();
+void GLRenderer::RenderSlice(EWindowMode eDirection, UINT64 iSliceIndex, 
+                             FLOATVECTOR3 vMinCoords, FLOATVECTOR3 vMaxCoords, 
+                             UINT64VECTOR3 vDomainSize, DOUBLEVECTOR3 vAspectRatio,
+                             DOUBLEVECTOR2 vWinAspectRatio) {
 
   switch (eDirection) {
     case WM_CORONAL : {
@@ -549,14 +506,92 @@ bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, U
                       }
     default        :  m_pMasterController->DebugOut()->Error("GLRenderer::Render2DView","Invalid windowmode set"); break;
   }
+}
+
+bool GLRenderer::Render2DView(ERenderArea eREnderArea, EWindowMode eDirection, UINT64 iSliceIndex) {
+
+  SetDataDepShaderVars();
+
+  if (!m_bUseMIP[size_t(eDirection)]) {
+    switch (m_eRenderMode) {
+      case RM_2DTRANS    :  m_p2DTransTex->Bind(1); 
+                            m_pProgram2DTransSlice->Enable();
+                            break;
+      default            :  m_p1DTransTex->Bind(1); 
+                            m_pProgram1DTransSlice->Enable();
+                            break;
+    }
+    glDisable(GL_BLEND);
+  } else {
+    m_pProgramMIPSlice->Enable();
+    glBlendFunc(GL_ONE, GL_ONE);
+    glBlendEquation(GL_MAX);
+    glEnable(GL_BLEND);
+
+    SetRenderTargetAreaScissor(eREnderArea);
+    glClearColor(0,0,0,0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDisable( GL_SCISSOR_TEST );
+  }
+
+  glDisable(GL_DEPTH_TEST);
+
+  UINT64 iCurrentLOD = 0;
+  UINTVECTOR3 vVoxelCount;
+
+  /// \todo change this code to use something better than the biggest single brick LOD level
+  for (UINT64 i = 0;i<m_pDataset->GetInfo()->GetLODLevelCount();i++) {
+    if (m_pDataset->GetInfo()->GetBrickCount(i).volume() == 1) {
+        iCurrentLOD = i;
+        vVoxelCount = UINTVECTOR3(m_pDataset->GetInfo()->GetDomainSize(i));
+    }
+  }
+
+  SetBrickDepShaderVarsSlice(vVoxelCount);
+
+  // convert 3D variables to the more general ND scheme used in the memory manager, i.e. convert 3-vectors to stl vectors
+  vector<UINT64> vLOD; vLOD.push_back(iCurrentLOD);
+  vector<UINT64> vBrick; 
+  vBrick.push_back(0);vBrick.push_back(0);vBrick.push_back(0);
+
+  // get the 3D texture from the memory manager
+  GLTexture3D* t = m_pMasterController->MemMan()->Get3DTexture(m_pDataset, vLOD, vBrick, m_bUseOnlyPowerOfTwo, 0, m_iFrameCounter);
+  if(t!=NULL) t->Bind(0);
+
+  // clear the target at the beginning
+  SetRenderTargetAreaScissor(eREnderArea);
+  glClearColor(0,0,0,1);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glDisable(GL_SCISSOR_TEST);
+
+  FLOATVECTOR3 vMinCoords(0.5f/FLOATVECTOR3(vVoxelCount));
+  FLOATVECTOR3 vMaxCoords(1.0f-vMinCoords);
+
+  UINT64VECTOR3 vDomainSize = m_pDataset->GetInfo()->GetDomainSize();
+  DOUBLEVECTOR3 vAspectRatio = m_pDataset->GetInfo()->GetScale() * DOUBLEVECTOR3(vDomainSize);  
+
+  DOUBLEVECTOR2 vWinAspectRatio = 1.0 / DOUBLEVECTOR2(m_vWinSize);
+  vWinAspectRatio = vWinAspectRatio / vWinAspectRatio.maxVal();
+
+  if (!m_bUseMIP[size_t(eDirection)]) {
+      RenderSlice(eDirection, iSliceIndex, vMinCoords, vMaxCoords, vDomainSize, vAspectRatio, vWinAspectRatio);
+  } else {
+    for (UINT64 i = 0;i<vDomainSize[size_t(eDirection)];i++) 
+      RenderSlice(eDirection, i, vMinCoords, vMaxCoords, vDomainSize, vAspectRatio, vWinAspectRatio);
+  }
 
   m_pMasterController->MemMan()->Release3DTexture(t);
 
   glEnable(GL_DEPTH_TEST);
 
-  switch (m_eRenderMode) {
-    case RM_2DTRANS    :  m_pProgram2DTransSlice->Disable(); break;
-    default            :  m_pProgram1DTransSlice->Disable(); break;
+  if (!m_bUseMIP[size_t(eDirection)]) {
+    switch (m_eRenderMode) {
+      case RM_2DTRANS    :  m_pProgram2DTransSlice->Disable(); break;
+      default            :  m_pProgram1DTransSlice->Disable(); break;
+    }
+  } else {
+    m_pProgramMIPSlice->Disable();
+    glBlendEquation(GL_FUNC_ADD);
   }
 
   return true;
@@ -787,6 +822,7 @@ void GLRenderer::Cleanup() {
   if (m_pProgramTrans)        {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramTrans); m_pProgramTrans =NULL;}
   if (m_pProgram1DTransSlice) {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTransSlice); m_pProgram1DTransSlice =NULL;}
   if (m_pProgram2DTransSlice) {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTransSlice); m_pProgram2DTransSlice =NULL;}
+  if (m_pProgramMIPSlice)     {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgramMIPSlice); m_pProgramMIPSlice =NULL;}
   if (m_pProgram1DTrans[0])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[0]); m_pProgram1DTrans[0] =NULL;}
   if (m_pProgram1DTrans[1])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram1DTrans[1]); m_pProgram1DTrans[1] =NULL;}
   if (m_pProgram2DTrans[0])   {m_pMasterController->MemMan()->FreeGLSLProgram(m_pProgram2DTrans[0]); m_pProgram2DTrans[0] =NULL;}

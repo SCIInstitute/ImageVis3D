@@ -101,6 +101,10 @@ AbstrRenderer::AbstrRenderer(MasterController* pMasterController, bool bUseOnlyP
   m_bFlipView[1]   = VECTOR2<bool>(false, false);
   m_bFlipView[2]   = VECTOR2<bool>(false, false);
 
+  m_bUseMIP[0]   = false;
+  m_bUseMIP[1]   = false;
+  m_bUseMIP[2]   = false;
+
   m_bRedrawMask[0] = true;
   m_bRedrawMask[1] = true;
   m_bRedrawMask[2] = true;
@@ -596,4 +600,17 @@ void AbstrRenderer::Get2DFlipMode(EWindowMode eWindow, bool& bFlipX, bool& bFlip
   if (eWindow > WM_SAGITTAL) return;
   bFlipX = m_bFlipView[size_t(eWindow)].x;
   bFlipY = m_bFlipView[size_t(eWindow)].y;
+}
+
+void AbstrRenderer::GetUseMIP(EWindowMode eWindow, bool& bUseMIP) {
+  // MIP is only possible for 2D views
+  if (eWindow > WM_SAGITTAL) return;
+  bUseMIP = m_bUseMIP[size_t(eWindow)];
+}
+
+void AbstrRenderer::SetUseMIP(EWindowMode eWindow, bool bUseMIP) {
+  // MIP is only possible for 2D views
+  if (eWindow > WM_SAGITTAL) return;
+  m_bUseMIP[size_t(eWindow)] = bUseMIP;
+  ScheduleWindowRedraw(eWindow);
 }

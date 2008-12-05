@@ -66,8 +66,8 @@ FLOATQUATERNION4 ArcBall::Drag(UINTVECTOR2 vPosition) {
   FLOATVECTOR3 vCurrent = MapToSphere(vPosition);
 
   // Compute the vector perpendicular to the begin and end vectors
-  FLOATVECTOR3 vCross(m_vStartDrag % vCurrent);
-  float        fDot(m_vStartDrag ^ vCurrent);
+  FLOATVECTOR3 vCross(vCurrent % m_vStartDrag);
+  float        fDot(vCurrent ^ m_vStartDrag);
 
   if (vCross.length() > ms_fEpsilon)    //if its non-zero
       return FLOATQUATERNION4(vCross.x, vCross.y, vCross.z, fDot);
@@ -79,9 +79,9 @@ FLOATVECTOR3 ArcBall::MapToSphere(UINTVECTOR2 vPosition) const {
   FLOATVECTOR3 vResult;
 
   // normalize position to [-1 ... 1]
-  FLOATVECTOR2 vNormPosition; 
-  vNormPosition.x = -(((vPosition.x-m_iWinOffsets.x) / (float(m_iWinDim.x  - 1) / 2.0f)) - 1.0f);
-  vNormPosition.y =  (((vPosition.y-m_iWinOffsets.y) / (float(m_iWinDim.y - 1) / 2.0f)) - 1.0f);
+  FLOATVECTOR2 vNormPosition;
+  vNormPosition.x =  -(((vPosition.x-m_iWinOffsets.x) / (float(m_iWinDim.x - 1) / 2.0f)) - 1.0f);
+  vNormPosition.y =  ((vPosition.y-m_iWinOffsets.y) / (float(m_iWinDim.y - 1) / 2.0f)) - 1.0f;
 
   // Compute the length of the vector to the point from the center
   float length = vNormPosition.length();
@@ -100,7 +100,7 @@ FLOATVECTOR3 ArcBall::MapToSphere(UINTVECTOR2 vPosition) const {
       // Return a vector to a point mapped inside the sphere
       vResult.x = vNormPosition.x;
       vResult.y = vNormPosition.y;
-      vResult.z = float(m_fRadius - length);
+      vResult.z = length-m_fRadius;
   }
 
   vResult = vResult * m_mTranslation;
