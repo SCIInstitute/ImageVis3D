@@ -50,6 +50,11 @@
   #include <iostream>
 #endif
 
+#if defined(__GNUC__) && __GNUC__ >= 3
+#   define FQN_UNUSED __attribute__ ((unused))
+#   define FQN_PRINTF __attribute__ ((format (printf, 1, 2)))
+#endif
+
 namespace Console {
   #ifdef WIN32
     #include <windows.h>
@@ -130,6 +135,11 @@ namespace Console {
 
     #include <wchar.h>
     #include <string>
+    static void printf(const wchar_t *, ...) FQN_UNUSED;
+    static void printfd(const wchar_t*, ...) FQN_UNUSED;
+
+    static void printf(const char* , ...) FQN_UNUSED FQN_PRINTF;
+    static void printfd(const char*, ...) FQN_UNUSED FQN_PRINTF;
 
     static void printf(const wchar_t* format, ...)
     {
@@ -160,7 +170,6 @@ namespace Console {
     #else
       static void printfd(const wchar_t*, ...) {}
     #endif
-
 
     static void printf(const char* format, ...)
     {
