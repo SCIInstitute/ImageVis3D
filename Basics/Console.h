@@ -53,6 +53,9 @@
 #if defined(__GNUC__) && __GNUC__ >= 3
 #   define FQN_UNUSED __attribute__ ((unused))
 #   define FQN_PRINTF __attribute__ ((format (printf, 1, 2)))
+#else
+#   define FQN_UNUSED /* nothing */
+#   define FQN_PRINTF /* nothing */
 #endif
 
 namespace Console {
