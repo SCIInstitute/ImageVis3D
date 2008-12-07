@@ -22,6 +22,7 @@ function update
 {
     if test -d .git ; then
         git diff --quiet
+        saved=0
         if test $? -ne 0 ; then
             git stash save "hacks"
             saved=1
