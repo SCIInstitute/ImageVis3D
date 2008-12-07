@@ -51,7 +51,7 @@ find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
 
 try qmake -spec ${spec}
 make clean
-make -j5
+make -j5 2> warnings
 try make
 
 revision=`$svn info | grep Revision | awk '{print $2}'`
@@ -66,3 +66,6 @@ if test `uname` = "Darwin" ; then
 elif test `uname` = "Linux" ; then
     mv Build/Linux/Bin/ImageVis3D ./ImageVis3D-r${revision}
 fi
+
+echo "Warnings:"
+cat warnings
