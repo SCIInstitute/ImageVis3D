@@ -786,7 +786,8 @@ void RasterDataBlock::AllocateTemp(const string& strTempFile, bool bBuildOffsetT
  * \param combineFunc - the function used to compute the LOD, this is mostly an average function
  * \return void
  * \see FlatDataToBrickedLOD
- */void RasterDataBlock::FlatDataToBrickedLOD(const void* pSourceData, const string& strTempFile, 
+ */
+void RasterDataBlock::FlatDataToBrickedLOD(const void* pSourceData, const string& strTempFile, 
                                               void (*combineFunc)(vector<UINT64> vSource, UINT64 iTarget, const void* pIn, const void* pOut),
                                               void (*maxminFunc)(const void* pIn, size_t iStart, size_t iCount, double *pfMin, double *pfMa),
                                               MaxMinDataBlock* pMaxMinDatBlock, AbstrDebugOut* pDebugOut) {

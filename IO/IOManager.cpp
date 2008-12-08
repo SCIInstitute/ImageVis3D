@@ -297,6 +297,128 @@ bool IOManager::ConvertDATDataset(const std::string& strFilename, const std::str
   } else return false;
 }
 
+
+
+const std::string IOManager::QuantizeShortTo12Bits(UINT64 iHeaderSkip, const std::string& strFilename, const std::string& strTargetFilename, size_t iSize) {
+  LargeRAWFile InputData(strFilename);
+  InputData.Open(false);
+
+  if (!InputData.IsOpen()) return "";
+
+  InputData.SeekPos(iHeaderSkip);
+
+  // determine max and min
+  unsigned short iMax = 0;
+  unsigned short iMin = 65535;
+  unsigned short* pInData = new unsigned short[BRICKSIZE*BRICKSIZE*BRICKSIZE*2];
+  UINT64 iPos = 0;
+  while (iPos < iSize)  {
+    size_t iRead = InputData.ReadRAW((unsigned char*)pInData, BRICKSIZE*BRICKSIZE*BRICKSIZE*2)/2;
+
+    for (size_t i = 0;i<iRead;i++) {
+      if (iMax < pInData[i]) iMax = pInData[i];
+      if (iMin > pInData[i]) iMin = pInData[i];
+    }
+
+    iPos += UINT64(iRead);
+  }
+
+  // if file uses less or equal than 12 bits quit here
+  if (iMax < 4096) {
+    delete [] pInData;
+    InputData.Close();
+    return strFilename;
+  }
+
+  // otherwise quantize
+  LargeRAWFile OutputData(strTargetFilename);
+  OutputData.Create(iSize*2);
+
+  if (!OutputData.IsOpen()) {
+    delete [] pInData;
+    InputData.Close();
+    return "";
+  }
+
+  float fQuantFact = 4095.0f / float(iMax-iMin);
+  
+  InputData.SeekPos(iHeaderSkip);
+  iPos = 0;
+  while (iPos < iSize)  {
+    size_t iRead = InputData.ReadRAW((unsigned char*)pInData, BRICKSIZE*BRICKSIZE*BRICKSIZE*2)/2;
+    for (size_t i = 0;i<iRead;i++) {
+      pInData[i] = min<unsigned short>(4095, (float(pInData[i]-iMin) * fQuantFact));
+    }
+    iPos += UINT64(iRead);
+
+    OutputData.WriteRAW((unsigned char*)pInData, 2*iRead);
+  }
+
+  delete [] pInData;
+  OutputData.Close();
+  InputData.Close();
+
+  return strTargetFilename;
+}
+
+const std::string IOManager::QuantizeFloatTo12Bits(UINT64 iHeaderSkip, const std::string& strFilename, const std::string& strTargetFilename, size_t iSize) {
+  LargeRAWFile InputData(strFilename);
+  InputData.Open(false);
+
+  if (!InputData.IsOpen()) return "";
+
+  InputData.SeekPos(iHeaderSkip);
+
+  // determine max and min
+  float fMax = -numeric_limits<float>::max();
+  float fMin = numeric_limits<float>::max();
+  float* pInData = new float[BRICKSIZE*BRICKSIZE*BRICKSIZE*2];
+  UINT64 iPos = 0;
+  while (iPos < iSize)  {
+    size_t iRead = InputData.ReadRAW((unsigned char*)pInData, BRICKSIZE*BRICKSIZE*BRICKSIZE*4)/4;
+
+    for (size_t i = 0;i<iRead;i++) {
+      if (fMax < pInData[i]) fMax = pInData[i];
+      if (fMin > pInData[i]) fMin = pInData[i];
+    }
+
+    iPos += UINT64(iRead);
+  }
+
+  // quantize
+  LargeRAWFile OutputData(strTargetFilename);
+  OutputData.Create(iSize*2);
+
+  if (!OutputData.IsOpen()) {
+    delete [] pInData;
+    InputData.Close();
+    return "";
+  }
+
+  float fQuantFact = 4095.0f / float(fMax-fMin);
+  unsigned short* pOutData = new unsigned short[BRICKSIZE*BRICKSIZE*BRICKSIZE*2];
+  
+  InputData.SeekPos(iHeaderSkip);
+  iPos = 0;
+  while (iPos < iSize)  {
+    size_t iRead = InputData.ReadRAW((unsigned char*)pInData, BRICKSIZE*BRICKSIZE*BRICKSIZE*4)/4;
+    for (size_t i = 0;i<iRead;i++) {
+      pOutData[i] = min<unsigned short>(4095, ((pInData[i]-fMin) * fQuantFact));
+    }
+    iPos += UINT64(iRead);
+
+    OutputData.WriteRAW((unsigned char*)pOutData, 2*iRead);
+  }
+
+  delete [] pInData;
+  delete [] pOutData;
+  OutputData.Close();
+  InputData.Close();
+
+  return strTargetFilename;
+}
+
+
 bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::string& strTargetFilename, UINT64 iHeaderSkip,
 				                         UINT64	iComponentSize, UINT64 iComponentCount, bool bSigned, bool bConvertEndianness,
                                  UINTVECTOR3 vVolumeSize,FLOATVECTOR3 vVolumeAspect, string strDesc, string strSource, UVFTables::ElementSemanticTable eType)
@@ -306,9 +428,11 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
   m_pMasterController->DebugOut()->Message("IOManager::ConvertRAWDataset","Converting RAW dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
 
   string strSourceFilename;
-  string tmpFilename = SysTools::GetPath(strTargetFilename)+SysTools::GetFilename(strFilename)+".endianess";
+  string tmpFilename0 = SysTools::GetPath(strTargetFilename)+SysTools::GetFilename(strFilename)+".endianess";
+  string tmpFilename1 = SysTools::GetPath(strTargetFilename)+SysTools::GetFilename(strFilename)+".quantized";
+
   if (bConvertEndianness) {
-    m_pMasterController->DebugOut()->Message("IOManager::ConvertRAWDataset","Performaing endianess conversion of RAW dataset %s to %s", strFilename.c_str(), tmpFilename.c_str());
+    m_pMasterController->DebugOut()->Message("IOManager::ConvertRAWDataset","Performaing endianess conversion of RAW dataset %s to %s", strFilename.c_str(), tmpFilename0.c_str());
 
     if (iComponentSize != 16 && iComponentSize != 32 && iComponentSize != 64) {
       m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unable to endian convert anything but 16bit, 32bit, or 64bit values (requested %i)", iComponentSize);
@@ -324,17 +448,17 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
       return false;
     }
 
-    LargeRAWFile ConvEndianData(tmpFilename);
+    LargeRAWFile ConvEndianData(tmpFilename0);
     ConvEndianData.Create();
 
     if (!ConvEndianData.IsOpen()) {
-      m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unable to open temp file %s for endianess conversion", tmpFilename.c_str());
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unable to open temp file %s for endianess conversion", tmpFilename0.c_str());
       WrongEndianData.Close();
       return false;
     }
 
     UINT64 ulFileLength = WrongEndianData.GetCurrentSize();
-    size_t iBufferSize = min<size_t>(size_t(ulFileLength), size_t(BRICKSIZE*BRICKSIZE*BRICKSIZE*iComponentSize/8)); // this must fit into memory otherwise other subsystems would break
+    size_t iBufferSize = min<size_t>(size_t(ulFileLength), size_t(BRICKSIZE*BRICKSIZE*BRICKSIZE*iComponentSize/8)); // hint: this must fit into memory otherwise other subsystems would break
     UINT64 ulBufferConverted = 0;
 
     unsigned char* pBuffer = new unsigned char[iBufferSize];
@@ -358,10 +482,10 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
       size_t iBytesWritten = ConvEndianData.WriteRAW(pBuffer, iBytesRead);
 
       if (iBytesRead != iBytesWritten)  {
-        m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Read/Write error converting endianess from %s to %s", strFilename.c_str(), tmpFilename.c_str());
+        m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Read/Write error converting endianess from %s to %s", strFilename.c_str(), tmpFilename0.c_str());
         WrongEndianData.Close();
         ConvEndianData.Close();
-        remove(tmpFilename.c_str());
+        remove(tmpFilename0.c_str());
         delete [] pBuffer;
         return false;
       }
@@ -373,8 +497,27 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 
     WrongEndianData.Close();
     ConvEndianData.Close();
-    strSourceFilename = tmpFilename;
+    strSourceFilename = tmpFilename0;
   } else strSourceFilename = strFilename;
+
+	switch (iComponentSize) {
+    case 16 : 
+      strSourceFilename = QuantizeShortTo12Bits(iHeaderSkip, strSourceFilename, tmpFilename1, iComponentCount*vVolumeSize.volume());
+      break;
+		case 32 :	
+      strSourceFilename = QuantizeFloatTo12Bits(iHeaderSkip, strSourceFilename, tmpFilename1, iComponentCount*vVolumeSize.volume());
+      iComponentSize = 16;
+      break;
+  }
+  
+  if (strSourceFilename == "")  {
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Read/Write error quantizing from to %s", strFilename.c_str());
+    return false;
+  }
+  
+  bool bQuantized = strSourceFilename == tmpFilename1;
+
+
 
 
   LargeRAWFile SourceData(strSourceFilename, iHeaderSkip);
@@ -462,21 +605,24 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
   MaxMinDataBlock MaxMinData;
 
 	switch (iComponentSize) {
-		case 8 :	switch (iComponentCount) {
+		case 8 :	
+          switch (iComponentCount) {
             case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,1>, SimpleMaxMin<unsigned char>, &MaxMinData, m_pMasterController->DebugOut()); break;
 						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,2>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,3>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned char,4>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", int(iComponentCount), int(iComponentSize)); uvfFile.Close(); SourceData.Close(); return false;
 					} break;
-		case 16 :		switch (iComponentCount) {
+		case 16 :
+          switch (iComponentCount) {
 						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short>, &MaxMinData, m_pMasterController->DebugOut()); break;
 						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,2>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,3>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 4 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<unsigned short,4>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						default: m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Unsupported iComponentCount %i for iComponentSize %i.", int(iComponentCount), int(iComponentSize)); uvfFile.Close(); SourceData.Close(); return false;
 					} break;
-		case 32 :	switch (iComponentCount) {
+		case 32 :	
+          switch (iComponentCount) {
 						case 1 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,1>, SimpleMaxMin<float>, &MaxMinData, m_pMasterController->DebugOut()); break;
 						case 2 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,2>, NULL, NULL, m_pMasterController->DebugOut()); break;
 						case 3 : dataVolume.FlatDataToBrickedLOD(&SourceData, "tempFile.tmp", CombineAverage<float,3>, NULL, NULL, m_pMasterController->DebugOut()); break;
@@ -491,7 +637,8 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
     m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Verify failed with the following reason: %s", strProblemDesc.c_str()); 
     uvfFile.Close(); 
     SourceData.Close();
-    if (bConvertEndianness) remove(tmpFilename.c_str());
+    if (bConvertEndianness) remove(tmpFilename0.c_str());
+    if (bQuantized) remove(tmpFilename1.c_str());
 		return false;
 	}
 
@@ -499,7 +646,8 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
     m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","AddDataBlock failed!"); 
     uvfFile.Close(); 
     SourceData.Close();
-    if (bConvertEndianness) remove(tmpFilename.c_str());
+    if (bConvertEndianness) remove(tmpFilename0.c_str());
+    if (bQuantized) remove(tmpFilename1.c_str());
 		return false;
 	}
 
@@ -508,7 +656,8 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
     m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Computation of 1D Histogram failed!"); 
     uvfFile.Close(); 
     SourceData.Close();
-    if (bConvertEndianness) remove(tmpFilename.c_str());
+    if (bConvertEndianness) remove(tmpFilename0.c_str());
+    if (bQuantized) remove(tmpFilename1.c_str());
 		return false;
   }
 
@@ -517,7 +666,8 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
     m_pMasterController->DebugOut()->Error("IOManager::ConvertRAWDataset","Computation of 2D Histogram failed!"); 
     uvfFile.Close(); 
     SourceData.Close();
-    if (bConvertEndianness) remove(tmpFilename.c_str());
+    if (bConvertEndianness) remove(tmpFilename0.c_str());
+    if (bQuantized) remove(tmpFilename1.c_str());
 		return false;
   }
 
@@ -538,7 +688,8 @@ bool IOManager::ConvertRAWDataset(const std::string& strFilename, const std::str
 	uvfFile.Create();
 	SourceData.Close();
 	uvfFile.Close();
-  if (bConvertEndianness) remove(tmpFilename.c_str());
+  if (bConvertEndianness) remove(tmpFilename0.c_str());
+  if (bQuantized) remove(tmpFilename1.c_str());
 
   return true;
 }

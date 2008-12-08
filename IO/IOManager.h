@@ -76,6 +76,9 @@ private:
                          std::string strDesc, std::string strSource="", UVFTables::ElementSemanticTable eType=UVFTables::ES_UNDEFINED);
 
 
+  const std::string QuantizeShortTo12Bits(UINT64 iHeaderSkip, const std::string& strFilename, const std::string& strTargetFilename, size_t iSize);
+  const std::string QuantizeFloatTo12Bits(UINT64 iHeaderSkip, const std::string& strFilename, const std::string& strTargetFilename, size_t iSize);
+
 };
 
 #endif // IOMANAGER_H
