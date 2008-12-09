@@ -45,7 +45,8 @@ TransferFunction2D::TransferFunction2D() :
   m_pColorData(NULL),
   m_pCanvas(NULL),
   m_pPainter(NULL),
-  m_vValueBBox(0,0)
+  m_vValueBBox(0,0),
+  m_bUseCachedData(false)
 {
   Resize(m_iSize);
 }
@@ -146,11 +147,9 @@ void TransferFunction2D::GetByteArray(unsigned char** pcData) {
   for (size_t i = 0;i<iSize;i++) {
     unsigned char r = *(pcDataIterator+2);
     unsigned char b = *(pcDataIterator+0);
-    unsigned char a = *(pcDataIterator+3);
 
     *(pcDataIterator+0) = r;
     *(pcDataIterator+2) = b;
-    *(pcDataIterator+3) = a;
 
     pcDataIterator+=4;
   }
@@ -216,20 +215,13 @@ unsigned char* TransferFunction2D::RenderTransferFunction8Bit() {
   if (m_pCanvas == NULL )    m_pCanvas    = new QImage(int(m_iSize.x), int(m_iSize.y), QImage::Format_ARGB32);
   if (m_pPainter == NULL)    m_pPainter   = new QPainter(m_pCanvas);
 
+  if (m_bUseCachedData) return m_pCanvas->bits();
+
   m_pCanvas->fill(0);  
 
-  // render 1D trans
-  size_t iSize = min<size_t>(m_iSize.x,  m_Trans1D.GetSize());
-  QImage image1DTrans(int(iSize), 1, QImage::Format_ARGB32);
-  for (unsigned int i = 0;i<iSize;i++) {
-    image1DTrans.setPixel(i,0,qRgba(int(m_Trans1D.vColorData[i][0]*255),
-                                    int(m_Trans1D.vColorData[i][1]*255),
-                                    int(m_Trans1D.vColorData[i][2]*255),
-                                    int(m_Trans1D.vColorData[i][3]*255)));
-  }
+  // render 1D trans 
   QRect imageRect(0, 0, int(m_iSize.x), int(m_iSize.y));
-  m_pPainter->drawImage(imageRect,image1DTrans);
-
+  m_pPainter->drawImage(imageRect,m_Trans1DImage);
 
   // render swatches
   QPen noBorderPen(Qt::NoPen);
@@ -258,6 +250,8 @@ unsigned char* TransferFunction2D::RenderTransferFunction8Bit() {
     m_pPainter->drawPolygon(&pointList[0], int(currentSwatch.pPoints.size()));
   }
 
+  m_bUseCachedData = true;
+
   return m_pCanvas->bits();
 }
 
@@ -276,22 +270,41 @@ ColorData2D* TransferFunction2D::RenderTransferFunction() {
   return m_pColorData;
 }
 
-
 void TransferFunction2D::ComputeNonZeroLimits() {   
-  RenderTransferFunction();
-  m_vValueBBox    = UINT64VECTOR4(UINT64(m_pColorData->GetSize().x),0,UINT64(m_pColorData->GetSize().y),0);
+  unsigned char* pPixelData = RenderTransferFunction8Bit();
 
-  for (size_t y = 0;y<m_pColorData->GetSize().y;y++) {
-    for (size_t x = 0;x<m_pColorData->GetSize().x;x++) {
-      if (m_pColorData->Get(x,y)[3] != 0) {
+  m_vValueBBox    = UINT64VECTOR4(UINT64(m_iSize.x),0,
+                                  UINT64(m_iSize.y),0);
+
+  size_t i = 3;
+  for (size_t y = 0;y<m_iSize.y;y++) {
+    for (size_t x = 0;x<m_iSize.x;x++) {
+      if (pPixelData[i] != 0) {
         m_vValueBBox.x = MIN(m_vValueBBox.x, x);
         m_vValueBBox.y = MAX(m_vValueBBox.y, x);
 
         m_vValueBBox.z = MIN(m_vValueBBox.z, y);
         m_vValueBBox.w = MAX(m_vValueBBox.w, y);
       }
+      i+=4;
     }
   }
+}
+
+void TransferFunction2D::Update1DTrans(const TransferFunction1D* p1DTrans) {
+
+  m_Trans1D = TransferFunction1D(*p1DTrans);
+
+  size_t iSize = min<size_t>(m_iSize.x,  m_Trans1D.GetSize());
+
+  m_Trans1DImage = QImage(int(iSize), 1, QImage::Format_ARGB32);
+  for (unsigned int i = 0;i<iSize;i++) {
+    m_Trans1DImage.setPixel(i,0,qRgba(int(m_Trans1D.vColorData[i][0]*255),
+                                    int(m_Trans1D.vColorData[i][1]*255),
+                                    int(m_Trans1D.vColorData[i][2]*255),
+                                    int(m_Trans1D.vColorData[i][3]*255)));
+  }
+
 }
 
 // ************************************************************************************************************
@@ -344,4 +357,3 @@ void TFPolygon::Save(ofstream& file) {
     file << endl;
   }  
 }
-

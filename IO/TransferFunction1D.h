@@ -62,7 +62,7 @@ public:
   void SetStdFunction(float fCenterPoint=0.5f, float fInvGradient=0.5f);
   void SetStdFunction(float fCenterPoint, float fInvGradient, int iComponent);
 
-  size_t GetSize() {return vColorData.size();}
+  const size_t GetSize() const {return vColorData.size();}
   void Resize(size_t iSize);
   void Resample(size_t iTargetSize);
 

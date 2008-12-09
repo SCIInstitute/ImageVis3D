@@ -496,19 +496,8 @@ void Q2DTransferFunction::changeEvent(QEvent * event) {
 
 
 void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
-  UINT64 iSize = min<UINT64>(m_vHistogram.GetSize().x,  m_pTrans->m_Trans1D.GetSize());
-
-  QImage image1DTrans(int(iSize), 1, QImage::Format_ARGB32);
-
-  for (unsigned int i = 0;i<iSize;i++) {
-    image1DTrans.setPixel(i,0,qRgba(int(m_pTrans->m_Trans1D.vColorData[i][0]*255),
-                     int(m_pTrans->m_Trans1D.vColorData[i][1]*255),
-                     int(m_pTrans->m_Trans1D.vColorData[i][2]*255),
-                     int(m_pTrans->m_Trans1D.vColorData[i][3]*255)));
-  }
-
   QRect imageRect(m_iBorderSize/2, m_iBorderSize/2, width()-m_iBorderSize, height()-m_iBorderSize);
-  painter.drawImage(imageRect,image1DTrans);
+  painter.drawImage(imageRect,m_pTrans->Get1DTransImage());
 }
 
 void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
@@ -573,7 +562,7 @@ bool Q2DTransferFunction::SaveToFile(const QString& strFilename) {
 
 
 void Q2DTransferFunction::Set1DTrans(const TransferFunction1D* p1DTrans) {
-  m_pTrans->m_Trans1D = TransferFunction1D(*p1DTrans);
+  m_pTrans->Update1DTrans(p1DTrans);
   m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
   m_bBackdropCacheUptodate = false;
   update();

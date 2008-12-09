@@ -308,6 +308,8 @@ void GPUMemMan::Free1DTrans(TransferFunction1D* pTransferFunction1D, AbstrRender
 void GPUMemMan::Changed2DTrans(AbstrRenderer* requester, TransferFunction2D* pTransferFunction2D) {
   m_MasterController->DebugOut()->Message("GPUMemMan::Changed2DTrans","Sending change notification for 2D transfer function");
 
+  pTransferFunction2D->InvalidateCache();
+
   pTransferFunction2D->ComputeNonZeroLimits();
 
   for (Trans2DListIter i = m_vpTrans2DList.begin();i<m_vpTrans2DList.end();i++) {
@@ -317,6 +319,7 @@ void GPUMemMan::Changed2DTrans(AbstrRenderer* requester, TransferFunction2D* pTr
       }
     }
   }
+
 }
 
 void GPUMemMan::GetEmpty2DTrans(const VECTOR2<size_t>& iSize, AbstrRenderer* requester, TransferFunction2D** ppTransferFunction2D, GLTexture2D** tex) {

@@ -316,11 +316,15 @@ const std::string IOManager::QuantizeShortTo12Bits(UINT64 iHeaderSkip, const std
     size_t iRead = InputData.ReadRAW((unsigned char*)pInData, BRICKSIZE*BRICKSIZE*BRICKSIZE*2)/2;
 
     for (size_t i = 0;i<iRead;i++) {
-      if (iMax < pInData[i]) iMax = pInData[i];
-      if (iMin > pInData[i]) iMin = pInData[i];
+      if ( iMax < pInData[i])
+        iMax = pInData[i];
+      if (iMin > pInData[i]) 
+        iMin = pInData[i];
     }
 
     iPos += UINT64(iRead);
+
+    if (iMin == 0 && iMax == 65535) break;
   }
 
   // if file uses less or equal than 12 bits quit here

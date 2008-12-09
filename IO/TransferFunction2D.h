@@ -87,20 +87,26 @@ public:
   bool Load(const std::string& filename);
   bool Save(const std::string& filename);
 
+  void InvalidateCache() {m_bUseCachedData = false;}
   void GetByteArray(unsigned char** pcData);
   void GetByteArray(unsigned char** pcData, unsigned char cUsedRange);
   void GetShortArray(unsigned short** psData, unsigned short sUsedRange=4095);
   void GetFloatArray(float** pfData);
 
   std::vector< TFPolygon > m_Swatches;
-  TransferFunction1D m_Trans1D;
 
   const VECTOR2<size_t> GetSize() const {return m_iSize;}
 
   void ComputeNonZeroLimits();
   const UINT64VECTOR4& GetNonZeroLimits() { return m_vValueBBox;}
 
+  const TransferFunction1D* Get1DTrans() {return &m_Trans1D;}
+  const QImage& Get1DTransImage() {return m_Trans1DImage;}
+  void Update1DTrans(const TransferFunction1D* p1DTrans);
+
 protected:
+  TransferFunction1D m_Trans1D;
+  QImage             m_Trans1DImage;
   VECTOR2<size_t> m_iSize;
   ColorData2D* RenderTransferFunction();
   unsigned char* RenderTransferFunction8Bit();
@@ -111,6 +117,7 @@ private:
   QImage*           m_pCanvas;
   QPainter*         m_pPainter;  
   UINT64VECTOR4     m_vValueBBox;
+  bool              m_bUseCachedData;
 
   void DeleteCanvasData();
 };

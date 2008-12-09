@@ -355,7 +355,7 @@ void AbstrRenderer::ScheduleRecompose() {
 
 void AbstrRenderer::ComputeMinLODForCurrentView() {
   UINTVECTOR3  viVoxelCount = UINTVECTOR3(m_pDataset->GetInfo()->GetDomainSize());
-  FLOATVECTOR3 vfExtend     = (FLOATVECTOR3(viVoxelCount) / viVoxelCount.maxVal()) * FLOATVECTOR3(m_pDataset->GetInfo()->GetScale());
+  FLOATVECTOR3 vfExtend     = (FLOATVECTOR3(viVoxelCount) / viVoxelCount.maxVal()) * FLOATVECTOR3(m_pDataset->GetInfo()->GetScale() / m_pDataset->GetInfo()->GetScale().maxVal() );
 
   // TODO consider real extend not center
 
@@ -375,6 +375,7 @@ vector<Brick> AbstrRenderer::BuildFrameBrickList() {
                       m_pDataset->GetInfo()->GetScale().y, 
                       m_pDataset->GetInfo()->GetScale().z);
 
+  vScale /= vScale.maxVal();
 
   FLOATVECTOR3 vDomainExtend = FLOATVECTOR3(vScale.x*vDomainSize.x, vScale.y*vDomainSize.y, vScale.z*vDomainSize.z) / iMaxDomainSize;
 
