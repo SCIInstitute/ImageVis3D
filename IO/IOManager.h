@@ -68,7 +68,7 @@ public:
 private:  
   MasterController* m_pMasterController;
 
-  bool ConvertNHDRDataset(const std::string& strFilename, const std::string& strTargetFilename);
+  bool ConvertNRRDDataset(const std::string& strFilename, const std::string& strTargetFilename, bool bIsDetached);
   bool ConvertDATDataset(const std::string& strFilename, const std::string& strTargetFilename);
   bool ConvertRAWDataset(const std::string& strFilename, const std::string& strTargetFilename, UINT64 iHeaderSkip,
 				                 UINT64 iComponentSize, UINT64 iComponentCount, bool bConvertEndianness,

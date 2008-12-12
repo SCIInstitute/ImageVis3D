@@ -36,6 +36,7 @@
 
 #pragma once
 
+
 #ifndef KEYVALUEFILEPARSER_H
 #define KEYVALUEFILEPARSER_H
 
@@ -49,6 +50,7 @@
 #endif
 
 #include <Basics/Vectors.h>
+#include <StdDefines.h>
 
 class KeyValPair {
 public:
@@ -80,8 +82,8 @@ public:
 class KeyValueFileParser
 {
 public:
-	KeyValueFileParser(const std::string& strFilename, char cToken = ':');
-	KeyValueFileParser(const std::wstring& wstrFilename, wchar_t cToken = ':');
+	KeyValueFileParser(const std::string& strFilename, const std::string& strToken = ":", bool bStopAfterEmpyLine=false);
+  KeyValueFileParser(const std::wstring& wstrFilename, const std::wstring& wstrToken = L":", bool bStopAfterEmpyLine=false);
 
 	~KeyValueFileParser(void);
 
@@ -89,12 +91,15 @@ public:
 	KeyValPair* GetData(const std::wstring& wstrKey, const bool bCaseSensitive=false); 
 
 	bool FileReadable() const {return m_bFileReadable;}
+  UINT64 GetStopPos() const {return m_iStopPos;}
 
 protected:
 	std::vector<KeyValPair> m_vecTokens;
 	bool m_bFileReadable;
+  bool m_bStopAfterEmpyLine;
+  UINT64 m_iStopPos;
 
-  bool ParseFile(std::wstring wstrFilename, wchar_t cToken);
+  bool ParseFile(const std::string& strFilename, const std::string& strToken);
 };
 
 #endif // KEYVALUEFILEPARSER_H

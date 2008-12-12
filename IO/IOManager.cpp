@@ -107,9 +107,9 @@ vector<FileStackInfo*> IOManager::ScanDirectory(std::string strDirectory) {
   return fileStacks;
 }
 
-bool IOManager::ConvertNHDRDataset(const std::string& strFilename, const std::string& strTargetFilename) 
+bool IOManager::ConvertNRRDDataset(const std::string& strFilename, const std::string& strTargetFilename, bool bIsDetached) 
 {
-  m_pMasterController->DebugOut()->Message("IOManager::ConvertNHDRDataset","Converting NRHD dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
+  m_pMasterController->DebugOut()->Message("IOManager::ConvertNRRDDataset","Converting NRHD dataset %s to %s", strFilename.c_str(), strTargetFilename.c_str());
 
   // Check Magic value in NRRD File first
 	ifstream fileData(strFilename.c_str());	
@@ -119,11 +119,11 @@ bool IOManager::ConvertNHDRDataset(const std::string& strFilename, const std::st
 	{
 		getline (fileData,strFirstLine);
     if (strFirstLine.substr(0,7) != "NRRD000") {
-      m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","The file %s is not a NRRD file (missing magic)", strFilename.c_str());
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","The file %s is not a NRRD file (missing magic)", strFilename.c_str());
       return false;
     }
   } else {
-    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open NRHD file %s", strFilename.c_str());
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Could not open NRRD file %s", strFilename.c_str());
     return false;
   }
   fileData.close();
@@ -138,16 +138,16 @@ bool IOManager::ConvertNHDRDataset(const std::string& strFilename, const std::st
   FLOATVECTOR3	vVolumeAspect(1,1,1);
   string        strRAWFile;
 
-  KeyValueFileParser parser(strFilename);
+  KeyValueFileParser parser(strFilename, ":", !bIsDetached);
 
   if (!parser.FileReadable()) {
-    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open NRHD file %s", strFilename.c_str());
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Could not open NRRD file %s", strFilename.c_str());
     return false;
   }
 
   KeyValPair* kvpType = parser.GetData("TYPE");
   if (kvpType == NULL) {
-    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open find token \"type\" in file %s", strFilename.c_str());
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Could not open find token \"type\" in file %s", strFilename.c_str());
 	  return false;
   } else {
 	  if (kvpType->strValueUpper == "SIGNED CHAR" || kvpType->strValueUpper == "INT8" || kvpType->strValueUpper == "INT8_T") {
@@ -181,47 +181,75 @@ bool IOManager::ConvertNHDRDataset(const std::string& strFilename, const std::st
 		  bSigned = true;
 		  iComponentSize = 64;
 	  } else {
-      m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Unsupported \"type\" in file %s", strFilename.c_str());
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Unsupported \"type\" in file %s", strFilename.c_str());
 	    return false;
     }
   }
 
   KeyValPair* kvpDim = parser.GetData("DIMENSION");
   if (kvpDim == NULL) {
-    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open find token \"dimension\" in file %s", strFilename.c_str());
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Could not open find token \"dimension\" in file %s", strFilename.c_str());
 	  return false;
   } else {
     if (kvpDim->iValue != 3)  {
-      m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Only 3D nhdr are supported at the moment");
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Only 3D NRRD are supported at the moment");
 	    return false;
      }
   }
 
   KeyValPair* kvpSizes = parser.GetData("SIZES");
   if (kvpSizes == NULL) {
-    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open find token \"sizes\" in file %s", strFilename.c_str());
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Could not open find token \"sizes\" in file %s", strFilename.c_str());
 	  return false;
   } else {
     vVolumeSize = kvpSizes->vuiValue;
   }
 
-  KeyValPair* kvpDataFile = parser.GetData("DATA FILE");
-  if (kvpDataFile == NULL) {
-    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open find token \"data file\" in file %s", strFilename.c_str());
-	  return false;
+  int iHeaderSkip = 0;
+  if (bIsDetached)  {
+    KeyValPair* kvpDataFile = parser.GetData("DATA FILE");
+    if (kvpDataFile == NULL) {
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Could not open find token \"data file\" in file %s", strFilename.c_str());
+	    return false;
+    } else {
+      strRAWFile = SysTools::GetPath(strFilename) + kvpDataFile->strValue;
+    }
   } else {
-    strRAWFile = SysTools::GetPath(strFilename) + kvpDataFile->strValue;
+    iHeaderSkip = parser.GetStopPos();
+    strRAWFile = strFilename;
   }
   
   KeyValPair* kvpEncoding = parser.GetData("ENCODING");
   if (kvpEncoding == NULL) {
-    m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Could not open find token \"encoding\" in file %s", strFilename.c_str());
+    m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Could not open find token \"encoding\" in file %s", strFilename.c_str());
 	  return false;
   } else {
-    if (kvpEncoding->strValueUpper != "RAW")  {
-      m_pMasterController->DebugOut()->Error("IOManager::ConvertNHDRDataset","Only raw encodings are supported at the moment.");
+    if (kvpEncoding->strValueUpper == "RAW")  {
+      m_pMasterController->DebugOut()->Message("IOManager::ConvertNRRDDataset","Found raw encoding.");
+    } else 
+    if (kvpEncoding->strValueUpper == "TXT" || kvpEncoding->strValueUpper == "TEXT" || kvpEncoding->strValueUpper == "ASCII")  {
+      /// \todo
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Found currently unsupported text encoding. Cannot continue.");
 	    return false;
-     }
+    } else 
+    if (kvpEncoding->strValueUpper != "HEX")  {
+      /// \todo
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Found currently unsupported hexadecimal text encoding. Cannot continue.");
+	    return false;
+    } else 
+    if (kvpEncoding->strValueUpper != "GZ" || kvpEncoding->strValueUpper != "GZIP" )  {
+      /// \todo
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Found currently unsupported gzip encoding. Cannot continue.");
+	    return false;
+    } else 
+    if (kvpEncoding->strValueUpper != "BZ2" || kvpEncoding->strValueUpper != "BZIP2" )  {
+      /// \todo
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Found currently unsupported bzip2 encoding. Cannot continue.");
+	    return false;
+    } else {
+      m_pMasterController->DebugOut()->Error("IOManager::ConvertNRRDDataset","Unknown encoding %s found. Cannot continue.");
+	    return false;
+    }
   }
 
   KeyValPair* kvpSpacings = parser.GetData("SPACINGS");
@@ -232,7 +260,7 @@ bool IOManager::ConvertNHDRDataset(const std::string& strFilename, const std::st
   KeyValPair* kvpEndian = parser.GetData("ENDIAN");
   if (kvpEndian != NULL && kvpEndian->strValueUpper == "BIG") bBigEndian = true;
 
-  return ConvertRAWDataset(strRAWFile, strTargetFilename, 0, iComponentSize, iComponentCount, bSigned, bBigEndian != EndianConvert::IsBigEndian(),
+  return ConvertRAWDataset(strRAWFile, strTargetFilename, iHeaderSkip, iComponentSize, iComponentCount, bSigned, bBigEndian != EndianConvert::IsBigEndian(),
                            vVolumeSize, vVolumeAspect, "NRRD data", SysTools::GetFilename(strFilename));
 
 }
@@ -846,7 +874,12 @@ bool IOManager::ConvertDataset(const std::string& strFilename, const std::string
 
   if (SysTools::ToLowerCase(SysTools::GetExt(strFilename)) == "nhdr") {
     m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Detected NRRD header file forwarding to NHDR converter.");
-    return ConvertNHDRDataset(strFilename, strTargetFilename);
+    return ConvertNRRDDataset(strFilename, strTargetFilename, true);
+  } 
+
+  if (SysTools::ToLowerCase(SysTools::GetExt(strFilename)) == "nrrd") {
+    m_pMasterController->DebugOut()->Message("IOManager::ConvertDataset","  Detected NRRD file forwarding to NRRD converter.");
+    return ConvertNRRDDataset(strFilename, strTargetFilename, false);
   } 
 
   /// \todo more converters here

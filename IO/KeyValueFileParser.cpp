@@ -107,22 +107,28 @@ KeyValPair::KeyValPair(const wstring& key, const wstring& value) :
 }
 
 
-KeyValueFileParser::KeyValueFileParser(const string& strFilename, char cToken)
+KeyValueFileParser::KeyValueFileParser(const string& strFilename, const string& strToken, bool bStopAfterEmpyLine) :
+  m_bStopAfterEmpyLine(bStopAfterEmpyLine),
+  m_iStopPos(0)
 {
-	wstring wstrFilename(strFilename.begin(), strFilename.end());
-	m_bFileReadable = ParseFile(wstrFilename,wchar_t(cToken));
+	m_bFileReadable = ParseFile(strFilename,strToken);
 }
 
-KeyValueFileParser::KeyValueFileParser(const wstring& wstrFilename, wchar_t cToken)
+KeyValueFileParser::KeyValueFileParser(const wstring& wstrFilename, const wstring& wstrToken, bool bStopAfterEmpyLine) :
+  m_bStopAfterEmpyLine(bStopAfterEmpyLine),
+  m_iStopPos(0)
 {
-	m_bFileReadable = ParseFile(wstrFilename,cToken);
+	string strFilename(wstrFilename.begin(), wstrFilename.end());
+	string strToken(wstrToken.begin(), wstrToken.end());
+
+  m_bFileReadable = ParseFile(strFilename,strToken);
 }
 
 KeyValueFileParser::~KeyValueFileParser()
 {
 }
 
-KeyValPair* KeyValueFileParser::GetData(const string&  strKey, const bool bCaseSensitive) {
+KeyValPair* KeyValueFileParser::GetData(const string& strKey, const bool bCaseSensitive) {
 	if (!bCaseSensitive) {
 		string upperKey(strKey);
 		transform(upperKey.begin(), upperKey.end(), upperKey.begin(), ::toupper);
@@ -145,26 +151,32 @@ KeyValPair* KeyValueFileParser::GetData(const wstring& wstrKey, const bool bCase
 }
 
 
-bool KeyValueFileParser::ParseFile(wstring wstrFilename, wchar_t cToken) {
-	wstring line;
+bool KeyValueFileParser::ParseFile(const string& strFilename, const string& strToken) {
+	string line;
 
-	string strFilename(wstrFilename.begin(), wstrFilename.end());
-	wifstream fileData(strFilename.c_str());	
+	ifstream fileData(strFilename.c_str(), ios::binary );	
 
 	if (fileData.is_open())
 	{
+    m_iStopPos = fileData.tellg();
 		while (! fileData.eof() )
 		{
 			getline (fileData,line);
 			SysTools::RemoveLeadingWhitespace(line);
 
-			if (line[0] == '#') continue;				// skip comments
-			if (line.find_first_of(cToken) == string::npos) continue;  // skip invalid lines
+      if (m_bStopAfterEmpyLine && line.length() == 0) {
 
-			wstring strKey = line.substr(0, line.find_first_of(cToken));
+        m_iStopPos = UINT64(fileData.tellg());
+        break;
+      }
+
+      if (line[0] == '#') continue;				// skip comments
+			if (line.find_first_of(strToken) == string::npos) continue;  // skip invalid lines
+
+			string strKey = line.substr(0, line.find_first_of(strToken));
 			SysTools::RemoveTailingWhitespace(strKey);
 
-			line = line.substr(line.find_first_of(cToken)+1, line.length());
+			line = line.substr(line.find_first_of(strToken)+1, line.length());
 			SysTools::RemoveLeadingWhitespace(line);
 			SysTools::RemoveTailingWhitespace(line);
 

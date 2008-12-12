@@ -71,7 +71,7 @@ void MainWindow::LoadDataset() {
 
   QString fileName = QFileDialog::getOpenFileName(this,
 	  				   "Load Dataset", strLastDir,
-		  			   "All known Files (*.uvf *.nhdr *.dat);;Universal Volume Format (*.uvf);;Nearly Raw Raster Data (*.nhdr);;QVis Data (*.dat)",&selectedFilter, options);
+		  			   "All known Files (*.uvf *.nrrd *.nhdr *.dat);;Universal Volume Format (*.uvf);;Nearly Raw Raster Data (*.nhdr *.nrrd);;QVis Data (*.dat)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/LoadDataset", QFileInfo(fileName).absoluteDir().path());
