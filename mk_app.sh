@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGETPATH=Build/OSX/Bin
+TARGETPATH=Build
 TARGETAPP=ImageVis3D.app
 PREFIX="${TARGETPATH}/${TARGETAPP}"
 
@@ -56,12 +56,13 @@ popd &>/dev/null
 echo "Copying Shaders ..."
 rm -fr "${PREFIX}/Contents/Resources"
 mkdir -p "${PREFIX}/Contents/Resources"
-cp Shaders/* "${PREFIX}/Contents/Resources"
+cp tuvok/Shaders/* "${PREFIX}/Contents/Resources"
 
 echo "Running install_name_tool"
 
 # FIXME These should probably be one for loop ..
 
+exit 0
 # set the identification names for the frameworks
 for fw in QtCore QtGui QtOpenGL ; do
     install_name_tool -id \
