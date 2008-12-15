@@ -24,26 +24,6 @@ HEADERS += StdDefines.h \
            UI/Q2DTransferFunction.h \
            UI/QDataRadioButton.h \
            UI/RenderWindow.h \
-           IO/DirectoryParser.h \
-           IO/KeyValueFileParser.h \
-           IO/Transferfunction1D.h \
-           IO/Transferfunction2D.h \
-           IO/VolumeDataset.h \
-           IO/IOManager.h \
-           IO/DICOM/DICOMParser.h \
-           IO/Images/ImageParser.h \
-           IO/UVF/DataBlock.h \
-           IO/UVF/GlobalHeader.h \
-           IO/UVF/KeyValuePairDataBlock.h \
-           IO/UVF/LargeRAWFile.h \
-           IO/UVF/RasterDataBlock.h \
-           IO/UVF/UVF.h \
-           IO/UVF/UVFBasic.h \
-           IO/UVF/UVFTables.h \
-           IO/UVF/Histogram1DDataBlock.h \
-           IO/UVF/Histogram2DDataBlock.h \
-           IO/UVF/MaxMinDataBlock.h \
-           Controller/MasterController.h \
            DebugOut/QTOut.h \
            DebugOut/QTLabelOut.h
 
@@ -67,25 +47,6 @@ SOURCES += UI/BrowseData.cpp \
            UI/QDataRadioButton.cpp \
            UI/RenderWindow.cpp \
            UI/SettingsDlg.cpp \
-           IO/KeyValueFileParser.cpp \           
-           IO/Transferfunction1D.cpp \
-           IO/Transferfunction2D.cpp \
-           IO/VolumeDataset.cpp \
-           IO/IOManager.cpp \
-           IO/DirectoryParser.cpp \
-           IO/DICOM/DICOMParser.cpp \
-           IO/Images/ImageParser.cpp \           
-           IO/UVF/DataBlock.cpp \
-           IO/UVF/GlobalHeader.cpp \
-           IO/UVF/KeyValuePairDataBlock.cpp \
-           IO/UVF/LargeRAWFile.cpp \
-           IO/UVF/RasterDataBlock.cpp \
-           IO/UVF/UVF.cpp \
-           IO/UVF/UVFTables.cpp \
-           IO/UVF/Histogram1DDataBlock.cpp \
-           IO/UVF/Histogram2DDataBlock.cpp \                     
-           IO/UVF/MaxMinDataBlock.cpp \
-           Controller/MasterController.cpp \
            DebugOut/QTOut.cpp \
            DebugOut/QTLabelOut.cpp \
            main.cpp

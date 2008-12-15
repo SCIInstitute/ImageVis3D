@@ -41,7 +41,7 @@
 #ifndef QTLABELOUT_H
 #define QTLABELOUT_H
 
-#include "../../tuvok/DebugOut/AbstrDebugOut.h"
+#include "../../Tuvok/DebugOut/AbstrDebugOut.h"
 #include <QtGui/QLabel>
 
 #include <deque>
