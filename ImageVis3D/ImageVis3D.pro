@@ -3,15 +3,9 @@
 ######################################################################
 
 TEMPLATE          = app
-unix:TARGET       = ../Build/Linux/Bin/ImageVis3D
-win32:TARGET      = ../Build/Win32/Bin/ImageVis3D
-mac:TARGET        = ../Build/OSX/Bin/ImageVis3D
-unix:RCC_DIR      = ../Build/Linux
-win32:RCC_DIR     = ../Build/Win32
-mac:RCC_DIR       = ../Build/OSX
-unix:OBJECTS_DIR  = ../Build/Linux
-win32:OBJECTS_DIR = ../Build/Win32
-mac:OBJECTS_DIR   = ../Build/OSX
+TARGET            = ../Build/ImageVis3D
+RCC_DIR           = ../Build/rcc
+OBJECTS_DIR       = ../Build/objects
 UI_DIR            = UI/AutoGen
 MOC_DIR           = UI/AutoGen
 DEPENDPATH       += .
@@ -50,12 +44,8 @@ HEADERS += StdDefines.h \
            IO/UVF/Histogram2DDataBlock.h \
            IO/UVF/MaxMinDataBlock.h \
            Controller/MasterController.h \
-           DebugOut/AbstrDebugOut.h \
-           DebugOut/TextfileOut.h \
            DebugOut/QTOut.h \
-           DebugOut/QTLabelOut.h \
-           DebugOut/ConsoleOut.h \
-           DebugOut/MultiplexOut.h
+           DebugOut/QTLabelOut.h
 
 FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui UI/UI/SettingsDlg.ui
 
@@ -96,9 +86,6 @@ SOURCES += UI/BrowseData.cpp \
            IO/UVF/Histogram2DDataBlock.cpp \                     
            IO/UVF/MaxMinDataBlock.cpp \
            Controller/MasterController.cpp \
-           DebugOut/TextfileOut.cpp \
            DebugOut/QTOut.cpp \
            DebugOut/QTLabelOut.cpp \
-           DebugOut/ConsoleOut.cpp \
-           DebugOut/MultiplexOut.cpp \ 
            main.cpp

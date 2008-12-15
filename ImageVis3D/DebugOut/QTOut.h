@@ -41,7 +41,7 @@
 #ifndef QTOut_H
 #define QTOut_H
 
-#include "AbstrDebugOut.h"
+#include "../../tuvok/DebugOut/AbstrDebugOut.h"
 #include <QtGui/QListWidget>
 
 #include <deque>
