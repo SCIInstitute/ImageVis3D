@@ -55,14 +55,11 @@ HEADERS += StdDefines.h \
            DebugOut/QTOut.h \
            DebugOut/QTLabelOut.h \
            DebugOut/ConsoleOut.h \
-           DebugOut/MultiplexOut.h \
-           3rdParty/GLEW/glew.h \
-           3rdParty/GLEW/glxew.h
+           DebugOut/MultiplexOut.h
 
 FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui UI/UI/SettingsDlg.ui
 
-SOURCES += 3rdParty/GLEW/glew.c \
-           UI/BrowseData.cpp \
+SOURCES += UI/BrowseData.cpp \
            UI/ImageVis3D.cpp \
            UI/ImageVis3D_Capturing.cpp \
            UI/ImageVis3D_Progress.cpp \
