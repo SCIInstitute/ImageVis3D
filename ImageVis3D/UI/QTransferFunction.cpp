@@ -36,7 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "QTransferFunction.h"
-#include <Controller/MasterController.h>
+#include "../Tuvok/Controller/MasterController.h"
 
 using namespace std;
 

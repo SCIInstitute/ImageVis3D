@@ -38,8 +38,8 @@
 #ifndef SETTINGSDLG_H
 #define SETTINGSDLG_H
 
-#include <Controller/MasterController.h>
-#include <UI/AutoGen/ui_SettingsDlg.h>
+#include "../Tuvok/Controller/MasterController.h"
+#include "UI/AutoGen/ui_SettingsDlg.h"
 
 class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 {

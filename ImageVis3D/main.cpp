@@ -37,11 +37,11 @@
 
 #include <QtGui/QApplication>
 #include <UI/ImageVis3D.h>
-#include <Controller/MasterController.h>
+#include "../Tuvok/Controller/MasterController.h"
 
-#include <Basics/SysTools.h>
-#include <DebugOut/TextfileOut.h>
-#include <DebugOut/MultiplexOut.h>
+#include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/DebugOut/TextfileOut.h"
+#include "../Tuvok/DebugOut/MultiplexOut.h"
 
 /*
 #ifdef _WIN32

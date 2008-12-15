@@ -41,7 +41,7 @@
 #define Q1DTRANSFERFUNCTION
 
 #include "QTransferFunction.h"
-#include <IO/TransferFunction1D.h>
+#include "../Tuvok/IO/TransferFunction1D.h"
 
 class MasterController;
 

@@ -39,7 +39,7 @@
 #include "Q2DTransferFunction.h"
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
-#include "../Controller/MasterController.h"
+#include "../Tuvok/Controller/MasterController.h"
 #include <limits>
 
 #ifdef max

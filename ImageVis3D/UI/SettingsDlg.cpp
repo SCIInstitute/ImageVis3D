@@ -38,7 +38,7 @@
 #include "SettingsDlg.h"
 #include <QtGui/QColorDialog>
 #include <QtGui/QMessageBox>
-#include <Basics/SysTools.h>
+#include "../Tuvok/Basics/SysTools.h"
 #include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
 

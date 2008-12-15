@@ -41,8 +41,8 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 
-#include <Controller/MasterController.h>
-#include <Basics/MathTools.h>
+#include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/Basics/MathTools.h"
 
 #include <iostream>
 

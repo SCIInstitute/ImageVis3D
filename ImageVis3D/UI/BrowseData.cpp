@@ -39,7 +39,7 @@
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QMessageBox>
-#include "ui_SettingsDlg.h"
+#include "AutoGen/ui_SettingsDlg.h"
 
 using namespace std;
 

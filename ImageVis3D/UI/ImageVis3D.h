@@ -42,7 +42,7 @@
 
 #include <StdDefines.h>
 
-#include "Controller/MasterController.h"
+#include "../Tuvok/Controller/MasterController.h"
 
 #include "AutoGen/ui_ImageVis3D.h"
 #include "RenderWindow.h"

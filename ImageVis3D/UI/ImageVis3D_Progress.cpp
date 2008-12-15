@@ -36,7 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "ImageVis3D.h"
-#include <Basics/SysTools.h>
+#include "../Tuvok/Basics/SysTools.h"
 
 using namespace std;
 

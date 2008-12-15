@@ -40,11 +40,11 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
-#include "Controller/MasterController.h"
+#include "../Tuvok/Controller/MasterController.h"
 
 #include <QtGui/QListWidget>
 #include <QtOpenGL/QGLWidget>
-#include <Basics/ArcBall.h>
+#include "../Tuvok/Basics/ArcBall.h"
 
 class MainWindow;
 

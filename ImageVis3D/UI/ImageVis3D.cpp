@@ -49,9 +49,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <Basics/SysTools.h>
-
-#include <DebugOut/MultiplexOut.h>
+#include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/DebugOut/MultiplexOut.h"
 
 
 using namespace std;

@@ -43,7 +43,7 @@
 
 #include "RenderWindow.h"
 #include "AutoGen/ui_BrowseData.h"
-#include "Controller/MasterController.h"
+#include "../Tuvok/Controller/MasterController.h"
 #include "QDataRadioButton.h"
 
 class BrowseData : public QDialog, protected Ui_BrowseData

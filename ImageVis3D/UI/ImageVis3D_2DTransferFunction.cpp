@@ -51,7 +51,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <Basics/SysTools.h>
+#include "../Tuvok/Basics/SysTools.h"
 
 using namespace std;
 
