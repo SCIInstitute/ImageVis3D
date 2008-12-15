@@ -6,7 +6,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageVis3D", "ImageVis3D\Im
 		{D474A1E1-2ED3-42E6-826C-372430E549B9} = {D474A1E1-2ED3-42E6-826C-372430E549B9}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tuvoc", "tuvok\Tuvoc.vcproj", "{D474A1E1-2ED3-42E6-826C-372430E549B9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tuvok", "Tuvok\Tuvok.vcproj", "{D474A1E1-2ED3-42E6-826C-372430E549B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
