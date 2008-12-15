@@ -9,7 +9,7 @@ OBJECTS_DIR       = ../Build/objects
 UI_DIR            = UI/AutoGen
 MOC_DIR           = UI/AutoGen
 DEPENDPATH       += .
-INCLUDEPATH      += . ../Tuvok
+INCLUDEPATH      += .
 QT               += opengl
 LIBS              = -L../Tuvok/Build -lTuvok
 
