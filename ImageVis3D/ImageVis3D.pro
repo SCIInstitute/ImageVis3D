@@ -9,9 +9,9 @@ OBJECTS_DIR       = ../Build/objects
 UI_DIR            = UI/AutoGen
 MOC_DIR           = UI/AutoGen
 DEPENDPATH       += .
-INCLUDEPATH      += . ../tuvok
+INCLUDEPATH      += . ../Tuvok
 QT               += opengl
-LIBS              = -L../tuvok/Build -ltuvok
+LIBS              = -L../Tuvok/Build -lTuvok
 
 # Input
 HEADERS += StdDefines.h \
