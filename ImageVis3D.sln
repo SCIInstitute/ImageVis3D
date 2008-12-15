@@ -1,7 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageVis3D", "ImageVis3D.vcproj", "{85742DE8-68C9-4140-A6A7-412CF789DECA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageVis3D", "ImageVis3D\ImageVis3D.vcproj", "{85742DE8-68C9-4140-A6A7-412CF789DECA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D474A1E1-2ED3-42E6-826C-372430E549B9} = {D474A1E1-2ED3-42E6-826C-372430E549B9}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tuvoc", "tuvok\Tuvoc.vcproj", "{D474A1E1-2ED3-42E6-826C-372430E549B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +24,14 @@ Global
 		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release|Win32.Build.0 = Release|Win32
 		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release|x64.ActiveCfg = Release|x64
 		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release|x64.Build.0 = Release|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|Win32.Build.0 = Debug|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|x64.ActiveCfg = Debug|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|x64.Build.0 = Debug|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|Win32.ActiveCfg = Release|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|Win32.Build.0 = Release|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|x64.ActiveCfg = Release|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
