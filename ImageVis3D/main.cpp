@@ -54,6 +54,10 @@
 
 int main(int argc, char* argv[])
 {	
+
+  std::vector<std::wstring> test = SysTools::GetDirTree(L"");
+  std::vector<std::string> test2 = SysTools::GetDirTree("");
+
   /*
   // Enable run-time memory check for debug builds on windows
 	#ifdef _WIN32
@@ -62,6 +66,18 @@ int main(int argc, char* argv[])
 		#endif
 	#endif
   */
+
+  TextfileOut* textout_ = new TextfileOut("test.txt");
+  for (size_t i = 0;i<test.size();i++) {
+    std::string tmp(test[i].begin(), test[i].end());
+    textout_->Error("",tmp.c_str());
+  }
+  for (size_t i = 0;i<test2.size();i++) {
+    textout_->Error("",test2[i].c_str());
+  }
+  delete textout_;
+
+
 
   // get command line paramers 
   SysTools::CmdLineParams parameters(argc, argv);

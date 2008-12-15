@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvoc.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR)lib32&quot;"
@@ -151,7 +151,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvoc.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR)lib64&quot;"
@@ -231,7 +231,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvoc.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR)lib32&quot;"
@@ -314,7 +314,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvoc.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR)lib64&quot;"
@@ -472,7 +472,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -482,7 +482,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -492,7 +492,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -502,7 +502,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -520,7 +520,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -530,7 +530,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -540,7 +540,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -550,7 +550,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -568,7 +568,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -578,7 +578,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -588,7 +588,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -598,7 +598,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -616,7 +616,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -626,7 +626,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -636,7 +636,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -646,7 +646,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -672,7 +672,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -682,7 +682,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -692,7 +692,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -702,7 +702,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -720,7 +720,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -730,7 +730,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -740,7 +740,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -750,7 +750,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -768,7 +768,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -778,7 +778,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -788,7 +788,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -798,7 +798,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -819,7 +819,7 @@
 							<Tool
 								Name="VCCustomBuildTool"
 								Description="Performing moc on $(InputName).h"
-								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 							/>
 						</FileConfiguration>
@@ -829,7 +829,7 @@
 							<Tool
 								Name="VCCustomBuildTool"
 								Description="Performing moc on $(InputName).h"
-								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 							/>
 						</FileConfiguration>
@@ -839,7 +839,7 @@
 							<Tool
 								Name="VCCustomBuildTool"
 								Description="Performing moc on $(InputName).h"
-								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 							/>
 						</FileConfiguration>
@@ -849,7 +849,7 @@
 							<Tool
 								Name="VCCustomBuildTool"
 								Description="Performing moc on $(InputName).h"
-								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 							/>
 						</FileConfiguration>

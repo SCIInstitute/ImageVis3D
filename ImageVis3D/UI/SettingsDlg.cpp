@@ -48,8 +48,8 @@ using namespace std;
 SettingsDlg::SettingsDlg(MasterController& MasterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
   QDialog(parent, flags),
   m_MasterController(MasterController),
-  m_InitialGPUMemMax(0),
-  m_bInit(true)
+  m_bInit(true),
+  m_InitialGPUMemMax(0)
 {
   setupUi(this);
 }

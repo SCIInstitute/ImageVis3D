@@ -58,9 +58,9 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),
   m_bRenderSubsysOK(true),   // be optimistic :-)
-  m_bAbsoluteViewLock(true),
   m_viRightClickPos(0,0),
   m_viMousePos(0,0),
+  m_bAbsoluteViewLock(true),
   m_strDataset(dataset),
   m_vWinDim(0,0),
   m_bCaptureMode(false)
