@@ -15,7 +15,7 @@ mac:OBJECTS_DIR   = ../Build/OSX
 UI_DIR            = UI/AutoGen
 MOC_DIR           = UI/AutoGen
 DEPENDPATH       += .
-INCLUDEPATH      += .
+INCLUDEPATH      += . ../tuvok
 QT               += opengl
 LIBS              = -L../tuvok/Build -ltuvok
 
@@ -64,24 +64,7 @@ HEADERS += StdDefines.h \
            DebugOut/ConsoleOut.h \
            DebugOut/MultiplexOut.h \
            3rdParty/GLEW/glew.h \
-           3rdParty/GLEW/glxew.h \
-           Renderer/FrameCapture.h \
-           Renderer/GLFrameCapture.h \
-           Renderer/CullingLOD.h \
-           Renderer/GLSLProgram.h \
-           Renderer/GLInclude.h \
-           Renderer/GLObject.h \
-           Renderer/GLTexture.h \
-           Renderer/GLTexture1D.h \
-           Renderer/GLTexture2D.h \
-           Renderer/GLTexture3D.h \
-           Renderer/GLRenderer.h \
-           Renderer/AbstrRenderer.h \
-           Renderer/GLRaycaster.h \
-           Renderer/GLSBVR.h \
-           Renderer/GPUMemMan/GPUMemMan.h \
-           Renderer/GPUMemMan/GPUMemManDataStructs.h \
-           Renderer/SBVRGeogen.h
+           3rdParty/GLEW/glxew.h
 
 FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui UI/UI/SettingsDlg.ui
 
@@ -133,19 +116,4 @@ SOURCES += 3rdParty/GLEW/glew.c \
            DebugOut/QTLabelOut.cpp \
            DebugOut/ConsoleOut.cpp \
            DebugOut/MultiplexOut.cpp \ 
-           Renderer/CullingLOD.cpp \
-           Renderer/GLFrameCapture.cpp \
-           Renderer/GLSLProgram.cpp \
-           Renderer/GLTexture.cpp \
-           Renderer/GLTexture1D.cpp \
-           Renderer/GLTexture2D.cpp \
-           Renderer/GLTexture3D.cpp \
-           Renderer/GLRenderer.cpp \           
-           Renderer/AbstrRenderer.cpp \
-           Renderer/GLRaycaster.cpp \
-           Renderer/GLSBVR.cpp \
-           Renderer/GPUMemMan/GPUMemMan.cpp \
-           Renderer/GPUMemMan/GPUMemManDataStructs.cpp \
-           Renderer/SBVRGeogen.cpp \  
-           Renderer/GLFBOTex.cpp \  
            main.cpp
