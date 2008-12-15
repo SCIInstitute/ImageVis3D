@@ -21,13 +21,6 @@ LIBS              = -L../tuvok/Build -ltuvok
 
 # Input
 HEADERS += StdDefines.h \
-           Basics/Grids.h \
-           Basics/SysTools.h \
-           Basics/Vectors.h \
-           Basics/MathTools.h \
-           Basics/ArcBall.h \
-           Basics/Checksums/MD5.h \
-           Basics/Checksums/crc32.h \
            UI/SettingsDlg.h \
            UI/BrowseData.h \
            UI/ImageVis3D.h \
@@ -69,11 +62,6 @@ HEADERS += StdDefines.h \
 FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui UI/UI/SettingsDlg.ui
 
 SOURCES += 3rdParty/GLEW/glew.c \
-           Basics/SystemInfo.cpp \
-           Basics/SysTools.cpp \
-           Basics/MathTools.cpp \
-           Basics/ArcBall.cpp \
-           Basics/Checksums/MD5.cpp \
            UI/BrowseData.cpp \
            UI/ImageVis3D.cpp \
            UI/ImageVis3D_Capturing.cpp \
