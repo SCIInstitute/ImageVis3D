@@ -65,9 +65,9 @@ int main(int argc, char* argv[])
 	#endif
   */
 
-/*
-  std::vector<std::wstring> test = SysTools::GetDirTree(L"");
-  std::vector<std::string> test2 = SysTools::GetDirTree("");
+
+  std::vector<std::wstring> test = SysTools::GetSubDirList(L"");
+  std::vector<std::string> test2 = SysTools::GetSubDirList("");
   TextfileOut* textout_ = new TextfileOut("test.txt");
   for (size_t i = 0;i<test.size();i++) {
     std::string tmp(test[i].begin(), test[i].end());
@@ -77,8 +77,9 @@ int main(int argc, char* argv[])
     textout_->Error("",test2[i].c_str());
   }
   delete textout_;
-*/
 
+
+  return 0;
 
   // get command line paramers 
   SysTools::CmdLineParams parameters(argc, argv);
