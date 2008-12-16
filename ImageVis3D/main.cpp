@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 		#endif
 	#endif
   */
-
+/*
 
   std::vector<std::wstring> test = SysTools::GetSubDirList(L"");
   std::vector<std::string> test2 = SysTools::GetSubDirList("");
@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
   delete textout_;
 
 
-  return 0;
+  return 0;*/
 
   // get command line paramers 
   SysTools::CmdLineParams parameters(argc, argv);
