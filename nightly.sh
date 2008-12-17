@@ -66,12 +66,12 @@ echo "revision: $revision"
 if test `uname` = "Darwin" ; then
     echo "Building app file ..."
     try bash mk_app.sh
-    pushd Build/OSX/Bin &>/dev/null
-    tar zcf iv3d-osx-r${revision}.tar.gz ImageVis3D.app
+    pushd Build/ &>/dev/null
+        tar zcf iv3d-osx-r${revision}.tar.gz ImageVis3D.app
     popd &>/dev/null
-    mv Build/OSX/Bin/iv3d-osx-r${revision}.tar.gz .
+    mv Build/iv3d-osx-r${revision}.tar.gz .
 elif test `uname` = "Linux" ; then
-    mv Build/Linux/Bin/ImageVis3D ./ImageVis3D-r${revision}
+    mv Build/ImageVis3D ./ImageVis3D-r${revision}
 fi
 
 echo "Warnings:"

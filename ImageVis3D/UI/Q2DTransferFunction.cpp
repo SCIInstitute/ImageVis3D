@@ -120,6 +120,9 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunctio
   for (size_t i = 0;i<m_vHistogram.GetSize().area();i++)
     m_vHistogram.SetLinear(i, (float(vHistogram->GetLinear(i)) - float(iMin)) / fDiff);
 
+  // Upload the new TF to the GPU.
+  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+
   emit SwatchChange();
 }
 
