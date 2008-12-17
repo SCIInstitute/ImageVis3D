@@ -72,10 +72,6 @@ RenderWindow::RenderWindow(MasterController& masterController,
 
   m_Renderer->LoadDataset(m_strDataset.toStdString());
   
-  // shift the object backwards by two so we are not sitting inside the volume
-  m_mAccumulatedTranslation.m43 = -2.0f;
-  m_Renderer->SetTranslation(m_mAccumulatedTranslation);
-
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
 }
