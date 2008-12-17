@@ -31,6 +31,13 @@ function update
         tjf-git-svn rebase
         git checkout private
         git rebase master
+
+        pushd Tuvok
+            git checkout -f master
+            tjf-git-svn rebase
+            git checkout private
+            git rebase master
+        popd
         if test ${saved} -eq 1 ; then
             git stash pop
         fi
@@ -49,7 +56,7 @@ update
 find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
     -exec rm {} +
 
-try qmake -spec ${spec}
+try qmake -spec ${spec} -recursive
 make clean
 make -j5 2> warnings
 try make
