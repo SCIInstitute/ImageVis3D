@@ -224,6 +224,7 @@ void MainWindow::SetupWorkspaceMenu() {
   menu_Workspace->addSeparator();
   menu_Workspace->addAction(dockWidget_LockOptions->toggleViewAction());
   menu_Workspace->addAction(dockWidget_Recorder->toggleViewAction());
+  menu_Workspace->addAction(dockWidget_Stereo->toggleViewAction());
 
   menu_Help->addAction(dockWidget_Debug->toggleViewAction());
 }
@@ -241,6 +242,7 @@ void MainWindow::InitAllWorkspaces() {
   dockWidget_2DTrans->setVisible(false);
   dockWidget_IsoSurface->setVisible(false);
   dockWidget_Debug->setVisible(false);
+  dockWidget_Stereo->setVisible(false);
 
   dockWidget_Tools->setFloating(true);
   dockWidget_Filters->setFloating(true);
@@ -254,6 +256,7 @@ void MainWindow::InitAllWorkspaces() {
   dockWidget_2DTrans->setFloating(true);
   dockWidget_IsoSurface->setFloating(true);
   dockWidget_Debug->setFloating(true);
+  dockWidget_Stereo->setFloating(true);
 }
 
 
@@ -440,6 +443,10 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
                 break;
     }
 
+    dockWidget_Stereo->setEnabled(true);
+    checkBox_Stereo->setChecked(m_ActiveRenderWin->GetRenderer()->GetStereo());
+
+
     checkBox_Lighting->setChecked(m_ActiveRenderWin->GetRenderer()->GetUseLigthing());
     SetSampleRateSlider(int(m_ActiveRenderWin->GetRenderer()->GetSampleRateModifier()*100));
     int iRange = int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
@@ -506,6 +513,9 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   m_2DTransferFunction->update();
 
   DisableAllTrans();
+
+  dockWidget_Stereo->setEnabled(false);
+
   ClearProgressView();
 
   UpdateLockView();

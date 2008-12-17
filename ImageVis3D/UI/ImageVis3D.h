@@ -157,6 +157,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void LockModalityChange();
     void ChangeLocks();
 
+    void ToggleStereoRendering();
+    void SetStereoEyeDistance();
+    void SetStereoFocalLength();
+
   private :
     MasterController&                         m_MasterController;
     QString                                   m_strCurrentWorkspaceFilename;
