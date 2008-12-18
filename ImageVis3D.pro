@@ -4,3 +4,4 @@
 
 SUBDIRS           = Tuvok ImageVis3D
 TEMPLATE          = subdirs
+CONFIG           += ordered
