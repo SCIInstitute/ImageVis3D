@@ -54,5 +54,5 @@ SOURCES += UI/BrowseData.cpp \
            UI/RAWDialog.cpp \
            DebugOut/QTOut.cpp \
            DebugOut/QTLabelOut.cpp \
-           IO/DialogConverter.cpp
+           IO/DialogConverter.cpp \
            main.cpp
