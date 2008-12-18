@@ -1,0 +1,702 @@
+<ui version="4.0" >
+ <class>RAWDialog</class>
+ <widget class="QDialog" name="RAWDialog" >
+  <property name="windowModality" >
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>441</width>
+    <height>392</height>
+   </rect>
+  </property>
+  <property name="contextMenuPolicy" >
+   <enum>Qt::DefaultContextMenu</enum>
+  </property>
+  <property name="windowTitle" >
+   <string>Load Unknown Dataset</string>
+  </property>
+  <property name="sizeGripEnabled" >
+   <bool>true</bool>
+  </property>
+  <property name="modal" >
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QLabel" name="label_srcFilename" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font" >
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text" >
+      <string>Filename: xxxxx.raw</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_VolSize" >
+     <property name="title" >
+      <string>Domain Size</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" >
+      <item>
+       <widget class="QSpinBox" name="spinBox_SizeX" >
+        <property name="suffix" >
+         <string/>
+        </property>
+        <property name="prefix" >
+         <string/>
+        </property>
+        <property name="maximum" >
+         <number>1000000000</number>
+        </property>
+        <property name="value" >
+         <number>256</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox_SizeY" >
+        <property name="suffix" >
+         <string/>
+        </property>
+        <property name="prefix" >
+         <string/>
+        </property>
+        <property name="maximum" >
+         <number>1000000000</number>
+        </property>
+        <property name="value" >
+         <number>256</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox_SizeZ" >
+        <property name="suffix" >
+         <string/>
+        </property>
+        <property name="prefix" >
+         <string/>
+        </property>
+        <property name="maximum" >
+         <number>1000000000</number>
+        </property>
+        <property name="value" >
+         <number>256</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>Aspect Ratio</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2" >
+      <item>
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_AspX" >
+        <property name="decimals" >
+         <number>8</number>
+        </property>
+        <property name="maximum" >
+         <double>999999999.000000000000000</double>
+        </property>
+        <property name="value" >
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_4" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_AspY" >
+        <property name="decimals" >
+         <number>8</number>
+        </property>
+        <property name="maximum" >
+         <double>999999999.000000000000000</double>
+        </property>
+        <property name="value" >
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_5" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_AspZ" >
+        <property name="decimals" >
+         <number>8</number>
+        </property>
+        <property name="maximum" >
+         <double>999999999.000000000000000</double>
+        </property>
+        <property name="value" >
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2" >
+     <property name="title" >
+      <string>Quantization</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3" >
+      <item>
+       <widget class="QRadioButton" name="radioButton_8bit" >
+        <property name="text" >
+         <string>8bit (char)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_16bit" >
+        <property name="text" >
+         <string>16bit (short)</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_32bitInt" >
+        <property name="text" >
+         <string>32 bit (int)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_32BitFloat" >
+        <property name="text" >
+         <string>32 bit (float)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame" >
+     <property name="frameShape" >
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_6" >
+      <property name="spacing" >
+       <number>2</number>
+      </property>
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QGroupBox" name="groupBox_4" >
+        <property name="title" >
+         <string>Encoding</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_5" >
+         <item>
+          <widget class="QRadioButton" name="radioButton_RAW" >
+           <property name="toolTip" >
+            <string/>
+           </property>
+           <property name="text" >
+            <string>RAW</string>
+           </property>
+           <property name="checked" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_Text" >
+           <property name="text" >
+            <string>Text</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_GZIP" >
+           <property name="text" >
+            <string>GZIP</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_BZIP2" >
+           <property name="text" >
+            <string>BZIP2</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_Endianess" >
+        <property name="title" >
+         <string>Endianess</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_7" >
+         <item>
+          <widget class="QRadioButton" name="radioButton_LittleEnd" >
+           <property name="text" >
+            <string>Little</string>
+           </property>
+           <property name="checked" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_BigEnd" >
+           <property name="text" >
+            <string>Big</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_3" >
+     <property name="title" >
+      <string>Header Skip</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_4" >
+      <item>
+       <widget class="QLabel" name="label_3" >
+        <property name="text" >
+         <string>Skip</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox_HeaderSkip" >
+        <property name="minimumSize" >
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximum" >
+         <number>1000000000</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_6" >
+        <property name="text" >
+         <string>Bytes</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_GuessHeader" >
+        <property name="toolTip" >
+         <string>The guessed size of the header is the size of the file minus the size of the data as specified above. This feature only works if the encoding is raw and if the filesize is larger than the size of the data specified.</string>
+        </property>
+        <property name="text" >
+         <string>Guess Header Size</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_Information" >
+     <property name="font" >
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text" >
+      <string>Value Validation</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="locale" >
+      <locale country="UnitedStates" language="English" />
+     </property>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>293</x>
+     <y>379</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>346</x>
+     <y>379</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_SizeX</sender>
+   <signal>valueChanged(QString)</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>71</x>
+     <y>66</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>148</x>
+     <y>323</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_SizeY</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>187</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>75</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_SizeZ</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>319</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>396</x>
+     <y>27</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_8bit</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>43</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>8</x>
+     <y>148</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_16bit</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>131</x>
+     <y>181</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>3</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_32bitInt</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>239</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>436</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_32BitFloat</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>350</x>
+     <y>188</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>435</x>
+     <y>201</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_RAW</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>51</x>
+     <y>247</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>435</x>
+     <y>235</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_Text</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>122</x>
+     <y>252</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>434</x>
+     <y>277</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_GZIP</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>178</x>
+     <y>252</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>439</x>
+     <y>308</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_BZIP2</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>239</x>
+     <y>252</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>435</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_HeaderSkip</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>62</x>
+     <y>303</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>237</x>
+     <y>325</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_RAW</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>ToggleEndianessDialog()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>26</x>
+     <y>247</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>201</x>
+     <y>353</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_GuessHeader</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>GuessHeaderSize()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>224</x>
+     <y>306</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>440</x>
+     <y>358</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>SelectBackColor1()</slot>
+  <slot>SelectBackColor2()</slot>
+  <slot>SelectTextColor()</slot>
+  <slot>SetTextOpacity(int)</slot>
+  <slot>SetMaxMemCheck()</slot>
+  <slot>LODDelayChanged()</slot>
+  <slot>MinFramerateChanged()</slot>
+  <slot>ActTSChanged()</slot>
+  <slot>InactTSChanged()</slot>
+  <slot>WarnAPIMethodChange()</slot>
+  <slot>RemoveLogo()</slot>
+  <slot>SelectLogo()</slot>
+  <slot>CheckValues()</slot>
+  <slot>ToggleEndianessDialog()</slot>
+  <slot>GuessHeaderSize()</slot>
+ </slots>
+</ui>

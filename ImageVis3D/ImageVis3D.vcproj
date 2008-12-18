@@ -407,6 +407,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UI\AutoGen\moc_RAWDialog.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\UI\AutoGen\moc_RenderWindow.cpp"
 					>
 				</File>
@@ -424,6 +428,10 @@
 				</File>
 				<File
 					RelativePath=".\UI\AutoGen\ui_PleaseWait.h"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\AutoGen\ui_RAWDialog.h"
 					>
 				</File>
 				<File
@@ -445,6 +453,10 @@
 				</File>
 				<File
 					RelativePath=".\UI\UI\PleaseWait.ui"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\UI\RAWDialog.ui"
 					>
 				</File>
 				<File
@@ -704,6 +716,54 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\UI\RAWDialog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\RAWDialog.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR)\bin32\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath=".\UI\RenderWindow.cpp"
 					>
 				</File>
@@ -910,6 +970,18 @@
 			</File>
 			<File
 				RelativePath=".\DebugOut\QTOut.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="IO"
+			>
+			<File
+				RelativePath=".\IO\DialogConverter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IO\DialogConverter.h"
 				>
 			</File>
 		</Filter>

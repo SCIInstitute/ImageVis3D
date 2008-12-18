@@ -52,6 +52,8 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/DebugOut/MultiplexOut.h"
 
+#include "../IO/DialogConverter.h"
+
 
 using namespace std;
 
@@ -98,6 +100,8 @@ MainWindow::MainWindow(MasterController& masterController,
     InitAllWorkspaces();
     SaveWorkspace("Default.wsp");
   }
+
+  masterController.IOMan()->RegisterFinalConverter(new DialogConverter(this));
   
   UpdateMRUActions();
   UpdateMenus();
