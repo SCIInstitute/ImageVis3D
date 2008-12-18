@@ -3492,8 +3492,14 @@
      </item>
      <item>
       <widget class="QSlider" name="horizontalSlider_EyeDistance" >
+       <property name="minimum" >
+        <number>1</number>
+       </property>
+       <property name="maximum" >
+        <number>20</number>
+       </property>
        <property name="value" >
-        <number>50</number>
+        <number>20</number>
        </property>
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>
@@ -3509,6 +3515,12 @@
      </item>
      <item>
       <widget class="QSlider" name="horizontalSlider_FocalLength" >
+       <property name="minimum" >
+        <number>1</number>
+       </property>
+       <property name="maximum" >
+        <number>50</number>
+       </property>
        <property name="value" >
         <number>50</number>
        </property>

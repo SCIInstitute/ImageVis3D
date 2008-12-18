@@ -45,9 +45,11 @@ void MainWindow::ToggleStereoRendering() {
 }
 
 void MainWindow::SetStereoEyeDistance() {
-
+  if (m_ActiveRenderWin == NULL) return;
+  m_ActiveRenderWin->GetRenderer()->SetStereoEyeDist(float(horizontalSlider_EyeDistance->value())/100.0);
 }
 
 void MainWindow::SetStereoFocalLength() {
-
+  if (m_ActiveRenderWin == NULL) return;  
+  m_ActiveRenderWin->GetRenderer()->SetStereoFocalLength(float(horizontalSlider_FocalLength->value())/10.0);
 }

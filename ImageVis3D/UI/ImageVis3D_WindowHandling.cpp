@@ -445,7 +445,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
     dockWidget_Stereo->setEnabled(true);
     checkBox_Stereo->setChecked(m_ActiveRenderWin->GetRenderer()->GetStereo());
-
+    horizontalSlider_EyeDistance->setValue(int(m_ActiveRenderWin->GetRenderer()->GetStereoEyeDist()*100));
+    horizontalSlider_FocalLength->setValue(int(m_ActiveRenderWin->GetRenderer()->GetStereoFocalLength()*10));
 
     checkBox_Lighting->setChecked(m_ActiveRenderWin->GetRenderer()->GetUseLigthing());
     SetSampleRateSlider(int(m_ActiveRenderWin->GetRenderer()->GetSampleRateModifier()*100));
