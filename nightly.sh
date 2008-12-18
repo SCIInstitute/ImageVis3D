@@ -56,7 +56,13 @@ update
 find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
     -exec rm {} +
 
-try qmake -spec ${spec} -recursive
+if test "x$1" = "-debug"; then
+    try qmake -spec ${spec} -recursive
+    CF="-Wextra -D_GLIBCXX_DEBUG"
+    try qmake CONFIG+=debug QMAKE_CXXFLAGS+="${CF}" -recursive
+else
+    try qmake -spec ${spec} -recursive
+fi
 make clean
 make -j5 2> warnings
 try make
