@@ -3,6 +3,7 @@
 ######################################################################
 
 TEMPLATE          = app
+CONFIG           += link_prl
 TARGET            = ../Build/ImageVis3D
 RCC_DIR           = ../Build/rcc
 OBJECTS_DIR       = ../Build/objects
