@@ -28,13 +28,13 @@ function update
             saved=1
         fi
         git checkout master
-        tjf-git-svn rebase
+        $svn rebase
         git checkout private
         git rebase master
 
         pushd Tuvok
             git checkout -f master
-            tjf-git-svn rebase
+            $svn rebase
             git checkout private
             git rebase master
         popd
@@ -69,13 +69,15 @@ try make
 
 revision=`$svn info | grep Revision | awk '{print $2}'`
 echo "revision: $revision"
+tarball=""
 if test `uname` = "Darwin" ; then
     echo "Building app file ..."
+    tarball="ImageVis3D_0.02b_OSX_r${revision}.tar.gz"
     try bash mk_app.sh
     pushd Build/ &>/dev/null
-        tar zcf iv3d-osx-r${revision}.tar.gz ImageVis3D.app
+        tar zcf ${tarball} ImageVis3D.app
     popd &>/dev/null
-    mv Build/iv3d-osx-r${revision}.tar.gz .
+    mv Build/${tarball} .
 elif test `uname` = "Linux" ; then
     mv Build/ImageVis3D ./ImageVis3D-r${revision}
 fi
