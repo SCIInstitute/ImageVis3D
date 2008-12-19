@@ -68,6 +68,10 @@ make -j5 2> warnings
 try make
 
 revision=`$svn info | grep Revision | awk '{print $2}'`
+pushd Tuvok
+    tuvok_revision=`$svn info | grep Revision | awk '{print $2}'`
+popd
+revision="${revision}_${tuvok_revision}"
 echo "revision: $revision"
 tarball=""
 if test `uname` = "Darwin" ; then
@@ -76,8 +80,9 @@ if test `uname` = "Darwin" ; then
     try bash mk_app.sh
     pushd Build/ &>/dev/null
         tar zcf ${tarball} ImageVis3D.app
+        zip -r ${tarball%%.tar.gz}.zip ImageVis3D.app
     popd &>/dev/null
-    mv Build/${tarball} .
+    mv Build/${tarball} Build/${tarball%%.tar.gz}.zip .
 elif test `uname` = "Linux" ; then
     mv Build/ImageVis3D ./ImageVis3D-r${revision}
 fi

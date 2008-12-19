@@ -40,4 +40,5 @@ else
     subj="Argon nightly (warnings) -- `date`"
 fi
 cat ${status} | mail -s "${subj}" ${full_em}
-try scp *.tar.gz tfogal@shell.sci.utah.edu:/usr/sci/projects/sciweb/devbuilds/imagevis3d/
+try scp *.tar.gz *.zip \
+    tfogal@shell.sci.utah.edu:/usr/sci/projects/sciweb/devbuilds/imagevis3d/
