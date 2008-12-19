@@ -84,8 +84,8 @@ bool DialogConverter::Convert(const std::string& strSourceFilename, const std::s
                                vVolumeSize, vVolumeAspect, "Raw data", SysTools::GetFilename(strSourceFilename));
     } else
     if (encID == 1)  {
-/*      return ConvertTXTDataset(strSourceFilename, strTargetFilename, strTempDir, pMasterController, iHeaderSkip, iComponentSize, 1, false, bConvEndian,
-                               vVolumeSize, vVolumeAspect, "NRRD data", SysTools::GetFilename(strSourceFilename));*/
+      return ConvertTXTDataset(strSourceFilename, strTargetFilename, strTempDir, pMasterController, iHeaderSkip, iComponentSize, 1, false, bConvEndian,
+                               vVolumeSize, vVolumeAspect, "Raw data", SysTools::GetFilename(strSourceFilename));
     } else
     if (encID == 2)  {
       return ConvertGZIPDataset(strSourceFilename, strTargetFilename, strTempDir, pMasterController, iHeaderSkip, iComponentSize, 1, false, bConvEndian,
