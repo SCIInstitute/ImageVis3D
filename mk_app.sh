@@ -14,15 +14,6 @@ function error
     echo "$@"
     exit 1
 }
-function mk_dir
-{
-    if test -d "$@" ; then
-        echo "Using existing directory: $@"
-    else
-        echo "Creating '$@' directory."
-        mkdir -p "$@"
-    fi
-}
 
 if ! test -d "${PREFIX}" ; then
     error "$PREFIX does not exist, build the application first!"
