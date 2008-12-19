@@ -55,6 +55,9 @@ RAWDialog::~RAWDialog(void)
 void RAWDialog::setupUi(QDialog *RAWDialog) {
   Ui_RAWDialog::setupUi(RAWDialog);
 
+  /// \todo enable float conversion then enable this button and do also call the convert function accordingly
+  radioButton_32BitFloat->setVisible(false);
+
   QString text = tr("Filename: %1").arg(QFileInfo(m_strFilename.c_str()).fileName());
   label_srcFilename->setText(text);
 
@@ -66,6 +69,7 @@ void RAWDialog::setupUi(QDialog *RAWDialog) {
 void RAWDialog::CheckValues() {
   if (!radioButton_RAW->isChecked()) {
     label_Information->setText("Can only validate settings in RAW mode.");
+    pushButton_GuessHeader->setEnabled(false);
     return;
   }
 
