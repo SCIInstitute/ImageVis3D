@@ -1,14 +1,18 @@
 #!/bin/sh
 
+export PATH="/Users/tfogal/sw/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin"
+
 em="tfogal@sci.utah.edu"
 full_em="tfogal@sci.utah.edu jens@sci.utah.edu"
 
+status="status-argon"
 function try
 {
     $@
     if test $? -ne 0 ; then
         echo "'$@' failed, bailing .."
-        echo "Command: '$@' failed..." | mail -s "Argon nightly FAILED" ${em}
+        echo "Command: '$@' failed..." >> ${status}
+        cat ${status} | mail -s "Argon nightly FAILED" ${em}
         exit 1
     fi
 }
@@ -25,6 +29,7 @@ echo "" >> ${status}
 
 echo "-------------------------------------" >> ${status}
 
+try cd ${HOME}/imagevis3d
 try sh nightly.sh
 cat warnings >> ${status}
 subj="Argon nightly warnings -- `date`"
