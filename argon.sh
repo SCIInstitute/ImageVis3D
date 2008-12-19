@@ -30,8 +30,14 @@ echo "" >> ${status}
 echo "-------------------------------------" >> ${status}
 
 try cd ${HOME}/imagevis3d
+rm *.tar.gz
 try sh nightly.sh
 cat warnings >> ${status}
-subj="Argon nightly warnings -- `date`"
+subj=""
+if test `file warnings | awk '{print $2}'` = "empty" ; then
+    subj="Argon nightly (clean) -- `date`"
+else
+    subj="Argon nightly (warnings) -- `date`"
+fi
 cat ${status} | mail -s "${subj}" ${full_em}
 try scp *.tar.gz tfogal@shell.sci.utah.edu:/usr/sci/projects/sciweb/devbuilds/imagevis3d/
