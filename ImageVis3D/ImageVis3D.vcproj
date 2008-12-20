@@ -71,10 +71,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd.lib QtGuid.lib QtCored.lib Imm32.lib Winmm.lib ws2_32.lib qjpegd.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;;&quot;$(QTDIR32)plugins\imageformats&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -151,10 +151,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd.lib QtGuid.lib QtCored.lib Imm32.lib Winmm.lib ws2_32.lib qjpegd.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)lib&quot;;&quot;$(QTDIR64)plugins\imageformats&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="17"
@@ -231,10 +231,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui.lib QtCore.lib QtOpenGL.lib Imm32.lib Winmm.lib ws2_32.lib qjpeg.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;;&quot;$(QTDIR32)plugins\imageformats&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -314,10 +314,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui.lib QtCore.lib QtOpenGL.lib Imm32.lib Winmm.lib ws2_32.lib qjpeg.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)lib&quot;;&quot;$(QTDIR64)plugins\imageformats&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -395,10 +395,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd.lib QtGuid.lib QtCored.lib Imm32.lib Winmm.lib ws2_32.lib qjpegd.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;;&quot;$(QTDIR32)plugins\imageformats&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -475,10 +475,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtOpenGLd4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd.lib QtGuid.lib QtCored.lib Imm32.lib Winmm.lib ws2_32.lib qjpegd.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)lib&quot;;&quot;$(QTDIR64)plugins\imageformats&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="17"
@@ -555,10 +555,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui.lib QtCore.lib QtOpenGL.lib Imm32.lib Winmm.lib ws2_32.lib qjpeg.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;;&quot;$(QTDIR32)plugins\imageformats&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -638,10 +638,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui4.lib QtCore4.lib QtOpenGL4.lib"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui.lib QtCore.lib QtOpenGL.lib Imm32.lib Winmm.lib ws2_32.lib qjpeg.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)lib&quot;;&quot;$(QTDIR64)plugins\imageformats&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
