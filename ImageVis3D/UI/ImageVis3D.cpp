@@ -86,7 +86,7 @@ MainWindow::MainWindow(MasterController& masterController,
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
   QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");
   QCoreApplication::setApplicationName("ImageVis3D");
-  QCoreApplication::setApplicationVersion(IV3D_VERSION);
+  QCoreApplication::setApplicationVersion(TUVOK_VERSION);
 
   setupUi(this);
 

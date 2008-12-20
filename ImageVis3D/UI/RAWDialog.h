@@ -40,7 +40,7 @@
 
 #include "UI/AutoGen/ui_RAWDialog.h"
 #include <string>
-#include "../Tuvok/StdDefines.h"
+#include <StdDefines.h>
 #include "../Tuvok/Basics/Vectors.h"
 
 class RAWDialog : public QDialog, protected Ui_RAWDialog

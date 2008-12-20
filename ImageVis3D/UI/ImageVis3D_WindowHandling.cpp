@@ -140,7 +140,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
   Ui_MainWindow::setupUi(MainWindow);
 
-  QString qstrTitle = tr("%1 Version: %2").arg(windowTitle()).arg(IV3D_VERSION);
+  QString qstrTitle = tr("%1 Version: %2 [Tuvok %3 %4]").arg(windowTitle()).arg(IV3D_VERSION).arg(TUVOK_VERSION).arg(TUVOK_DETAILS);
   setWindowTitle(qstrTitle);
 
   m_1DTransferFunction =
@@ -685,6 +685,11 @@ void MainWindow::Expand2DWidgets() {
 
 void MainWindow::ShowAbout()
 {
+#ifdef _DEBUG
   QMessageBox::about(this, "ImageVis3D "IV3D_VERSION,
-    tr("This is <b>ImageVis3D</b> "IV3D_VERSION". Copyrigth 2008 by the Scientific Computing and Imaging (SCI) Institute. This version is for internal testing only. Please report bugs to jens@sci.utah.edu"));
+    tr("Warning this is a DEBUG build! This version is for testing only, some function run with dramatically reduced performance, please use a release build instead.\n\nThis is ImageVis3D "IV3D_VERSION" it uses the Tuvok render engine "TUVOK_VERSION" "TUVOK_DETAILS".Copyrigth 2008 by the Scientific Computing and Imaging (SCI) Institute. Please report bugs to jens@sci.utah.edu"));
+#else
+  QMessageBox::about(this, "ImageVis3D "IV3D_VERSION" DEBUG VERSION!",
+    tr("This is ImageVis3D "IV3D_VERSION" it uses the Tuvok render engine "TUVOK_VERSION" "TUVOK_DETAILS".Copyrigth 2008 by the Scientific Computing and Imaging (SCI) Institute. Please report bugs to jens@sci.utah.edu"));
+#endif
 }
