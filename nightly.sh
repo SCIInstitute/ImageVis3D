@@ -9,7 +9,8 @@ function try
     fi
 }
 if test -d .git ; then
-    if test -x `which tjf-git-svn`; then
+    which tjf-git-svn &>/dev/null
+    if test $? -eq 0; then
         svn="tjf-git-svn"
     else
         svn="git svn"
