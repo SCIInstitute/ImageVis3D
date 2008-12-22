@@ -78,7 +78,7 @@ tarball=""
 if test `uname` = "Darwin" ; then
     echo "Building app file ..."
     tarball="ImageVis3D_0.02b_OSX_r${revision}.tar.gz"
-    try bash mk_app.sh
+    try bash Scripts/mk_app.sh
     pushd Build/ &>/dev/null
         tar zcf ${tarball} ImageVis3D.app
         zip -r ${tarball%%.tar.gz}.zip ImageVis3D.app

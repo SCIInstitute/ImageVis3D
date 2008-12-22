@@ -31,7 +31,7 @@ echo "-------------------------------------" >> ${status}
 
 try cd ${HOME}/imagevis3d
 rm *.tar.gz
-try sh nightly.sh
+try sh Scripts/nightly.sh
 cat warnings >> ${status}
 subj=""
 if test `file warnings | awk '{print $2}'` = "empty" ; then
