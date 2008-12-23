@@ -1,7 +1,7 @@
 #!/bin/sh
 
 rm -fr qt-mac-opensource-src-4.4.3
-tar jxvf qt-mac-opensource-src-4.4.3.tar.gz
+tar zxvf qt-mac-opensource-src-4.4.3.tar.gz
 pushd qt-mac-opensource-src-4.4.3
 echo "yes" | \
 ./configure \
