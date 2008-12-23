@@ -135,3 +135,8 @@ unsigned int RAWDialog::GetHeaderSize() {
 bool RAWDialog::IsBigEndian() {
   return radioButton_BigEnd->isChecked();
 }
+
+bool RAWDialog::IsSigned() {
+  return radioButton_Signed->isChecked();
+}
+

@@ -56,6 +56,7 @@ class RAWDialog : public QDialog, protected Ui_RAWDialog
     unsigned int GetEncoding();
     unsigned int GetHeaderSize();
     bool IsBigEndian();
+    bool IsSigned();
 
     UINT64 ComputeExpectedSize();
 
