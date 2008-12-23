@@ -71,13 +71,8 @@ bool DialogConverter::Convert(const std::string& strSourceFilename, const std::s
     
 
     unsigned int iComponentSize = 8;
-    bool         bIsFloatinPoint = false;
     if (quantID == 1) iComponentSize = 16;
       if (quantID == 2) iComponentSize = 32;
-      if (quantID == 3) {
-        iComponentSize = 32;
-        bIsFloatinPoint = true;
-      }
 
     if (encID == 0)  {
       return ConvertRAWDataset(strSourceFilename, strTargetFilename, strTempDir, pMasterController, iHeaderSkip, iComponentSize, 1, false, bConvEndian,

@@ -55,8 +55,6 @@ RAWDialog::~RAWDialog(void)
 void RAWDialog::setupUi(QDialog *RAWDialog) {
   Ui_RAWDialog::setupUi(RAWDialog);
 
-  /// \todo enable float conversion then enable this button and do also call the convert function accordingly
-  radioButton_32BitFloat->setVisible(false);
 
   QString text = tr("Filename: %1").arg(QFileInfo(m_strFilename.c_str()).fileName());
   label_srcFilename->setText(text);
@@ -118,8 +116,7 @@ FLOATVECTOR3 RAWDialog::GetAspectRatio() {
 unsigned int RAWDialog::GetQuantization() {
   unsigned int iID = 0;
   if (radioButton_16bit->isChecked()) iID = 1; else
-    if (radioButton_32bitInt->isChecked()) iID = 2; else
-      if (radioButton_32BitFloat->isChecked()) iID = 3;
+    if (radioButton_32BitFloat->isChecked()) iID = 2;
   return iID;
 }
 

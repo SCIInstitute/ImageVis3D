@@ -69,9 +69,11 @@ void MainWindow::LoadDataset() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/LoadDataset", ".").toString();
 
+  QString dialogString = m_MasterController.IOMan()->GetLoadDialogString().c_str();
+
   QString fileName = QFileDialog::getOpenFileName(this,
 	  				   "Load Dataset", strLastDir,
-		  			   "All known Files (*.uvf *.nrrd *.nhdr *.dat);;Universal Volume Format (*.uvf);;Nearly Raw Raster Data (*.nhdr *.nrrd);;QVis Data (*.dat);;All Files (*.*)",&selectedFilter, options);
+		  			   dialogString,&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/LoadDataset", QFileInfo(fileName).absoluteDir().path());

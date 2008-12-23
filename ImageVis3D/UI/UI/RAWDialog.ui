@@ -229,13 +229,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_32bitInt" >
-        <property name="text" >
-         <string>32 bit (int)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QRadioButton" name="radioButton_32BitFloat" >
         <property name="text" >
          <string>32 bit (float)</string>
@@ -534,22 +527,6 @@
     <hint type="destinationlabel" >
      <x>3</x>
      <y>189</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton_32bitInt</sender>
-   <signal>clicked()</signal>
-   <receiver>RAWDialog</receiver>
-   <slot>CheckValues()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>239</x>
-     <y>184</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>436</x>
-     <y>152</y>
     </hint>
    </hints>
   </connection>
