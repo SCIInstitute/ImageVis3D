@@ -109,7 +109,7 @@ class RenderWindow : public QGLWidget
     void SetCV(bool bDoClearView, bool bPropagate=true);
     void SetCVFocusPos(const FLOATVECTOR2& vMousePos, bool bPropagate=true);
 
-    UINTVECTOR2 GetDynamicRange() const;
+    size_t GetDynamicRange() const;
     FLOATVECTOR3 GetIsosufaceColor() const;
     FLOATVECTOR3 GetCVColor() const;
 

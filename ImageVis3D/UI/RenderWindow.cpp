@@ -618,8 +618,8 @@ void RenderWindow::SetAbsoluteViewLock(bool bAbsoluteViewLock) {
   m_bAbsoluteViewLock = bAbsoluteViewLock;
 }
 
-UINTVECTOR2 RenderWindow::GetDynamicRange() const {
-  return UINTVECTOR2(m_Renderer->Get2DTrans()->GetSize());
+size_t RenderWindow::GetDynamicRange() const {
+  return m_Renderer->Get1DTrans()->GetSize();
 }
 
 FLOATVECTOR3 RenderWindow::GetIsosufaceColor() const {

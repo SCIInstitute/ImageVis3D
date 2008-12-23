@@ -296,7 +296,7 @@ void MainWindow::SetSampleRateSlider(int iValue) {
 }
 
 void MainWindow::SetIsoValue(int iValue) {
-  int iMaxSize = int(m_ActiveRenderWin->GetDynamicRange().x);
+  int iMaxSize = int(m_ActiveRenderWin->GetDynamicRange());
   if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetIsoValue(float(iValue)/float(iMaxSize));
   UpdateIsoValLabel(iValue, iMaxSize);
 }
@@ -314,7 +314,7 @@ void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {
 
 
 void MainWindow::SetFocusIsoValue(int iValue) {
-  int iMaxSize = int(m_ActiveRenderWin->GetDynamicRange().x);
+  int iMaxSize = int(m_ActiveRenderWin->GetDynamicRange());
   if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetCVIsoValue(float(iValue)/float(iMaxSize));
   UpdateFocusIsoValLabel(iValue, iMaxSize);
 }
