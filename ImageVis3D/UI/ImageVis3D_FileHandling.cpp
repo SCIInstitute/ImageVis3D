@@ -146,7 +146,7 @@ void MainWindow::LoadDataset(QString fileName) {
       labelOut->m_bShowErrors = true;
       labelOut->m_bShowOther = false;
 
-      pMultiOut->AddDebugOut(labelOut,  false);
+      pMultiOut->AddDebugOut(labelOut,  true);
       pMultiOut->AddDebugOut(pOldDebug, false);
      
       if (!m_MasterController.IOMan()->ConvertDataset(fileName.toStdString(), targetFileName.toStdString())) {
@@ -155,14 +155,10 @@ void MainWindow::LoadDataset(QString fileName) {
         QMessageBox::critical(this, "Conversion Error", strText);
 
         m_MasterController.SetDebugOut(pOldDebug);
-        delete pMultiOut;
-        delete labelOut;
         return;
       }      
       fileName = targetFileName;
       m_MasterController.SetDebugOut(pOldDebug);
-      delete pMultiOut;
-      delete labelOut;
     }
 
 
