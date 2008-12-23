@@ -66,7 +66,7 @@ void QTLabelOut::printf(const char* format, ...)
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
   m_label->setText ( buff );
-  m_label->update();
+  m_label->repaint();
 }
 
 void QTLabelOut::_printf(const char* format, ...)
@@ -80,10 +80,10 @@ void QTLabelOut::_printf(const char* format, ...)
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
   m_label->setText ( buff );
-  m_label->update();
+  m_label->repaint();
 }
 
-void QTLabelOut::Message(const char* source, const char* format, ...) {
+void QTLabelOut::Message(const char* , const char* format, ...) {
   char buff[16384];
   va_list args;
   va_start(args, format);
@@ -93,10 +93,10 @@ void QTLabelOut::Message(const char* source, const char* format, ...) {
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
   if (!m_bShowMessages) return;
-  _printf("MESSAGE (%s): %s",source, buff);
+  _printf(buff);
 }
 
-void QTLabelOut::Warning(const char* source, const char* format, ...) {
+void QTLabelOut::Warning(const char* , const char* format, ...) {
   char buff[16384];
   va_list args;
   va_start(args, format);
@@ -106,10 +106,10 @@ void QTLabelOut::Warning(const char* source, const char* format, ...) {
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
   if (!m_bShowWarnings) return;
-  _printf("WARNING (%s): %s",source, buff);
+  _printf("WARNING: %s",buff);
 }
 
-void QTLabelOut::Error(const char* source, const char* format, ...) {
+void QTLabelOut::Error(const char* , const char* format, ...) {
   char buff[16384];
   va_list args;
   va_start(args, format);
@@ -119,7 +119,7 @@ void QTLabelOut::Error(const char* source, const char* format, ...) {
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
   if (!m_bShowErrors) return;
-  _printf("ERROR (%s): %s",source, buff);
+  _printf("ERROR: %s", buff);
 }
 
 

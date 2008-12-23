@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>302</width>
-    <height>90</height>
+    <width>593</width>
+    <height>151</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -17,6 +17,12 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize" >
+   <size>
+    <width>500</width>
+    <height>150</height>
+   </size>
   </property>
   <property name="contextMenuPolicy" >
    <enum>Qt::NoContextMenu</enum>
@@ -30,7 +36,7 @@
   <property name="modal" >
    <bool>false</bool>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
     <widget class="QLabel" name="label" >
      <property name="font" >
@@ -42,6 +48,22 @@
      </property>
      <property name="text" >
       <string>Please wait ..</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_Status" >
+     <property name="text" >
+      <string/>
+     </property>
+     <property name="scaledContents" >
+      <bool>false</bool>
      </property>
      <property name="alignment" >
       <set>Qt::AlignCenter</set>

@@ -48,7 +48,7 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
     virtual ~PleaseWaitDialog();
 
     void SetText(QString text) {hide(); label->setText(text); show(); raise(); update(); repaint();}
-
+    QLabel* GetStatusLabel() {return label_Status;}
 
 };
 

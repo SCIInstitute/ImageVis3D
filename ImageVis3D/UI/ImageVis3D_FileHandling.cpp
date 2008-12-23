@@ -53,6 +53,9 @@
 #include <string>
 #include "../Tuvok/Basics/SysTools.h"
 
+#include "DebugOut/QTLabelOut.h"
+#include "../Tuvok/DebugOut/MultiplexOut.h"
+
 using namespace std;
 
 // ******************************************
@@ -130,14 +133,38 @@ void MainWindow::LoadDataset(QString fileName) {
       QString targetFileName = GetConvFilename();
       if (targetFileName.isEmpty()) return;
       pleaseWait.SetText("Converting, please wait  ...");
+
+      // add status label into debug chain
+      AbstrDebugOut* pOldDebug       = m_MasterController.DebugOut();
+
+      MultiplexOut* pMultiOut = new MultiplexOut();
+      m_MasterController.SetDebugOut(pMultiOut, true);
+
+      QTLabelOut* labelOut = new QTLabelOut(pleaseWait.GetStatusLabel());
+      labelOut->m_bShowMessages = true;
+      labelOut->m_bShowWarnings = true;
+      labelOut->m_bShowErrors = true;
+      labelOut->m_bShowOther = false;
+
+      pMultiOut->AddDebugOut(labelOut,  false);
+      pMultiOut->AddDebugOut(pOldDebug, false);
+     
       if (!m_MasterController.IOMan()->ConvertDataset(fileName.toStdString(), targetFileName.toStdString())) {
         QString strText = tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFileName);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
         QMessageBox::critical(this, "Conversion Error", strText);
+
+        m_MasterController.SetDebugOut(pOldDebug);
+        delete pMultiOut;
+        delete labelOut;
         return;
       }      
       fileName = targetFileName;
+      m_MasterController.SetDebugOut(pOldDebug);
+      delete pMultiOut;
+      delete labelOut;
     }
+
 
     RenderWindow *renderWin = CreateNewRenderWindow(fileName);
     renderWin->show();
