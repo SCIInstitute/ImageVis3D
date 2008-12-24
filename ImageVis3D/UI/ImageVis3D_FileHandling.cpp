@@ -158,6 +158,7 @@ void MainWindow::LoadDataset(QString fileName) {
         return;
       }      
       fileName = targetFileName;
+      pleaseWait.close();
       m_MasterController.SetDebugOut(pOldDebug);
     }
 
