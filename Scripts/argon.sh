@@ -30,7 +30,7 @@ echo "" >> ${status}
 echo "-------------------------------------" >> ${status}
 
 try cd ${HOME}/imagevis3d
-rm *.tar.gz
+rm *.tar.gz *.zip
 try sh Scripts/nightly.sh
 cat warnings >> ${status}
 subj=""
