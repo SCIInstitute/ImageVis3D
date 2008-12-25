@@ -59,8 +59,8 @@ using namespace std;
 
 
 MainWindow::MainWindow(MasterController& masterController,
-		       QWidget* parent /* = 0 */,
-		       Qt::WindowFlags flags /* = 0 */) :
+           QWidget* parent /* = 0 */,
+           Qt::WindowFlags flags /* = 0 */) :
 
   QMainWindow(parent, flags),
   m_MasterController(masterController),
@@ -248,15 +248,15 @@ void MainWindow::FilterImage() {
 
   m_MasterController.DebugOut()->
     Message("MainWindow::FilterImage",
-	    "Performing filter %d on %s.", tab, 
-	    m_ActiveRenderWin->GetDatasetName().toStdString().c_str() );
+      "Performing filter %d on %s.", tab, 
+      m_ActiveRenderWin->GetDatasetName().toStdString().c_str() );
 
   QString fileName = m_ActiveRenderWin->GetDatasetName();
 
   /// \todo ARS -- this should return a pointer to memory.
   m_MasterController.Filter( m_ActiveRenderWin->GetDatasetName().toStdString(),
-			     tab,
-			     &var0, &var1 );
+           tab,
+           &var0, &var1 );
 
 
   /// \todo ARS -- Need to be able to a CreateNewRenderWindow based on memory

@@ -159,9 +159,9 @@ private:
   INTVECTOR2   Rel2Abs(FLOATVECTOR2 vfCoord);
   FLOATVECTOR2 Abs2Rel(INTVECTOR2   vCoord);
   FLOATVECTOR2 Rotate(FLOATVECTOR2 point,
-		      float angle,
-		      FLOATVECTOR2 center,
-		      FLOATVECTOR2 rescale);
+          float angle,
+          FLOATVECTOR2 center,
+          FLOATVECTOR2 rescale);
 };
 
 

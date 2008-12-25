@@ -57,8 +57,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
   public:
     MainWindow(MasterController& masterController,
-	       QWidget* parent = 0,
-	       Qt::WindowFlags flags = 0);
+         QWidget* parent = 0,
+         Qt::WindowFlags flags = 0);
 
     virtual ~MainWindow();
     
@@ -196,14 +196,14 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void SetupWorkspaceMenu();
     bool LoadWorkspace(QString strFilename,
-		       bool bSilentFail = false,
-		       bool bRetryResource = true);
+           bool bSilentFail = false,
+           bool bRetryResource = true);
 
     bool SaveWorkspace(QString strFilename);
 
     bool LoadGeometry(QString strFilename,
-		      bool bSilentFail = false,
-		      bool bRetryResource = true);
+          bool bSilentFail = false,
+          bool bRetryResource = true);
 
     bool SaveGeometry(QString strFilename);
 

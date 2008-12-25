@@ -100,11 +100,11 @@ void MainWindow::Transfer1DSetGroups() {
   checkBox_Alpha->setChecked(iRadioState==2);
 
   unsigned int iPaintMode = (Q1DTransferFunction::PAINT_RED |
-			     Q1DTransferFunction::PAINT_GREEN |
-			     Q1DTransferFunction::PAINT_BLUE |
-			     ((iRadioState==2) ?
-			      Q1DTransferFunction::PAINT_ALPHA :
-			      Q1DTransferFunction::PAINT_NONE) );
+           Q1DTransferFunction::PAINT_GREEN |
+           Q1DTransferFunction::PAINT_BLUE |
+           ((iRadioState==2) ?
+            Q1DTransferFunction::PAINT_ALPHA :
+            Q1DTransferFunction::PAINT_NONE) );
 
   m_1DTransferFunction->
     SetPaintMode( (Q1DTransferFunction::paintMode ) iPaintMode);
@@ -140,8 +140,8 @@ void MainWindow::Transfer1DLoad() {
 
   QString fileName =
     QFileDialog::getOpenFileName(this,
-				 "Load 1D Transferfunction", strLastDir,
-				 "1D Transferfunction File (*.1dt)");
+         "Load 1D Transferfunction", strLastDir,
+         "1D Transferfunction File (*.1dt)");
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/Transfer1DLoad", QFileInfo(fileName).absoluteDir().path());
@@ -155,8 +155,8 @@ void MainWindow::Transfer1DSave() {
 
   QString fileName =
     QFileDialog::getSaveFileName(this,
-				 "Save 1D Transferfunction", strLastDir,
-				 "1D Transferfunction File (*.1dt)");
+         "Save 1D Transferfunction", strLastDir,
+         "1D Transferfunction File (*.1dt)");
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/Transfer1DSave", QFileInfo(fileName).absoluteDir().path());

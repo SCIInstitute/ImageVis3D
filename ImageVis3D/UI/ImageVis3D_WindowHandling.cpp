@@ -66,8 +66,8 @@ bool MainWindow::LoadGeometry() {
 
   QString fileName =
     QFileDialog::getOpenFileName(this, "Load Geometry",
-				 strLastDir,
-				 "Geometry Files (*.geo)");
+         strLastDir,
+         "Geometry Files (*.geo)");
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/LoadGeometry", QFileInfo(fileName).absoluteDir().path());
     return LoadGeometry(fileName);
@@ -79,9 +79,9 @@ bool MainWindow::SaveGeometry() {
   QString strLastDir = settings.value("Folders/SaveGeometry", ".").toString();
 
   QString fileName = QFileDialog::getSaveFileName(this,
-						  "Save Current Geometry",
-						  strLastDir,
-						  "Geometry Files (*.geo)");
+              "Save Current Geometry",
+              strLastDir,
+              "Geometry Files (*.geo)");
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/SaveGeometry", QFileInfo(fileName).absoluteDir().path());
     return SaveGeometry(fileName);
@@ -89,8 +89,8 @@ bool MainWindow::SaveGeometry() {
 }
 
 bool MainWindow::LoadGeometry(QString strFilename,
-			      bool bSilentFail,
-			      bool bRetryResource) {
+            bool bSilentFail,
+            bool bRetryResource) {
 
   QSettings settings( strFilename, QSettings::IniFormat );
 
@@ -102,7 +102,7 @@ bool MainWindow::LoadGeometry(QString strFilename,
   if (!bOK && bRetryResource) {
     string stdString(strFilename.toAscii());
     if (LoadGeometry(SysTools::GetFromResourceOnMac(stdString).c_str(),
-		     true, false)) {
+         true, false)) {
       return true;
     }
   }
@@ -152,35 +152,35 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   verticalLayout_2DTrans->addWidget(m_2DTransferFunction);
 
   connect(verticalSlider_2DTransHistScale, SIGNAL(valueChanged(int)),
-	  m_2DTransferFunction, SLOT(SetHistogtramScale(int)));
+    m_2DTransferFunction, SLOT(SetHistogtramScale(int)));
   connect(verticalSlider_1DTransHistScale, SIGNAL(valueChanged(int)),
-	  m_1DTransferFunction, SLOT(SetHistogtramScale(int)));
+    m_1DTransferFunction, SLOT(SetHistogtramScale(int)));
 
   connect(m_2DTransferFunction, SIGNAL(SwatchChange()),
-	  this, SLOT(Transfer2DSwatchesChanged()));
+    this, SLOT(Transfer2DSwatchesChanged()));
   connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)),
-	  m_2DTransferFunction, SLOT(Transfer2DSetActiveSwatch(int)));
+    m_2DTransferFunction, SLOT(Transfer2DSetActiveSwatch(int)));
   connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)),
-	  this, SLOT(Transfer2DUpdateSwatchButtons()));
+    this, SLOT(Transfer2DUpdateSwatchButtons()));
   connect(listWidget_Gradient, SIGNAL(currentRowChanged(int)),
-	  this, SLOT(Transfer2DUpdateGradientButtons()));  
+    this, SLOT(Transfer2DUpdateGradientButtons()));  
 
   connect(pushButton_AddPoly,  SIGNAL(clicked()),
-	  m_2DTransferFunction, SLOT(Transfer2DAddSwatch()));
+    m_2DTransferFunction, SLOT(Transfer2DAddSwatch()));
   connect(pushButton_AddCircle,SIGNAL(clicked()),
-	  m_2DTransferFunction, SLOT(Transfer2DAddCircleSwatch()));
+    m_2DTransferFunction, SLOT(Transfer2DAddCircleSwatch()));
   connect(pushButton_DelPoly,  SIGNAL(clicked()),
-	  m_2DTransferFunction, SLOT(Transfer2DDeleteSwatch()));
+    m_2DTransferFunction, SLOT(Transfer2DDeleteSwatch()));
   connect(pushButton_UpPoly,   SIGNAL(clicked()),
-	  m_2DTransferFunction, SLOT(Transfer2DUpSwatch()));
+    m_2DTransferFunction, SLOT(Transfer2DUpSwatch()));
   connect(pushButton_DownPoly, SIGNAL(clicked()),
-	  m_2DTransferFunction, SLOT(Transfer2DDownSwatch()));
+    m_2DTransferFunction, SLOT(Transfer2DDownSwatch()));
 
   for (unsigned int i = 0; i < ms_iMaxRecentFiles; ++i) {
     m_recentFileActs[i] = new QAction(this);
     m_recentFileActs[i]->setVisible(false);
     connect(m_recentFileActs[i], SIGNAL(triggered()),
-	    this, SLOT(OpenRecentFile()));
+      this, SLOT(OpenRecentFile()));
     menuLast_Used_Projects->addAction(m_recentFileActs[i]);
   }
 
@@ -265,9 +265,9 @@ bool MainWindow::LoadWorkspace() {
   QString strLastDir = settings.value("Folders/LoadWorkspace", ".").toString();
 
   QString fileName = QFileDialog::getOpenFileName(this,
-						  "Load Workspace",
-						  strLastDir,
-						  "Workspace Files (*.wsp)");
+              "Load Workspace",
+              strLastDir,
+              "Workspace Files (*.wsp)");
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/LoadWorkspace", QFileInfo(fileName).absoluteDir().path());
     return LoadWorkspace(fileName);
@@ -279,9 +279,9 @@ bool MainWindow::SaveWorkspace() {
   QString strLastDir = settings.value("Folders/SaveWorkspace", ".").toString();
 
   QString fileName = QFileDialog::getSaveFileName(this,
-						  "Save Current Workspace",
-						  strLastDir,
-						  "Workspace Files (*.wsp)");
+              "Save Current Workspace",
+              strLastDir,
+              "Workspace Files (*.wsp)");
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/SaveWorkspace", QFileInfo(fileName).absoluteDir().path());
     return SaveWorkspace(fileName);
@@ -290,8 +290,8 @@ bool MainWindow::SaveWorkspace() {
 
 
 bool MainWindow::LoadWorkspace(QString strFilename,
-			       bool bSilentFail,
-			       bool bRetryResource) {
+             bool bSilentFail,
+             bool bRetryResource) {
 
   QSettings settings( strFilename, QSettings::IniFormat ); 
 
@@ -303,9 +303,9 @@ bool MainWindow::LoadWorkspace(QString strFilename,
     string stdString(strFilename.toAscii());
 
     if (LoadWorkspace(SysTools::GetFromResourceOnMac(stdString).c_str(),
-		      true, false)) {
+          true, false)) {
       m_strCurrentWorkspaceFilename =
-	SysTools::GetFromResourceOnMac(stdString).c_str();
+  SysTools::GetFromResourceOnMac(stdString).c_str();
       return true;
     }
   }
@@ -382,7 +382,7 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
           break;
         }
       }
-	    QMessageBox::critical(this, "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+      QMessageBox::critical(this, "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
     }
     return bIsOK;
   } return false;
@@ -396,16 +396,16 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
   RenderWindow *renderWin =
     new RenderWindow(m_MasterController, m_eVolumeRendererType, dataset,
-		     iCounter++, m_bPowerOfTwo, m_glShareWidget, this);
+         iCounter++, m_bPowerOfTwo, m_glShareWidget, this);
 
   ApplySettings(renderWin);
 
   mdiArea->addSubWindow(renderWin);
 
   connect(renderWin, SIGNAL(WindowActive(RenderWindow*)),
-	  this, SLOT(RenderWindowActive(RenderWindow*)));
+    this, SLOT(RenderWindowActive(RenderWindow*)));
   connect(renderWin, SIGNAL(WindowClosing(RenderWindow*)),
-	  this, SLOT(RenderWindowClosing(RenderWindow*)));
+    this, SLOT(RenderWindowClosing(RenderWindow*)));
 
   return renderWin;
 }
@@ -415,19 +415,19 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   if (m_ActiveRenderWin != sender) {
     m_MasterController.DebugOut()->
       Message("MainWindow::RenderWindowActive",
-	      "ACK that %s is now active",
-	      sender->GetDatasetName().toStdString().c_str());
+        "ACK that %s is now active",
+        sender->GetDatasetName().toStdString().c_str());
     m_ActiveRenderWin = sender;
 
     if (!CheckRenderwindowFitness(m_ActiveRenderWin)) return;
 
     m_1DTransferFunction->
       SetData(sender->GetRenderer()->GetDataSet()->Get1DHistogram(),
-	      sender->GetRenderer()->Get1DTrans());
+        sender->GetRenderer()->Get1DTrans());
     m_1DTransferFunction->update();
     m_2DTransferFunction->
       SetData(sender->GetRenderer()->GetDataSet()->Get2DHistogram(),
-	      sender->GetRenderer()->Get2DTrans());
+        sender->GetRenderer()->Get2DTrans());
     m_2DTransferFunction->update();
 
     AbstrRenderer::ERenderMode e = m_ActiveRenderWin->GetRendermode();
@@ -437,9 +437,9 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
       case AbstrRenderer::RM_2DTRANS    : Use2DTrans(); break;
       case AbstrRenderer::RM_ISOSURFACE : UseIso(); break;
       default : m_MasterController.DebugOut()->
-		                Error("MainWindow::RenderWindowActive",
-		                      "unknown rendermode from %s",
-		                      sender->GetDatasetName().toStdString().c_str());
+                    Error("MainWindow::RenderWindowActive",
+                          "unknown rendermode from %s",
+                          sender->GetDatasetName().toStdString().c_str());
                 break;
     }
 
@@ -497,16 +497,16 @@ void MainWindow::SetRescaleFactors() {
 void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   m_MasterController.DebugOut()->
     Message("MainWindow::RenderWindowClosing",
-	    "ACK that %s is now closing",
-	    sender->GetDatasetName().toStdString().c_str());
+      "ACK that %s is now closing",
+      sender->GetDatasetName().toStdString().c_str());
 
   RemoveAllLocks(sender);
 
   m_ActiveRenderWin = NULL;
   disconnect(sender, SIGNAL(WindowActive(RenderWindow*)),
-	     this, SLOT(RenderWindowActive(RenderWindow*)));
+       this, SLOT(RenderWindowActive(RenderWindow*)));
   disconnect(sender, SIGNAL(WindowClosing(RenderWindow*)),
-	     this, SLOT(RenderWindowClosing(RenderWindow*)));
+       this, SLOT(RenderWindowClosing(RenderWindow*)));
 
   m_1DTransferFunction->SetData(NULL, NULL);
   m_1DTransferFunction->update();

@@ -159,8 +159,8 @@ class RenderWindow : public QGLWidget
     QString           m_strDataset;
     QString           m_strID;
 
-    UINTVECTOR2		    m_vWinDim;
-	  bool			        m_bCaptureMode;
+    UINTVECTOR2        m_vWinDim;
+    bool              m_bCaptureMode;
 
     void SetupArcBall();
     void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);

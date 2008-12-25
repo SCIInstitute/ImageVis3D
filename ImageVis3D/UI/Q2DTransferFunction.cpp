@@ -146,20 +146,20 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
     for (size_t x = 0;x<m_vHistogram.GetSize().x;x++) {
       float value = min<float>(1.0f, pow(m_vHistogram.Get(x,y),1.0f/(1+(m_fHistfScale-1)/100.0f)));
       image.setPixel(int(x),
-		     int(m_vHistogram.GetSize().y-(y+1)),
-		     qRgb(int(m_colorBack.red()  * (1.0f-value) +
-			            m_colorHistogram.red()  * value),
+         int(m_vHistogram.GetSize().y-(y+1)),
+         qRgb(int(m_colorBack.red()  * (1.0f-value) +
+                  m_colorHistogram.red()  * value),
               int(m_colorBack.green()* (1.0f-value) +
-			            m_colorHistogram.green()* value),
+                  m_colorHistogram.green()* value),
               int(m_colorBack.blue() * (1.0f-value) +
-			            m_colorHistogram.blue() * value)));
+                  m_colorHistogram.blue() * value)));
     }
 
   // ... draw it
   QRectF target(m_iBorderSize/2, m_iBorderSize/2,
-		width()-m_iBorderSize, height()-m_iBorderSize);
+    width()-m_iBorderSize, height()-m_iBorderSize);
   QRectF source(0.0, 0.0,
-		m_vHistogram.GetSize().x, m_vHistogram.GetSize().y);
+    m_vHistogram.GetSize().x, m_vHistogram.GetSize().y);
   painter.drawImage( target, image, source );
 }
 
@@ -167,20 +167,20 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
 
 INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
   return INTVECTOR2(int(m_iSwatchBorderSize/2+
-			m_iBorderSize/2+vfCoord.x*
-			(width()-m_iBorderSize-m_iSwatchBorderSize)),
-		    int(m_iSwatchBorderSize/2+
-			m_iBorderSize/2+vfCoord.y*
-			(height()-m_iBorderSize-m_iSwatchBorderSize)));
+      m_iBorderSize/2+vfCoord.x*
+      (width()-m_iBorderSize-m_iSwatchBorderSize)),
+        int(m_iSwatchBorderSize/2+
+      m_iBorderSize/2+vfCoord.y*
+      (height()-m_iBorderSize-m_iSwatchBorderSize)));
 }
 
 FLOATVECTOR2 Q2DTransferFunction::Abs2Rel(INTVECTOR2 vCoord) {
   return FLOATVECTOR2((float(vCoord.x)-m_iSwatchBorderSize/2.0f+
-		       m_iBorderSize/2.0f)/
-		      float(width()-m_iBorderSize-m_iSwatchBorderSize),
-		      (float(vCoord.y)-m_iSwatchBorderSize/2.0f+
-		       m_iBorderSize/2.0f)/
-		      float(height()-m_iBorderSize-m_iSwatchBorderSize));
+           m_iBorderSize/2.0f)/
+          float(width()-m_iBorderSize-m_iSwatchBorderSize),
+          (float(vCoord.y)-m_iSwatchBorderSize/2.0f+
+           m_iBorderSize/2.0f)/
+          float(height()-m_iBorderSize-m_iSwatchBorderSize));
 }
 
 void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {

@@ -133,7 +133,7 @@ void MainWindow::Transfer2DUpdateGradientBox() {
 
     listWidget_Gradient->
       setCurrentRow(min<int>(iCurrent,
-			     int(m_2DTransferFunction->GetGradientCount())));
+           int(m_2DTransferFunction->GetGradientCount())));
     
   }
 
@@ -174,8 +174,8 @@ void MainWindow::Transfer2DAddGradient() {
 
   bool ok;
   float f = float(QInputDialog::getDouble(this,
-					  tr("Select Gradient Stop"),
-					  tr("Stop at:"), 0.5, 0, 1, 3, &ok));
+            tr("Select Gradient Stop"),
+            tr("Stop at:"), 0.5, 0, 1, 3, &ok));
 
   if (!ok) return;
 
@@ -226,7 +226,7 @@ void MainWindow::Transfer2DLoad() {
 
   QString fileName =
     QFileDialog::getOpenFileName(this, "Load 2D Transferfunction", strLastDir,
-				 "2D Transferfunction File (*.2dt)");
+         "2D Transferfunction File (*.2dt)");
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/Transfer2DLoad", QFileInfo(fileName).absoluteDir().path());
@@ -241,7 +241,7 @@ void MainWindow::Transfer2DSave() {
 
   QString fileName =
     QFileDialog::getSaveFileName(this, "Save 2D Transferfunction", strLastDir,
-				 "2D Transferfunction File (*.2dt)");
+         "2D Transferfunction File (*.2dt)");
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/Transfer2DSave", QFileInfo(fileName).absoluteDir().path());

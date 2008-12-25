@@ -292,8 +292,8 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bAvoidCompositing,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
-	m_bInit = true;
-	horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
+  m_bInit = true;
+  horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
   horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
   checkBoxQuickload->setChecked(bQuickopen);
@@ -378,13 +378,13 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
                                                                            .arg(255-m_cTextColor.blue());
 
   pushButtonSelText->setStyleSheet( strStyle );
-	m_bInit = false;
+  m_bInit = false;
 }
 
 
 void SettingsDlg::WarnAPIMethodChange() {
-	if (!m_bInit)
-		QMessageBox::warning(this, "Warning", "A change to the render API, the rendermode, or the compatibiliy settings only affects renderwindows opened from now on.");
+  if (!m_bInit)
+    QMessageBox::warning(this, "Warning", "A change to the render API, the rendermode, or the compatibiliy settings only affects renderwindows opened from now on.");
 }
 
 unsigned int SettingsDlg::GetVolrenType() const {
@@ -419,7 +419,7 @@ void SettingsDlg::SelectLogo() {
 
   QString fileName =
     QFileDialog::getOpenFileName(this, "Select Logo", strLastDir,
-				 "All Files (*.*)");
+         "All Files (*.*)");
 
   if (!fileName.isEmpty()) {
 

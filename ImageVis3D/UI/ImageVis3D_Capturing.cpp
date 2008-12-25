@@ -46,20 +46,20 @@ using namespace std;
 
 void MainWindow::CaptureFrame() {
   if (m_ActiveRenderWin) {
-	  if (!m_ActiveRenderWin->CaptureFrame(lineEditCaptureFile->text().toStdString())) {
-		QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
-		QMessageBox::warning(this, tr("Error"), msg);
-	  }
+    if (!m_ActiveRenderWin->CaptureFrame(lineEditCaptureFile->text().toStdString())) {
+    QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
+    QMessageBox::warning(this, tr("Error"), msg);
+    }
   }
 }
 
 void MainWindow::CaptureSequence() {
   
   if (m_ActiveRenderWin) {
-	  if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString())) {
-		QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
-		QMessageBox::warning(this, tr("Error"), msg);
-	  }
+    if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString())) {
+    QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
+    QMessageBox::warning(this, tr("Error"), msg);
+    }
   }
 }
 
@@ -67,14 +67,14 @@ void MainWindow::CaptureRotation() {
   if (m_ActiveRenderWin) {
     m_ActiveRenderWin->ToggleHQCaptureMode();
     int iImagesPerAngle = (horizontalSlider_RotSpeed->maximum()+1) - horizontalSlider_RotSpeed->value();
-	  int i = 0;
-	  float fAngle = 0.0f;
-	  while (fAngle < 360) {
+    int i = 0;
+    float fAngle = 0.0f;
+    while (fAngle < 360) {
       m_ActiveRenderWin->SetCaptureRotationAngle(fAngle);
-	    m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString());
-	    fAngle = float(i) / float(iImagesPerAngle);
-	    i++;
-	  }
+      m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString());
+      fAngle = float(i) / float(iImagesPerAngle);
+      i++;
+    }
     m_ActiveRenderWin->ToggleHQCaptureMode();
   }
 }
@@ -90,16 +90,16 @@ void MainWindow::SetCaptureFilename() {
   QString strLastDir = settings.value("Folders/SetCaptureFilename", ".").toString();
 
   QString fileName = QFileDialog::getSaveFileName(this,"Select Image File", strLastDir,
-					   "All Files (*.*)",&selectedFilter, options);
+             "All Files (*.*)",&selectedFilter, options);
 
 
   if (!fileName.isEmpty()) {
-	  // add png as the default filetype if the user forgot to enter one
-	  if (SysTools::GetExt(fileName.toStdString()) == "")
-		  fileName = fileName + ".png";
+    // add png as the default filetype if the user forgot to enter one
+    if (SysTools::GetExt(fileName.toStdString()) == "")
+      fileName = fileName + ".png";
 
     settings.setValue("Folders/SetCaptureFilename", QFileInfo(fileName).absoluteDir().path());
-	  lineEditCaptureFile->setText(fileName);
+    lineEditCaptureFile->setText(fileName);
   }
 
 }

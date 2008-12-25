@@ -75,8 +75,8 @@ void MainWindow::LoadDataset() {
   QString dialogString = m_MasterController.IOMan()->GetLoadDialogString().c_str();
 
   QString fileName = QFileDialog::getOpenFileName(this,
-	  				   "Load Dataset", strLastDir,
-		  			   dialogString,&selectedFilter, options);
+               "Load Dataset", strLastDir,
+               dialogString,&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/LoadDataset", QFileInfo(fileName).absoluteDir().path());
@@ -201,7 +201,7 @@ void MainWindow::LoadDirectory() {
         pleaseWait.SetText("Converting, please wait  ...");
         if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFileName.toStdString())) {
           QString strText =
-  	        tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFileName);
+            tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFileName);
 
           QMessageBox::critical(this, "Conversion Error", strText);
           m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", strText.toStdString().c_str());        
@@ -213,7 +213,7 @@ void MainWindow::LoadDirectory() {
       }
     } else {
       QString msg =
-	      tr("Error no valid files in directory %1 found.").arg(directoryName);
+        tr("Error no valid files in directory %1 found.").arg(directoryName);
       QMessageBox::information(this, tr("Problem"), msg);
     }
   }
@@ -232,8 +232,8 @@ void MainWindow::SaveDataset() {
 
   QString fileName =
     QFileDialog::getSaveFileName(this, "Save Current Dataset",
-				 strLastDir,
-				 "Universal Volume Format (*.uvf)",&selectedFilter, options);
+         strLastDir,
+         "Universal Volume Format (*.uvf)",&selectedFilter, options);
 
   if (!fileName.isEmpty())
     settings.setValue("Folders/SaveDataset", QFileInfo(fileName).absoluteDir().path());

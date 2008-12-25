@@ -381,18 +381,18 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLOD
 
 bool RenderWindow::CaptureFrame(const std::string& strFilename)
 {
-	GLFrameCapture f;
-	makeCurrent();
+  GLFrameCapture f;
+  makeCurrent();
   paintGL(); // make sure we have the same results in the front and in the backbuffer
-	return f.CaptureSingleFrame(strFilename);
+  return f.CaptureSingleFrame(strFilename);
 }
 
 bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename)
 {
-	GLFrameCapture f;
-	makeCurrent();
+  GLFrameCapture f;
+  makeCurrent();
   paintGL(); // make sure we have the same results in the front and in the backbuffer
-	return f.CaptureSequenceFrame(strFilename);
+  return f.CaptureSequenceFrame(strFilename);
 }
 
 void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation) {
