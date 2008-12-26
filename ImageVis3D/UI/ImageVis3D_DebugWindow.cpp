@@ -116,7 +116,8 @@ bool MainWindow::ParseCommand(string strCommand, string strParam) {
     return true;
   }
   if (strCommand == "versions") {      
-    m_DebugOut->printf("ImageVis3D Version: %s",TUVOK_VERSION);
+    m_DebugOut->printf("Tuvok Version: %i %s",TUVOK_VERSION, TUVOK_VERSION_TYPE);
+    m_DebugOut->printf("ImageVis3D Version: %i %s",IV3D_VERSION, IV3D_VERSION_TYPE);
     m_DebugOut->printf("QT Version: %s",QT_VERSION_STR);    
     return true;
   }
