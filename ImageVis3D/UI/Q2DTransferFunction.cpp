@@ -210,7 +210,8 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
       pointList[j] = QPoint(vPixelPos.x, vPixelPos.y);
     }
 
-    INTVECTOR2 vPixelPos0 = Rel2Abs(currentSwatch.pGradientCoords[0])-m_iSwatchBorderSize, vPixelPos1 = Rel2Abs(currentSwatch.pGradientCoords[1])-m_iSwatchBorderSize; 
+    INTVECTOR2 vPixelPos0 = Rel2Abs(currentSwatch.pGradientCoords[0])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize),
+		       vPixelPos1 = Rel2Abs(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize); 
     QLinearGradient linearBrush(vPixelPos0.x, vPixelPos0.y, vPixelPos1.x, vPixelPos1.y);
     
     for (size_t j = 0;j<currentSwatch.pGradientStops.size();j++) {      
@@ -235,9 +236,9 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
 
       painter.setBrush(Qt::NoBrush);
       if (m_iGradSelIndex== 0) painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
-      INTVECTOR2 vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[0])-m_iSwatchBorderSize;
+      INTVECTOR2 vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[0])-INTVECTOR2(m_iSwatchBorderSize,m_iSwatchBorderSize);
       painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
-      vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[1])-m_iSwatchBorderSize;
+      vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize,m_iSwatchBorderSize);
       if (m_iGradSelIndex== 1) painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
       painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);      
     }
