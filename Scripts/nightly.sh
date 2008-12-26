@@ -1,5 +1,7 @@
 #!/bin/sh
 
+IV3D_VERSION=0.03b
+
 function try
 {
     $@
@@ -65,6 +67,7 @@ else
     try qmake -spec ${spec} -recursive
 fi
 make clean
+rm warnings
 make -j5 2> warnings
 try make
 
@@ -77,7 +80,7 @@ echo "revision: $revision"
 tarball=""
 if test `uname` = "Darwin" ; then
     echo "Building app file ..."
-    tarball="ImageVis3D_0.02b_OSX_r${revision}.tar.gz"
+    tarball="ImageVis3D_${IV3D_VERSION}_OSX_r${revision}.tar.gz"
     try bash Scripts/mk_app.sh
     pushd Build/ &>/dev/null
         tar zcf ${tarball} ImageVis3D.app
@@ -85,7 +88,7 @@ if test `uname` = "Darwin" ; then
     popd &>/dev/null
     mv Build/${tarball} Build/${tarball%%.tar.gz}.zip .
 elif test `uname` = "Linux" ; then
-    mv Build/ImageVis3D ./ImageVis3D-r${revision}
+    mv Build/ImageVis3D ./ImageVis3D_${IV3D_VERSION}-r${revision}
 fi
 
 echo "Warnings:"
