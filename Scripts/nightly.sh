@@ -1,6 +1,8 @@
 #!/bin/sh
 
-IV3D_VERSION=0.03b
+IV3D_VERSION=` \
+    grep "IV3D_VERSION " ImageVis3D/StdDefines.h | \
+    awk '{ sub("\r", "", $3); print $3 }'`
 
 function try
 {
