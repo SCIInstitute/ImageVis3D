@@ -59,6 +59,7 @@ update
 find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
     -exec rm {} +
 
+# use qmake to generate makefiles, potentially in debug mode.
 if test "x$1" = "-debug"; then
     try qmake -spec ${spec} -recursive
     CF="-Wextra -D_GLIBCXX_DEBUG"
@@ -71,16 +72,30 @@ rm warnings
 make -j5 2> warnings
 try make
 
+# Get the current revisions of the two repositories, so we can appropriately
+# label the build tarballs.
 revision=`$svn info | grep Revision | awk '{print $2}'`
 pushd Tuvok
     tuvok_revision=`$svn info | grep Revision | awk '{print $2}'`
 popd
 revision="${revision}_${tuvok_revision}"
 echo "revision: $revision"
+
+# likewise for the machine architecture.
+arch=`uname -m`
+# Even though the customs for uname are unequivocally better (hold more
+# information), munge the arch name so that it follows the
+# software.sci.utah.edu naming conventions.
+if test "x${arch}" = "xi386" ; then
+    arch="32"
+elif test "x${arch}" = "xx86_64" ; then
+    arch="64"
+fi
+
 tarball=""
 if test `uname` = "Darwin" ; then
     echo "Building app file ..."
-    tarball="ImageVis3D_${IV3D_VERSION}_OSX_r${revision}.tar.gz"
+    tarball="ImageVis3D_${IV3D_VERSION}_osx${arch}_r${revision}.tar.gz"
     try bash Scripts/mk_app.sh
     pushd Build/ &>/dev/null
         tar zcf ${tarball} ImageVis3D.app
