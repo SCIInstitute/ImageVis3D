@@ -42,7 +42,7 @@ mkdir Shaders
 xcopy ..\Tuvok\Shaders\*.glsl .\Shaders
 
 del ..\ImageVis3D*.zip
-"C:\Program Files\7-Zip\7z" a -r ..\ImageVis3D_%IV3DCODEVERSION%_Win_%REVSTR%.zip
+"C:\Program Files\7-Zip\7z" a -r ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip
 
 del . /F /S /Q
 rmDir Shaders
