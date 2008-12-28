@@ -1,4 +1,20 @@
+
+set path=%path%;C:\Program Files (x86)\CollabNet Subversion
+
+cd..
+svn up
+
+svn info > rev1.txt
+cd Tuvok
+svn info > ..\rev2.txt
 cd ..
+
+for /f "tokens=1,2" %%i in (rev1.txt) do if %%i==Revision: set IV3DVERSION=%%j
+for /f "tokens=1,2" %%i in (rev2.txt) do if %%i==Revision: set TUVOKVERSION=%%j
+for /f "tokens=2,3" %%i in (ImageVis3D\StdDefines.h) do if %%i==IV3D_VERSION set IV3DCODEVERSION=%%j
+
+del rev1.txt
+del rev2.txt
 
 set REVSTR=%IV3DVERSION%_%TUVOKVERSION%
 set CONFIG=Release (with DirectX)
@@ -83,10 +99,6 @@ goto END
 
 :END
 
-setx IV3DVERSION ""
-setx TUVOKVERSION ""
-
-setx IV3DCODEVERSION ""
 del out32.txt
 del out64.txt
 
