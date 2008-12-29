@@ -75,41 +75,46 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
   m_iCurrentImage = i;
 
   QIcon icon;
-  QImage image(m_stackInfo.m_ivSize.x, m_stackInfo.m_ivSize.y, QImage::Format_RGB32);
 
   void* pData = NULL;
   m_stackInfo.m_Elements[i]->GetData(&pData);
-
-  if (m_stackInfo.m_iComponentCount == 1) {
-    switch (m_stackInfo.m_iAllocated) {
-      case 8  :{
-            unsigned int i = 0;
-            unsigned char* pCharData = (unsigned char*)pData;
-            for (int y = 0;y<image.height();y++) 
-              for (int x = 0;x<image.width();x++) {
-                image.setPixel(x,y, qRgb(pCharData[i],pCharData[i],pCharData[i]));
-                i++;
-              }
-             } break;
-      case 16 : {
-            unsigned int i = 0;
-            unsigned short* pShortData = (unsigned short*)pData;
-            for (int y = 0;y<image.height();y++) 
-              for (int x = 0;x<image.width();x++) {
-                unsigned char value = (unsigned char)(255.0f*float(pShortData[i])/float((m_stackInfo.m_iStored)));
-                image.setPixel(x,y, qRgb(value,value,value));
-                i++;
-              }
-             } break;
-      default  : break; /// \todo handle other bitwith data
-    }
+  if (m_stackInfo.m_bIsJPEGEncoded) {
+    unsigned int iLength = m_stackInfo.m_Elements[i]->GetDataSize();
+    QImage image;
+    image.loadFromData((uchar*)pData, iLength);
+    icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::Off);
   } else {
-    /// \todo handle color data
+    QImage image(m_stackInfo.m_ivSize.x, m_stackInfo.m_ivSize.y, QImage::Format_RGB32);
+
+    if (m_stackInfo.m_iComponentCount == 1) {
+      switch (m_stackInfo.m_iAllocated) {
+        case 8  :{
+              unsigned int i = 0;
+              unsigned char* pCharData = (unsigned char*)pData;
+              for (int y = 0;y<image.height();y++) 
+                for (int x = 0;x<image.width();x++) {
+                  image.setPixel(x,y, qRgb(pCharData[i],pCharData[i],pCharData[i]));
+                  i++;
+                }
+               } break;
+        case 16 : {
+              unsigned int i = 0;
+              unsigned short* pShortData = (unsigned short*)pData;
+              for (int y = 0;y<image.height();y++) 
+                for (int x = 0;x<image.width();x++) {
+                  unsigned char value = (unsigned char)(255.0f*float(pShortData[i])/float((m_stackInfo.m_iStored)));
+                  image.setPixel(x,y, qRgb(value,value,value));
+                  i++;
+                }
+               } break;
+        default  : break; /// \todo handle other bitwith data
+      }
+    } else {
+      /// \todo handle color data
+    }
+    icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::Off);
   }
-
   delete [] (char*)pData;
-
-  icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::Off);
   setIcon(icon);
   update();
 }
