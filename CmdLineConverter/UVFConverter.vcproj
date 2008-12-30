@@ -333,8 +333,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug (with DirectX)|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="Build\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="Build\$(PlatformName)\$(ConfigurationName)\objects"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -409,8 +409,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug (with DirectX)|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="Build\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="Build\$(PlatformName)\$(ConfigurationName)\objects"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -486,8 +486,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release (with DirectX)|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="Build\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="Build\$(PlatformName)\$(ConfigurationName)\objects"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -565,8 +565,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release (with DirectX)|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="Build\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="Build\$(PlatformName)\$(ConfigurationName)\objects"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
