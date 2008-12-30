@@ -70,10 +70,18 @@ IF ERRORLEVEL 0 (
 time /t  >> result.txt
 IF EXIST "Build\x64\%CONFIG%\ImageVis3D-64.exe" (
   set BUILD64=TRUE
-  echo 64bit build completed >> result.txt
+  echo ImageVis 64bit build completed >> result.txt
 ) ELSE (
   set BUILD64=FALSE
-  echo 64bit build failed >> result.txt
+  echo ImageVis 64bit build failed >> result.txt
+)
+
+IF EXIST "CmdLineConverter\Build\x64\%CONFIG%\UVFConverter64.exe" (
+  set BUILDUVF64=TRUE
+  echo UVFConverter64 completed >> result.txt
+) ELSE (
+  set BUILDUVF64=FALSE
+  echo UVFConverter64 failed >> result.txt
 )
 
 IF EXIST out32.txt del out32.txt
@@ -87,10 +95,18 @@ IF ERRORLEVEL 0 (
 time /t  >> result.txt
 IF EXIST "Build\Win32\%CONFIG%\ImageVis3D-32.exe" (
   set BUILD32=TRUE
-  echo 32bit build completed >> result.txt
+  echo ImageVis 32bit build completed >> result.txt
 ) ELSE (
   set BUILD32=FALSE
-  echo 32bit build failed >> result.txt
+  echo ImageVis 32bit build failed >> result.txt
+)
+
+IF EXIST "CmdLineConverter\Build\Win32\%CONFIG%\UVFConverter32.exe" (
+  set BUILDUVF32=TRUE
+  echo UVFConverter32 completed >> result.txt
+) ELSE (
+  set BUILDUVF32=FALSE
+  echo UVFConverter32 failed >> result.txt
 )
 
 IF NOT EXIST \\geronimo\share\IV3D-WIN\nul mkdir \\geronimo\share\IV3D-WIN
@@ -114,30 +130,47 @@ del ..\ImageVis3D*.zip
 
 del . /F /S /Q
 rmDir Shaders
-cd ..
-rmdir Nightly
 
-IF EXIST ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip (
-  time /t  >> result.txt
-  echo Nightly build successful >> result.txt
-  echo.>> result.txt
-  echo.>> result.txt
-  echo -------------------------------->> result.txt
-  echo.>> result.txt
-  echo.>> result.txt
-  type out32.txt >> result.txt
-  type out64.txt >> result.txt
+IF EXIST ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip (
+  time /t  >> ..\result.txt
+  echo ImageVis3D build successful >> ..\result.txt
 ) else (
   goto ZIPFAIL
 )
 
-xcopy ImageVis3D*.zip \\geronimo\share\IV3D-WIN /Y
-del ImageVis3D*.zip
+if NOT !BUILDUVF64!==TRUE (
+  if NOT !BUILDUVF32!==TRUE goto UVFAILED
+)
 
-copy "Tuvok\Build\Win32\%CONFIG%\objects\BuildLog.htm" \\geronimo\share\IV3D-WIN\tuvok32.htm /Y
-copy "Tuvok\Build\x64\%CONFIG%\objects\BuildLog.htm" \\geronimo\share\IV3D-WIN\tuvok64.htm /Y
-copy "Build\Win32\%CONFIG%\objects\BuildLog.htm" \\geronimo\share\IV3D-WIN\IV3D32.htm /Y
-copy "Build\x64\%CONFIG%\objects\BuildLog.htm" \\geronimo\share\IV3D-WIN\IV3D64.htm /Y
+if !BUILDUVF64!==TRUE xcopy "..\CmdLineConverter\Build\x64\%CONFIG%\UVFConverter64.exe" .
+if !BUILDUVF32!==TRUE xcopy "..\CmdLineConverter\Build\Win32\%CONFIG%\UVFConverter32.exe" .
+
+"C:\Program Files\7-Zip\7z" a -r ..\UVFConverter_Win_r%REVSTR%.zip
+del . /F /S /Q
+
+xcopy ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WIN /Y
+del ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip
+
+IF EXIST ..\UVFConverter_Win_r%REVSTR%.zip (
+  time /t  >> ..\result.txt
+  echo UVFConverter build successful >> ..\result.txt
+) else (
+  goto ZIPFAILUVF
+)
+
+xcopy ..\UVFConverter_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WIN /Y
+del ..\UVFConverter_Win_r%REVSTR%.zip
+
+:UVFAILED
+
+cd ..
+rmdir Nightly
+
+
+echo f | xcopy "Tuvok\Build\Win32\%CONFIG%\objects\BuildLog.htm" \\geronimo\share\IV3D-WIN\tuvok32.htm /Y
+echo f | xcopy "Tuvok\Build\x64\%CONFIG%\objects\BuildLog.htm" \\geronimo\share\IV3D-WIN\tuvok64.htm /Y
+echo f | xcopy "Build\Win32\%CONFIG%\objects\BuildLog.htm" \\geronimo\share\IV3D-WIN\IV3D32.htm /Y
+echo f | xcopy "Build\x64\%CONFIG%\objects\BuildLog.htm" \\geronimo\share\IV3D-WIN\IV3D64.htm /Y
 
 GOTO END
 
@@ -148,12 +181,21 @@ goto END
 
 :ZIPFAIL
 
-echo Packing the final ZIP file failed  >> result.txt
+echo Packing the final ImageVis3D ZIP file failed  >> result.txt
+goto END
+
+:ZIPFAILUVF
+
+echo Packing the final UVFConverter ZIP file failed  >> result.txt
 goto END
 
 :ALLFAILED
 
 echo All builds failed to compile >> result.txt
+goto END
+
+:END
+
 echo.>> result.txt
 echo.>> result.txt
 echo -------------------------------->> result.txt
@@ -161,11 +203,8 @@ echo.>> result.txt
 echo.>> result.txt
 type out32.txt >> result.txt
 type out64.txt >> result.txt
-goto END
 
-:END
-
-copy result.txt \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.log /Y
+echo f | xcopy result.txt \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.log /Y
 IF EXIST out32.txt del out32.txt
 IF EXIST out64.txt del out64.txt
 
