@@ -8,6 +8,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageVis3D", "ImageVis3D\Im
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tuvok", "Tuvok\Tuvok.vcproj", "{D474A1E1-2ED3-42E6-826C-372430E549B9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UVFConverter", "CmdLineConverter\UVFConverter.vcproj", "{3D1630AA-C160-493B-88F2-E29AB13AF140}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D474A1E1-2ED3-42E6-826C-372430E549B9} = {D474A1E1-2ED3-42E6-826C-372430E549B9}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug (with DirectX)|Win32 = Debug (with DirectX)|Win32
@@ -52,6 +57,22 @@ Global
 		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|Win32.Build.0 = Release|Win32
 		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|x64.ActiveCfg = Release|x64
 		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|x64.Build.0 = Release|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug (with DirectX)|Win32.ActiveCfg = Debug|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug (with DirectX)|Win32.Build.0 = Debug|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug (with DirectX)|x64.ActiveCfg = Debug|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug (with DirectX)|x64.Build.0 = Debug|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug|Win32.Build.0 = Debug|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug|x64.ActiveCfg = Debug|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug|x64.Build.0 = Debug|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release (with DirectX)|Win32.ActiveCfg = Release|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release (with DirectX)|Win32.Build.0 = Release|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release (with DirectX)|x64.ActiveCfg = Release|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release (with DirectX)|x64.Build.0 = Release|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release|Win32.ActiveCfg = Release|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release|Win32.Build.0 = Release|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release|x64.ActiveCfg = Release|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
