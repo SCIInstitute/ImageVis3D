@@ -4,10 +4,9 @@
 
 TEMPLATE          = app
 CONFIG           += link_prl static
-TARGET            = Build
+TARGET            = Build/data2uvf
 DEPENDPATH       += .
 INCLUDEPATH      += .
-QT               += opengl
 LIBS              = -L../Tuvok/Build -lTuvok
 
 # Input
