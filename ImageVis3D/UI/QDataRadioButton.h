@@ -40,6 +40,7 @@
 #ifndef QDATARADIOBUTTON_H
 #define QDATARADIOBUTTON_H
 
+#include <StdDefines.h>
 #include <QtGui/QRadioButton>
 #include <../Tuvok/IO/DirectoryParser.h>
 

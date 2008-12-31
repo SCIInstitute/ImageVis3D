@@ -133,5 +133,5 @@ void QDataRadioButton::SetupInfo() {
 
   setText(desc);
 
-  SetStackImage(uint(iElemCount/2));
+  SetStackImage(UINT32(iElemCount/2));
 }

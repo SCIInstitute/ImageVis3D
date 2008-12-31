@@ -41,7 +41,7 @@
 #include <QtGui/QtGui>
 #include <QtOpenGL/QtOpenGL>
 #include <assert.h>
-#include "../Tuvok/Renderer/GLFrameCapture.h"
+#include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 
 RenderWindow::RenderWindow(MasterController& masterController,
                  MasterController::EVolumeRendererType eType,
