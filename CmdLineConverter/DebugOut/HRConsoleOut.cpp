@@ -41,12 +41,6 @@ using namespace std;
 #include "HRConsoleOut.h"
 #include "../../Tuvok/Basics/Console.h"
 
-
-#ifdef WIN32
-  #include <windows.h>
-#endif
-
-
 HRConsoleOut::HRConsoleOut() {
 }
 
