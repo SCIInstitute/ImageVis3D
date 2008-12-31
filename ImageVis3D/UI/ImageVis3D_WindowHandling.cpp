@@ -406,6 +406,11 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
     this, SLOT(RenderWindowActive(RenderWindow*)));
   connect(renderWin, SIGNAL(WindowClosing(RenderWindow*)),
     this, SLOT(RenderWindowClosing(RenderWindow*)));
+  connect(renderWin, SIGNAL(RenderWindowViewChanged(int)),
+    this, SLOT(RenderWindowViewChanged(int)));
+  connect(renderWin, SIGNAL(StereoDisabled()),
+    this, SLOT(StereoDisabled()));
+  
 
   return renderWin;
 }
@@ -494,6 +499,14 @@ void MainWindow::SetRescaleFactors() {
 }
 
 
+void MainWindow::StereoDisabled() {
+  checkBox_Stereo->setChecked(false);
+}
+
+void MainWindow::RenderWindowViewChanged(int iMode) {
+  groupBox_MovieCapture->setEnabled(iMode == 0);
+}
+
 void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   m_MasterController.DebugOut()->
     Message("MainWindow::RenderWindowClosing",
@@ -507,6 +520,8 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
        this, SLOT(RenderWindowActive(RenderWindow*)));
   disconnect(sender, SIGNAL(WindowClosing(RenderWindow*)),
        this, SLOT(RenderWindowClosing(RenderWindow*)));
+  disconnect(sender, SIGNAL(RenderWindowViewChanged(int)),
+       this, SLOT(RenderWindowViewChanged(int)));
 
   m_1DTransferFunction->SetData(NULL, NULL);
   m_1DTransferFunction->update();

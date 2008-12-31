@@ -76,6 +76,7 @@ class RenderWindow : public QGLWidget
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
     bool CaptureFrame(const std::string& strFilename);
     bool CaptureSequenceFrame(const std::string& strFilename);
+    bool CaptureMIPrame(const std::string& strFilename, float fAngle);
     void ToggleHQCaptureMode();
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() {return m_bRenderSubsysOK;}
@@ -119,6 +120,7 @@ class RenderWindow : public QGLWidget
     void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {m_iTimeSliceMSecsActive = iActive; m_iTimeSliceMSecsInActive = iInactive;}
 
   signals:
+    void StereoDisabled();
     void RenderWindowViewChanged(int iViewID);
     void WindowActive(RenderWindow* sender);
     void WindowInActive(RenderWindow* sender);

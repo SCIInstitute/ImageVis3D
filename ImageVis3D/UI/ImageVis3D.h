@@ -122,6 +122,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void RenderWindowActive(RenderWindow* sender);
     void RenderWindowClosing(RenderWindow* sender);
+    void StereoDisabled();
+    void RenderWindowViewChanged(int iMode);
 
     void ClearDebugWin();
     void ParseAndExecuteDebugCommand();

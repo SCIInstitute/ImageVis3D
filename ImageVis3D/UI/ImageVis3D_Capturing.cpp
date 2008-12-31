@@ -41,6 +41,9 @@
 #include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
 
+#include "PleaseWait.h"
+#include "DebugOut/QTLabelOut.h"
+#include "../Tuvok/DebugOut/MultiplexOut.h"
 
 using namespace std;
 
@@ -54,7 +57,6 @@ void MainWindow::CaptureFrame() {
 }
 
 void MainWindow::CaptureSequence() {
-  
   if (m_ActiveRenderWin) {
     if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString())) {
     QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
@@ -66,16 +68,77 @@ void MainWindow::CaptureSequence() {
 void MainWindow::CaptureRotation() {
   if (m_ActiveRenderWin) {
     m_ActiveRenderWin->ToggleHQCaptureMode();
-    int iImagesPerAngle = (horizontalSlider_RotSpeed->maximum()+1) - horizontalSlider_RotSpeed->value();
-    int i = 0;
-    float fAngle = 0.0f;
-    while (fAngle < 360) {
-      m_ActiveRenderWin->SetCaptureRotationAngle(fAngle);
-      m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString());
-      fAngle = float(i) / float(iImagesPerAngle);
-      i++;
+    
+    PleaseWaitDialog pleaseWait(this);
+    // add status label into debug chain
+    AbstrDebugOut* pOldDebug       = m_MasterController.DebugOut();
+    MultiplexOut* pMultiOut = new MultiplexOut();
+    m_MasterController.SetDebugOut(pMultiOut, true);
+    QTLabelOut* labelOut = new QTLabelOut(pleaseWait.GetStatusLabel());
+    labelOut->m_bShowMessages = true;
+    labelOut->m_bShowWarnings = true;
+    labelOut->m_bShowErrors = true;
+    labelOut->m_bShowOther = false;
+    pMultiOut->AddDebugOut(labelOut,  true);
+    pMultiOut->AddDebugOut(pOldDebug, false);
+
+    AbstrRenderer::EWindowMode eWindowMode = m_ActiveRenderWin->GetRenderer()->GetFullWindowmode();
+
+    if (eWindowMode == AbstrRenderer::WM_3D)  {
+      pleaseWait.SetText("Capturing a full 360° rotation, please wait  ...");
+     
+      int iImagesPerAngle = (horizontalSlider_RotSpeed->maximum()+1) - horizontalSlider_RotSpeed->value();
+      int i = 0;
+      float fAngle = 0.0f;
+      while (fAngle < 360) {
+        labelOut->m_bShowMessages = true;
+        labelOut->m_bShowWarnings = true;
+        labelOut->m_bShowErrors = true;
+        m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i,(iImagesPerAngle*360),int(100*float(i)/float(iImagesPerAngle*360)) );
+        labelOut->m_bShowMessages = false;
+        labelOut->m_bShowWarnings = false;
+        labelOut->m_bShowErrors = false;
+        m_ActiveRenderWin->SetCaptureRotationAngle(fAngle);
+        if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString())) {
+          QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
+          QMessageBox::warning(this, tr("Error"), msg);
+          break;
+        }
+        fAngle = float(i) / float(iImagesPerAngle);
+        i++;
+      }
+    } else {
+      if (m_ActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
+        pleaseWait.SetText("Capturing a full 360° MIP rotation, please wait  ...");
+        int iImagesPerAngle = (horizontalSlider_RotSpeed->maximum()+1) - horizontalSlider_RotSpeed->value();
+        int i = 0;
+        float fAngle = 0.0f;
+        while (fAngle < 360) {
+          labelOut->m_bShowMessages = true;
+          labelOut->m_bShowWarnings = true;
+          labelOut->m_bShowErrors = true;
+          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i,(iImagesPerAngle*360),int(100*float(i)/float(iImagesPerAngle*360)) );
+          labelOut->m_bShowMessages = false;
+          labelOut->m_bShowWarnings = false;
+          labelOut->m_bShowErrors = false;
+          if (!m_ActiveRenderWin->CaptureMIPrame(lineEditCaptureFile->text().toStdString(),fAngle)) {
+            QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
+            QMessageBox::warning(this, tr("Error"), msg);
+            break;
+          }
+          fAngle = float(i) / float(iImagesPerAngle);
+          i++;
+        }                   
+      } else {
+        pleaseWait.SetText("Slicing trougth the dataset, please wait  ...");
+        /// \todo TODO slice capturing
+        QString msg = tr("Slice Capturing is not implemented yet. Aborting.");
+        QMessageBox::warning(this, tr("Error"), msg);
+      }
     }
     m_ActiveRenderWin->ToggleHQCaptureMode();
+    pleaseWait.close();
+    m_MasterController.SetDebugOut(pOldDebug);    
   }
 }
 

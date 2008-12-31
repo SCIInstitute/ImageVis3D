@@ -40,8 +40,13 @@
 using namespace std;
 
 void MainWindow::ToggleStereoRendering() {
-  if (m_ActiveRenderWin == NULL) return;  
-  m_ActiveRenderWin->GetRenderer()->SetStereo(checkBox_Stereo->isChecked());
+  if (m_ActiveRenderWin == NULL) return;
+
+  if (m_ActiveRenderWin->GetRenderer()->GetViewmode() == AbstrRenderer::VM_SINGLE && 
+    m_ActiveRenderWin->GetRenderer()->GetFullWindowmode()== AbstrRenderer::WM_3D) 
+    m_ActiveRenderWin->GetRenderer()->SetStereo(checkBox_Stereo->isChecked());
+  else
+    if (checkBox_Stereo->isChecked()) checkBox_Stereo->setChecked(false);
 }
 
 void MainWindow::SetStereoEyeDistance() {

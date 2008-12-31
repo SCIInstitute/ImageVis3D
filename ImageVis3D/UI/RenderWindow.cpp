@@ -247,7 +247,14 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
     AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode((int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
     m_Renderer->SetViewmode(eMode);
 
-    if (eMode == AbstrRenderer::VM_SINGLE) m_Renderer->SetFullWindowmode(eWinMode);
+    if (eMode == AbstrRenderer::VM_SINGLE) 
+      m_Renderer->SetFullWindowmode(eWinMode);
+    else
+     if (m_Renderer->GetStereo()) {
+       m_Renderer->SetStereo(false);
+       emit StereoDisabled();
+     }
+
 
     SetupArcBall();
     emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
@@ -273,8 +280,7 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
   if (event->key() == Qt::Key_M) {
     AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
     bool bUseMIP=false;
-    m_Renderer->GetUseMIP(eWinMode, bUseMIP);
-    bUseMIP = !bUseMIP;
+    bUseMIP = !m_Renderer->GetUseMIP(eWinMode);
     m_Renderer->SetUseMIP(eWinMode, bUseMIP);
   }
 }
@@ -385,6 +391,17 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename)
   makeCurrent();
   paintGL(); // make sure we have the same results in the front and in the backbuffer
   return f.CaptureSingleFrame(strFilename);
+}
+
+
+bool RenderWindow::CaptureMIPrame(const std::string& strFilename, float fAngle)
+{
+  GLFrameCapture f;
+  makeCurrent();
+  m_Renderer->SetMIPRotationAngle(fAngle);
+  paintGL(); // make sure we have the same results in the front and in the backbuffer
+  m_Renderer->SetMIPRotationAngle(0.0f);
+  return f.CaptureSequenceFrame(strFilename);
 }
 
 bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename)
