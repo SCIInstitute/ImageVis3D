@@ -41,8 +41,8 @@
 
 #include "../Tuvok/StdTuvokDefines.h"
 
-#define IV3D_VERSION 0.03
-#define IV3D_VERSION_TYPE "beta (SANTA)"
+#define IV3D_VERSION 0.04
+#define IV3D_VERSION_TYPE "beta (FIREWORKS)"
 
 
 #endif // STDDEFINES_H
