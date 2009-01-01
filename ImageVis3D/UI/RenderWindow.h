@@ -76,7 +76,7 @@ class RenderWindow : public QGLWidget
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
     bool CaptureFrame(const std::string& strFilename);
     bool CaptureSequenceFrame(const std::string& strFilename);
-    bool CaptureMIPrame(const std::string& strFilename, float fAngle);
+    bool CaptureMIPFrame(const std::string& strFilename, float fAngle);
     void ToggleHQCaptureMode();
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() {return m_bRenderSubsysOK;}

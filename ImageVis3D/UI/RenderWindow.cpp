@@ -394,7 +394,7 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename)
 }
 
 
-bool RenderWindow::CaptureMIPrame(const std::string& strFilename, float fAngle)
+bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle)
 {
   GLFrameCapture f;
   makeCurrent();
