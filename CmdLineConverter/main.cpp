@@ -148,12 +148,7 @@ int main(int argc, char* argv[])
       string strFilenameAndDirectory = SysTools::RemoveExt(strOutfile);
       string strExt = SysTools::GetExt(strOutfile);  // should be "uvf" but we never know what the user specified
       for (size_t i = 0;i<dirinfo.size();i++) {
-        stringstream s;
-        if (strExt != "") 
-          s << strFilenameAndDirectory << "_" << (i+1) << "." << strExt;
-        else
-          s << strFilenameAndDirectory << "_" << (i+1);
-        vStrFilenames[i] = s.str();
+        vStrFilenames[i] = SysTools::AppendFilename(strOutfile, i+1);
       }
     }
 
