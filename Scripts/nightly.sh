@@ -71,7 +71,7 @@ else
     try qmake -spec ${spec} -recursive
 fi
 make clean
-rm warnings
+rm -f warnings
 make -j5 2> warnings
 try make
 
