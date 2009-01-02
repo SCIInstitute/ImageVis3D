@@ -1,9 +1,5 @@
 #!/bin/sh
 
-IV3D_VERSION=` \
-    grep "IV3D_VERSION " ImageVis3D/StdDefines.h | \
-    awk '{ sub("\r", "", $3); print $3 }'`
-
 function try
 {
     $@
@@ -56,6 +52,11 @@ if test `uname` = "Darwin" ; then
     spec="macx-g++"
 fi
 update
+
+# now that we've set eol:native in svn, the awk part might not be necessary.
+IV3D_VERSION=` \
+    grep "IV3D_VERSION " ImageVis3D/StdDefines.h | \
+    awk '{ sub("\r", "", $3); print $3 }'`
 
 # manual clean.
 find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
