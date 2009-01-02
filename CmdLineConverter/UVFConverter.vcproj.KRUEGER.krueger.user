@@ -151,7 +151,7 @@
 			<DebugSettings
 				Command="$(TargetPath)"
 				WorkingDirectory=""
-				CommandArguments=""
+				CommandArguments="-d &quot;D:\Data\DICOM\Dataset1&quot;"
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"
@@ -162,7 +162,7 @@
 				SQLDebugging=""
 				Environment=""
 				EnvironmentMerge="true"
-				DebuggerFlavor=""
+				DebuggerFlavor="0"
 				MPIRunCommand=""
 				MPIRunArguments=""
 				MPIRunWorkingDirectory=""

@@ -47,7 +47,7 @@
 #include <iostream>
 using namespace std;
 
-#define CONV_VERSION 0.1
+#define CONV_VERSION 1.0
 
 /*
 #ifdef _WIN32
@@ -56,8 +56,7 @@ using namespace std;
     #include <crtdbg.h>
   #endif
 #endif
-*/
-
+  */
 
 void ShowUsage(string filename) {
 	cout << endl <<
@@ -74,14 +73,14 @@ void ShowUsage(string filename) {
 
 int main(int argc, char* argv[])
 {
-  /*
-  // Enable run-time memory check for debug builds on windows
+/*
+// Enable run-time memory check for debug builds on windows
   #ifdef _WIN32
     #if defined(DEBUG) | defined(_DEBUG)
       _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
     #endif
   #endif
-  */
+*/
 
   // get command line paramers 
   SysTools::CmdLineParams parameters(argc, argv);
@@ -152,6 +151,7 @@ int main(int argc, char* argv[])
       }
     }
 
+
     int iFailCount = 0;
     for (size_t i = 0;i<dirinfo.size();i++) {
       if (ioMan.ConvertDataset(dirinfo[i], vStrFilenames[i])) {
@@ -159,12 +159,16 @@ int main(int argc, char* argv[])
       } else {
         cout << "Failure." << endl << endl;
         iFailCount++;
+        for (size_t i = 0;i<dirinfo.size();i++) delete dirinfo[i];
         return 3;
       }
     }
+    
     if (iFailCount != 0)  {
       cout << iFailCount << " out of " << dirinfo.size() << " stacks failed to convert properly."<< endl << endl;
     }
+
+    for (size_t i = 0;i<dirinfo.size();i++) delete dirinfo[i];
     return 0;
   }
 }

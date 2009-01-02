@@ -243,12 +243,16 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
   QGLWidget::keyPressEvent(event);
 
   if (event->key() == Qt::Key_R) {
-    FLOATMATRIX4 mIdentity;
-    m_Renderer->SetRotation(mIdentity);
-    m_Renderer->SetTranslation(mIdentity);
-    m_mCurrentRotation = mIdentity;
-    m_mAccumulatedRotation = mIdentity;
-    m_mAccumulatedTranslation = mIdentity;
+    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+
+    if (eWinMode == AbstrRenderer::WM_3D) {
+      FLOATMATRIX4 mIdentity;
+      m_Renderer->SetRotation(mIdentity);
+      m_Renderer->SetTranslation(mIdentity);
+      m_mCurrentRotation = mIdentity;
+      m_mAccumulatedRotation = mIdentity;
+      m_mAccumulatedTranslation = mIdentity;
+    }
   }
 
   if (event->key() == Qt::Key_Space) {
@@ -263,7 +267,6 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
        m_Renderer->SetStereo(false);
        emit StereoDisabled();
      }
-
 
     SetupArcBall();
     emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
