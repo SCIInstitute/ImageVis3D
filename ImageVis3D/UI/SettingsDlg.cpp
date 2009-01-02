@@ -103,7 +103,7 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   } else {
     iMaxCPUMemSize /= 1024*1024;
     horizontalSlider_CPUMem->setMaximum(iMaxCPUMemSize);
-    horizontalSlider_CPUMem->setValue(iMaxCPUMemSize*0.8f);
+    horizontalSlider_CPUMem->setValue(int(iMaxCPUMemSize*0.8f));
   }
 
   if (iBitWith == 32) 
@@ -116,7 +116,7 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   } else {
     iMaxGPUMemSize /= 1024*1024;
     horizontalSlider_GPUMem->setMaximum(iMaxGPUMemSize);
-    horizontalSlider_GPUMem->setValue(iMaxGPUMemSize*0.8f);
+    horizontalSlider_GPUMem->setValue(int(iMaxGPUMemSize*0.8f));
   }
 
   m_InitialGPUMemMax = horizontalSlider_GPUMem->maximum();
