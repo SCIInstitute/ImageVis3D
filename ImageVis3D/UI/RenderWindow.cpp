@@ -242,6 +242,15 @@ void RenderWindow::wheelEvent(QWheelEvent *event) {
 void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
   QGLWidget::keyPressEvent(event);
 
+  if (event->key() == Qt::Key_R) {
+    FLOATMATRIX4 mIdentity;
+    m_Renderer->SetRotation(mIdentity);
+    m_Renderer->SetTranslation(mIdentity);
+    m_mCurrentRotation = mIdentity;
+    m_mAccumulatedRotation = mIdentity;
+    m_mAccumulatedTranslation = mIdentity;
+  }
+
   if (event->key() == Qt::Key_Space) {
     AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
     AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode((int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
