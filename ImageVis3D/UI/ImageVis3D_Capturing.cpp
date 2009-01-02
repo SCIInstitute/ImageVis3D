@@ -93,7 +93,10 @@ void MainWindow::CaptureRotation() {
         labelOut->m_bShowMessages = true;
         labelOut->m_bShowWarnings = true;
         labelOut->m_bShowErrors = true;
-        m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i,360,int(100*float(i)/float(360)) );
+        if (i==0)
+          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i percent completed",i+1,360,int(100*float(i)/float(360)) );
+        else
+          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,360,int(100*float(i)/float(360)) );
         labelOut->m_bShowMessages = false;
         labelOut->m_bShowWarnings = false;
         labelOut->m_bShowErrors = false;
@@ -116,7 +119,10 @@ void MainWindow::CaptureRotation() {
           labelOut->m_bShowMessages = true;
           labelOut->m_bShowWarnings = true;
           labelOut->m_bShowErrors = true;
-          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i,360,int(100*float(i)/float(360)) );
+          if (i==0)
+            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i percent completed",i+1,360,int(100*float(i)/float(360)) );
+          else
+            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,360,int(100*float(i)/float(360)) );
           labelOut->m_bShowMessages = false;
           labelOut->m_bShowWarnings = false;
           labelOut->m_bShowErrors = false;
