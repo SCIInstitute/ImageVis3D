@@ -163,6 +163,7 @@ void MainWindow::SetCaptureFilename() {
       fileName = fileName + ".png";
 
     settings.setValue("Folders/SetCaptureFilename", QFileInfo(fileName).absoluteDir().path());
+    settings.setValue("Files/SetCaptureFilename", fileName);
     lineEditCaptureFile->setText(fileName);
   }
 

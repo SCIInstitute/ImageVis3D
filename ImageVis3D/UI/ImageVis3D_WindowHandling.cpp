@@ -196,6 +196,10 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
   frame_Expand2DWidgets->hide();
   UpdateLockView();
+
+  QSettings settings;
+  QString fileName = settings.value("Files/SetCaptureFilename", lineEditCaptureFile->text()).toString();
+  lineEditCaptureFile->setText(fileName);
 }
 
 // ******************************************
