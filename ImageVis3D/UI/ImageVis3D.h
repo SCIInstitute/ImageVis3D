@@ -162,6 +162,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetStereoEyeDistance();
     void SetStereoFocalLength();
 
+    void Show1DTrans();
+    void Show2DTrans();
+    void ShowIsoEdit();
+
   private :
     MasterController&                         m_MasterController;
     QString                                   m_strCurrentWorkspaceFilename;

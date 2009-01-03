@@ -39,6 +39,7 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
+#include <QtGui/QInputDialog>
 #include <QtCore/QSettings>
 
 #include "PleaseWait.h"
@@ -67,6 +68,22 @@ void MainWindow::CaptureSequence() {
 
 void MainWindow::CaptureRotation() {
   if (m_ActiveRenderWin) {
+
+    QSettings settings;
+    int iNumImages = settings.value("Renderer/ImagesPerRotation", 360).toInt();
+
+    bool ok;
+    iNumImages = QInputDialog::getInteger(this,
+                                          tr("How many images to you want to compute?"),
+                                          tr("How many images to you want to compute:"), iNumImages, 1, 3600, 1, &ok);
+
+    if (!ok) return;
+
+    settings.setValue("Renderer/ImagesPerRotation", iNumImages);
+
+
+    AbstrRenderer::EWindowMode eWindowMode = m_ActiveRenderWin->GetRenderer()->GetFullWindowmode();
+
     m_ActiveRenderWin->ToggleHQCaptureMode();
     
     PleaseWaitDialog pleaseWait(this);
@@ -82,25 +99,23 @@ void MainWindow::CaptureRotation() {
     pMultiOut->AddDebugOut(labelOut,  true);
     pMultiOut->AddDebugOut(pOldDebug, false);
 
-    AbstrRenderer::EWindowMode eWindowMode = m_ActiveRenderWin->GetRenderer()->GetFullWindowmode();
-
     if (eWindowMode == AbstrRenderer::WM_3D)  {
       pleaseWait.SetText("Capturing a full 360° rotation, please wait  ...");
      
       int i = 0;
       float fAngle = 0.0f;
-      while (fAngle < 359) {
+      while (i < iNumImages) {
         labelOut->m_bShowMessages = true;
         labelOut->m_bShowWarnings = true;
         labelOut->m_bShowErrors = true;
         if (i==0)
-          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i percent completed",i+1,360,int(100*float(i)/float(360)) );
+          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
         else
-          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,360,int(100*float(i)/float(360)) );
+          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
         labelOut->m_bShowMessages = false;
         labelOut->m_bShowWarnings = false;
         labelOut->m_bShowErrors = false;
-        fAngle = float(i);
+        fAngle = float(i) * 360.0f/float(iNumImages);
         m_ActiveRenderWin->SetCaptureRotationAngle(fAngle);
         if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString())) {
           QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
@@ -115,19 +130,19 @@ void MainWindow::CaptureRotation() {
         pleaseWait.SetText("Capturing a full 360° MIP rotation, please wait  ...");
         int i = 0;
         float fAngle = 0.0f;
-        while (fAngle < 359) {
+        while (i < iNumImages) {
           labelOut->m_bShowMessages = true;
           labelOut->m_bShowWarnings = true;
           labelOut->m_bShowErrors = true;
           if (i==0)
-            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i percent completed",i+1,360,int(100*float(i)/float(360)) );
+            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
           else
-            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,360,int(100*float(i)/float(360)) );
+            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
           labelOut->m_bShowMessages = false;
           labelOut->m_bShowWarnings = false;
           labelOut->m_bShowErrors = false;
 
-          fAngle = float(i);
+          fAngle = float(i) * 360.0f/float(iNumImages);
 
           if (!m_ActiveRenderWin->CaptureMIPFrame(lineEditCaptureFile->text().toStdString(), fAngle)) {
             QString msg = tr("Error writing image file %1.").arg(lineEditCaptureFile->text());
@@ -145,7 +160,8 @@ void MainWindow::CaptureRotation() {
     }
     m_ActiveRenderWin->ToggleHQCaptureMode();
     pleaseWait.close();
-    m_MasterController.SetDebugOut(pOldDebug);    
+    m_MasterController.SetDebugOut(pOldDebug);
+    m_ActiveRenderWin->GetRenderer()->ScheduleCompleteRedraw();  // to make sure front and backbuffer are valid
   }
 }
 

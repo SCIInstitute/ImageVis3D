@@ -36,17 +36,27 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "ImageVis3D.h"
+#include <QtGui/QMessageBox>
 
 using namespace std;
 
 void MainWindow::ToggleStereoRendering() {
-  if (m_ActiveRenderWin == NULL) return;
-
-  if (m_ActiveRenderWin->GetRenderer()->GetViewmode() == AbstrRenderer::VM_SINGLE && 
-    m_ActiveRenderWin->GetRenderer()->GetFullWindowmode()== AbstrRenderer::WM_3D) 
+  if (m_ActiveRenderWin) {
+    if (m_ActiveRenderWin->GetRenderer()->GetViewmode() != AbstrRenderer::VM_SINGLE ||
+        m_ActiveRenderWin->GetRenderer()->GetFullWindowmode() != AbstrRenderer::WM_3D) {
+      QString strText = "Stereo rendering is only available in single view 3D mode. Do you want to change to that view now?";
+      if (QMessageBox::Yes == QMessageBox::question(this, "3D Stereo", strText, QMessageBox::Yes, QMessageBox::No)) {
+        m_ActiveRenderWin->GetRenderer()->SetFullWindowmode(AbstrRenderer::WM_3D);
+        m_ActiveRenderWin->GetRenderer()->SetViewmode(AbstrRenderer::VM_SINGLE);
+      } else {
+        checkBox_Stereo->setChecked(false);
+        return;
+      }
+    }
     m_ActiveRenderWin->GetRenderer()->SetStereo(checkBox_Stereo->isChecked());
-  else
-    if (checkBox_Stereo->isChecked()) checkBox_Stereo->setChecked(false);
+  } else {
+    checkBox_Stereo->setChecked(false);
+  }
 }
 
 void MainWindow::SetStereoEyeDistance() {

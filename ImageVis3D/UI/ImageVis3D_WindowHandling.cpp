@@ -715,3 +715,15 @@ void MainWindow::ShowAbout()
 #endif
   QMessageBox::about(this, qstrTitle,qstrText);
 }
+
+void MainWindow::Show1DTrans() {
+  dockWidget_1DTrans->setVisible(true);
+}
+
+void MainWindow::Show2DTrans() {
+  dockWidget_2DTrans->setVisible(true);
+}
+
+void MainWindow::ShowIsoEdit() {
+  dockWidget_IsoSurface->setVisible(true);
+}
