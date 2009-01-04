@@ -62,13 +62,21 @@ IV3D_VERSION=` \
 find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
     -exec rm {} +
 
+# Find qmake -- expect it in PATH, but the user can set QT_BIN to pick a
+# specific Qt.
+if test -n "${QT_BIN}" -a -x "${QT_BIN}/qmake" ; then
+    qmake="${QT_BIN}/qmake"
+    echo "QT_BIN set; using ${qmake} instead of `which qmake`"
+else
+    qmake="qmake"
+fi
 # use qmake to generate makefiles, potentially in debug mode.
 if test "x$1" = "-debug"; then
-    try qmake -spec ${spec} -recursive
+    try ${qmake} -spec ${spec} -recursive
     CF="-Wextra -D_GLIBCXX_DEBUG"
-    try qmake CONFIG+=debug QMAKE_CXXFLAGS+="${CF}" -recursive
+    try ${qmake} CONFIG+=debug QMAKE_CXXFLAGS+="${CF}" -recursive
 else
-    try qmake -spec ${spec} -recursive
+    try ${qmake} -spec ${spec} -recursive
 fi
 make clean
 rm -f warnings
