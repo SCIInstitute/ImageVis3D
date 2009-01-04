@@ -41,6 +41,8 @@ if test `file warnings | awk '{print $2}'` = "empty" ; then
 else
     subj="Argon nightly (warnings) -- `date`"
 fi
-cat ${status} | mail -s "${subj}" ${full_em}
+if test "$1" != "-q" ; then
+    cat ${status} | mail -s "${subj}" ${full_em}
+fi
 try scp *.zip \
     tfogal@shell.sci.utah.edu:/usr/sci/projects/sciweb/devbuilds/imagevis3d/
