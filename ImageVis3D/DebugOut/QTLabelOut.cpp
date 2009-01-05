@@ -36,6 +36,7 @@
 */
 
 #include "QTLabelOut.h"
+#include <StdDefines.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <sstream>
@@ -54,8 +55,9 @@ using namespace std;
   #endif
 #endif
 
-QTLabelOut::QTLabelOut(QLabel *label) :
-  m_label(label)
+QTLabelOut::QTLabelOut(QLabel *label, QDialog *parent) :
+  m_label(label),
+  m_parent(parent)
 {
 }
 
@@ -73,7 +75,13 @@ void QTLabelOut::printf(const char* format, ...)
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+#ifdef __APPLE__
+  m_parent->hide();
+#endif
   m_label->setText ( buff );
+#ifdef __APPLE__
+  m_parent->show();
+#endif
   m_label->repaint();
 }
 
@@ -88,7 +96,13 @@ void QTLabelOut::_printf(const char* format, ...)
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+#ifdef __APPLE__
+  m_parent->hide();
+#endif
   m_label->setText ( buff );
+#ifdef __APPLE__
+  m_parent->show();
+#endif
   m_label->repaint();
 }
 

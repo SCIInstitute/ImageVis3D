@@ -106,7 +106,8 @@ void MainWindow::CaptureRotation() {
     AbstrDebugOut* pOldDebug       = m_MasterController.DebugOut();
     MultiplexOut* pMultiOut = new MultiplexOut();
     m_MasterController.SetDebugOut(pMultiOut, true);
-    QTLabelOut* labelOut = new QTLabelOut(pleaseWait.GetStatusLabel());
+    QTLabelOut* labelOut = new QTLabelOut(pleaseWait.GetStatusLabel(),
+                                          &pleaseWait);
     labelOut->m_bShowMessages = true;
     labelOut->m_bShowWarnings = true;
     labelOut->m_bShowErrors = true;
@@ -120,6 +121,7 @@ void MainWindow::CaptureRotation() {
       int i = 0;
       float fAngle = 0.0f;
       while (i < iNumImages) {
+        pleaseWait.hide();
         labelOut->m_bShowMessages = true;
         labelOut->m_bShowWarnings = true;
         labelOut->m_bShowErrors = true;
@@ -130,6 +132,7 @@ void MainWindow::CaptureRotation() {
         labelOut->m_bShowMessages = false;
         labelOut->m_bShowWarnings = false;
         labelOut->m_bShowErrors = false;
+        pleaseWait.show();
         fAngle = float(i)/float(iNumImages) * 360.0f;
         m_ActiveRenderWin->SetCaptureRotationAngle(fAngle);
         string strSequenceName;

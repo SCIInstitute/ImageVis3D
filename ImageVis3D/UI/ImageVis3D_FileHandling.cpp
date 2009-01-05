@@ -140,7 +140,8 @@ void MainWindow::LoadDataset(QString fileName) {
       MultiplexOut* pMultiOut = new MultiplexOut();
       m_MasterController.SetDebugOut(pMultiOut, true);
 
-      QTLabelOut* labelOut = new QTLabelOut(pleaseWait.GetStatusLabel());
+      QTLabelOut* labelOut = new QTLabelOut(pleaseWait.GetStatusLabel(),
+                                            &pleaseWait);
       labelOut->m_bShowMessages = true;
       labelOut->m_bShowWarnings = true;
       labelOut->m_bShowErrors = true;

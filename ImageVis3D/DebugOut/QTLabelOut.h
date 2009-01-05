@@ -43,12 +43,13 @@
 
 #include "../../Tuvok/DebugOut/AbstrDebugOut.h"
 #include <QtGui/QLabel>
+#include <QtGui/QDialog>
 
 #include <deque>
 
 class QTLabelOut : public AbstrDebugOut {
   public:
-    QTLabelOut(QLabel *label);
+    QTLabelOut(QLabel *label, QDialog *parent);
     virtual ~QTLabelOut();
 
     virtual void printf(const char* format, ...);
@@ -59,9 +60,9 @@ class QTLabelOut : public AbstrDebugOut {
 
   private:
     QLabel *m_label;
+    QDialog *m_parent;
 
     void _printf(const char* format, ...);
-
 };
 
 #endif // QTLABELOUT_H

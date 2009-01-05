@@ -44,5 +44,4 @@
 #define IV3D_VERSION 0.04
 #define IV3D_VERSION_TYPE "beta (FIREWORKS)"
 
-
 #endif // STDDEFINES_H
