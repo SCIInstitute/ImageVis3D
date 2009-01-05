@@ -43,26 +43,27 @@ using namespace std;
 MIPRotDialog::MIPRotDialog(UINT32 iImages, bool bOrthoView, bool bStereo, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
   QDialog(parent, flags)
 {
-  spinBox_Images->setValue(iImages);
-  radioButton_Ortho->setChecked(bOrthoView);
-  checkBox_Stereo->setChecked(bStereo);
 
-  setupUi(this);
+  setupUi(this, iImages, bOrthoView, bStereo);
 }
 
 MIPRotDialog::~MIPRotDialog(void)
 {
 }
 
-void MIPRotDialog::setupUi(QDialog *MIPRotDialog) {
+void MIPRotDialog::setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoView, bool bStereo) {
   Ui_MIPRotDialog::setupUi(MIPRotDialog);
+
+  spinBox_Images->setValue(iImages);
+  radioButton_Ortho->setChecked(bOrthoView);
+  checkBox_Stereo->setChecked(bStereo);
 
   UpdateDegreeLabel();
 }
 
 
 void MIPRotDialog::UpdateDegreeLabel() {
-  float fDegreePerImage = 1.0f/spinBox_Images->value();
+  float fDegreePerImage = 360.0f/spinBox_Images->value();
   QString qstr = tr("(%1° per image)").arg(fDegreePerImage);
   label_Degree->setText(qstr);
 }
