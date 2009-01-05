@@ -55,7 +55,10 @@ void MIPRotDialog::setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoVie
   Ui_MIPRotDialog::setupUi(MIPRotDialog);
 
   spinBox_Images->setValue(iImages);
-  radioButton_Ortho->setChecked(bOrthoView);
+  if (bOrthoView) 
+    radioButton_Ortho->setChecked(true);
+  else
+    radioButton_Persp->setChecked(true);
   checkBox_Stereo->setChecked(bStereo);
 
   UpdateDegreeLabel();
