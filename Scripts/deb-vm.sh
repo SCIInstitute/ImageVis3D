@@ -44,5 +44,5 @@ fi
 if test "$1" != "-q" ; then
     cat ${status} | mail -s "${subj}" ${full_em}
     devbuilds="/usr/sci/projects/sciweb/devbuilds/imagevis3d/"
-    try scp *.zip tfogal@shell.sci.utah.edu:${devbuilds}
+    try scp *.tar.gz tfogal@shell.sci.utah.edu:${devbuilds}
 fi

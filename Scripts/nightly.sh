@@ -71,8 +71,8 @@ elif test `uname` = "Linux" ; then
         mkdir ${dir}
         cp ../Build/ImageVis3D ./${dir}
         cp -R ../Tuvok/Shaders ./${dir}
-        tar zcf "${dir}_r${revs}.tar.gz" ${dir}
-        mv "${dir}_r${revs}.tar.gz" ../
+        tar zcf "${dir}_Linux_r${revs}.tar.gz" ${dir}
+        mv "${dir}_Linux_r${revs}.tar.gz" ../
     popd
     rm -r staging
 fi
