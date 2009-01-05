@@ -155,7 +155,7 @@ void MainWindow::CaptureRotation() {
           if (bReUse) 
             strImageFilename = SysTools::AppendFilename(strImageFilename,"_LR");
           else
-            strImageFilename = SysTools::AppendFilename(strImageFilename,"_R");
+            strImageFilename = SysTools::AppendFilename(strImageFilename,"_L");
         }
 
         pleaseWait.SetText("Capturing a full 360° MIP rotation, please wait  ...");
@@ -191,19 +191,19 @@ void MainWindow::CaptureRotation() {
           }
 
           if (bStereo) {
-            vstrRightEyeImageVector[i] = strSequenceName;
+            vstrLeftEyeImageVector[i] = strSequenceName;
             if (bReUse) {
-              vstrLeftEyeImageVector[(i+(iNumImages/120))%iNumImages] = strSequenceName;
+              vstrRightEyeImageVector[(i+(iNumImages/120))%iNumImages] = strSequenceName;
             } else {
               fAngle -= 3.0f;
-              string strImageFilenameLeft = SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_L");
-              if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilenameLeft, fAngle, bOrthoView, &strSequenceName)) {           
-                QString msg = tr("Error writing image file %1.").arg(strImageFilenameLeft.c_str());
+              string strImageFilenameRight = SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_R");
+              if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, &strSequenceName)) {           
+                QString msg = tr("Error writing image file %1.").arg(strImageFilenameRight.c_str());
                 QMessageBox::warning(this, tr("Error"), msg);
                 m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
                 break;
               }
-              vstrLeftEyeImageVector[i] = strSequenceName;
+              vstrRightEyeImageVector[i] = strSequenceName;
             }
           } 
 
@@ -246,7 +246,7 @@ void MainWindow::CaptureRotation() {
             imageRight.save(strTarget.c_str());
           }
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
-            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 3 of 3: %i percent completed\nCleanup\nProcessing Image %i of %i\n%i percent completed",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
+            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 3 of 3: %i percent completed\nCleanup\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
             remove(vstrRightEyeImageVector[i].c_str());
             if (SysTools::FileExists(vstrLeftEyeImageVector[i])) remove(vstrLeftEyeImageVector[i].c_str());
           }
