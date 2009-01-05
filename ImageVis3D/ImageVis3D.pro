@@ -25,12 +25,18 @@ HEADERS += StdDefines.h \
            UI/Q2DTransferFunction.h \
            UI/QDataRadioButton.h \
            UI/RenderWindow.h \
-           UI/RAWDialog.h \           
+           UI/RAWDialog.h \
+           UI/MIPRotDialog.h \           
            DebugOut/QTOut.h \
            DebugOut/QTLabelOut.h \
            IO/DialogConverter.h
 
-FORMS += UI/UI/BrowseData.ui UI/UI/ImageVis3D.ui UI/UI/PleaseWait.ui UI/UI/SettingsDlg.ui UI/UI/RAWDialog.ui
+FORMS += UI/UI/BrowseData.ui \
+         UI/UI/ImageVis3D.ui \
+         UI/UI/PleaseWait.ui \
+         UI/UI/SettingsDlg.ui \
+         UI/UI/RAWDialog.ui \
+         UI/UI/MIPRotDialog.ui
 
 SOURCES += UI/BrowseData.cpp \
            UI/ImageVis3D.cpp \
@@ -52,6 +58,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/RenderWindow.cpp \
            UI/SettingsDlg.cpp \
            UI/RAWDialog.cpp \
+           UI/MIPRotDialog.cpp \           
            DebugOut/QTOut.cpp \
            DebugOut/QTLabelOut.cpp \
            IO/DialogConverter.cpp \

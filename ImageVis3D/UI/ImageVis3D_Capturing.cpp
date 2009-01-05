@@ -44,6 +44,7 @@
 
 #include "PleaseWait.h"
 #include "DebugOut/QTLabelOut.h"
+#include "MIPRotDialog.h"
 #include "../Tuvok/DebugOut/MultiplexOut.h"
 
 using namespace std;
@@ -69,20 +70,32 @@ void MainWindow::CaptureSequence() {
 void MainWindow::CaptureRotation() {
   if (m_ActiveRenderWin) {
 
+    AbstrRenderer::EWindowMode eWindowMode = m_ActiveRenderWin->GetRenderer()->GetFullWindowmode();
+
     QSettings settings;
-    int iNumImages = settings.value("Renderer/ImagesPerRotation", 360).toInt();
+    int iNumImages  = settings.value("Renderer/ImagesPerRotation", 360).toInt();
+    bool bOrthoView = settings.value("Renderer/RotationUseOrtho", true).toBool();
+    bool bStereo    = settings.value("Renderer/RotationUseStereo", false).toBool();
 
     bool ok;
-    iNumImages = QInputDialog::getInteger(this,
-                                          tr("How many images to you want to compute?"),
-                                          tr("How many images to you want to compute:"), iNumImages, 1, 3600, 1, &ok);
-
+    if (m_ActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
+      MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, this);
+      if (mipRotDialog.exec() == QDialog::Accepted) {
+        ok = true;
+        iNumImages = mipRotDialog.GetNumImages();
+        bOrthoView = mipRotDialog.GetUseOrtho();
+        bStereo    = mipRotDialog.GetUseStereo();
+      } else ok = false;
+    } else {
+      iNumImages = QInputDialog::getInteger(this,
+                                            tr("How many images to you want to compute?"),
+                                            tr("How many images to you want to compute:"), iNumImages, 1, 3600, 1, &ok);
+    }
     if (!ok) return;
 
     settings.setValue("Renderer/ImagesPerRotation", iNumImages);
-
-
-    AbstrRenderer::EWindowMode eWindowMode = m_ActiveRenderWin->GetRenderer()->GetFullWindowmode();
+    settings.setValue("Renderer/RotationUseOrtho", bOrthoView);
+    settings.setValue("Renderer/RotationUseStereo", bStereo);
 
     m_ActiveRenderWin->ToggleHQCaptureMode();
     
