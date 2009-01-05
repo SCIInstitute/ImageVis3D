@@ -114,7 +114,16 @@ if test `uname` = "Darwin" ; then
     popd &>/dev/null
     mv Build/${tarball} Build/${tarball%%.tar.gz}.zip .
 elif test `uname` = "Linux" ; then
-    mv Build/ImageVis3D ./ImageVis3D_${IV3D_VERSION}-r${revision}
+    mkdir staging
+    pushd staging
+        dir="ImageVis3D_${IV3D_VERSION}"
+        mkdir ${dir}
+        cp ../Build/ImageVis3D ./${dir}
+        cp -R ../Tuvok/Shaders ./${dir}
+        tar zcf "${dir}_r${revision}.tar.gz" ${dir}
+        mv "${dir}_r${revision}.tar.gz" ../
+    popd
+    rm -r staging
 fi
 
 echo "Warnings:"
