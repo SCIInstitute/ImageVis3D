@@ -4,7 +4,7 @@
 
 TEMPLATE          = app
 CONFIG           += link_prl static
-TARGET            = Build/data2uvf
+TARGET            = Build/UVFConverter
 DEPENDPATH       += .
 INCLUDEPATH      += .
 LIBS              = -L../Tuvok/Build -lTuvok
