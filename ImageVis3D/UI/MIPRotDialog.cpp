@@ -66,7 +66,17 @@ void MIPRotDialog::UpdateDegreeLabel() {
   float fDegreePerImage = 360.0f/spinBox_Images->value();
   QString qstr = tr("(%1° per image)").arg(fDegreePerImage);
   label_Degree->setText(qstr);
+  UpdateStereoCheckbox();
 }
+
+void MIPRotDialog::UpdateStereoCheckbox() {
+  if (checkBox_Stereo->isChecked() && (spinBox_Images->value() % 120 != 0)) {
+    checkBox_Stereo->setText("Stereo (performance warning: image count is not a multiple of 120)");
+  } else {
+    checkBox_Stereo->setText("Stereo");
+  }
+}
+
 
 UINT32 MIPRotDialog::GetNumImages() {
   return UINT32(spinBox_Images->value());

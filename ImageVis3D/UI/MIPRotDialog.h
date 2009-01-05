@@ -54,6 +54,7 @@ class MIPRotDialog : public QDialog, protected Ui_MIPRotDialog
 
   protected slots:
     void UpdateDegreeLabel();
+    void UpdateStereoCheckbox();
 
   private:
     void setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoView, bool bStereo);

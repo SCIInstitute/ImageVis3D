@@ -60,9 +60,11 @@ void MainWindow::CaptureFrame() {
 
 void MainWindow::CaptureSequence() {
   if (m_ActiveRenderWin) {
-    if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString())) {
-    QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
-    QMessageBox::warning(this, tr("Error"), msg);
+    string strSequenceName;
+    if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString()), &strSequenceName) {
+      QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
+      QMessageBox::warning(this, tr("Error"), msg);
+      m_MasterController.DebugOut()->Error("MainWindow::CaptureSequence", msg.toAscii());
     }
   }
 }
@@ -73,7 +75,7 @@ void MainWindow::CaptureRotation() {
     AbstrRenderer::EWindowMode eWindowMode = m_ActiveRenderWin->GetRenderer()->GetFullWindowmode();
 
     QSettings settings;
-    int iNumImages  = settings.value("Renderer/ImagesPerRotation", 360).toInt();
+    int  iNumImages = settings.value("Renderer/ImagesPerRotation", 360).toInt();
     bool bOrthoView = settings.value("Renderer/RotationUseOrtho", true).toBool();
     bool bStereo    = settings.value("Renderer/RotationUseStereo", false).toBool();
 
@@ -128,17 +130,33 @@ void MainWindow::CaptureRotation() {
         labelOut->m_bShowMessages = false;
         labelOut->m_bShowWarnings = false;
         labelOut->m_bShowErrors = false;
-        fAngle = float(i) * 360.0f/float(iNumImages);
+        fAngle = float(i)/float(iNumImages) * 360.0f;
         m_ActiveRenderWin->SetCaptureRotationAngle(fAngle);
-        if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString())) {
-          QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
+        string strSequenceName;
+        if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(), &strSequenceName)) {
+          QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
           QMessageBox::warning(this, tr("Error"), msg);
+          m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
           break;
         }
         i++;
       }
     } else {
       if (m_ActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
+
+        bool bReUse = false;
+        string strImageFilename = lineEditCaptureFile->text().toStdString();
+        vector<string> vstrLeftEyeImageVector(iNumImages);
+        vector<string> vstrRightEyeImageVector(iNumImages);
+        if (bStereo) {
+          // as for stereo we need a 3° difference between the images thus see if the current iNumImages settings allows us to simply reuse an older image
+          bReUse = (iNumImages % 120 == 0);
+
+          if (bReUse) 
+            strImageFilename = SysTools::AppendFilename(strImageFilename,"_LR");
+          else
+            strImageFilename = SysTools::AppendFilename(strImageFilename,"_R");
+        }
 
         pleaseWait.SetText("Capturing a full 360° MIP rotation, please wait  ...");
         int i = 0;
@@ -147,23 +165,95 @@ void MainWindow::CaptureRotation() {
           labelOut->m_bShowMessages = true;
           labelOut->m_bShowWarnings = true;
           labelOut->m_bShowErrors = true;
-          if (i==0)
-            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
-          else
-            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
+          if (bStereo) {
+            if (i==0)
+              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 1 of 3: %i percent completed\nProcessing Image %i of %i (the first image may be slower due to caching)",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
+            else
+              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 1 of 3: %i percent completed\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages);
+          } else {
+            if (i==0)
+              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "%i percent completed\nProcessing Image %i of %i (the first image may be slower due to caching)",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
+            else
+              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "%i percent completed\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages);
+          }
           labelOut->m_bShowMessages = false;
           labelOut->m_bShowWarnings = false;
           labelOut->m_bShowErrors = false;
 
-          fAngle = float(i) * 360.0f/float(iNumImages);
+          fAngle = float(i)/float(iNumImages) * 360.0f;
+          string strSequenceName;
 
-          if (!m_ActiveRenderWin->CaptureMIPFrame(lineEditCaptureFile->text().toStdString(), fAngle)) {
-            QString msg = tr("Error writing image file %1.").arg(lineEditCaptureFile->text());
+          if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, &strSequenceName)) {            
+            QString msg = tr("Error writing image file %1.").arg(strSequenceName.c_str());
             QMessageBox::warning(this, tr("Error"), msg);
+            m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
             break;
           }
+
+          if (bStereo) {
+            vstrRightEyeImageVector[i] = strSequenceName;
+            if (bReUse) {
+              vstrLeftEyeImageVector[(i+(iNumImages/120))%iNumImages] = strSequenceName;
+            } else {
+              fAngle -= 3.0f;
+              string strImageFilenameLeft = SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_L");
+              if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilenameLeft, fAngle, bOrthoView, &strSequenceName)) {           
+                QString msg = tr("Error writing image file %1.").arg(strImageFilenameLeft.c_str());
+                QMessageBox::warning(this, tr("Error"), msg);
+                m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
+                break;
+              }
+              vstrLeftEyeImageVector[i] = strSequenceName;
+            }
+          } 
+
           i++;
-        }                   
+        }
+
+        if (m_ActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode) && bStereo) {
+          labelOut->m_bShowMessages = true;
+          labelOut->m_bShowWarnings = true;
+          labelOut->m_bShowErrors = true;
+
+          for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
+            string strSourceL = vstrLeftEyeImageVector[i];
+            string strSourceR = vstrRightEyeImageVector[i];            
+            string strTarget  = SysTools::FindNextSequenceName(lineEditCaptureFile->text().toStdString());
+
+            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 2 of 3: %i percent completed\nCreating stereo image %s from %s and %s \nProcessing Image %i of %i", int(100*float(i)/float(iNumImages)), SysTools::GetFilename(strTarget).c_str(), SysTools::GetFilename(strSourceL).c_str(), SysTools::GetFilename(strSourceR).c_str(), i+1,iNumImages );
+
+            QImage imageLeft(strSourceL.c_str());
+            QImage imageRight(strSourceR.c_str());
+
+            for (int y = 0;y<imageLeft.height();y++) {
+                for (int x = 0;x<imageLeft.width();x++) {
+                  QRgb pixelLeft  = imageLeft.pixel(x,y);
+                  QRgb pixelRight = imageRight.pixel(x,y);
+
+                  int iGrayLeft  = int(qRed(pixelLeft)  * 0.3f + qGreen(pixelLeft)  * 0.59f + qBlue(pixelLeft)  * 0.11f);
+                  int iGrayRight = int(qRed(pixelRight) * 0.3f + qGreen(pixelRight) * 0.59f + qBlue(pixelRight) * 0.11f);
+
+
+                  QRgb pixelStereo = qRgb(iGrayLeft,
+                                          iGrayRight/2,
+                                          iGrayRight);
+
+                  imageRight.setPixel(x,y,pixelStereo);
+                }
+            }
+
+
+            imageRight.save(strTarget.c_str());
+          }
+          for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
+            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 3 of 3: %i percent completed\nCleanup\nProcessing Image %i of %i\n%i percent completed",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
+            remove(vstrRightEyeImageVector[i].c_str());
+            if (SysTools::FileExists(vstrLeftEyeImageVector[i])) remove(vstrLeftEyeImageVector[i].c_str());
+          }
+        }
+        labelOut->m_bShowMessages = false;
+        labelOut->m_bShowWarnings = false;
+        labelOut->m_bShowErrors = false;
       } else {
         pleaseWait.SetText("Slicing trougth the dataset, please wait  ...");
         /// \todo TODO slice capturing
@@ -191,7 +281,6 @@ void MainWindow::SetCaptureFilename() {
   QString fileName = QFileDialog::getSaveFileName(this,"Select Image File", strLastDir,
              "All Files (*.*)",&selectedFilter, options);
 
-
   if (!fileName.isEmpty()) {
     // add png as the default filetype if the user forgot to enter one
     if (SysTools::GetExt(fileName.toStdString()) == "")
@@ -201,5 +290,4 @@ void MainWindow::SetCaptureFilename() {
     settings.setValue("Files/SetCaptureFilename", fileName);
     lineEditCaptureFile->setText(fileName);
   }
-
 }

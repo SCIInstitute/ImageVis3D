@@ -43,6 +43,8 @@
 #include <assert.h>
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 
+using namespace std;
+
 RenderWindow::RenderWindow(MasterController& masterController,
                  MasterController::EVolumeRendererType eType,
                  QString dataset,
@@ -406,22 +408,25 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename)
 }
 
 
-bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle)
+bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, std::string* strRealFilename)
 {
   GLFrameCapture f;
   makeCurrent();
   m_Renderer->SetMIPRotationAngle(fAngle);
+  bool bSystemOrtho = m_Renderer->GetOrthoView();
+  if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bOrtho);
   paintGL(); // make sure we have the same results in the front and in the backbuffer
   m_Renderer->SetMIPRotationAngle(0.0f);
-  return f.CaptureSequenceFrame(strFilename);
+  if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bSystemOrtho);
+  return f.CaptureSequenceFrame(strFilename, strRealFilename);
 }
 
-bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename)
+bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename, std::string* strRealFilename)
 {
   GLFrameCapture f;
   makeCurrent();
   paintGL(); // make sure we have the same results in the front and in the backbuffer
-  return f.CaptureSequenceFrame(strFilename);
+  return f.CaptureSequenceFrame(strFilename, strRealFilename);
 }
 
 void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation) {

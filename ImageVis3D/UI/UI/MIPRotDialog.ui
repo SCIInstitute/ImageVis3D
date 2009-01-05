@@ -111,7 +111,7 @@
       <item>
        <widget class="QCheckBox" name="checkBox_Stereo" >
         <property name="text" >
-         <string>Anaglyph Stereo</string>
+         <string>Stereo</string>
         </property>
        </widget>
       </item>
@@ -193,8 +193,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>checkBox_Stereo</sender>
+   <signal>clicked()</signal>
+   <receiver>MIPRotDialog</receiver>
+   <slot>UpdateStereoCheckbox()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>52</x>
+     <y>151</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>62</x>
+     <y>175</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>UpdateDegreeLabel()</slot>
+  <slot>UpdateStereoCheckbox()</slot>
  </slots>
 </ui>

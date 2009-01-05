@@ -45,6 +45,7 @@
 #include <QtGui/QListWidget>
 #include <QtOpenGL/QGLWidget>
 #include "../Tuvok/Basics/ArcBall.h"
+#include <string>
 
 class MainWindow;
 
@@ -75,8 +76,8 @@ class RenderWindow : public QGLWidget
     void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
     bool CaptureFrame(const std::string& strFilename);
-    bool CaptureSequenceFrame(const std::string& strFilename);
-    bool CaptureMIPFrame(const std::string& strFilename, float fAngle);
+    bool CaptureSequenceFrame(const std::string& strFilename, std::string* strRealFilename=NULL);
+    bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, std::string* strRealFilename=NULL);
     void ToggleHQCaptureMode();
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() {return m_bRenderSubsysOK;}
