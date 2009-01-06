@@ -151,6 +151,10 @@ unsigned int SettingsDlg::GetInactiveTS() const {
   return (unsigned int)(horizontalSlider_InactTS->value());
 }
 
+bool  SettingsDlg::GetShowVersionInTitle() const {
+  return checkBox_ShowVersionInTitle->isChecked();
+}
+
 bool  SettingsDlg::GetAutoSaveGEO() const {
   return checkBox_SaveGEOOnExit->isChecked();
 }
@@ -289,6 +293,7 @@ void SettingsDlg::SetLogoLabel() {
 
 void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
                             bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
+                            bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bAvoidCompositing,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
@@ -302,6 +307,7 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
   horizontalSlider_ActTS->setValue(iActiveTS);
   horizontalSlider_InactTS->setValue(iInactiveTS);
    
+  checkBox_ShowVersionInTitle->setChecked(bShowVersionInTitle);
   checkBox_SaveGEOOnExit->setChecked(bAutoSaveGEO);
   checkBox_SaveWSPOnExit->setChecked(bAutoSaveWSP);
   checkBox_AutoLockClonedWindow->setChecked(bAutoLockClonedWindow);

@@ -82,6 +82,7 @@ bool MainWindow::ShowSettings() {
       settings.endGroup();
 
       settings.beginGroup("UI");
+      bool bShowVersionInTitle = settings.value("VersionInTitle", m_bShowVersionInTitle).toBool();
       bool bAutoSaveGEO = settings.value("AutoSaveGEO", m_bAutoSaveGEO).toBool();
       bool bAutoSaveWSP = settings.value("AutoSaveWSP", m_bAutoSaveWSP).toBool();
       bool bAutoLockClonedWindow = settings.value("AutoLockClonedWindow", m_bAutoLockClonedWindow).toBool();
@@ -113,7 +114,8 @@ bool MainWindow::ShowSettings() {
 
       // hand data to form
       settingsDlg.Data2Form(iMaxCPU, iMaxGPU, 
-                            bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS, 
+                            bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS,
+                            bShowVersionInTitle,
                             bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
                             iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bAvoidCompositing,
                             vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
@@ -136,6 +138,7 @@ bool MainWindow::ShowSettings() {
       settings.endGroup();
 
       settings.beginGroup("UI");
+      settings.setValue("VersionInTitle", settingsDlg.GetShowVersionInTitle());
       settings.setValue("AutoSaveGEO", settingsDlg.GetAutoSaveGEO());
       settings.setValue("AutoSaveWSP", settingsDlg.GetAutoSaveWSP());
       settings.setValue("AutoLockClonedWindow", settingsDlg.GetAutoLockClonedWindow());
@@ -186,6 +189,8 @@ void MainWindow::ApplySettings() {
   settings.endGroup();
 
   settings.beginGroup("UI");
+  m_bShowVersionInTitle = settings.value("VersionInTitle", m_bShowVersionInTitle).toBool();
+  SetTitle();
   m_bAutoSaveGEO = settings.value("AutoSaveGEO", m_bAutoSaveGEO).toBool();
   m_bAutoSaveWSP = settings.value("AutoSaveWSP", m_bAutoSaveWSP).toBool();
   m_bAutoLockClonedWindow = settings.value("AutoLockClonedWindow", m_bAutoLockClonedWindow).toBool();
@@ -227,7 +232,6 @@ void MainWindow::ApplySettings() {
   }
 
   // Apply global settings
-
   m_MasterController.SysInfo()->SetMaxUsableCPUMem(iMaxCPU);
   m_MasterController.SysInfo()->SetMaxUsableGPUMem(iMaxGPU);
   m_MasterController.MemMan()->MemSizesChanged();

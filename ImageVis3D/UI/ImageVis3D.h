@@ -195,6 +195,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     QAction*                                  m_recentFileActs[ms_iMaxRecentFiles];
     FLOATVECTOR3                              m_vBackgroundColors[2];
     FLOATVECTOR4                              m_vTextColor;
+    bool                                      m_bShowVersionInTitle;
     bool                                      m_bQuickopen;
     unsigned int                              m_iMinFramerate;
     unsigned int                              m_iLODDelay;
@@ -231,7 +232,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     bool SaveGeometry(QString strFilename);
 
-
+    void SetTitle();
     void setupUi(QMainWindow *MainWindow);
 
     void UpdateMRUActions();

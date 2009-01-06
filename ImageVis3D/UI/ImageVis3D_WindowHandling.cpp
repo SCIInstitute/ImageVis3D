@@ -136,12 +136,21 @@ bool MainWindow::SaveGeometry(QString strFilename) {
 // UI
 // ******************************************
 
+void MainWindow::SetTitle() {
+  QString qstrTitle;
+  if (m_bShowVersionInTitle) 
+    qstrTitle = tr("ImageVis3D Version: %1 %2 [Tuvok %3 %4 %5]").arg(IV3D_VERSION).arg(IV3D_VERSION_TYPE).arg(TUVOK_VERSION).arg(TUVOK_VERSION_TYPE).arg(TUVOK_DETAILS);
+  else
+    qstrTitle = tr("ImageVis3D");
+  setWindowTitle(qstrTitle);
+}
+
+
 void MainWindow::setupUi(QMainWindow *MainWindow) {
 
   Ui_MainWindow::setupUi(MainWindow);
 
-  QString qstrTitle = tr("%1 Version: %2 %3 [Tuvok %4 %5 %6]").arg(windowTitle()).arg(IV3D_VERSION).arg(IV3D_VERSION_TYPE).arg(TUVOK_VERSION).arg(TUVOK_VERSION_TYPE).arg(TUVOK_DETAILS);
-  setWindowTitle(qstrTitle);
+  SetTitle();
 
   m_1DTransferFunction =
     new Q1DTransferFunction(m_MasterController, frame_1DTrans);
