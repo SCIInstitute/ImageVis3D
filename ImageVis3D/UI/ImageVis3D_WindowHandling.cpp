@@ -356,8 +356,15 @@ bool MainWindow::ApplyWorkspace() {
 
 
 void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
-  if (!m_ActiveRenderWin) return;
-  m_ActiveRenderWin->resize(iSizeX, iSizeY);
+  // resize the MDIsubwindow parent instead of the m_ActiveRenderWin directly
+  for (int j = 0;j<mdiArea->subWindowList().size();j++) {
+    QWidget* w = mdiArea->subWindowList().at(j)->widget();
+    RenderWindow* otherWin = qobject_cast<RenderWindow*>(w);
+    if (otherWin == m_ActiveRenderWin) {
+        mdiArea->subWindowList().at(j)->resize(iSizeX, iSizeY);
+        return;
+    }
+  }
 }
 
 void MainWindow::CloseCurrentView() {

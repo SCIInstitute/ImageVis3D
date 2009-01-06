@@ -300,13 +300,17 @@ void MainWindow::SetSampleRateSlider(int iValue) {
 }
 
 void MainWindow::SetIsoValue(float fValue) {
-  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetIsoValue(fValue);
+  if (m_ActiveRenderWin != NULL) {
+    int iMaxSize = int(m_ActiveRenderWin->GetDynamicRange());
+    m_ActiveRenderWin->SetIsoValue(fValue);
+    UpdateIsoValLabel(int(fValue*iMaxSize), iMaxSize);
+  }
 }
 
 void MainWindow::SetIsoValue(int iValue) {
   if (m_ActiveRenderWin != NULL) {
     int iMaxSize = int(m_ActiveRenderWin->GetDynamicRange());
-    SetIsoValue(float(iValue)/float(iMaxSize));
+    m_ActiveRenderWin->SetIsoValue(float(iValue)/float(iMaxSize));
     UpdateIsoValLabel(iValue, iMaxSize);
   }
 }

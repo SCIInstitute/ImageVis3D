@@ -107,7 +107,8 @@ int main(int argc, char* argv[])
 
   if (strScriptFile != "") {
     bool bScriptResult =  mainWindow.RunScript(strScriptFile);
-    if (!mainWindow.StayOpen()) return (bScriptResult) ? 0 : 1;
+    if (!mainWindow.StayOpen()) 
+      return (bScriptResult) ? 0 : 1;
   }
 
   return app.exec();
