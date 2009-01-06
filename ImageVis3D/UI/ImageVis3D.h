@@ -50,8 +50,10 @@
 #include "DebugOut/QTOut.h"
 #include <UI/SettingsDlg.h>
 
+#include <string>
+#include <vector>
 
-class MainWindow : public QMainWindow, protected Ui_MainWindow
+class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptable
 {
   Q_OBJECT
 
@@ -63,6 +65,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     virtual ~MainWindow();
     
     QTOut* GetDebugOut() {return m_DebugOut;}
+
+    // Scriptable implementation
+    virtual bool RegisterCalls(Scripting* pScriptEngine);
+    virtual bool Execute(const std::string& strCommand, const std::vector< std::string >& strParams);
 
   public slots:
     void SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick);
@@ -227,7 +233,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void InitAllWorkspaces();
 
-    bool ParseCommand(std::string strCommand, std::string strParam);
     void CheckSettings();
     void ApplySettings();
     void ApplySettings(RenderWindow* renderWin);

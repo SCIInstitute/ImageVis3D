@@ -70,7 +70,9 @@ int main(int argc, char* argv[])
   std::string strLogFileName;
   bool bUseLogFile = parameters.GetValue("LOG",strLogFileName);
   int iLogLevel = 0;
+  std::string strScriptFile = "";
   parameters.GetValue("LOGLEVEL",iLogLevel);
+  parameters.GetValue("SCRIPT",strScriptFile);
 
   // create the master controller
   MasterController masterController;
@@ -101,6 +103,10 @@ int main(int argc, char* argv[])
 
   // open the QT window
   mainWindow.show();
+
+  if (SysTools::FileExists(strScriptFile)) {
+    
+  }
 
   // execute the QT messageing loop
   return app.exec();

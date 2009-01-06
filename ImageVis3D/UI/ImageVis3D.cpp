@@ -83,6 +83,8 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bAutoLockClonedWindow(false),
   m_bAbsoluteViewLocks(true)
 {
+  RegisterCalls(m_MasterController.ScriptEngine());
+
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
   QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");
   QCoreApplication::setApplicationName("ImageVis3D");

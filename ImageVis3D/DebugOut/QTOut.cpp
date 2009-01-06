@@ -57,9 +57,6 @@ using namespace std;
 QTOut::QTOut(QListWidget *listWidget) :
   m_listWidget(listWidget)
 {
-  m_bRecordLists[0] = false;
-  m_bRecordLists[1] = false;
-  m_bRecordLists[2] = false;
   Message("QTOut::QTOut","Starting up QTListviewDebug out");
 }
 
@@ -146,29 +143,4 @@ void QTOut::Error(const char* source, const char* format, ...) {
   }
   if (!m_bShowErrors) return;
   _printf("ERROR (%s): %s",source, buff);
-}
-
-
-void QTOut::PrintErrorList() {
-  m_listWidget->addItem ( "Printing recorded errors:" );
-  for (std::deque< std::string >::iterator i = m_strErrorList.begin();i<m_strErrorList.end();i++) {
-    m_listWidget->addItem ( i->c_str() );
-  }
-  m_listWidget->addItem ( "end of recorded errors" );
-}
-
-void QTOut::PrintWarningList() {
-  m_listWidget->addItem ( "Printing recorded warnings:" );
-  for (std::deque< std::string >::iterator i = m_strWarningList.begin();i<m_strWarningList.end();i++) {
-    m_listWidget->addItem ( i->c_str() );
-  }
-  m_listWidget->addItem ( "end of recorded warnings" );
-}
-
-void QTOut::PrintMessageList() {
-  m_listWidget->addItem ( "Printing recorded messages:" );
-  for (std::deque< std::string >::iterator i = m_strMessageList.begin();i<m_strMessageList.end();i++) {
-    m_listWidget->addItem ( i->c_str() );
-  }
-  m_listWidget->addItem ( "end of recorded messages" );
 }
