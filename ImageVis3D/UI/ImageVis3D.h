@@ -68,7 +68,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     // Scriptable implementation
     virtual bool RegisterCalls(Scripting* pScriptEngine);
-    virtual bool Execute(const std::string& strCommand, const std::vector< std::string >& strParams);
+    virtual bool Execute(const std::string& strCommand, const std::vector< std::string >& strParams, std::string& strMessage);
 
     bool RunScript(const std::string& strFilename);
     bool StayOpen() const {return m_bStayOpenAfterScriptEnd;}

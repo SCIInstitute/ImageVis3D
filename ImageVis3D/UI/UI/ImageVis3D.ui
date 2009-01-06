@@ -3513,8 +3513,14 @@
           <property name="text" >
            <string>Execute</string>
           </property>
-          <property name="default" >
+          <property name="autoExclusive" >
            <bool>false</bool>
+          </property>
+          <property name="autoDefault" >
+           <bool>true</bool>
+          </property>
+          <property name="default" >
+           <bool>true</bool>
           </property>
           <property name="flat" >
            <bool>false</bool>
@@ -4389,7 +4395,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1193</x>
-     <y>1031</y>
+     <y>1026</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4404,8 +4410,8 @@
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1153</x>
-     <y>591</y>
+     <x>1113</x>
+     <y>607</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4420,8 +4426,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1153</x>
-     <y>615</y>
+     <x>1113</x>
+     <y>631</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4436,8 +4442,8 @@
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1153</x>
-     <y>639</y>
+     <x>1113</x>
+     <y>655</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4949,7 +4955,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1156</x>
-     <y>1058</y>
+     <y>1053</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -4965,7 +4971,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1193</x>
-     <y>1031</y>
+     <y>1026</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1193</x>
@@ -5076,8 +5082,8 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1059</x>
-     <y>528</y>
+     <x>1030</x>
+     <y>544</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1008</x>
@@ -5092,8 +5098,8 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1121</x>
-     <y>528</y>
+     <x>1107</x>
+     <y>544</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1005</x>
@@ -5141,7 +5147,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1192</x>
-     <y>1096</y>
+     <y>1083</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1004</x>
@@ -5157,7 +5163,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1192</x>
-     <y>1112</y>
+     <y>1107</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1000</x>
@@ -5173,7 +5179,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1191</x>
-     <y>1197</y>
+     <y>1184</y>
     </hint>
     <hint type="destinationlabel" >
      <x>998</x>
@@ -5189,7 +5195,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1155</x>
-     <y>1159</y>
+     <y>1154</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1000</x>
@@ -5205,7 +5211,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1191</x>
-     <y>1234</y>
+     <y>1229</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1003</x>
@@ -5221,7 +5227,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1191</x>
-     <y>1279</y>
+     <y>1274</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1004</x>
@@ -5237,7 +5243,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1191</x>
-     <y>1324</y>
+     <y>1319</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1000</x>
@@ -5365,7 +5371,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>344</x>
-     <y>1543</y>
+     <y>1562</y>
     </hint>
     <hint type="destinationlabel" >
      <x>383</x>
@@ -5380,8 +5386,8 @@
    <slot>Show1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1170</x>
-     <y>587</y>
+     <x>1138</x>
+     <y>609</y>
     </hint>
     <hint type="destinationlabel" >
      <x>980</x>
@@ -5396,8 +5402,8 @@
    <slot>Show2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1168</x>
-     <y>613</y>
+     <x>1138</x>
+     <y>634</y>
     </hint>
     <hint type="destinationlabel" >
      <x>981</x>
@@ -5412,12 +5418,28 @@
    <slot>ShowIsoEdit()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1162</x>
-     <y>636</y>
+     <x>1138</x>
+     <y>659</y>
     </hint>
     <hint type="destinationlabel" >
      <x>979</x>
      <y>607</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEdit_DebugCommand</sender>
+   <signal>returnPressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ParseAndExecuteDebugCommand()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>97</x>
+     <y>1407</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>122</x>
+     <y>1430</y>
     </hint>
    </hints>
   </connection>
