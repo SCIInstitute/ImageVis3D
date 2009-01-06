@@ -383,6 +383,7 @@ void MainWindow::CloneCurrentView() {
 
   QMdiSubWindow * pActiveWin = mdiArea->activeSubWindow(); // as "show" toggles the active renderwin we need to remeber it
   renderWin->show();
+  RenderWindowActive(renderWin);
   mdiArea->activeSubWindow()->resize(pActiveWin->size().width(), pActiveWin->size().height());
 }
 
@@ -410,8 +411,6 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
   } return false;
 }
 
-/// \todo ARS Need to be able to CreateNewRenderWindow based on memory only
-
 RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 {
   static unsigned int iCounter = 0;
@@ -433,7 +432,6 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   connect(renderWin, SIGNAL(StereoDisabled()),
     this, SLOT(StereoDisabled()));
   
-
   return renderWin;
 }
 
