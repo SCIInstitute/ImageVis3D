@@ -81,7 +81,8 @@ MainWindow::MainWindow(MasterController& masterController,
   m_strLogoFilename(""),
   m_iLogoPos(3),
   m_bAutoLockClonedWindow(false),
-  m_bAbsoluteViewLocks(true)
+  m_bAbsoluteViewLocks(true),
+  m_bStayOpenAfterScriptEnd(false)
 {
   RegisterCalls(m_MasterController.ScriptEngine());
 
@@ -298,10 +299,16 @@ void MainWindow::SetSampleRateSlider(int iValue) {
   UpdateSampleRateLabel(iValue);
 }
 
+void MainWindow::SetIsoValue(float fValue) {
+  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetIsoValue(fValue);
+}
+
 void MainWindow::SetIsoValue(int iValue) {
-  int iMaxSize = int(m_ActiveRenderWin->GetDynamicRange());
-  if (m_ActiveRenderWin != NULL) m_ActiveRenderWin->SetIsoValue(float(iValue)/float(iMaxSize));
-  UpdateIsoValLabel(iValue, iMaxSize);
+  if (m_ActiveRenderWin != NULL) {
+    int iMaxSize = int(m_ActiveRenderWin->GetDynamicRange());
+    SetIsoValue(float(iValue)/float(iMaxSize));
+    UpdateIsoValLabel(iValue, iMaxSize);
+  }
 }
 
 void MainWindow::SetIsoValueSlider(int iValue, int iMaxValue) {
@@ -424,5 +431,41 @@ void MainWindow::ToggleClearView() {
   if (m_ActiveRenderWin) {
     m_ActiveRenderWin->SetCV(checkBox_ClearView->isChecked());
     frame_ClearView->setEnabled(checkBox_ClearView->isChecked());
+  }
+}
+
+// ******************************************
+// Dataset interaction
+// ******************************************
+
+void MainWindow::RotateCurrentViewX(double angle) {
+  if (m_ActiveRenderWin) {
+    FLOATMATRIX4 matRot;
+    matRot.RotationX(3.141592653589793238462643383*angle/180.0);
+    m_ActiveRenderWin->Rotate(matRot);
+  }
+} 
+
+void MainWindow::RotateCurrentViewY(double angle) {
+  if (m_ActiveRenderWin) {
+    FLOATMATRIX4 matRot;
+    matRot.RotationY(3.141592653589793238462643383*angle/180.0);
+    m_ActiveRenderWin->Rotate(matRot);
+  }
+} 
+
+void MainWindow::RotateCurrentViewZ(double angle) {
+  if (m_ActiveRenderWin) {
+    FLOATMATRIX4 matRot;
+    matRot.RotationZ(3.141592653589793238462643383*angle/180.0);
+    m_ActiveRenderWin->Rotate(matRot);
+  }
+}
+
+void MainWindow::TranslateCurrentView(double x, double y, double z) {
+  if (m_ActiveRenderWin) {
+    FLOATMATRIX4 matTrans;
+    matTrans.Translation(x,y,z);
+    m_ActiveRenderWin->Translate(matTrans);
   }
 }

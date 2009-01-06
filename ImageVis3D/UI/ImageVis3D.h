@@ -71,6 +71,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     virtual bool Execute(const std::string& strCommand, const std::vector< std::string >& strParams);
 
     bool RunScript(const std::string& strFilename);
+    bool StayOpen() const {return m_bStayOpenAfterScriptEnd;}
 
   public slots:
     void SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick);
@@ -82,6 +83,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void CaptureRotation();
     void LoadDataset();
     void LoadDirectory();
+    void CloseCurrentView();
+    void ResizeCurrentView(int iSizeX, int iSizeY);
     void CloneCurrentView();
 
     void ToggleRenderWindowView2x2();
@@ -95,6 +98,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void Transfer1DSetColors();
     void Transfer1DSetGroups();
     void Transfer1DLoad();
+    bool Transfer1DLoad(std::string strFilename);
     void Transfer1DSave();
     void Transfer1DCopyTo2DTrans();
 
@@ -103,6 +107,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void Transfer2DChooseGradientColor();
     void Transfer2DChooseGradientOpacity();
     void Transfer2DLoad();
+    bool Transfer2DLoad(std::string strFilename);
     void Transfer2DSave();
 
     void SetUpdateMode();
@@ -147,6 +152,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void Collapse2DWidgets();
     void Expand2DWidgets();
     void SetSampleRate(int iValue);
+    void SetIsoValue(float fValue);
     void SetIsoValue(int iValue);
     void ToggleGlobalBBox(bool bRenderBBox);
     void ToggleLocalBBox(bool bRenderBBox);
@@ -206,6 +212,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     int                                       m_iLogoPos;
     bool                                      m_bAutoLockClonedWindow;
     bool                                      m_bAbsoluteViewLocks;
+    bool                                      m_bStayOpenAfterScriptEnd;
 
     RenderWindow* CreateNewRenderWindow(QString dataset);
     bool CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow=true);
@@ -232,7 +239,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     void GetDebugViewMask();
       
-    void LoadDataset(QString fileName);
+    bool LoadDataset(const std::vector< std::string >& strParams);
+    bool LoadDataset(QString fileName, QString targetFileName="", bool bNoUserInteraction=false);
 
     QString GetConvFilename();
 
@@ -260,6 +268,15 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void RemoveAllLocks(RenderWindow* sender, size_t iLockType);
     bool SetLock(size_t iLockType, RenderWindow* winA, RenderWindow* winB);
     bool IsLockedWith(size_t iLockType, RenderWindow* winA, RenderWindow* winB);
+
+    bool CaptureFrame(const std::string& strTargetName);
+    bool CaptureSequence(const std::string& strTargetName, std::string* strRealFilename=NULL);
+
+    void RotateCurrentViewX(double angle);
+    void RotateCurrentViewY(double angle);
+    void RotateCurrentViewZ(double angle);
+    void TranslateCurrentView(double x, double y, double z);
+
 
 };
 

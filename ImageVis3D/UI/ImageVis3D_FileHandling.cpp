@@ -95,43 +95,56 @@ QString MainWindow::GetConvFilename() {
     QSettings settings;
     QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
 
-    QString targetFileName =
+    QString targetFilename =
       QFileDialog::getSaveFileName(this, "Select filename for converted data",
            strLastDir,
            "Universal Volume Format (*.uvf)",&selectedFilter, options);
 
-    if (!targetFileName.isEmpty())
-      settings.setValue("Folders/GetConvFilename", QFileInfo(targetFileName).absoluteDir().path());
+    if (!targetFilename.isEmpty())
+      settings.setValue("Folders/GetConvFilename", QFileInfo(targetFilename).absoluteDir().path());
 
-    return targetFileName;
+    return targetFilename;
 }
 
-void MainWindow::LoadDataset(QString fileName) {
+
+bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
+  if (strParams.size() < 1 || strParams.size() > 2)  return false;
+  string inFile = strParams[0], convFile;
+  if (strParams.size() == 1)  {
+    convFile = SysTools::ChangeExt(inFile, "uvf"); 
+  } else convFile = strParams[1];
+
+  return LoadDataset(inFile.c_str(), convFile.c_str(), true);
+}
+
+bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoUserInteraction) {
   PleaseWaitDialog pleaseWait(this);
 
-  if (!fileName.isEmpty()) {
+  if (!filename.isEmpty()) {
 
-    if (!SysTools::FileExists(string(fileName.toAscii()))) {
-        QString strText = tr("File %1 not found.").arg(fileName);
+    if (!SysTools::FileExists(string(filename.toAscii()))) {
+        QString strText = tr("File %1 not found.").arg(filename);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
-        QMessageBox::critical(this, "Load Error", strText);
-        return;
+        if (!bNoUserInteraction) QMessageBox::critical(this, "Load Error", strText);
+        return false;
     }
 
     bool bChecksumFail=false;
-    if ((m_bQuickopen && !m_MasterController.IOMan()->NeedsConversion(fileName.toStdString())) || 
-        !m_MasterController.IOMan()->NeedsConversion(fileName.toStdString(), bChecksumFail)) {
+    if ((m_bQuickopen && !m_MasterController.IOMan()->NeedsConversion(filename.toStdString())) || 
+        !m_MasterController.IOMan()->NeedsConversion(filename.toStdString(), bChecksumFail)) {
 
       if (bChecksumFail) {
-        QString strText = tr("File %1 appears to be a broken UVF file since the header looks ok but the checksum does not match.").arg(fileName);
+        QString strText = tr("File %1 appears to be a broken UVF file since the header looks ok but the checksum does not match.").arg(filename);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());        
-        QMessageBox::critical(this, "Load Error", strText);
-        return;
+        if (!bNoUserInteraction) QMessageBox::critical(this, "Load Error", strText);
+        return false;
       }
 
     } else {
-      QString targetFileName = GetConvFilename();
-      if (targetFileName.isEmpty()) return;
+      if (!bNoUserInteraction && targetFilename.isEmpty())
+        targetFilename = GetConvFilename();
+
+      if (targetFilename.isEmpty()) return false;
       pleaseWait.SetText("Converting, please wait  ...");
 
       // add status label into debug chain
@@ -147,25 +160,26 @@ void MainWindow::LoadDataset(QString fileName) {
       pMultiOut->AddDebugOut(labelOut,  true);
       pMultiOut->AddDebugOut(pOldDebug, false);
      
-      if (!m_MasterController.IOMan()->ConvertDataset(fileName.toStdString(), targetFileName.toStdString())) {
-        QString strText = tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFileName);
+      if (!m_MasterController.IOMan()->ConvertDataset(filename.toStdString(), targetFilename.toStdString(), bNoUserInteraction)) {
+        QString strText = tr("Unable to convert file %1 into %2.").arg(filename).arg(targetFilename);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
-        QMessageBox::critical(this, "Conversion Error", strText);
+        if (!bNoUserInteraction) QMessageBox::critical(this, "Conversion Error", strText);
 
         m_MasterController.SetDebugOut(pOldDebug);
-        return;
+        return false;
       }      
-      fileName = targetFileName;
+      filename = targetFilename;
       pleaseWait.close();
       m_MasterController.SetDebugOut(pOldDebug);
     }
 
 
-    RenderWindow *renderWin = CreateNewRenderWindow(fileName);
+    RenderWindow *renderWin = CreateNewRenderWindow(filename);
     renderWin->show();
 
-    AddFileToMRUList(fileName);
-  }
+    AddFileToMRUList(filename);
+    return true;
+  } else return false;
 }
 
 
@@ -193,19 +207,19 @@ void MainWindow::LoadDirectory() {
       #endif
         QString selectedFilter;
 
-        QString targetFileName = GetConvFilename();
-        if (targetFileName.isEmpty()) return;
+        QString targetFilename = GetConvFilename();
+        if (targetFilename.isEmpty()) return;
 
         pleaseWait.SetText("Converting, please wait  ...");
-        if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFileName.toStdString())) {
+        if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFilename.toStdString())) {
           QString strText =
-            tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFileName);
+            tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFilename);
 
           QMessageBox::critical(this, "Conversion Error", strText);
           m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", strText.toStdString().c_str());        
         }      
       
-        RenderWindow *renderWin = CreateNewRenderWindow(targetFileName);
+        RenderWindow *renderWin = CreateNewRenderWindow(targetFilename);
         renderWin->show();
         AddFileToMRUList(fileName);
       }

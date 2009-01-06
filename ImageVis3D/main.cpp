@@ -105,8 +105,10 @@ int main(int argc, char* argv[])
   // open the QT window
   mainWindow.show();
 
-  if (strScriptFile != "") 
-    return mainWindow.RunScript(strScriptFile) ? 0 : 1;
-  else
-    return app.exec();
+  if (strScriptFile != "") {
+    bool bScriptResult =  mainWindow.RunScript(strScriptFile);
+    if (!mainWindow.StayOpen()) return (bScriptResult) ? 0 : 1;
+  }
+
+  return app.exec();
 }

@@ -79,6 +79,8 @@ class RenderWindow : public QGLWidget
     bool CaptureSequenceFrame(const std::string& strFilename, std::string* strRealFilename=NULL);
     bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, std::string* strRealFilename=NULL);
     void ToggleHQCaptureMode();
+    void Translate(const FLOATMATRIX4& mTranslation) {SetTranslation(mTranslation*m_mAccumulatedTranslation);}
+    void Rotate(const FLOATMATRIX4& mRotation) {SetRotation(mRotation*m_mAccumulatedRotation,mRotation*m_mAccumulatedRotation);}
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() {return m_bRenderSubsysOK;}
 
@@ -166,8 +168,8 @@ class RenderWindow : public QGLWidget
     bool              m_bCaptureMode;
 
     void SetupArcBall();
-    void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);
     void SetRotation(const FLOATMATRIX4& mAccumulatedRotation, const FLOATMATRIX4& mCurrentRotation);
+    void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);
 };
 
 #endif // RENDERWINDOW_H

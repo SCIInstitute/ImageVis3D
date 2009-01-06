@@ -134,6 +134,10 @@ void MainWindow::ApplyUpdate() {
   if (radioButton_2DTrans->isChecked()) m_2DTransferFunction->ApplyFunction();
 }
 
+bool MainWindow::Transfer1DLoad(string strFilename) {
+  return (m_1DTransferFunction) ? m_1DTransferFunction->LoadFromFile(strFilename.c_str()) : false;
+}
+
 void MainWindow::Transfer1DLoad() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/Transfer1DLoad", ".").toString();
@@ -148,6 +152,7 @@ void MainWindow::Transfer1DLoad() {
     m_1DTransferFunction->LoadFromFile(fileName);
   }
 }
+
 
 void MainWindow::Transfer1DSave() {
   QSettings settings;

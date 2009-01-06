@@ -354,6 +354,17 @@ bool MainWindow::ApplyWorkspace() {
 // Render Windows
 // ******************************************
 
+
+void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
+  if (!m_ActiveRenderWin) return;
+  m_ActiveRenderWin->resize(iSizeX, iSizeY);
+}
+
+void MainWindow::CloseCurrentView() {
+  if (!m_ActiveRenderWin) return;
+  m_ActiveRenderWin->close();
+}
+
 void MainWindow::CloneCurrentView() {
   RenderWindow *renderWin = CreateNewRenderWindow(GetActiveRenderWindow()->GetDatasetName());
 

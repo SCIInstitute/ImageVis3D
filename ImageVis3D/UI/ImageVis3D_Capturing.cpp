@@ -49,11 +49,13 @@
 
 using namespace std;
 
+
 void MainWindow::CaptureFrame() {
   if (m_ActiveRenderWin) {
-    if (!m_ActiveRenderWin->CaptureFrame(lineEditCaptureFile->text().toStdString())) {
-    QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
-    QMessageBox::warning(this, tr("Error"), msg);
+    if (!CaptureFrame(lineEditCaptureFile->text().toStdString())) {
+      QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
+      QMessageBox::warning(this, tr("Error"), msg);
+      m_MasterController.DebugOut()->Error("MainWindow::CaptureFrame", msg.toAscii());
     }
   }
 }
@@ -61,12 +63,26 @@ void MainWindow::CaptureFrame() {
 void MainWindow::CaptureSequence() {
   if (m_ActiveRenderWin) {
     string strSequenceName;
-    if (!m_ActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString()), &strSequenceName) {
+    if (!CaptureSequence(lineEditCaptureFile->text().toStdString(), &strSequenceName)){
       QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
       QMessageBox::warning(this, tr("Error"), msg);
       m_MasterController.DebugOut()->Error("MainWindow::CaptureSequence", msg.toAscii());
     }
   }
+}
+
+bool MainWindow::CaptureFrame(const std::string& strTargetName) {
+  if (m_ActiveRenderWin) 
+    return m_ActiveRenderWin->CaptureFrame(strTargetName);
+  else
+    return false;
+}
+
+bool MainWindow::CaptureSequence(const std::string& strTargetName, std::string* strRealFilename) {
+  if (m_ActiveRenderWin) 
+    return m_ActiveRenderWin->CaptureSequenceFrame(strTargetName, strRealFilename);
+  else
+    return false;
 }
 
 void MainWindow::CaptureRotation() {

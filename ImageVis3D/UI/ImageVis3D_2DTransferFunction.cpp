@@ -220,6 +220,10 @@ void MainWindow::Transfer2DDeleteGradient() {
 }
 
 
+bool MainWindow::Transfer2DLoad(string strFilename) {
+  return (m_2DTransferFunction) ? m_2DTransferFunction->LoadFromFile(strFilename.c_str()) : false;
+}
+
 void MainWindow::Transfer2DLoad() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/Transfer2DLoad", ".").toString();

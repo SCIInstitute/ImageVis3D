@@ -48,8 +48,9 @@ DialogConverter::DialogConverter(QWidget* parent) :
 {
 }
 
-bool DialogConverter::Convert(const std::string& strSourceFilename, const std::string& strTargetFilename, const std::string& strTempDir, MasterController* pMasterController)
+bool DialogConverter::Convert(const std::string& strSourceFilename, const std::string& strTargetFilename, const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction)
 {
+  if (bNoUserInteraction) return false;
   pMasterController->DebugOut()->Message("DialogConverter::Convert","Attempting to interactively convert dataset %s to %s", strSourceFilename.c_str(), strTargetFilename.c_str());
   
   LargeRAWFile f(strSourceFilename);

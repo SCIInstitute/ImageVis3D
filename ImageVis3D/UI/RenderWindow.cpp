@@ -189,8 +189,7 @@ void RenderWindow::ToggleHQCaptureMode() {
 void RenderWindow::SetCaptureRotationAngle(float fAngle) {
   FLOATMATRIX4 matRot;
   matRot.RotationY(3.141592653589793238462643383*double(fAngle)/180.0);
-  m_mAccumulatedRotation = m_mCaptureStartRotation*matRot;
-  m_Renderer->SetRotation(m_mAccumulatedRotation);
+  SetRotation(matRot, matRot);
   paintGL();
 }
 
