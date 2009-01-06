@@ -85,9 +85,9 @@ int main(int argc, char* argv[])
   if (bUseLogFile) {
     TextfileOut* textout = new TextfileOut(strLogFileName);
   
-    textout->m_bShowErrors   = true;
-    textout->m_bShowWarnings = iLogLevel > 0;
-    textout->m_bShowMessages = iLogLevel > 1;
+    textout->SetShowErrors(true);
+    textout->SetShowWarnings(iLogLevel > 0);
+    textout->SetShowMessages(iLogLevel > 1);
 
     textout->printf("Loglevel:%i\n",iLogLevel);
 
@@ -95,6 +95,7 @@ int main(int argc, char* argv[])
     bool           bDeleteOldDebug = masterController.DoDeleteDebugOut();
 
     MultiplexOut* pMultiOut = new MultiplexOut();
+    pMultiOut->SetOutput(true,true,true,true);
     masterController.SetDebugOut(pMultiOut, true);
 
     pMultiOut->AddDebugOut(textout, true);
@@ -104,10 +105,8 @@ int main(int argc, char* argv[])
   // open the QT window
   mainWindow.show();
 
-  if (SysTools::FileExists(strScriptFile)) {
-    
-  }
-
-  // execute the QT messageing loop
-  return app.exec();
+  if (strScriptFile != "") 
+    return mainWindow.RunScript(strScriptFile) ? 0 : 1;
+  else
+    return app.exec();
 }

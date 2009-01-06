@@ -70,6 +70,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     virtual bool RegisterCalls(Scripting* pScriptEngine);
     virtual bool Execute(const std::string& strCommand, const std::vector< std::string >& strParams);
 
+    bool RunScript(const std::string& strFilename);
+
   public slots:
     void SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick);
 
@@ -131,6 +133,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void StereoDisabled();
     void RenderWindowViewChanged(int iMode);
 
+    void ShowVersions();
+    void ShowGLInfo();
+    void ShowSysInfo();
     void ClearDebugWin();
     void ParseAndExecuteDebugCommand();
     void SetDebugViewMask();

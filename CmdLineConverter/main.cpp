@@ -118,10 +118,7 @@ int main(int argc, char* argv[])
   }
 
   HRConsoleOut* debugOut = new HRConsoleOut();
-  debugOut->m_bShowMessages = true;
-  debugOut->m_bShowWarnings = true;
-  debugOut->m_bShowErrors = true;
-  debugOut->m_bShowOther = false;
+  debugOut->SetOutput(true, true, true, false);
 
   MasterController masterController((AbstrDebugOut*)debugOut);
   IOManager ioMan(&masterController);

@@ -41,73 +41,51 @@
 
 using namespace std;
 
-
-bool MainWindow::RegisterCalls(Scripting* pScriptEngine) {
-  pScriptEngine->RegisterCommand(this, "clear", "clear this window");
-  pScriptEngine->RegisterCommand(this, "versions", "print version information");
-  pScriptEngine->RegisterCommand(this, "glinfo", "print information about the supported OpenGL extension");
-  pScriptEngine->RegisterCommand(this, "sysinfo", "print information about the system and the mem usage");
-
-  return true;
+void MainWindow::ShowVersions() {
+  m_MasterController.DebugOut()->printf("Tuvok Version: %i %s",TUVOK_VERSION, TUVOK_VERSION_TYPE);
+  m_MasterController.DebugOut()->printf("ImageVis3D Version: %i %s",IV3D_VERSION, IV3D_VERSION_TYPE);
+  m_MasterController.DebugOut()->printf("QT Version: %s",QT_VERSION_STR);    
 }
 
-bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::string >&) {
-  if (strCommand == "clear") {
-    ClearDebugWin();
-    return true;
-  }
-  
-  if (strCommand == "versions") {      
-    m_MasterController.DebugOut()->printf("Tuvok Version: %i %s",TUVOK_VERSION, TUVOK_VERSION_TYPE);
-    m_MasterController.DebugOut()->printf("ImageVis3D Version: %i %s",IV3D_VERSION, IV3D_VERSION_TYPE);
-    m_MasterController.DebugOut()->printf("QT Version: %s",QT_VERSION_STR);    
-    return true;
-  }
-  if (strCommand == "glinfo") {
-    if (m_ActiveRenderWin == NULL) {
-      m_MasterController.DebugOut()->printf("please open a renderwindow first");
-    } else {
+void MainWindow::ShowGLInfo() {
+  if (m_ActiveRenderWin == NULL) {
+    m_MasterController.DebugOut()->printf("please open a renderwindow first");
+  } else {
 
-      m_MasterController.DebugOut()->printf("Printing GL extensions:");
+    m_MasterController.DebugOut()->printf("Printing GL extensions:");
 
-      const char *extensions = (const char*)glGetString(GL_EXTENSIONS);
+    const char *extensions = (const char*)glGetString(GL_EXTENSIONS);
 
-      unsigned int iExtCount = 0;
-      string strExtension = "";
-      while (extensions[0]) {
-        if (extensions[0] == ' ' || extensions[0] == '\0') {
-          m_MasterController.DebugOut()->printf("  %s",strExtension.c_str());
-          strExtension = "";
-          iExtCount++;
-        } else strExtension += extensions[0];
-        extensions++;
-      }
-      m_MasterController.DebugOut()->printf("%u extensions found",iExtCount);
+    unsigned int iExtCount = 0;
+    string strExtension = "";
+    while (extensions[0]) {
+      if (extensions[0] == ' ' || extensions[0] == '\0') {
+        m_MasterController.DebugOut()->printf("  %s",strExtension.c_str());
+        strExtension = "";
+        iExtCount++;
+      } else strExtension += extensions[0];
+      extensions++;
     }
-    return true;
+    m_MasterController.DebugOut()->printf("%u extensions found",iExtCount);
   }
+}
 
-  if (strCommand == "sysinfo") {
-    m_MasterController.DebugOut()->printf("This a %ubit build.", m_MasterController.MemMan()->GetBitWithMem());
+void MainWindow::ShowSysInfo() {
+  m_MasterController.DebugOut()->printf("This a %ubit build.", m_MasterController.MemMan()->GetBitWithMem());
 
-    m_MasterController.DebugOut()->printf("CPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetCPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableCPUMem()/(1024*1024));
-    m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)", 
-      m_MasterController.MemMan()->GetAllocatedCPUMem()/(1024*1024),
-      m_MasterController.MemMan()->GetAllocatedCPUMem());
-    if (m_MasterController.MemMan()->GetAllocatedCPUMem() < m_MasterController.MemMan()->GetCPUMem() )
-      m_MasterController.DebugOut()->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetCPUMem()-m_MasterController.MemMan()->GetAllocatedCPUMem())/(1024*1024));
+  m_MasterController.DebugOut()->printf("CPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetCPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableCPUMem()/(1024*1024));
+  m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)", 
+                                          m_MasterController.MemMan()->GetAllocatedCPUMem()/(1024*1024),
+                                          m_MasterController.MemMan()->GetAllocatedCPUMem());
+  if (m_MasterController.MemMan()->GetAllocatedCPUMem() < m_MasterController.MemMan()->GetCPUMem() )
+    m_MasterController.DebugOut()->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetCPUMem()-m_MasterController.MemMan()->GetAllocatedCPUMem())/(1024*1024));
 
-    m_MasterController.DebugOut()->printf("GPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetGPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableGPUMem()/(1024*1024));
-    m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)", 
-      m_MasterController.MemMan()->GetAllocatedGPUMem()/(1024*1024),
-      m_MasterController.MemMan()->GetAllocatedGPUMem());
-    if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() ) 
-      m_MasterController.DebugOut()->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024));
-
-    return true;
-  }
-
-  return false;
+  m_MasterController.DebugOut()->printf("GPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetGPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableGPUMem()/(1024*1024));
+  m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)", 
+                                          m_MasterController.MemMan()->GetAllocatedGPUMem()/(1024*1024),
+                                          m_MasterController.MemMan()->GetAllocatedGPUMem());
+  if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() ) 
+    m_MasterController.DebugOut()->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024));
 }
 
 void MainWindow::ClearDebugWin() {
@@ -115,22 +93,33 @@ void MainWindow::ClearDebugWin() {
 }
 
 void MainWindow::SetDebugViewMask() {
-  m_MasterController.DebugOut()->m_bShowErrors = checkBox_ShowDebugErrors->isChecked();
-  m_MasterController.DebugOut()->m_bShowWarnings = checkBox_ShowDebugWarnings->isChecked();
-  m_MasterController.DebugOut()->m_bShowMessages = checkBox_ShowDebugMessages->isChecked();
-  m_MasterController.DebugOut()->m_bShowOther = checkBox_ShowDebugOther->isChecked();
+  m_MasterController.DebugOut()->SetOutput(checkBox_ShowDebugErrors->isChecked(),
+                      checkBox_ShowDebugWarnings->isChecked(),
+                      checkBox_ShowDebugMessages->isChecked(),
+                      checkBox_ShowDebugOther->isChecked());
 }
 
 void MainWindow::GetDebugViewMask() {
-  checkBox_ShowDebugErrors->setChecked(m_MasterController.DebugOut()->m_bShowErrors);
-  checkBox_ShowDebugWarnings->setChecked(m_MasterController.DebugOut()->m_bShowWarnings);
-  checkBox_ShowDebugMessages->setChecked(m_MasterController.DebugOut()->m_bShowMessages);
-  checkBox_ShowDebugOther->setChecked(m_MasterController.DebugOut()->m_bShowOther);
+
+  bool bShowErrors;
+  bool bShowWarnings;
+  bool bShowMessages;
+  bool bShowOther;
+
+  m_MasterController.DebugOut()->GetOutput(bShowErrors,
+                      bShowWarnings,
+                      bShowMessages,
+                      bShowOther);
+
+  checkBox_ShowDebugErrors->setChecked(bShowErrors);
+  checkBox_ShowDebugWarnings->setChecked(bShowWarnings);
+  checkBox_ShowDebugMessages->setChecked(bShowMessages);
+  checkBox_ShowDebugOther->setChecked(bShowOther);
 }
 
 void MainWindow::ParseAndExecuteDebugCommand() {
-  bool bTemp = m_DebugOut->m_bShowMessages;
-  m_DebugOut->m_bShowMessages = true;
+  bool bTemp = m_DebugOut->ShowMessages();
+  m_DebugOut->SetShowMessages(true);
 
   if (m_DebugOut != m_MasterController.DebugOut())  {
     m_DebugOut->printf("Debug out is currently redirected to another debug out.");
@@ -138,6 +127,6 @@ void MainWindow::ParseAndExecuteDebugCommand() {
 
   m_MasterController.ScriptEngine()->ParseLine(lineEdit_DebugCommand->text().toStdString());
   
-  m_DebugOut->m_bShowMessages = bTemp;
+  m_DebugOut->SetShowMessages(bTemp);
   lineEdit_DebugCommand->clear();
 }

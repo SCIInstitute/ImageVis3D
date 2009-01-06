@@ -108,10 +108,7 @@ void MainWindow::CaptureRotation() {
     m_MasterController.SetDebugOut(pMultiOut, true);
     QTLabelOut* labelOut = new QTLabelOut(pleaseWait.GetStatusLabel(),
                                           &pleaseWait);
-    labelOut->m_bShowMessages = true;
-    labelOut->m_bShowWarnings = true;
-    labelOut->m_bShowErrors = true;
-    labelOut->m_bShowOther = false;
+    labelOut->SetOutput(true, true, true, false);
     pMultiOut->AddDebugOut(labelOut,  true);
     pMultiOut->AddDebugOut(pOldDebug, false);
 
@@ -122,16 +119,12 @@ void MainWindow::CaptureRotation() {
       float fAngle = 0.0f;
       while (i < iNumImages) {
         pleaseWait.hide();
-        labelOut->m_bShowMessages = true;
-        labelOut->m_bShowWarnings = true;
-        labelOut->m_bShowErrors = true;
+        labelOut->SetOutput(true, true, true, false);
         if (i==0)
           m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
         else
           m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
-        labelOut->m_bShowMessages = false;
-        labelOut->m_bShowWarnings = false;
-        labelOut->m_bShowErrors = false;
+        labelOut->SetOutput(false, false, false, false);
         pleaseWait.show();
         fAngle = float(i)/float(iNumImages) * 360.0f;
         m_ActiveRenderWin->SetCaptureRotationAngle(fAngle);
@@ -165,9 +158,7 @@ void MainWindow::CaptureRotation() {
         int i = 0;
         float fAngle = 0.0f;
         while (i < iNumImages) {
-          labelOut->m_bShowMessages = true;
-          labelOut->m_bShowWarnings = true;
-          labelOut->m_bShowErrors = true;
+          labelOut->SetOutput(true, true, true, false);
           if (bStereo) {
             if (i==0)
               m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 1 of 3: %i percent completed\nProcessing Image %i of %i (the first image may be slower due to caching)",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
@@ -179,9 +170,7 @@ void MainWindow::CaptureRotation() {
             else
               m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "%i percent completed\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages);
           }
-          labelOut->m_bShowMessages = false;
-          labelOut->m_bShowWarnings = false;
-          labelOut->m_bShowErrors = false;
+          labelOut->SetOutput(false, false, false, false);
 
           fAngle = float(i)/float(iNumImages) * 360.0f;
           string strSequenceName;
@@ -214,9 +203,7 @@ void MainWindow::CaptureRotation() {
         }
 
         if (m_ActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode) && bStereo) {
-          labelOut->m_bShowMessages = true;
-          labelOut->m_bShowWarnings = true;
-          labelOut->m_bShowErrors = true;
+          labelOut->SetOutput(true, true, true, false);
 
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
             string strSourceL = vstrLeftEyeImageVector[i];
@@ -254,9 +241,6 @@ void MainWindow::CaptureRotation() {
             if (SysTools::FileExists(vstrLeftEyeImageVector[i])) remove(vstrLeftEyeImageVector[i].c_str());
           }
         }
-        labelOut->m_bShowMessages = false;
-        labelOut->m_bShowWarnings = false;
-        labelOut->m_bShowErrors = false;
       } else {
         pleaseWait.SetText("Slicing trougth the dataset, please wait  ...");
         /// \todo TODO slice capturing
