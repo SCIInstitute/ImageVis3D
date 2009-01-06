@@ -278,7 +278,7 @@ void MainWindow::FilterImage() {
 void MainWindow::SetLighting(bool bLighting) {
   RenderWindow* w = GetActiveRenderWindow();
   if (w != NULL) {
-    w->SetUseLigthing(bLighting);
+    w->SetUseLighting(bLighting);
   }
 }
 

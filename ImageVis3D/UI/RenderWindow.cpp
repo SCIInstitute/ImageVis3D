@@ -496,7 +496,7 @@ void RenderWindow::CloneViewState(RenderWindow* other) {
 void RenderWindow::CloneRendermode(RenderWindow* other) {
   SetRendermode(other->GetRendermode());
 
-  m_Renderer->SetUseLigthing(other->m_Renderer->GetUseLigthing());
+  m_Renderer->SetUseLighting(other->m_Renderer->GetUseLighting());
   m_Renderer->SetSampleRateModifier(other->m_Renderer->GetSampleRateModifier()); 
   m_Renderer->SetGlobalBBox(other->m_Renderer->GetGlobalBBox());
   m_Renderer->SetLocalBBox(other->m_Renderer->GetLocalBBox());
@@ -527,11 +527,11 @@ void RenderWindow::SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColo
   m_Renderer->SetTextColor(vTextColor); 
 }
 
-void RenderWindow::SetUseLigthing(bool bLighting, bool bPropagate) {
-  m_Renderer->SetUseLigthing(bLighting); 
+void RenderWindow::SetUseLighting(bool bLighting, bool bPropagate) {
+  m_Renderer->SetUseLighting(bLighting);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
-      m_vpLocks[1][i]->SetUseLigthing(bLighting, false);
+      m_vpLocks[1][i]->SetUseLighting(bLighting, false);
     }
   }
 }

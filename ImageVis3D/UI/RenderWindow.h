@@ -97,7 +97,7 @@ class RenderWindow : public QGLWidget
     void SetAvoidCompositing(bool bAvoidCompositing);
     bool GetAvoidCompositing() const;
 
-    void SetUseLigthing(bool bLighting, bool bPropagate=true);
+    void SetUseLighting(bool bLighting, bool bPropagate=true);
     void SetSampleRateModifier(float fSampleRateModifier, bool bPropagate=true); 
     void SetIsoValue(float fIsoVal, bool bPropagate=true);
     void SetCVIsoValue(float fIsoVal, bool bPropagate=true);

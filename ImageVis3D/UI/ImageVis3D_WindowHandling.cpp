@@ -457,7 +457,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     horizontalSlider_EyeDistance->setValue(int(m_ActiveRenderWin->GetRenderer()->GetStereoEyeDist()*100));
     horizontalSlider_FocalLength->setValue(int(m_ActiveRenderWin->GetRenderer()->GetStereoFocalLength()*10));
 
-    checkBox_Lighting->setChecked(m_ActiveRenderWin->GetRenderer()->GetUseLigthing());
+    checkBox_Lighting->setChecked(m_ActiveRenderWin->GetRenderer()->GetUseLighting());
     SetSampleRateSlider(int(m_ActiveRenderWin->GetRenderer()->GetSampleRateModifier()*100));
     int iRange = int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
     SetIsoValueSlider(int(m_ActiveRenderWin->GetRenderer()->GetIsoValue()*iRange), iRange);
