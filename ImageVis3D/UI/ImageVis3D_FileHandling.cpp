@@ -196,7 +196,6 @@ void MainWindow::LoadDirectory() {
   if (!directoryName.isEmpty()) {
     pleaseWait.SetText("Scanning directory for files, please wait  ...");
     settings.setValue("Folders/LoadDirectory", directoryName);
-    QString fileName;
     BrowseData browseDataDialog(m_MasterController, (QDialog*)&pleaseWait,directoryName, this);
 
     if (browseDataDialog.DataFound()) {
@@ -214,8 +213,7 @@ void MainWindow::LoadDirectory() {
         pleaseWait.SetText("Converting, please wait  ...");
         if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFilename.toStdString())) {
           QString strText =
-            tr("Unable to convert file %1 into %2.").arg(fileName).arg(targetFilename);
-
+            tr("Unable to convert file stack from directory %1 into %2.").arg(directoryName).arg(targetFilename);
           QMessageBox::critical(this, "Conversion Error", strText);
           m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", strText.toStdString().c_str());        
         }      
@@ -223,7 +221,7 @@ void MainWindow::LoadDirectory() {
         RenderWindow *renderWin = CreateNewRenderWindow(targetFilename);
         renderWin->show();
         RenderWindowActive(renderWin);
-        AddFileToMRUList(fileName);
+        AddFileToMRUList(targetFilename);
       }
     } else {
       QString msg =
