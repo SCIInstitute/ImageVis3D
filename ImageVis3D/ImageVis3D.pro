@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE          = app
-CONFIG           += link_prl static
+CONFIG           += link_prl static warn_on
 TARGET            = ../Build/ImageVis3D
 RCC_DIR           = ../Build/rcc
 OBJECTS_DIR       = ../Build/objects

@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE          = app
-CONFIG           += link_prl static
+CONFIG           += link_prl static warn_on
 TARGET            = Build/UVFConverter
 DEPENDPATH       += .
 INCLUDEPATH      += .
