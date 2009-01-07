@@ -81,7 +81,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "mode2d")          { Use2DTrans();} else
   if (strCommand == "modeiso")         { UseIso();} else
   if (strCommand == "close")           { CloseCurrentView();} else
-  if (strCommand == "resize")          { ResizeCurrentView(atoi(strParams[0].c_str()), atof(strParams[1].c_str()));} else
+  if (strCommand == "resize")          { ResizeCurrentView(atoi(strParams[0].c_str()), atoi(strParams[1].c_str()));} else
   if (strCommand == "rotateX")         { RotateCurrentViewX(atof(strParams[0].c_str()));} else
   if (strCommand == "rotateY")         { RotateCurrentViewY(atof(strParams[0].c_str()));} else
   if (strCommand == "rotateZ")         { RotateCurrentViewZ(atof(strParams[0].c_str()));} else
