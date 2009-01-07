@@ -8,20 +8,14 @@ function die
     exit 1
 }
 
-# Determines the appropriate VCS system to use.  Mostly, handles/distinguishes
+# Determines the appropriate VCS system to use.  Mainly to handles/distinguish
 # between svn and git-svn repositories.  Sets variable `VCS' to the appropriate
 # executable.
 VCS=""
 function _vcs
 {
     if test -d .git ; then
-        # Hack for tom -- stupid SSL workaround
-        which tjf-git-svn &> /dev/null
-        if test $? -eq 0 ; then
-            VCS="tjf-git-svn"
-        else
-            VCS="git svn"
-        fi
+        VCS="git svn"
     else
        VCS="svn"
     fi
