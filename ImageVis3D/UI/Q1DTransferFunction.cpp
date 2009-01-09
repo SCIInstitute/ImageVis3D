@@ -480,7 +480,10 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 
 bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
   // hand the load call over to the TransferFunction1D class
-  size_t iSize = m_pTrans->GetSize();
+  size_t iSize = 0;
+  if(m_pTrans) {
+    iSize = m_pTrans->GetSize();
+  }
 
   if( m_pTrans->Load(strFilename.toStdString(), iSize) ) {
     PreparePreviewData();
