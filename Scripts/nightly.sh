@@ -35,12 +35,21 @@ else
     qmake="qmake"
 fi
 # use qmake to generate makefiles, potentially in debug mode.
-if test "x$1" = "-debug"; then
-    try ${qmake} -spec ${spec} -recursive
-    CF="-Wextra -D_GLIBCXX_DEBUG"
-    try ${qmake} CONFIG+=debug QMAKE_CXXFLAGS+="${CF}" -recursive
-else
-    try ${qmake} -spec ${spec} -recursive
+CF="-fno-strict-aliasing"
+CFG="release"
+if test "x$1" = "x-debug"; then
+    CF="${CF} -Wextra -D_GLIBCXX_DEBUG"
+    CFG="debug"
+fi
+${qmake} \
+    CONFIG+=${CFG} \
+    QMAKE_CFLAGS="${CF}" \
+    QMAKE_CXXFLAGS+="${CF}" \
+    QMAKE_LDFLAGS="${CF} ${LDF}" \
+    -spec ${spec} \
+    -recursive
+if test $? -ne 0 ; then
+    die "qmake failed."
 fi
 make clean
 rm -f warnings
