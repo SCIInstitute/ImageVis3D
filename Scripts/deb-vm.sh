@@ -19,8 +19,7 @@ function try
     fi
 }
 
-status="status-deb-vm"
-
+rm -f ${status} warnings
 echo "Using compiler version:" > ${status}
 g++ --version >> ${status}
 echo "" >> ${status}
