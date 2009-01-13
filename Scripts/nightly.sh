@@ -1,15 +1,6 @@
 #!/bin/sh
 source Scripts/util.sh
 
-function try
-{
-    $@
-    if test $? -ne 0 ; then
-        echo "'$@' failed, bailing .."
-        exit 1
-    fi
-}
-
 spec="linux-g++"
 if test `uname` = "Darwin" ; then
     spec="macx-g++"
@@ -25,6 +16,8 @@ make clean &>/dev/null
 # manual clean, just in case Qt's clean isn't good enough.
 find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
     -exec rm {} +
+rm -fr Build/ImageVis3D.app
+rm -f Build/ImageVis3D
 
 # Find qmake -- expect it in PATH, but the user can set QT_BIN to pick a
 # specific Qt.

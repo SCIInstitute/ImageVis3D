@@ -4,9 +4,19 @@
 # Give an error message and exit uncleanly.
 function die
 {
-    echo "$@"
+    echo "'$@' failed, bailing..."
     exit 1
 }
+
+# Run a command which must succeed, else the script terminates.
+function try
+{
+    $@
+    if test $? -ne 0 ; then
+        die "$@"
+    fi
+}
+
 
 # Determines the appropriate VCS system to use.  Mainly to handles/distinguish
 # between svn and git-svn repositories.  Sets variable `VCS' to the appropriate
