@@ -171,9 +171,8 @@ void MainWindow::CaptureRotation() {
         }
 
         pleaseWait.SetText("Capturing a full 360° MIP rotation, please wait  ...");
-        int i = 0;
         float fAngle = 0.0f;
-        while (i < iNumImages) {
+        for (int i = 0;i<iNumImages;i++) {
           labelOut->SetOutput(true, true, true, false);
           if (bStereo) {
             if (i==0)
@@ -191,7 +190,7 @@ void MainWindow::CaptureRotation() {
           fAngle = float(i)/float(iNumImages) * 360.0f;
           string strSequenceName;
 
-          if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, &strSequenceName)) {            
+          if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), &strSequenceName)) {            
             QString msg = tr("Error writing image file %1.").arg(strSequenceName.c_str());
             QMessageBox::warning(this, tr("Error"), msg);
             m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
@@ -205,7 +204,7 @@ void MainWindow::CaptureRotation() {
             } else {
               fAngle -= 3.0f;
               string strImageFilenameRight = SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_R");
-              if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, &strSequenceName)) {           
+              if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, i==(iNumImages-1), &strSequenceName)) {           
                 QString msg = tr("Error writing image file %1.").arg(strImageFilenameRight.c_str());
                 QMessageBox::warning(this, tr("Error"), msg);
                 m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
@@ -214,8 +213,6 @@ void MainWindow::CaptureRotation() {
               vstrRightEyeImageVector[i] = strSequenceName;
             }
           } 
-
-          i++;
         }
 
         if (m_ActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode) && bStereo) {

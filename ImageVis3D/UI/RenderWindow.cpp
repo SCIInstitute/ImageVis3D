@@ -402,21 +402,34 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename)
 {
   GLFrameCapture f;
   makeCurrent();
+#ifdef __APPLE__
+  hide();
+  show();
+#endif
+  repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
   return f.CaptureSingleFrame(strFilename);
 }
 
 
-bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, std::string* strRealFilename)
+bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, std::string* strRealFilename)
 {
   GLFrameCapture f;
-  makeCurrent();
   m_Renderer->SetMIPRotationAngle(fAngle);
   bool bSystemOrtho = m_Renderer->GetOrthoView();
   if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bOrtho);
+  makeCurrent();
+#ifdef __APPLE__
+  hide();
+  show();
+#endif
+
+  repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
-  m_Renderer->SetMIPRotationAngle(0.0f);
-  if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bSystemOrtho);
+  if (bFinalFrame) { // restore state
+    m_Renderer->SetMIPRotationAngle(0.0f);
+    if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bSystemOrtho);
+  }
   return f.CaptureSequenceFrame(strFilename, strRealFilename);
 }
 
@@ -424,6 +437,11 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename, std::str
 {
   GLFrameCapture f;
   makeCurrent();
+#ifdef __APPLE__
+  hide();
+  show();
+#endif
+  repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
   return f.CaptureSequenceFrame(strFilename, strRealFilename);
 }
