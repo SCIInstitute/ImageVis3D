@@ -398,23 +398,34 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLOD
   m_Renderer->SetPerfMeasures(iMinFramerate, iLODDelay); 
 }
 
-bool RenderWindow::CaptureFrame(const std::string& strFilename)
+bool RenderWindow::CaptureFrame(const std::string& strFilename, 
+#ifdef __APPLE__
+                                 QMdiArea* container
+#else
+                                 QMdiArea*
+#endif
+                                )
 {
   GLFrameCapture f;
   makeCurrent();
-  ((QWidget*)parent())->hide();
-  ((QWidget*)parent())->show();
 #ifdef __APPLE__
-  ((QWidget*)parent())->hide();
-  ((QWidget*)parent())->show();
-#endif
+  container->repaint();
+  container->repaint();
+#else
   repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
+#endif
   return f.CaptureSingleFrame(strFilename);
 }
 
 
-bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, std::string* strRealFilename)
+bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, 
+#ifdef __APPLE__
+                                   QMdiArea* container, 
+#else
+                                   QMdiArea*, 
+#endif
+                                   std::string* strRealFilename)
 {
   GLFrameCapture f;
   m_Renderer->SetMIPRotationAngle(fAngle);
@@ -422,11 +433,12 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bOrtho);
   makeCurrent();
 #ifdef __APPLE__
-  ((QWidget*)parent())->hide();
-  ((QWidget*)parent())->show();
-#endif
+  container->repaint();
+  container->repaint();
+#else
   repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
+#endif
   if (bFinalFrame) { // restore state
     m_Renderer->SetMIPRotationAngle(0.0f);
     if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bSystemOrtho);
@@ -434,16 +446,23 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   return f.CaptureSequenceFrame(strFilename, strRealFilename);
 }
 
-bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename, std::string* strRealFilename)
+bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename, 
+#ifdef __APPLE__
+                                        QMdiArea* container, 
+#else
+                                        QMdiArea*, 
+#endif
+                                        std::string* strRealFilename)
 {
   GLFrameCapture f;
   makeCurrent();
 #ifdef __APPLE__
-  ((QWidget*)parent())->hide();
-  ((QWidget*)parent())->show();
-#endif
+  container->repaint();
+  container->repaint();
+#else
   repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
+#endif
   return f.CaptureSequenceFrame(strFilename, strRealFilename);
 }
 

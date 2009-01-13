@@ -43,6 +43,7 @@
 #include "../Tuvok/Controller/MasterController.h"
 
 #include <QtGui/QListWidget>
+#include <QtGui/QMdiArea>
 #include <QtOpenGL/QGLWidget>
 #include "../Tuvok/Basics/ArcBall.h"
 #include <string>
@@ -76,9 +77,9 @@ class RenderWindow : public QGLWidget
     void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor);
     void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
-    bool CaptureFrame(const std::string& strFilename);
-    bool CaptureSequenceFrame(const std::string& strFilename, std::string* strRealFilename=NULL);
-    bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, std::string* strRealFilename=NULL);
+    bool CaptureFrame(const std::string& strFilename, QMdiArea* container);
+    bool CaptureSequenceFrame(const std::string& strFilename, QMdiArea* container, std::string* strRealFilename=NULL);
+    bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, QMdiArea* container, std::string* strRealFilename=NULL);
     void ToggleHQCaptureMode();
     void Translate(const FLOATMATRIX4& mTranslation) {SetTranslation(mTranslation*m_mAccumulatedTranslation);}
     void Rotate(const FLOATMATRIX4& mRotation) {SetRotation(mRotation*m_mAccumulatedRotation,mRotation*m_mAccumulatedRotation);}
