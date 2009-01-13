@@ -190,7 +190,7 @@ void MainWindow::CaptureRotation() {
           fAngle = float(i)/float(iNumImages) * 360.0f;
           string strSequenceName;
 
-          if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), &strSequenceName)) {            
+          if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), /*mdiArea->currentSubWindow(),*/ &strSequenceName)) {            
             QString msg = tr("Error writing image file %1.").arg(strSequenceName.c_str());
             QMessageBox::warning(this, tr("Error"), msg);
             m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());

@@ -46,6 +46,7 @@
 #include <QtOpenGL/QGLWidget>
 #include "../Tuvok/Basics/ArcBall.h"
 #include <string>
+#include <StdDefines.h>
 
 class MainWindow;
 

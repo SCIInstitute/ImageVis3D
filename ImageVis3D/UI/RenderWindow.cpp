@@ -403,8 +403,8 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename)
   GLFrameCapture f;
   makeCurrent();
 #ifdef __APPLE__
-  hide();
-  show();
+  parent()->hide();
+  parent()->show();
 #endif
   repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
@@ -420,10 +420,9 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bOrtho);
   makeCurrent();
 #ifdef __APPLE__
-  hide();
-  show();
+  parent()->hide();
+  parent()->show();
 #endif
-
   repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
   if (bFinalFrame) { // restore state
@@ -438,8 +437,8 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename, std::str
   GLFrameCapture f;
   makeCurrent();
 #ifdef __APPLE__
-  hide();
-  show();
+  parent()->hide();
+  parent()->show();
 #endif
   repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
