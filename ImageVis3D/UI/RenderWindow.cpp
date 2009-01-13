@@ -398,19 +398,13 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLOD
   m_Renderer->SetPerfMeasures(iMinFramerate, iLODDelay); 
 }
 
-bool RenderWindow::CaptureFrame(const std::string& strFilename, 
-#ifdef __APPLE__
-                                 QMdiArea* container
-#else
-                                 QMdiArea*
-#endif
-                                )
+bool RenderWindow::CaptureFrame(const std::string& strFilename)
 {
   GLFrameCapture f;
   makeCurrent();
 #ifdef __APPLE__
   paintGL();
-  paintGL();
+  paintGL(); // make sure we have the same results in the front and in the backbuffer
 #else
   repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
@@ -420,11 +414,6 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
 
 
 bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, 
-#ifdef __APPLE__
-                                   QMdiArea* container, 
-#else
-                                   QMdiArea*, 
-#endif
                                    std::string* strRealFilename)
 {
   GLFrameCapture f;
@@ -434,7 +423,7 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   makeCurrent();
 #ifdef __APPLE__
   paintGL();
-  paintGL();
+  paintGL(); // make sure we have the same results in the front and in the backbuffer
 #else
   repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
@@ -447,18 +436,13 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
 }
 
 bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename, 
-#ifdef __APPLE__
-                                        QMdiArea* container, 
-#else
-                                        QMdiArea*, 
-#endif
                                         std::string* strRealFilename)
 {
   GLFrameCapture f;
   makeCurrent();
 #ifdef __APPLE__
   paintGL();
-  paintGL();
+  paintGL(); // make sure we have the same results in the front and in the backbuffer
 #else
   repaint();
   repaint(); // make sure we have the same results in the front and in the backbuffer
