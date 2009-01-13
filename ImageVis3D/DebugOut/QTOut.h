@@ -28,10 +28,10 @@
 
 /**
   \file    QTOut.h
-  \author    Jens Krueger
-        SCI Institute
-        University of Utah
-  \version  1.0
+  \author  Jens Krueger
+           SCI Institute
+           University of Utah
+  \version 1.0
   \date    August 2008
 */
 
@@ -44,7 +44,7 @@
 #include "../../Tuvok/DebugOut/AbstrDebugOut.h"
 #include <QtGui/QListWidget>
 
-class QTOut : public AbstrDebugOut{
+class QTOut : public AbstrDebugOut {
   public:
     QTOut(QListWidget *listWidget);
     virtual ~QTOut();
@@ -58,7 +58,6 @@ class QTOut : public AbstrDebugOut{
     QListWidget *m_listWidget;
 
     void _printf(const char* format, ...);
-
 };
 
 #endif // QTOut_H

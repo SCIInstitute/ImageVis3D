@@ -28,10 +28,10 @@
 
 /**
   \file    QTLabelOut.h
-  \author    Jens Krueger
-        SCI Institute
-        University of Utah
-  \version  1.0
+  \author  Jens Krueger
+           SCI Institute
+           University of Utah
+  \version 1.0
   \date    August 2008
 */
 
@@ -44,8 +44,6 @@
 #include "../../Tuvok/DebugOut/AbstrDebugOut.h"
 #include <QtGui/QLabel>
 #include <QtGui/QDialog>
-
-#include <deque>
 
 class QTLabelOut : public AbstrDebugOut {
   public:
