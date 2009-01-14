@@ -211,6 +211,7 @@ type out32.txt >> result.txt
 type out64.txt >> result.txt
 
 echo f | xcopy result.txt \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.log /Y
+xcopy Win_Latest_Version.txt \\geronimo\share\IV3D-WIN /Y
 IF EXIST out32.txt del out32.txt
 IF EXIST out64.txt del out64.txt
 
