@@ -20,7 +20,7 @@ cd ..
 for /f "tokens=1,2" %%i in (rev1.txt) do if %%i==Revision: set IV3DVERSION=%%j
 for /f "tokens=1,2" %%i in (rev2.txt) do if %%i==Revision: set TUVOKVERSION=%%j
 for /f "tokens=2,3" %%i in (ImageVis3D\StdDefines.h) do if %%i==IV3D_VERSION set IV3DCODEVERSION=%%j
-for /f "tokens=2,3" %%i in (ImageVis3D\Tuvok\StdTuvokDefines.h) do if %%i==TUVOK_VERSION set TUVOCCODEVERSION=%%j
+for /f "tokens=2,3" %%i in (Tuvok\StdTuvokDefines.h) do if %%i==TUVOK_VERSION set TUVOCCODEVERSION=%%j
 
 del rev1.txt
 del rev2.txt
