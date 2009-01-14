@@ -135,5 +135,4 @@ private:
   void RedrawPreviewBarBack();
 };
 
-
 #endif // Q1DTRANSFERFUNCTION

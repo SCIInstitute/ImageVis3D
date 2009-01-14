@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -45,7 +45,7 @@
 
 using namespace std;
 
-SettingsDlg::SettingsDlg(MasterController& MasterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
+SettingsDlg::SettingsDlg(MasterController& MasterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
   QDialog(parent, flags),
   m_MasterController(MasterController),
   m_bInit(true),
@@ -70,22 +70,22 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
 
   // init stats labels
   QString desc;
-  if (m_MasterController.SysInfo()->IsCPUSizeComputed()) 
+  if (m_MasterController.SysInfo()->IsCPUSizeComputed())
     desc = tr("CPU Mem: %1 MB (%2 bytes)").arg(iMaxCPUMemSize/(1024*1024)).arg(iMaxCPUMemSize);
-  else 
+  else
     desc = tr("CPU Mem: unchecked");
   label_CPUMem->setText(desc);
 
-  if (m_MasterController.SysInfo()->IsGPUSizeComputed()) 
+  if (m_MasterController.SysInfo()->IsGPUSizeComputed())
     desc = tr("GPU Mem: %1 MB (%2 bytes)").arg(iMaxGPUMemSize/(1024*1024)).arg(iMaxGPUMemSize);
-  else 
+  else
     desc = tr("GPU Mem: unchecked");
-    
+
   label_GPUMem->setText(desc);
 
-  if (m_MasterController.SysInfo()->IsNumberOfCPUsComputed()) 
-    desc = tr("Processors %1").arg(iProcCount);    
-  else 
+  if (m_MasterController.SysInfo()->IsNumberOfCPUsComputed())
+    desc = tr("Processors %1").arg(iProcCount);
+  else
     desc = tr("Processors: unchecked");
   label_NumProc->setText(desc);
 
@@ -101,7 +101,7 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   }
 
   // on a 32bit system allow only a maximum of 2 gig to be adressed
-  if (iBitWith == 32) 
+  if (iBitWith == 32)
     horizontalSlider_CPUMem->setMaximum(min(horizontalSlider_CPUMem->maximum(), 2048));
 
   iMaxGPUMemSize /= 1024*1024;
@@ -207,7 +207,7 @@ void SettingsDlg::SelectTextColor() {
                                                                              .arg(255-m_cTextColor.blue());
 
     pushButtonSelText->setStyleSheet( strStyle );
-  }  
+  }
 }
 
 void SettingsDlg::SetTextOpacity(int iOpacity) {
@@ -227,7 +227,7 @@ void SettingsDlg::SelectBackColor1() {
                                                                              .arg(255-m_cBackColor1.blue());
 
     pushButtonSelBack1->setStyleSheet( strStyle );
-  }  
+  }
 }
 
 void SettingsDlg::SelectBackColor2() {
@@ -243,7 +243,7 @@ void SettingsDlg::SelectBackColor2() {
                                                                              .arg(255-m_cBackColor2.blue());
 
     pushButtonSelBack2->setStyleSheet( strStyle );
-  } 
+  }
 }
 
 // make sure the user cannot select more GPU than CPU mem
@@ -288,8 +288,8 @@ void SettingsDlg::SetLogoLabel() {
   }
 }
 
-void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
-                            bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
+void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
+                            bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bAvoidCompositing,
@@ -303,7 +303,7 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
   horizontalSlider_LODDelay->setValue(iLODDelay);
   horizontalSlider_ActTS->setValue(iActiveTS);
   horizontalSlider_InactTS->setValue(iInactiveTS);
-   
+
   checkBox_ShowVersionInTitle->setChecked(bShowVersionInTitle);
   checkBox_SaveGEOOnExit->setChecked(bAutoSaveGEO);
   checkBox_SaveWSPOnExit->setChecked(bAutoSaveWSP);
@@ -321,28 +321,28 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
   }
 
   switch (iVolRenType) {
-    case 1    : radioButton_APIGL->setChecked(true); 
+    case 1    : radioButton_APIGL->setChecked(true);
                 radioButton_Raycast->setChecked(true);
                 break;
-    case 2    : radioButton_APIDX->setChecked(true); 
+    case 2    : radioButton_APIDX->setChecked(true);
                 radioButton_SBVR->setChecked(true);
                 break;
-    case 3    : radioButton_APIDX->setChecked(true); 
+    case 3    : radioButton_APIDX->setChecked(true);
                 radioButton_Raycast->setChecked(true);
                 break;
-    default   : radioButton_APIGL->setChecked(true); 
+    default   : radioButton_APIGL->setChecked(true);
                 radioButton_SBVR->setChecked(true);
                 break;
   }
 
   switch (iLogoPos) {
-    case 0    : radioButton_logoTL->setChecked(true); 
+    case 0    : radioButton_logoTL->setChecked(true);
                 break;
-    case 1    : radioButton_logoTR->setChecked(true); 
+    case 1    : radioButton_logoTR->setChecked(true);
                 break;
-    case 2    : radioButton_logoBL->setChecked(true); 
+    case 2    : radioButton_logoBL->setChecked(true);
                 break;
-    default   : radioButton_logoBR->setChecked(true); 
+    default   : radioButton_logoBR->setChecked(true);
                 break;
   }
 
@@ -351,7 +351,7 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
 
   checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
   checkBox_AvoidCompositing->setChecked(bAvoidCompositing);
-  
+
   QString strStyle =
   tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
                                                                            .arg(m_cBackColor1.green())
@@ -391,7 +391,7 @@ void SettingsDlg::WarnAPIMethodChange() {
 }
 
 unsigned int SettingsDlg::GetVolrenType() const {
-  unsigned int iResult = radioButton_APIGL->isChecked() ? 0 : 2; 
+  unsigned int iResult = radioButton_APIGL->isChecked() ? 0 : 2;
   iResult += radioButton_SBVR->isChecked() ? 0 : 1;
   return iResult;
 }
@@ -440,5 +440,5 @@ void SettingsDlg::SelectLogo() {
 
 void SettingsDlg::RemoveLogo() {
   m_strLogoFilename = "";
-  SetLogoLabel();  
+  SetLogoLabel();
 }
