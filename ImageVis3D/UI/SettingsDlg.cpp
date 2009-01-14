@@ -70,54 +70,51 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
 
   // init stats labels
   QString desc;
-  if (iMaxCPUMemSize==0) 
-    desc = tr("CPU Mem: unchecked");
-  else 
+  if (m_MasterController.SysInfo()->IsCPUSizeComputed()) 
     desc = tr("CPU Mem: %1 MB (%2 bytes)").arg(iMaxCPUMemSize/(1024*1024)).arg(iMaxCPUMemSize);
+  else 
+    desc = tr("CPU Mem: unchecked");
   label_CPUMem->setText(desc);
 
-  if (iMaxGPUMemSize==0) 
-    desc = tr("GPU Mem: unchecked");
-  else 
+  if (m_MasterController.SysInfo()->IsGPUSizeComputed()) 
     desc = tr("GPU Mem: %1 MB (%2 bytes)").arg(iMaxGPUMemSize/(1024*1024)).arg(iMaxGPUMemSize);
+  else 
+    desc = tr("GPU Mem: unchecked");
+    
   label_GPUMem->setText(desc);
 
-  if (iProcCount==0) 
-    desc = tr("Processors: unchecked");
-  else 
+  if (m_MasterController.SysInfo()->IsNumberOfCPUsComputed()) 
     desc = tr("Processors %1").arg(iProcCount);    
+  else 
+    desc = tr("Processors: unchecked");
   label_NumProc->setText(desc);
 
   desc = tr("Running in %1 bit mode").arg(iBitWith);
   label_NumBits->setText(desc);
 
-  // init mem sliders
-
-  horizontalSlider_GPUMem->setMinimum(64);
-  horizontalSlider_CPUMem->setMinimum(512);
-
-  if (iMaxCPUMemSize == 0) {
-    iMaxCPUMemSize = 32*1024;
-    horizontalSlider_CPUMem->setMaximum(iMaxCPUMemSize);
-    horizontalSlider_CPUMem->setValue(2*1024);
+  iMaxCPUMemSize /= 1024*1024;
+  horizontalSlider_CPUMem->setMaximum(iMaxCPUMemSize);
+  if (!m_MasterController.SysInfo()->IsCPUSizeComputed()) {
+    horizontalSlider_CPUMem->setValue(1024); // choose one gig as default in core size if the max size is not-computed the default
   } else {
-    iMaxCPUMemSize /= 1024*1024;
-    horizontalSlider_CPUMem->setMaximum(iMaxCPUMemSize);
     horizontalSlider_CPUMem->setValue(int(iMaxCPUMemSize*0.8f));
   }
 
+  // on a 32bit system allow only a maximum of 2 gig to be adressed
   if (iBitWith == 32) 
     horizontalSlider_CPUMem->setMaximum(min(horizontalSlider_CPUMem->maximum(), 2048));
 
-  if (iMaxGPUMemSize == 0) {
-    iMaxGPUMemSize = 4*1024;
-    horizontalSlider_GPUMem->setMaximum(iMaxGPUMemSize);
-    horizontalSlider_GPUMem->setValue(512);
+  iMaxGPUMemSize /= 1024*1024;
+  horizontalSlider_GPUMem->setMaximum(iMaxGPUMemSize);
+  if (!m_MasterController.SysInfo()->IsGPUSizeComputed()) {
+    horizontalSlider_GPUMem->setValue(512); // choose 512 meg as default in core size if the max size is not-computed the default
   } else {
-    iMaxGPUMemSize /= 1024*1024;
-    horizontalSlider_GPUMem->setMaximum(iMaxGPUMemSize);
     horizontalSlider_GPUMem->setValue(int(iMaxGPUMemSize*0.8f));
   }
+
+  // init mem sliders
+  horizontalSlider_GPUMem->setMinimum(32);
+  horizontalSlider_CPUMem->setMinimum(512);
 
   m_InitialGPUMemMax = horizontalSlider_GPUMem->maximum();
 }
