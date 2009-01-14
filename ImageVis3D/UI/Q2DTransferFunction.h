@@ -83,9 +83,20 @@ public:
     return m_pTrans->m_Swatches[i].pPoints.size();}
 
   size_t GetGradientCount() {
-    return m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.size();}
+    if(static_cast<size_t>(m_iActiveSwatchIndex) >=
+       m_pTrans->m_Swatches.size()) {
+      return 0;
+    }
+    return m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.size();
+  }
   GradientStop GetGradient(unsigned int i) {
-    return m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops[i];}
+    if(static_cast<size_t>(m_iActiveSwatchIndex) >=
+       m_pTrans->m_Swatches.size()) {
+      // need to return something invalid.
+      return GradientStop(0.0, FLOATVECTOR4(0,0,0,0));
+    }
+    return m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops[i];
+  }
   void AddGradient(GradientStop stop);
   void DeleteGradient(unsigned int i);
   void SetGradient(unsigned int i, GradientStop stop);
