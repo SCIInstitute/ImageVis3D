@@ -897,31 +897,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_selectCaptureFilename" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
-               <horstretch>20</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize" >
-              <size>
-               <width>35</width>
-               <height>23</height>
-              </size>
-             </property>
-             <property name="maximumSize" >
-              <size>
-               <width>20</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="toolTip" >
-              <string>Click here zo change the filename, filetype and location of the captured image.</string>
-             </property>
-             <property name="statusTip" >
-              <string>Automatically record a 360 degree rotation of the current view.</string>
-             </property>
+            <widget class="QToolButton" name="toolButton_selectCaptureFilename" >
              <property name="text" >
               <string>...</string>
              </property>
@@ -1372,7 +1348,7 @@
    <property name="minimumSize" >
     <size>
      <width>175</width>
-     <height>234</height>
+     <height>245</height>
     </size>
    </property>
    <property name="windowTitle" >
@@ -1929,7 +1905,7 @@
    <property name="minimumSize" >
     <size>
      <width>445</width>
-     <height>416</height>
+     <height>435</height>
     </size>
    </property>
    <property name="features" >
@@ -2005,23 +1981,14 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_Collapse" >
-             <property name="minimumSize" >
-              <size>
-               <width>30</width>
-               <height>23</height>
-              </size>
-             </property>
-             <property name="maximumSize" >
-              <size>
-               <width>25</width>
-               <height>16777215</height>
-              </size>
-             </property>
+            <widget class="QToolButton" name="toolButton_Collapse2D" >
              <property name="toolTip" >
               <string>Collapse the polygon selcetion part of the 2D transfer function.</string>
              </property>
              <property name="statusTip" >
+              <string>Collapse the polygon selcetion part of the 2D transfer function.</string>
+             </property>
+             <property name="whatsThis" >
               <string>Collapse the polygon selcetion part of the 2D transfer function.</string>
              </property>
              <property name="text" >
@@ -2536,29 +2503,14 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_Expand" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-            <horstretch>25</horstretch>
-            <verstretch>25</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize" >
-           <size>
-            <width>30</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="maximumSize" >
-           <size>
-            <width>25</width>
-            <height>25</height>
-           </size>
-          </property>
+         <widget class="QToolButton" name="toolButton" >
           <property name="toolTip" >
            <string>Expand the polygon selcetion part of the 2D transfer function.</string>
           </property>
           <property name="statusTip" >
+           <string>Expand the polygon selcetion part of the 2D transfer function.</string>
+          </property>
+          <property name="whatsThis" >
            <string>Expand the polygon selcetion part of the 2D transfer function.</string>
           </property>
           <property name="text" >
@@ -2830,18 +2782,9 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_Open1DTrans" >
-                <property name="minimumSize" >
-                 <size>
-                  <width>20</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="maximumSize" >
-                 <size>
-                  <width>20</width>
-                  <height>16777215</height>
-                 </size>
+               <widget class="QToolButton" name="toolButton_Open1DTrans" >
+                <property name="toolTip" >
+                 <string>Show 1D transfer function editor.</string>
                 </property>
                 <property name="statusTip" >
                  <string>Show 1D transfer function editor.</string>
@@ -2850,57 +2793,39 @@
                  <string>Show 1D transfer function editor.</string>
                 </property>
                 <property name="text" >
-                 <string/>
+                 <string>...</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_Open2DTrans" >
-                <property name="minimumSize" >
-                 <size>
-                  <width>20</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="maximumSize" >
-                 <size>
-                  <width>20</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
+               <widget class="QToolButton" name="toolButton_Open2DTrans" >
                 <property name="toolTip" >
                  <string>Show 2D transfer function editor.</string>
                 </property>
                 <property name="statusTip" >
                  <string>Show 2D transfer function editor.</string>
                 </property>
+                <property name="whatsThis" >
+                 <string>Show 2D transfer function editor.</string>
+                </property>
                 <property name="text" >
-                 <string/>
+                 <string>...</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_OpenIso" >
-                <property name="minimumSize" >
-                 <size>
-                  <width>20</width>
-                  <height>23</height>
-                 </size>
-                </property>
-                <property name="maximumSize" >
-                 <size>
-                  <width>20</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
+               <widget class="QToolButton" name="toolButton_OpenIso" >
                 <property name="toolTip" >
                  <string>Show isosurface editor.</string>
                 </property>
                 <property name="statusTip" >
                  <string>Show isosurface editor.</string>
                 </property>
+                <property name="whatsThis" >
+                 <string>Show isosurface editor.</string>
+                </property>
                 <property name="text" >
-                 <string/>
+                 <string>...</string>
                 </property>
                </widget>
               </item>
@@ -4364,7 +4289,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>155</x>
-     <y>1641</y>
+     <y>1620</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4379,8 +4304,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>901</x>
-     <y>1643</y>
+     <x>911</x>
+     <y>1621</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4460,7 +4385,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>155</x>
-     <y>1938</y>
+     <y>1933</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4476,7 +4401,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>155</x>
-     <y>1967</y>
+     <y>1962</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4491,8 +4416,8 @@
    <slot>Transfer2DLoad()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>755</x>
-     <y>1996</y>
+     <x>795</x>
+     <y>1991</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4507,8 +4432,8 @@
    <slot>Transfer2DSave()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>932</x>
-     <y>1996</y>
+     <x>972</x>
+     <y>1991</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4523,8 +4448,8 @@
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1193</x>
-     <y>1026</y>
+     <x>1284</x>
+     <y>981</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4539,8 +4464,8 @@
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1113</x>
-     <y>607</y>
+     <x>1106</x>
+     <y>645</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4555,8 +4480,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1113</x>
-     <y>631</y>
+     <x>1106</x>
+     <y>680</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4571,8 +4496,8 @@
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1113</x>
-     <y>655</y>
+     <x>1106</x>
+     <y>713</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4588,7 +4513,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1689</y>
+     <y>1670</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4604,7 +4529,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1713</y>
+     <y>1696</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4620,7 +4545,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1737</y>
+     <y>1722</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4636,7 +4561,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1761</y>
+     <y>1748</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4652,7 +4577,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1892</y>
+     <y>1885</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4668,7 +4593,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1861</y>
+     <y>1852</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4684,7 +4609,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>362</x>
-     <y>1213</y>
+     <y>1199</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4700,7 +4625,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>69</x>
-     <y>1213</y>
+     <y>1199</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4716,7 +4641,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>224</x>
-     <y>1213</y>
+     <y>1199</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4732,7 +4657,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>145</x>
-     <y>1213</y>
+     <y>1199</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4748,7 +4673,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>281</x>
-     <y>1213</y>
+     <y>1199</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4764,7 +4689,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>155</x>
-     <y>1996</y>
+     <y>1991</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4780,7 +4705,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>155</x>
-     <y>1641</y>
+     <y>1620</y>
     </hint>
     <hint type="destinationlabel" >
      <x>155</x>
@@ -4795,8 +4720,8 @@
    <slot>Transfer2DAddGradient()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>931</x>
-     <y>1910</y>
+     <x>972</x>
+     <y>1904</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4811,8 +4736,8 @@
    <slot>Transfer2DDeleteGradient()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>931</x>
-     <y>1941</y>
+     <x>972</x>
+     <y>1935</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4827,8 +4752,8 @@
    <slot>Transfer2DUpdateGradientBox()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>901</x>
-     <y>1643</y>
+     <x>911</x>
+     <y>1621</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4843,8 +4768,8 @@
    <slot>Transfer2DChooseGradientColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>731</x>
-     <y>1973</y>
+     <x>772</x>
+     <y>1968</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4859,8 +4784,8 @@
    <slot>Transfer2DChooseGradientOpacity()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>932</x>
-     <y>1971</y>
+     <x>972</x>
+     <y>1966</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4875,8 +4800,8 @@
    <slot>ApplyUpdate()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1174</x>
-     <y>757</y>
+     <x>1265</x>
+     <y>719</y>
     </hint>
     <hint type="destinationlabel" >
      <x>687</x>
@@ -4891,8 +4816,8 @@
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1174</x>
-     <y>689</y>
+     <x>1265</x>
+     <y>654</y>
     </hint>
     <hint type="destinationlabel" >
      <x>685</x>
@@ -4907,8 +4832,8 @@
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1174</x>
-     <y>710</y>
+     <x>1265</x>
+     <y>675</y>
     </hint>
     <hint type="destinationlabel" >
      <x>683</x>
@@ -4923,8 +4848,8 @@
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1174</x>
-     <y>731</y>
+     <x>1265</x>
+     <y>696</y>
     </hint>
     <hint type="destinationlabel" >
      <x>680</x>
@@ -4940,7 +4865,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>146</x>
-     <y>1830</y>
+     <y>1819</y>
     </hint>
     <hint type="destinationlabel" >
      <x>415</x>
@@ -4956,7 +4881,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>182</x>
-     <y>566</y>
+     <y>559</y>
     </hint>
     <hint type="destinationlabel" >
      <x>419</x>
@@ -4972,7 +4897,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>371</x>
-     <y>1406</y>
+     <y>1389</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -5003,44 +4928,12 @@
    <slot>SetLighting(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1173</x>
-     <y>811</y>
+     <x>1264</x>
+     <y>776</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
      <y>1320</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_Collapse</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Collapse2DWidgets()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>932</x>
-     <y>1646</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>386</x>
-     <y>1427</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_Expand</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Expand2DWidgets()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>964</x>
-     <y>1647</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>386</x>
-     <y>1380</y>
     </hint>
    </hints>
   </connection>
@@ -5051,8 +4944,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>901</x>
-     <y>1643</y>
+     <x>911</x>
+     <y>1621</y>
     </hint>
     <hint type="destinationlabel" >
      <x>933</x>
@@ -5067,8 +4960,8 @@
    <slot>SetSampleRate(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1164</x>
-     <y>913</y>
+     <x>1255</x>
+     <y>878</y>
     </hint>
     <hint type="destinationlabel" >
      <x>389</x>
@@ -5083,8 +4976,8 @@
    <slot>SetIsoValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1156</x>
-     <y>1053</y>
+     <x>1249</x>
+     <y>1006</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -5099,12 +4992,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1193</x>
-     <y>1026</y>
+     <x>1284</x>
+     <y>981</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>1193</x>
-     <y>1306</y>
+     <x>1284</x>
+     <y>1268</y>
     </hint>
    </hints>
   </connection>
@@ -5115,8 +5008,8 @@
    <slot>ToggleGlobalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1173</x>
-     <y>835</y>
+     <x>1264</x>
+     <y>800</y>
     </hint>
     <hint type="destinationlabel" >
      <x>990</x>
@@ -5131,8 +5024,8 @@
    <slot>ToggleLocalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1173</x>
-     <y>859</y>
+     <x>1264</x>
+     <y>824</y>
     </hint>
     <hint type="destinationlabel" >
      <x>989</x>
@@ -5147,8 +5040,8 @@
    <slot>CaptureFrame()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1056</x>
-     <y>122</y>
+     <x>1125</x>
+     <y>119</y>
     </hint>
     <hint type="destinationlabel" >
      <x>998</x>
@@ -5163,28 +5056,12 @@
    <slot>CaptureSequence()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1191</x>
-     <y>122</y>
+     <x>1283</x>
+     <y>119</y>
     </hint>
     <hint type="destinationlabel" >
      <x>999</x>
      <y>133</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_selectCaptureFilename</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>SetCaptureFilename()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1179</x>
-     <y>81</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>1005</x>
-     <y>66</y>
     </hint>
    </hints>
   </connection>
@@ -5195,8 +5072,8 @@
    <slot>CaptureRotation()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1183</x>
-     <y>177</y>
+     <x>1274</x>
+     <y>173</y>
     </hint>
     <hint type="destinationlabel" >
      <x>997</x>
@@ -5211,8 +5088,8 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1030</x>
-     <y>544</y>
+     <x>1074</x>
+     <y>573</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1008</x>
@@ -5227,8 +5104,8 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1107</x>
-     <y>544</y>
+     <x>1174</x>
+     <y>573</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1005</x>
@@ -5243,8 +5120,8 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1183</x>
-     <y>528</y>
+     <x>1274</x>
+     <y>573</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1007</x>
@@ -5275,8 +5152,8 @@
    <slot>ChooseIsoColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1192</x>
-     <y>1083</y>
+     <x>1284</x>
+     <y>1035</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1004</x>
@@ -5291,8 +5168,8 @@
    <slot>ToggleClearView()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1192</x>
-     <y>1107</y>
+     <x>1284</x>
+     <y>1059</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1000</x>
@@ -5307,8 +5184,8 @@
    <slot>ChooseFocusColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1191</x>
-     <y>1184</y>
+     <x>1284</x>
+     <y>1133</y>
     </hint>
     <hint type="destinationlabel" >
      <x>998</x>
@@ -5323,8 +5200,8 @@
    <slot>SetFocusIsoValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1155</x>
-     <y>1154</y>
+     <x>1249</x>
+     <y>1104</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1000</x>
@@ -5339,8 +5216,8 @@
    <slot>SetFocusSize(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1191</x>
-     <y>1229</y>
+     <x>1284</x>
+     <y>1178</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1003</x>
@@ -5355,8 +5232,8 @@
    <slot>SetContextScale(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1191</x>
-     <y>1274</y>
+     <x>1284</x>
+     <y>1223</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1004</x>
@@ -5371,8 +5248,8 @@
    <slot>SetBorderSize(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1191</x>
-     <y>1319</y>
+     <x>1284</x>
+     <y>1268</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1000</x>
@@ -5388,7 +5265,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>59</x>
-     <y>902</y>
+     <y>892</y>
     </hint>
     <hint type="destinationlabel" >
      <x>384</x>
@@ -5404,7 +5281,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>329</x>
-     <y>926</y>
+     <y>916</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -5420,7 +5297,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>213</x>
-     <y>974</y>
+     <y>964</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -5436,7 +5313,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>268</x>
-     <y>950</y>
+     <y>940</y>
     </hint>
     <hint type="destinationlabel" >
      <x>382</x>
@@ -5452,7 +5329,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>105</x>
-     <y>1129</y>
+     <y>1119</y>
     </hint>
     <hint type="destinationlabel" >
      <x>385</x>
@@ -5468,7 +5345,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>99</x>
-     <y>1458</y>
+     <y>1441</y>
     </hint>
     <hint type="destinationlabel" >
      <x>388</x>
@@ -5484,7 +5361,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>202</x>
-     <y>1506</y>
+     <y>1489</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -5500,59 +5377,11 @@
    <hints>
     <hint type="sourcelabel" >
      <x>344</x>
-     <y>1562</y>
+     <y>1544</y>
     </hint>
     <hint type="destinationlabel" >
      <x>383</x>
      <y>1562</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_Open1DTrans</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Show1DTrans()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1138</x>
-     <y>609</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>980</x>
-     <y>664</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_Open2DTrans</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>Show2DTrans()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1138</x>
-     <y>634</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>981</x>
-     <y>632</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_OpenIso</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>ShowIsoEdit()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1138</x>
-     <y>659</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>979</x>
-     <y>607</y>
     </hint>
    </hints>
   </connection>
@@ -5564,7 +5393,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>97</x>
-     <y>1407</y>
+     <y>1390</y>
     </hint>
     <hint type="destinationlabel" >
      <x>122</x>
@@ -5585,6 +5414,102 @@
     <hint type="destinationlabel" >
      <x>601</x>
      <y>1013</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton_selectCaptureFilename</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetCaptureFilename()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1269</x>
+     <y>79</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>958</x>
+     <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton_Open1DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Show1DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1121</x>
+     <y>641</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>959</x>
+     <y>690</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton_Open2DTrans</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Show2DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1123</x>
+     <y>674</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>957</x>
+     <y>738</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton_OpenIso</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ShowIsoEdit()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1122</x>
+     <y>713</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>958</x>
+     <y>791</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton_Collapse2D</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Collapse2DWidgets()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>958</x>
+     <y>1609</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>671</x>
+     <y>1582</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Expand2DWidgets()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>984</x>
+     <y>1633</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>896</x>
+     <y>1563</y>
     </hint>
    </hints>
   </connection>
