@@ -3157,8 +3157,17 @@
         <number>0</number>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_30" >
-        <property name="margin" >
+        <property name="leftMargin" >
          <number>0</number>
+        </property>
+        <property name="topMargin" >
+         <number>9</number>
+        </property>
+        <property name="rightMargin" >
+         <number>0</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>9</number>
         </property>
         <item>
          <widget class="QFrame" name="frame_21" >
@@ -3623,7 +3632,7 @@
        <property name="minimumSize" >
         <size>
          <width>0</width>
-         <height>23</height>
+         <height>0</height>
         </size>
        </property>
        <property name="text" >
@@ -3662,10 +3671,10 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_32" >
         <property name="spacing" >
-         <number>3</number>
+         <number>6</number>
         </property>
         <property name="margin" >
-         <number>3</number>
+         <number>9</number>
         </property>
         <item>
          <widget class="QLabel" name="label_LODProgress" >
@@ -3723,10 +3732,10 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_28" >
         <property name="spacing" >
-         <number>3</number>
+         <number>9</number>
         </property>
         <property name="margin" >
-         <number>3</number>
+         <number>9</number>
         </property>
         <item>
          <widget class="QLabel" name="label_12" >
