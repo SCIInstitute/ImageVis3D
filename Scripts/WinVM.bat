@@ -30,6 +30,15 @@ echo %IV3DVERSION% >>      Windows_Latest_Version.txt
 echo %TUVOCCODEVERSION% >> Windows_Latest_Version.txt
 echo %TUVOKVERSION% >>     Windows_Latest_Version.txt
 
+echo #ifndef IV3D_SVN_VERSION >> ImageVis3D\StdDefines.h
+echo #define IV3D_SVN_VERSION %IV3DVERSION% >> ImageVis3D\StdDefines.h
+echo #endif >> ImageVis3D\StdDefines.h
+
+echo #ifndef TUVOK_SVN_VERSION >> Tuvok\StdTuvokDefines.h
+echo #define TUVOK_SVN_VERSION %TUVOKVERSION% >> Tuvok\StdTuvokDefines.h
+echo #endif >> Tuvok\StdTuvokDefines.h
+
+
 set REVSTR=%IV3DVERSION%_%TUVOKVERSION%
 set CONFIG=Release (with DirectX)
 set QTDIR32=C:\QT\4.4.3-32bit-static\
@@ -214,4 +223,7 @@ echo f | xcopy result.txt \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%
 xcopy Win_Latest_Version.txt \\geronimo\share\IV3D-WIN /Y
 IF EXIST out32.txt del out32.txt
 IF EXIST out64.txt del out64.txt
+
+del ImageVis3D\StdDefines.h
+del Tuvok\StdTuvokDefines.h
 
