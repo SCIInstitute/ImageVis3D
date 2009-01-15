@@ -11,7 +11,7 @@ UI_DIR            = UI/AutoGen
 MOC_DIR           = UI/AutoGen
 DEPENDPATH       += .
 INCLUDEPATH      += .
-QT               += opengl
+QT               += opengl network
 LIBS              = -L../Tuvok/Build -lTuvok
 
 # Input
