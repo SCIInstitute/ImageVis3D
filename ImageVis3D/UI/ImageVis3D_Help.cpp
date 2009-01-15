@@ -91,7 +91,7 @@ void MainWindow::CheckForUpdatesInternal() {
   }
 
   if (!m_pHttp) return;
-  QString strCompleteFile = tr("%1%2").arg(UPDATE_PATH).arg(UPDATE_VERSION_FILE);
+  QString strCompleteFile = tr("%1%2").arg(UPDATE_VERSION_PATH).arg(UPDATE_VERSION_FILE);
   QUrl url(strCompleteFile);
 
   QHttp::ConnectionMode mode = url.scheme().toLower() == "https" ? QHttp::ConnectionModeHttps : QHttp::ConnectionModeHttp;
@@ -123,12 +123,12 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
     int iTuvokSVNVersion = 0;
     if (GetVersionsFromUpdateFile(string(m_pUpdateFile->fileName().toAscii()), fIV3DVersion, iIV3DSVNVersion, fTuvokVersion, iTuvokSVNVersion)) {
       if (fIV3DVersion > float(IV3D_VERSION) || fTuvokVersion > float(TUVOK_VERSION)) {
-        QString qstrMessage = tr("A new version of ImageVis3D was found. You SHOULD download the newer version at %1/%2").arg(UPDATE_PATH).arg(UPDATE_FILE);
+        QString qstrMessage = tr("A new version of ImageVis3D was found. You SHOULD download the newer version at %1").arg(UPDATE_STABLE_PATH);
         QMessageBox::information(this, tr("Update Check"),qstrMessage);
       } else {
 #if defined(IV3D_SVN_VERSION) && defined(TUVOK_SVN_VERSION)
         if (m_bStartupCheck && iIV3DSVNVersion > int(IV3D_SVN_VERSION) || iTuvokSVNVersion > int(TUVOK_SVN_VERSION)) {
-          QString qstrMessage = tr("A new SVN build of ImageVis3D was found. You MAY want to download the newer version at %1/%2").arg(UPDATE_PATH).arg(UPDATE_FILE);
+          QString qstrMessage = tr("A new SVN build of ImageVis3D was found. You MAY want to download the newer version at %1/%2").arg(UPDATE_NIGHTLY_PATH).arg(UPDATE_FILE);
           QMessageBox::information(this, tr("Update Check"),qstrMessage);
         } else {
 #endif
