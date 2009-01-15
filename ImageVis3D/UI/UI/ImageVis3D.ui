@@ -906,7 +906,7 @@
              </property>
              <property name="minimumSize" >
               <size>
-               <width>20</width>
+               <width>35</width>
                <height>23</height>
               </size>
              </property>
@@ -1611,7 +1611,7 @@
    <property name="minimumSize" >
     <size>
      <width>400</width>
-     <height>375</height>
+     <height>378</height>
     </size>
    </property>
    <property name="windowTitle" >
@@ -1650,7 +1650,7 @@
          <number>0</number>
         </property>
         <property name="bottomMargin" >
-         <number>3</number>
+         <number>6</number>
         </property>
         <item row="0" column="0" >
          <widget class="QCheckBox" name="checkBox_Use1DTrans" >
@@ -1928,8 +1928,8 @@
   <widget class="QDockWidget" name="dockWidget_2DTrans" >
    <property name="minimumSize" >
     <size>
-     <width>442</width>
-     <height>415</height>
+     <width>445</width>
+     <height>416</height>
     </size>
    </property>
    <property name="features" >
@@ -1971,7 +1971,7 @@
          <number>0</number>
         </property>
         <property name="bottomMargin" >
-         <number>3</number>
+         <number>6</number>
         </property>
         <item>
          <widget class="QFrame" name="frame_4" >
@@ -2008,7 +2008,7 @@
             <widget class="QPushButton" name="pushButton_Collapse" >
              <property name="minimumSize" >
               <size>
-               <width>40</width>
+               <width>30</width>
                <height>23</height>
               </size>
              </property>
@@ -2025,7 +2025,7 @@
               <string>Collapse the polygon selcetion part of the 2D transfer function.</string>
              </property>
              <property name="text" >
-              <string>&lt;&lt;</string>
+              <string>&lt;</string>
              </property>
             </widget>
            </item>
@@ -2545,7 +2545,7 @@
           </property>
           <property name="minimumSize" >
            <size>
-            <width>25</width>
+            <width>30</width>
             <height>25</height>
            </size>
           </property>
@@ -2562,7 +2562,7 @@
            <string>Expand the polygon selcetion part of the 2D transfer function.</string>
           </property>
           <property name="text" >
-           <string>>></string>
+           <string>></string>
           </property>
          </widget>
         </item>
@@ -2850,7 +2850,7 @@
                  <string>Show 1D transfer function editor.</string>
                 </property>
                 <property name="text" >
-                 <string>...</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -2875,7 +2875,7 @@
                  <string>Show 2D transfer function editor.</string>
                 </property>
                 <property name="text" >
-                 <string>...</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -2900,7 +2900,7 @@
                  <string>Show isosurface editor.</string>
                 </property>
                 <property name="text" >
-                 <string>...</string>
+                 <string/>
                 </property>
                </widget>
               </item>
