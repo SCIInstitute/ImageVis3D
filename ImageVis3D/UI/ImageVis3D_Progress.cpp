@@ -43,14 +43,12 @@ using namespace std;
 void MainWindow::ClearProgressView() {
   label_ProgressDesc->setVisible(true);
   groupBox_RenderProgress->setVisible(false);
-  groupBox_ProcessProgess->setVisible(false);
 }
 
 void MainWindow::SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick) {
   if (dockWidget_ProgressView->isVisible()) {
     label_ProgressDesc->setVisible(false);
     groupBox_RenderProgress->setVisible(true);
-    groupBox_ProcessProgess->setVisible(false);
 
     QString msg = tr("LOD %1/%2").arg(iCurrentCount).arg(iLODCount);
     label_LODProgress->setText(msg);

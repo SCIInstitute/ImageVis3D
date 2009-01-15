@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1294</width>
-    <height>1957</height>
+    <height>1913</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -3622,7 +3622,44 @@
       <number>2</number>
      </property>
      <item>
+      <widget class="QLabel" name="label_ProgressDesc" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Minimum" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>This panel shows the progress of rendering operations for the active window. Currently nothing of that kind is active so you only see this text.</string>
+       </property>
+       <property name="textFormat" >
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="scaledContents" >
+        <bool>false</bool>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QGroupBox" name="groupBox_RenderProgress" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="title" >
         <string>Rendering</string>
        </property>
@@ -3656,78 +3693,6 @@
          </widget>
         </item>
        </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox_ProcessProgess" >
-       <property name="minimumSize" >
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="title" >
-        <string>Processing</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_28" >
-        <property name="spacing" >
-         <number>9</number>
-        </property>
-        <property name="margin" >
-         <number>9</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="label_12" >
-          <property name="text" >
-           <string>TextLabel</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QProgressBar" name="progressBar_Processing" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
-          <property name="value" >
-           <number>24</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_ProgressDesc" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize" >
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text" >
-        <string>This panel shows the progress of lengthy rendering or data processing operations when they are running for the active window. Currently nothing of that kind is active so you only see this text.</string>
-       </property>
-       <property name="textFormat" >
-        <enum>Qt::PlainText</enum>
-       </property>
-       <property name="scaledContents" >
-        <bool>false</bool>
-       </property>
-       <property name="alignment" >
-        <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-       </property>
-       <property name="wordWrap" >
-        <bool>true</bool>
-       </property>
       </widget>
      </item>
      <item>
