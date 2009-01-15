@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1294</width>
-    <height>2028</height>
+    <height>1957</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -3161,13 +3161,13 @@
          <number>0</number>
         </property>
         <property name="topMargin" >
-         <number>9</number>
+         <number>3</number>
         </property>
         <property name="rightMargin" >
          <number>0</number>
         </property>
         <property name="bottomMargin" >
-         <number>9</number>
+         <number>3</number>
         </property>
         <item>
          <widget class="QFrame" name="frame_21" >
@@ -3622,60 +3622,11 @@
       <number>2</number>
      </property>
      <item>
-      <widget class="QLabel" name="label_ProgressDesc" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize" >
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text" >
-        <string>This panel shows the progress of lengthy rendering or data processing operations when they are running for the active window. Currently nothing of that kind is active so you only see this text.</string>
-       </property>
-       <property name="textFormat" >
-        <enum>Qt::PlainText</enum>
-       </property>
-       <property name="scaledContents" >
-        <bool>false</bool>
-       </property>
-       <property name="alignment" >
-        <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-       </property>
-       <property name="wordWrap" >
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QGroupBox" name="groupBox_RenderProgress" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize" >
-        <size>
-         <width>0</width>
-         <height>105</height>
-        </size>
-       </property>
        <property name="title" >
         <string>Rendering</string>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_32" >
-        <property name="spacing" >
-         <number>6</number>
-        </property>
-        <property name="margin" >
-         <number>9</number>
-        </property>
+       <layout class="QVBoxLayout" name="verticalLayout_35" >
         <item>
          <widget class="QLabel" name="label_LODProgress" >
           <property name="text" >
@@ -3685,12 +3636,6 @@
         </item>
         <item>
          <widget class="QProgressBar" name="progressBar_Frame" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
           <property name="value" >
            <number>24</number>
           </property>
@@ -3705,12 +3650,6 @@
         </item>
         <item>
          <widget class="QProgressBar" name="progressBar_Level" >
-          <property name="minimumSize" >
-           <size>
-            <width>0</width>
-            <height>23</height>
-           </size>
-          </property>
           <property name="value" >
            <number>24</number>
           </property>
@@ -3758,6 +3697,37 @@
          </widget>
         </item>
        </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_ProgressDesc" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>This panel shows the progress of lengthy rendering or data processing operations when they are running for the active window. Currently nothing of that kind is active so you only see this text.</string>
+       </property>
+       <property name="textFormat" >
+        <enum>Qt::PlainText</enum>
+       </property>
+       <property name="scaledContents" >
+        <bool>false</bool>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
