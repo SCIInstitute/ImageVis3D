@@ -25,10 +25,10 @@ for /f "tokens=2,3" %%i in (Tuvok\StdTuvokDefines.h) do if %%i==TUVOK_VERSION se
 del rev1.txt
 del rev2.txt
 
-echo %IV3DCODEVERSION% > Win_Latest_Version.txt
-echo %IV3DVERSION% >> Win_Latest_Version.txt
-echo %TUVOCCODEVERSION% >> Win_Latest_Version.txt
-echo %TUVOKVERSION% >> Win_Latest_Version.txt
+echo %IV3DCODEVERSION% >   Windows_Latest_Version.txt
+echo %IV3DVERSION% >>      Windows_Latest_Version.txt
+echo %TUVOCCODEVERSION% >> Windows_Latest_Version.txt
+echo %TUVOKVERSION% >>     Windows_Latest_Version.txt
 
 set REVSTR=%IV3DVERSION%_%TUVOKVERSION%
 set CONFIG=Release (with DirectX)
