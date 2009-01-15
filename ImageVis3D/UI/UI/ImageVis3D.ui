@@ -1611,7 +1611,7 @@
    <property name="minimumSize" >
     <size>
      <width>400</width>
-     <height>374</height>
+     <height>375</height>
     </size>
    </property>
    <property name="windowTitle" >
@@ -1640,8 +1640,17 @@
         <number>0</number>
        </property>
        <layout class="QGridLayout" name="gridLayout_9" >
-        <property name="margin" >
+        <property name="leftMargin" >
          <number>0</number>
+        </property>
+        <property name="topMargin" >
+         <number>0</number>
+        </property>
+        <property name="rightMargin" >
+         <number>0</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>3</number>
         </property>
         <item row="0" column="0" >
          <widget class="QCheckBox" name="checkBox_Use1DTrans" >
@@ -1952,8 +1961,17 @@
         <property name="spacing" >
          <number>3</number>
         </property>
-        <property name="margin" >
+        <property name="leftMargin" >
          <number>0</number>
+        </property>
+        <property name="topMargin" >
+         <number>0</number>
+        </property>
+        <property name="rightMargin" >
+         <number>0</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>3</number>
         </property>
         <item>
          <widget class="QFrame" name="frame_4" >
@@ -1988,6 +2006,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_Collapse" >
+             <property name="minimumSize" >
+              <size>
+               <width>40</width>
+               <height>23</height>
+              </size>
+             </property>
              <property name="maximumSize" >
               <size>
                <width>25</width>
@@ -3647,10 +3671,16 @@
      </property>
      <item>
       <widget class="QLabel" name="label_ProgressDesc" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize" >
         <size>
          <width>0</width>
-         <height>0</height>
+         <height>23</height>
         </size>
        </property>
        <property name="text" >
