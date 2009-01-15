@@ -402,7 +402,7 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename)
 {
   GLFrameCapture f;
   makeCurrent();
-#ifdef __APPLE__
+#ifdef TUVOK_OS_APPLE
   paintGL();
   paintGL(); // make sure we have the same results in the front and in the backbuffer
 #else
@@ -421,7 +421,7 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   bool bSystemOrtho = m_Renderer->GetOrthoView();
   if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bOrtho);
   makeCurrent();
-#ifdef __APPLE__
+#ifdef TUVOK_OS_APPLE
   paintGL();
   paintGL(); // make sure we have the same results in the front and in the backbuffer
 #else
@@ -440,7 +440,7 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
 {
   GLFrameCapture f;
   makeCurrent();
-#ifdef __APPLE__
+#ifdef TUVOK_OS_APPLE
   paintGL();
   paintGL(); // make sure we have the same results in the front and in the backbuffer
 #else

@@ -102,6 +102,7 @@
     <addaction name="actionAbout" />
     <addaction name="separator" />
     <addaction name="actionOpen_Online_Help" />
+    <addaction name="actionCheck_for_Updates" />
    </widget>
    <widget class="QMenu" name="menu_Edit" >
     <property name="enabled" >
@@ -3962,6 +3963,11 @@
     <string>Settings</string>
    </property>
   </action>
+  <action name="actionCheck_for_Updates" >
+   <property name="text" >
+    <string>Check for Updates</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="0" />
  <tabstops>
@@ -5443,6 +5449,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionCheck_for_Updates</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>CheckForUpdates()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>601</x>
+     <y>1013</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -5509,5 +5531,6 @@
   <slot>Show1DTrans()</slot>
   <slot>Show2DTrans()</slot>
   <slot>ShowIsoEdit()</slot>
+  <slot>CheckForUpdates()</slot>
  </slots>
 </ui>

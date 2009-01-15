@@ -87,6 +87,7 @@ bool MainWindow::ShowSettings() {
       bool bAutoSaveWSP = settings.value("AutoSaveWSP", m_bAutoSaveWSP).toBool();
       bool bAutoLockClonedWindow = settings.value("AutoLockClonedWindow", m_bAutoLockClonedWindow).toBool();
       bool bAbsoluteViewLocks = settings.value("AbsoluteViewLocks", m_bAbsoluteViewLocks).toBool();
+      bool bCheckForUpdatesOnStartUp = settings.value("CheckForUpdatesOnStartUp", m_bCheckForUpdatesOnStartUp).toBool();
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -117,6 +118,7 @@ bool MainWindow::ShowSettings() {
                             bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS,
                             bShowVersionInTitle,
                             bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
+                            bCheckForUpdatesOnStartUp,
                             iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bAvoidCompositing,
                             vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
     }
@@ -143,6 +145,7 @@ bool MainWindow::ShowSettings() {
       settings.setValue("AutoSaveWSP", settingsDlg.GetAutoSaveWSP());
       settings.setValue("AutoLockClonedWindow", settingsDlg.GetAutoLockClonedWindow());
       settings.setValue("AbsoluteViewLocks", settingsDlg.GetAbsoluteViewLocks());
+      settings.setValue("CheckForUpdatesOnStartUp", settingsDlg.GetCheckForUpdatesOnStartUp());
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -195,6 +198,7 @@ void MainWindow::ApplySettings() {
   m_bAutoSaveWSP = settings.value("AutoSaveWSP", m_bAutoSaveWSP).toBool();
   m_bAutoLockClonedWindow = settings.value("AutoLockClonedWindow", m_bAutoLockClonedWindow).toBool();
   m_bAbsoluteViewLocks = settings.value("AbsoluteViewLocks", m_bAbsoluteViewLocks).toBool();
+  m_bCheckForUpdatesOnStartUp = settings.value("CheckForUpdatesOnStartUp", m_bCheckForUpdatesOnStartUp).toBool();
   settings.endGroup();
 
   settings.beginGroup("Renderer");

@@ -44,4 +44,21 @@
 #define IV3D_VERSION 0.052
 #define IV3D_VERSION_TYPE "beta (Biblical Magi)"
 
+#define UPDATE_PATH "http://software.sci.utah.edu/devbuilds/imagevis3d/"
+
+#ifdef TUVOK_OS_WINDOWS
+  #define UPDATE_FILE "ImageVis3D-Windows-Latest.zip"
+  #define UPDATE_VERSION_FILE "Windows_Latest_Version.txt"
+#endif
+
+#ifdef TUVOK_OS_APPLE
+  #define UPDATE_FILE "ImageVis3D-OSX-Latest.zip"
+  #define UPDATE_VERSION_FILE "OSX_Latest_Version.txt"
+#endif
+
+#ifdef TUVOK_OS_UNIX
+  #define UPDATE_FILE "ImageVis3D-Linux-Latest.zip"
+  #define UPDATE_VERSION_FILE "Linux_Latest_Version.txt"
+#endif
+
 #endif // STDDEFINES_H

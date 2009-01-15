@@ -43,7 +43,13 @@ using namespace std;
 
 void MainWindow::ShowVersions() {
   m_MasterController.DebugOut()->printf("Tuvok Version: %i %s",TUVOK_VERSION, TUVOK_VERSION_TYPE);
+#ifdef TUVOK_SVN_VERSION 
+  m_MasterController.DebugOut()->printf("SVN Version: %i",TUVOK_SVN_VERSION);
+#endif
   m_MasterController.DebugOut()->printf("ImageVis3D Version: %i %s",IV3D_VERSION, IV3D_VERSION_TYPE);
+#ifdef IV3D_SVN_VERSION
+  m_MasterController.DebugOut()->printf("SVN Version: %i",IV3D_SVN_VERSION);
+#endif
   m_MasterController.DebugOut()->printf("QT Version: %s",QT_VERSION_STR);    
 }
 

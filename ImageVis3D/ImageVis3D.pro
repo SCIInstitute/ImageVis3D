@@ -51,6 +51,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/ImageVis3D_Locking.cpp \
            UI/ImageVis3D_Stereo.cpp \
            UI/ImageVis3D_Scripting.cpp \
+           UI/ImageVis3D_Help.cpp \
            UI/PleaseWait.cpp \
            UI/QTransferFunction.cpp \
            UI/Q1DTransferFunction.cpp \

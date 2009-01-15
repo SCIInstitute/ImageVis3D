@@ -168,6 +168,10 @@ bool SettingsDlg::GetAbsoluteViewLocks() const {
   return checkBox_AbsoluteViewLocks->isChecked();
 }
 
+bool SettingsDlg::GetCheckForUpdatesOnStartUp() const {
+  return checkBox_CheckForUpdatesOnStartUp->isChecked();
+}
+
 FLOATVECTOR3  SettingsDlg::GetBackgroundColor1() const {
   return FLOATVECTOR3(m_cBackColor1.red()/255.0f,
                       m_cBackColor1.green()/255.0f,
@@ -292,6 +296,7 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
                             bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
+                            bool bCheckForUpdatesOnStartUp,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bAvoidCompositing,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
   m_bInit = true;
@@ -309,6 +314,8 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
   checkBox_SaveWSPOnExit->setChecked(bAutoSaveWSP);
   checkBox_AutoLockClonedWindow->setChecked(bAutoLockClonedWindow);
   checkBox_AbsoluteViewLocks->setChecked(bAbsoluteViewLocks);
+  checkBox_CheckForUpdatesOnStartUp->setChecked(bCheckForUpdatesOnStartUp);
+  
 
   m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
   m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));

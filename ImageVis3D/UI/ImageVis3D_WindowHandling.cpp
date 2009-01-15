@@ -45,6 +45,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QInputDialog>
 #include <QtGui/QColorDialog>
+#include <QtNetwork/QHttp>
 
 #include "PleaseWait.h"
 
@@ -209,6 +210,10 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   QSettings settings;
   QString fileName = settings.value("Files/SetCaptureFilename", lineEditCaptureFile->text()).toString();
   lineEditCaptureFile->setText(fileName);
+
+  m_pHttp = new QHttp(this);
+  connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
+  connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
 }
 
 // ******************************************
@@ -717,21 +722,6 @@ void MainWindow::Collapse2DWidgets() {
 void MainWindow::Expand2DWidgets() {
   frame_2DTransEditWrapper->show();
   frame_Expand2DWidgets->hide();
-}
-
-
-void MainWindow::ShowAbout()
-{
-  QString qstrTitle;
-  QString qstrText;
-#ifdef _DEBUG
-  qstrTitle = tr("ImageVis3D %1").arg(IV3D_VERSION);
-  qstrText =  tr("Warning this is a DEBUG build! This version is for testing only, some function run with dramatically reduced performance, please use a release build instead.\n\nThis is ImageVis3D %1 %2 it uses the Tuvok render engine %3 %4 %5.Copyrigth 2008 by the Scientific Computing and Imaging (SCI) Institute. Please report bugs to jens@sci.utah.edu").arg(IV3D_VERSION).arg(IV3D_VERSION_TYPE).arg(TUVOK_VERSION).arg(TUVOK_VERSION_TYPE).arg(TUVOK_DETAILS);
-#else
-  qstrTitle = tr("ImageVis3D %1 %2 DEBUG VERSION!").arg(IV3D_VERSION).arg(IV3D_VERSION_TYPE);
-  qstrText =  tr("This is ImageVis3D %1 %2 it uses the Tuvok render engine %3 %4 %5.Copyrigth 2008 by the Scientific Computing and Imaging (SCI) Institute. Please report bugs to jens@sci.utah.edu").arg(IV3D_VERSION).arg(IV3D_VERSION_TYPE).arg(TUVOK_VERSION).arg(TUVOK_VERSION_TYPE).arg(TUVOK_DETAILS);
-#endif
-  QMessageBox::about(this, qstrTitle,qstrText);
 }
 
 void MainWindow::Show1DTrans() {

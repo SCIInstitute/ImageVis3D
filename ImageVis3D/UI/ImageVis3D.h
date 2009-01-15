@@ -53,6 +53,12 @@
 #include <string>
 #include <vector>
 
+class QHttp;
+class QHttpResponseHeader;
+class QAuthenticator;
+class QFile;
+class QSslError;
+
 class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptable
 {
   Q_OBJECT
@@ -86,6 +92,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void CloseCurrentView();
     void ResizeCurrentView(int iSizeX, int iSizeY);
     void CloneCurrentView();
+    void CheckForUpdates();
 
     void ToggleRenderWindowView2x2();
     void ToggleRenderWindowViewSingle();
@@ -160,8 +167,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SetRescaleFactors();
     virtual void closeEvent(QCloseEvent *event);
 
-    void ShowAbout();
+    // update
+    void httpRequestFinished(int requestId, bool error);
+    void readResponseHeader(const QHttpResponseHeader &responseHeader);
 
+    void ShowAbout();
     void ChooseIsoColor();
 
     void ToggleClearView();
@@ -182,6 +192,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void Show1DTrans();
     void Show2DTrans();
     void ShowIsoEdit();
+
 
   private :
     MasterController&                         m_MasterController;
@@ -213,6 +224,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     int                                       m_iLogoPos;
     bool                                      m_bAutoLockClonedWindow;
     bool                                      m_bAbsoluteViewLocks;
+    bool                                      m_bCheckForUpdatesOnStartUp;
+    
     bool                                      m_bStayOpenAfterScriptEnd;
 
     RenderWindow* CreateNewRenderWindow(QString dataset);
@@ -278,7 +291,14 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void RotateCurrentViewZ(double angle);
     void TranslateCurrentView(double x, double y, double z);
 
-
+    // update
+    QHttp* m_pHttp;
+    QFile* m_pUpdateFile;
+    int    m_iHttpGetId;
+    bool   m_bStartupCheck;
+    void CheckForUpdatesInternal();
+    void QuietCheckForUpdates();
+    bool GetVersionsFromUpdateFile(const std::string& strFilename, float& fIV3DVersion, int& iIV3DSVNVersion, float& fTuvokVersion, int& iTuvokSVNVersion);
 };
 
 #endif // IMAGEVIS3D_H

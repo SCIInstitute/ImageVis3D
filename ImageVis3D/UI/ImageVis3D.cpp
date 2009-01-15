@@ -41,6 +41,7 @@
 #include <QtCore/QTimer>
 #include <QtGui/QMdiSubWindow>
 #include <QtCore/QSettings>
+#include <QtCore/QFileInfo>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QColorDialog>
 
@@ -83,7 +84,12 @@ MainWindow::MainWindow(MasterController& masterController,
   m_iLogoPos(3),
   m_bAutoLockClonedWindow(false),
   m_bAbsoluteViewLocks(true),
-  m_bStayOpenAfterScriptEnd(false)
+  m_bCheckForUpdatesOnStartUp(false),
+  m_bStayOpenAfterScriptEnd(false),
+  m_pHttp(NULL),
+  m_pUpdateFile(NULL),
+  m_iHttpGetId(-1),
+  m_bStartupCheck(true)
 {
   RegisterCalls(m_MasterController.ScriptEngine());
 
@@ -117,6 +123,8 @@ MainWindow::MainWindow(MasterController& masterController,
 
   CheckSettings();
   ClearProgressView();
+  
+  if (m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
 }
 
 MainWindow::~MainWindow()
@@ -124,12 +132,20 @@ MainWindow::~MainWindow()
   if (m_DebugOut == m_MasterController.DebugOut()) {
     m_MasterController.RemoveDebugOut(m_DebugOut);
   } else {
-
     // if the debugger was replaced by a multiplexer (for instance for file logging) remove it from the multiplexer
     MultiplexOut* p = dynamic_cast<MultiplexOut*>(m_MasterController.DebugOut());
     if (p != NULL) p->RemoveDebugOut(m_DebugOut);      
   }
   delete m_DebugOut;
+
+  // cleanup updatefile, this codepath is taken for instance when the windows firewall blocked an http request
+  if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
+    m_pUpdateFile->close();
+    m_pUpdateFile->remove();
+    delete m_pUpdateFile;
+    m_pUpdateFile = NULL;
+  }
+
 }
 
 

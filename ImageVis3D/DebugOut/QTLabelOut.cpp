@@ -75,11 +75,11 @@ void QTLabelOut::printf(const char* format, ...)
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-#ifdef __APPLE__
+#ifdef TUVOK_OS_APPLE
   m_parent->hide();
 #endif
   m_label->setText ( buff );
-#ifdef __APPLE__
+#ifdef TUVOK_OS_APPLE
   m_parent->show();
 #endif
   m_label->repaint();
@@ -96,11 +96,11 @@ void QTLabelOut::_printf(const char* format, ...)
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-#ifdef __APPLE__
+#ifdef TUVOK_OS_APPLE
   m_parent->hide();
 #endif
   m_label->setText ( buff );
-#ifdef __APPLE__
+#ifdef TUVOK_OS_APPLE
   m_parent->show();
 #endif
   m_label->repaint();
