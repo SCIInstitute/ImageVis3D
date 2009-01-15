@@ -6,6 +6,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 date /t > result.txt
 time /t  >> result.txt
 echo Start >> result.txt
+echo f | xcopy result.txt \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.log /Y
 
 svn up
 
