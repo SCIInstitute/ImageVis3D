@@ -166,6 +166,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   connect(verticalSlider_1DTransHistScale, SIGNAL(valueChanged(int)),
     m_1DTransferFunction, SLOT(SetHistogtramScale(int)));
 
+  verticalSlider_2DTransHistScale->setValue(1500);
+
   connect(m_2DTransferFunction, SIGNAL(SwatchChange()),
     this, SLOT(Transfer2DSwatchesChanged()));
   connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)),
