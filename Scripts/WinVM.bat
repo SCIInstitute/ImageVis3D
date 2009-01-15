@@ -6,7 +6,6 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 date /t > result.txt
 time /t  >> result.txt
 echo Start >> result.txt
-echo f | xcopy result.txt \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.log /Y
 
 svn up
 
@@ -26,11 +25,6 @@ for /f "tokens=2,3" %%i in (Tuvok\StdTuvokDefines.h) do if %%i==TUVOK_VERSION se
 del rev1.txt
 del rev2.txt
 
-echo %IV3DCODEVERSION% >   Windows_Latest_Version.txt
-echo %IV3DVERSION% >>      Windows_Latest_Version.txt
-echo %TUVOCCODEVERSION% >> Windows_Latest_Version.txt
-echo %TUVOKVERSION% >>     Windows_Latest_Version.txt
-
 echo #ifndef IV3D_SVN_VERSION >> ImageVis3D\StdDefines.h
 echo #define IV3D_SVN_VERSION %IV3DVERSION% >> ImageVis3D\StdDefines.h
 echo #endif >> ImageVis3D\StdDefines.h
@@ -44,6 +38,8 @@ set REVSTR=%IV3DVERSION%_%TUVOKVERSION%
 set CONFIG=Release (with DirectX)
 set QTDIR32=C:\QT\4.4.3-32bit-static\
 set QTDIR64=C:\QT\4.4.3-64bit-static\
+
+echo f | xcopy result.txt \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.log /Y
 
 IF EXIST "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" (
   call "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" amd64
@@ -154,6 +150,14 @@ IF EXIST ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip (
   goto ZIPFAIL
 )
 
+echo %IV3DCODEVERSION% >   Windows_Latest_Version.txt
+echo %IV3DVERSION% >>      Windows_Latest_Version.txt
+echo %TUVOCCODEVERSION% >> Windows_Latest_Version.txt
+echo %TUVOKVERSION% >>     Windows_Latest_Version.txt
+xcopy Windows_Latest_Version.txt \\geronimo\share\IV3D-WIN /Y
+del Windows_Latest_Version.txt
+
+
 if NOT !BUILDUVF64!==TRUE (
   if NOT !BUILDUVF32!==TRUE goto UVFAILED
 )
@@ -181,7 +185,6 @@ del ..\UVFConverter_Win_r%REVSTR%.zip
 
 cd ..
 rmdir Nightly
-
 
 echo f | xcopy "Tuvok\Build\Win32\%CONFIG%\objects\BuildLog.htm" \\geronimo\share\IV3D-WIN\tuvok32.htm /Y
 echo f | xcopy "Tuvok\Build\x64\%CONFIG%\objects\BuildLog.htm" \\geronimo\share\IV3D-WIN\tuvok64.htm /Y
@@ -221,10 +224,8 @@ type out32.txt >> result.txt
 type out64.txt >> result.txt
 
 echo f | xcopy result.txt \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.log /Y
-xcopy Windows_Latest_Version.txt \\geronimo\share\IV3D-WIN /Y
 
 IF EXIST result.txt del result.txt
-IF EXIST Windows_Latest_Version.txt del Windows_Latest_Version.txt
 IF EXIST out32.txt del out32.txt
 IF EXIST out64.txt del out64.txt
 
