@@ -41,7 +41,7 @@
 
 #include "../Tuvok/StdTuvokDefines.h"
 
-#define IV3D_VERSION 0.052
+#define IV3D_VERSION 0.053
 #define IV3D_VERSION_TYPE "beta (Biblical Magi)"
 
 #define UPDATE_PATH "http://software.sci.utah.edu/devbuilds/imagevis3d/"
