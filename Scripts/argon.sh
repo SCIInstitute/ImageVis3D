@@ -56,3 +56,7 @@ fn_zip="${devb}/${fn_zip}"
 fn_latest="${devb}/ImageVis3D-OSX-Latest.zip"
 mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_latest}
 mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_zip} ${fn_latest}
+
+# Update the text file for determining the latest version.
+mailtry mv latest OSX_Latest_Version.txt
+mailtry scp OSX_Latest_Version.txt tfogal@shell.sci.utah.edu:${devb}
