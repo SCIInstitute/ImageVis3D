@@ -1,4 +1,5 @@
 #!/bin/sh
+cd ${HOME}/imagevis3d
 source Scripts/util.sh
 
 export PATH="${HOME}/sw/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin"
