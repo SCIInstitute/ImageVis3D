@@ -42,22 +42,32 @@ function vcs_update
         svn update
     else
         git diff --exit-code --quiet &>/dev/null
+        saved=0
         if test $? -ne 0 ; then
             git stash save "uncomitted changes from `date`"
+            saved=1
         fi
         git checkout master
         $VCS rebase
         git checkout private
         git rebase master
+        if test $saved -eq 1 ; then
+            git stash pop
+        fi
+        saved=0
 
         pushd Tuvok
             git diff --exit-code --quiet &>/dev/null
             if test $? -ne 0 ; then
                 git stash save "uncomitted changes from `date`"
+                saved=1
             fi
             $VCS rebase
             git checkout private
             git rebase master
+            if test $saved -eq 1 ; then
+                git stash pop
+            fi
         popd
     fi
 }
