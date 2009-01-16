@@ -43,13 +43,14 @@ else
 fi
 if test "$1" != "-q" ; then
     cat ${status} | mail -s "${subj}" ${full_em}
-    devbuilds="/usr/sci/projects/sciweb/devbuilds/imagevis3d/"
-    mailtry scp *.tar.gz tfogal@shell.sci.utah.edu:${devbuilds}
-
-    # Update `latest version' symlink.
-    fn_tarball=$(nm_zipfile)
-    fn_tarball="${devb}/${fn_tarball}"
-    fn_tarball="${devb}/ImageVis3D-Linux-Latest.tar.gz"
-    mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_tarball}
-    mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_tarball} ${fn_latest}
 fi
+
+devbuilds="/usr/sci/projects/sciweb/devbuilds/imagevis3d/"
+mailtry scp *.tar.gz tfogal@shell.sci.utah.edu:${devbuilds}
+
+# Update `latest version' symlink.
+fn_tarball=$(nm_zipfile)
+fn_tarball="${devb}/${fn_tarball}"
+fn_tarball="${devb}/ImageVis3D-Linux-Latest.tar.gz"
+mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_tarball}
+mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_tarball} ${fn_latest}
