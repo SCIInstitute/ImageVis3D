@@ -54,3 +54,7 @@ fn_tarball="${devbuilds}/${fn_tarball}"
 fn_latest="${devbuilds}/ImageVis3D-Linux-Latest.tar.gz"
 mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_latest}
 mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_tarball} ${fn_latest}
+
+# Update the text file for automagic version checks.
+mailtry mv latest Linux_Latest_Version.txt
+mailtry scp Linux_Latest_Version.txt tfogal@shell.sci.utah.edu:${devb}
