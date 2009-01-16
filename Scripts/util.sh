@@ -107,9 +107,9 @@ function sci_arch
 # Gives the name of the appropriate tarball.
 function nm_tarball
 {
-    arch=$(sci_arch)
-    revs=$(revision)
-    vers=$(version)
+    local arch=$(sci_arch)
+    local revs=$(revision)
+    version
     echo "ImageVis3D_${IV3D_VERSION}_${arch}_r${revs}.tar.gz"
 }
 
@@ -117,5 +117,5 @@ function nm_tarball
 function nm_zipfile
 {
     local tb_name=$(nm_tarball)
-    echo ${tb_name%%.tar.gz}.zip
+    echo "${tb_name%%.tar.gz}.zip"
 }
