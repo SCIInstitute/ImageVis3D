@@ -94,7 +94,7 @@ function sci_arch
     if test "x${opsys}" = "xDarwin" ; then
         opsys="osx"
     fi
-    if test "x${arch}" = "xi386" ; then
+    if test "x${arch}" = "xi386" -o "x${arch}" = "xi686" ; then
         arch="32"
     elif test "x${arch}" = "xx86_64" ; then
         arch="64"
