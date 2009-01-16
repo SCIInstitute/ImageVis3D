@@ -33,7 +33,7 @@ echo "-------------------------------------" >> ${status}
 
 mailtry cd ${HOME}/imagevis3d
 rm -f *.tar.gz *.zip warnings
-mailtry sh Scripts/nightly.sh
+mailtry sh Scripts/nightly.sh --dirty
 cat warnings >> ${status}
 subj=""
 if test `file warnings | awk '{print $2}'` = "empty" ; then
@@ -57,4 +57,4 @@ mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_tarball} ${fn_latest}
 
 # Update the text file for automagic version checks.
 mailtry mv latest Linux_Latest_Version.txt
-mailtry scp Linux_Latest_Version.txt tfogal@shell.sci.utah.edu:${devb}
+mailtry scp Linux_Latest_Version.txt tfogal@shell.sci.utah.edu:${devbuilds}
