@@ -33,7 +33,7 @@ echo "-------------------------------------" >> ${status}
 
 mailtry cd ${HOME}/imagevis3d
 rm -f *.tar.gz *.zip warnings
-mailtry sh Scripts/nightly.sh --dirty
+mailtry sh Scripts/nightly.sh
 cat warnings >> ${status}
 subj=""
 if test `file warnings | awk '{print $2}'` = "empty" ; then
