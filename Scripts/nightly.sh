@@ -8,6 +8,7 @@ fi
 vcs_update
 
 version
+revision
 
 if test "x$1" != "x--dirty" ; then
     make clean &>/dev/null
@@ -28,7 +29,9 @@ else
     qmake="qmake"
 fi
 # use qmake to generate makefiles, potentially in debug mode.
-CF="-fno-strict-aliasing"
+D_TUVOK="-DTUVOK_SVN_VERSION=${R_TUVOK}"
+D_IV3D="-DIV3D_SVN_VERSION=${R_IMAGEVIS3D}"
+CF="-fno-strict-aliasing ${D_TUVOK} ${D_IV3D}"
 CFG="release"
 if test "x$1" = "x-debug"; then
     CF="${CF} -Wextra -D_GLIBCXX_DEBUG"
@@ -46,13 +49,6 @@ if test $? -ne 0 ; then
 fi
 make -j5 2> warnings
 try make
-
-# Get the current revisions of the two repositories, so we can appropriately
-# label the build tarballs.
-revs=$(revision)
-
-# likewise for the machine architecture.
-arch=$(sci_arch)
 
 tarball=$(nm_tarball)
 zipfile=$(nm_zipfile)
