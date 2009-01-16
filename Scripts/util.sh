@@ -76,12 +76,15 @@ function revision
     echo "${R_IMAGEVIS3D}_${R_TUVOK}"
 }
 
-# Reads the version numbers from Std*Defines.h.  Sets IV3D_VERSION, also
-# returns the version number.
+# Reads the version numbers from Std*Defines.h.  Sets IV3D_VERSION,
+# TUVOK_VERSION.
 function version
 {
     export IV3D_VERSION=` \
         grep "IV3D_VERSION " ImageVis3D/StdDefines.h | \
+        awk '{ print $3 }'`
+    export TUVOK_VERSION=` \
+        grep "TUVOK_VERSION " Tuvok/StdTuvokDefines.h | \
         awk '{ print $3 }'`
 }
 

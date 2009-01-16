@@ -79,6 +79,11 @@ elif test `uname` = "Linux" ; then
     popd
     rm -r staging
 fi
+rm -f latest
+echo "${IV3D_VERSION}" > latest
+echo "${R_IMAGEVIS3D}" >> latest
+echo "${TUVOK_VERSION}" >> latest
+echo "${R_TUVOK}" >> latest
 
 echo "Warnings:"
 cat warnings
