@@ -11,7 +11,8 @@ em="tfogal@sci.utah.edu"
 full_em="tfogal@sci.utah.edu jens@sci.utah.edu"
 
 status="status-argon"
-function try
+# like 'try' but sends an email if it fails.
+function mailtry
 {
     $@
     if test $? -ne 0 ; then
@@ -34,7 +35,7 @@ echo "-------------------------------------" >> ${status}
 
 try cd ${HOME}/imagevis3d
 rm -f *.tar.gz *.zip warnings
-try sh Scripts/nightly.sh
+mailtry sh Scripts/nightly.sh
 cat warnings >> ${status}
 subj=""
 if test `file warnings | awk '{print $2}'` = "empty" ; then
@@ -45,5 +46,12 @@ fi
 if test "$1" != "-q" ; then
     cat ${status} | mail -s "${subj}" ${full_em}
 fi
-try scp *.zip \
-    tfogal@shell.sci.utah.edu:/usr/sci/projects/sciweb/devbuilds/imagevis3d/
+devb="/usr/sci/projects/sciweb/devbuilds/imagevis3d/"
+mailtry scp *.zip tfogal@shell.sci.utah.edu:${devb}
+
+# Now update the `latest version' symlink.
+fn_zip=$(nm_zipfile)
+fn_zip="${devb}/${fn_zip}"
+fn_latest="${devb}/ImageVis3D-OSX-Latest.zip"
+mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_latest}
+mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_zip} ${fn_latest}
