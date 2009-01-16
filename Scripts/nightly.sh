@@ -32,6 +32,13 @@ fi
 D_TUVOK="-DTUVOK_SVN_VERSION=${R_TUVOK}"
 D_IV3D="-DIV3D_SVN_VERSION=${R_IMAGEVIS3D}"
 CF="-fno-strict-aliasing ${D_TUVOK} ${D_IV3D}"
+if test `uname` = "Darwin" ; then
+    archs="-arch i486 -arch x86_64 -arch ppc"
+    CF="${CF} ${archs}"
+    LDF="${LDFLAGS} ${archs}"
+else
+    LDF="-Wl,--as-needed"
+fi
 CFG="release"
 if test "x$1" = "x-debug"; then
     CF="${CF} -Wextra -D_GLIBCXX_DEBUG"
@@ -41,7 +48,7 @@ ${qmake} \
     CONFIG+=${CFG} \
     QMAKE_CFLAGS="${CF}" \
     QMAKE_CXXFLAGS+="${CF}" \
-    QMAKE_LDFLAGS="${CF} ${LDF}" \
+    QMAKE_LDFLAGS="${CF} ${LDF} ${LDFLAGS}" \
     -spec ${spec} \
     -recursive
 if test $? -ne 0 ; then
