@@ -50,7 +50,7 @@ mailtry scp *.tar.gz tfogal@shell.sci.utah.edu:${devbuilds}
 
 # Update `latest version' symlink.
 fn_tarball=$(nm_tarball)
-fn_tarball="${devb}/${fn_tarball}"
-fn_tarball="${devb}/ImageVis3D-Linux-Latest.tar.gz"
+fn_tarball="${devbuilds}/${fn_tarball}"
+fn_tarball="${devbuilds}/ImageVis3D-Linux-Latest.tar.gz"
 mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_tarball}
 mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_tarball} ${fn_latest}
