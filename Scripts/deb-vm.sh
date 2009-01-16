@@ -1,4 +1,5 @@
 #!/bin/sh
+source Scripts/util.sh
 
 export PATH="${HOME}/sw/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin"
 # this affects what BSD mail uses for the Reply-To header:
@@ -8,7 +9,7 @@ em="tfogal@sci.utah.edu"
 full_em="tfogal@sci.utah.edu jens@sci.utah.edu"
 
 status="status-deb-vm"
-function try
+function mailtry
 {
     $@
     if test $? -ne 0 ; then
@@ -30,9 +31,9 @@ echo "" >> ${status}
 
 echo "-------------------------------------" >> ${status}
 
-try cd ${HOME}/imagevis3d
+mailtry cd ${HOME}/imagevis3d
 rm -f *.tar.gz *.zip warnings
-try sh Scripts/nightly.sh
+mailtry sh Scripts/nightly.sh
 cat warnings >> ${status}
 subj=""
 if test `file warnings | awk '{print $2}'` = "empty" ; then
@@ -43,5 +44,12 @@ fi
 if test "$1" != "-q" ; then
     cat ${status} | mail -s "${subj}" ${full_em}
     devbuilds="/usr/sci/projects/sciweb/devbuilds/imagevis3d/"
-    try scp *.tar.gz tfogal@shell.sci.utah.edu:${devbuilds}
+    mailtry scp *.tar.gz tfogal@shell.sci.utah.edu:${devbuilds}
+
+    # Update `latest version' symlink.
+    fn_tarball=$(nm_zipfile)
+    fn_tarball="${devb}/${fn_tarball}"
+    fn_tarball="${devb}/ImageVis3D-Linux-Latest.tar.gz"
+    mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_tarball}
+    mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_tarball} ${fn_latest}
 fi
