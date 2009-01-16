@@ -41,14 +41,20 @@ function vcs_update
     if test "x${VCS}" = "xsvn" ; then
         svn update
     else
-        git stash save "uncomitted changes from `date`"
+        git diff --exit-code --quiet &>/dev/null
+        if test $? -ne 0 ; then
+            git stash save "uncomitted changes from `date`"
+        fi
         git checkout master
         $VCS rebase
         git checkout private
         git rebase master
 
         pushd Tuvok
-            git stash save "uncomitted changes from `date`"
+            git diff --exit-code --quiet &>/dev/null
+            if test $? -ne 0 ; then
+                git stash save "uncomitted changes from `date`"
+            fi
             $VCS rebase
             git checkout private
             git rebase master
@@ -70,11 +76,24 @@ function revision
     echo "${R_IMAGEVIS3D}_${R_TUVOK}"
 }
 
+# Reads the version numbers from Std*Defines.h.  Sets IV3D_VERSION, also
+# returns the version number.
+function version
+{
+    IV3D_VERSION=` \
+        grep "IV3D_VERSION " ImageVis3D/StdDefines.h | \
+        awk '{ print $3 }'`
+}
+
 # Determine the architecture name according SCI conventions.  Basically, this
 # is one of (Linux|osx|Win) with one of (32|64) appended.
 function sci_arch
 {
     local arch=`uname -m`
+    local opsys=`uname -s`
+    if test "x${opsys}" = "xDarwin" ; then
+        opsys="osx"
+    fi
     if test "x${arch}" = "xi386" ; then
         arch="32"
     elif test "x${arch}" = "xx86_64" ; then
@@ -82,5 +101,21 @@ function sci_arch
     fi
     # else who knows .. just stick with the uname output, there's no convention
     # anymore anyway.
-    echo "${arch}"
+    echo "${opsys}${arch}"
+}
+
+# Gives the name of the appropriate tarball.
+function nm_tarball
+{
+    arch=$(sci_arch)
+    revs=$(revision)
+    vers=$(version)
+    echo "ImageVis3D_${IV3D_VERSION}_${arch}_r${revs}.tar.gz"
+}
+
+# Gives the name of the appropriate zip file.
+function nm_zipfile
+{
+    local tb_name=$(nm_tarball)
+    echo ${tb_name%%.tar.gz}.zip
 }

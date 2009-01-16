@@ -7,10 +7,7 @@ if test `uname` = "Darwin" ; then
 fi
 vcs_update
 
-# now that we've set eol:native in svn, the awk part might not be necessary.
-IV3D_VERSION=` \
-    grep "IV3D_VERSION " ImageVis3D/StdDefines.h | \
-    awk '{ sub("\r", "", $3); print $3 }'`
+version
 
 make clean &>/dev/null
 # manual clean, just in case Qt's clean isn't good enough.
@@ -18,6 +15,7 @@ find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
     -exec rm {} +
 rm -fr Build/ImageVis3D.app
 rm -f Build/ImageVis3D
+rm -f warnings
 
 # Find qmake -- expect it in PATH, but the user can set QT_BIN to pick a
 # specific Qt.
@@ -44,8 +42,6 @@ ${qmake} \
 if test $? -ne 0 ; then
     die "qmake failed."
 fi
-make clean
-rm -f warnings
 make -j5 2> warnings
 try make
 
@@ -56,25 +52,24 @@ revs=$(revision)
 # likewise for the machine architecture.
 arch=$(sci_arch)
 
-tarball=""
+tarball=$(nm_tarball)
 if test `uname` = "Darwin" ; then
     echo "Building app file ..."
-    tarball="ImageVis3D_${IV3D_VERSION}_osx${arch}_r${revs}.tar.gz"
     try bash Scripts/mk_app.sh
     pushd Build/ &>/dev/null
         tar zcf ${tarball} ImageVis3D.app
-        zip -r ${tarball%%.tar.gz}.zip ImageVis3D.app
+        zip -9r $(nm_zipfile) ImageVis3D.app
     popd &>/dev/null
-    mv Build/${tarball} Build/${tarball%%.tar.gz}.zip .
+    mv Build/${tarball} Build/$(nm_zipfile) .
 elif test `uname` = "Linux" ; then
     mkdir staging
     pushd staging
         dir="ImageVis3D_${IV3D_VERSION}"
-        mkdir ${dir}
+        mkdir "${dir}"
         cp ../Build/ImageVis3D ./${dir}
         cp -R ../Tuvok/Shaders ./${dir}
-        tar zcf "${dir}_Linux_r${revs}.tar.gz" ${dir}
-        mv "${dir}_Linux_r${revs}.tar.gz" ../
+        GZIP="--best" tar zcf "${tarball}" ${dir}
+        mv "${tarball}" ../
     popd
     rm -r staging
 fi

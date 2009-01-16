@@ -1,4 +1,5 @@
 #!/bin/sh
+source Scripts/util.sh
 
 export PATH="${HOME}/sw/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin"
 # this affects what BSD mail uses for the Reply-To header:
