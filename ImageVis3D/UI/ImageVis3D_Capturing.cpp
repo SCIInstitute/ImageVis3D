@@ -134,14 +134,12 @@ void MainWindow::CaptureRotation() {
       int i = 0;
       float fAngle = 0.0f;
       while (i < iNumImages) {
-        pleaseWait.hide();
         labelOut->SetOutput(true, true, true, false);
         if (i==0)
           m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
         else
           m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
         labelOut->SetOutput(false, false, false, false);
-        pleaseWait.show();
         fAngle = float(i)/float(iNumImages) * 360.0f;
         m_ActiveRenderWin->SetCaptureRotationAngle(fAngle);
         string strSequenceName;
