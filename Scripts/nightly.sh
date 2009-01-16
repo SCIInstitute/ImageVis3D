@@ -9,13 +9,15 @@ vcs_update
 
 version
 
-make clean &>/dev/null
-# manual clean, just in case Qt's clean isn't good enough.
-find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
-    -exec rm {} +
-rm -fr Build/ImageVis3D.app
-rm -f Build/ImageVis3D
-rm -f warnings
+if test "x$1" != "x--dirty" ; then
+    make clean &>/dev/null
+    # manual clean, just in case Qt's clean isn't good enough.
+    find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
+        -exec rm {} +
+    rm -fr Build/ImageVis3D.app
+    rm -f Build/ImageVis3D
+    rm -f warnings
+fi
 
 # Find qmake -- expect it in PATH, but the user can set QT_BIN to pick a
 # specific Qt.
@@ -53,14 +55,15 @@ revs=$(revision)
 arch=$(sci_arch)
 
 tarball=$(nm_tarball)
+zipfile=$(nm_zipfile)
 if test `uname` = "Darwin" ; then
     echo "Building app file ..."
     try bash Scripts/mk_app.sh
     pushd Build/ &>/dev/null
         tar zcf ${tarball} ImageVis3D.app
-        zip -9r $(nm_zipfile) ImageVis3D.app
+        zip -9r ${zipfile} ImageVis3D.app
     popd &>/dev/null
-    mv Build/${tarball} Build/$(nm_zipfile) .
+    mv Build/${tarball} Build/${zipfile} .
 elif test `uname` = "Linux" ; then
     mkdir staging
     pushd staging

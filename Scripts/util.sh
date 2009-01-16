@@ -80,7 +80,7 @@ function revision
 # returns the version number.
 function version
 {
-    IV3D_VERSION=` \
+    export IV3D_VERSION=` \
         grep "IV3D_VERSION " ImageVis3D/StdDefines.h | \
         awk '{ print $3 }'`
 }
