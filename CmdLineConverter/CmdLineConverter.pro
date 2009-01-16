@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE          = app
-CONFIG           += link_prl static warn_on
+CONFIG           += link_prl static warn_on x86 ppc
 TARGET            = Build/UVFConverter
 DEPENDPATH       += .
 INCLUDEPATH      += .

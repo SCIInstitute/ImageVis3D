@@ -4,4 +4,4 @@
 
 SUBDIRS           = Tuvok ImageVis3D CmdLineConverter
 TEMPLATE          = subdirs
-CONFIG           += ordered
+CONFIG           += ordered x86 ppc

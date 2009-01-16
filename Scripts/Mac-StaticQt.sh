@@ -1,11 +1,12 @@
 #!/bin/sh
 
 rm -fr qt-mac-opensource-src-4.4.3
-tar zxvf qt-mac-opensource-src-4.4.3.tar.gz
+tar jxvf qt-mac-opensource-src-4.4.3.tar.bz2
 pushd qt-mac-opensource-src-4.4.3
 echo "yes" | \
 ./configure \
         -prefix ${HOME}/sw \
+        -universal \
         -static \
         -qt-libjpeg \
         -no-openssl \
@@ -24,6 +25,7 @@ if test $? -ne 0; then
         exit 1
 fi
 
-make sub-src
+make sub-src || exit 1
+make install || exit 1
 
 popd
