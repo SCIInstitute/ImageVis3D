@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>314</width>
-    <height>215</height>
+    <height>239</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -112,6 +112,13 @@
        <widget class="QCheckBox" name="checkBox_Stereo" >
         <property name="text" >
          <string>Stereo</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_NoLOD" >
+        <property name="text" >
+         <string>Disable LOD</string>
         </property>
        </widget>
       </item>

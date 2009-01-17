@@ -183,7 +183,7 @@ void RenderWindow::ToggleHQCaptureMode() {
   } else {
     m_mAccumulatedRotation = m_mCaptureStartRotation;
   }
-  m_Renderer->DisableLOD(m_bCaptureMode);
+  m_Renderer->SetCaptureMode(m_bCaptureMode);
 }
 
 void RenderWindow::SetCaptureRotationAngle(float fAngle) {
@@ -414,13 +414,14 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename)
 }
 
 
-bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, 
+bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, bool bUseLOD,
                                    std::string* strRealFilename)
 {
   GLFrameCapture f;
   m_Renderer->SetMIPRotationAngle(fAngle);
   bool bSystemOrtho = m_Renderer->GetOrthoView();
   if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bOrtho);
+  m_Renderer->SetMIPLOD(bUseLOD);
   makeCurrent();
 #ifdef TUVOK_OS_APPLE
   paintGL();

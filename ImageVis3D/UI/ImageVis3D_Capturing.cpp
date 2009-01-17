@@ -94,15 +94,21 @@ void MainWindow::CaptureRotation() {
     int  iNumImages = settings.value("Renderer/ImagesPerRotation", 360).toInt();
     bool bOrthoView = settings.value("Renderer/RotationUseOrtho", true).toBool();
     bool bStereo    = settings.value("Renderer/RotationUseStereo", false).toBool();
+    bool bUseLOD    = settings.value("Renderer/RotationUseLOD", true).toBool();
 
     bool ok;
     if (m_ActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
-      MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, this);
+      MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD, this);
       if (mipRotDialog.exec() == QDialog::Accepted) {
         ok = true;
         iNumImages = mipRotDialog.GetNumImages();
         bOrthoView = mipRotDialog.GetUseOrtho();
         bStereo    = mipRotDialog.GetUseStereo();
+        bUseLOD    = mipRotDialog.GetUseLOD();
+
+        settings.setValue("Renderer/RotationUseOrtho", bOrthoView);
+        settings.setValue("Renderer/RotationUseStereo", bStereo);
+        settings.setValue("Renderer/RotationUseLOD", bUseLOD);
       } else ok = false;
     } else {
       iNumImages = QInputDialog::getInteger(this,
@@ -112,8 +118,6 @@ void MainWindow::CaptureRotation() {
     if (!ok) return;
 
     settings.setValue("Renderer/ImagesPerRotation", iNumImages);
-    settings.setValue("Renderer/RotationUseOrtho", bOrthoView);
-    settings.setValue("Renderer/RotationUseStereo", bStereo);
 
     m_ActiveRenderWin->ToggleHQCaptureMode();
     
@@ -188,7 +192,7 @@ void MainWindow::CaptureRotation() {
           fAngle = float(i)/float(iNumImages) * 360.0f;
           string strSequenceName;
 
-          if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), &strSequenceName)) {
+          if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), bUseLOD, &strSequenceName)) {
             QString msg = tr("Error writing image file %1.").arg(strSequenceName.c_str());
             QMessageBox::warning(this, tr("Error"), msg);
             m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
@@ -202,7 +206,7 @@ void MainWindow::CaptureRotation() {
             } else {
               fAngle -= 3.0f;
               string strImageFilenameRight = SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_R");
-              if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, i==(iNumImages-1), &strSequenceName)) {
+              if (!m_ActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, bUseLOD, i==(iNumImages-1), &strSequenceName)) {
                 QString msg = tr("Error writing image file %1.").arg(strImageFilenameRight.c_str());
                 QMessageBox::warning(this, tr("Error"), msg);
                 m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
@@ -251,7 +255,8 @@ void MainWindow::CaptureRotation() {
             remove(vstrRightEyeImageVector[i].c_str());
             if (SysTools::FileExists(vstrLeftEyeImageVector[i])) remove(vstrLeftEyeImageVector[i].c_str());
           }
-        }
+        }     
+
       } else {
         pleaseWait.SetText("Slicing trougth the dataset, please wait  ...");
         /// \todo TODO slice capturing

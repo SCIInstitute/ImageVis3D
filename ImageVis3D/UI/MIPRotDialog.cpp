@@ -40,18 +40,18 @@
 
 using namespace std;
 
-MIPRotDialog::MIPRotDialog(UINT32 iImages, bool bOrthoView, bool bStereo, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
+MIPRotDialog::MIPRotDialog(UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
   QDialog(parent, flags)
 {
 
-  setupUi(this, iImages, bOrthoView, bStereo);
+  setupUi(this, iImages, bOrthoView, bStereo, bUseLOD);
 }
 
 MIPRotDialog::~MIPRotDialog(void)
 {
 }
 
-void MIPRotDialog::setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoView, bool bStereo) {
+void MIPRotDialog::setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD) {
   Ui_MIPRotDialog::setupUi(MIPRotDialog);
 
   spinBox_Images->setValue(iImages);
@@ -60,6 +60,7 @@ void MIPRotDialog::setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoVie
   else
     radioButton_Persp->setChecked(true);
   checkBox_Stereo->setChecked(bStereo);
+  checkBox_NoLOD->setChecked(!bUseLOD);
 
   UpdateDegreeLabel();
 }
@@ -81,15 +82,19 @@ void MIPRotDialog::UpdateStereoCheckbox() {
 }
 
 
-UINT32 MIPRotDialog::GetNumImages() {
+UINT32 MIPRotDialog::GetNumImages() const {
   return UINT32(spinBox_Images->value());
 }
 
-bool MIPRotDialog::GetUseOrtho() {
+bool MIPRotDialog::GetUseOrtho() const {
   return radioButton_Ortho->isChecked();
 }
 
-bool MIPRotDialog::GetUseStereo() {
+bool MIPRotDialog::GetUseStereo() const {
   return checkBox_Stereo->isChecked();
+}
+
+bool MIPRotDialog::GetUseLOD() const {
+  return !checkBox_NoLOD->isChecked();
 }
 
