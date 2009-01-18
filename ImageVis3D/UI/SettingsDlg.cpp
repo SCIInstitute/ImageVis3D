@@ -105,7 +105,9 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
     horizontalSlider_CPUMem->setMaximum(min(horizontalSlider_CPUMem->maximum(), 2048));
 
   iMaxGPUMemSize /= 1024*1024;
+
   horizontalSlider_GPUMem->setMaximum(iMaxGPUMemSize);
+  m_InitialGPUMemMax = iMaxGPUMemSize;
   if (!m_MasterController.SysInfo()->IsGPUSizeComputed()) {
     horizontalSlider_GPUMem->setValue(512); // choose 512 meg as default in core size if the max size is not-computed the default
   } else {
@@ -115,8 +117,6 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   // init mem sliders
   horizontalSlider_GPUMem->setMinimum(32);
   horizontalSlider_CPUMem->setMinimum(512);
-
-  m_InitialGPUMemMax = horizontalSlider_GPUMem->maximum();
 }
 
 
@@ -255,7 +255,6 @@ void SettingsDlg::SetMaxMemCheck() {
   if (horizontalSlider_GPUMem->value() > horizontalSlider_CPUMem->value()) {
     horizontalSlider_GPUMem->setValue(horizontalSlider_CPUMem->value());
   }
-
   horizontalSlider_GPUMem->setMaximum(min<int>(horizontalSlider_CPUMem->value(),m_InitialGPUMemMax)  );
 }
 
