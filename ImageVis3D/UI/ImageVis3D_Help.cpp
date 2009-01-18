@@ -128,7 +128,7 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
       } else {
 #if defined(IV3D_SVN_VERSION) && defined(TUVOK_SVN_VERSION)
         if (m_bStartupCheck && iIV3DSVNVersion > int(IV3D_SVN_VERSION) || iTuvokSVNVersion > int(TUVOK_SVN_VERSION)) {
-          QString qstrMessage = tr("A new SVN build of ImageVis3D was found. You MAY want to download the newer version at %1/%2").arg(UPDATE_NIGHTLY_PATH).arg(UPDATE_FILE);
+          QString qstrMessage = tr("A new SVN build of ImageVis3D was found. You MAY want to download the newer version at %1%2").arg(UPDATE_NIGHTLY_PATH).arg(UPDATE_FILE);
           QMessageBox::information(this, tr("Update Check"),qstrMessage);
         } else {
 #endif
