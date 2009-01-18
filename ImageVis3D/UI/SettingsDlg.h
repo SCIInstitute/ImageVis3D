@@ -70,6 +70,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     unsigned int  GetBlendPrecisionMode() const;
 
     bool          GetUseOnlyPowerOfTwo() const;
+    bool          GetDownSampleTo8Bits() const;
     bool          GetAvoidCompositing() const;
 
     QString       GetLogoFilename() const;
@@ -81,7 +82,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bShowVersionInTitle,
                    bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                    bool bCheckForUpdatesOnStartUp,
-                   unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bAvoidCompositing,
+                   unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, 
+                   bool bDownSampleTo8Bits, bool bAvoidCompositing,
                    const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos);
 
   protected slots:

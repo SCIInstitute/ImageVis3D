@@ -59,6 +59,7 @@ class RenderWindow : public QGLWidget
                  QString dataset,
                  unsigned int iCounter,
                  bool bUseOnlyPowerOfTwo,
+                 bool bDownSampleTo8Bits,
                  QGLWidget* glShareWidget,
                  QWidget* parent = 0,
                  Qt::WindowFlags flags = 0);

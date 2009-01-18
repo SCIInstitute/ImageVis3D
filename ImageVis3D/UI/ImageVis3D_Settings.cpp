@@ -94,6 +94,7 @@ bool MainWindow::ShowSettings() {
       unsigned int iVolRenType = settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
       unsigned int iBlendPrecisionMode = settings.value("BlendPrecisionMode", 0).toUInt();
       bool bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
+      bool bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
       bool bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
       
       FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0f).toULongLong(),
@@ -119,7 +120,8 @@ bool MainWindow::ShowSettings() {
                             bShowVersionInTitle,
                             bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
                             bCheckForUpdatesOnStartUp,
-                            iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bAvoidCompositing,
+                            iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
+                            bAvoidCompositing,
                             vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
     }
 
@@ -152,6 +154,7 @@ bool MainWindow::ShowSettings() {
       settings.setValue("RendererType", settingsDlg.GetVolrenType());
       settings.setValue("BlendPrecisionMode", settingsDlg.GetBlendPrecisionMode());
       settings.setValue("PowerOfTwo", settingsDlg.GetUseOnlyPowerOfTwo());
+      settings.setValue("DownSampleTo8Bits", settingsDlg.GetDownSampleTo8Bits());
       settings.setValue("AvoidCompositing", settingsDlg.GetAvoidCompositing());
       settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
       settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
@@ -205,6 +208,7 @@ void MainWindow::ApplySettings() {
   m_eVolumeRendererType = (MasterController::EVolumeRendererType)settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
   m_iBlendPrecisionMode = settings.value("BlendPrecisionMode", m_iBlendPrecisionMode).toUInt();
   m_bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
+  m_bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
   m_bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
 
   m_vBackgroundColors[0] = FLOATVECTOR3(settings.value("Background1R", 0.0f).toULongLong(),

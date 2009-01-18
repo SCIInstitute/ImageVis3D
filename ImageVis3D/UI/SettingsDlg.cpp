@@ -297,7 +297,7 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             bool bCheckForUpdatesOnStartUp,
-                            unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bAvoidCompositing,
+                            unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits, bool bAvoidCompositing,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
   m_bInit = true;
   horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
@@ -358,6 +358,7 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
 
   checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
   checkBox_AvoidCompositing->setChecked(bAvoidCompositing);
+  checkBox_DownSampleTo8Bits->setChecked(bDownSampleTo8Bits);
 
   QString strStyle =
   tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
@@ -394,7 +395,7 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
 
 void SettingsDlg::WarnAPIMethodChange() {
   if (!m_bInit)
-    QMessageBox::warning(this, "Warning", "A change to the render API, the rendermode, or the compatibiliy settings only affects renderwindows opened from now on.");
+    QMessageBox::warning(this, "Warning", "A change to the render API, the rendermode, or the compatibiliy settings only affects new render windows.");
 }
 
 unsigned int SettingsDlg::GetVolrenType() const {
@@ -406,6 +407,11 @@ unsigned int SettingsDlg::GetVolrenType() const {
 bool SettingsDlg::GetUseOnlyPowerOfTwo() const {
   return checkBox_PowerOfTwo->isChecked();
 }
+
+bool SettingsDlg::GetDownSampleTo8Bits() const {
+  return checkBox_DownSampleTo8Bits->isChecked();
+}
+
 
 bool SettingsDlg::GetAvoidCompositing() const {
   return checkBox_AvoidCompositing->isChecked();

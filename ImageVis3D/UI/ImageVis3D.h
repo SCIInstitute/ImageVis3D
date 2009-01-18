@@ -215,6 +215,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     unsigned int                              m_iBlendPrecisionMode;
     bool                                      m_bPowerOfTwo;
+    bool                                      m_bDownSampleTo8Bits;
     bool                                      m_bAvoidCompositing;
     bool                                      m_bAutoSaveGEO;
     bool                                      m_bAutoSaveWSP;
