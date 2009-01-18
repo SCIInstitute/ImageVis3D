@@ -245,6 +245,15 @@ void RenderWindow::wheelEvent(QWheelEvent *event) {
 void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
   QGLWidget::keyPressEvent(event);
 
+
+  if (event->key() == Qt::Key_C) {
+    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+
+    if (eWinMode == AbstrRenderer::WM_3D) {
+      m_Renderer->SetRenderCoordArrows(!m_Renderer->GetRenderCoordArrows());
+    }
+  }
+
   if (event->key() == Qt::Key_R) {
     AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
 
