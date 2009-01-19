@@ -232,3 +232,4 @@ IF EXIST out64.txt del out64.txt
 del ImageVis3D\StdDefines.h
 del Tuvok\StdTuvokDefines.h
 
+echo done > \\geronimo\share\IV3D-WIN\done.trigger
