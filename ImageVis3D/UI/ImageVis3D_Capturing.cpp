@@ -95,20 +95,24 @@ void MainWindow::CaptureRotation() {
     bool bOrthoView = settings.value("Renderer/RotationUseOrtho", true).toBool();
     bool bStereo    = settings.value("Renderer/RotationUseStereo", false).toBool();
     bool bUseLOD    = settings.value("Renderer/RotationUseLOD", true).toBool();
+    int bEyeDist    = settings.value("Renderer/EyeDist", 3).toBool();
 
     bool ok;
     if (m_ActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
-      MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD, this);
+      MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD, bEyeDist, this);
       if (mipRotDialog.exec() == QDialog::Accepted) {
         ok = true;
         iNumImages = mipRotDialog.GetNumImages();
         bOrthoView = mipRotDialog.GetUseOrtho();
         bStereo    = mipRotDialog.GetUseStereo();
         bUseLOD    = mipRotDialog.GetUseLOD();
+        bEyeDist   = mipRotDialog.GetEyeDist();
 
         settings.setValue("Renderer/RotationUseOrtho", bOrthoView);
         settings.setValue("Renderer/RotationUseStereo", bStereo);
         settings.setValue("Renderer/RotationUseLOD", bUseLOD);
+        settings.setValue("Renderer/EyeDist", bEyeDist);
+        
       } else ok = false;
     } else {
       iNumImages = QInputDialog::getInteger(this,

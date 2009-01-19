@@ -40,18 +40,18 @@
 
 using namespace std;
 
-MIPRotDialog::MIPRotDialog(UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
+MIPRotDialog::MIPRotDialog(UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD, UINT32 iEyeDist, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
   QDialog(parent, flags)
 {
 
-  setupUi(this, iImages, bOrthoView, bStereo, bUseLOD);
+  setupUi(this, iImages, bOrthoView, bStereo, bUseLOD, iEyeDist);
 }
 
 MIPRotDialog::~MIPRotDialog(void)
 {
 }
 
-void MIPRotDialog::setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD) {
+void MIPRotDialog::setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD, UINT32 iEyeDist) {
   Ui_MIPRotDialog::setupUi(MIPRotDialog);
 
   spinBox_Images->setValue(iImages);
@@ -61,6 +61,8 @@ void MIPRotDialog::setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoVie
     radioButton_Persp->setChecked(true);
   checkBox_Stereo->setChecked(bStereo);
   checkBox_NoLOD->setChecked(!bUseLOD);
+
+  horizontalSlider_EyeDist->setValue(iEyeDist);
 
   UpdateDegreeLabel();
 }
@@ -74,12 +76,30 @@ void MIPRotDialog::UpdateDegreeLabel() {
 }
 
 void MIPRotDialog::UpdateStereoCheckbox() {
-  if (checkBox_Stereo->isChecked() && (spinBox_Images->value() % 120 != 0)) {
-    checkBox_Stereo->setText("Stereo (performance warning: image count is not a multiple of 120)");
+  bool bAreImagesReusable = true;
+  float fDegreePerImage = 360.0f/spinBox_Images->value();
+  int iDegreePerImage = int(fDegreePerImage);
+  if (fDegreePerImage != iDegreePerImage) 
+    bAreImagesReusable = false; 
+  else {
+    int iEyeDist = horizontalSlider_EyeDist->value();    
+    if (iEyeDist < iDegreePerImage || 
+        iEyeDist % iDegreePerImage != 0) bAreImagesReusable = false;
+  }
+
+  if (checkBox_Stereo->isChecked() && bAreImagesReusable) {
+    checkBox_Stereo->setText("Stereo (performance warning)");
   } else {
     checkBox_Stereo->setText("Stereo");
   }
 }
+
+void MIPRotDialog::UpdateEyeDistLabel() {
+  QString qstr = tr("(%1°)").arg(horizontalSlider_EyeDist->value());
+  label_EyeDist->setText(qstr);
+  UpdateStereoCheckbox();
+}
+
 
 
 UINT32 MIPRotDialog::GetNumImages() const {
@@ -98,3 +118,6 @@ bool MIPRotDialog::GetUseLOD() const {
   return !checkBox_NoLOD->isChecked();
 }
 
+UINT32 MIPRotDialog::GetEyeDist() const {
+  return UINT32(horizontalSlider_EyeDist->value());
+}
