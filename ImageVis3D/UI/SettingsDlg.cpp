@@ -296,7 +296,8 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             bool bCheckForUpdatesOnStartUp,
-                            unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits, bool bAvoidCompositing,
+                            unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits,
+                            bool bDisableBorder, bool bAvoidCompositing,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
   m_bInit = true;
   horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
@@ -357,6 +358,7 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
 
   checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
   checkBox_AvoidCompositing->setChecked(bAvoidCompositing);
+  checkBox_DisableBorder->setChecked(bDisableBorder);
   checkBox_DownSampleTo8Bits->setChecked(bDownSampleTo8Bits);
 
   QString strStyle =
@@ -411,6 +413,10 @@ bool SettingsDlg::GetDownSampleTo8Bits() const {
   return checkBox_DownSampleTo8Bits->isChecked();
 }
 
+
+bool SettingsDlg::GetDisableBorder() const {
+  return checkBox_DisableBorder->isChecked();
+}
 
 bool SettingsDlg::GetAvoidCompositing() const {
   return checkBox_AvoidCompositing->isChecked();

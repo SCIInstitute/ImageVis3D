@@ -60,9 +60,10 @@ class RenderWindow : public QGLWidget
                  unsigned int iCounter,
                  bool bUseOnlyPowerOfTwo,
                  bool bDownSampleTo8Bits,
+                 bool bDisableBorder,
                  QGLWidget* glShareWidget,
-                 QWidget* parent = 0,
-                 Qt::WindowFlags flags = 0);
+                 QWidget* parent,
+                 Qt::WindowFlags flags);
 
     virtual ~RenderWindow();
 

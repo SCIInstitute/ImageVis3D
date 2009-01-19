@@ -426,7 +426,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
   RenderWindow *renderWin =
     new RenderWindow(m_MasterController, m_eVolumeRendererType, dataset,
-         iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, m_glShareWidget, this);
+         iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, m_bDisableBorder, m_glShareWidget, this, 0);
 
   ApplySettings(renderWin);
 

@@ -8,7 +8,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>353</width>
+    <width>358</width>
     <height>503</height>
    </rect>
   </property>
@@ -716,6 +716,13 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="2" >
+           <widget class="QCheckBox" name="checkBox_DisableBorder" >
+            <property name="text" >
+             <string>Disable Border</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -950,7 +957,7 @@
    <slot>SelectBackColor1()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>124</x>
+     <x>188</x>
      <y>266</y>
     </hint>
     <hint type="destinationlabel" >
@@ -982,7 +989,7 @@
    <slot>SelectTextColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>124</x>
+     <x>188</x>
      <y>297</y>
     </hint>
     <hint type="destinationlabel" >
@@ -1030,8 +1037,8 @@
    <slot>LODDelayChanged()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>242</x>
-     <y>271</y>
+     <x>150</x>
+     <y>179</y>
     </hint>
     <hint type="destinationlabel" >
      <x>119</x>
@@ -1046,8 +1053,8 @@
    <slot>MinFramerateChanged()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>242</x>
-     <y>271</y>
+     <x>150</x>
+     <y>179</y>
     </hint>
     <hint type="destinationlabel" >
      <x>209</x>
@@ -1062,8 +1069,8 @@
    <slot>ActTSChanged()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>242</x>
-     <y>271</y>
+     <x>150</x>
+     <y>179</y>
     </hint>
     <hint type="destinationlabel" >
      <x>160</x>
@@ -1078,8 +1085,8 @@
    <slot>InactTSChanged()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>242</x>
-     <y>271</y>
+     <x>150</x>
+     <y>179</y>
     </hint>
     <hint type="destinationlabel" >
      <x>11</x>
@@ -1212,6 +1219,22 @@
     <hint type="destinationlabel" >
      <x>349</x>
      <y>180</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_DisableBorder</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>WarnAPIMethodChange()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>243</x>
+     <y>215</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>354</x>
+     <y>227</y>
     </hint>
    </hints>
   </connection>
