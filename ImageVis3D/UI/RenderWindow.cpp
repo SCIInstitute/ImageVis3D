@@ -41,9 +41,13 @@
 #include <QtGui/QtGui>
 #include <QtOpenGL/QtOpenGL>
 #include <assert.h>
+#include <sstream>
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 
 using namespace std;
+
+UINT32 RenderWindow::ms_iMax3DTexDims = 0;
+std::string RenderWindow::ms_glVendorString = "";
 
 RenderWindow::RenderWindow(MasterController& masterController,
                  MasterController::EVolumeRendererType eType,
@@ -114,11 +118,35 @@ void RenderWindow::initializeGL()
       m_bRenderSubsysOK = false;
       return;
     } else {
-      const GLubyte *vendor=glGetString(GL_VENDOR);
-      const GLubyte *renderer=glGetString(GL_RENDERER);
-      const GLubyte *version=glGetString(GL_VERSION);
-      m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Starting up GL! Running on a %s %s with OpenGL version %s",vendor, renderer, version);
-      m_bRenderSubsysOK = true;
+      if (GLEW_VERSION_2_0 || 
+          (glewGetExtension("GL_ARB_shader_objects") && 
+           glewGetExtension("GL_ARB_shading_language_100") && 
+           glewGetExtension("GL_EXT_texture3D"))) {
+        const GLubyte *vendor=glGetString(GL_VENDOR);
+        const GLubyte *renderer=glGetString(GL_RENDERER);
+        const GLubyte *version=glGetString(GL_VERSION);
+
+        stringstream s;
+        s << vendor << " " << renderer << " with OpenGL version " << version;
+        ms_glVendorString = s.str();
+
+        m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Starting up GL! Running on a %s", ms_glVendorString.c_str());
+
+        GLint iMax3DTexDims;
+        glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE_EXT, &iMax3DTexDims);        
+        ms_iMax3DTexDims = iMax3DTexDims;
+
+        if (ms_iMax3DTexDims < BRICKSIZE) {
+          m_MasterController.DebugOut()->Warning("RenderWindow::initializeGL", "Maximum supported texture size (%i) is smaler than required by the IO subsystem (%i).", ms_iMax3DTexDims, int(BRICKSIZE));
+        } else {
+          m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Maximum supported texture size %i (required by the IO subsystem %i).", ms_iMax3DTexDims, int(BRICKSIZE));
+        } 
+
+        m_bRenderSubsysOK = true;
+      } else {      
+        m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "Insufficient OpenGL support");
+        m_bRenderSubsysOK = false;
+      }
     }
 
     bFirstTime = false;

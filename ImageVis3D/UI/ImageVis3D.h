@@ -146,7 +146,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void RenderWindowViewChanged(int iMode);
 
     void ShowVersions();
-    void ShowGLInfo();
+    void ShowGLInfo(bool bWithExtensions);
     void ShowSysInfo();
     void ClearDebugWin();
     void ParseAndExecuteDebugCommand();

@@ -120,6 +120,9 @@ class RenderWindow : public QGLWidget
     FLOATVECTOR3 GetIsosufaceColor() const;
     FLOATVECTOR3 GetCVColor() const;
 
+    static const std::string& GetVendorString() {return ms_glVendorString;}
+    static UINT32 GetMax3DTexDims() {return ms_iMax3DTexDims;}
+
   public slots:
     void ToggleRenderWindowView2x2();
     void ToggleRenderWindowViewSingle();
@@ -145,8 +148,11 @@ class RenderWindow : public QGLWidget
     virtual void focusOutEvent ( QFocusEvent * event );
     virtual void keyPressEvent ( QKeyEvent * event );
     virtual void Cleanup();
-
+   
   private:
+    static std::string ms_glVendorString;
+    static UINT32     ms_iMax3DTexDims;
+
     MainWindow*       m_MainWindow;
     GLRenderer*       m_Renderer;
     MasterController& m_MasterController;

@@ -53,12 +53,17 @@ void MainWindow::ShowVersions() {
   m_MasterController.DebugOut()->printf("QT Version: %s",QT_VERSION_STR);    
 }
 
-void MainWindow::ShowGLInfo() {
+void MainWindow::ShowGLInfo(bool bWithExtensions) {
   if (m_ActiveRenderWin == NULL) {
-    m_MasterController.DebugOut()->printf("please open a renderwindow first");
+    m_MasterController.DebugOut()->printf("Please open a renderwindow first!");
   } else {
 
-    m_MasterController.DebugOut()->printf("Printing GL extensions:");
+    m_MasterController.DebugOut()->printf(RenderWindow::GetVendorString().c_str());
+    m_MasterController.DebugOut()->printf("Maximum 3D texture size %i",int(RenderWindow::GetMax3DTexDims()));
+
+    if (!bWithExtensions) return;
+
+    m_MasterController.DebugOut()->printf("Supported GL extensions:");
 
     const char *extensions = (const char*)glGetString(GL_EXTENSIONS);
 
