@@ -118,23 +118,26 @@ void RenderWindow::initializeGL()
       m_bRenderSubsysOK = false;
       return;
     } else {
-      if (GLEW_VERSION_2_0 || 
-          (glewGetExtension("GL_ARB_shader_objects") && 
-           glewGetExtension("GL_ARB_shading_language_100") && 
-           glewGetExtension("GL_EXT_texture3D"))) {
-        const GLubyte *vendor=glGetString(GL_VENDOR);
-        const GLubyte *renderer=glGetString(GL_RENDERER);
-        const GLubyte *version=glGetString(GL_VERSION);
+      const GLubyte *vendor=glGetString(GL_VENDOR);
+      const GLubyte *renderer=glGetString(GL_RENDERER);
+      const GLubyte *version=glGetString(GL_VERSION);
+      stringstream s;
+      s << vendor << " " << renderer << " with OpenGL version " << version;
+      ms_glVendorString = s.str();
+      m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Starting up GL! Running on a %s", ms_glVendorString.c_str());
 
-        stringstream s;
-        s << vendor << " " << renderer << " with OpenGL version " << version;
-        ms_glVendorString = s.str();
+      bool bOpenGLSO  = glewGetExtension("GL_ARB_shader_objects");
+      bool bOpenGLSL  = glewGetExtension("GL_ARB_shading_language_100");
+      bool bOpenGL3DT = glewGetExtension("GL_EXT_texture3D");
+      bool bOpenGLFBO = glewGetExtension("GL_EXT_framebuffer_object");
 
-        m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Starting up GL! Running on a %s", ms_glVendorString.c_str());
-
+      if (bOpenGL3DT) { 
         GLint iMax3DTexDims;
         glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE_EXT, &iMax3DTexDims);        
         ms_iMax3DTexDims = iMax3DTexDims;
+      }
+
+      if (bOpenGLFBO && (GLEW_VERSION_2_0 || (bOpenGLSL && bOpenGL3DT))) {
 
         if (ms_iMax3DTexDims < BRICKSIZE) {
           m_MasterController.DebugOut()->Warning("RenderWindow::initializeGL", "Maximum supported texture size (%i) is smaler than required by the IO subsystem (%i).", ms_iMax3DTexDims, int(BRICKSIZE));
@@ -144,7 +147,13 @@ void RenderWindow::initializeGL()
 
         m_bRenderSubsysOK = true;
       } else {      
-        m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "Insufficient OpenGL support");
+        m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "Insufficient OpenGL support:");
+     
+        if (!bOpenGLSO) m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "OpenGL shader objects not suported (GL_ARB_shader_objects)");
+        if (!bOpenGLSL) m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "OpenGL shading language version 1.0 not suported (GL_ARB_shading_language_100)");
+        if (!bOpenGL3DT) m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "OpenGL 3D textures not suported (GL_EXT_texture3D)");
+        if (!bOpenGLFBO) m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "OpenGL framebuffer objects not suported (GL_EXT_framebuffer_object)");
+        
         m_bRenderSubsysOK = false;
       }
     }
