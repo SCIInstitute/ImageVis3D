@@ -63,7 +63,7 @@ void MainWindow::CheckSettings() {
 
 bool MainWindow::ShowSettings() {
     QSettings settings;
-    SettingsDlg settingsDlg(m_ActiveRenderWin != NULL, m_MasterController, this);
+    SettingsDlg settingsDlg(m_pActiveRenderWin != NULL, m_MasterController, this);
 
     // load first setting to see if we allready saved something
     UINT64 iMaxGPU = settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong();
@@ -177,7 +177,7 @@ bool MainWindow::ShowSettings() {
 
       // as the "avoid compositing" setting may enable/disable the ability to do clearview
       // we must doublecheck the state of the controls 
-      if (m_ActiveRenderWin) ToggleClearViewControls(int(m_ActiveRenderWin->GetDynamicRange()));
+      if (m_pActiveRenderWin) ToggleClearViewControls(int(m_pActiveRenderWin->GetDynamicRange()));
 
       return true;
     } else return false;

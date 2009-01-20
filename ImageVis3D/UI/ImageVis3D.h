@@ -201,7 +201,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     Q2DTransferFunction*                      m_2DTransferFunction;
     QGLWidget*                                m_glShareWidget;
     QTOut*                                    m_DebugOut;
-    RenderWindow*                             m_ActiveRenderWin;
+    RenderWindow*                             m_pActiveRenderWin;
     static const unsigned int                 ms_iMaxRecentFiles = 5;
     QAction*                                  m_recentFileActs[ms_iMaxRecentFiles];
     FLOATVECTOR3                              m_vBackgroundColors[2];

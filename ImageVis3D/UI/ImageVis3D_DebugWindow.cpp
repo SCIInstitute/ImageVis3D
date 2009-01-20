@@ -54,7 +54,7 @@ void MainWindow::ShowVersions() {
 }
 
 void MainWindow::ShowGLInfo(bool bWithExtensions) {
-  if (m_ActiveRenderWin == NULL) {
+  if (RenderWindow::GetVendorString() == "") {
     m_MasterController.DebugOut()->printf("Please open a renderwindow first!");
   } else {
 
@@ -65,19 +65,11 @@ void MainWindow::ShowGLInfo(bool bWithExtensions) {
 
     m_MasterController.DebugOut()->printf("Supported GL extensions:");
 
-    const char *extensions = (const char*)glGetString(GL_EXTENSIONS);
-
-    unsigned int iExtCount = 0;
-    string strExtension = "";
-    while (extensions[0]) {
-      if (extensions[0] == ' ' || extensions[0] == '\0') {
-        m_MasterController.DebugOut()->printf("  %s",strExtension.c_str());
-        strExtension = "";
-        iExtCount++;
-      } else strExtension += extensions[0];
-      extensions++;
+    vector< string > vExtensions = SysTools::Tokenize(RenderWindow::GetExtString());
+    for (size_t i = 0;i<vExtensions.size();i++) {
+      m_MasterController.DebugOut()->printf("  %s",vExtensions[i].c_str());
     }
-    m_MasterController.DebugOut()->printf("%u extensions found",iExtCount);
+    m_MasterController.DebugOut()->printf("%i extensions found",int(vExtensions.size()));
   }
 }
 

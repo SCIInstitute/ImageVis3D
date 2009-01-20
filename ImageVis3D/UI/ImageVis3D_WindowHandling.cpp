@@ -372,23 +372,23 @@ bool MainWindow::ApplyWorkspace() {
 
 
 void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
-  if (!m_ActiveRenderWin) return;
+  if (!m_pActiveRenderWin) return;
   mdiArea->activeSubWindow()->resize(iSizeX, iSizeY);
 }
 
 void MainWindow::CloseCurrentView() {
-  if (!m_ActiveRenderWin) return;
+  if (!m_pActiveRenderWin) return;
   mdiArea->activeSubWindow()->close();
 }
 
 void MainWindow::CloneCurrentView() {
   RenderWindow *renderWin = CreateNewRenderWindow(GetActiveRenderWindow()->GetDatasetName());
 
-  renderWin->CloneViewState(m_ActiveRenderWin);
-  renderWin->CloneRendermode(m_ActiveRenderWin);
+  renderWin->CloneViewState(m_pActiveRenderWin);
+  renderWin->CloneRendermode(m_pActiveRenderWin);
 
   if (m_bAutoLockClonedWindow) 
-    for (size_t i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_ActiveRenderWin); 
+    for (size_t i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_pActiveRenderWin); 
 
   QMdiSubWindow * pActiveWin = mdiArea->activeSubWindow(); // as "show" toggles the active renderwin we need to remeber it
   renderWin->show();
@@ -399,6 +399,10 @@ void MainWindow::CloneCurrentView() {
 bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow) {
   if (renderWin) {
     bool bIsOK = renderWin->IsRenderSubsysOK();
+    if (!bIsOK) 
+      m_pActiveRenderWin = NULL;
+    else
+      m_MasterController.DebugOut()->Error("IOManager::CheckRenderwindowFitness","Renderwindow healthy.");
 
     if (bIfNotOkShowMessageAndCloseWindow && !bIsOK) {
       m_MasterController.DebugOut()->Error("IOManager::CheckRenderwindowFitness","Unable to initialize the render window, see previous error messages for details.");
@@ -410,7 +414,7 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
 
         if (subwindow == renderWin)  {
           mdiArea->setActiveSubWindow(mdiArea->subWindowList().at(i));
-          mdiArea->closeActiveSubWindow();  // we assume that CheckRenderwindowFitness is always called on the active subwindow
+          mdiArea->closeActiveSubWindow();
           break;
         }
       }
@@ -446,14 +450,16 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
 
 void MainWindow::RenderWindowActive(RenderWindow* sender) {
-  if (m_ActiveRenderWin != sender) {
+  if (m_pActiveRenderWin != sender) {
     m_MasterController.DebugOut()->
       Message("MainWindow::RenderWindowActive",
         "ACK that %s is now active",
         sender->GetDatasetName().toStdString().c_str());
-    m_ActiveRenderWin = sender;
+    m_pActiveRenderWin = sender;
 
-    if (!CheckRenderwindowFitness(m_ActiveRenderWin)) return;
+    if (!CheckRenderwindowFitness(m_pActiveRenderWin)) {
+      return;
+    }
 
     m_1DTransferFunction->
       SetData(sender->GetRenderer()->GetDataSet()->Get1DHistogram(),
@@ -464,7 +470,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
         sender->GetRenderer()->Get2DTrans());
     m_2DTransferFunction->update();
 
-    AbstrRenderer::ERenderMode e = m_ActiveRenderWin->GetRendermode();
+    AbstrRenderer::ERenderMode e = m_pActiveRenderWin->GetRendermode();
 
     switch (e) {
       case AbstrRenderer::RM_1DTRANS    : Use1DTrans(); break;
@@ -478,22 +484,22 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     }
 
     dockWidget_Stereo->setEnabled(true);
-    checkBox_Stereo->setChecked(m_ActiveRenderWin->GetRenderer()->GetStereo());
-    horizontalSlider_EyeDistance->setValue(int(m_ActiveRenderWin->GetRenderer()->GetStereoEyeDist()*100));
-    horizontalSlider_FocalLength->setValue(int(m_ActiveRenderWin->GetRenderer()->GetStereoFocalLength()*10));
+    checkBox_Stereo->setChecked(m_pActiveRenderWin->GetRenderer()->GetStereo());
+    horizontalSlider_EyeDistance->setValue(int(m_pActiveRenderWin->GetRenderer()->GetStereoEyeDist()*100));
+    horizontalSlider_FocalLength->setValue(int(m_pActiveRenderWin->GetRenderer()->GetStereoFocalLength()*10));
 
-    checkBox_Lighting->setChecked(m_ActiveRenderWin->GetRenderer()->GetUseLighting());
-    SetSampleRateSlider(int(m_ActiveRenderWin->GetRenderer()->GetSampleRateModifier()*100));
-    int iRange = int(m_ActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
-    SetIsoValueSlider(int(m_ActiveRenderWin->GetRenderer()->GetIsoValue()*iRange), iRange);
+    checkBox_Lighting->setChecked(m_pActiveRenderWin->GetRenderer()->GetUseLighting());
+    SetSampleRateSlider(int(m_pActiveRenderWin->GetRenderer()->GetSampleRateModifier()*100));
+    int iRange = int(m_pActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
+    SetIsoValueSlider(int(m_pActiveRenderWin->GetRenderer()->GetIsoValue()*iRange), iRange);
 
-    DOUBLEVECTOR3 vfRescaleFactors =  m_ActiveRenderWin->GetRenderer()->GetRescaleFactors();
+    DOUBLEVECTOR3 vfRescaleFactors =  m_pActiveRenderWin->GetRenderer()->GetRescaleFactors();
     doubleSpinBox_RescaleX->setValue(vfRescaleFactors.x);
     doubleSpinBox_RescaleY->setValue(vfRescaleFactors.y);
     doubleSpinBox_RescaleZ->setValue(vfRescaleFactors.z);
 
-    SetToggleGlobalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetGlobalBBox());
-    SetToggleLocalBBoxLabel(m_ActiveRenderWin->GetRenderer()->GetLocalBBox());
+    SetToggleGlobalBBoxLabel(m_pActiveRenderWin->GetRenderer()->GetGlobalBBox());
+    SetToggleLocalBBoxLabel(m_pActiveRenderWin->GetRenderer()->GetLocalBBox());
     ClearProgressView();
 
     ToggleClearViewControls(iRange);
@@ -502,29 +508,29 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 }
 
 void MainWindow::ToggleClearViewControls(int iRange) {
-  if (m_ActiveRenderWin->GetRenderer()->SupportsClearView()) {
+  if (m_pActiveRenderWin->GetRenderer()->SupportsClearView()) {
     checkBox_ClearView->setVisible(true);
     frame_ClearView->setVisible(true);
 
-    checkBox_ClearView->setChecked(m_ActiveRenderWin->GetRenderer()->GetCV());
+    checkBox_ClearView->setChecked(m_pActiveRenderWin->GetRenderer()->GetCV());
   } else {
     checkBox_ClearView->setVisible(false);
     frame_ClearView->setVisible(false);
   }
 
-  SetFocusIsoValueSlider(int(m_ActiveRenderWin->GetRenderer()->GetCVIsoValue()*iRange), iRange);
-  SetFocusSizeValueSlider(99-int(m_ActiveRenderWin->GetRenderer()->GetCVSize()*9.9f));
-  SetContextScaleValueSlider(int(m_ActiveRenderWin->GetRenderer()->GetCVContextScale()*10.0f));
-  SetBorderSizeValueSlider(int(99-m_ActiveRenderWin->GetRenderer()->GetCVBorderScale()));
+  SetFocusIsoValueSlider(int(m_pActiveRenderWin->GetRenderer()->GetCVIsoValue()*iRange), iRange);
+  SetFocusSizeValueSlider(99-int(m_pActiveRenderWin->GetRenderer()->GetCVSize()*9.9f));
+  SetContextScaleValueSlider(int(m_pActiveRenderWin->GetRenderer()->GetCVContextScale()*10.0f));
+  SetBorderSizeValueSlider(int(99-m_pActiveRenderWin->GetRenderer()->GetCVBorderScale()));
 }
 
 void MainWindow::SetRescaleFactors() {
-  if (!m_ActiveRenderWin) return;
+  if (!m_pActiveRenderWin) return;
   DOUBLEVECTOR3 vfRescaleFactors;
   vfRescaleFactors.x = doubleSpinBox_RescaleX->value();
   vfRescaleFactors.y = doubleSpinBox_RescaleY->value();
   vfRescaleFactors.z = doubleSpinBox_RescaleZ->value();
-  m_ActiveRenderWin->GetRenderer()->SetRescaleFactors(vfRescaleFactors);
+  m_pActiveRenderWin->GetRenderer()->SetRescaleFactors(vfRescaleFactors);
 }
 
 
@@ -544,7 +550,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
   RemoveAllLocks(sender);
 
-  m_ActiveRenderWin = NULL;
+  m_pActiveRenderWin = NULL;
   disconnect(sender, SIGNAL(WindowActive(RenderWindow*)),
        this, SLOT(RenderWindowActive(RenderWindow*)));
   disconnect(sender, SIGNAL(WindowClosing(RenderWindow*)),

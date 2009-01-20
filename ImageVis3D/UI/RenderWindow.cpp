@@ -46,8 +46,9 @@
 
 using namespace std;
 
-UINT32 RenderWindow::ms_iMax3DTexDims = 0;
 std::string RenderWindow::ms_glVendorString = "";
+std::string RenderWindow::ms_glExtString = "";
+UINT32 RenderWindow::ms_iMax3DTexDims = 0;
 
 RenderWindow::RenderWindow(MasterController& masterController,
                  MasterController::EVolumeRendererType eType,
@@ -126,10 +127,11 @@ void RenderWindow::initializeGL()
       ms_glVendorString = s.str();
       m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Starting up GL! Running on a %s", ms_glVendorString.c_str());
 
-      bool bOpenGLSO  = glewGetExtension("GL_ARB_shader_objects");
-      bool bOpenGLSL  = glewGetExtension("GL_ARB_shading_language_100");
-      bool bOpenGL3DT = glewGetExtension("GL_EXT_texture3D");
-      bool bOpenGLFBO = glewGetExtension("GL_EXT_framebuffer_object");
+      bool bOpenGLSO20 = atof((const char*)version) >= 2.0;
+      bool bOpenGLSO   = glewGetExtension("GL_ARB_shader_objects");
+      bool bOpenGLSL   = glewGetExtension("GL_ARB_shading_language_100");
+      bool bOpenGL3DT  = glewGetExtension("GL_EXT_texture3D");
+      bool bOpenGLFBO  = glewGetExtension("GL_EXT_framebuffer_object");
 
       if (bOpenGL3DT) { 
         GLint iMax3DTexDims;
@@ -137,7 +139,11 @@ void RenderWindow::initializeGL()
         ms_iMax3DTexDims = iMax3DTexDims;
       }
 
-      if (bOpenGLFBO && (GLEW_VERSION_2_0 || (bOpenGLSL && bOpenGL3DT))) {
+      char *extensions = NULL;
+      if (glGetString != NULL) extensions = (char*)glGetString(GL_EXTENSIONS);
+      if (extensions != NULL)  ms_glExtString = extensions;
+
+      if (bOpenGLFBO && (bOpenGLSO20 || (bOpenGLSL && bOpenGL3DT))) {
 
         if (ms_iMax3DTexDims < BRICKSIZE) {
           m_MasterController.DebugOut()->Warning("RenderWindow::initializeGL", "Maximum supported texture size (%i) is smaler than required by the IO subsystem (%i).", ms_iMax3DTexDims, int(BRICKSIZE));

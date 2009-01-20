@@ -121,6 +121,7 @@ class RenderWindow : public QGLWidget
     FLOATVECTOR3 GetCVColor() const;
 
     static const std::string& GetVendorString() {return ms_glVendorString;}
+    static const std::string& GetExtString() {return ms_glExtString;}
     static UINT32 GetMax3DTexDims() {return ms_iMax3DTexDims;}
 
   public slots:
@@ -151,7 +152,8 @@ class RenderWindow : public QGLWidget
    
   private:
     static std::string ms_glVendorString;
-    static UINT32     ms_iMax3DTexDims;
+    static std::string ms_glExtString;
+    static UINT32      ms_iMax3DTexDims;
 
     MainWindow*       m_MainWindow;
     GLRenderer*       m_Renderer;
