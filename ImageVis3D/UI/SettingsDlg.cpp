@@ -45,11 +45,12 @@
 
 using namespace std;
 
-SettingsDlg::SettingsDlg(MasterController& MasterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
+SettingsDlg::SettingsDlg(bool bWarnAPIChange, MasterController& MasterController, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
   QDialog(parent, flags),
   m_MasterController(MasterController),
   m_bInit(true),
-  m_InitialGPUMemMax(0)
+  m_InitialGPUMemMax(0),
+  m_bWarnAPIChange(bWarnAPIChange)
 {
   setupUi(this);
 }
@@ -395,8 +396,10 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
 
 
 void SettingsDlg::WarnAPIMethodChange() {
-  if (!m_bInit)
+  if (m_bWarnAPIChange && !m_bInit) {
     QMessageBox::warning(this, "Warning", "A change to the render API, the rendermode, or the compatibiliy settings only affects new render windows.");
+    m_bWarnAPIChange = false;
+  }
 }
 
 unsigned int SettingsDlg::GetVolrenType() const {

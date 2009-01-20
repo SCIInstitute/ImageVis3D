@@ -63,7 +63,7 @@ void MainWindow::CheckSettings() {
 
 bool MainWindow::ShowSettings() {
     QSettings settings;
-    SettingsDlg settingsDlg(m_MasterController, this);
+    SettingsDlg settingsDlg(m_ActiveRenderWin != NULL, m_MasterController, this);
 
     // load first setting to see if we allready saved something
     UINT64 iMaxGPU = settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong();

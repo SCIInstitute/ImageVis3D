@@ -45,7 +45,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 {
   Q_OBJECT
   public:
-    SettingsDlg(MasterController& masterController, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    SettingsDlg(bool bWarnAPIChange, MasterController& masterController, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~SettingsDlg();
 
     UINT64        GetGPUMem() const;
@@ -109,6 +109,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     QString           m_strLogoFilename;
     bool              m_bInit;
     int               m_InitialGPUMemMax;
+    bool              m_bWarnAPIChange;
 
     void setupUi(QDialog *SettingsDlg);
     void SetLogoLabel();
