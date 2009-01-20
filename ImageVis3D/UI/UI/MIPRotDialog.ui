@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>310</width>
-    <height>238</height>
+    <width>314</width>
+    <height>262</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -112,6 +112,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="checkBox_Stereo" >
+        <property name="text" >
+         <string>Stereo</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QFrame" name="frame_3" >
         <property name="frameShape" >
          <enum>QFrame::NoFrame</enum>
@@ -127,16 +134,9 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QCheckBox" name="checkBox_Stereo" >
-           <property name="text" >
-            <string>Stereo</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QLabel" name="label_2" >
            <property name="text" >
-            <string>Eye Distance</string>
+            <string>Stereo Eye Disparity</string>
            </property>
           </widget>
          </item>

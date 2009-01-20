@@ -95,23 +95,23 @@ void MainWindow::CaptureRotation() {
     bool bOrthoView = settings.value("Renderer/RotationUseOrtho", true).toBool();
     bool bStereo    = settings.value("Renderer/RotationUseStereo", false).toBool();
     bool bUseLOD    = settings.value("Renderer/RotationUseLOD", true).toBool();
-    int bEyeDist    = settings.value("Renderer/EyeDist", 3).toBool();
+    int iEyeDist    = settings.value("Renderer/RotationEyeDist", 3).toInt();
 
     bool ok;
     if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
-      MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD, bEyeDist, this);
+      MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD, iEyeDist, this);
       if (mipRotDialog.exec() == QDialog::Accepted) {
         ok = true;
         iNumImages = mipRotDialog.GetNumImages();
         bOrthoView = mipRotDialog.GetUseOrtho();
         bStereo    = mipRotDialog.GetUseStereo();
         bUseLOD    = mipRotDialog.GetUseLOD();
-        bEyeDist   = mipRotDialog.GetEyeDist();
+        iEyeDist   = mipRotDialog.GetEyeDist();
 
         settings.setValue("Renderer/RotationUseOrtho", bOrthoView);
         settings.setValue("Renderer/RotationUseStereo", bStereo);
         settings.setValue("Renderer/RotationUseLOD", bUseLOD);
-        settings.setValue("Renderer/EyeDist", bEyeDist);
+        settings.setValue("Renderer/RotationEyeDist", iEyeDist);
         
       } else ok = false;
     } else {
@@ -162,13 +162,16 @@ void MainWindow::CaptureRotation() {
     } else {
       if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
 
-        bool bReUse = false;
+        bool bReUse = true;
+        int iReUseOffset = 0;
         string strImageFilename = lineEditCaptureFile->text().toStdString();
         vector<string> vstrLeftEyeImageVector(iNumImages);
         vector<string> vstrRightEyeImageVector(iNumImages);
         if (bStereo) {
-          // as for stereo we need a 3° difference between the images thus see if the current iNumImages settings allows us to simply reuse an older image
-          bReUse = (iNumImages % 120 == 0);
+
+          double fDegreePerImage = 360.0/iNumImages;
+          iReUseOffset = int(iEyeDist/fDegreePerImage);
+          bReUse = (iReUseOffset == iEyeDist/fDegreePerImage); 
 
           if (bReUse) 
             strImageFilename = SysTools::AppendFilename(strImageFilename,"_LR");
@@ -206,7 +209,7 @@ void MainWindow::CaptureRotation() {
           if (bStereo) {
             vstrLeftEyeImageVector[i] = strSequenceName;
             if (bReUse) {
-              vstrRightEyeImageVector[(i+(iNumImages/120))%iNumImages] = strSequenceName;
+              vstrRightEyeImageVector[(i+iReUseOffset)%iNumImages] = strSequenceName;
             } else {
               fAngle -= 3.0f;
               string strImageFilenameRight = SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_R");

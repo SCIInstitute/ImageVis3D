@@ -76,18 +76,12 @@ void MIPRotDialog::UpdateDegreeLabel() {
 }
 
 void MIPRotDialog::UpdateStereoCheckbox() {
-  bool bAreImagesReusable = true;
-  float fDegreePerImage = 360.0f/spinBox_Images->value();
-  int iDegreePerImage = int(fDegreePerImage);
-  if (fDegreePerImage != iDegreePerImage) 
-    bAreImagesReusable = false; 
-  else {
-    int iEyeDist = horizontalSlider_EyeDist->value();    
-    if (iEyeDist < iDegreePerImage || 
-        iEyeDist % iDegreePerImage != 0) bAreImagesReusable = false;
-  }
+  double fDegreePerImage = 360.0/spinBox_Images->value();
+  int iEyeDist = horizontalSlider_EyeDist->value();    
+  int iReuseDist = int(iEyeDist/fDegreePerImage);
+  bool bAreImagesReusable = (iReuseDist == iEyeDist/fDegreePerImage); 
 
-  if (checkBox_Stereo->isChecked() && bAreImagesReusable) {
+  if (checkBox_Stereo->isChecked() && !bAreImagesReusable) {
     checkBox_Stereo->setText("Stereo (performance warning)");
   } else {
     checkBox_Stereo->setText("Stereo");
