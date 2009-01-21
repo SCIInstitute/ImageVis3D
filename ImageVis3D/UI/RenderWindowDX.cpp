@@ -56,8 +56,8 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
                                bool bDisableBorder,
                                QWidget* parent,
                                Qt::WindowFlags flags) :
-  RenderWindow(masterController, eType, dataset, iCounter, parent),
-  QWidget(parent, flags)
+  QWidget(parent, flags),
+  RenderWindow(masterController, eType, dataset, iCounter, parent)
 {  
   m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);
 

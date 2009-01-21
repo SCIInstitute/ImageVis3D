@@ -58,8 +58,8 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
                                QGLWidget* glShareWidget,
                                QWidget* parent,
                                Qt::WindowFlags flags) :
-  RenderWindow(masterController, eType, dataset, iCounter, parent),
-  QGLWidget(parent, glShareWidget, flags)
+  QGLWidget(parent, glShareWidget, flags),
+  RenderWindow(masterController, eType, dataset, iCounter, parent)
 {  
   m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);
   m_Renderer->LoadDataset(m_strDataset.toStdString());  
