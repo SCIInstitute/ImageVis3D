@@ -38,6 +38,7 @@
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include <QtOpenGL/QtOpenGL>
+#include <QtGui/QImageReader>
 
 using namespace std;
 
@@ -72,6 +73,18 @@ void MainWindow::ShowGPUInfo(bool bWithExtensions) {
       }
       m_MasterController.DebugOut()->printf("%i extensions found",int(vExtensions.size()));
     }
+  }
+}
+
+
+void MainWindow::ListSupportedImages() {
+  m_MasterController.DebugOut()->printf("Supported image formats are:");
+  QList<QByteArray> listImageFormats = QImageReader::supportedImageFormats(); 
+  for (int i = 0;i<listImageFormats.size();i++) {
+    QByteArray imageFormat = listImageFormats[i];
+    QString qStrImageFormat(imageFormat);
+    string strImageFormat = qStrImageFormat.toAscii();
+    m_MasterController.DebugOut()->printf(strImageFormat.c_str());
   }
 }
 

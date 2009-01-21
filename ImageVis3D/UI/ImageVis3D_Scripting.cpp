@@ -47,7 +47,7 @@ bool MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "gpuinfo", "","print basic information about the GPU, the driver and the rendering APIs");
   pScriptEngine->RegisterCommand(this, "gpuinfoext", "","print extensive information about the GPU, the driver and the rendering APIs");
   pScriptEngine->RegisterCommand(this, "sysinfo", "","print information about the system and the mem usage");
-  pScriptEngine->RegisterCommand(this, "sysinfo", "","print information about the system and the mem usage");
+  pScriptEngine->RegisterCommand(this, "imageformats", "","print a list of the supported image formats");
   pScriptEngine->RegisterCommand(this, "open", "sourcefile [targetfile]","open the sourcefile and write it into targetfile if conversion is required");
   pScriptEngine->RegisterCommand(this, "open1d", "sourcefile","open 1D transfer function sourcefile");
   pScriptEngine->RegisterCommand(this, "open2d", "sourcefile","open 2D transfer function sourcefile");
@@ -75,6 +75,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "gpuinfo")         { ShowGPUInfo(false); } else
   if (strCommand == "gpuinfoext")      { ShowGPUInfo(true); } else
   if (strCommand == "sysinfo")         { ShowSysInfo();} else
+  if (strCommand == "imageformats")    { ListSupportedImages();} else
   if (strCommand == "open")            { bool bResult = LoadDataset(strParams); if (!bResult) {strMessage = "Unable to load dataset file "+strParams[0]; return false;}} else
   if (strCommand == "open1d")          { bool bResult = Transfer1DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0]; return false;}} else
   if (strCommand == "open2d")          { bool bResult = Transfer2DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0]; return false;}} else
