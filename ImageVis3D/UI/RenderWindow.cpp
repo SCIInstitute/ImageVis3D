@@ -39,50 +39,41 @@
 #include "ImageVis3D.h"
 
 #include <QtGui/QtGui>
-#include <QtOpenGL/QtOpenGL>
 #include <assert.h>
 #include <sstream>
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 
 using namespace std;
 
-std::string RenderWindow::ms_glVendorString = "";
-std::string RenderWindow::ms_glExtString = "";
+std::string RenderWindow::ms_gpuVendorString = "";
 UINT32 RenderWindow::ms_iMax3DTexDims = 0;
 
 RenderWindow::RenderWindow(MasterController& masterController,
-                 MasterController::EVolumeRendererType eType,
-                 QString dataset,
-                 unsigned int iCounter,
-                 bool bUseOnlyPowerOfTwo,
-                 bool bDownSampleTo8Bits,
-                 bool bDisableBorder,
-                 QGLWidget* glShareWidget,
-                 QWidget* parent,
-                 Qt::WindowFlags flags) :
-  QGLWidget(parent, glShareWidget, flags),
-  m_MainWindow((MainWindow*)parent),
-  m_Renderer((GLRenderer*)masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder)),
+                           MasterController::EVolumeRendererType eType,
+                           const QString& dataset,
+                           unsigned int iCounter,
+                           QWidget* parent,
+                           const UINTVECTOR2& vMinSize,
+                           const UINTVECTOR2& vDefaultSize) :
+  m_strDataset(dataset),
+  m_strID(""),
+  m_Renderer(NULL),
   m_MasterController(masterController),
+  m_bRenderSubsysOK(true),   // be optimistic :-)
+  m_eRendererType(eType),
+  m_MainWindow((MainWindow*)parent),
+  m_vWinDim(0,0),
+  m_vMinSize(vMinSize),
+  m_vDefaultSize(vDefaultSize),
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),
-  m_bRenderSubsysOK(true),   // be optimistic :-)
   m_viRightClickPos(0,0),
   m_viMousePos(0,0),
   m_bAbsoluteViewLock(true),
-  m_strDataset(dataset),
-  m_vWinDim(0,0),
   m_bCaptureMode(false)
 {  
-  SetupArcBall();
-
-  m_strID = tr("[%1] %2").arg(iCounter).arg(m_strDataset);
-  setWindowTitle(m_strID);
-
-  m_Renderer->LoadDataset(m_strDataset.toStdString());
-  
-  setFocusPolicy(Qt::StrongFocus);
-  setMouseTracking(true);
+  m_strID = "[%1] %2";
+  m_strID = m_strID.arg(iCounter).arg(dataset);
 }
 
 RenderWindow::~RenderWindow()
@@ -90,10 +81,6 @@ RenderWindow::~RenderWindow()
   Cleanup();
 }
 
-QSize RenderWindow::minimumSizeHint() const
-{
-  return QSize(50, 50);
-}
 
 void RenderWindow::SetAvoidCompositing(bool bAvoidCompositing) {
   m_Renderer->SetAvoidSeperateCompositing(bAvoidCompositing);
@@ -101,124 +88,6 @@ void RenderWindow::SetAvoidCompositing(bool bAvoidCompositing) {
 
 bool RenderWindow::GetAvoidCompositing() const {
   return m_Renderer->GetAvoidSeperateCompositing();
-}
-
-
-QSize RenderWindow::sizeHint() const
-{
-  return QSize(400, 400);
-}
-
-void RenderWindow::initializeGL()
-{
-  static bool bFirstTime = true;
-  if (bFirstTime) {
-    int err = glewInit();
-    if (err != GLEW_OK) {
-      m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "Error initializing GLEW: %s",glewGetErrorString(err));
-      m_bRenderSubsysOK = false;
-      return;
-    } else {
-      const GLubyte *vendor=glGetString(GL_VENDOR);
-      const GLubyte *renderer=glGetString(GL_RENDERER);
-      const GLubyte *version=glGetString(GL_VERSION);
-      stringstream s;
-      s << vendor << " " << renderer << " with OpenGL version " << version;
-      ms_glVendorString = s.str();
-      m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Starting up GL! Running on a %s", ms_glVendorString.c_str());
-
-      bool bOpenGLSO20 = atof((const char*)version) >= 2.0;
-      bool bOpenGLSO   = glewGetExtension("GL_ARB_shader_objects");
-      bool bOpenGLSL   = glewGetExtension("GL_ARB_shading_language_100");
-      bool bOpenGL3DT  = glewGetExtension("GL_EXT_texture3D");
-      bool bOpenGLFBO  = glewGetExtension("GL_EXT_framebuffer_object");
-
-      if (bOpenGL3DT) { 
-        GLint iMax3DTexDims;
-        glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE_EXT, &iMax3DTexDims);        
-        ms_iMax3DTexDims = iMax3DTexDims;
-      }
-
-      char *extensions = NULL;
-      if (glGetString != NULL) extensions = (char*)glGetString(GL_EXTENSIONS);
-      if (extensions != NULL)  ms_glExtString = extensions;
-
-      if (bOpenGLFBO && (bOpenGLSO20 || (bOpenGLSL && bOpenGL3DT))) {
-
-        if (ms_iMax3DTexDims < BRICKSIZE) {
-          m_MasterController.DebugOut()->Warning("RenderWindow::initializeGL", "Maximum supported texture size (%i) is smaler than required by the IO subsystem (%i).", ms_iMax3DTexDims, int(BRICKSIZE));
-        } else {
-          m_MasterController.DebugOut()->Message("RenderWindow::initializeGL", "Maximum supported texture size %i (required by the IO subsystem %i).", ms_iMax3DTexDims, int(BRICKSIZE));
-        } 
-
-        m_bRenderSubsysOK = true;
-      } else {      
-        m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "Insufficient OpenGL support:");
-     
-        if (!bOpenGLSO) m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "OpenGL shader objects not suported (GL_ARB_shader_objects)");
-        if (!bOpenGLSL) m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "OpenGL shading language version 1.0 not suported (GL_ARB_shading_language_100)");
-        if (!bOpenGL3DT) m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "OpenGL 3D textures not suported (GL_EXT_texture3D)");
-        if (!bOpenGLFBO) m_MasterController.DebugOut()->Error("RenderWindow::initializeGL", "OpenGL framebuffer objects not suported (GL_EXT_framebuffer_object)");
-        
-        m_bRenderSubsysOK = false;
-      }
-    }
-
-    bFirstTime = false;
-  }
-
-  if (m_Renderer == NULL) 
-    m_bRenderSubsysOK = false;
-  else
-    m_bRenderSubsysOK = m_Renderer->Initialize();
-
-
-  if (!m_bRenderSubsysOK) {
-    m_Renderer->Cleanup();
-    m_MasterController.ReleaseVolumerenderer(m_Renderer);
-    m_Renderer = NULL;
-  } 
-}
-
-void RenderWindow::paintGL()
-{
-  if (m_Renderer != NULL && m_bRenderSubsysOK) {
-    m_Renderer->Paint();
-    if (isActiveWindow()) {
-      unsigned int iLevelCount        = m_Renderer->GetCurrentSubFrameCount();
-      unsigned int iWorkingLevelCount = m_Renderer->GetWorkingSubFrame();
-
-      unsigned int iBrickCount        = m_Renderer->GetCurrentBrickCount();
-      unsigned int iWorkingBrick      = m_Renderer->GetWorkingBrick();
-
-      m_MainWindow->SetRenderProgress(iLevelCount, iWorkingLevelCount, iBrickCount, iWorkingBrick);
-    } 
-  }
-}
-
-void RenderWindow::resizeGL(int width, int height)
-{
-  m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
-
-  if (m_Renderer != NULL) {
-    m_Renderer->Resize(UINTVECTOR2(width, height));
-    SetupArcBall();
-  }
-}
-
-void RenderWindow::mousePressEvent(QMouseEvent *event)
-{
-  AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
-
-  // mouse is over the 3D window
-  if (eWinMode == AbstrRenderer::WM_3D ) {
-    if (event->button() == Qt::RightButton) m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
-    if (event->button() == Qt::LeftButton)  m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
-  }
-}
-
-void RenderWindow::mouseReleaseEvent(QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton) FinalizeRotation(true);
 }
 
 void RenderWindow::ToggleHQCaptureMode() {
@@ -236,10 +105,25 @@ void RenderWindow::SetCaptureRotationAngle(float fAngle) {
   matRot.RotationY(3.141592653589793238462643383*double(fAngle)/180.0);
   matRot = m_mCaptureStartRotation * matRot;
   SetRotation(matRot, matRot);
-  paintGL();
+  PaintRenderer();
 }
 
-void RenderWindow::mouseMoveEvent(QMouseEvent *event)
+void RenderWindow::MousePressEvent(QMouseEvent *event)
+{
+  AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+
+  // mouse is over the 3D window
+  if (eWinMode == AbstrRenderer::WM_3D ) {
+    if (event->button() == Qt::RightButton) m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+    if (event->button() == Qt::LeftButton)  m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+  }
+}
+
+void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
+  if (event->button() == Qt::LeftButton) FinalizeRotation(true);
+}
+
+void RenderWindow::MouseMoveEvent(QMouseEvent *event)
 {
   m_viMousePos = INTVECTOR2(event->pos().x(), event->pos().y());
   AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
@@ -266,13 +150,11 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
       bPerformUpdate = true;
     }
 
-    if (bPerformUpdate) updateGL();
+    if (bPerformUpdate) UpdateWindow();
   }
 }
 
-void RenderWindow::wheelEvent(QWheelEvent *event) {
-  QGLWidget::wheelEvent(event);
-
+void RenderWindow::WheelEvent(QWheelEvent *event) {
   AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
 
   // mouse is over the 3D window
@@ -283,13 +165,10 @@ void RenderWindow::wheelEvent(QWheelEvent *event) {
     int iZoom = event->delta()/120;  // this returns 1 for "most" mice if the wheel is turned one "click"
     m_Renderer->SetSliceDepth(eWinMode, int(m_Renderer->GetSliceDepth(eWinMode))+iZoom);
   }
-  updateGL();
+  UpdateWindow();
 }
 
-void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
-  QGLWidget::keyPressEvent(event);
-
-
+void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
   if (event->key() == Qt::Key_C) {
     AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
 
@@ -321,12 +200,12 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
     else
      if (m_Renderer->GetStereo()) {
        m_Renderer->SetStereo(false);
-       emit StereoDisabled();
+       EmitStereoDisabled();
      }
 
     SetupArcBall();
-    emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
-    updateGL();    
+    EmitRenderWindowViewChanged(int(m_Renderer->GetViewmode()));
+    UpdateWindow();    
   }
 
   if (event->key() == Qt::Key_X) {
@@ -351,6 +230,21 @@ void RenderWindow::keyPressEvent ( QKeyEvent * event ) {
     bUseMIP = !m_Renderer->GetUseMIP(eWinMode);
     m_Renderer->SetUseMIP(eWinMode, bUseMIP);
   }
+}
+
+void RenderWindow::CloseEvent(QCloseEvent*) {
+  EmitWindowClosing();
+}
+
+void RenderWindow::FocusInEvent ( QFocusEvent * event ) {
+  if (m_Renderer) m_Renderer->SetTimeSlice(m_iTimeSliceMSecsActive);
+
+  if (event->gotFocus()) EmitWindowActive();
+}
+
+void RenderWindow::FocusOutEvent ( QFocusEvent * event ) {
+  if (m_Renderer) m_Renderer->SetTimeSlice(m_iTimeSliceMSecsInActive);
+  if (!event->gotFocus()) EmitWindowInActive();
 }
 
 void RenderWindow::SetupArcBall() {
@@ -384,8 +278,8 @@ void RenderWindow::ToggleRenderWindowView2x2() {
   if (m_Renderer != NULL) {
     m_Renderer->SetViewmode(AbstrRenderer::VM_TWOBYTWO);
     SetupArcBall();
-    emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
-    updateGL();
+    EmitRenderWindowViewChanged(int(m_Renderer->GetViewmode()));
+    UpdateWindow();
   }
 }
 
@@ -393,61 +287,28 @@ void RenderWindow::ToggleRenderWindowViewSingle() {
   if (m_Renderer != NULL) {
     m_Renderer->SetViewmode(AbstrRenderer::VM_SINGLE);
     SetupArcBall();
-    emit RenderWindowViewChanged(int(m_Renderer->GetViewmode()));
-    updateGL();
+    EmitRenderWindowViewChanged(int(m_Renderer->GetViewmode()));
+    UpdateWindow();
   }
 }
 
 void RenderWindow::Cleanup() {
   if (m_Renderer == NULL) return;
   
-  makeCurrent();
   m_Renderer->Cleanup();
   m_MasterController.ReleaseVolumerenderer(m_Renderer);
   m_Renderer = NULL;
 }
 
-void RenderWindow::closeEvent(QCloseEvent *event) {
-  QGLWidget::closeEvent(event);
-
-  emit WindowClosing(this);
-}
-
-void RenderWindow::focusInEvent ( QFocusEvent * event ) {
-  // call superclass method
-  QGLWidget::focusInEvent(event);
-  if (m_Renderer) m_Renderer->SetTimeSlice(m_iTimeSliceMSecsActive);
-
-  if (event->gotFocus()) {
-    emit WindowActive(this);
-  }
-}
-
-void RenderWindow::focusOutEvent ( QFocusEvent * event ) {
-  // call superclass method
-  QGLWidget::focusOutEvent(event);
-  if (m_Renderer) m_Renderer->SetTimeSlice(m_iTimeSliceMSecsInActive);
-
-  if (!event->gotFocus()) {
-    emit WindowInActive(this);
-  }
-}
-
-
 void RenderWindow::CheckForRedraw() {
-  if (m_Renderer->CheckForRedraw()) {
-    makeCurrent();
-    update();
-  }
+  if (m_Renderer->CheckForRedraw()) UpdateWindow();
 }
 
 void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {
-  makeCurrent();
   m_Renderer->SetBlendPrecision(eBlendPrecisionMode); 
 }
 
 void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS) {
-  makeCurrent();
   m_iTimeSliceMSecsActive   = iActiveTS;
   m_iTimeSliceMSecsInActive = iInactiveTS;
   m_Renderer->SetPerfMeasures(iMinFramerate, iLODDelay); 
@@ -456,14 +317,8 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLOD
 bool RenderWindow::CaptureFrame(const std::string& strFilename)
 {
   GLFrameCapture f;
-  makeCurrent();
-#ifdef TUVOK_OS_APPLE
-  paintGL();
-  paintGL(); // make sure we have the same results in the front and in the backbuffer
-#else
-  repaint();
-  repaint(); // make sure we have the same results in the front and in the backbuffer
-#endif
+  ForceRepaint();
+  ForceRepaint(); // make sure we have the same results in the front and in the backbuffer
   return f.CaptureSingleFrame(strFilename);
 }
 
@@ -476,14 +331,8 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   bool bSystemOrtho = m_Renderer->GetOrthoView();
   if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bOrtho);
   m_Renderer->SetMIPLOD(bUseLOD);
-  makeCurrent();
-#ifdef TUVOK_OS_APPLE
-  paintGL();
-  paintGL(); // make sure we have the same results in the front and in the backbuffer
-#else
-  repaint();
-  repaint(); // make sure we have the same results in the front and in the backbuffer
-#endif
+  ForceRepaint();
+  ForceRepaint(); // make sure we have the same results in the front and in the backbuffer
   if (bFinalFrame) { // restore state
     m_Renderer->SetMIPRotationAngle(0.0f);
     if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bSystemOrtho);
@@ -495,14 +344,8 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
                                         std::string* strRealFilename)
 {
   GLFrameCapture f;
-  makeCurrent();
-#ifdef TUVOK_OS_APPLE
-  paintGL();
-  paintGL(); // make sure we have the same results in the front and in the backbuffer
-#else
-  repaint();
-  repaint(); // make sure we have the same results in the front and in the backbuffer
-#endif
+  ForceRepaint();
+  ForceRepaint(); // make sure we have the same results in the front and in the backbuffer
   return f.CaptureSequenceFrame(strFilename, strRealFilename);
 }
 
@@ -589,7 +432,6 @@ void RenderWindow::CloneRendermode(RenderWindow* other) {
 }
 
 void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate) {
-  makeCurrent();
   m_Renderer->SetRendermode(eRenderMode); 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
@@ -599,7 +441,6 @@ void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bP
 }
 
 void RenderWindow::SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor) {
-  makeCurrent();
   m_Renderer->SetBackgroundColors(vBackColors); 
   m_Renderer->SetTextColor(vTextColor); 
 }
@@ -739,4 +580,30 @@ FLOATVECTOR3 RenderWindow::GetIsosufaceColor() const {
 
 FLOATVECTOR3 RenderWindow::GetCVColor() const {
   return m_Renderer->GetCVColor();
+}
+
+void RenderWindow::ResizeRenderer(int width, int height)
+{
+  m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
+
+  if (m_Renderer != NULL) {
+    m_Renderer->Resize(UINTVECTOR2(width, height));
+    SetupArcBall();
+  }
+}
+
+void RenderWindow::PaintRenderer()
+{
+  if (m_Renderer != NULL && m_bRenderSubsysOK) {
+    m_Renderer->Paint();
+    if (GetQtWidget()->isActiveWindow()) {
+      unsigned int iLevelCount        = m_Renderer->GetCurrentSubFrameCount();
+      unsigned int iWorkingLevelCount = m_Renderer->GetWorkingSubFrame();
+
+      unsigned int iBrickCount        = m_Renderer->GetCurrentBrickCount();
+      unsigned int iWorkingBrick      = m_Renderer->GetWorkingBrick();
+
+      m_MainWindow->SetRenderProgress(iLevelCount, iWorkingLevelCount, iBrickCount, iWorkingBrick);
+    } 
+  }
 }

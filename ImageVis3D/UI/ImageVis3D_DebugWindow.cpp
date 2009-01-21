@@ -53,7 +53,7 @@ void MainWindow::ShowVersions() {
   m_MasterController.DebugOut()->printf("QT Version: %s",QT_VERSION_STR);    
 }
 
-void MainWindow::ShowGLInfo(bool bWithExtensions) {
+void MainWindow::ShowGPUInfo(bool bWithExtensions) {
   if (RenderWindow::GetVendorString() == "") {
     m_MasterController.DebugOut()->printf("Please open a renderwindow first!");
   } else {
@@ -63,13 +63,15 @@ void MainWindow::ShowGLInfo(bool bWithExtensions) {
 
     if (!bWithExtensions) return;
 
-    m_MasterController.DebugOut()->printf("Supported GL extensions:");
+    if (RenderWindowGL::GetExtString() != "") {
+      m_MasterController.DebugOut()->printf("Supported GL extensions:");
 
-    vector< string > vExtensions = SysTools::Tokenize(RenderWindow::GetExtString());
-    for (size_t i = 0;i<vExtensions.size();i++) {
-      m_MasterController.DebugOut()->printf("  %s",vExtensions[i].c_str());
+      vector< string > vExtensions = SysTools::Tokenize(RenderWindowGL::GetExtString());
+      for (size_t i = 0;i<vExtensions.size();i++) {
+        m_MasterController.DebugOut()->printf("  %s",vExtensions[i].c_str());
+      }
+      m_MasterController.DebugOut()->printf("%i extensions found",int(vExtensions.size()));
     }
-    m_MasterController.DebugOut()->printf("%i extensions found",int(vExtensions.size()));
   }
 }
 
@@ -97,9 +99,9 @@ void MainWindow::ClearDebugWin() {
 
 void MainWindow::SetDebugViewMask() {
   m_MasterController.DebugOut()->SetOutput(checkBox_ShowDebugErrors->isChecked(),
-                      checkBox_ShowDebugWarnings->isChecked(),
-                      checkBox_ShowDebugMessages->isChecked(),
-                      checkBox_ShowDebugOther->isChecked());
+                                           checkBox_ShowDebugWarnings->isChecked(),
+                                           checkBox_ShowDebugMessages->isChecked(),
+                                           checkBox_ShowDebugOther->isChecked());
 }
 
 void MainWindow::GetDebugViewMask() {

@@ -175,8 +175,8 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
 
 
     RenderWindow *renderWin = CreateNewRenderWindow(filename);
-    renderWin->show();  // calls RenderWindowActive automatically
-  //  RenderWindowActive(renderWin);
+    renderWin->GetQtWidget()->show();  // calls RenderWindowActive automatically
+    UpdateMenus();
 
     AddFileToMRUList(filename);
     return true;
@@ -219,7 +219,7 @@ void MainWindow::LoadDirectory() {
         }      
       
         RenderWindow *renderWin = CreateNewRenderWindow(targetFilename);
-        renderWin->show();
+        renderWin->GetQtWidget()->show();
         RenderWindowActive(renderWin);
         AddFileToMRUList(targetFilename);
       }

@@ -115,8 +115,10 @@ bool MainWindow::ShowSettings() {
       int iLogoPos            = settings.value("LogoPosition", m_iLogoPos).toInt();
       settings.endGroup();
 
+      bool bIsDirectX10Capable = m_MasterController.SysInfo()->IsDirectX10Capable();
+
       // hand data to form
-      settingsDlg.Data2Form(iMaxCPU, iMaxGPU, 
+      settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU, 
                             bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS,
                             bShowVersionInTitle,
                             bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
@@ -239,7 +241,7 @@ void MainWindow::ApplySettings() {
   // Apply window settings
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {
     QWidget* w = mdiArea->subWindowList().at(i)->widget();
-    ApplySettings(qobject_cast<RenderWindow*>(w));
+    ApplySettings(WidgetToRenderWin(w));
   }
 
   // Apply global settings

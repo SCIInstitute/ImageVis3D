@@ -78,7 +78,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     int           GetLogoPos() const;
 
 
-    void Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU, 
+    void Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU, 
                    bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
                    bool bShowVersionInTitle,
                    bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,

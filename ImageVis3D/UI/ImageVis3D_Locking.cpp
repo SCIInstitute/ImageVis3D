@@ -62,7 +62,7 @@ void MainWindow::UpdateLockView() {
 
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {
     QWidget* w = mdiArea->subWindowList().at(i)->widget();
-    RenderWindow* renderWin = qobject_cast<RenderWindow*>(w);
+    RenderWindow* renderWin = WidgetToRenderWin(w);
 
     if (renderWin != m_pActiveRenderWin) {
       listWidget_Lock->addItem(renderWin->GetWindowID());
@@ -112,7 +112,7 @@ void MainWindow::ChangeLocks() {
       RenderWindow* otherWin = NULL;
       for (int j = 0;j<mdiArea->subWindowList().size();j++) {
          QWidget* w = mdiArea->subWindowList().at(j)->widget();
-         RenderWindow* renderWin = qobject_cast<RenderWindow*>(w);
+         RenderWindow* renderWin = WidgetToRenderWin(w);
          if (QString(renderWin->GetWindowID()) == listWidget_Lock->item(i)->text() ) {
             otherWin = renderWin;
             break;
@@ -171,7 +171,7 @@ void MainWindow::RemoveAllLocks(RenderWindow* sender) {
 void MainWindow::RemoveAllLocks(RenderWindow* sender, size_t iLockType) {
   for (int j = 0;j<mdiArea->subWindowList().size();j++) {
     QWidget* w = mdiArea->subWindowList().at(j)->widget();
-    RenderWindow* otherWin = qobject_cast<RenderWindow*>(w);
+    RenderWindow* otherWin = WidgetToRenderWin(w);
     if (otherWin == sender) continue;
 
     for (size_t k = 0;k<otherWin->m_vpLocks[iLockType].size();) {

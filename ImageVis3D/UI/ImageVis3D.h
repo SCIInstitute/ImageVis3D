@@ -44,7 +44,11 @@
 #include "../Tuvok/Controller/MasterController.h"
 
 #include "AutoGen/ui_ImageVis3D.h"
-#include "RenderWindow.h"
+#include "RenderWindowGL.h"
+#if defined(_WIN32) && defined(USE_DIRECTX)
+#include "RenderWindowDX.h"
+#endif
+
 #include "Q1DTransferFunction.h"
 #include "Q2DTransferFunction.h"
 #include "DebugOut/QTOut.h"
@@ -146,7 +150,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void RenderWindowViewChanged(int iMode);
 
     void ShowVersions();
-    void ShowGLInfo(bool bWithExtensions);
+    void ShowGPUInfo(bool bWithExtensions);
     void ShowSysInfo();
     void ClearDebugWin();
     void ParseAndExecuteDebugCommand();
@@ -230,9 +234,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     
     bool                                      m_bStayOpenAfterScriptEnd;
 
+    RenderWindow* WidgetToRenderWin(QWidget* w);
     RenderWindow* CreateNewRenderWindow(QString dataset);
     bool CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow=true);
-    RenderWindow* GetActiveRenderWindow();
 
     void SetupWorkspaceMenu();
     bool LoadWorkspace(QString strFilename,

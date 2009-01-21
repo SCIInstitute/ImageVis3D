@@ -43,27 +43,22 @@
 #include "../Tuvok/Controller/MasterController.h"
 
 #include <QtGui/QListWidget>
-#include <QtOpenGL/QGLWidget>
 #include "../Tuvok/Basics/ArcBall.h"
 #include <string>
 #include <StdDefines.h>
 
 class MainWindow;
 
-class RenderWindow : public QGLWidget
+class RenderWindow 
 {
-  Q_OBJECT  
   public:
     RenderWindow(MasterController& masterController,
                  MasterController::EVolumeRendererType eType,
-                 QString dataset,
+                 const QString& dataset,
                  unsigned int iCounter,
-                 bool bUseOnlyPowerOfTwo,
-                 bool bDownSampleTo8Bits,
-                 bool bDisableBorder,
-                 QGLWidget* glShareWidget,
                  QWidget* parent,
-                 Qt::WindowFlags flags);
+                 const UINTVECTOR2& vMinSize = UINTVECTOR2(50, 50),
+                 const UINTVECTOR2& vDefaultSize= UINTVECTOR2(400, 400));
 
     virtual ~RenderWindow();
 
@@ -76,7 +71,7 @@ class RenderWindow : public QGLWidget
     void SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate=true);
     AbstrRenderer::ERenderMode GetRendermode() {return m_Renderer->GetRendermode();}
     void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor);
-    void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
+    virtual void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
     bool CaptureFrame(const std::string& strFilename);
     bool CaptureSequenceFrame(const std::string& strFilename, std::string* strRealFilename=NULL);
@@ -120,47 +115,59 @@ class RenderWindow : public QGLWidget
     FLOATVECTOR3 GetIsosufaceColor() const;
     FLOATVECTOR3 GetCVColor() const;
 
-    static const std::string& GetVendorString() {return ms_glVendorString;}
-    static const std::string& GetExtString() {return ms_glExtString;}
+    static const std::string& GetVendorString() {return ms_gpuVendorString;}
     static UINT32 GetMax3DTexDims() {return ms_iMax3DTexDims;}
 
-  public slots:
-    void ToggleRenderWindowView2x2();
-    void ToggleRenderWindowViewSingle();
-    void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {m_iTimeSliceMSecsActive = iActive; m_iTimeSliceMSecsInActive = iInactive;}
+    virtual QWidget* GetQtWidget() = NULL;
 
-  signals:
-    void StereoDisabled();
-    void RenderWindowViewChanged(int iViewID);
-    void WindowActive(RenderWindow* sender);
-    void WindowInActive(RenderWindow* sender);
-    void WindowClosing(RenderWindow* sender);
+  public: // public slots:
+    virtual void ToggleRenderWindowView2x2();
+    virtual void ToggleRenderWindowViewSingle();
+    virtual void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {m_iTimeSliceMSecsActive = iActive; m_iTimeSliceMSecsInActive = iInactive;}
 
   protected:
-    virtual void initializeGL();
-    virtual void paintGL();
-    virtual void resizeGL(int width, int height);
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void mouseReleaseEvent(QMouseEvent *event);
-    virtual void mouseMoveEvent(QMouseEvent *event);
-    virtual void wheelEvent(QWheelEvent *event);
-    virtual void closeEvent(QCloseEvent *event);
-    virtual void focusInEvent(QFocusEvent * event);
-    virtual void focusOutEvent ( QFocusEvent * event );
-    virtual void keyPressEvent ( QKeyEvent * event );
-    virtual void Cleanup();
-   
-  private:
-    static std::string ms_glVendorString;
-    static std::string ms_glExtString;
+    QString           m_strDataset;
+    QString           m_strID;  
+    AbstrRenderer*    m_Renderer;
+    MasterController& m_MasterController;
+    bool              m_bRenderSubsysOK;
+    UINTVECTOR2       m_vWinDim;
+    UINTVECTOR2       m_vMinSize;
+    UINTVECTOR2       m_vDefaultSize;
+
+    static std::string ms_gpuVendorString;
     static UINT32      ms_iMax3DTexDims;
 
+    void SetupArcBall();
+
+    void ResizeRenderer(int width, int height);
+    void PaintRenderer();
+    virtual void InitializeRenderer() = NULL;
+
+    // Qt widget connector calls
+    virtual void UpdateWindow() = NULL;
+    virtual void ForceRepaint() = NULL;
+    virtual void EmitStereoDisabled() = NULL;
+    virtual void EmitRenderWindowViewChanged(int iViewID) = NULL;
+    virtual void EmitWindowActive() = NULL;
+    virtual void EmitWindowInActive() = NULL;
+    virtual void EmitWindowClosing() = NULL;
+
+    void MousePressEvent(QMouseEvent *event);
+    void MouseReleaseEvent(QMouseEvent *event);
+    void MouseMoveEvent(QMouseEvent *event);
+    void WheelEvent(QWheelEvent *event);
+    void CloseEvent(QCloseEvent *event);
+    void FocusInEvent(QFocusEvent * event);
+    void FocusOutEvent ( QFocusEvent * event );
+    void KeyPressEvent ( QKeyEvent * event );
+    void Cleanup();
+
+  private:
+    MasterController::EVolumeRendererType m_eRendererType;
     MainWindow*       m_MainWindow;
-    GLRenderer*       m_Renderer;
-    MasterController& m_MasterController;
     unsigned int      m_iTimeSliceMSecsActive;
     unsigned int      m_iTimeSliceMSecsInActive;
-    bool              m_bRenderSubsysOK;
     
     ArcBall           m_ArcBall;
     INTVECTOR2        m_viRightClickPos;
@@ -169,18 +176,12 @@ class RenderWindow : public QGLWidget
     FLOATMATRIX4      m_mAccumulatedRotation;
     FLOATMATRIX4      m_mCaptureStartRotation;
     FLOATMATRIX4      m_mAccumulatedTranslation;
-    bool              m_bAbsoluteViewLock;
-
-       
-    QString           m_strDataset;
-    QString           m_strID;
-
-    UINTVECTOR2        m_vWinDim;
+    bool              m_bAbsoluteViewLock;    
     bool              m_bCaptureMode;
 
-    void SetupArcBall();
     void SetRotation(const FLOATMATRIX4& mAccumulatedRotation, const FLOATMATRIX4& mCurrentRotation);
     void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);
+
 };
 
 #endif // RENDERWINDOW_H

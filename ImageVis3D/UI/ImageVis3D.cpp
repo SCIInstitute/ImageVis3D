@@ -285,20 +285,17 @@ void MainWindow::FilterImage() {
   if( radioButton_FilterUpdate->isChecked() ) {
     renderWin = CreateNewRenderWindow(fileName);
   } else { // if( radioButton_FilterCreate->isChecked() )
-    m_pActiveRenderWin->close();
+    m_pActiveRenderWin->GetQtWidget()->close();
     renderWin = CreateNewRenderWindow(fileName);
   }
 
-  renderWin->show();
+  renderWin->GetQtWidget()->show();
   RenderWindowActive(renderWin);
 }
 
 
 void MainWindow::SetLighting(bool bLighting) {
-  RenderWindow* w = GetActiveRenderWindow();
-  if (w != NULL) {
-    w->SetUseLighting(bLighting);
-  }
+  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetUseLighting(bLighting);
 }
 
 void MainWindow::SetSampleRate(int iValue) {
@@ -490,4 +487,19 @@ void MainWindow::TranslateCurrentView(double x, double y, double z) {
     matTrans.Translation(x,y,z);
     m_pActiveRenderWin->Translate(matTrans);
   }
+}
+
+
+RenderWindow* MainWindow::WidgetToRenderWin(QWidget* w) {
+  if (w->objectName() == "RenderWindowGL") {
+    RenderWindowGL* r = static_cast<RenderWindowGL*>(w);  
+    return static_cast<RenderWindow*>(r);
+  } 
+#if defined(_WIN32) && defined(USE_DIRECTX)
+  if (w->objectName() == "RenderWindowDX") {
+      RenderWindowDX* r = static_cast<RenderWindowDX*>(w);  
+      return static_cast<RenderWindow*>(r);
+  } 
+#endif
+  return NULL;
 }

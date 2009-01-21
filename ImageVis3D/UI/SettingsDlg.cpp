@@ -118,6 +118,7 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   // init mem sliders
   horizontalSlider_GPUMem->setMinimum(32);
   horizontalSlider_CPUMem->setMinimum(512);
+
 }
 
 
@@ -292,7 +293,7 @@ void SettingsDlg::SetLogoLabel() {
   }
 }
 
-void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
+void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU,
                             bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
@@ -327,6 +328,14 @@ void SettingsDlg::Data2Form(UINT64 iMaxCPU, UINT64 iMaxGPU,
     case 1    : radioButton_Prec16Bit->setChecked(true); break;
     default   : radioButton_Prec8Bit->setChecked(true); break;
   }
+
+  radioButton_APIDX->setEnabled(bIsDirectX10Capable);
+
+  // adjust rendermode to GL if no DX support is present
+  if (!bIsDirectX10Capable && iVolRenType > 2) {
+    iVolRenType -= 2;
+  }
+
 
   switch (iVolRenType) {
     case 1    : radioButton_APIGL->setChecked(true);

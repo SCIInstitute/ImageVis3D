@@ -44,8 +44,8 @@ using namespace std;
 bool MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "clear", "", "clear this window");
   pScriptEngine->RegisterCommand(this, "versions", "", "print version information");
-  pScriptEngine->RegisterCommand(this, "glinfo", "","print basic information about the OpenGL subsystem");
-  pScriptEngine->RegisterCommand(this, "glinfoext", "","print information about the OpenGL subsystem and supported OpenGL extension");
+  pScriptEngine->RegisterCommand(this, "gpuinfo", "","print basic information about the GPU, the driver and the rendering APIs");
+  pScriptEngine->RegisterCommand(this, "gpuinfoext", "","print extensive information about the GPU, the driver and the rendering APIs");
   pScriptEngine->RegisterCommand(this, "sysinfo", "","print information about the system and the mem usage");
   pScriptEngine->RegisterCommand(this, "sysinfo", "","print information about the system and the mem usage");
   pScriptEngine->RegisterCommand(this, "open", "sourcefile [targetfile]","open the sourcefile and write it into targetfile if conversion is required");
@@ -72,8 +72,8 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   strMessage = "";
   if (strCommand == "clear")           { ClearDebugWin(); } else
   if (strCommand == "versions")        { ShowVersions(); } else
-  if (strCommand == "glinfo")          { ShowGLInfo(false); } else
-  if (strCommand == "glinfoext")       { ShowGLInfo(true); } else
+  if (strCommand == "gpuinfo")         { ShowGPUInfo(false); } else
+  if (strCommand == "gpuinfoext")      { ShowGPUInfo(true); } else
   if (strCommand == "sysinfo")         { ShowSysInfo();} else
   if (strCommand == "open")            { bool bResult = LoadDataset(strParams); if (!bResult) {strMessage = "Unable to load dataset file "+strParams[0]; return false;}} else
   if (strCommand == "open1d")          { bool bResult = Transfer1DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0]; return false;}} else

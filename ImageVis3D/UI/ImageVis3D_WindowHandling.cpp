@@ -37,6 +37,8 @@
 
 #include "ImageVis3D.h"
 #include "BrowseData.h"
+#include "RenderWindowGL.h"
+#include "RenderWindowDX.h"
 
 #include <QtCore/QTimer>
 #include <QtGui/QMdiSubWindow>
@@ -382,7 +384,8 @@ void MainWindow::CloseCurrentView() {
 }
 
 void MainWindow::CloneCurrentView() {
-  RenderWindow *renderWin = CreateNewRenderWindow(GetActiveRenderWindow()->GetDatasetName());
+  if (!m_pActiveRenderWin) return;
+  RenderWindow *renderWin = CreateNewRenderWindow(m_pActiveRenderWin->GetDatasetName());
 
   renderWin->CloneViewState(m_pActiveRenderWin);
   renderWin->CloneRendermode(m_pActiveRenderWin);
@@ -391,7 +394,7 @@ void MainWindow::CloneCurrentView() {
     for (size_t i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_pActiveRenderWin); 
 
   QMdiSubWindow * pActiveWin = mdiArea->activeSubWindow(); // as "show" toggles the active renderwin we need to remeber it
-  renderWin->show();
+  renderWin->GetQtWidget()->show();
   RenderWindowActive(renderWin);
   mdiArea->activeSubWindow()->resize(pActiveWin->size().width(), pActiveWin->size().height());
 }
@@ -402,7 +405,7 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
     if (!bIsOK) 
       m_pActiveRenderWin = NULL;
     else
-      m_MasterController.DebugOut()->Error("IOManager::CheckRenderwindowFitness","Renderwindow healthy.");
+      m_MasterController.DebugOut()->Message("IOManager::CheckRenderwindowFitness","Renderwindow healthy.");
 
     if (bIfNotOkShowMessageAndCloseWindow && !bIsOK) {
       m_MasterController.DebugOut()->Error("IOManager::CheckRenderwindowFitness","Unable to initialize the render window, see previous error messages for details.");
@@ -410,7 +413,7 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
       // find window in mdi area
       for (int i = 0;i<mdiArea->subWindowList().size();i++) {
         QWidget* w = mdiArea->subWindowList().at(i)->widget();
-        RenderWindow* subwindow = qobject_cast<RenderWindow*>(w);
+        RenderWindow* subwindow = WidgetToRenderWin(w);
 
         if (subwindow == renderWin)  {
           mdiArea->setActiveSubWindow(mdiArea->subWindowList().at(i));
@@ -427,23 +430,39 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
 RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 {
   static unsigned int iCounter = 0;
+  RenderWindow *renderWin;
 
-  RenderWindow *renderWin =
-    new RenderWindow(m_MasterController, m_eVolumeRendererType, dataset,
-         iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, m_bDisableBorder, m_glShareWidget, this, 0);
+  #if defined(_WIN32) && defined(USE_DIRECTX)
+    if (m_eVolumeRendererType >= MasterController::DIRECTX_SBVR) {
+      renderWin = new RenderWindowDX(m_MasterController, m_eVolumeRendererType, dataset, 
+                                       iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
+                                       m_bDisableBorder, this, 0);
+    } else {
+      renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset, 
+                                     iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
+                                     m_bDisableBorder, m_glShareWidget, this, 0);
+    }
+  #else
+    if (m_eVolumeRendererType >= MasterController::DIRECTX_SBVR) {
+      QMessageBox::message(this, "No DirectX Support", "The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
+      m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
 
-  ApplySettings(renderWin);
+      m_eVolumeRendererType = MasterController::EVolumeRendererType(int(m_eVolumeRendererType) - int(MasterController::DIRECTX_SBVR) );
+    }
+    renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset, 
+                                   iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
+                                   m_bDisableBorder, m_glShareWidget, this, 0);
+  #endif
 
-  mdiArea->addSubWindow(renderWin);
+  if (renderWin && renderWin->GetRenderer()) {
+    ApplySettings(renderWin);
+  }
 
-  connect(renderWin, SIGNAL(WindowActive(RenderWindow*)),
-    this, SLOT(RenderWindowActive(RenderWindow*)));
-  connect(renderWin, SIGNAL(WindowClosing(RenderWindow*)),
-    this, SLOT(RenderWindowClosing(RenderWindow*)));
-  connect(renderWin, SIGNAL(RenderWindowViewChanged(int)),
-    this, SLOT(RenderWindowViewChanged(int)));
-  connect(renderWin, SIGNAL(StereoDisabled()),
-    this, SLOT(StereoDisabled()));
+  mdiArea->addSubWindow(renderWin->GetQtWidget());
+  connect(renderWin->GetQtWidget(), SIGNAL(WindowActive(RenderWindow*)), this, SLOT(RenderWindowActive(RenderWindow*)));
+  connect(renderWin->GetQtWidget(), SIGNAL(WindowClosing(RenderWindow*)), this, SLOT(RenderWindowClosing(RenderWindow*)));
+  connect(renderWin->GetQtWidget(), SIGNAL(RenderWindowViewChanged(int)), this, SLOT(RenderWindowViewChanged(int)));
+  connect(renderWin->GetQtWidget(), SIGNAL(StereoDisabled()), this, SLOT(StereoDisabled()));
   
   return renderWin;
 }
@@ -551,12 +570,10 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   RemoveAllLocks(sender);
 
   m_pActiveRenderWin = NULL;
-  disconnect(sender, SIGNAL(WindowActive(RenderWindow*)),
-       this, SLOT(RenderWindowActive(RenderWindow*)));
-  disconnect(sender, SIGNAL(WindowClosing(RenderWindow*)),
-       this, SLOT(RenderWindowClosing(RenderWindow*)));
-  disconnect(sender, SIGNAL(RenderWindowViewChanged(int)),
-       this, SLOT(RenderWindowViewChanged(int)));
+  disconnect(sender->GetQtWidget(), SIGNAL(WindowActive(RenderWindow*)),  this, SLOT(RenderWindowActive(RenderWindow*)));
+  disconnect(sender->GetQtWidget(), SIGNAL(WindowClosing(RenderWindow*)), this, SLOT(RenderWindowClosing(RenderWindow*)));
+  disconnect(sender->GetQtWidget(), SIGNAL(RenderWindowViewChanged(int)), this, SLOT(RenderWindowViewChanged(int)));
+  disconnect(sender->GetQtWidget(), SIGNAL(StereoDisabled()), this, SLOT(StereoDisabled()));
 
   m_1DTransferFunction->SetData(NULL, NULL);
   m_1DTransferFunction->update();
@@ -575,30 +592,19 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
 
 void MainWindow::ToggleRenderWindowView2x2() {
-  RenderWindow* win = GetActiveRenderWindow();
-  if (win) win->ToggleRenderWindowView2x2();
+  if (m_pActiveRenderWin) m_pActiveRenderWin->ToggleRenderWindowView2x2();
 }
 
 
 void MainWindow::ToggleRenderWindowViewSingle() {
-  RenderWindow* win = GetActiveRenderWindow();
-  if (win) win->ToggleRenderWindowViewSingle();
+  if (m_pActiveRenderWin) m_pActiveRenderWin->ToggleRenderWindowViewSingle();
 }
-
-
-RenderWindow* MainWindow::GetActiveRenderWindow()
-{
-  if (QMdiSubWindow* activeSubWindow = mdiArea->activeSubWindow())
-    return qobject_cast<RenderWindow*>(activeSubWindow->widget());
-  else
-    return NULL;
-}
-
 
 void MainWindow::CheckForRedraw() {
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {
     QWidget* w = mdiArea->subWindowList().at(i)->widget();
-    qobject_cast<RenderWindow*>(w)->CheckForRedraw();
+    RenderWindow* r = WidgetToRenderWin(w);
+    r->CheckForRedraw();
   }
 }
 
@@ -638,7 +644,7 @@ void MainWindow::OpenRecentFile(){
 }
 
 void MainWindow::UpdateMenus() {
-  bool bHasMdiChild = (GetActiveRenderWindow() != 0);
+  bool bHasMdiChild = m_pActiveRenderWin != NULL;
   actionSave_Dataset->setEnabled(bHasMdiChild);
 
   actionGo_Fullscreen->setEnabled(bHasMdiChild);
