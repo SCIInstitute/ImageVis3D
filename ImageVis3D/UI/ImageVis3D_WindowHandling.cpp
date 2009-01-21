@@ -444,7 +444,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
     }
   #else
     if (m_eVolumeRendererType >= MasterController::DIRECTX_SBVR) {
-      QMessageBox::message(this, "No DirectX Support", "The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
+      QMessageBox::information(this, "No DirectX Support", "The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
       m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
 
       m_eVolumeRendererType = MasterController::EVolumeRendererType(int(m_eVolumeRendererType) - int(MasterController::DIRECTX_SBVR) );
