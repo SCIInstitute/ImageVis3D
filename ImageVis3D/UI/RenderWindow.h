@@ -118,7 +118,7 @@ class RenderWindow
     static const std::string& GetVendorString() {return ms_gpuVendorString;}
     static UINT32 GetMax3DTexDims() {return ms_iMax3DTexDims;}
 
-    virtual QWidget* GetQtWidget() = NULL;
+    virtual QWidget* GetQtWidget() = 0;
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
@@ -142,16 +142,16 @@ class RenderWindow
 
     void ResizeRenderer(int width, int height);
     void PaintRenderer();
-    virtual void InitializeRenderer() = NULL;
+    virtual void InitializeRenderer() = 0;
 
     // Qt widget connector calls
-    virtual void UpdateWindow() = NULL;
-    virtual void ForceRepaint() = NULL;
-    virtual void EmitStereoDisabled() = NULL;
-    virtual void EmitRenderWindowViewChanged(int iViewID) = NULL;
-    virtual void EmitWindowActive() = NULL;
-    virtual void EmitWindowInActive() = NULL;
-    virtual void EmitWindowClosing() = NULL;
+    virtual void UpdateWindow() = 0;
+    virtual void ForceRepaint() = 0;
+    virtual void EmitStereoDisabled() = 0;
+    virtual void EmitRenderWindowViewChanged(int iViewID) = 0;
+    virtual void EmitWindowActive() = 0;
+    virtual void EmitWindowInActive() = 0;
+    virtual void EmitWindowClosing() = 0;
 
     void MousePressEvent(QMouseEvent *event);
     void MouseReleaseEvent(QMouseEvent *event);
