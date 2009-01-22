@@ -45,7 +45,7 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
   Q_OBJECT
   public:
     PleaseWaitDialog(QWidget* parent,
-                     Qt::WindowFlags flags = Qt::WindowModal);
+                     Qt::WindowFlags flags = 0);
     virtual ~PleaseWaitDialog();
 
     void SetText(QString text) {
