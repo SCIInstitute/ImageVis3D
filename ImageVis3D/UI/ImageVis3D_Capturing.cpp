@@ -37,7 +37,6 @@
 
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
-#include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
 #include <QtGui/QInputDialog>
 #include <QtCore/QSettings>
@@ -54,7 +53,7 @@ void MainWindow::CaptureFrame() {
   if (m_pActiveRenderWin) {
     if (!CaptureFrame(lineEditCaptureFile->text().toStdString())) {
       QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
-      QMessageBox::warning(this, tr("Error"), msg);
+      ShowWarningDialog( tr("Error"), msg);
       m_MasterController.DebugOut()->Error("MainWindow::CaptureFrame", msg.toAscii());
     }
   }
@@ -65,7 +64,7 @@ void MainWindow::CaptureSequence() {
     string strSequenceName;
     if (!CaptureSequence(lineEditCaptureFile->text().toStdString(), &strSequenceName)){
       QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
-      QMessageBox::warning(this, tr("Error"), msg);
+      ShowWarningDialog( tr("Error"), msg);
       m_MasterController.DebugOut()->Error("MainWindow::CaptureSequence", msg.toAscii());
     }
   }
@@ -128,6 +127,9 @@ void MainWindow::CaptureRotation() {
     PleaseWaitDialog pleaseWait(this);
     // add status label into debug chain
     AbstrDebugOut* pOldDebug       = m_MasterController.DebugOut();
+    bool           bDeleteOldDebug = m_MasterController.DoDeleteDebugOut();
+    m_MasterController.SetDeleteDebugOut(false);
+
     MultiplexOut* pMultiOut = new MultiplexOut();
     m_MasterController.SetDebugOut(pMultiOut, true);
     QTLabelOut* labelOut = new QTLabelOut(pleaseWait.GetStatusLabel(),
@@ -153,7 +155,7 @@ void MainWindow::CaptureRotation() {
         string strSequenceName;
         if (!m_pActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(), &strSequenceName)) {
           QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
-          QMessageBox::warning(this, tr("Error"), msg);
+          ShowWarningDialog( tr("Error"), msg);
           m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
           break;
         }
@@ -201,7 +203,7 @@ void MainWindow::CaptureRotation() {
 
           if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), bUseLOD, &strSequenceName)) {
             QString msg = tr("Error writing image file %1.").arg(strSequenceName.c_str());
-            QMessageBox::warning(this, tr("Error"), msg);
+            ShowWarningDialog( tr("Error"), msg);
             m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
             break;
           }
@@ -215,7 +217,7 @@ void MainWindow::CaptureRotation() {
               string strImageFilenameRight = SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_R");
               if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, bUseLOD, i==(iNumImages-1), &strSequenceName)) {
                 QString msg = tr("Error writing image file %1.").arg(strImageFilenameRight.c_str());
-                QMessageBox::warning(this, tr("Error"), msg);
+                ShowWarningDialog( tr("Error"), msg);
                 m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
                 break;
               }
@@ -268,12 +270,12 @@ void MainWindow::CaptureRotation() {
         pleaseWait.SetText("Slicing trougth the dataset, please wait  ...");
         /// \todo TODO slice capturing
         QString msg = tr("Slice Capturing is not implemented yet. Aborting.");
-        QMessageBox::warning(this, tr("Error"), msg);
+        ShowWarningDialog( tr("Error"), msg);
       }
     }
     m_pActiveRenderWin->ToggleHQCaptureMode();
     pleaseWait.close();
-    m_MasterController.SetDebugOut(pOldDebug);
+    m_MasterController.SetDebugOut(pOldDebug, bDeleteOldDebug);
     m_pActiveRenderWin->GetRenderer()->ScheduleCompleteRedraw();  // to make sure front and backbuffer are valid
   }
 }

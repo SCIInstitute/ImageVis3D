@@ -60,6 +60,7 @@ using namespace std;
 
 
 MainWindow::MainWindow(MasterController& masterController,
+           bool bScriptMode, /* = false */
            QWidget* parent /* = 0 */,
            Qt::WindowFlags flags /* = 0 */) :
 
@@ -87,11 +88,13 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bAutoLockClonedWindow(false),
   m_bAbsoluteViewLocks(true),
   m_bCheckForUpdatesOnStartUp(false),
+  m_bCheckForDevBuilds(false),
   m_bStayOpenAfterScriptEnd(false),
   m_pHttp(NULL),
   m_pUpdateFile(NULL),
   m_iHttpGetId(-1),
-  m_bStartupCheck(true)
+  m_bStartupCheck(false),
+  m_bScriptMode(bScriptMode)
 {
   RegisterCalls(m_MasterController.ScriptEngine());
 

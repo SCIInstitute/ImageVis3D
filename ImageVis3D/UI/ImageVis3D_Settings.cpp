@@ -38,7 +38,6 @@
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include <QtCore/QSettings>
-#include <QtGui/QMessageBox>
 #include <QtGui/QMdiSubWindow>
 
 using namespace std;
@@ -47,9 +46,9 @@ void MainWindow::CheckSettings() {
   QSettings settings;
 
   // if memory isn't set this must be the first time we run this app
-  if (UINT64_INVALID == settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong()) {
+  if (!m_bScriptMode && UINT64_INVALID == settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong()) {
     do {
-      QMessageBox::information(this, "Initial Setup", "As this is the first "
+      ShowInformationDialog( "Initial Setup", "As this is the first "
                                "time you've started ImageVis3D on this system, "
                                "you need to configure the initial settings.  "
                                "In particular, the memory usage settings need "
@@ -88,6 +87,7 @@ bool MainWindow::ShowSettings() {
       bool bAutoLockClonedWindow = settings.value("AutoLockClonedWindow", m_bAutoLockClonedWindow).toBool();
       bool bAbsoluteViewLocks = settings.value("AbsoluteViewLocks", m_bAbsoluteViewLocks).toBool();
       bool bCheckForUpdatesOnStartUp = settings.value("CheckForUpdatesOnStartUp", m_bCheckForUpdatesOnStartUp).toBool();
+      bool bCheckForDevBuilds = settings.value("CheckForDevBuilds", m_bCheckForDevBuilds).toBool();
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -122,7 +122,7 @@ bool MainWindow::ShowSettings() {
                             bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS,
                             bShowVersionInTitle,
                             bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
-                            bCheckForUpdatesOnStartUp,
+                            bCheckForUpdatesOnStartUp, bCheckForDevBuilds,
                             iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
                             bDisableBorder, bAvoidCompositing,
                             vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
@@ -151,6 +151,7 @@ bool MainWindow::ShowSettings() {
       settings.setValue("AutoLockClonedWindow", settingsDlg.GetAutoLockClonedWindow());
       settings.setValue("AbsoluteViewLocks", settingsDlg.GetAbsoluteViewLocks());
       settings.setValue("CheckForUpdatesOnStartUp", settingsDlg.GetCheckForUpdatesOnStartUp());
+      settings.setValue("CheckForDevBuilds", settingsDlg.GetCheckForDevBuilds());
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -206,6 +207,7 @@ void MainWindow::ApplySettings() {
   m_bAutoLockClonedWindow = settings.value("AutoLockClonedWindow", m_bAutoLockClonedWindow).toBool();
   m_bAbsoluteViewLocks = settings.value("AbsoluteViewLocks", m_bAbsoluteViewLocks).toBool();
   m_bCheckForUpdatesOnStartUp = settings.value("CheckForUpdatesOnStartUp", m_bCheckForUpdatesOnStartUp).toBool();
+  m_bCheckForDevBuilds = settings.value("CheckForDevBuilds", m_bCheckForDevBuilds).toBool();
   settings.endGroup();
 
   settings.beginGroup("Renderer");

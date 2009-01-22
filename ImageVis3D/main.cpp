@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 
   // create the QT window
   QApplication app( argc, argv );
-  MainWindow mainWindow(masterController, 0, Qt::Window);
+  MainWindow mainWindow(masterController, strScriptFile!="", 0, Qt::Window);
   
   // if using a logfile inject that file-logger into the debug out chain
   if (bUseLogFile) {

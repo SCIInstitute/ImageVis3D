@@ -104,7 +104,6 @@ void MainWindow::CheckForUpdatesInternal() {
   QByteArray remotePath = QUrl::toPercentEncoding(url.path(), "!$&'()*+,;=:@/");
   if (remotePath.isEmpty()) remotePath = "/";
   m_iHttpGetId = m_pHttp->get(remotePath, m_pUpdateFile);
-
 }
 
 void MainWindow::httpRequestFinished(int requestId, bool error) {
@@ -115,7 +114,7 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
   }
 
   if (error) {
-    if (!m_bStartupCheck) QMessageBox::information(this, tr("Update Check"),tr("Download failed: %1.").arg(m_pHttp->errorString()));
+    if (!m_bStartupCheck) ShowInformationDialog( tr("Update Check"),tr("Download failed: %1.").arg(m_pHttp->errorString()));
   } else {
     float fIV3DVersion = 0;
     int iIV3DSVNVersion = 0;
@@ -124,15 +123,15 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
     if (GetVersionsFromUpdateFile(string(m_pUpdateFile->fileName().toAscii()), fIV3DVersion, iIV3DSVNVersion, fTuvokVersion, iTuvokSVNVersion)) {
       if (fIV3DVersion > float(IV3D_VERSION) || fTuvokVersion > float(TUVOK_VERSION)) {
         QString qstrMessage = tr("A new version of ImageVis3D was found. You SHOULD download the newer version at %1").arg(UPDATE_STABLE_PATH);
-        QMessageBox::information(this, tr("Update Check"),qstrMessage);
+        ShowInformationDialog( tr("Update Check"),qstrMessage);
       } else {
 #if defined(IV3D_SVN_VERSION) && defined(TUVOK_SVN_VERSION)
-        if (m_bStartupCheck && iIV3DSVNVersion > int(IV3D_SVN_VERSION) || iTuvokSVNVersion > int(TUVOK_SVN_VERSION)) {
-          QString qstrMessage = tr("A new SVN build of ImageVis3D was found. You MAY want to download the newer version at %1%2").arg(UPDATE_NIGHTLY_PATH).arg(UPDATE_FILE);
-          QMessageBox::information(this, tr("Update Check"),qstrMessage);
+        if (m_bCheckForDevBuilds && (iIV3DSVNVersion > int(IV3D_SVN_VERSION) || iTuvokSVNVersion > int(TUVOK_SVN_VERSION))) {
+          QString qstrMessage = tr("A new SVN devbuild of ImageVis3D was found. You MAY want to download the newer version at %1%2").arg(UPDATE_NIGHTLY_PATH).arg(UPDATE_FILE);
+          ShowInformationDialog( tr("Update Check"),qstrMessage);
         } else {
 #endif
-          if (!m_bStartupCheck) QMessageBox::information(this, tr("Update Check"),tr("This is the most current version of ImageVis3D and Tuvok!"));
+          if (!m_bStartupCheck) ShowInformationDialog( tr("Update Check"),tr("This is the most current version of ImageVis3D and Tuvok!"));
 #if defined(IV3D_SVN_VERSION) && defined(TUVOK_SVN_VERSION)
         }
 #endif
@@ -157,7 +156,7 @@ void MainWindow::readResponseHeader(const QHttpResponseHeader &responseHeader) {
        // these are not error conditions
        break;
     default:
-       if (!m_bStartupCheck) QMessageBox::information(this, tr("Update Check"), tr("Download failed: %1.") .arg(responseHeader.reasonPhrase()));
+       if (!m_bStartupCheck) ShowInformationDialog( tr("Update Check"), tr("Download failed: %1.") .arg(responseHeader.reasonPhrase()));
        m_pHttp->abort();
   }
 }

@@ -174,6 +174,10 @@ bool SettingsDlg::GetCheckForUpdatesOnStartUp() const {
   return checkBox_CheckForUpdatesOnStartUp->isChecked();
 }
 
+bool SettingsDlg::GetCheckForDevBuilds() const {
+  return checkBox_CheckForDevBuilds->isChecked();
+}
+
 FLOATVECTOR3  SettingsDlg::GetBackgroundColor1() const {
   return FLOATVECTOR3(m_cBackColor1.red()/255.0f,
                       m_cBackColor1.green()/255.0f,
@@ -297,7 +301,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
                             bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
-                            bool bCheckForUpdatesOnStartUp,
+                            bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits,
                             bool bDisableBorder, bool bAvoidCompositing,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
@@ -317,7 +321,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   checkBox_AutoLockClonedWindow->setChecked(bAutoLockClonedWindow);
   checkBox_AbsoluteViewLocks->setChecked(bAbsoluteViewLocks);
   checkBox_CheckForUpdatesOnStartUp->setChecked(bCheckForUpdatesOnStartUp);
-  
+  checkBox_CheckForDevBuilds->setChecked(bCheckForDevBuilds);
 
   m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
   m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));

@@ -38,7 +38,6 @@
 #include "BrowseData.h"
 
 #include <QtCore/QFileInfo>
-#include <QtGui/QMessageBox>
 #include "AutoGen/ui_SettingsDlg.h"
 
 using namespace std;

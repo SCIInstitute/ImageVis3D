@@ -69,15 +69,16 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
   public:
     MainWindow(MasterController& masterController,
-         QWidget* parent = 0,
-         Qt::WindowFlags flags = 0);
+               bool bScriptMode = false,   // suppress dialog boxes
+               QWidget* parent = 0,
+               Qt::WindowFlags flags = 0);
 
     virtual ~MainWindow();
     
     QTOut* GetDebugOut() {return m_DebugOut;}
 
     // Scriptable implementation
-    virtual bool RegisterCalls(Scripting* pScriptEngine);
+    virtual void RegisterCalls(Scripting* pScriptEngine);
     virtual bool Execute(const std::string& strCommand, const std::vector< std::string >& strParams, std::string& strMessage);
 
     bool RunScript(const std::string& strFilename);
@@ -198,6 +199,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void Show2DTrans();
     void ShowIsoEdit();
 
+    void ShowInformationDialog(QString strTitle, QString strMessage);
+    void ShowWarningDialog(QString strTitle, QString strMessage);
+    void ShowCriticalDialog(QString strTitle, QString strMessage);
 
   private :
     MasterController&                         m_MasterController;
@@ -232,6 +236,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool                                      m_bAutoLockClonedWindow;
     bool                                      m_bAbsoluteViewLocks;
     bool                                      m_bCheckForUpdatesOnStartUp;
+    bool                                      m_bCheckForDevBuilds;
     
     bool                                      m_bStayOpenAfterScriptEnd;
 
@@ -303,6 +308,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     QFile* m_pUpdateFile;
     int    m_iHttpGetId;
     bool   m_bStartupCheck;
+    bool   m_bScriptMode;
     void CheckForUpdatesInternal();
     void QuietCheckForUpdates();
     bool GetVersionsFromUpdateFile(const std::string& strFilename, float& fIV3DVersion, int& iIV3DSVNVersion, float& fTuvokVersion, int& iTuvokSVNVersion);

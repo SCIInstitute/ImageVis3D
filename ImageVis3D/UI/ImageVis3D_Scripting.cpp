@@ -41,7 +41,7 @@
 
 using namespace std;
 
-bool MainWindow::RegisterCalls(Scripting* pScriptEngine) {
+void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "clear", "", "clear this window");
   pScriptEngine->RegisterCommand(this, "versions", "", "print version information");
   pScriptEngine->RegisterCommand(this, "gpuinfo", "","print basic information about the GPU, the driver and the rendering APIs");
@@ -65,7 +65,6 @@ bool MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "capturesequence", "targetfile", "capture a single image into targetfile_counter");
   pScriptEngine->RegisterCommand(this, "stayopen", "", "do not close the app after the end of the script");
   pScriptEngine->RegisterCommand(this, "quit", "", "quit ImageVis3D");
-  return true;
 }
 
 bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::string >& strParams, std::string& strMessage) {

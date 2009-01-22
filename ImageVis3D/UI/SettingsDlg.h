@@ -62,6 +62,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetAutoLockClonedWindow() const;
     bool          GetAbsoluteViewLocks() const;
     bool          GetCheckForUpdatesOnStartUp() const;
+    bool          GetCheckForDevBuilds() const;
 
     unsigned int  GetVolrenType() const;
     FLOATVECTOR3  GetBackgroundColor1() const;
@@ -82,7 +83,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
                    bool bShowVersionInTitle,
                    bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
-                   bool bCheckForUpdatesOnStartUp,
+                   bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds,
                    unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, 
                    bool bDownSampleTo8Bits, bool bDisableBorder, bool bAvoidCompositing,
                    const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos);

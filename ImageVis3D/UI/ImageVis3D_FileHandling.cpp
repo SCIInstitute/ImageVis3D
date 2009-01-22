@@ -42,7 +42,6 @@
 #include <QtGui/QMdiSubWindow>
 #include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
-#include <QtGui/QMessageBox>
 #include <QtGui/QInputDialog>
 #include <QtGui/QColorDialog>
 
@@ -125,7 +124,7 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
     if (!SysTools::FileExists(string(filename.toAscii()))) {
         QString strText = tr("File %1 not found.").arg(filename);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
-        if (!bNoUserInteraction) QMessageBox::critical(this, "Load Error", strText);
+        if (!bNoUserInteraction) ShowCriticalDialog( "Load Error", strText);
         return false;
     }
 
@@ -136,7 +135,7 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
       if (bChecksumFail) {
         QString strText = tr("File %1 appears to be a broken UVF file since the header looks ok but the checksum does not match.").arg(filename);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());        
-        if (!bNoUserInteraction) QMessageBox::critical(this, "Load Error", strText);
+        if (!bNoUserInteraction) ShowCriticalDialog( "Load Error", strText);
         return false;
       }
 
@@ -149,6 +148,8 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
 
       // add status label into debug chain
       AbstrDebugOut* pOldDebug       = m_MasterController.DebugOut();
+      bool           bDeleteOldDebug = m_MasterController.DoDeleteDebugOut();
+      m_MasterController.SetDeleteDebugOut(false);
 
       MultiplexOut* pMultiOut = new MultiplexOut();
       m_MasterController.SetDebugOut(pMultiOut, true);
@@ -163,14 +164,14 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
       if (!m_MasterController.IOMan()->ConvertDataset(filename.toStdString(), targetFilename.toStdString(), bNoUserInteraction)) {
         QString strText = tr("Unable to convert file %1 into %2.").arg(filename).arg(targetFilename);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
-        if (!bNoUserInteraction) QMessageBox::critical(this, "Conversion Error", strText);
+        if (!bNoUserInteraction) ShowCriticalDialog( "Conversion Error", strText);
 
-        m_MasterController.SetDebugOut(pOldDebug);
+        m_MasterController.SetDebugOut(pOldDebug, bDeleteOldDebug);
         return false;
       }      
       filename = targetFilename;
       pleaseWait.close();
-      m_MasterController.SetDebugOut(pOldDebug);
+      m_MasterController.SetDebugOut(pOldDebug,bDeleteOldDebug);
     }
 
 
@@ -214,7 +215,7 @@ void MainWindow::LoadDirectory() {
         if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFilename.toStdString())) {
           QString strText =
             tr("Unable to convert file stack from directory %1 into %2.").arg(directoryName).arg(targetFilename);
-          QMessageBox::critical(this, "Conversion Error", strText);
+          ShowCriticalDialog( "Conversion Error", strText);
           m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", strText.toStdString().c_str());        
         }      
       
@@ -226,7 +227,7 @@ void MainWindow::LoadDirectory() {
     } else {
       QString msg =
         tr("Error no valid files in directory %1 found.").arg(directoryName);
-      QMessageBox::information(this, tr("Problem"), msg);
+      ShowInformationDialog( tr("Problem"), msg);
     }
   }
 }

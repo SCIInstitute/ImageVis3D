@@ -112,7 +112,7 @@ bool MainWindow::LoadGeometry(QString strFilename,
 
   if (!bSilentFail && !bOK) {
     QString msg = tr("Error reading geometry file %1").arg(strFilename);
-    QMessageBox::warning(this, tr("Error"), msg);
+    ShowWarningDialog( tr("Error"), msg);
     return false;
   }
 
@@ -124,7 +124,7 @@ bool MainWindow::SaveGeometry(QString strFilename) {
 
   if (!settings.isWritable()) {
     QString msg = tr("Error saving geometry file %1").arg(strFilename);
-    QMessageBox::warning(this, tr("Error"), msg);
+    ShowWarningDialog( tr("Error"), msg);
     return false;
   }
 
@@ -334,7 +334,7 @@ bool MainWindow::LoadWorkspace(QString strFilename,
 
   if (!bSilentFail && !bOK) {
     QString msg = tr("Error reading workspace file %1").arg(strFilename);
-    QMessageBox::warning(this, tr("Error"), msg);
+    ShowWarningDialog( tr("Error"), msg);
     return false;
   }
 
@@ -349,7 +349,7 @@ bool MainWindow::SaveWorkspace(QString strFilename) {
 
   if (!settings.isWritable()) {
     QString msg = tr("Error saving workspace file %1").arg(strFilename);
-    QMessageBox::warning(this, tr("Error"), msg);
+    ShowWarningDialog( tr("Error"), msg);
     return false;
   }
 
@@ -421,7 +421,7 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
           break;
         }
       }
-      QMessageBox::critical(this, "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+      ShowCriticalDialog( "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
     }
     return bIsOK;
   } return false;
@@ -444,7 +444,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
     }
   #else
     if (m_eVolumeRendererType >= MasterController::DIRECTX_SBVR) {
-      QMessageBox::information(this, "No DirectX Support", "The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
+      ShowInformationDialog( "No DirectX Support", "The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
       m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
 
       m_eVolumeRendererType = MasterController::EVolumeRendererType(int(m_eVolumeRendererType) - int(MasterController::DIRECTX_SBVR) );
@@ -748,4 +748,16 @@ void MainWindow::Show2DTrans() {
 
 void MainWindow::ShowIsoEdit() {
   dockWidget_IsoSurface->setVisible(true);
+}
+
+void MainWindow::ShowCriticalDialog(QString strTitle, QString strMessage) {
+  if (!m_bScriptMode) QMessageBox::critical(this, strTitle, strMessage);
+}
+
+void MainWindow::ShowInformationDialog(QString strTitle, QString strMessage) {
+  if (!m_bScriptMode) QMessageBox::information(this, strTitle, strMessage);
+}
+
+void MainWindow::ShowWarningDialog(QString strTitle, QString strMessage) {
+  if (!m_bScriptMode) QMessageBox::warning(this, strTitle, strMessage);
 }

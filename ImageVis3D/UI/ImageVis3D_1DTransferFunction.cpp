@@ -42,7 +42,6 @@
 #include <QtGui/QMdiSubWindow>
 #include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
-#include <QtGui/QMessageBox>
 #include <QtGui/QInputDialog>
 #include <QtGui/QColorDialog>
 
