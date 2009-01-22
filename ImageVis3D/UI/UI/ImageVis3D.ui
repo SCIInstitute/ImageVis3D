@@ -3793,10 +3793,12 @@
      <item>
       <widget class="QLabel" name="label_FocalLength" >
        <property name="toolTip" >
-        <string>Use the focal length to specify where your monitor is in the virtual 3D world. Larger values wil bring the volume in front of the screen, while smaler values while make it apear behind. While the first effect usualy looks more spectacular it is also more likely to cause headaches after a while.</string>
+        <string>Use the focal length to specify where your monitor is in the virtual 3D world. Larger values wil bring the volume in front of the screen, while
+smaller values while make it apear behind. While the first effect usualy looks more spectacular it is also more likely to cause headaches after a while.</string>
        </property>
        <property name="statusTip" >
-        <string>Use the focal length to specify where your monitor is in the virtual 3D world. Larger values wil bring the volume in front of the screen, while smaler values while make it apear behind. While the first effect usualy looks more spectacular it is also more likely to cause headaches after a while.</string>
+        <string>Use the focal length to specify where your monitor is in the virtual 3D world. Larger values wil bring the volume in front of the screen, while
+smaller values while make it apear behind. While the first effect usualy looks more spectacular it is also more likely to cause headaches after a while.</string>
        </property>
        <property name="text" >
         <string>Focal Length</string>
@@ -3806,10 +3808,12 @@
      <item>
       <widget class="QSlider" name="horizontalSlider_FocalLength" >
        <property name="toolTip" >
-        <string>Use the focal length to specify where your monitor is in the virtual 3D world. Larger values wil bring the volume in front of the screen, while smaler values while make it apear behind. While the first effect usualy looks more spectacular it is also more likely to cause headaches after a while.</string>
+        <string>Use the focal length to specify where your monitor is in the virtual 3D world. Larger values wil bring the volume in front of the screen, while
+smaller values while make it apear behind. While the first effect usualy looks more spectacular it is also more likely to cause headaches after a while.</string>
        </property>
        <property name="statusTip" >
-        <string>Use the focal length to specify where your monitor is in the virtual 3D world. Larger values wil bring the volume in front of the screen, while smaler values while make it apear behind. While the first effect usualy looks more spectacular it is also more likely to cause headaches after a while.</string>
+        <string>Use the focal length to specify where your monitor is in the virtual 3D world. Larger values wil bring the volume in front of the screen, while
+smaller values while make it apear behind. While the first effect usualy looks more spectacular it is also more likely to cause headaches after a while.</string>
        </property>
        <property name="minimum" >
         <number>1</number>

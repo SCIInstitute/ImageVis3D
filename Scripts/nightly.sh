@@ -34,7 +34,7 @@ D_IV3D="-DIV3D_SVN_VERSION=${R_IMAGEVIS3D}"
 CF="-fno-strict-aliasing ${D_TUVOK} ${D_IV3D}"
 CFG="release"
 if test "x$1" = "x-debug"; then
-    CF="${CF} -Wextra -D_GLIBCXX_DEBUG"
+    CF="${CF} -Wextra -D_GLIBCXX_DEBUG -g"
     CFG="debug"
 fi
 ${qmake} \

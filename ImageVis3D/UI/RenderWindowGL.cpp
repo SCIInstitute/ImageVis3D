@@ -149,11 +149,10 @@ void RenderWindowGL::InitializeRenderer()
 }
 
 void RenderWindowGL::ForceRepaint() {
-  #ifdef TUVOK_OS_APPLE
-    paintGL();
-  #else
-    repaint();
-  #endif
+  repaint();
+#ifdef TUVOK_OS_APPLE
+  QCoreApplication::processEvents();
+#endif
 }
 
 void RenderWindowGL::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {

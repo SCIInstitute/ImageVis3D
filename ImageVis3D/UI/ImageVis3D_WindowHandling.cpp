@@ -499,8 +499,23 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   connect(renderWin->GetQtWidget(), SIGNAL(WindowClosing(RenderWindow*)), this, SLOT(RenderWindowClosing(RenderWindow*)));
   connect(renderWin->GetQtWidget(), SIGNAL(RenderWindowViewChanged(int)), this, SLOT(RenderWindowViewChanged(int)));
   connect(renderWin->GetQtWidget(), SIGNAL(StereoDisabled()), this, SLOT(StereoDisabled()));
+
   if(m_pActiveRenderWin != renderWin) {
     QCoreApplication::processEvents();
+#ifdef TUVOK_OS_APPLE
+    // HACK: For some reason on the Mac we need to set the active sub window,
+    // re-process events, and then call our activation function ... doesn't
+    // seem to happen automagically.
+    QList<QMdiSubWindow *>::iterator iter;
+    for(iter = mdiArea->subWindowList().begin(); iter !=
+      mdiArea->subWindowList().end();  ++iter) {
+      if(renderWin->GetQtWidget() == (*iter)->widget()) {
+        mdiArea->setActiveSubWindow(*iter);
+      }
+    }
+    QCoreApplication::processEvents();
+    RenderWindowActive(renderWin);
+#endif
   }
   
   return renderWin;

@@ -77,7 +77,7 @@ void RAWDialog::CheckValues() {
     label_Information->setText("Settings may work (file is larger then your settings require).");
     pushButton_GuessHeader->setEnabled(true);
   } else if (iExpectedSize > m_iFileSize) {
-    label_Information->setText("Settings can not work (file is smaler then your settings require).");
+    label_Information->setText("Settings can not work (file is smaller then your settings require).");
     pushButton_GuessHeader->setEnabled(false);
   } else {
     label_Information->setText("Settings seem to be ok (file has the right size).");
