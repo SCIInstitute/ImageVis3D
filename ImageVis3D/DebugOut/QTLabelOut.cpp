@@ -37,8 +37,9 @@
 
 #include "QTLabelOut.h"
 #include <StdDefines.h>
-#include <stdarg.h>
-#include <stdio.h>
+#include <QtCore/QCoreApplication>
+#include <cstdarg>
+#include <cstdio>
 #include <sstream>
 
 using namespace std;
@@ -75,14 +76,11 @@ void QTLabelOut::printf(const char* format, ...)
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-#ifdef TUVOK_OS_APPLE
-  m_parent->hide();
-#endif
   m_label->setText ( buff );
-#ifdef TUVOK_OS_APPLE
-  m_parent->show();
-#endif
   m_label->repaint();
+#ifdef TUVOK_OS_APPLE
+  QCoreApplication::processEvents();
+#endif
 }
 
 void QTLabelOut::_printf(const char* format, ...)
@@ -96,14 +94,11 @@ void QTLabelOut::_printf(const char* format, ...)
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-#ifdef TUVOK_OS_APPLE
-  m_parent->hide();
-#endif
   m_label->setText ( buff );
-#ifdef TUVOK_OS_APPLE
-  m_parent->show();
-#endif
   m_label->repaint();
+#ifdef TUVOK_OS_APPLE
+  QCoreApplication::processEvents();
+#endif
 }
 
 void QTLabelOut::Message(const char* , const char* format, ...) {

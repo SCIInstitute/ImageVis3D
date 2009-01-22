@@ -49,8 +49,6 @@
 #include <QtGui/QColorDialog>
 #include <QtNetwork/QHttp>
 
-#include "PleaseWait.h"
-
 #include <fstream>
 #include <iostream>
 #include <string>

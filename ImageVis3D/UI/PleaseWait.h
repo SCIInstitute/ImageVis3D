@@ -44,10 +44,18 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
 {
   Q_OBJECT
   public:
-    PleaseWaitDialog(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    PleaseWaitDialog(QWidget* parent,
+                     Qt::WindowFlags flags = Qt::WindowModal);
     virtual ~PleaseWaitDialog();
 
-    void SetText(QString text) {hide(); label->setText(text); show(); raise(); update(); repaint();}
+    void SetText(QString text) {
+      label->setText(text);
+      if(this->isHidden()) {
+        this->show();
+      }
+      this->repaint();
+      QCoreApplication::processEvents();
+    }
     QLabel* GetStatusLabel() {return label_Status;}
 };
 
