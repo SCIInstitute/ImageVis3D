@@ -93,6 +93,7 @@ int main(int argc, char* argv[])
 
     AbstrDebugOut* pOldDebug       = masterController.DebugOut();
     bool           bDeleteOldDebug = masterController.DoDeleteDebugOut();
+    masterController.SetDeleteDebugOut(false);
 
     MultiplexOut* pMultiOut = new MultiplexOut();
     pMultiOut->SetOutput(true,true,true,true);
