@@ -15,6 +15,7 @@ echo "yes" | \
         -no-webkit \
         -release \
         -no-sql-sqlite \
+        -qt-gif
         -no-gif \
         -no-framework \
         -make libs \
