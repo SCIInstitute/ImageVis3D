@@ -83,7 +83,7 @@ void MainWindow::ListSupportedImages() {
   for (int i = 0;i<listImageFormats.size();i++) {
     QByteArray imageFormat = listImageFormats[i];
     QString qStrImageFormat(imageFormat);
-    string strImageFormat = qStrImageFormat.toAscii();
+    string strImageFormat = qStrImageFormat.toStdString();
     m_MasterController.DebugOut()->printf(strImageFormat.c_str());
   }
 }
