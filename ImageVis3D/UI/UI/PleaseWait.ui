@@ -1,6 +1,9 @@
 <ui version="4.0" >
  <class>PleaseWaitDialog</class>
  <widget class="QDialog" name="PleaseWaitDialog" >
+  <property name="windowModality" >
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="enabled" >
    <bool>true</bool>
   </property>
