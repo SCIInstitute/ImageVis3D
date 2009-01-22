@@ -199,7 +199,10 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   }
 
   // this widget is used to share the contexts amongst the render windows
-  m_glShareWidget = new QGLWidget(this);
+  QGLFormat fmt;
+  fmt.setAlpha(true);
+  fmt.setRgba(true);
+  m_glShareWidget = new QGLWidget(fmt,this);
   this->horizontalLayout->addWidget(m_glShareWidget);
 
   DisableAllTrans();
@@ -212,8 +215,9 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   UpdateLockView();
 
   QSettings settings;
-  QString fileName = settings.value("Files/SetCaptureFilename", lineEditCaptureFile->text()).toString();
+  QString fileName = settings.value("Files/CaptureFilename", lineEditCaptureFile->text()).toString();
   lineEditCaptureFile->setText(fileName);
+  checkBox_PreserveTransparency->setChecked(settings.value("PreserveTransparency", true).toBool());
 
   m_pHttp = new QHttp(this);
   connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
@@ -438,9 +442,12 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
                                        iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
                                        m_bDisableBorder, this, 0);
     } else {
+      QGLFormat fmt;
+      fmt.setRgba(true);
+      fmt.setAlpha(true);
       renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset, 
                                      iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
-                                     m_bDisableBorder, m_glShareWidget, this, 0);
+                                     m_bDisableBorder, m_glShareWidget, fmt, this, 0);
     }
   #else
     if (m_eVolumeRendererType >= MasterController::DIRECTX_SBVR) {
@@ -449,9 +456,12 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
       m_eVolumeRendererType = MasterController::EVolumeRendererType(int(m_eVolumeRendererType) - int(MasterController::DIRECTX_SBVR) );
     }
+    QGLFormat fmt;
+    fmt.setAlpha(true);
+    fmt.setRgba(true);
     renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset, 
                                    iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
-                                   m_bDisableBorder, m_glShareWidget, this, 0);
+                                   m_bDisableBorder, m_glShareWidget, fmt, this, 0);
   #endif
 
   if (renderWin && renderWin->GetRenderer()) {

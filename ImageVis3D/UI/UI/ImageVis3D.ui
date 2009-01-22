@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1294</width>
-    <height>1913</height>
+    <height>1931</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -847,7 +847,7 @@
         </size>
        </property>
        <property name="title" >
-        <string>Image</string>
+        <string>Filename</string>
        </property>
        <property name="flat" >
         <bool>false</bool>
@@ -913,6 +913,16 @@
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBox_PreserveTransparency" >
+          <property name="text" >
+           <string>Preserve Transparency</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -4256,8 +4266,8 @@
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>155</x>
-     <y>1620</y>
+     <x>154</x>
+     <y>1523</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4272,8 +4282,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>911</x>
-     <y>1621</y>
+     <x>948</x>
+     <y>1527</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4352,8 +4362,8 @@
    <slot>Transfer1DLoad()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>155</x>
-     <y>1933</y>
+     <x>154</x>
+     <y>1836</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4368,8 +4378,8 @@
    <slot>Transfer1DSave()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>155</x>
-     <y>1962</y>
+     <x>154</x>
+     <y>1865</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4384,8 +4394,8 @@
    <slot>Transfer2DLoad()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>795</x>
-     <y>1991</y>
+     <x>798</x>
+     <y>1894</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4400,8 +4410,8 @@
    <slot>Transfer2DSave()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>972</x>
-     <y>1991</y>
+     <x>975</x>
+     <y>1894</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4417,7 +4427,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1284</x>
-     <y>968</y>
+     <y>952</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4432,8 +4442,8 @@
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1104</x>
-     <y>638</y>
+     <x>1102</x>
+     <y>622</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4448,8 +4458,8 @@
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1104</x>
-     <y>673</y>
+     <x>1102</x>
+     <y>657</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4464,8 +4474,8 @@
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1104</x>
-     <y>708</y>
+     <x>1102</x>
+     <y>692</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4480,8 +4490,8 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1670</y>
+     <x>145</x>
+     <y>1573</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4496,8 +4506,8 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1696</y>
+     <x>145</x>
+     <y>1599</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4512,8 +4522,8 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1722</y>
+     <x>145</x>
+     <y>1625</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4528,8 +4538,8 @@
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1748</y>
+     <x>145</x>
+     <y>1651</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4544,8 +4554,8 @@
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1885</y>
+     <x>145</x>
+     <y>1788</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4560,8 +4570,8 @@
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1852</y>
+     <x>145</x>
+     <y>1755</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4576,8 +4586,8 @@
    <slot>ClearDebugWin()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>362</x>
-     <y>1199</y>
+     <x>365</x>
+     <y>1141</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4592,8 +4602,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>69</x>
-     <y>1199</y>
+     <x>71</x>
+     <y>1141</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4608,8 +4618,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>224</x>
-     <y>1199</y>
+     <x>225</x>
+     <y>1141</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4624,8 +4634,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>145</x>
-     <y>1199</y>
+     <x>147</x>
+     <y>1141</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4640,8 +4650,8 @@
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>281</x>
-     <y>1199</y>
+     <x>284</x>
+     <y>1141</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4656,8 +4666,8 @@
    <slot>Transfer1DCopyTo2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>155</x>
-     <y>1991</y>
+     <x>154</x>
+     <y>1894</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4672,12 +4682,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>155</x>
-     <y>1620</y>
+     <x>154</x>
+     <y>1523</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>155</x>
-     <y>1892</y>
+     <x>154</x>
+     <y>1894</y>
     </hint>
    </hints>
   </connection>
@@ -4688,8 +4698,8 @@
    <slot>Transfer2DAddGradient()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>972</x>
-     <y>1904</y>
+     <x>975</x>
+     <y>1807</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4704,8 +4714,8 @@
    <slot>Transfer2DDeleteGradient()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>972</x>
-     <y>1935</y>
+     <x>975</x>
+     <y>1838</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4720,8 +4730,8 @@
    <slot>Transfer2DUpdateGradientBox()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>911</x>
-     <y>1621</y>
+     <x>948</x>
+     <y>1527</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4736,8 +4746,8 @@
    <slot>Transfer2DChooseGradientColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>772</x>
-     <y>1968</y>
+     <x>774</x>
+     <y>1871</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4752,8 +4762,8 @@
    <slot>Transfer2DChooseGradientOpacity()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>972</x>
-     <y>1966</y>
+     <x>975</x>
+     <y>1869</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4769,7 +4779,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1265</x>
-     <y>715</y>
+     <y>699</y>
     </hint>
     <hint type="destinationlabel" >
      <x>687</x>
@@ -4785,7 +4795,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1265</x>
-     <y>647</y>
+     <y>631</y>
     </hint>
     <hint type="destinationlabel" >
      <x>685</x>
@@ -4801,7 +4811,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1265</x>
-     <y>668</y>
+     <y>652</y>
     </hint>
     <hint type="destinationlabel" >
      <x>683</x>
@@ -4817,7 +4827,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1265</x>
-     <y>689</y>
+     <y>673</y>
     </hint>
     <hint type="destinationlabel" >
      <x>680</x>
@@ -4832,8 +4842,8 @@
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>146</x>
-     <y>1819</y>
+     <x>145</x>
+     <y>1722</y>
     </hint>
     <hint type="destinationlabel" >
      <x>415</x>
@@ -4849,7 +4859,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>182</x>
-     <y>559</y>
+     <y>548</y>
     </hint>
     <hint type="destinationlabel" >
      <x>419</x>
@@ -4864,8 +4874,8 @@
    <slot>ParseAndExecuteDebugCommand()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>371</x>
-     <y>1389</y>
+     <x>374</x>
+     <y>1314</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4897,7 +4907,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1264</x>
-     <y>769</y>
+     <y>753</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -4912,12 +4922,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>911</x>
-     <y>1621</y>
+     <x>948</x>
+     <y>1527</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>933</x>
-     <y>1943</y>
+     <x>975</x>
+     <y>1894</y>
     </hint>
    </hints>
   </connection>
@@ -4929,7 +4939,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1255</x>
-     <y>871</y>
+     <y>855</y>
     </hint>
     <hint type="destinationlabel" >
      <x>389</x>
@@ -4944,8 +4954,8 @@
    <slot>SetIsoValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1249</x>
-     <y>993</y>
+     <x>1250</x>
+     <y>980</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -4961,11 +4971,11 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1284</x>
-     <y>968</y>
+     <y>952</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1284</x>
-     <y>1268</y>
+     <y>1239</y>
     </hint>
    </hints>
   </connection>
@@ -4977,7 +4987,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1264</x>
-     <y>793</y>
+     <y>777</y>
     </hint>
     <hint type="destinationlabel" >
      <x>990</x>
@@ -4993,7 +5003,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1264</x>
-     <y>817</y>
+     <y>801</y>
     </hint>
     <hint type="destinationlabel" >
      <x>989</x>
@@ -5008,8 +5018,8 @@
    <slot>CaptureFrame()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1124</x>
-     <y>119</y>
+     <x>1122</x>
+     <y>143</y>
     </hint>
     <hint type="destinationlabel" >
      <x>998</x>
@@ -5025,7 +5035,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1283</x>
-     <y>119</y>
+     <y>143</y>
     </hint>
     <hint type="destinationlabel" >
      <x>999</x>
@@ -5041,7 +5051,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1274</x>
-     <y>173</y>
+     <y>197</y>
     </hint>
     <hint type="destinationlabel" >
      <x>997</x>
@@ -5056,8 +5066,8 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1073</x>
-     <y>566</y>
+     <x>1070</x>
+     <y>550</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1008</x>
@@ -5072,8 +5082,8 @@
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1173</x>
-     <y>566</y>
+     <x>1172</x>
+     <y>550</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1005</x>
@@ -5089,7 +5099,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1274</x>
-     <y>566</y>
+     <y>550</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1007</x>
@@ -5153,7 +5163,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1284</x>
-     <y>1178</y>
+     <y>1146</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1003</x>
@@ -5169,7 +5179,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1284</x>
-     <y>1223</y>
+     <y>1191</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1004</x>
@@ -5185,7 +5195,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>1284</x>
-     <y>1268</y>
+     <y>1236</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1000</x>
@@ -5200,8 +5210,8 @@
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>59</x>
-     <y>892</y>
+     <x>69</x>
+     <y>865</y>
     </hint>
     <hint type="destinationlabel" >
      <x>384</x>
@@ -5216,8 +5226,8 @@
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>329</x>
-     <y>916</y>
+     <x>339</x>
+     <y>889</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -5232,8 +5242,8 @@
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>213</x>
-     <y>964</y>
+     <x>223</x>
+     <y>937</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -5248,8 +5258,8 @@
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>268</x>
-     <y>940</y>
+     <x>278</x>
+     <y>913</y>
     </hint>
     <hint type="destinationlabel" >
      <x>382</x>
@@ -5265,7 +5275,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>105</x>
-     <y>1119</y>
+     <y>1065</y>
     </hint>
     <hint type="destinationlabel" >
      <x>385</x>
@@ -5281,7 +5291,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>99</x>
-     <y>1441</y>
+     <y>1369</y>
     </hint>
     <hint type="destinationlabel" >
      <x>388</x>
@@ -5297,7 +5307,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>202</x>
-     <y>1489</y>
+     <y>1414</y>
     </hint>
     <hint type="destinationlabel" >
      <x>386</x>
@@ -5313,7 +5323,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>344</x>
-     <y>1544</y>
+     <y>1459</y>
     </hint>
     <hint type="destinationlabel" >
      <x>383</x>
@@ -5328,8 +5338,8 @@
    <slot>ParseAndExecuteDebugCommand()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>97</x>
-     <y>1390</y>
+     <x>154</x>
+     <y>1312</y>
     </hint>
     <hint type="destinationlabel" >
      <x>122</x>
@@ -5376,8 +5386,8 @@
    <slot>Show1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1129</x>
-     <y>639</y>
+     <x>1130</x>
+     <y>623</y>
     </hint>
     <hint type="destinationlabel" >
      <x>959</x>
@@ -5392,8 +5402,8 @@
    <slot>Show2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1123</x>
-     <y>674</y>
+     <x>1130</x>
+     <y>658</y>
     </hint>
     <hint type="destinationlabel" >
      <x>957</x>
@@ -5408,8 +5418,8 @@
    <slot>ShowIsoEdit()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1129</x>
-     <y>709</y>
+     <x>1130</x>
+     <y>693</y>
     </hint>
     <hint type="destinationlabel" >
      <x>958</x>
@@ -5424,8 +5434,8 @@
    <slot>Collapse2DWidgets()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>958</x>
-     <y>1609</y>
+     <x>975</x>
+     <y>1528</y>
     </hint>
     <hint type="destinationlabel" >
      <x>671</x>
@@ -5440,8 +5450,8 @@
    <slot>Expand2DWidgets()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1003</x>
-     <y>1625</y>
+     <x>1005</x>
+     <y>1528</y>
     </hint>
     <hint type="destinationlabel" >
      <x>896</x>
@@ -5456,8 +5466,8 @@
    <slot>ChooseIsoColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1056</x>
-     <y>1009</y>
+     <x>1284</x>
+     <y>1006</y>
     </hint>
     <hint type="destinationlabel" >
      <x>959</x>
@@ -5472,12 +5482,28 @@
    <slot>ChooseFocusColor()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1073</x>
-     <y>1102</y>
+     <x>1284</x>
+     <y>1101</y>
     </hint>
     <hint type="destinationlabel" >
      <x>956</x>
      <y>1075</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_PreserveTransparency</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>PreserveTransparencyChanged()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1037</x>
+     <y>107</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>953</x>
+     <y>159</y>
     </hint>
    </hints>
   </connection>
@@ -5548,5 +5574,6 @@
   <slot>Show2DTrans()</slot>
   <slot>ShowIsoEdit()</slot>
   <slot>CheckForUpdates()</slot>
+  <slot>PreserveTransparencyChanged()</slot>
  </slots>
 </ui>

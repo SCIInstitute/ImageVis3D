@@ -314,17 +314,17 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLOD
   m_Renderer->SetPerfMeasures(iMinFramerate, iLODDelay); 
 }
 
-bool RenderWindow::CaptureFrame(const std::string& strFilename)
+bool RenderWindow::CaptureFrame(const std::string& strFilename, bool bPreserveTransparency)
 {
   GLFrameCapture f;
   ForceRepaint();
   ForceRepaint(); // make sure we have the same results in the front and in the backbuffer
-  return f.CaptureSingleFrame(strFilename);
+  return f.CaptureSingleFrame(strFilename, bPreserveTransparency);
 }
 
 
 bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, bool bUseLOD,
-                                   std::string* strRealFilename)
+                                   bool bPreserveTransparency, std::string* strRealFilename)
 {
   GLFrameCapture f;
   m_Renderer->SetMIPRotationAngle(fAngle);
@@ -337,16 +337,16 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
     m_Renderer->SetMIPRotationAngle(0.0f);
     if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bSystemOrtho);
   }
-  return f.CaptureSequenceFrame(strFilename, strRealFilename);
+  return f.CaptureSequenceFrame(strFilename, bPreserveTransparency, strRealFilename);
 }
 
 bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename, 
-                                        std::string* strRealFilename)
+                                        bool bPreserveTransparency, std::string* strRealFilename)
 {
   GLFrameCapture f;
   ForceRepaint();
   ForceRepaint(); // make sure we have the same results in the front and in the backbuffer
-  return f.CaptureSequenceFrame(strFilename, strRealFilename);
+  return f.CaptureSequenceFrame(strFilename, bPreserveTransparency, strRealFilename);
 }
 
 void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation) {

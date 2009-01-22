@@ -56,9 +56,10 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
                                bool bDownSampleTo8Bits,
                                bool bDisableBorder,
                                QGLWidget* glShareWidget,
+                               const QGLFormat& fmt,
                                QWidget* parent,
                                Qt::WindowFlags flags) :
-  QGLWidget(parent, glShareWidget, flags),
+  QGLWidget(fmt, parent, glShareWidget, flags),
   RenderWindow(masterController, eType, dataset, iCounter, parent)
 {  
   m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);

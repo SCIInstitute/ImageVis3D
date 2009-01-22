@@ -62,6 +62,7 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
                  bool bDownSampleTo8Bits,
                  bool bDisableBorder,
                  QGLWidget* glShareWidget,
+                 const QGLFormat& fmt,
                  QWidget* parent,
                  Qt::WindowFlags flags);
 

@@ -198,10 +198,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void Show1DTrans();
     void Show2DTrans();
     void ShowIsoEdit();
-
-    void ShowInformationDialog(QString strTitle, QString strMessage);
-    void ShowWarningDialog(QString strTitle, QString strMessage);
-    void ShowCriticalDialog(QString strTitle, QString strMessage);
+    void PreserveTransparencyChanged();
 
   private :
     MasterController&                         m_MasterController;
@@ -302,6 +299,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void RotateCurrentViewY(double angle);
     void RotateCurrentViewZ(double angle);
     void TranslateCurrentView(double x, double y, double z);
+
+    void ShowInformationDialog(QString strTitle, QString strMessage);
+    void ShowWarningDialog(QString strTitle, QString strMessage);
+    void ShowCriticalDialog(QString strTitle, QString strMessage);
 
     // update
     QHttp* m_pHttp;

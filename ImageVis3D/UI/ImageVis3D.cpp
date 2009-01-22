@@ -130,6 +130,7 @@ MainWindow::MainWindow(MasterController& masterController,
   ClearProgressView();
   
   if (m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
+
 }
 
 MainWindow::~MainWindow()

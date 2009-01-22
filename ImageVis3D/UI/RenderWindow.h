@@ -73,9 +73,9 @@ class RenderWindow
     void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor);
     virtual void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
-    bool CaptureFrame(const std::string& strFilename);
-    bool CaptureSequenceFrame(const std::string& strFilename, std::string* strRealFilename=NULL);
-    bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, bool bUseLOD, std::string* strRealFilename=NULL);
+    bool CaptureFrame(const std::string& strFilename, bool bPreserveTransparency);
+    bool CaptureSequenceFrame(const std::string& strFilename, bool bPreserveTransparency, std::string* strRealFilename=NULL);
+    bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, bool bUseLOD, bool bPreserveTransparency, std::string* strRealFilename=NULL);
     void ToggleHQCaptureMode();
     void Translate(const FLOATMATRIX4& mTranslation) {SetTranslation(mTranslation*m_mAccumulatedTranslation);}
     void Rotate(const FLOATMATRIX4& mRotation) {SetRotation(mRotation*m_mAccumulatedRotation,mRotation*m_mAccumulatedRotation);}

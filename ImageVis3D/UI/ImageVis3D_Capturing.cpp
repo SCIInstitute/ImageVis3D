@@ -72,14 +72,14 @@ void MainWindow::CaptureSequence() {
 
 bool MainWindow::CaptureFrame(const std::string& strTargetName) {
   if (m_pActiveRenderWin) 
-    return m_pActiveRenderWin->CaptureFrame(strTargetName);
+    return m_pActiveRenderWin->CaptureFrame(strTargetName, checkBox_PreserveTransparency->isChecked());
   else
     return false;
 }
 
 bool MainWindow::CaptureSequence(const std::string& strTargetName, std::string* strRealFilename) {
   if (m_pActiveRenderWin) 
-    return m_pActiveRenderWin->CaptureSequenceFrame(strTargetName, strRealFilename);
+    return m_pActiveRenderWin->CaptureSequenceFrame(strTargetName, checkBox_PreserveTransparency->isChecked(), strRealFilename);
   else
     return false;
 }
@@ -153,7 +153,7 @@ void MainWindow::CaptureRotation() {
         fAngle = float(i)/float(iNumImages) * 360.0f;
         m_pActiveRenderWin->SetCaptureRotationAngle(fAngle);
         string strSequenceName;
-        if (!m_pActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(), &strSequenceName)) {
+        if (!m_pActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
           QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
           ShowWarningDialog( tr("Error"), msg);
           m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
@@ -201,7 +201,7 @@ void MainWindow::CaptureRotation() {
           fAngle = float(i)/float(iNumImages) * 360.0f;
           string strSequenceName;
 
-          if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), bUseLOD, &strSequenceName)) {
+          if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), bUseLOD, checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
             QString msg = tr("Error writing image file %1.").arg(strSequenceName.c_str());
             ShowWarningDialog( tr("Error"), msg);
             m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
@@ -215,7 +215,7 @@ void MainWindow::CaptureRotation() {
             } else {
               fAngle -= 3.0f;
               string strImageFilenameRight = SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_R");
-              if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, bUseLOD, i==(iNumImages-1), &strSequenceName)) {
+              if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, bUseLOD, i==(iNumImages-1), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
                 QString msg = tr("Error writing image file %1.").arg(strImageFilenameRight.c_str());
                 ShowWarningDialog( tr("Error"), msg);
                 m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
@@ -248,9 +248,10 @@ void MainWindow::CaptureRotation() {
                   int iGrayRight = int(qRed(pixelRight) * 0.3f + qGreen(pixelRight) * 0.59f + qBlue(pixelRight) * 0.11f);
 
 
-                  QRgb pixelStereo = qRgb(iGrayLeft,
+                  QRgb pixelStereo = qRgba(iGrayLeft,
                                           iGrayRight/2,
-                                          iGrayRight);
+                                          iGrayRight,
+                                          255);
 
                   imageRight.setPixel(x,y,pixelStereo);
                 }
@@ -288,7 +289,7 @@ void MainWindow::SetCaptureFilename() {
   QString selectedFilter;
 
   QSettings settings;
-  QString strLastDir = settings.value("Folders/SetCaptureFilename", ".").toString();
+  QString strLastDir = settings.value("Folders/CaptureFilename", ".").toString();
 
   QString fileName = QFileDialog::getSaveFileName(this,"Select Image File", strLastDir,
              "All Files (*.*)",&selectedFilter, options);
@@ -298,8 +299,14 @@ void MainWindow::SetCaptureFilename() {
     if (SysTools::GetExt(fileName.toStdString()) == "")
       fileName = fileName + ".png";
 
-    settings.setValue("Folders/SetCaptureFilename", QFileInfo(fileName).absoluteDir().path());
-    settings.setValue("Files/SetCaptureFilename", fileName);
+    settings.setValue("Folders/CaptureFilename", QFileInfo(fileName).absoluteDir().path());
+    settings.setValue("Files/CaptureFilename", fileName);
     lineEditCaptureFile->setText(fileName);
   }
+}
+
+
+void MainWindow::PreserveTransparencyChanged() {
+  QSettings settings;
+  settings.setValue("PreserveTransparency", checkBox_PreserveTransparency->isChecked());
 }
