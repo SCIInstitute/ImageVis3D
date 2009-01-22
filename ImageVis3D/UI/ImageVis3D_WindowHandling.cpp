@@ -463,6 +463,9 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   connect(renderWin->GetQtWidget(), SIGNAL(WindowClosing(RenderWindow*)), this, SLOT(RenderWindowClosing(RenderWindow*)));
   connect(renderWin->GetQtWidget(), SIGNAL(RenderWindowViewChanged(int)), this, SLOT(RenderWindowViewChanged(int)));
   connect(renderWin->GetQtWidget(), SIGNAL(StereoDisabled()), this, SLOT(StereoDisabled()));
+  if(m_pActiveRenderWin != renderWin) {
+    QCoreApplication::processEvents();
+  }
   
   return renderWin;
 }
