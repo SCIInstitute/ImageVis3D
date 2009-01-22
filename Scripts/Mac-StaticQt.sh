@@ -1,7 +1,14 @@
 #!/bin/sh
 
+tarball="qt-mac-opensource-src-4.4.3.tar"
+# If the user re-compressed it as bzip2, use that.
+if test -f ${tarball}.bz2 ; then
+    tarball="${tarball}.bz2"
+else
+    tarball="${tarball}.gz"
+fi
 rm -fr qt-mac-opensource-src-4.4.3
-tar jxvf qt-mac-opensource-src-4.4.3.tar.bz2
+tar jxf ${tarball}
 pushd qt-mac-opensource-src-4.4.3
 echo "yes" | \
 ./configure \
