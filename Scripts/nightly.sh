@@ -38,7 +38,7 @@ if test "x$1" = "x-debug"; then
     CFG="debug"
 fi
 ${qmake} \
-    CONFIG+=${CFG} \
+    QMAKE_CONFIG=${CFG} \
     QMAKE_CFLAGS="${CF}" \
     QMAKE_CXXFLAGS+="${CF}" \
     QMAKE_LFLAGS="${CF} ${LDF} ${LDFLAGS}" \
