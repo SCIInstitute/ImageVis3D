@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE          = app
-CONFIG           += link_prl static warn_on stl exceptions
+CONFIG           += link_prl static warn_on stl exceptions x86 ppc
 TARGET            = Build/UVFConverter
 DEPENDPATH       += .
 INCLUDEPATH      += .
