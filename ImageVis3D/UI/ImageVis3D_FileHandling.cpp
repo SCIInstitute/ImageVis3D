@@ -99,8 +99,10 @@ QString MainWindow::GetConvFilename() {
            strLastDir,
            "Universal Volume Format (*.uvf)",&selectedFilter, options);
 
-    if (!targetFilename.isEmpty())
+    if (!targetFilename.isEmpty()) {
+      targetFilename = SysTools::CheckExt(string(targetFilename.toAscii()), "uvf").c_str();
       settings.setValue("Folders/GetConvFilename", QFileInfo(targetFilename).absoluteDir().path());
+    }
 
     return targetFilename;
 }
@@ -248,7 +250,10 @@ void MainWindow::SaveDataset() {
          strLastDir,
          "Universal Volume Format (*.uvf)",&selectedFilter, options);
 
-  if (!fileName.isEmpty())
+  if (!fileName.isEmpty()) {
+    fileName = SysTools::CheckExt(string(fileName.toAscii()), "uvf").c_str();
     settings.setValue("Folders/SaveDataset", QFileInfo(fileName).absoluteDir().path());
+  }
 
+  // TODO: save the dataset (if we ever need this feature)
 }

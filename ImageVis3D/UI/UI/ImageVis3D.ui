@@ -3536,7 +3536,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="listWidget_3" />
+      <widget class="QListWidget" name="listWidget_DebugOut" />
      </item>
      <item>
       <widget class="QFrame" name="frame_8" >

@@ -227,9 +227,15 @@ void MainWindow::Transfer2DLoad() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/Transfer2DLoad", ".").toString();
 
+  QString selectedFilter;
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+
   QString fileName =
     QFileDialog::getOpenFileName(this, "Load 2D Transferfunction", strLastDir,
-         "2D Transferfunction File (*.2dt)");
+         "2D Transferfunction File (*.2dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/Transfer2DLoad", QFileInfo(fileName).absoluteDir().path());
@@ -242,11 +248,18 @@ void MainWindow::Transfer2DSave() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/Transfer2DSave", ".").toString();
 
+  QString selectedFilter;
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+
   QString fileName =
     QFileDialog::getSaveFileName(this, "Save 2D Transferfunction", strLastDir,
-         "2D Transferfunction File (*.2dt)");
+         "2D Transferfunction File (*.2dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
+    fileName = SysTools::CheckExt(string(fileName.toAscii()), "2dt").c_str();
     settings.setValue("Folders/Transfer2DSave", QFileInfo(fileName).absoluteDir().path());
     m_2DTransferFunction->SaveToFile(fileName);
   }

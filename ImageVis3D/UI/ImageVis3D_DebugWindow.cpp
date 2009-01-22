@@ -107,7 +107,7 @@ void MainWindow::ShowSysInfo() {
 }
 
 void MainWindow::ClearDebugWin() {
-  listWidget_3->clear();
+  listWidget_DebugOut->clear();
 }
 
 void MainWindow::SetDebugViewMask() {
@@ -146,5 +146,8 @@ void MainWindow::ParseAndExecuteDebugCommand() {
   m_MasterController.ScriptEngine()->ParseLine(lineEdit_DebugCommand->text().toStdString());
   
   m_DebugOut->SetShowMessages(bTemp);
+  if (listWidget_DebugOut->count() > 0) 
+    listWidget_DebugOut->setCurrentRow(listWidget_DebugOut->count());
+
   lineEdit_DebugCommand->clear();
 }

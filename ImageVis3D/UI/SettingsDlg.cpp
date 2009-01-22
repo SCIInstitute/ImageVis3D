@@ -454,9 +454,15 @@ void SettingsDlg::SelectLogo() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/LogoLoad", ".").toString();
 
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
   QString fileName =
     QFileDialog::getOpenFileName(this, "Select Logo", strLastDir,
-         "All Files (*.*)");
+         "All Files (*.*)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
 

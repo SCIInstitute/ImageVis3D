@@ -67,10 +67,16 @@ bool MainWindow::LoadGeometry() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/LoadGeometry", ".").toString();
 
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
   QString fileName =
     QFileDialog::getOpenFileName(this, "Load Geometry",
          strLastDir,
-         "Geometry Files (*.geo)");
+         "Geometry Files (*.geo)",&selectedFilter, options);
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/LoadGeometry", QFileInfo(fileName).absoluteDir().path());
     return LoadGeometry(fileName);
@@ -81,11 +87,18 @@ bool MainWindow::SaveGeometry() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/SaveGeometry", ".").toString();
 
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
   QString fileName = QFileDialog::getSaveFileName(this,
               "Save Current Geometry",
               strLastDir,
-              "Geometry Files (*.geo)");
+              "Geometry Files (*.geo)",&selectedFilter, options);
   if (!fileName.isEmpty()) {
+    fileName = SysTools::CheckExt(string(fileName.toAscii()), "geo").c_str();
     settings.setValue("Folders/SaveGeometry", QFileInfo(fileName).absoluteDir().path());
     return SaveGeometry(fileName);
   } return false;
@@ -207,7 +220,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
   DisableAllTrans();
 
-  m_DebugOut = new QTOut(listWidget_3);
+  m_DebugOut = new QTOut(listWidget_DebugOut);
   m_MasterController.SetDebugOut(m_DebugOut);
   GetDebugViewMask();
 
@@ -290,10 +303,16 @@ bool MainWindow::LoadWorkspace() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/LoadWorkspace", ".").toString();
 
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
   QString fileName = QFileDialog::getOpenFileName(this,
               "Load Workspace",
               strLastDir,
-              "Workspace Files (*.wsp)");
+              "Workspace Files (*.wsp)",&selectedFilter, options);
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/LoadWorkspace", QFileInfo(fileName).absoluteDir().path());
     return LoadWorkspace(fileName);
@@ -304,11 +323,18 @@ bool MainWindow::SaveWorkspace() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/SaveWorkspace", ".").toString();
 
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
   QString fileName = QFileDialog::getSaveFileName(this,
               "Save Current Workspace",
               strLastDir,
-              "Workspace Files (*.wsp)");
+              "Workspace Files (*.wsp)",&selectedFilter, options);
   if (!fileName.isEmpty()) {
+    fileName = SysTools::CheckExt(string(fileName.toAscii()), "wsp").c_str();
     settings.setValue("Folders/SaveWorkspace", QFileInfo(fileName).absoluteDir().path());
     return SaveWorkspace(fileName);
   } else return false;

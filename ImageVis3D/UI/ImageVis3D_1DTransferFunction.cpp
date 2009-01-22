@@ -141,10 +141,16 @@ void MainWindow::Transfer1DLoad() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/Transfer1DLoad", ".").toString();
 
+  QString selectedFilter;
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+
   QString fileName =
     QFileDialog::getOpenFileName(this,
          "Load 1D Transferfunction", strLastDir,
-         "1D Transferfunction File (*.1dt)");
+         "1D Transferfunction File (*.1dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/Transfer1DLoad", QFileInfo(fileName).absoluteDir().path());
@@ -157,12 +163,19 @@ void MainWindow::Transfer1DSave() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/Transfer1DSave", ".").toString();
 
+  QString selectedFilter;
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+
   QString fileName =
     QFileDialog::getSaveFileName(this,
          "Save 1D Transferfunction", strLastDir,
-         "1D Transferfunction File (*.1dt)");
+         "1D Transferfunction File (*.1dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
+    fileName = SysTools::CheckExt(string(fileName.toAscii()), "1dt").c_str();
     settings.setValue("Folders/Transfer1DSave", QFileInfo(fileName).absoluteDir().path());
     m_1DTransferFunction->SaveToFile(fileName);
   }
