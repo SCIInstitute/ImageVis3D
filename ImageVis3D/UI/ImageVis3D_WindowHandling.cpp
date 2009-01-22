@@ -647,7 +647,7 @@ void MainWindow::OpenRecentFile(){
 }
 
 void MainWindow::UpdateMenus() {
-  bool bHasMdiChild = m_pActiveRenderWin != NULL;
+  bool bHasMdiChild = mdiArea->subWindowList().size() > 0;
   actionSave_Dataset->setEnabled(bHasMdiChild);
 
   actionGo_Fullscreen->setEnabled(bHasMdiChild);
