@@ -14,6 +14,8 @@ echo "yes" | \
 ./configure \
         -prefix ${HOME}/sw \
         -universal \
+        -arch x86 \
+        -arch ppc \
         -static \
         -qt-libjpeg \
         -no-openssl \
