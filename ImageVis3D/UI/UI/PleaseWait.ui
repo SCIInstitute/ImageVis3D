@@ -37,7 +37,7 @@
    <bool>false</bool>
   </property>
   <property name="modal" >
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
