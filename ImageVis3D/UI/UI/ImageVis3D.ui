@@ -3532,6 +3532,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_Upload" >
+          <property name="text" >
+           <string>Upload</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
@@ -4130,8 +4137,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
      <y>-1</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>426</x>
-     <y>513</y>
+     <x>901</x>
+     <y>544</y>
     </hint>
    </hints>
   </connection>
@@ -4146,8 +4153,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
      <y>-1</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>426</x>
-     <y>513</y>
+     <x>901</x>
+     <y>544</y>
     </hint>
    </hints>
   </connection>
@@ -4162,8 +4169,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
      <y>-1</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>426</x>
-     <y>513</y>
+     <x>901</x>
+     <y>544</y>
     </hint>
    </hints>
   </connection>
@@ -4178,8 +4185,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
      <y>-1</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>426</x>
-     <y>513</y>
+     <x>901</x>
+     <y>544</y>
     </hint>
    </hints>
   </connection>
@@ -4590,7 +4597,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ClearDebugWin()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>365</x>
+     <x>362</x>
      <y>1141</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4606,7 +4613,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>71</x>
+     <x>69</x>
      <y>1141</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4622,7 +4629,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>225</x>
+     <x>224</x>
      <y>1141</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4638,7 +4645,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>147</x>
+     <x>145</x>
      <y>1141</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4654,7 +4661,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetDebugViewMask()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>284</x>
+     <x>281</x>
      <y>1141</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4878,7 +4885,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ParseAndExecuteDebugCommand()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>374</x>
+     <x>452</x>
      <y>1314</y>
     </hint>
     <hint type="destinationlabel" >
@@ -4958,7 +4965,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetIsoValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1250</x>
+     <x>1249</x>
      <y>980</y>
     </hint>
     <hint type="destinationlabel" >
@@ -5390,7 +5397,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Show1DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1130</x>
+     <x>1129</x>
      <y>623</y>
     </hint>
     <hint type="destinationlabel" >
@@ -5406,7 +5413,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Show2DTrans()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1130</x>
+     <x>1129</x>
      <y>658</y>
     </hint>
     <hint type="destinationlabel" >
@@ -5422,7 +5429,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ShowIsoEdit()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1130</x>
+     <x>1129</x>
      <y>693</y>
     </hint>
     <hint type="destinationlabel" >
@@ -5454,7 +5461,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Expand2DWidgets()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1005</x>
+     <x>1003</x>
      <y>1528</y>
     </hint>
     <hint type="destinationlabel" >
@@ -5508,6 +5515,22 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <hint type="destinationlabel" >
      <x>953</x>
      <y>159</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Upload</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>UploadLogToServer()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>396</x>
+     <y>1126</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>466</x>
+     <y>1147</y>
     </hint>
    </hints>
   </connection>
@@ -5579,5 +5602,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>ShowIsoEdit()</slot>
   <slot>CheckForUpdates()</slot>
   <slot>PreserveTransparencyChanged()</slot>
+  <slot>UploadLogToServer()</slot>
  </slots>
 </ui>

@@ -68,6 +68,7 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
 }
 
 bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::string >& strParams, std::string& strMessage) {
+  bool bResult = true;
   strMessage = "";
   if (strCommand == "clear")           { ClearDebugWin(); } else
   if (strCommand == "versions")        { ShowVersions(); } else
@@ -75,9 +76,9 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "gpuinfoext")      { ShowGPUInfo(true); } else
   if (strCommand == "sysinfo")         { ShowSysInfo();} else
   if (strCommand == "imageformats")    { ListSupportedImages();} else
-  if (strCommand == "open")            { bool bResult = LoadDataset(strParams); if (!bResult) {strMessage = "Unable to load dataset file "+strParams[0]; return false;}} else
-  if (strCommand == "open1d")          { bool bResult = Transfer1DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0]; return false;}} else
-  if (strCommand == "open2d")          { bool bResult = Transfer2DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0]; return false;}} else
+  if (strCommand == "open")            { bResult = LoadDataset(strParams); if (!bResult) {strMessage = "Unable to load dataset file "+strParams[0];}} else
+  if (strCommand == "open1d")          { bResult = Transfer1DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0];}} else
+  if (strCommand == "open2d")          { bResult = Transfer2DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0];}} else
   if (strCommand == "setiso")          { SetIsoValue(float(atof(strParams[0].c_str())));} else
   if (strCommand == "mode1d")          { Use1DTrans();} else
   if (strCommand == "mode2d")          { Use2DTrans();} else
@@ -88,11 +89,13 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "rotateY")         { RotateCurrentViewY(atof(strParams[0].c_str()));} else
   if (strCommand == "rotateZ")         { RotateCurrentViewZ(atof(strParams[0].c_str()));} else
   if (strCommand == "translate")       { TranslateCurrentView(atof(strParams[0].c_str()), atof(strParams[1].c_str()), atof(strParams[2].c_str()));} else
-  if (strCommand == "capturesingle")   { bool bResult = CaptureFrame(strParams[0]); if (!bResult) {strMessage = "Unable to save file "+strParams[0]; return false;}} else
-  if (strCommand == "capturesequence") { bool bResult = CaptureSequence(strParams[0]); if (!bResult) {strMessage = "Unable to save file "+strParams[0]; return false;}} else
+  if (strCommand == "capturesingle")   { bResult = CaptureFrame(strParams[0]); if (!bResult) {strMessage = "Unable to save file "+strParams[0];}} else
+  if (strCommand == "capturesequence") { bResult = CaptureSequence(strParams[0]); if (!bResult) {strMessage = "Unable to save file "+strParams[0];}} else
   if (strCommand == "stayopen")        { m_bStayOpenAfterScriptEnd = true;} else
-  if (strCommand == "quit")            { return close();} else
+  if (strCommand == "quit")            { bResult = close();} else
     return false;
+
+  QCoreApplication::processEvents();
   return true;
 }
 

@@ -41,9 +41,15 @@
 #include <QtNetwork/QHttpResponseHeader>
 #include <QtNetwork/QAuthenticator>
 #include <QtCore/QUrl>
+#include <QtCore/QTime>
+#include <QtCore/QDate>
 #include <QtCore/QDir>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QTemporaryFile>
+#include <QtCore/QTextStream>
+
+#include "FTPDialog.h"
 #include "../Tuvok/Basics/SysTools.h"
 
 using namespace std;
@@ -161,8 +167,6 @@ void MainWindow::readResponseHeader(const QHttpResponseHeader &responseHeader) {
   }
 }
 
-
-
 bool MainWindow::GetVersionsFromUpdateFile(const string& strFilename, float& fIV3DVersion, int& iIV3DSVNVersion, float& fTuvokVersion, int& iTuvokSVNVersion) {
   string line ="";
   ifstream updateFile(strFilename.c_str(),ios::binary);  
@@ -177,4 +181,47 @@ bool MainWindow::GetVersionsFromUpdateFile(const string& strFilename, float& fIV
   updateFile.close();
 
   return true;
+}
+
+void MainWindow::UploadLogToServer() {
+  if (m_pDialog) {
+    disconnect(m_pDialog, SIGNAL(TransferFailure()), this, SLOT(FtpFail()));
+    disconnect(m_pDialog, SIGNAL(TransferSuccess()), this, SLOT(FtpSuccess()));
+    delete m_pDialog;
+  }
+
+  m_pTempFile =new QFile("SubmittedDebugOutput.txt");
+
+  if (!m_pTempFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
+     FtpFail();
+     return;
+  }
+  QTextStream outstream(m_pTempFile);
+
+  for (int i = 0;i<listWidget_DebugOut->count();i++)
+    outstream << listWidget_DebugOut->item(i)->text() << "\n";
+  m_pTempFile->close();
+
+  QString qstrID = tr("%1DebugOut_%2_%3.txt").arg(DEBUG_DUMP_PATH).arg(QTime::currentTime().toString()).arg(QDate::currentDate().toString());
+
+  m_pDialog = new FTPDialog(string(m_pTempFile->fileName().toAscii()), DEBUG_DUMP_SERVER ,string(qstrID.toAscii()), this);
+
+  connect(m_pDialog, SIGNAL(TransferFailure()), this, SLOT(FtpFail()));
+  connect(m_pDialog, SIGNAL(TransferSuccess()), this, SLOT(FtpSuccess()));
+
+  m_pDialog->Start();
+}
+
+void MainWindow::FtpFail() {
+  if (m_pTempFile) {
+    m_pTempFile->remove();
+  }
+  ShowInformationDialog("Transfer failed", "Transfer failed");
+}
+
+void MainWindow::FtpSuccess() {
+  if (m_pTempFile) {
+    m_pTempFile->remove();
+  }
+  ShowInformationDialog("Transfer successfull", "Transfer successfull");
 }

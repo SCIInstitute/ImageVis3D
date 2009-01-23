@@ -37,13 +37,17 @@
 
 #include "ImageVis3D.h"
 #include "BrowseData.h"
+#include "FTPDialog.h"
 
 #include <QtCore/QTimer>
-#include <QtGui/QMdiSubWindow>
 #include <QtCore/QSettings>
 #include <QtCore/QFileInfo>
+
+#include <QtGui/QMdiSubWindow>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QColorDialog>
+
+#include <QtNetwork/QHttp>
 
 #include "PleaseWait.h"
 
@@ -94,7 +98,9 @@ MainWindow::MainWindow(MasterController& masterController,
   m_pUpdateFile(NULL),
   m_iHttpGetId(-1),
   m_bStartupCheck(false),
-  m_bScriptMode(bScriptMode)
+  m_bScriptMode(bScriptMode),
+  m_pDialog(NULL),
+  m_pTempFile(NULL)
 {
   RegisterCalls(m_MasterController.ScriptEngine());
 
@@ -152,6 +158,8 @@ MainWindow::~MainWindow()
     m_pUpdateFile = NULL;
   }
 
+  delete m_pHttp;
+  delete m_pDialog;
 }
 
 

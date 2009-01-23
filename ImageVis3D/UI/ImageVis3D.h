@@ -62,6 +62,7 @@ class QHttpResponseHeader;
 class QAuthenticator;
 class QFile;
 class QSslError;
+class FTPDialog;
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptable
 {
@@ -88,6 +89,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick);
 
   protected slots:
+    void FtpFail();
+    void FtpSuccess();
+
     void SetCaptureFilename();
     void CaptureFrame();
     void CaptureSequence();
@@ -176,6 +180,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     // update
     void httpRequestFinished(int requestId, bool error);
     void readResponseHeader(const QHttpResponseHeader &responseHeader);
+
+    void UploadLogToServer();
 
     void ShowAbout();
     void ChooseIsoColor();
@@ -313,6 +319,12 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void CheckForUpdatesInternal();
     void QuietCheckForUpdates();
     bool GetVersionsFromUpdateFile(const std::string& strFilename, float& fIV3DVersion, int& iIV3DSVNVersion, float& fTuvokVersion, int& iTuvokSVNVersion);
+
+    // ftp
+    FTPDialog* m_pDialog;
+    QFile*     m_pTempFile;
+
+
 };
 
 #endif // IMAGEVIS3D_H

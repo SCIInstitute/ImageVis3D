@@ -233,6 +233,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
 }
 
 void RenderWindow::CloseEvent(QCloseEvent*) {
+  Cleanup();
   EmitWindowClosing();
 }
 

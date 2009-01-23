@@ -233,6 +233,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   m_pHttp = new QHttp(this);
   connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
   connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
+
 }
 
 // ******************************************
@@ -402,12 +403,12 @@ bool MainWindow::ApplyWorkspace() {
 
 
 void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
-  if (!m_pActiveRenderWin) return;
+  if (!m_pActiveRenderWin || !mdiArea->activeSubWindow()) return;
   mdiArea->activeSubWindow()->resize(iSizeX, iSizeY);
 }
 
 void MainWindow::CloseCurrentView() {
-  if (!m_pActiveRenderWin) return;
+  if (!m_pActiveRenderWin || !mdiArea->activeSubWindow()) return;
   mdiArea->activeSubWindow()->close();
 }
 
@@ -509,6 +510,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
       mdiArea->subWindowList().end();  ++iter) {
       if(renderWin->GetQtWidget() == (*iter)->widget()) {
         mdiArea->setActiveSubWindow(*iter);
+        break;
       }
     }
     QCoreApplication::processEvents();
@@ -640,7 +642,6 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
   UpdateLockView();
 }
-
 
 
 void MainWindow::ToggleRenderWindowView2x2() {

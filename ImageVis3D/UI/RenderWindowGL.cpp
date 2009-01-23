@@ -61,7 +61,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
                                Qt::WindowFlags flags) :
   QGLWidget(fmt, parent, glShareWidget, flags),
   RenderWindow(masterController, eType, dataset, iCounter, parent)
-{  
+{
   m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);
   m_Renderer->LoadDataset(m_strDataset.toStdString());  
   SetupArcBall();

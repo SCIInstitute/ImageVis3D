@@ -20,6 +20,7 @@ HEADERS += StdDefines.h \
            UI/BrowseData.h \
            UI/ImageVis3D.h \
            UI/PleaseWait.h \
+           UI/FTPDialog.h \
            UI/QTransferFunction.h \
            UI/Q1DTransferFunction.h \
            UI/Q2DTransferFunction.h \
@@ -37,6 +38,7 @@ FORMS += UI/UI/BrowseData.ui \
          UI/UI/PleaseWait.ui \
          UI/UI/SettingsDlg.ui \
          UI/UI/RAWDialog.ui \
+         UI/UI/FTPDialog.ui \
          UI/UI/MIPRotDialog.ui
 
 SOURCES += UI/BrowseData.cpp \
@@ -54,6 +56,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/ImageVis3D_Scripting.cpp \
            UI/ImageVis3D_Help.cpp \
            UI/PleaseWait.cpp \
+           UI/FTPDialog.cpp \
            UI/QTransferFunction.cpp \
            UI/Q1DTransferFunction.cpp \
            UI/Q2DTransferFunction.cpp \

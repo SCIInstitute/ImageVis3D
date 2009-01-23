@@ -44,6 +44,8 @@
 #define IV3D_VERSION 0.053
 #define IV3D_VERSION_TYPE "beta (Biblical Magi)"
 
+#define DEBUG_DUMP_SERVER   "ftp://ftp.sci.utah.edu"
+#define DEBUG_DUMP_PATH     "upload/ImageVis3D/"
 #define UPDATE_VERSION_PATH "http://software.sci.utah.edu/devbuilds/imagevis3d/"
 #define UPDATE_NIGHTLY_PATH "http://software.sci.utah.edu/devbuilds/imagevis3d/"
 #define UPDATE_STABLE_PATH  "http://software.sci.utah.edu/SCIdownload.php?item=imagevis3d"

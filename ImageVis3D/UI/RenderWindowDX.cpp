@@ -59,6 +59,7 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
   QWidget(parent, flags),
   RenderWindow(masterController, eType, dataset, iCounter, parent)
 {  
+  setBaseSize( sizeHint() );
   m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);
 
   if (m_Renderer) {
