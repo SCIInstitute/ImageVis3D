@@ -114,7 +114,7 @@ void RenderWindowGL::InitializeRenderer()
       if (bOpenGLFBO && (bOpenGLSO20 || (bOpenGLSL && bOpenGL3DT))) {
 
         if (ms_iMax3DTexDims < BRICKSIZE) {
-          m_MasterController.DebugOut()->Warning("RenderWindowGL::InitializeRenderer", "Maximum supported texture size (%i) is smaler than required by the IO subsystem (%i).", ms_iMax3DTexDims, int(BRICKSIZE));
+          m_MasterController.DebugOut()->Warning("RenderWindowGL::InitializeRenderer", "Maximum supported texture size (%i) is smaller than required by the IO subsystem (%i).", ms_iMax3DTexDims, int(BRICKSIZE));
         } else {
           m_MasterController.DebugOut()->Message("RenderWindowGL::InitializeRenderer", "Maximum supported texture size %i (required by the IO subsystem %i).", ms_iMax3DTexDims, int(BRICKSIZE));
         } 
