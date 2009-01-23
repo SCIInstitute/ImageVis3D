@@ -71,7 +71,6 @@ MainWindow::MainWindow(MasterController& masterController,
   QMainWindow(parent, flags),
   m_MasterController(masterController),
   m_strCurrentWorkspaceFilename(""),
-  m_pActiveRenderWin(NULL),
   m_bShowVersionInTitle(true),
   m_bQuickopen(false),
   m_iMinFramerate(10),
@@ -173,7 +172,7 @@ MainWindow::~MainWindow()
 // ******************************************
 
 void MainWindow::Use1DTrans() {
-  if (!m_pActiveRenderWin) return;
+  if (!ActiveRenderWin()) return;
 
   checkBox_Use2DTrans->setChecked(false);
   checkBox_Use2DTrans->setEnabled(true);
@@ -188,12 +187,12 @@ void MainWindow::Use1DTrans() {
   m_1DTransferFunction->setEnabled(true);
   m_2DTransferFunction->setEnabled(false);
 
-  if (m_pActiveRenderWin) m_pActiveRenderWin->SetRendermode(AbstrRenderer::RM_1DTRANS);
+  if (ActiveRenderWin()) ActiveRenderWin()->SetRendermode(AbstrRenderer::RM_1DTRANS);
 }
 
 
 void MainWindow::Use2DTrans() {
-  if (!m_pActiveRenderWin) return;
+  if (!ActiveRenderWin()) return;
 
   checkBox_Use1DTrans->setChecked(false);
   checkBox_Use1DTrans->setEnabled(true);
@@ -208,12 +207,12 @@ void MainWindow::Use2DTrans() {
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(true);
 
-  if (m_pActiveRenderWin) m_pActiveRenderWin->SetRendermode(AbstrRenderer::RM_2DTRANS);
+  if (ActiveRenderWin()) ActiveRenderWin()->SetRendermode(AbstrRenderer::RM_2DTRANS);
 }
 
 
 void MainWindow::UseIso() {
-  if (!m_pActiveRenderWin) return;
+  if (!ActiveRenderWin()) return;
 
   checkBox_Use2DTrans->setChecked(false);
   checkBox_Use2DTrans->setEnabled(true);
@@ -228,7 +227,7 @@ void MainWindow::UseIso() {
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(false);
 
-  if (m_pActiveRenderWin) m_pActiveRenderWin->SetRendermode(AbstrRenderer::RM_ISOSURFACE);
+  if (ActiveRenderWin()) ActiveRenderWin()->SetRendermode(AbstrRenderer::RM_ISOSURFACE);
 }
 
 
@@ -252,7 +251,7 @@ void MainWindow::DisableAllTrans() {
 
 void MainWindow::FilterImage() {
 
-  if (!m_pActiveRenderWin) return;
+  if (!ActiveRenderWin()) return;
 
   // Get theactive tab
   int tab = tabWidget_Filter->currentIndex();
@@ -284,12 +283,12 @@ void MainWindow::FilterImage() {
   m_MasterController.DebugOut()->
     Message("MainWindow::FilterImage",
       "Performing filter %d on %s.", tab, 
-      m_pActiveRenderWin->GetDatasetName().toStdString().c_str() );
+      ActiveRenderWin()->GetDatasetName().toStdString().c_str() );
 
-  QString fileName = m_pActiveRenderWin->GetDatasetName();
+  QString fileName = ActiveRenderWin()->GetDatasetName();
 
   /// \todo ARS -- this should return a pointer to memory.
-  m_MasterController.Filter( m_pActiveRenderWin->GetDatasetName().toStdString(),
+  m_MasterController.Filter( ActiveRenderWin()->GetDatasetName().toStdString(),
            tab,
            &var0, &var1 );
 
@@ -297,7 +296,7 @@ void MainWindow::FilterImage() {
   if( radioButton_FilterUpdate->isChecked() ) {
     renderWin = CreateNewRenderWindow(fileName);
   } else { // if( radioButton_FilterCreate->isChecked() )
-    m_pActiveRenderWin->GetQtWidget()->close();
+    ActiveRenderWin()->GetQtWidget()->close();
     renderWin = CreateNewRenderWindow(fileName);
   }
 
@@ -307,11 +306,11 @@ void MainWindow::FilterImage() {
 
 
 void MainWindow::SetLighting(bool bLighting) {
-  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetUseLighting(bLighting);
+  if (ActiveRenderWin() != NULL) ActiveRenderWin()->SetUseLighting(bLighting);
 }
 
 void MainWindow::SetSampleRate(int iValue) {
-  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetSampleRateModifier(iValue/100.0f); 
+  if (ActiveRenderWin() != NULL) ActiveRenderWin()->SetSampleRateModifier(iValue/100.0f); 
   UpdateSampleRateLabel(iValue);
 }
 
@@ -327,17 +326,17 @@ void MainWindow::SetSampleRateSlider(int iValue) {
 }
 
 void MainWindow::SetIsoValue(float fValue) {
-  if (m_pActiveRenderWin != NULL) {
-    int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange());
-    m_pActiveRenderWin->SetIsoValue(fValue);
+  if (ActiveRenderWin() != NULL) {
+    int iMaxSize = int(ActiveRenderWin()->GetDynamicRange());
+    ActiveRenderWin()->SetIsoValue(fValue);
     UpdateIsoValLabel(int(fValue*iMaxSize), iMaxSize);
   }
 }
 
 void MainWindow::SetIsoValue(int iValue) {
-  if (m_pActiveRenderWin != NULL) {
-    int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange());
-    m_pActiveRenderWin->SetIsoValue(float(iValue)/float(iMaxSize));
+  if (ActiveRenderWin() != NULL) {
+    int iMaxSize = int(ActiveRenderWin()->GetDynamicRange());
+    ActiveRenderWin()->SetIsoValue(float(iValue)/float(iMaxSize));
     UpdateIsoValLabel(iValue, iMaxSize);
   }
 }
@@ -355,8 +354,8 @@ void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {
 
 
 void MainWindow::SetFocusIsoValue(int iValue) {
-  int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange());
-  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetCVIsoValue(float(iValue)/float(iMaxSize));
+  int iMaxSize = int(ActiveRenderWin()->GetDynamicRange());
+  if (ActiveRenderWin() != NULL) ActiveRenderWin()->SetCVIsoValue(float(iValue)/float(iMaxSize));
   UpdateFocusIsoValLabel(iValue, iMaxSize);
 }
 
@@ -378,15 +377,15 @@ void MainWindow::SetBorderSizeValueSlider(int iValue) {
 }
 
 void MainWindow::SetFocusSize(int iValue) {
-  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetCVSize(float(99-iValue)/9.9f);
+  if (ActiveRenderWin() != NULL) ActiveRenderWin()->SetCVSize(float(99-iValue)/9.9f);
 }
 
 void MainWindow::SetContextScale(int iValue) {
-  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetCVContextScale(float(iValue)/10.0f);
+  if (ActiveRenderWin() != NULL) ActiveRenderWin()->SetCVContextScale(float(iValue)/10.0f);
 }
 
 void MainWindow::SetBorderSize(int iValue) {
-  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetCVBorderScale(float(99-iValue));
+  if (ActiveRenderWin() != NULL) ActiveRenderWin()->SetCVBorderScale(float(99-iValue));
 }
 
 void MainWindow::UpdateFocusIsoValLabel(int iValue, int iMaxValue) {
@@ -407,12 +406,12 @@ void MainWindow::SetToggleLocalBBoxLabel(bool bRenderBBox)
 
 void MainWindow::ToggleGlobalBBox(bool bRenderBBox)
 {
-  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetGlobalBBox(bRenderBBox);
+  if (ActiveRenderWin() != NULL) ActiveRenderWin()->SetGlobalBBox(bRenderBBox);
 }
 
 void MainWindow::ToggleLocalBBox(bool bRenderBBox)
 {
-  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetLocalBBox(bRenderBBox);
+  if (ActiveRenderWin() != NULL) ActiveRenderWin()->SetLocalBBox(bRenderBBox);
 }
 
 
@@ -426,8 +425,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::ChooseIsoColor()
 {
-  if (m_pActiveRenderWin)  {
-    FLOATVECTOR3 vIsoColor = m_pActiveRenderWin->GetIsosufaceColor();
+  if (ActiveRenderWin())  {
+    FLOATVECTOR3 vIsoColor = ActiveRenderWin()->GetIsosufaceColor();
     QColor color = QColorDialog::getColor(qRgba(int(vIsoColor.x*255),
                                                 int(vIsoColor.y*255),
                                                 int(vIsoColor.z*255),
@@ -436,15 +435,15 @@ void MainWindow::ChooseIsoColor()
     if (color.isValid()) {
 
       vIsoColor = FLOATVECTOR3(color.red() / 255.0f, color.green() / 255.0f, color.blue() / 255.0f);
-      m_pActiveRenderWin->SetIsosufaceColor(vIsoColor);
+      ActiveRenderWin()->SetIsosufaceColor(vIsoColor);
     }
   }
 }
 
 void MainWindow::ChooseFocusColor()
 {
-  if (m_pActiveRenderWin)  {
-    FLOATVECTOR3 vIsoColor = m_pActiveRenderWin->GetCVColor();
+  if (ActiveRenderWin())  {
+    FLOATVECTOR3 vIsoColor = ActiveRenderWin()->GetCVColor();
     QColor color = QColorDialog::getColor(qRgba(int(vIsoColor.x*255),
                                                 int(vIsoColor.y*255),
                                                 int(vIsoColor.z*255),
@@ -453,14 +452,14 @@ void MainWindow::ChooseFocusColor()
     if (color.isValid()) {
 
       vIsoColor = FLOATVECTOR3(color.red() / 255.0f, color.green() / 255.0f, color.blue() / 255.0f);
-      m_pActiveRenderWin->SetCVColor(vIsoColor);
+      ActiveRenderWin()->SetCVColor(vIsoColor);
     }
   }
 }
 
 void MainWindow::ToggleClearView() {
-  if (m_pActiveRenderWin) {
-    m_pActiveRenderWin->SetCV(checkBox_ClearView->isChecked());
+  if (ActiveRenderWin()) {
+    ActiveRenderWin()->SetCV(checkBox_ClearView->isChecked());
     frame_ClearView->setEnabled(checkBox_ClearView->isChecked());
   }
 }
@@ -470,35 +469,43 @@ void MainWindow::ToggleClearView() {
 // ******************************************
 
 void MainWindow::RotateCurrentViewX(double angle) {
-  if (m_pActiveRenderWin) {
+  if (ActiveRenderWin()) {
     FLOATMATRIX4 matRot;
     matRot.RotationX(3.141592653589793238462643383*angle/180.0);
-    m_pActiveRenderWin->Rotate(matRot);
+    ActiveRenderWin()->Rotate(matRot);
   }
 } 
 
 void MainWindow::RotateCurrentViewY(double angle) {
-  if (m_pActiveRenderWin) {
+  if (ActiveRenderWin()) {
     FLOATMATRIX4 matRot;
     matRot.RotationY(3.141592653589793238462643383*angle/180.0);
-    m_pActiveRenderWin->Rotate(matRot);
+    ActiveRenderWin()->Rotate(matRot);
   }
 } 
 
 void MainWindow::RotateCurrentViewZ(double angle) {
-  if (m_pActiveRenderWin) {
+  if (ActiveRenderWin()) {
     FLOATMATRIX4 matRot;
     matRot.RotationZ(3.141592653589793238462643383*angle/180.0);
-    m_pActiveRenderWin->Rotate(matRot);
+    ActiveRenderWin()->Rotate(matRot);
   }
 }
 
 void MainWindow::TranslateCurrentView(double x, double y, double z) {
-  if (m_pActiveRenderWin) {
+  if (ActiveRenderWin()) {
     FLOATMATRIX4 matTrans;
     matTrans.Translation(x,y,z);
-    m_pActiveRenderWin->Translate(matTrans);
+    ActiveRenderWin()->Translate(matTrans);
   }
+}
+
+
+RenderWindow* MainWindow::ActiveRenderWin() {
+  if (mdiArea->activeSubWindow()) 
+    return WidgetToRenderWin(mdiArea->activeSubWindow()->widget()); 
+  else
+    return NULL;
 }
 
 

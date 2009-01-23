@@ -50,7 +50,7 @@ using namespace std;
 
 
 void MainWindow::CaptureFrame() {
-  if (m_pActiveRenderWin) {
+  if (ActiveRenderWin()) {
     if (!CaptureFrame(lineEditCaptureFile->text().toStdString())) {
       QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
       ShowWarningDialog( tr("Error"), msg);
@@ -60,7 +60,7 @@ void MainWindow::CaptureFrame() {
 }
 
 void MainWindow::CaptureSequence() {
-  if (m_pActiveRenderWin) {
+  if (ActiveRenderWin()) {
     string strSequenceName;
     if (!CaptureSequence(lineEditCaptureFile->text().toStdString(), &strSequenceName)){
       QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
@@ -71,8 +71,8 @@ void MainWindow::CaptureSequence() {
 }
 
 bool MainWindow::CaptureFrame(const std::string& strTargetName) {
-  if (m_pActiveRenderWin) 
-    return m_pActiveRenderWin->CaptureFrame(strTargetName, checkBox_PreserveTransparency->isChecked());
+  if (ActiveRenderWin()) 
+    return ActiveRenderWin()->CaptureFrame(strTargetName, checkBox_PreserveTransparency->isChecked());
   else {
     m_MasterController.DebugOut()->Warning("MainWindow::CaptureFrame",
                                            "No render window is open!");
@@ -81,8 +81,8 @@ bool MainWindow::CaptureFrame(const std::string& strTargetName) {
 }
 
 bool MainWindow::CaptureSequence(const std::string& strTargetName, std::string* strRealFilename) {
-  if (m_pActiveRenderWin) 
-    return m_pActiveRenderWin->CaptureSequenceFrame(strTargetName, checkBox_PreserveTransparency->isChecked(), strRealFilename);
+  if (ActiveRenderWin()) 
+    return ActiveRenderWin()->CaptureSequenceFrame(strTargetName, checkBox_PreserveTransparency->isChecked(), strRealFilename);
   else {
     m_MasterController.DebugOut()->Warning("MainWindow::CaptureSequence",
                                            "No render window is open!");
@@ -91,9 +91,9 @@ bool MainWindow::CaptureSequence(const std::string& strTargetName, std::string* 
 }
 
 void MainWindow::CaptureRotation() {
-  if (m_pActiveRenderWin) {
+  if (ActiveRenderWin()) {
 
-    AbstrRenderer::EWindowMode eWindowMode = m_pActiveRenderWin->GetRenderer()->GetFullWindowmode();
+    AbstrRenderer::EWindowMode eWindowMode = ActiveRenderWin()->GetRenderer()->GetFullWindowmode();
 
     QSettings settings;
     int  iNumImages = settings.value("Renderer/ImagesPerRotation", 360).toInt();
@@ -103,7 +103,7 @@ void MainWindow::CaptureRotation() {
     int iEyeDist    = settings.value("Renderer/RotationEyeDist", 3).toInt();
 
     bool ok;
-    if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
+    if (ActiveRenderWin()->GetRenderer()->GetUseMIP(eWindowMode))  {
       MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD, iEyeDist, this);
       if (mipRotDialog.exec() == QDialog::Accepted) {
         ok = true;
@@ -128,7 +128,7 @@ void MainWindow::CaptureRotation() {
 
     settings.setValue("Renderer/ImagesPerRotation", iNumImages);
 
-    m_pActiveRenderWin->ToggleHQCaptureMode();
+    ActiveRenderWin()->ToggleHQCaptureMode();
     
     PleaseWaitDialog pleaseWait(this);
     // add status label into debug chain
@@ -157,9 +157,9 @@ void MainWindow::CaptureRotation() {
           m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
         labelOut->SetOutput(false, false, false, false);
         fAngle = float(i)/float(iNumImages) * 360.0f;
-        m_pActiveRenderWin->SetCaptureRotationAngle(fAngle);
+        ActiveRenderWin()->SetCaptureRotationAngle(fAngle);
         string strSequenceName;
-        if (!m_pActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
+        if (!ActiveRenderWin()->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
           QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
           ShowWarningDialog( tr("Error"), msg);
           m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
@@ -168,7 +168,7 @@ void MainWindow::CaptureRotation() {
         i++;
       }
     } else {
-      if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
+      if (ActiveRenderWin()->GetRenderer()->GetUseMIP(eWindowMode))  {
 
         bool bReUse = true;
         int iReUseOffset = 0;
@@ -207,7 +207,7 @@ void MainWindow::CaptureRotation() {
           fAngle = float(i)/float(iNumImages) * 360.0f;
           string strSequenceName;
 
-          if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), bUseLOD, checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
+          if (!ActiveRenderWin()->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), bUseLOD, checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
             QString msg = tr("Error writing image file %1.").arg(strSequenceName.c_str());
             ShowWarningDialog( tr("Error"), msg);
             m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
@@ -221,7 +221,7 @@ void MainWindow::CaptureRotation() {
             } else {
               fAngle -= 3.0f;
               string strImageFilenameRight = SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_R");
-              if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, bUseLOD, i==(iNumImages-1), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
+              if (!ActiveRenderWin()->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, bUseLOD, i==(iNumImages-1), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
                 QString msg = tr("Error writing image file %1.").arg(strImageFilenameRight.c_str());
                 ShowWarningDialog( tr("Error"), msg);
                 m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
@@ -232,7 +232,7 @@ void MainWindow::CaptureRotation() {
           } 
         }
 
-        if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode) && bStereo) {
+        if (ActiveRenderWin()->GetRenderer()->GetUseMIP(eWindowMode) && bStereo) {
           labelOut->SetOutput(true, true, true, false);
 
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
@@ -280,10 +280,10 @@ void MainWindow::CaptureRotation() {
         ShowWarningDialog( tr("Error"), msg);
       }
     }
-    m_pActiveRenderWin->ToggleHQCaptureMode();
+    ActiveRenderWin()->ToggleHQCaptureMode();
     pleaseWait.close();
     m_MasterController.SetDebugOut(pOldDebug, bDeleteOldDebug);
-    m_pActiveRenderWin->GetRenderer()->ScheduleCompleteRedraw();  // to make sure front and backbuffer are valid
+    ActiveRenderWin()->GetRenderer()->ScheduleCompleteRedraw();  // to make sure front and backbuffer are valid
   }
 }
 

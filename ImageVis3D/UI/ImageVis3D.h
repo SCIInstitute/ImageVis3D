@@ -213,7 +213,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     Q2DTransferFunction*                      m_2DTransferFunction;
     QGLWidget*                                m_glShareWidget;
     QTOut*                                    m_DebugOut;
-    RenderWindow*                             m_pActiveRenderWin;
     static const unsigned int                 ms_iMaxRecentFiles = 5;
     QAction*                                  m_recentFileActs[ms_iMaxRecentFiles];
     FLOATVECTOR3                              m_vBackgroundColors[2];
@@ -309,7 +308,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ShowInformationDialog(QString strTitle, QString strMessage);
     void ShowWarningDialog(QString strTitle, QString strMessage);
     void ShowCriticalDialog(QString strTitle, QString strMessage);
-
+    
+    RenderWindow* ActiveRenderWin();
+    
     // update
     QHttp* m_pHttp;
     QFile* m_pUpdateFile;

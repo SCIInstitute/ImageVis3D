@@ -41,30 +41,30 @@
 using namespace std;
 
 void MainWindow::ToggleStereoRendering() {
-  if (m_pActiveRenderWin) {
-    if (m_pActiveRenderWin->GetRenderer()->GetViewmode() != AbstrRenderer::VM_SINGLE ||
-        m_pActiveRenderWin->GetRenderer()->GetFullWindowmode() != AbstrRenderer::WM_3D) {
+  if (ActiveRenderWin()) {
+    if (ActiveRenderWin()->GetRenderer()->GetViewmode() != AbstrRenderer::VM_SINGLE ||
+        ActiveRenderWin()->GetRenderer()->GetFullWindowmode() != AbstrRenderer::WM_3D) {
       QString strText = "Stereo rendering is only available in single view 3D mode. Do you want to change to that view now?";
       if (QMessageBox::Yes == QMessageBox::question(this, "3D Stereo", strText, QMessageBox::Yes, QMessageBox::No)) {
-        m_pActiveRenderWin->GetRenderer()->SetFullWindowmode(AbstrRenderer::WM_3D);
-        m_pActiveRenderWin->GetRenderer()->SetViewmode(AbstrRenderer::VM_SINGLE);
+        ActiveRenderWin()->GetRenderer()->SetFullWindowmode(AbstrRenderer::WM_3D);
+        ActiveRenderWin()->GetRenderer()->SetViewmode(AbstrRenderer::VM_SINGLE);
       } else {
         checkBox_Stereo->setChecked(false);
         return;
       }
     }
-    m_pActiveRenderWin->GetRenderer()->SetStereo(checkBox_Stereo->isChecked());
+    ActiveRenderWin()->GetRenderer()->SetStereo(checkBox_Stereo->isChecked());
   } else {
     checkBox_Stereo->setChecked(false);
   }
 }
 
 void MainWindow::SetStereoEyeDistance() {
-  if (m_pActiveRenderWin == NULL) return;
-  m_pActiveRenderWin->GetRenderer()->SetStereoEyeDist(float(horizontalSlider_EyeDistance->value())/100.0);
+  if (ActiveRenderWin() == NULL) return;
+  ActiveRenderWin()->GetRenderer()->SetStereoEyeDist(float(horizontalSlider_EyeDistance->value())/100.0);
 }
 
 void MainWindow::SetStereoFocalLength() {
-  if (m_pActiveRenderWin == NULL) return;  
-  m_pActiveRenderWin->GetRenderer()->SetStereoFocalLength(float(horizontalSlider_FocalLength->value())/10.0);
+  if (ActiveRenderWin() == NULL) return;  
+  ActiveRenderWin()->GetRenderer()->SetStereoFocalLength(float(horizontalSlider_FocalLength->value())/10.0);
 }
