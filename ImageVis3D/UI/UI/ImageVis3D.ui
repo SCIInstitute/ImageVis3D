@@ -3527,6 +3527,9 @@
           <property name="statusTip" >
            <string>Click here to clear the output window.</string>
           </property>
+          <property name="whatsThis" >
+           <string>Click here to clear the output window.</string>
+          </property>
           <property name="text" >
            <string>Clear</string>
           </property>
@@ -3534,6 +3537,27 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_Upload" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="baseSize" >
+           <size>
+            <width>0</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="toolTip" >
+           <string>Click here to upload the current Debug Window contents to the SCI Server for bugtraking.</string>
+          </property>
+          <property name="statusTip" >
+           <string>Click here to upload the current Debug Window contents to the SCI Server for bugtraking.</string>
+          </property>
+          <property name="whatsThis" >
+           <string>Click here to upload the current Debug Window contents to the SCI Server for bugtraking.</string>
+          </property>
           <property name="text" >
            <string>Upload</string>
           </property>
