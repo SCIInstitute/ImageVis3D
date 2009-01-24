@@ -186,6 +186,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ShowAbout();
     void ChooseIsoColor();
 
+    void ToggleFullscreen();
     void ToggleClearView();
     void SetFocusIsoValue(int iValue);
     void ChooseFocusColor();

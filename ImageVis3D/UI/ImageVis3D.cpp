@@ -501,6 +501,12 @@ void MainWindow::TranslateCurrentView(double x, double y, double z) {
 }
 
 
+void MainWindow::ToggleFullscreen() {
+  if (ActiveRenderWin())
+    ActiveRenderWin()->ToggleFullscreen();
+}
+
+
 RenderWindow* MainWindow::ActiveRenderWin() {
   if (mdiArea->activeSubWindow()) 
     return WidgetToRenderWin(mdiArea->activeSubWindow()->widget()); 

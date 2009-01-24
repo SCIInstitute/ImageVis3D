@@ -70,9 +70,13 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     static const std::string& GetExtString() {return ms_glExtString;}
     virtual void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
 
+  protected:
+    virtual void ToggleFullscreen();
+
   private:
     virtual void InitializeRenderer();
     static std::string ms_glExtString;
+
 
   // **************** Qt widget connector calls
   protected:  

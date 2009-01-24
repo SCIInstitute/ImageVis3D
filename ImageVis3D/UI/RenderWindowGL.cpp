@@ -159,3 +159,7 @@ void RenderWindowGL::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrec
   makeCurrent();
   RenderWindow::SetBlendPrecision(eBlendPrecisionMode);
 }
+
+void RenderWindowGL::ToggleFullscreen() {
+// TODO
+}

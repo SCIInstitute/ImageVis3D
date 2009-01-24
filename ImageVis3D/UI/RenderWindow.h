@@ -120,6 +120,8 @@ class RenderWindow
 
     virtual QWidget* GetQtWidget() = 0;
 
+    virtual void ToggleFullscreen() = 0;
+
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
     virtual void ToggleRenderWindowViewSingle();

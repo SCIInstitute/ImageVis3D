@@ -67,6 +67,9 @@ class RenderWindowDX : public QWidget, public RenderWindow
 
     virtual ~RenderWindowDX();
 
+  protected:
+    virtual void ToggleFullscreen();
+
   private:
     virtual void InitializeRenderer();
 

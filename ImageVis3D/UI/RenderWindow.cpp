@@ -169,6 +169,12 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
 }
 
 void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
+
+  if (event->key() == Qt::Key_F) {
+    ToggleFullscreen();
+  }
+
+
   if (event->key() == Qt::Key_C) {
     AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
 

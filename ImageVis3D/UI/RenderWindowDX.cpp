@@ -94,6 +94,14 @@ void RenderWindowDX::InitializeRenderer()
 
 void RenderWindowDX::ForceRepaint() {
   repaint();
+#ifdef TUVOK_OS_APPLE
+  QCoreApplication::processEvents();
+#endif
 }
+
+void RenderWindowDX::ToggleFullscreen() {
+  // TODO
+}
+
 
 #endif // _WIN32 && USE_DIRECTX

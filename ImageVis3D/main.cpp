@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
   }
 
   // open the QT window
-  mainWindow.show();
+  mainWindow.showFullScreen();
 
   if (strScriptFile != "") {
     bool bScriptResult =  mainWindow.RunScript(strScriptFile);
