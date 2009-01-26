@@ -40,6 +40,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
 #include "../Tuvok/Controller/MasterController.h"
+#include <exception>
 #include <limits>
 
 #ifdef max
@@ -603,6 +604,12 @@ void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
   emit SwatchChange();
 }
 
+// hack, see below.
+class BadTF : public std::exception {
+  virtual const char* what() const throw() {
+    return "no TF is set.";
+  }
+};
 void Q2DTransferFunction::Transfer2DAddSwatch() {  
   TFPolygon newSwatch;
 
@@ -618,6 +625,12 @@ void Q2DTransferFunction::Transfer2DAddSwatch() {
   newSwatch.pGradientStops.push_back(g1);
   newSwatch.pGradientStops.push_back(g2);
   newSwatch.pGradientStops.push_back(g3);
+
+  /// @todo Quick Hack -- this should probably be removed, or maybe just
+  /// replaced with something cheap like an assert.
+  if(m_pTrans) {
+    throw BadTF();
+  }
 
   m_pTrans->m_Swatches.push_back(newSwatch);
 
