@@ -184,44 +184,57 @@ bool MainWindow::GetVersionsFromUpdateFile(const string& strFilename, float& fIV
 }
 
 void MainWindow::UploadLogToServer() {
-  if (m_pDialog) {
-    disconnect(m_pDialog, SIGNAL(TransferFailure()), this, SLOT(FtpFail()));
-    disconnect(m_pDialog, SIGNAL(TransferSuccess()), this, SLOT(FtpSuccess()));
-    delete m_pDialog;
-  }
+  QFile* pFTPTempFile =new QFile("SubmittedDebugOutput.txt");
 
-  m_pTempFile =new QFile("SubmittedDebugOutput.txt");
-
-  if (!m_pTempFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
-     FtpFail();
+  if (!pFTPTempFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
+     ShowInformationDialog("Transfer failed", "Transfer failed");
      return;
   }
-  QTextStream outstream(m_pTempFile);
+  QTextStream outstream(pFTPTempFile);
 
   for (int i = 0;i<listWidget_DebugOut->count();i++)
     outstream << listWidget_DebugOut->item(i)->text() << "\n";
-  m_pTempFile->close();
+  pFTPTempFile->close();
 
-  QString qstrID = tr("%1DebugOut_%2_%3.txt").arg(DEBUG_DUMP_PATH).arg(QTime::currentTime().toString()).arg(QDate::currentDate().toString());
+  string strSourceName = string(pFTPTempFile->fileName().toAscii());
 
-  m_pDialog = new FTPDialog(string(m_pTempFile->fileName().toAscii()), DEBUG_DUMP_SERVER ,string(qstrID.toAscii()), this);
+  delete pFTPTempFile;
 
-  connect(m_pDialog, SIGNAL(TransferFailure()), this, SLOT(FtpFail()));
-  connect(m_pDialog, SIGNAL(TransferSuccess()), this, SLOT(FtpSuccess()));
+  QString qstrID = tr("DebugOut_%1_%2.txt").arg(QTime::currentTime().toString()).arg(QDate::currentDate().toString());
+  FtpTransfer(strSourceName, string(qstrID.toAscii()));
+}
 
-  m_pDialog->Start();
+bool MainWindow::FtpTransfer(string strSource, string strDest, bool bDeleteSource) {
+  if (!m_bFTPFinished) return false;
+  m_bFTPFinished = true;
+
+  if (m_pFTPDialog) {
+    disconnect(m_pFTPDialog, SIGNAL(TransferFailure()), this, SLOT(FtpFail()));
+    disconnect(m_pFTPDialog, SIGNAL(TransferSuccess()), this, SLOT(FtpSuccess()));
+    delete m_pFTPDialog;
+  }
+
+  m_bFTPDeleteSource = bDeleteSource;
+  string strFullDest = string(DEBUG_DUMP_PATH) + strDest;
+
+  m_pFTPDialog = new FTPDialog(strSource, DEBUG_DUMP_SERVER ,strFullDest, this);
+
+  connect(m_pFTPDialog, SIGNAL(TransferFailure()), this, SLOT(FtpFail()));
+  connect(m_pFTPDialog, SIGNAL(TransferSuccess()), this, SLOT(FtpSuccess()));
+
+  m_pFTPDialog->Start();
+
+  return true;
 }
 
 void MainWindow::FtpFail() {
-  if (m_pTempFile) {
-    m_pTempFile->remove();
-  }
+  if (SysTools::FileExists(m_strFTPTempFile) && m_bFTPDeleteSource) remove(m_strFTPTempFile.c_str());
   ShowInformationDialog("Transfer failed", "Transfer failed");
+  m_bFTPFinished = true;
 }
 
 void MainWindow::FtpSuccess() {
-  if (m_pTempFile) {
-    m_pTempFile->remove();
-  }
+  if (SysTools::FileExists(m_strFTPTempFile) && m_bFTPDeleteSource) remove(m_strFTPTempFile.c_str());
   ShowInformationDialog("Transfer successfull", "Transfer successfull");
+  m_bFTPFinished = true;
 }

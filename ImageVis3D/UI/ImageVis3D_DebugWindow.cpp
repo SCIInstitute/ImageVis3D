@@ -147,7 +147,7 @@ void MainWindow::ParseAndExecuteDebugCommand() {
   
   m_DebugOut->SetShowMessages(bTemp);
   if (listWidget_DebugOut->count() > 0) 
-    listWidget_DebugOut->setCurrentRow(listWidget_DebugOut->count());
+    listWidget_DebugOut->setCurrentRow(listWidget_DebugOut->count()-1);
 
   lineEdit_DebugCommand->clear();
 }

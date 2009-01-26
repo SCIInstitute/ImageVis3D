@@ -99,8 +99,10 @@ MainWindow::MainWindow(MasterController& masterController,
   m_iHttpGetId(-1),
   m_bStartupCheck(false),
   m_bScriptMode(bScriptMode),
-  m_pDialog(NULL),
-  m_pTempFile(NULL)
+  m_pFTPDialog(NULL),
+  m_strFTPTempFile(""),
+  m_bFTPDeleteSource(true),
+  m_bFTPFinished(true)  
 {
   RegisterCalls(m_MasterController.ScriptEngine());
 
@@ -159,7 +161,7 @@ MainWindow::~MainWindow()
   }
 
   delete m_pHttp;
-  delete m_pDialog;
+  delete m_pFTPDialog;
 }
 
 

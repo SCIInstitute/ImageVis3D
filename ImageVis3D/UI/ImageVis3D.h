@@ -324,10 +324,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool GetVersionsFromUpdateFile(const std::string& strFilename, float& fIV3DVersion, int& iIV3DSVNVersion, float& fTuvokVersion, int& iTuvokSVNVersion);
 
     // ftp
-    FTPDialog* m_pDialog;
-    QFile*     m_pTempFile;
-
-
+    FTPDialog*   m_pFTPDialog;
+    std::string  m_strFTPTempFile;
+    bool         m_bFTPDeleteSource;
+    bool         m_bFTPFinished;
+    bool         FtpTransfer(std::string strSource, std::string strDest, bool bDeleteSource = true);
 };
 
 #endif // IMAGEVIS3D_H

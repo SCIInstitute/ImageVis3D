@@ -64,6 +64,7 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "capturesingle", "targetfile", "capture a single image into targetfile");
   pScriptEngine->RegisterCommand(this, "capturesequence", "targetfile", "capture a single image into targetfile_counter");
   pScriptEngine->RegisterCommand(this, "stayopen", "", "do not close the app after the end of the script");
+  pScriptEngine->RegisterCommand(this, "upload", "source target yes/no", "upload the file 'source' to the debug server with the name 'target' the last parameter specifices whether the source file is deleted after the transfer is completed, as this call is non blocking it should aonly be called at the end of the script to avoid race conditions");
   pScriptEngine->RegisterCommand(this, "quit", "", "quit ImageVis3D");
 }
 
@@ -92,6 +93,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "capturesingle")   { bResult = CaptureFrame(strParams[0]); if (!bResult) {strMessage = "Unable to save file "+strParams[0];}} else
   if (strCommand == "capturesequence") { bResult = CaptureSequence(strParams[0]); if (!bResult) {strMessage = "Unable to save file "+strParams[0];}} else
   if (strCommand == "stayopen")        { m_bStayOpenAfterScriptEnd = true;} else
+  if (strCommand == "upload")          { bResult = FtpTransfer(strParams[0], strParams[1], SysTools::ToLowerCase(strParams[2]) == "yes" );} else
   if (strCommand == "quit")            { bResult = close();} else
     return false;
 
