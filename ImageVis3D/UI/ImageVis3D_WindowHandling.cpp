@@ -520,7 +520,10 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
 
 void MainWindow::RenderWindowActive(RenderWindow* sender) {
-  if (ActiveRenderWin() != sender) {
+  // to make sure we are only calling this code if the renderwindow changes and not just if the same window gets
+  // reactivated, keep track of the last active window
+  if (m_pLastActiveRenderWin != sender) {
+    m_pLastActiveRenderWin = sender;
     m_MasterController.DebugOut()->
       Message("MainWindow::RenderWindowActive",
         "ACK that %s is now active",
