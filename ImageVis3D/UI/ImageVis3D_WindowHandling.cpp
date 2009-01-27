@@ -511,7 +511,6 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
       }
     }
     QCoreApplication::processEvents();
-    RenderWindowActive(renderWin);
 #endif
   }
   
