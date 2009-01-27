@@ -74,4 +74,4 @@ SOURCES += UI/BrowseData.cpp \
 win32 {
   HEADERS += UI/RenderWindowDX.h
   SOURCES += UI/RenderWindowDX.cpp
- }
+}
