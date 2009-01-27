@@ -49,10 +49,6 @@
 #include <StdDefines.h>
 #include "RenderWindow.h"
 
-#include <windows.h>
-#include <d3d10.h>
-#include <d3dx10.h>
-
 class MainWindow;
 
 class RenderWindowDX : public QWidget, public RenderWindow
@@ -75,12 +71,6 @@ class RenderWindowDX : public QWidget, public RenderWindow
     virtual void ToggleFullscreen();
 
   private:
-    HINSTANCE               m_hInst;
-    D3D10_DRIVER_TYPE       m_driverType;
-    ID3D10Device*           m_pd3dDevice;
-    IDXGISwapChain*         m_pSwapChain;
-    ID3D10RenderTargetView* m_pRenderTargetView;
-
     virtual void InitializeRenderer();
 
   protected slots:

@@ -65,18 +65,13 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
                                QWidget* parent,
                                Qt::WindowFlags flags) :
   QWidget(parent, flags),
-  RenderWindow(masterController, eType, dataset, iCounter, parent),
-  m_hInst(NULL),
-  m_driverType(D3D10_DRIVER_TYPE_NULL),
-  m_pd3dDevice(NULL),
-  m_pSwapChain(NULL),
-  m_pRenderTargetView(NULL)
-
+  RenderWindow(masterController, eType, dataset, iCounter, parent)
 {  
   setBaseSize( sizeHint() );
   m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);
 
   if (m_Renderer) {
+    ((DXRenderer*)m_Renderer)->SetWinID(winId());
     m_Renderer->LoadDataset(m_strDataset.toStdString());
     InitializeRenderer();
     SetupArcBall();
@@ -86,6 +81,8 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
   setWindowTitle(m_strID);
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
+
+  InitializeRenderer();
 }
 
 RenderWindowDX::~RenderWindowDX() 
@@ -118,67 +115,7 @@ void RenderWindowDX::ToggleFullscreen() {
 }
 
 void RenderWindowDX::resizeEvent ( QResizeEvent * event ) {
-    HRESULT hr = S_OK;
-
-    UINT createDeviceFlags = 0;
-#ifdef _DEBUG
-    createDeviceFlags |= D3D10_CREATE_DEVICE_DEBUG;
-#endif
-
-    D3D10_DRIVER_TYPE driverTypes[] =
-    {
-        D3D10_DRIVER_TYPE_HARDWARE,
-        D3D10_DRIVER_TYPE_REFERENCE,
-    };
-    UINT numDriverTypes = sizeof( driverTypes ) / sizeof( driverTypes[0] );
-
-    DXGI_SWAP_CHAIN_DESC sd;
-    ZeroMemory( &sd, sizeof(sd) );
-    sd.BufferCount = 1;
-    sd.BufferDesc.Width = event->size().width();
-    sd.BufferDesc.Height = event->size().height();
-    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 60;
-    sd.BufferDesc.RefreshRate.Denominator = 1;
-    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = this->winId();
-    sd.SampleDesc.Count = 1;
-    sd.SampleDesc.Quality = 0;
-    sd.Windowed = TRUE;
-
-    for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
-    {
-        m_driverType = driverTypes[driverTypeIndex];
-        hr = D3D10CreateDeviceAndSwapChain( NULL, m_driverType, NULL, createDeviceFlags,
-                                            D3D10_SDK_VERSION, &sd, &m_pSwapChain, &m_pd3dDevice );
-        if( SUCCEEDED( hr ) )
-            break;
-    }
-    if( FAILED( hr ) )
-        return;  // TODO report failiure
-
-    // Create a render target view
-    ID3D10Texture2D* pBackBuffer;
-    hr = m_pSwapChain->GetBuffer( 0, __uuidof( ID3D10Texture2D ), ( LPVOID* )&pBackBuffer );
-    if( FAILED( hr ) )
-        return;  // TODO: report failiure
-
-    hr = m_pd3dDevice->CreateRenderTargetView( pBackBuffer, NULL, &m_pRenderTargetView );
-    pBackBuffer->Release();
-    if( FAILED( hr ) )
-        return;  // TODO: report failiure
-
-    m_pd3dDevice->OMSetRenderTargets( 1, &m_pRenderTargetView, NULL );
-
-    // Setup the viewport
-    D3D10_VIEWPORT vp;
-    vp.Width = event->size().width();
-    vp.Height = event->size().height();
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    m_pd3dDevice->RSSetViewports( 1, &vp );
+  ResizeRenderer(event->size().width(), event->size().height());
 }
 
 #endif // _WIN32 && USE_DIRECTX

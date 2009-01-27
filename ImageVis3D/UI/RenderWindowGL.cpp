@@ -74,7 +74,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
 
 RenderWindowGL::~RenderWindowGL() 
 {
-  makeCurrent();
+  makeCurrent(); // call makeCurrent here for the cleanup call in the parent destructor to work properly
 }
 
 void RenderWindowGL::InitializeRenderer()
