@@ -40,6 +40,7 @@
 #include "RenderWindowGL.h"
 #include "RenderWindowDX.h"
 
+
 #include <QtCore/QTimer>
 #include <QtGui/QMdiSubWindow>
 #include <QtGui/QFileDialog>
@@ -811,3 +812,27 @@ void MainWindow::ShowInformationDialog(QString strTitle, QString strMessage) {
 void MainWindow::ShowWarningDialog(QString strTitle, QString strMessage) {
   if (!m_bScriptMode) QMessageBox::warning(this, strTitle, strMessage);
 }
+
+void MainWindow::ShowWelcomeScreen() {
+  QSize qSize = this->size(); 
+  QPoint qPos = this->pos(); 
+  QSize qWelcomeSize = m_pWelcomeDialog->size();
+  QSize qTmp =  (qSize - qWelcomeSize) / 2.0f;
+  QPoint qNewWelcomePos(qTmp.width(), qTmp.height());
+  m_pWelcomeDialog->move(qPos+qNewWelcomePos );
+
+
+  m_pWelcomeDialog->SetShowAtStartup(m_bShowWelcomeScreen);
+  m_pWelcomeDialog->ClearMRUItems();
+
+  QSettings settings;
+  QStringList files = settings.value("Menu/MRU").toStringList();
+  int numRecentFiles = qMin(files.size(), (int)ms_iMaxRecentFiles);
+  for (int i = 0; i < numRecentFiles; ++i) {
+    QString text = tr("%1").arg(QFileInfo(files[i]).fileName());
+    m_pWelcomeDialog->AddMRUItem(string(text.toAscii()), string(files[i].toAscii()));
+  }
+ 
+  m_pWelcomeDialog->show();
+}
+

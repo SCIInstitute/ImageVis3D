@@ -100,8 +100,11 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout" />
+    <addaction name="actionWelcome_Screen" />
     <addaction name="separator" />
     <addaction name="actionOpen_Online_Help" />
+    <addaction name="actionOpen_Online_Video_Tutorials" />
+    <addaction name="separator" />
     <addaction name="actionCheck_for_Updates" />
    </widget>
    <widget class="QMenu" name="menu_Edit" >
@@ -4029,6 +4032,16 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <string>Check for Updates</string>
    </property>
   </action>
+  <action name="actionOpen_Online_Video_Tutorials" >
+   <property name="text" >
+    <string>Open Online Video Tutorials</string>
+   </property>
+  </action>
+  <action name="actionWelcome_Screen" >
+   <property name="text" >
+    <string>Welcome Screen</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="0" />
  <tabstops>
@@ -5574,6 +5587,54 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionOpen_Online_Help</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>OnlineHelp()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>646</x>
+     <y>965</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionOpen_Online_Video_Tutorials</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>OnlineVideoTut()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>646</x>
+     <y>965</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionWelcome_Screen</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ShowWelcomeScreen()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>646</x>
+     <y>965</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -5644,5 +5705,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>PreserveTransparencyChanged()</slot>
   <slot>UploadLogToServer()</slot>
   <slot>ToggleFullscreen()</slot>
+  <slot>OnlineHelp()</slot>
+  <slot>OnlineVideoTut()</slot>
+  <slot>ShowWelcomeScreen()</slot>
  </slots>
 </ui>

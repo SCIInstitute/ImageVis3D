@@ -88,6 +88,7 @@ bool MainWindow::ShowSettings() {
       bool bAbsoluteViewLocks = settings.value("AbsoluteViewLocks", m_bAbsoluteViewLocks).toBool();
       bool bCheckForUpdatesOnStartUp = settings.value("CheckForUpdatesOnStartUp", m_bCheckForUpdatesOnStartUp).toBool();
       bool bCheckForDevBuilds = settings.value("CheckForDevBuilds", m_bCheckForDevBuilds).toBool();
+      bool bShowWelcomeScreen = settings.value("ShowWelcomeScreen", m_bShowWelcomeScreen).toBool();
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -122,7 +123,7 @@ bool MainWindow::ShowSettings() {
                             bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS,
                             bShowVersionInTitle,
                             bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
-                            bCheckForUpdatesOnStartUp, bCheckForDevBuilds,
+                            bCheckForUpdatesOnStartUp, bCheckForDevBuilds, bShowWelcomeScreen,
                             iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
                             bDisableBorder, bAvoidCompositing,
                             vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
@@ -152,6 +153,7 @@ bool MainWindow::ShowSettings() {
       settings.setValue("AbsoluteViewLocks", settingsDlg.GetAbsoluteViewLocks());
       settings.setValue("CheckForUpdatesOnStartUp", settingsDlg.GetCheckForUpdatesOnStartUp());
       settings.setValue("CheckForDevBuilds", settingsDlg.GetCheckForDevBuilds());
+      settings.setValue("ShowWelcomeScreen", settingsDlg.GetShowWelcomeScreen());
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -208,6 +210,8 @@ void MainWindow::ApplySettings() {
   m_bAbsoluteViewLocks = settings.value("AbsoluteViewLocks", m_bAbsoluteViewLocks).toBool();
   m_bCheckForUpdatesOnStartUp = settings.value("CheckForUpdatesOnStartUp", m_bCheckForUpdatesOnStartUp).toBool();
   m_bCheckForDevBuilds = settings.value("CheckForDevBuilds", m_bCheckForDevBuilds).toBool();
+  m_bShowWelcomeScreen = settings.value("ShowWelcomeScreen", m_bShowWelcomeScreen).toBool();
+
   settings.endGroup();
 
   settings.beginGroup("Renderer");

@@ -28,7 +28,8 @@ HEADERS += StdDefines.h \
            UI/RenderWindow.h \
            UI/RenderWindowGL.h \
            UI/RAWDialog.h \
-           UI/MIPRotDialog.h \           
+           UI/MIPRotDialog.h \ 
+           UI/Welcome.h \                     
            DebugOut/QTOut.h \
            DebugOut/QTLabelOut.h \
            IO/DialogConverter.h
@@ -39,6 +40,7 @@ FORMS += UI/UI/BrowseData.ui \
          UI/UI/SettingsDlg.ui \
          UI/UI/RAWDialog.ui \
          UI/UI/FTPDialog.ui \
+         UI/UI/Welcome.ui \
          UI/UI/MIPRotDialog.ui
 
 SOURCES += UI/BrowseData.cpp \
@@ -56,6 +58,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/ImageVis3D_Scripting.cpp \
            UI/ImageVis3D_Help.cpp \
            UI/PleaseWait.cpp \
+           UI/Welcome.cpp \
            UI/FTPDialog.cpp \
            UI/QTransferFunction.cpp \
            UI/Q1DTransferFunction.cpp \
@@ -70,6 +73,9 @@ SOURCES += UI/BrowseData.cpp \
            DebugOut/QTLabelOut.cpp \
            IO/DialogConverter.cpp \
            main.cpp
+
+
+RESOURCES = ImageVis3D.qrc
 
 win32 {
   HEADERS += UI/RenderWindowDX.h

@@ -1,0 +1,360 @@
+<ui version="4.0" >
+ <class>Welcome</class>
+ <widget class="QDialog" name="Welcome" >
+  <property name="windowModality" >
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="sizePolicy" >
+   <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle" >
+   <string>Welcome To ImageVis3D</string>
+  </property>
+  <property name="locale" >
+   <locale country="UnitedStates" language="English" />
+  </property>
+  <property name="sizeGripEnabled" >
+   <bool>false</bool>
+  </property>
+  <property name="modal" >
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QLabel" name="label" >
+     <property name="minimumSize" >
+      <size>
+       <width>0</width>
+       <height>150</height>
+      </size>
+     </property>
+     <property name="maximumSize" >
+      <size>
+       <width>16777215</width>
+       <height>150</height>
+      </size>
+     </property>
+     <property name="font" >
+      <font>
+       <pointsize>30</pointsize>
+      </font>
+     </property>
+     <property name="text" >
+      <string>Welcome To ImageVis3D</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame" >
+     <property name="frameShape" >
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth" >
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QGroupBox" name="groupBox_OpenFile" >
+        <property name="title" >
+         <string>Open a File</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_OpenFile" >
+         <item>
+          <widget class="QPushButton" name="pushButton_OpenFromFile" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Open Data Set from File</string>
+           </property>
+           <property name="autoDefault" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_OpenFromDirectoy" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Open Data Set from a Directory</string>
+           </property>
+           <property name="autoDefault" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>20</width>
+             <height>180</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_2" >
+        <property name="title" >
+         <string>Get Help</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2" >
+         <item>
+          <widget class="QPushButton" name="pushButton_GotoOnlineHelp" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Goto Online Help</string>
+           </property>
+           <property name="autoDefault" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_OnlineVideoTutorials" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Goto Online Video Tutorials</string>
+           </property>
+           <property name="autoDefault" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_CheckForNewVersion" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Check for new Version</string>
+           </property>
+           <property name="autoDefault" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame_2" >
+     <property name="frameShape" >
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth" >
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="checkBox_ShowAtStartup" >
+        <property name="text" >
+         <string>Do not show this dialog box at startup (can also be changed in the preferences)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_Close" >
+        <property name="minimumSize" >
+         <size>
+          <width>0</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="text" >
+         <string>Close</string>
+        </property>
+        <property name="autoDefault" >
+         <bool>false</bool>
+        </property>
+        <property name="default" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_CheckForNewVersion</sender>
+   <signal>clicked()</signal>
+   <receiver>Welcome</receiver>
+   <slot>CheckUpdates()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>502</x>
+     <y>418</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>635</x>
+     <y>387</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_OnlineVideoTutorials</sender>
+   <signal>clicked()</signal>
+   <receiver>Welcome</receiver>
+   <slot>OnlineVideoTut()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>458</x>
+     <y>232</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>635</x>
+     <y>192</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_GotoOnlineHelp</sender>
+   <signal>clicked()</signal>
+   <receiver>Welcome</receiver>
+   <slot>OnlineHelp()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>516</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>634</x>
+     <y>68</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_OpenFromDirectoy</sender>
+   <signal>clicked()</signal>
+   <receiver>Welcome</receiver>
+   <slot>OpenFromDir()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>213</x>
+     <y>226</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>635</x>
+     <y>223</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_OpenFromFile</sender>
+   <signal>clicked()</signal>
+   <receiver>Welcome</receiver>
+   <slot>OpenFromFile()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>208</x>
+     <y>197</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>379</x>
+     <y>442</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Close</sender>
+   <signal>clicked()</signal>
+   <receiver>Welcome</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>573</x>
+     <y>454</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>465</x>
+     <y>475</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>CheckUpdates()</slot>
+  <slot>OnlineHelp()</slot>
+  <slot>OnlineVideoTut()</slot>
+  <slot>OpenFromFile()</slot>
+  <slot>OpenFromDir()</slot>
+  <signal>CheckUpdatesClicked()</signal>
+  <signal>OnlineHelpClicked()</signal>
+  <signal>OnlineVideoTutClicked()</signal>
+  <signal>OpenFromFileClicked()</signal>
+  <signal>OpenFromDirClicked()</signal>
+ </slots>
+</ui>

@@ -39,7 +39,6 @@
 #include "BrowseData.h"
 #include "FTPDialog.h"
 
-#include <QtCore/QTimer>
 #include <QtCore/QSettings>
 #include <QtCore/QFileInfo>
 
@@ -69,6 +68,7 @@ MainWindow::MainWindow(MasterController& masterController,
            Qt::WindowFlags flags /* = 0 */) :
 
   QMainWindow(parent, flags),
+  m_pRedrawTimer(NULL),
   m_MasterController(masterController),
   m_strCurrentWorkspaceFilename(""),
   m_bShowVersionInTitle(true),
@@ -77,6 +77,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_iLODDelay(1000),
   m_iActiveTS(500),
   m_iInactiveTS(100),
+  m_pWelcomeDialog(new WelcomeDialog(this)),
   m_iBlendPrecisionMode(0),
   m_bPowerOfTwo(true),
   m_bDownSampleTo8Bits(false),
@@ -102,7 +103,8 @@ MainWindow::MainWindow(MasterController& masterController,
   m_pFTPDialog(NULL),
   m_strFTPTempFile(""),
   m_bFTPDeleteSource(true),
-  m_bFTPFinished(true)  
+  m_bFTPFinished(true),
+  m_bShowWelcomeScreen(true)
 {
   RegisterCalls(m_MasterController.ScriptEngine());
 
@@ -130,15 +132,25 @@ MainWindow::MainWindow(MasterController& masterController,
   UpdateMRUActions();
   UpdateMenus();
 
-  QTimer *timer = new QTimer(this);
-  connect(timer, SIGNAL(timeout()), this, SLOT(CheckForRedraw()));
-  timer->start(10);
+  m_pRedrawTimer = new QTimer(this);
+  connect(m_pRedrawTimer, SIGNAL(timeout()), this, SLOT(CheckForRedraw()));
+  m_pRedrawTimer->start(10);
+
 
   CheckSettings();
   ClearProgressView();
   
   if (m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
 
+  connect(m_pWelcomeDialog, SIGNAL(CheckUpdatesClicked()),   this, SLOT(CheckForUpdates()));
+  connect(m_pWelcomeDialog, SIGNAL(OnlineVideoTutClicked()), this, SLOT(OnlineVideoTut()));
+  connect(m_pWelcomeDialog, SIGNAL(OnlineHelpClicked()),     this, SLOT(OnlineHelp()));
+  connect(m_pWelcomeDialog, SIGNAL(OpenFromFileClicked()),   this, SLOT(LoadDataset()));
+  connect(m_pWelcomeDialog, SIGNAL(OpenFromFileClicked(std::string)),   this, SLOT(LoadDataset(std::string)));
+  connect(m_pWelcomeDialog, SIGNAL(OpenFromDirClicked()),    this, SLOT(LoadDirectory()));
+  connect(m_pWelcomeDialog, SIGNAL(accepted()),              this, SLOT(CloseWelcome()));
+  
+  if (!m_bScriptMode && m_bShowWelcomeScreen) ShowWelcomeScreen();
 }
 
 MainWindow::~MainWindow()
@@ -162,6 +174,8 @@ MainWindow::~MainWindow()
 
   delete m_pHttp;
   delete m_pFTPDialog;
+  m_pRedrawTimer->stop();
+  delete m_pRedrawTimer;
 }
 
 

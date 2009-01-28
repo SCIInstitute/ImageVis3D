@@ -48,6 +48,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTextStream>
+#include <QtCore/QSettings>
 
 #include "FTPDialog.h"
 #include "../Tuvok/Basics/SysTools.h"
@@ -72,6 +73,7 @@ void MainWindow::QuietCheckForUpdates() {
   m_bStartupCheck = true;
   CheckForUpdatesInternal();
 }
+
 
 void MainWindow::CheckForUpdates() {
   m_bStartupCheck = false;
@@ -238,3 +240,35 @@ void MainWindow::FtpSuccess() {
   ShowInformationDialog("Transfer successfull", "Transfer successfull");
   m_bFTPFinished = true;
 }
+
+void MainWindow::OnlineHelp() {
+#ifdef TUVOK_OS_WINDOWS
+  ShellExecuteA(NULL, "open", HELP_URL, NULL,NULL,SW_SHOWDEFAULT);
+#endif
+#ifdef TUVOK_OS_APPLE
+  system("start "HELP_URL);
+#endif
+#ifdef TUVOK_OS_UNIX
+  system("firefox "HELP_URL);  // TODO: Tom: instead of hoping for firefox to be installed integrate this into the UI
+#endif
+}
+
+void MainWindow::OnlineVideoTut() {
+#ifdef TUVOK_OS_WINDOWS
+  ShellExecuteA(NULL, "open", TUTORIAL_URL, NULL,NULL,SW_SHOWDEFAULT);
+#endif
+#ifdef TUVOK_OS_APPLE
+  system("start "TUTORIAL_URL);
+#endif
+#ifdef TUVOK_OS_UNIX
+  system("firefox "TUTORIAL_URL); // TODO: Tom: instead of hoping for firefox to be installed integrate this into the UI
+#endif
+}
+
+void MainWindow::CloseWelcome() {
+  if (m_pWelcomeDialog->ShowAtStartup() != m_bShowWelcomeScreen) {
+    QSettings settings;
+    settings.setValue("UI/ShowWelcomeScreen", m_pWelcomeDialog->ShowAtStartup());
+  }
+}
+

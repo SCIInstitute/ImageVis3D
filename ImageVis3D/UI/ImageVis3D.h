@@ -53,6 +53,9 @@
 #include "Q2DTransferFunction.h"
 #include "DebugOut/QTOut.h"
 #include <UI/SettingsDlg.h>
+#include <UI/Welcome.h>
+
+#include <QtCore/QTimer>
 
 #include <string>
 #include <vector>
@@ -97,11 +100,15 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void CaptureSequence();
     void CaptureRotation();
     void LoadDataset();
+    void LoadDataset(std::string strFilename) {LoadDataset(QString(strFilename.c_str()));}
     void LoadDirectory();
     void CloseCurrentView();
     void ResizeCurrentView(int iSizeX, int iSizeY);
     void CloneCurrentView();
     void CheckForUpdates();
+    void OnlineHelp();
+    void OnlineVideoTut();
+    void CloseWelcome();
 
     void ToggleRenderWindowView2x2();
     void ToggleRenderWindowViewSingle();
@@ -207,7 +214,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ShowIsoEdit();
     void PreserveTransparencyChanged();
 
+    void ShowWelcomeScreen();
+
   private :
+    QTimer*                                   m_pRedrawTimer;
     MasterController&                         m_MasterController;
     QString                                   m_strCurrentWorkspaceFilename;
     Q1DTransferFunction*                      m_1DTransferFunction;
@@ -224,6 +234,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     unsigned int                              m_iLODDelay;
     unsigned int                              m_iActiveTS;
     unsigned int                              m_iInactiveTS;
+    WelcomeDialog*                            m_pWelcomeDialog;
 
     unsigned int                              m_iBlendPrecisionMode;
     bool                                      m_bPowerOfTwo;
@@ -240,6 +251,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool                                      m_bAbsoluteViewLocks;
     bool                                      m_bCheckForUpdatesOnStartUp;
     bool                                      m_bCheckForDevBuilds;
+    bool                                      m_bShowWelcomeScreen;
     
     bool                                      m_bStayOpenAfterScriptEnd;
 

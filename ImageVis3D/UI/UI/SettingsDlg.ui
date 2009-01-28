@@ -8,7 +8,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>358</width>
+    <width>359</width>
     <height>503</height>
    </rect>
   </property>
@@ -547,6 +547,13 @@
            <widget class="QCheckBox" name="checkBox_ShowVersionInTitle" >
             <property name="text" >
              <string>Show version in title</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2" >
+           <widget class="QCheckBox" name="checkBox_ShowWelcomeScreen" >
+            <property name="text" >
+             <string>Welcome screen at startup</string>
             </property>
            </widget>
           </item>
