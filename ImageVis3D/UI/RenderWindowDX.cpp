@@ -37,13 +37,6 @@
 
 #if defined(_WIN32) && defined(USE_DIRECTX)
 
-#pragma comment( lib, "d3d10.lib" )
-#ifdef _DEBUG
-  #pragma comment( lib, "d3dx10d.lib" )
-#else
-  #pragma comment( lib, "d3dx10.lib" )
-#endif
-
 
 #include "RenderWindowDX.h"
 #include "ImageVis3D.h"
@@ -71,18 +64,16 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
   m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);
 
   if (m_Renderer) {
-    ((DXRenderer*)m_Renderer)->SetWinID(winId());
+    ((DXRenderer*)m_Renderer)->SetWinID(parent->winId());  // hand over the handle of the window we are sitting in not the widget inside the window
     m_Renderer->LoadDataset(m_strDataset.toStdString());
     InitializeRenderer();
     SetupArcBall();
-  } m_bRenderSubsysOK = false;
+  } else m_bRenderSubsysOK = false;
 
   setObjectName("RenderWindowDX");  // this is used by WidgetToRenderWin() to detect the type
   setWindowTitle(m_strID);
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
-
-  InitializeRenderer();
 }
 
 RenderWindowDX::~RenderWindowDX() 
