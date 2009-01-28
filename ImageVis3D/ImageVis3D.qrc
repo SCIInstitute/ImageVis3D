@@ -1,5 +1,9 @@
  <!DOCTYPE RCC><RCC version="1.0">
  <qresource>
    <file>Resources/imagevis3dmini.png</file>
+   <file>Resources/imagevis3d.png</file>
+   <file>Resources/icon_16.png</file>
+   <file>Resources/icon_32.png</file>
+   <file>Resources/icon_64.png</file>
  </qresource>
  </RCC>

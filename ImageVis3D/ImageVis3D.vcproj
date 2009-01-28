@@ -819,6 +819,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Build\rcc\qrc_ImageVis3D.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\UI\AutoGen\ui_BrowseData.h"
 					>
 				</File>

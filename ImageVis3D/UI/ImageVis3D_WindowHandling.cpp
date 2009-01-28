@@ -210,6 +210,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     menuLast_Used_Projects->addAction(m_recentFileActs[i]);
   }
 
+  setWindowIcon(QIcon(QPixmap::fromImage(QImage(":/Resources/icon_16.png"))));
+
   // this widget is used to share the contexts amongst the render windows
   QGLFormat fmt;
   fmt.setAlpha(true);
@@ -833,6 +835,7 @@ void MainWindow::ShowWelcomeScreen() {
     m_pWelcomeDialog->AddMRUItem(string(text.toAscii()), string(files[i].toAscii()));
   }
  
+  m_pWelcomeDialog->setWindowIcon(windowIcon());
   m_pWelcomeDialog->show();
 }
 

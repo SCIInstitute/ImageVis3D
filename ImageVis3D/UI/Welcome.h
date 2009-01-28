@@ -62,8 +62,8 @@ class WelcomeDialog : public QDialog, protected Ui_Welcome
   
     void ClearMRUItems();
     void AddMRUItem(std::string strDesc, std::string strFilename);
-    void SetShowAtStartup(bool bShow) {checkBox_ShowAtStartup->setChecked(bShow);}
-    bool ShowAtStartup() const {return checkBox_ShowAtStartup->isChecked();}
+    void SetShowAtStartup(bool bShow) {checkBox_ShowAtStartup->setChecked(!bShow);}
+    bool ShowAtStartup() const {return !checkBox_ShowAtStartup->isChecked();}
 
   protected slots:
     virtual void CheckUpdates();

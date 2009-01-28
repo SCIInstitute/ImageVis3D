@@ -41,6 +41,7 @@ WelcomeDialog::WelcomeDialog(QWidget* parent, Qt::WindowFlags flags /* = 0 */) :
   QDialog(parent, flags)
 {
   setupUi(this);
+  label_logo->setPixmap(QPixmap::fromImage(QImage(":/Resources/imagevis3dmini.png")));
 }
 
 WelcomeDialog::~WelcomeDialog(void)
