@@ -43,6 +43,10 @@
 #include "../Tuvok/DebugOut/TextfileOut.h"
 #include "../Tuvok/DebugOut/MultiplexOut.h"
 
+#if defined(_WIN32) && defined(USE_DIRECTX)
+  #include "../Tuvok/Basics/DynamicDX.h"
+#endif
+
 /*
 #ifdef _WIN32
   // CRT's memory leak detection on windows
@@ -54,6 +58,10 @@
 
 int main(int argc, char* argv[])
 {
+  #if defined(_WIN32) && defined(USE_DIRECTX)
+    DynamicDX::InitializeDX();
+  #endif
+
   /*
   // Enable run-time memory check for debug builds on windows
   #ifdef _WIN32
@@ -113,4 +121,8 @@ int main(int argc, char* argv[])
   }
 
   return app.exec();
+
+  #if defined(_WIN32) && defined(USE_DIRECTX)
+    DynamicDX::InitializeDX();
+  #endif
 }
