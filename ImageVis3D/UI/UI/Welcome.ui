@@ -218,9 +218,22 @@
       <item>
        <widget class="QCheckBox" name="checkBox_ShowAtStartup" >
         <property name="text" >
-         <string>Do not show this dialog box at startup (can also be changed in the preferences)</string>
+         <string>Do not show this welcome screen at startup (can also be changed in the preferences)</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_Close" >

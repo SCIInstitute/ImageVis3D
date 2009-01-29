@@ -816,13 +816,15 @@ void MainWindow::ShowWarningDialog(QString strTitle, QString strMessage) {
 }
 
 void MainWindow::ShowWelcomeScreen() {
+/*
+  // This code should center the window in its parent, but for now we just let QT decide where to put the window
   QSize qSize = this->size(); 
   QPoint qPos = this->pos(); 
   QSize qWelcomeSize = m_pWelcomeDialog->size();
   QSize qTmp =  (qSize - qWelcomeSize) / 2.0f;
   QPoint qNewWelcomePos(qTmp.width(), qTmp.height());
   m_pWelcomeDialog->move(qPos+qNewWelcomePos );
-
+*/
 
   m_pWelcomeDialog->SetShowAtStartup(m_bShowWelcomeScreen);
   m_pWelcomeDialog->ClearMRUItems();
