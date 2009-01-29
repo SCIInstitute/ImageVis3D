@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -106,7 +106,7 @@ void MainWindow::CheckForUpdatesInternal() {
   m_pHttp->setHost(url.host(), mode, url.port() == -1 ? 0 : url.port());
   if (!url.userName().isEmpty()) m_pHttp->setUser(url.userName(), url.password());
 
-  QString strUpdateFile = tr("%1/ImageVis3D_UpdateCheck_Temp").arg(QDir::tempPath());  
+  QString strUpdateFile = tr("%1/ImageVis3D_UpdateCheck_Temp").arg(QDir::tempPath());
 
   m_pUpdateFile = new QTemporaryFile(strUpdateFile);
   QByteArray remotePath = QUrl::toPercentEncoding(url.path(), "!$&'()*+,;=:@/");
@@ -171,7 +171,7 @@ void MainWindow::readResponseHeader(const QHttpResponseHeader &responseHeader) {
 
 bool MainWindow::GetVersionsFromUpdateFile(const string& strFilename, float& fIV3DVersion, int& iIV3DSVNVersion, float& fTuvokVersion, int& iTuvokSVNVersion) {
   string line ="";
-  ifstream updateFile(strFilename.c_str(),ios::binary);  
+  ifstream updateFile(strFilename.c_str(),ios::binary);
 
   if (updateFile.is_open())
   {

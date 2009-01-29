@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -63,7 +63,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   RenderWindow(masterController, eType, dataset, iCounter, parent)
 {
   m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);
-  m_Renderer->LoadDataset(m_strDataset.toStdString());  
+  m_Renderer->LoadDataset(m_strDataset.toStdString());
   SetupArcBall();
 
   setObjectName("RenderWindowGL");  // this is used by WidgetToRenderWin() to detect the type
@@ -72,7 +72,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   setMouseTracking(true);
 }
 
-RenderWindowGL::~RenderWindowGL() 
+RenderWindowGL::~RenderWindowGL()
 {
   makeCurrent(); // call makeCurrent here for the cleanup call in the parent destructor to work properly
 }
@@ -101,9 +101,9 @@ void RenderWindowGL::InitializeRenderer()
       bool bOpenGL3DT  = glewGetExtension("GL_EXT_texture3D");
       bool bOpenGLFBO  = glewGetExtension("GL_EXT_framebuffer_object");
 
-      if (bOpenGL3DT) { 
+      if (bOpenGL3DT) {
         GLint iMax3DTexDims;
-        glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE_EXT, &iMax3DTexDims);        
+        glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE_EXT, &iMax3DTexDims);
         ms_iMax3DTexDims = iMax3DTexDims;
       }
 
@@ -117,17 +117,17 @@ void RenderWindowGL::InitializeRenderer()
           m_MasterController.DebugOut()->Warning("RenderWindowGL::InitializeRenderer", "Maximum supported texture size (%i) is smaller than required by the IO subsystem (%i).", ms_iMax3DTexDims, int(BRICKSIZE));
         } else {
           m_MasterController.DebugOut()->Message("RenderWindowGL::InitializeRenderer", "Maximum supported texture size %i (required by the IO subsystem %i).", ms_iMax3DTexDims, int(BRICKSIZE));
-        } 
+        }
 
         m_bRenderSubsysOK = true;
-      } else {      
+      } else {
         m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "Insufficient OpenGL support:");
-     
+
         if (!bOpenGLSO) m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "OpenGL shader objects not suported (GL_ARB_shader_objects)");
         if (!bOpenGLSL) m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "OpenGL shading language version 1.0 not suported (GL_ARB_shading_language_100)");
         if (!bOpenGL3DT) m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "OpenGL 3D textures not suported (GL_EXT_texture3D)");
         if (!bOpenGLFBO) m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "OpenGL framebuffer objects not suported (GL_EXT_framebuffer_object)");
-        
+
         m_bRenderSubsysOK = false;
       }
     }
@@ -135,7 +135,7 @@ void RenderWindowGL::InitializeRenderer()
     bFirstTime = false;
   }
 
-  if (m_Renderer == NULL) 
+  if (m_Renderer == NULL)
     m_bRenderSubsysOK = false;
   else
     m_bRenderSubsysOK = m_Renderer->Initialize();
@@ -145,7 +145,7 @@ void RenderWindowGL::InitializeRenderer()
     m_Renderer->Cleanup();
     m_MasterController.ReleaseVolumerenderer(m_Renderer);
     m_Renderer = NULL;
-  } 
+  }
 }
 
 void RenderWindowGL::ForceRepaint() {
