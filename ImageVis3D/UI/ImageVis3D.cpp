@@ -93,6 +93,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bAbsoluteViewLocks(true),
   m_bCheckForUpdatesOnStartUp(false),
   m_bCheckForDevBuilds(false),
+  m_bShowWelcomeScreen(true),
   m_bStayOpenAfterScriptEnd(false),
   m_pLastActiveRenderWin(false),
   m_pHttp(NULL),
@@ -103,8 +104,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_pFTPDialog(NULL),
   m_strFTPTempFile(""),
   m_bFTPDeleteSource(true),
-  m_bFTPFinished(true),
-  m_bShowWelcomeScreen(true)
+  m_bFTPFinished(true)
 {
   RegisterCalls(m_MasterController.ScriptEngine());
 
