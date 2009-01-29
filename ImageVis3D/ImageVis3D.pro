@@ -13,6 +13,9 @@ DEPENDPATH       += .
 INCLUDEPATH      += .
 QT               += opengl network
 LIBS              = -L../Tuvok/Build -lTuvok
+RESOURCES         = ImageVis3D.qrc
+RC_FILE 	  = Resources/ImageVis3D.rc
+ICON              = Resources/ImageVis3D.icns
 
 # Input
 HEADERS += StdDefines.h \
@@ -75,7 +78,7 @@ SOURCES += UI/BrowseData.cpp \
            main.cpp
 
 
-RESOURCES = ImageVis3D.qrc
+
 
 win32 {
   HEADERS += UI/RenderWindowDX.h

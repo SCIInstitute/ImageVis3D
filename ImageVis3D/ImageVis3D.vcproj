@@ -708,11 +708,39 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Resources\icon_16.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\icon_32.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\icon_64.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\ImageVis3D.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\imagevis3d.png"
+				>
+			</File>
+			<File
 				RelativePath=".\ImageVis3D.pro"
 				>
 			</File>
 			<File
 				RelativePath=".\ImageVis3D.qrc"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\ImageVis3D.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\imagevis3dmini.png"
 				>
 			</File>
 			<File
