@@ -20,7 +20,7 @@ if ! test -d "${PREFIX}" ; then
 fi
 
 echo "Copying Shaders ..."
-rm -fr "${PREFIX}/Contents/Resources"
+rm -f "${PREFIX}/Contents/Resources/*.glsl"
 mkdir -p "${PREFIX}/Contents/Resources"
 cp tuvok/Shaders/* "${PREFIX}/Contents/Resources"
 
