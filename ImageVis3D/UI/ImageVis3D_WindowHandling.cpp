@@ -748,6 +748,8 @@ void MainWindow::ClearMRUList()
 
 void MainWindow::AddFileToMRUList(const QString &fileName)
 {
+  if (m_bScriptMode || fileName == "") return;
+
   QSettings settings;
   QStringList files = settings.value("Menu/MRU").toStringList();
 
