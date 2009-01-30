@@ -61,7 +61,7 @@
   #define UPDATE_VERSION_FILE "OSX_Latest_Version.txt"
 #endif
 
-#ifdef TUVOK_OS_UNIX
+#ifdef TUVOK_OS_LINUX
   #define UPDATE_FILE "ImageVis3D-Linux-Latest.zip"
   #define UPDATE_VERSION_FILE "Linux_Latest_Version.txt"
 #endif

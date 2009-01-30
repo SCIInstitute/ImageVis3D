@@ -259,7 +259,7 @@ void MainWindow::OnlineHelp() {
 #ifdef TUVOK_OS_APPLE
   system("start "HELP_URL);
 #endif
-#ifdef TUVOK_OS_UNIX
+#ifdef TUVOK_OS_LINUX
   system("firefox "HELP_URL);  // TODO: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif
 }
@@ -271,7 +271,7 @@ void MainWindow::OnlineVideoTut() {
 #ifdef TUVOK_OS_APPLE
   system("start "TUTORIAL_URL);
 #endif
-#ifdef TUVOK_OS_UNIX
+#ifdef TUVOK_OS_LINUX
   system("firefox "TUTORIAL_URL); // TODO: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif
 }

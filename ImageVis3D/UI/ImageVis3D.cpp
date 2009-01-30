@@ -525,6 +525,9 @@ void MainWindow::ToggleFullscreen() {
 
 
 RenderWindow* MainWindow::ActiveRenderWin() {
+#ifdef TUVOK_OS_LINUX
+  QCoreApplication::processEvents();
+#endif
   if (mdiArea->activeSubWindow()) 
     return WidgetToRenderWin(mdiArea->activeSubWindow()->widget()); 
   else
