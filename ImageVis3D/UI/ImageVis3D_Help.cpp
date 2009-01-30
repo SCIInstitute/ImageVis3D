@@ -254,7 +254,7 @@ void MainWindow::FtpSuccess() {
 
 void MainWindow::OnlineHelp() {
 #ifdef TUVOK_OS_WINDOWS
-  ShellExecuteA(NULL, "start", HELP_URL, NULL,NULL,SW_SHOWDEFAULT);
+  ShellExecuteA(NULL, "open", HELP_URL, NULL,NULL,SW_SHOWDEFAULT);
 #endif
 #ifdef TUVOK_OS_APPLE
   system("open "HELP_URL);
@@ -266,7 +266,7 @@ void MainWindow::OnlineHelp() {
 
 void MainWindow::OnlineVideoTut() {
 #ifdef TUVOK_OS_WINDOWS
-  ShellExecuteA(NULL, "start", TUTORIAL_URL, NULL,NULL,SW_SHOWDEFAULT);
+  ShellExecuteA(NULL, "open", TUTORIAL_URL, NULL,NULL,SW_SHOWDEFAULT);
 #endif
 #ifdef TUVOK_OS_APPLE
   system("open "TUTORIAL_URL);
