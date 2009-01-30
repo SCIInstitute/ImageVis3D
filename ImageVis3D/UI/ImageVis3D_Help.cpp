@@ -254,25 +254,25 @@ void MainWindow::FtpSuccess() {
 
 void MainWindow::OnlineHelp() {
 #ifdef TUVOK_OS_WINDOWS
-  ShellExecuteA(NULL, "open", HELP_URL, NULL,NULL,SW_SHOWDEFAULT);
+  ShellExecuteA(NULL, "start", HELP_URL, NULL,NULL,SW_SHOWDEFAULT);
 #endif
 #ifdef TUVOK_OS_APPLE
-  system("start "HELP_URL);
+  system("open "HELP_URL);
 #endif
 #ifdef TUVOK_OS_LINUX
-  system("firefox "HELP_URL);  // TODO: Tom: instead of hoping for firefox to be installed integrate this into the UI
+  system("firefox "HELP_URL);  /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif
 }
 
 void MainWindow::OnlineVideoTut() {
 #ifdef TUVOK_OS_WINDOWS
-  ShellExecuteA(NULL, "open", TUTORIAL_URL, NULL,NULL,SW_SHOWDEFAULT);
+  ShellExecuteA(NULL, "start", TUTORIAL_URL, NULL,NULL,SW_SHOWDEFAULT);
 #endif
 #ifdef TUVOK_OS_APPLE
-  system("start "TUTORIAL_URL);
+  system("open "TUTORIAL_URL);
 #endif
 #ifdef TUVOK_OS_LINUX
-  system("firefox "TUTORIAL_URL); // TODO: Tom: instead of hoping for firefox to be installed integrate this into the UI
+  system("firefox "TUTORIAL_URL); /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif
 }
 
