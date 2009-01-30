@@ -62,14 +62,16 @@ class RenderWindow
 
     virtual ~RenderWindow();
 
-    QString GetDatasetName() {return m_strDataset;}
-    QString GetWindowID() {return m_strID;}
+    QString GetDatasetName() const {return m_strDataset;}
+    QString GetWindowID() const {return m_strID;}
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
     AbstrRenderer* GetRenderer() {return m_Renderer;}
     void CheckForRedraw();
     void SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate=true);
-    AbstrRenderer::ERenderMode GetRendermode() {return m_Renderer->GetRendermode();}
+    const AbstrRenderer::ERenderMode GetRendermode() const {
+        return m_Renderer->GetRendermode();
+    }
     void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor);
     virtual void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
     void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
@@ -80,7 +82,7 @@ class RenderWindow
     void Translate(const FLOATMATRIX4& mTranslation) {SetTranslation(mTranslation*m_mAccumulatedTranslation);}
     void Rotate(const FLOATMATRIX4& mRotation) {SetRotation(mRotation*m_mAccumulatedRotation,mRotation*m_mAccumulatedRotation);}
     void SetCaptureRotationAngle(float fAngle);
-    bool IsRenderSubsysOK() {return m_bRenderSubsysOK;}
+    bool IsRenderSubsysOK() const {return m_bRenderSubsysOK;}
 
     static const size_t               ms_iLockCount = 4;
     std::vector<RenderWindow*>        m_vpLocks[ms_iLockCount];
@@ -183,7 +185,6 @@ class RenderWindow
 
     void SetRotation(const FLOATMATRIX4& mAccumulatedRotation, const FLOATMATRIX4& mCurrentRotation);
     void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);
-
 };
 
 #endif // RENDERWINDOW_H
