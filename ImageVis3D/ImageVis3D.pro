@@ -16,6 +16,8 @@ LIBS              = -L../Tuvok/Build -lTuvok
 RESOURCES         = ImageVis3D.qrc
 RC_FILE 	  = Resources/ImageVis3D.rc
 ICON              = Resources/ImageVis3D.icns
+unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
+unix:QMAKE_CFLAGS += -fno-strict-aliasing
 
 # Input
 HEADERS += StdDefines.h \
