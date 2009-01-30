@@ -45,7 +45,7 @@
 #define IV3D_VERSION_TYPE "beta (Biblical Magi)"
 
 #define HELP_URL  "http://www.sci.utah.edu/cibc/wiki/index.php/CIBC:Project:ImageVis3D#Manual"
-#define TUTORIAL_URL  "http://www.sci.utah.edu/cibc/wiki/index.php/CIBC:Project:ImageVis3D#Manual"
+#define TUTORIAL_URL  "http://www.sci.utah.edu/cibc/wiki/index.php/CIBC:Project:ImageVis3D#Video_Tutorials"
 #define DEBUG_DUMP_SERVER   "ftp://ftp.sci.utah.edu"
 #define DEBUG_DUMP_PATH     "upload/ImageVis3D/"
 #define UPDATE_VERSION_PATH "http://software.sci.utah.edu/devbuilds/imagevis3d/"
