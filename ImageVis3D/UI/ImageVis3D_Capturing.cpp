@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -71,7 +71,7 @@ void MainWindow::CaptureSequence() {
 }
 
 bool MainWindow::CaptureFrame(const std::string& strTargetName) {
-  if (ActiveRenderWin()) 
+  if (ActiveRenderWin())
     return ActiveRenderWin()->CaptureFrame(strTargetName, checkBox_PreserveTransparency->isChecked());
   else {
     m_MasterController.DebugOut()->Warning("MainWindow::CaptureFrame",
@@ -81,7 +81,7 @@ bool MainWindow::CaptureFrame(const std::string& strTargetName) {
 }
 
 bool MainWindow::CaptureSequence(const std::string& strTargetName, std::string* strRealFilename) {
-  if (ActiveRenderWin()) 
+  if (ActiveRenderWin())
     return ActiveRenderWin()->CaptureSequenceFrame(strTargetName, checkBox_PreserveTransparency->isChecked(), strRealFilename);
   else {
     m_MasterController.DebugOut()->Warning("MainWindow::CaptureSequence",
@@ -117,7 +117,7 @@ void MainWindow::CaptureRotation() {
         settings.setValue("Renderer/RotationUseStereo", bStereo);
         settings.setValue("Renderer/RotationUseLOD", bUseLOD);
         settings.setValue("Renderer/RotationEyeDist", iEyeDist);
-        
+
       } else ok = false;
     } else {
       iNumImages = QInputDialog::getInteger(this,
@@ -129,7 +129,7 @@ void MainWindow::CaptureRotation() {
     settings.setValue("Renderer/ImagesPerRotation", iNumImages);
 
     ActiveRenderWin()->ToggleHQCaptureMode();
-    
+
     PleaseWaitDialog pleaseWait(this);
     // add status label into debug chain
     AbstrDebugOut* pOldDebug       = m_MasterController.DebugOut();
@@ -146,7 +146,7 @@ void MainWindow::CaptureRotation() {
 
     if (eWindowMode == AbstrRenderer::WM_3D)  {
       pleaseWait.SetText("Capturing a full 360° rotation, please wait  ...");
-     
+
       int i = 0;
       float fAngle = 0.0f;
       while (i < iNumImages) {
@@ -179,9 +179,9 @@ void MainWindow::CaptureRotation() {
 
           double fDegreePerImage = 360.0/iNumImages;
           iReUseOffset = int(iEyeDist/fDegreePerImage);
-          bReUse = (iReUseOffset == iEyeDist/fDegreePerImage); 
+          bReUse = (iReUseOffset == iEyeDist/fDegreePerImage);
 
-          if (bReUse) 
+          if (bReUse)
             strImageFilename = SysTools::AppendFilename(strImageFilename,"_LR");
           else
             strImageFilename = SysTools::AppendFilename(strImageFilename,"_L");
@@ -229,7 +229,7 @@ void MainWindow::CaptureRotation() {
               }
               vstrRightEyeImageVector[i] = strSequenceName;
             }
-          } 
+          }
         }
 
         if (ActiveRenderWin()->GetRenderer()->GetUseMIP(eWindowMode) && bStereo) {
@@ -237,7 +237,7 @@ void MainWindow::CaptureRotation() {
 
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
             string strSourceL = vstrLeftEyeImageVector[i];
-            string strSourceR = vstrRightEyeImageVector[i];            
+            string strSourceR = vstrRightEyeImageVector[i];
             string strTarget  = SysTools::FindNextSequenceName(lineEditCaptureFile->text().toStdString());
 
             m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 2 of 3: %i percent completed\nCreating stereo image %s from %s and %s \nProcessing Image %i of %i", int(100*float(i)/float(iNumImages)), SysTools::GetFilename(strTarget).c_str(), SysTools::GetFilename(strSourceL).c_str(), SysTools::GetFilename(strSourceR).c_str(), i+1,iNumImages );
@@ -271,8 +271,7 @@ void MainWindow::CaptureRotation() {
             remove(vstrRightEyeImageVector[i].c_str());
             if (SysTools::FileExists(vstrLeftEyeImageVector[i])) remove(vstrLeftEyeImageVector[i].c_str());
           }
-        }     
-
+        }
       } else {
         pleaseWait.SetText("Slicing trougth the dataset, please wait  ...");
         /// \todo TODO slice capturing
