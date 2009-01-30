@@ -308,7 +308,7 @@ void RenderWindow::Cleanup() {
 }
 
 void RenderWindow::CheckForRedraw() {
-  if (m_Renderer->CheckForRedraw()) UpdateWindow();
+  if (m_Renderer && m_Renderer->CheckForRedraw()) UpdateWindow();
 }
 
 void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {
