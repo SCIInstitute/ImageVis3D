@@ -406,17 +406,17 @@ bool MainWindow::ApplyWorkspace() {
 
 
 void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
-  if (!m_pActiveRenderWin) return;
+  if (!ActiveRenderWin()) return;
   mdiArea->activeSubWindow()->resize(iSizeX, iSizeY);
 }
 
 void MainWindow::CloseCurrentView() {
-  if (!m_pActiveRenderWin) return;
+  if (!ActiveRenderWin()) return;
   mdiArea->activeSubWindow()->close();
 }
 
 void MainWindow::CloneCurrentView() {
-  if (!m_pActiveRenderWin) return;
+  if (!ActiveRenderWin()) return;
   RenderWindow *renderWin = CreateNewRenderWindow(m_pActiveRenderWin->GetDatasetName());
 
   renderWin->CloneViewState(m_pActiveRenderWin);
@@ -641,6 +641,8 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   ClearProgressView();
 
   UpdateLockView();
+
+  m_pActiveRenderWin = NULL;
 }
 
 
