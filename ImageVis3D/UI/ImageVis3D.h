@@ -323,7 +323,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ShowCriticalDialog(QString strTitle, QString strMessage);
     
     RenderWindow* ActiveRenderWin();
-    RenderWindow* m_pLastActiveRenderWin;
+    RenderWindow* m_pActiveRenderWin;
     
     // update
     QHttp* m_pHttp;

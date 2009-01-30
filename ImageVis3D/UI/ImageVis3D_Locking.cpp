@@ -45,12 +45,12 @@ using namespace std;
 void MainWindow::UpdateLockView() {
   m_bUpdatingLockView = true;
   listWidget_Lock->clear();
-  if (ActiveRenderWin() == NULL) {
+  if (m_pActiveRenderWin == NULL) {
     label_LockWinowID->setVisible(false);
     return;
   }
 
-  QString text = "Lock window " + ActiveRenderWin()->GetWindowID();
+  QString text = "Lock window " + m_pActiveRenderWin->GetWindowID();
   label_LockWinowID->setText(text);
   label_LockWinowID->setVisible(true);
 
@@ -64,12 +64,12 @@ void MainWindow::UpdateLockView() {
     QWidget* w = mdiArea->subWindowList().at(i)->widget();
     RenderWindow* renderWin = WidgetToRenderWin(w);
 
-    if (renderWin != ActiveRenderWin()) {
+    if (renderWin != m_pActiveRenderWin) {
       listWidget_Lock->addItem(renderWin->GetWindowID());
 
       // check if lock for this item is allready set
-      for (size_t j = 0;j<ActiveRenderWin()->m_vpLocks[iLockType].size();j++) {
-        if (renderWin == ActiveRenderWin()->m_vpLocks[iLockType][j]) {
+      for (size_t j = 0;j<m_pActiveRenderWin->m_vpLocks[iLockType].size();j++) {
+        if (renderWin == m_pActiveRenderWin->m_vpLocks[iLockType][j]) {
           listWidget_Lock->item(listWidget_Lock->count()-1)->setSelected(true);
         }
       }
@@ -95,10 +95,10 @@ void MainWindow::ChangeLocks() {
   for (int i = 0;i<listWidget_Lock->count();i++)
     if (listWidget_Lock->item(i)->isSelected()) iLocksInList++;
 
-  size_t iLocksInVector = ActiveRenderWin()->m_vpLocks[iLockType].size();
+  size_t iLocksInVector = m_pActiveRenderWin->m_vpLocks[iLockType].size();
 
   // otherwise update the locklists
-  RemoveAllLocks(ActiveRenderWin(), iLockType);
+  RemoveAllLocks(m_pActiveRenderWin, iLockType);
 
   // if we removed one lock we have to remove all locks, as they would be restored via transitivity otherwise
   if (iLocksInList < iLocksInVector) {
@@ -118,7 +118,7 @@ void MainWindow::ChangeLocks() {
             break;
          } 
       }
-      if (otherWin != NULL) bAddedTransitiveLocks = SetLock(iLockType, ActiveRenderWin(), otherWin);
+      if (otherWin != NULL) bAddedTransitiveLocks = SetLock(iLockType, m_pActiveRenderWin, otherWin);
     }
   }
   if (bAddedTransitiveLocks) UpdateLockView();
