@@ -50,6 +50,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QSettings>
 
+#include "AboutDlg.h"
 #include "FTPDialog.h"
 #include "../Tuvok/Basics/SysTools.h"
 
@@ -62,22 +63,31 @@ void MainWindow::ShowAbout()
 #ifdef _DEBUG
   qstrTitle = tr("ImageVis3D %1 %2 DEBUG VERSION!").arg(IV3D_VERSION).arg(IV3D_VERSION_TYPE);
   qstrText = tr("Warning: this is a DEBUG build!  This version is for "
-                "testing only.  Some functions may run with dramatically "
-                "reduced performance.  Please download a release build for "
+                "testing only. Some functions may run with dramatically "
+                "reduced performance. Please download a release build for "
                 "general use.\n\n");
 #else
   qstrTitle = tr("ImageVis3D %1").arg(IV3D_VERSION);
 #endif
   qstrText += tr("This is ImageVis3D %1 %2, using the Tuvok render engine "
-                 "%3 %4 %5.  Copyright 2008,2009 by the Scientific Computing "
-                 "and Imaging (SCI) Institute.  Please report bugs to "
-                 "iv3d-users@sci.utah.edu")
+                 "%3 %4 %5. Copyright 2008,2009 by the Scientific Computing "
+                 "and Imaging (SCI) Institute.")
                     .arg(IV3D_VERSION)
                     .arg(IV3D_VERSION_TYPE)
                     .arg(TUVOK_VERSION)
                     .arg(TUVOK_VERSION_TYPE)
                     .arg(TUVOK_DETAILS);
-  QMessageBox::about(this, qstrTitle,qstrText);
+
+  AboutDlg d(qstrTitle,qstrText, this);
+  connect(&d, SIGNAL(CheckUpdatesClicked()),   this, SLOT(CheckForUpdates()));
+  connect(&d, SIGNAL(OnlineVideoTutClicked()), this, SLOT(OnlineVideoTut()));
+  connect(&d, SIGNAL(OnlineHelpClicked()),     this, SLOT(OnlineHelp()));
+  connect(&d, SIGNAL(ReportABugClicked()),     this, SLOT(ReportABug()));
+  d.exec();
+  disconnect(&d, SIGNAL(CheckUpdatesClicked()),   this, SLOT(CheckForUpdates()));
+  disconnect(&d, SIGNAL(OnlineVideoTutClicked()), this, SLOT(OnlineVideoTut()));
+  disconnect(&d, SIGNAL(OnlineHelpClicked()),     this, SLOT(OnlineHelp()));
+  disconnect(&d, SIGNAL(ReportABugClicked()),     this, SLOT(ReportABug()));
 }
 
 void MainWindow::QuietCheckForUpdates() {
@@ -283,3 +293,7 @@ void MainWindow::CloseWelcome() {
   }
 }
 
+
+void MainWindow::ReportABug() {
+  // TODO
+}

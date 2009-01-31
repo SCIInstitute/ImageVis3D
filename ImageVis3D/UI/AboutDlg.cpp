@@ -37,36 +37,38 @@
 
 #include "AboutDlg.h"
 
-AboutDlgDialog::AboutDlgDialog(QString title, QString desc, QWidget* parent, Qt::WindowFlags flags) : 
+AboutDlg::AboutDlg(QString title, QString desc, QWidget* parent, Qt::WindowFlags flags) : 
   QDialog(parent, flags)
 {
   setupUi(this);
   label_logo->setPixmap(QPixmap::fromImage(QImage(":/Resources/imagevis3d.png")));
+  setWindowTitle(title);
+  label_AboutText->setText(desc);
 }
 
-AboutDlgDialog::~AboutDlgDialog(void)
+AboutDlg::~AboutDlg(void)
 {
 }
 
-void AboutDlgDialog::CheckUpdates()
+void AboutDlg::CheckUpdates()
 {
-
+  accept();
   emit CheckUpdatesClicked();
 }
 
-void AboutDlgDialog::OnlineVideoTut()
+void AboutDlg::OnlineVideoTut()
 {
   accept();
   emit OnlineVideoTutClicked();
 }
 
-void AboutDlgDialog::OnlineHelp()
+void AboutDlg::OnlineHelp()
 {
   accept();
   emit OnlineHelpClicked();
 }
 
-void AboutDlgDialog::ReportABug()
+void AboutDlg::ReportABug()
 {
   accept();
   emit ReportABugClicked();

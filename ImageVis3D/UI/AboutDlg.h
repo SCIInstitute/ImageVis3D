@@ -38,16 +38,16 @@
 #ifndef ABOUTDLG_H
 #define ABOUTDLG_H
 
-#include "AutoGen/ui_AboutDlg.h"
+#include "AutoGen/ui_About.h"
 #include <vector>
 #include <string>
 
-class AboutDlgDialog : public QDialog, protected Ui_AboutDlg
+class AboutDlg : public QDialog, protected Ui_About
 {
   Q_OBJECT
   public:
-    AboutDlgDialog(QString title, QString desc, QWidget* parent, Qt::WindowFlags flags = Qt::Tool);
-    virtual ~AboutDlgDialog();
+    AboutDlg(QString title, QString desc, QWidget* parent, Qt::WindowFlags flags = Qt::Tool);
+    virtual ~AboutDlg();
   
 
   protected slots:

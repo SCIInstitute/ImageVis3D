@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>457</width>
-    <height>451</height>
+    <width>430</width>
+    <height>246</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -33,16 +33,22 @@
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
     <widget class="QLabel" name="label_logo" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="minimumSize" >
       <size>
        <width>0</width>
-       <height>150</height>
+       <height>0</height>
       </size>
      </property>
      <property name="maximumSize" >
       <size>
        <width>16777215</width>
-       <height>150</height>
+       <height>16777215</height>
       </size>
      </property>
      <property name="font" >
@@ -52,6 +58,9 @@
      </property>
      <property name="text" >
       <string>ImageVis3D Logo</string>
+     </property>
+     <property name="scaledContents" >
+      <bool>false</bool>
      </property>
      <property name="alignment" >
       <set>Qt::AlignCenter</set>
@@ -68,6 +77,9 @@
        <widget class="QLabel" name="label_AboutText" >
         <property name="text" >
          <string>TextLabel</string>
+        </property>
+        <property name="wordWrap" >
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -94,8 +106,8 @@
         <property name="title" >
          <string>Need Help?</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2" >
-         <item>
+        <layout class="QGridLayout" name="gridLayout" >
+         <item row="0" column="0" >
           <widget class="QPushButton" name="pushButton_GotoOnlineHelp" >
            <property name="minimumSize" >
             <size>
@@ -111,36 +123,7 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_OnlineVideoTutorials" >
-           <property name="minimumSize" >
-            <size>
-             <width>0</width>
-             <height>23</height>
-            </size>
-           </property>
-           <property name="text" >
-            <string>Goto Online Video Tutorials</string>
-           </property>
-           <property name="autoDefault" >
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer_2" >
-           <property name="orientation" >
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0" >
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
+         <item row="2" column="0" >
           <widget class="QPushButton" name="pushButton_CheckForNewVersion" >
            <property name="minimumSize" >
             <size>
@@ -156,7 +139,23 @@
            </property>
           </widget>
          </item>
-         <item>
+         <item row="0" column="1" >
+          <widget class="QPushButton" name="pushButton_OnlineVideoTutorials" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>Goto Online Video Tutorials</string>
+           </property>
+           <property name="autoDefault" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1" >
           <widget class="QPushButton" name="pushButton_BugRep" >
            <property name="text" >
             <string>Report an Issue</string>
@@ -230,8 +229,8 @@
    <slot>CheckUpdates()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>502</x>
-     <y>418</y>
+     <x>437</x>
+     <y>369</y>
     </hint>
     <hint type="destinationlabel" >
      <x>635</x>
@@ -246,8 +245,8 @@
    <slot>OnlineVideoTut()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>458</x>
-     <y>232</y>
+     <x>437</x>
+     <y>294</y>
     </hint>
     <hint type="destinationlabel" >
      <x>635</x>
@@ -262,8 +261,8 @@
    <slot>OnlineHelp()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>516</x>
-     <y>193</y>
+     <x>437</x>
+     <y>265</y>
     </hint>
     <hint type="destinationlabel" >
      <x>634</x>
@@ -278,12 +277,28 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>573</x>
-     <y>454</y>
+     <x>447</x>
+     <y>441</y>
     </hint>
     <hint type="destinationlabel" >
      <x>465</x>
      <y>475</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_BugRep</sender>
+   <signal>clicked()</signal>
+   <receiver>About</receiver>
+   <slot>ReportABug()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>167</x>
+     <y>390</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>5</x>
+     <y>406</y>
     </hint>
    </hints>
   </connection>
@@ -292,8 +307,10 @@
   <slot>CheckUpdates()</slot>
   <slot>OnlineHelp()</slot>
   <slot>OnlineVideoTut()</slot>
+  <slot>ReportABug()</slot>
   <signal>CheckUpdatesClicked()</signal>
   <signal>OnlineHelpClicked()</signal>
   <signal>OnlineVideoTutClicked()</signal>
+  <signal>ReportABugClicked()</signal>
  </slots>
 </ui>
