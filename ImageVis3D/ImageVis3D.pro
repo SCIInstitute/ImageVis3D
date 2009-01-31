@@ -36,6 +36,7 @@ HEADERS += StdDefines.h \
            UI/MIPRotDialog.h \ 
            UI/Welcome.h \
            UI/AboutDlg.h \
+           UI/URLDlg.h \
            DebugOut/QTOut.h \
            DebugOut/QTLabelOut.h \
            IO/DialogConverter.h
@@ -48,6 +49,7 @@ FORMS += UI/UI/BrowseData.ui \
          UI/UI/FTPDialog.ui \
          UI/UI/Welcome.ui \
          UI/UI/About.ui \
+         UI/UI/URLDlg.ui \
          UI/UI/MIPRotDialog.ui
 
 SOURCES += UI/BrowseData.cpp \
@@ -67,6 +69,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/PleaseWait.cpp \
            UI/Welcome.cpp \
            UI/AboutDlg.cpp \
+           UI/URLDlg.cpp \
            UI/FTPDialog.cpp \
            UI/QTransferFunction.cpp \
            UI/Q1DTransferFunction.cpp \
@@ -81,9 +84,6 @@ SOURCES += UI/BrowseData.cpp \
            DebugOut/QTLabelOut.cpp \
            IO/DialogConverter.cpp \
            main.cpp
-
-
-
 
 win32 {
   HEADERS += UI/RenderWindowDX.h

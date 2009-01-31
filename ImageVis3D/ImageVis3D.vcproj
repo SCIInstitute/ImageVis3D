@@ -891,6 +891,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UI\AutoGen\ui_URLDlg.h"
+					>
+				</File>
+				<File
 					RelativePath=".\UI\AutoGen\ui_Welcome.h"
 					>
 				</File>
@@ -929,6 +933,10 @@
 				</File>
 				<File
 					RelativePath=".\UI\UI\SettingsDlg.ui"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\UI\URLDlg.ui"
 					>
 				</File>
 				<File
@@ -1970,6 +1978,14 @@
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\UI\URLDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\URLDlg.h"
+					>
 				</File>
 				<File
 					RelativePath=".\UI\Welcome.cpp"
