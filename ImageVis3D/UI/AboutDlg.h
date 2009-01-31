@@ -41,6 +41,7 @@
 #include "AutoGen/ui_About.h"
 #include <vector>
 #include <string>
+#include <StdDefines.h>
 
 class AboutDlg : public QDialog, protected Ui_About
 {

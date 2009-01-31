@@ -5,5 +5,6 @@
    <file>Resources/icon_16.png</file>
    <file>Resources/icon_32.png</file>
    <file>Resources/icon_64.png</file>
+   <file>Resources/icon_Update.png</file>
  </qresource>
  </RCC>

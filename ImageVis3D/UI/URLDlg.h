@@ -41,6 +41,7 @@
 #include "AutoGen/ui_URLDlg.h"
 #include <vector>
 #include <string>
+#include <StdDefines.h>
 
 class URLDlg : public QDialog, protected Ui_URLDlg
 {

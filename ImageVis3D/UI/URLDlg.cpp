@@ -37,12 +37,17 @@
 
 #include "URLDlg.h"
 
+#ifdef TUVOK_OS_WINDOWS
+  #include <windows.h>
+#endif
+
 URLDlg::URLDlg(QString title, QString desc, QString url, QWidget* parent, Qt::WindowFlags flags) : 
   QDialog(parent, flags),
   m_strURL(url)
 {
   setupUi(this);
   setWindowTitle(title);
+  label_updateIcon->setPixmap(QPixmap::fromImage(QImage(":/Resources/icon_Update.png")));
   label_desc->setText(desc);
   label_url->setText(url);
 }
@@ -56,7 +61,7 @@ void URLDlg::Download()
   accept();
   
 #ifdef TUVOK_OS_WINDOWS
-  ShellExecuteA(NULL, "open", m_strURL.toAscii(), NULL,NULL,SW_SHOWDEFAULT);
+  ShellExecuteA(NULL, "open", m_strURL.toAscii(), NULL,NULL, SW_SHOWDEFAULT);
 #endif
 #ifdef TUVOK_OS_APPLE
   m_strURL = tr("open %1").arg(m_strURL);

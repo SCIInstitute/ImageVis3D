@@ -41,6 +41,7 @@
 #include "AutoGen/ui_Welcome.h"
 #include <vector>
 #include <string>
+#include <StdDefines.h>
 
 class MRUButton : public QPushButton {
   public:
