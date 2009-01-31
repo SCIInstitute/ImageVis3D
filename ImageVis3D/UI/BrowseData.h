@@ -55,10 +55,13 @@ class BrowseData : public QDialog, protected Ui_BrowseData
 
     bool DataFound() {return m_bDataFound;}
 
-    FileStackInfo* GetStackInfo() {return m_dirInfo[m_iSelected];}
+    FileStackInfo* GetStackInfo() {
+      return m_dirInfo[m_iSelected];
+    }
 
   protected slots:
     virtual void accept();
+    virtual void SetBrightness(int iScale);
 
   private:
     MasterController&              m_MasterController;

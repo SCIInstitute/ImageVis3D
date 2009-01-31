@@ -64,7 +64,7 @@ void BrowseData::showEvent ( QShowEvent * ) {
 
 
 void BrowseData::accept() {
-  // find out which dataset is selcted
+  // find out which dataset is selected
   for (size_t i = 0;i < m_vRadioButtons.size();i++) {
     if (m_vRadioButtons[i]->isChecked()) {
       m_iSelected = i;
@@ -73,6 +73,14 @@ void BrowseData::accept() {
   }
 
   QDialog::accept();
+}
+
+void BrowseData::SetBrightness(int iScale) {
+  for (size_t i = 0;i < m_vRadioButtons.size();i++)
+    m_vRadioButtons[i]->SetBrightness(float(iScale));
+#ifdef TUVOK_OS_APPLE
+  QCoreApplication::processEvents();
+#endif
 }
 
 

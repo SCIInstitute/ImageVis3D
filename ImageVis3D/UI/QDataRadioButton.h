@@ -51,15 +51,18 @@ public:
   QDataRadioButton(FileStackInfo* stack, const QString &text, QWidget *parent=0);
   virtual ~QDataRadioButton() {}
 
+  void SetBrightness(float fScale);
+
 protected:
-  unsigned int m_iCurrentImage;
+  unsigned int  m_iCurrentImage;
   FileStackInfo m_stackInfo;
+  float         m_fScale;
 
   virtual void leaveEvent ( QEvent * event );
   virtual void mouseMoveEvent(QMouseEvent *event);
 
   void SetupInfo();
-  void SetStackImage(unsigned int i);
+  void SetStackImage(unsigned int i, bool bForceUpdate = false);
 
 };
 

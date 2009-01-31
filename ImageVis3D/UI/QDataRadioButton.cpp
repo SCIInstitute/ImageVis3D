@@ -41,14 +41,16 @@
 QDataRadioButton::QDataRadioButton(FileStackInfo* stack, QWidget *parent) : 
   QRadioButton(parent), 
   m_iCurrentImage((unsigned int)(-1)),  
-  m_stackInfo(stack) 
+  m_stackInfo(stack),
+  m_fScale(1.0f)
 {
   SetupInfo();
 }
 QDataRadioButton::QDataRadioButton(FileStackInfo* stack, const QString &text, QWidget *parent) :
   QRadioButton(text, parent), 
   m_iCurrentImage((unsigned int)(-1)),  
-  m_stackInfo(stack)
+  m_stackInfo(stack),
+  m_fScale(1.0f)
 {
   SetupInfo();
 }
@@ -68,9 +70,14 @@ void QDataRadioButton::mouseMoveEvent(QMouseEvent *event){
   SetStackImage(i);
 }
 
-void QDataRadioButton::SetStackImage(unsigned int i) {
+void QDataRadioButton::SetBrightness(float fScale) {
+  m_fScale = fScale;
+  SetStackImage(m_iCurrentImage, true);
+}
 
-  if (m_iCurrentImage == i) return;
+void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
+
+  if (!bForceUpdate && m_iCurrentImage == i) return;
   
   m_iCurrentImage = i;
 
@@ -93,7 +100,8 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
               unsigned char* pCharData = (unsigned char*)pData;
               for (int y = 0;y<image.height();y++) 
                 for (int x = 0;x<image.width();x++) {
-                  image.setPixel(x,y, qRgb(pCharData[i],pCharData[i],pCharData[i]));
+                  unsigned char value = (unsigned char)(std::min(255.0f,m_fScale*pCharData[i]));
+                  image.setPixel(x,y, qRgb(value,value,value));
                   i++;
                 }
                } break;
@@ -102,7 +110,7 @@ void QDataRadioButton::SetStackImage(unsigned int i) {
               unsigned short* pShortData = (unsigned short*)pData;
               for (int y = 0;y<image.height();y++) 
                 for (int x = 0;x<image.width();x++) {
-                  unsigned char value = (unsigned char)(255.0f*float(pShortData[i])/float((m_stackInfo.m_iStored)));
+                  unsigned char value = (unsigned char)(std::min(255.0f,255.0f*m_fScale*float(pShortData[i])/float((2<<m_stackInfo.m_iStored))));
                   image.setPixel(x,y, qRgb(value,value,value));
                   i++;
                 }
