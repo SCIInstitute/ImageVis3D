@@ -708,6 +708,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\Resources\bug.png"
+				>
+			</File>
+			<File
 				RelativePath=".\Doxyfile"
 				>
 			</File>
@@ -875,6 +879,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UI\AutoGen\ui_BugRepDlg.h"
+					>
+				</File>
+				<File
 					RelativePath=".\UI\AutoGen\ui_FTPDialog.h"
 					>
 				</File>
@@ -917,6 +925,10 @@
 				</File>
 				<File
 					RelativePath=".\UI\UI\BrowseData.ui"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\UI\BugRepDlg.ui"
 					>
 				</File>
 				<File
@@ -1130,6 +1142,14 @@
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\UI\BugRepDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\BugRepDlg.h"
+					>
 				</File>
 				<File
 					RelativePath=".\UI\FTPDialog.cpp"

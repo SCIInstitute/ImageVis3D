@@ -6,5 +6,6 @@
    <file>Resources/icon_32.png</file>
    <file>Resources/icon_64.png</file>
    <file>Resources/icon_Update.png</file>
+   <file>Resources/bug.png</file>
  </qresource>
  </RCC>

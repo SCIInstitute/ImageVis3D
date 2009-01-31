@@ -9,7 +9,7 @@
     <x>0</x>
     <y>0</y>
     <width>431</width>
-    <height>156</height>
+    <height>120</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -31,6 +31,9 @@
       <number>0</number>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_updateIcon" >
         <property name="sizePolicy" >
@@ -62,6 +65,9 @@
          <number>0</number>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
          <item>
           <widget class="QLabel" name="label_desc" >
            <property name="font" >

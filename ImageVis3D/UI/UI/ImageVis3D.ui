@@ -106,6 +106,7 @@
     <addaction name="actionOpen_Online_Video_Tutorials" />
     <addaction name="separator" />
     <addaction name="actionCheck_for_Updates" />
+    <addaction name="actionReport_an_Issue" />
    </widget>
    <widget class="QMenu" name="menu_Edit" >
     <property name="enabled" >
@@ -4042,6 +4043,11 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <string>Welcome Screen</string>
    </property>
   </action>
+  <action name="actionReport_an_Issue" >
+   <property name="text" >
+    <string>Report an Issue</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="0" />
  <tabstops>
@@ -5635,6 +5641,22 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionReport_an_Issue</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ReportABug()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>646</x>
+     <y>965</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -5708,5 +5730,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>OnlineHelp()</slot>
   <slot>OnlineVideoTut()</slot>
   <slot>ShowWelcomeScreen()</slot>
+  <slot>ReportABug()</slot>
  </slots>
 </ui>

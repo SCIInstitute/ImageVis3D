@@ -52,6 +52,7 @@
 
 #include "URLDlg.h"
 #include "AboutDlg.h"
+#include "BugRepDlg.h"
 #include "FTPDialog.h"
 #include "../Tuvok/Basics/SysTools.h"
 
@@ -301,7 +302,9 @@ void MainWindow::CloseWelcome() {
   }
 }
 
-
 void MainWindow::ReportABug() {
-  // TODO
+  BugRepDlg b(this);
+  if (b.exec() == QDialog::Accepted) {
+    /// \todo
+  }
 }

@@ -107,6 +107,9 @@
          <string>Need Help?</string>
         </property>
         <layout class="QGridLayout" name="gridLayout" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
          <item row="0" column="0" >
           <widget class="QPushButton" name="pushButton_GotoOnlineHelp" >
            <property name="minimumSize" >
