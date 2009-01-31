@@ -27,7 +27,7 @@
 */
 
 
-//!    File   : Welcome.h
+//!    File   : AboutDlg.h
 //!    Author : Jens Krueger
 //!             SCI Institute
 //!             University of Utah
@@ -35,57 +35,33 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
-#ifndef WELCOME_H
-#define WELCOME_H
+#ifndef ABOUTDLG_H
+#define ABOUTDLG_H
 
-#include "AutoGen/ui_Welcome.h"
+#include "AutoGen/ui_AboutDlg.h"
 #include <vector>
 #include <string>
 
-class MRUButton : public QPushButton {
-  public:
-    explicit MRUButton(QWidget *parent=0) : QPushButton(parent) {}
-    explicit MRUButton(const QString &text, QWidget *parent=0) : QPushButton(text, parent) {}
-    MRUButton(const QIcon& icon, const QString &text, QWidget *parent=0) : QPushButton(icon, text, parent) {}
-    virtual ~MRUButton() {}
-
-    std::string  strFilename;
-};
-
-
-class WelcomeDialog : public QDialog, protected Ui_Welcome
+class AboutDlgDialog : public QDialog, protected Ui_AboutDlg
 {
   Q_OBJECT
   public:
-    WelcomeDialog(QWidget* parent, Qt::WindowFlags flags = Qt::Tool);
-    virtual ~WelcomeDialog();
+    AboutDlgDialog(QString title, QString desc, QWidget* parent, Qt::WindowFlags flags = Qt::Tool);
+    virtual ~AboutDlgDialog();
   
-    void ClearMRUItems();
-    void AddMRUItem(std::string strDesc, std::string strFilename);
-    void SetShowAtStartup(bool bShow) {checkBox_ShowAtStartup->setChecked(!bShow);}
-    bool ShowAtStartup() const {return !checkBox_ShowAtStartup->isChecked();}
 
   protected slots:
     virtual void CheckUpdates();
     virtual void OnlineVideoTut();
     virtual void OnlineHelp();
-    virtual void OpenFromFile();
-    virtual void OpenFromDir();
-    virtual void OpenMRU();
+    virtual void ReportABug();
 
   signals:
     void CheckUpdatesClicked();
     void OnlineVideoTutClicked();
     void OnlineHelpClicked();
-    void OpenFromFileClicked();
-    void OpenFromFileClicked(std::string filename);
-    void OpenFromDirClicked();
-    void OpenMRU(int iID);
-
-  private:
-    std::vector<MRUButton*> m_vMRUItems;
-
+    void ReportABugClicked();
 
 };
 
-#endif // WELCOME_H
+#endif // ABOUTDLG_H

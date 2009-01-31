@@ -37,7 +37,7 @@
 
 #include "PleaseWait.h"
 
-PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags /* = 0 */) : QDialog(parent, flags)
+PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags) : QDialog(parent, flags)
 {
   setupUi(this);
 }
