@@ -120,9 +120,11 @@ int main(int argc, char* argv[])
       return (bScriptResult) ? 0 : 1;
   }
 
-  return app.exec();
+  int iResult = app.exec();
 
   #if defined(_WIN32) && defined(USE_DIRECTX)
-    DynamicDX::InitializeDX();
+    DynamicDX::CleanupDX();
   #endif
+
+  return iResult;
 }

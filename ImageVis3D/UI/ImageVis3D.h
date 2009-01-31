@@ -170,7 +170,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SetDebugViewMask();
 
     void CheckForRedraw();
-    bool ShowSettings();
+    bool ShowSettings() {return ShowSettings(false);}
+    bool ShowSettings(bool bInitializeOnly);
     void SetLighting(bool bLighting);
 
     void Collapse2DWidgets();

@@ -40,8 +40,9 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/IO/UVF/LargeRAWFile.h"
 
-using namespace std;
+#include <QtGui/QMessageBox>
 
+using namespace std;
 
 DialogConverter::DialogConverter(QWidget* parent) :
   m_parent(parent)
@@ -51,7 +52,10 @@ DialogConverter::DialogConverter(QWidget* parent) :
 bool DialogConverter::Convert(const std::string& strSourceFilename, const std::string& strTargetFilename, const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction)
 {
   if (bNoUserInteraction) return false;
-  pMasterController->DebugOut()->Message("DialogConverter::Convert","Attempting to interactively convert dataset %s to %s", strSourceFilename.c_str(), strTargetFilename.c_str());
+
+  if (QMessageBox::No == QMessageBox::question(NULL, "RAW Loader", "This file was not recognized by ImageVis3D's build in readers and cannot be converted automatically. Do you want to specify the data set parameters manually?", QMessageBox::Yes, QMessageBox::No)) {
+    return false;
+  }
   
   LargeRAWFile f(strSourceFilename);
   f.Open(false);
