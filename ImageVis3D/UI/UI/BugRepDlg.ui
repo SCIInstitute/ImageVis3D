@@ -26,6 +26,12 @@
        <pointsize>20</pointsize>
       </font>
      </property>
+     <property name="toolTip" >
+      <string/>
+     </property>
+     <property name="whatsThis" >
+      <string>The First "Computer Bug" Moth found trapped between points at Relay # 70, Panel F, of the Mark II Aiken Relay Calculator while it was being tested at Harvard University, 9 September 1945. The operators affixed the moth to the computer log, with the entry: "First actual case of bug being found". They put out the word that they had "debugged" the machine, thus introducing the term "debugging a computer program". In 1988, the log, with the moth still taped by the entry, was in the Naval Surface Warfare Center Computer Museum at Dahlgren, Virginia.</string>
+     </property>
      <property name="text" >
       <string>Icon</string>
      </property>
@@ -55,7 +61,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="textEdit" />
+       <widget class="QTextEdit" name="textEdit_desc" />
       </item>
      </layout>
     </widget>
@@ -82,14 +88,14 @@ p, li { white-space: pre-wrap; }
           <number>0</number>
          </property>
          <item>
-          <widget class="QCheckBox" name="checkBox_incSysInfo" >
+          <widget class="QCheckBox" name="checkBox_IncludeSysinfo" >
            <property name="text" >
             <string>Submit System Information</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_IncLog" >
+          <widget class="QCheckBox" name="checkBox_IncludeLog" >
            <property name="text" >
             <string>Submit Debug Log</string>
            </property>
@@ -121,7 +127,7 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit" >
+          <widget class="QLineEdit" name="lineEdit_file" >
            <property name="readOnly" >
             <bool>true</bool>
            </property>

@@ -37,6 +37,13 @@
 
 #include "BugRepDlg.h"
 
+#include "../Tuvok/Basics/SysTools.h"
+
+#include <QtGui/QFileDialog>
+#include <QtCore/QSettings>
+
+using namespace std;
+
 BugRepDlg::BugRepDlg(QWidget* parent, Qt::WindowFlags flags) : 
   QDialog(parent, flags)
 {
@@ -49,5 +56,60 @@ BugRepDlg::~BugRepDlg(void)
 }
 
 void BugRepDlg::SelectFile() {
-  /// \todo
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/BugReportFilename", ".").toString();
+
+  QString fileName = QFileDialog::getOpenFileName(this,"Select File", strLastDir,
+             "All Files (*.*)",&selectedFilter, options);
+
+  if (!fileName.isEmpty()) {
+    settings.setValue("Folders/CaptureFilename", QFileInfo(fileName).absoluteDir().path());
+    lineEdit_file->setText(fileName);
+  }
+}
+
+string BugRepDlg::GetDescription() const {
+  return string(textEdit_desc->toPlainText().toAscii());
+}
+
+bool BugRepDlg::SubmitSysinfo() const {
+  return checkBox_IncludeSysinfo->isChecked();
+}
+
+bool BugRepDlg::SubmitLog() const {
+  return checkBox_IncludeLog->isChecked();
+}
+
+string BugRepDlg::GetUsername() const {
+  return string(lineEdit_name->text().toAscii());
+}
+
+string BugRepDlg::GetUserMail() const {
+  return string(lineEdit_email->text().toAscii());
+}
+
+string BugRepDlg::GetDataFilename() const {
+  return string(lineEdit_file->text().toAscii());
+}
+
+void BugRepDlg::SetSubmitSysinfo(bool bSubmitSysinfo) {
+  checkBox_IncludeSysinfo->setChecked(bSubmitSysinfo);
+}
+
+void BugRepDlg::SetSubmitLog(bool bSubmitLog) {
+  checkBox_IncludeLog->setChecked(bSubmitLog);
+}
+
+void BugRepDlg::SetUsername(string strName) {
+  lineEdit_name->setText(strName.c_str());
+}
+
+void BugRepDlg::SetUserMail(string strMail) {
+  lineEdit_email->setText(strMail.c_str());
 }

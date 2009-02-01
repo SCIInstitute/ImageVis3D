@@ -50,6 +50,18 @@ class BugRepDlg : public QDialog, protected Ui_BugRepDlg
     BugRepDlg(QWidget* parent, Qt::WindowFlags flags = Qt::Tool);
     virtual ~BugRepDlg();
 
+    std::string GetDescription() const;
+    bool SubmitSysinfo() const;
+    bool SubmitLog() const;
+    std::string GetUsername() const;
+    std::string GetUserMail() const;
+    std::string GetDataFilename() const;
+
+    void SetSubmitSysinfo(bool bSubmitSysinfo);
+    void SetSubmitLog(bool bSubmitLog);
+    void SetUsername(std::string strName);
+    void SetUserMail(std::string strMail);
+
   protected slots:
     void SelectFile();
 };

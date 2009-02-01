@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="UVFConverter"
-	ProjectGUID="{3D1630AA-C160-493B-88F2-E29AB13AF140}"
-	RootNamespace="UVFConverter"
+	Name="ExtractDebugInfo"
+	ProjectGUID="{5494E269-CBE9-443E-9C3D-997B141FDDC7}"
+	RootNamespace="ExtractDebugInfo"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -297,7 +297,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Winmm.lib ws2_32.lib Imm32.lib Tuvok.lib opengl32.lib QtOpenGL.lib QtGui.lib QtCore.lib  QtNetwork.lib qjpeg.lib  qtiff.lib qgif.lib"
+				AdditionalDependencies="Tuvok.lib"
 				OutputFile="$(OutDir)\$(ProjectName)32.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;;&quot;$(QTDIR32)plugins\imageformats&quot;"
@@ -647,20 +647,8 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="DebugOut"
-			>
-			<File
-				RelativePath=".\DebugOut\HRConsoleOut.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DebugOut\HRConsoleOut.h"
-				>
-			</File>
-		</Filter>
 		<File
-			RelativePath=".\CmdLineConverter.pro"
+			RelativePath=".\ExtractDebugInfo.pro"
 			>
 		</File>
 		<File

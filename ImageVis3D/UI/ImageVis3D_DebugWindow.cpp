@@ -89,7 +89,7 @@ void MainWindow::ListSupportedImages() {
 }
 
 void MainWindow::ShowSysInfo() {
-  m_MasterController.DebugOut()->printf("This a %ubit build.", m_MasterController.MemMan()->GetBitWithMem());
+  m_MasterController.DebugOut()->printf("This is a %ubit build.", m_MasterController.MemMan()->GetBitWithMem());
 
   m_MasterController.DebugOut()->printf("CPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetCPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableCPUMem()/(1024*1024));
   m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)", 

@@ -55,6 +55,9 @@
 #include "BugRepDlg.h"
 #include "FTPDialog.h"
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/Basics/Appendix.h"
+
+#include <fstream>
 
 using namespace std;
 
@@ -239,6 +242,7 @@ void MainWindow::UploadLogToServer() {
 bool MainWindow::FtpTransfer(string strSource, string strDest, bool bDeleteSource) {
   if (!m_bFTPFinished) return false;
   m_bFTPFinished = true;
+  m_strFTPTempFile = strSource;
 
   if (m_pFTPDialog) {
     disconnect(m_pFTPDialog, SIGNAL(TransferFailure()), this, SLOT(FtpFail()));
@@ -304,7 +308,105 @@ void MainWindow::CloseWelcome() {
 
 void MainWindow::ReportABug() {
   BugRepDlg b(this);
+
+  QSettings settings;
+  settings.beginGroup("BugReport");
+  b.SetSubmitSysinfo(settings.value("SubmitSysinfo", true).toBool());
+  b.SetSubmitLog(settings.value("SubmitLog", true).toBool());
+  b.SetUsername(string(settings.value("Username", "").toString().toAscii()));
+  b.SetUserMail(string(settings.value("UserMail", "").toString().toAscii()));
+
   if (b.exec() == QDialog::Accepted) {
-    /// \todo
+    
+    settings.setValue("SubmitSysinfo", b.SubmitSysinfo());
+    settings.setValue("SubmitLog", b.SubmitLog());
+    settings.setValue("Username", b.GetUsername().c_str());
+    settings.setValue("UserMail", b.GetUserMail().c_str());
+
+    // first create the report textfile
+    ofstream reportFile("bugreport.txt");  
+    if (!reportFile.is_open()) {
+      ShowWarningDialog("Warning", "Unable to create bugreport.txt, aborting.");
+      return;
+    }
+    
+    string strDate(QDate::currentDate().toString().toAscii()); 
+    string strTime(QTime::currentTime().toString().toAscii()); 
+    reportFile << "Issue Report " << strDate << "  " << strTime << endl << endl << endl;
+
+    reportFile << "Tuvok Version:" << float(TUVOK_VERSION) << " " << TUVOK_VERSION_TYPE;
+#ifdef TUVOK_SVN_VERSION 
+    reportFile << " SVN Version:" << int(TUVOK_SVN_VERSION);
+#endif
+    reportFile << endl << "ImageVis3D Version:" << float(IV3D_VERSION) << " " << IV3D_VERSION_TYPE;
+#ifdef IV3D_SVN_VERSION
+    reportFile << " SVN Version:" << int(IV3D_SVN_VERSION);
+#endif
+    reportFile << endl << "QT Version:" << QT_VERSION_STR << endl;
+    reportFile << "This is a "<< m_MasterController.MemMan()->GetBitWithMem() << "bit build." << endl;
+
+    if (b.GetUsername() != "") reportFile << "User:" << b.GetUsername() << endl;
+    if (b.GetUserMail() != "") reportFile << "Email:" << b.GetUserMail() << endl;
+
+    reportFile << endl << endl << "Description:" << endl << b.GetDescription() << endl;
+
+    if (b.SubmitSysinfo() ) {
+      reportFile << endl << endl << "Memory info:" << endl;
+
+      reportFile << "CPU Memory: Total " << m_MasterController.MemMan()->GetCPUMem()/(1024*1024) << " MB, Usable " << m_MasterController.SysInfo()->GetMaxUsableCPUMem()/(1024*1024) << " MB" << endl;
+      reportFile << "    Used: " << m_MasterController.MemMan()->GetAllocatedCPUMem()/(1024*1024) << " MB (" << m_MasterController.MemMan()->GetAllocatedCPUMem() << " Bytes)" << endl;
+      if (m_MasterController.MemMan()->GetAllocatedCPUMem() < m_MasterController.MemMan()->GetCPUMem() )
+        reportFile << "    Available: " << (m_MasterController.MemMan()->GetCPUMem()-m_MasterController.MemMan()->GetAllocatedCPUMem())/(1024*1024) << "MB" << endl;;
+
+      reportFile << "GPU Memory: Total " << m_MasterController.MemMan()->GetGPUMem()/(1024*1024) << " MB, Usable " << m_MasterController.SysInfo()->GetMaxUsableGPUMem()/(1024*1024) << " MB" << endl;
+      reportFile << "    Used: " << m_MasterController.MemMan()->GetAllocatedGPUMem()/(1024*1024) << " MB (" << m_MasterController.MemMan()->GetAllocatedGPUMem() << " Bytes)" << endl;
+      if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() ) 
+        reportFile << "    Available: " << (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024) <<" MB" << endl;
+
+      reportFile << endl << endl << "GPU info:" << endl;
+      if (RenderWindow::GetVendorString() == "") {
+        reportFile << "No GPU-info discovered yet" << endl;
+      } else {
+        reportFile << RenderWindow::GetVendorString().c_str() << endl;
+        reportFile << "Maximum 3D texture size " << RenderWindow::GetMax3DTexDims() << endl;
+        reportFile << "Supported GL extensions:" << endl;
+        reportFile << RenderWindowGL::GetExtString() << endl;
+      }
+
+    }
+
+    if (b.SubmitLog() ) {
+      reportFile << endl << endl << "Debug Log:" << endl;
+      for (int i = 0;i<listWidget_DebugOut->count();i++) {
+        string line(listWidget_DebugOut->item(i)->text().toAscii());
+        reportFile << "   " << line << endl;
+      }
+    }
+
+    reportFile.close();
+
+    // combine everything into a single file
+    vector<string> vFiles;
+    vFiles.push_back("bugreport.txt");
+    if (b.GetDataFilename() != "") vFiles.push_back(b.GetDataFilename());
+
+    Appendix a("report.apx", vFiles);
+
+    remove("bugreport.txt");
+    if (!a.IsOK()) {
+      ShowWarningDialog("Warning", "Unable to create report file report.apx, aborting.");
+      return;
+    }
+
+    // compress that single file
+    /// \todo Tom add compressor here
+
+    QString qstrID = tr("ErrorReport_%1_%2.apx").arg(QTime::currentTime().toString()).arg(QDate::currentDate().toString());
+    if (!FtpTransfer("report.apx", string(qstrID.toAscii()), true)) {
+      remove("report.apx");
+      ShowWarningDialog("Warning", "Another FTP transfer is still in progress, aborting.");
+      return;
+    }
   }
+
 }
