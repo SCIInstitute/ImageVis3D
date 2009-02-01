@@ -49,7 +49,7 @@ DialogConverter::DialogConverter(QWidget* parent) :
 {
 }
 
-bool DialogConverter::Convert(const std::string& strSourceFilename, const std::string& strTargetFilename, const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction)
+bool DialogConverter::ConvertToUVF(const std::string& strSourceFilename, const std::string& strTargetFilename, const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction)
 {
   if (bNoUserInteraction) return false;
 

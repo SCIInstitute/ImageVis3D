@@ -51,7 +51,7 @@ public:
   DialogConverter(QWidget* parent);
   virtual ~DialogConverter() {}
 
-  virtual bool Convert(const std::string& strSourceFilename, const std::string& strTargetFilename, const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction);
+  virtual bool ConvertToUVF(const std::string& strSourceFilename, const std::string& strTargetFilename, const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction);
 
 protected:
   QWidget* m_parent;
