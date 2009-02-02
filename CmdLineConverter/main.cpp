@@ -47,7 +47,7 @@
 #include <iostream>
 using namespace std;
 
-#define CONV_VERSION 1.0
+#define CONV_VERSION 1.1
 
 /*
 #ifdef _WIN32
@@ -60,15 +60,31 @@ using namespace std;
 
 void ShowUsage(string filename) {
 	cout << endl <<
-			filename << " V" << CONV_VERSION << " (using Tuvok V" << TUVOK_VERSION << TUVOK_VERSION_TYPE << ")"<< endl << "  (c) Scientific Computing and Imaging Institute, University of Utah" << endl << endl <<
+			filename << " V" << CONV_VERSION << " (using Tuvok V" << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE << ")"<< endl << "  (c) Scientific Computing and Imaging Institute, University of Utah" << endl << endl <<
+      " Converts different types of volumes into a UVF file and vice versa." << endl << endl <<
       " Usage:" << endl <<
-			"    " << filename << " -f InFile ^ -d InDir [-out OutFile]" << endl << endl <<		
+			"    " << filename << " -f InFile ^ -d InDir -out OutFile" << endl << endl <<		
 			"     Mandatory Arguments:" << endl <<
-			"        -f   the input filename" << endl << 
+			"        -f    the input filename" << endl << 
 			"        XOR" << endl << 
-			"        -d   the input directory" << endl << 
-			"     Optional Arguments:" << endl <<
-			"        -out  the target uvf filename (default is InFile.uvf in file mode (-f), converted.uvf direcory mdoe (-d) )" << endl << endl;
+			"        -d    the input directory" << endl << 
+			"        -out  the target filename (the extension is used to detect the format)" << endl <<
+      "          Supported formats: " << endl <<
+      "             - uvf" << endl << 
+      "             - vff" << endl << 
+      "             - nrrd" << endl << 
+      "             - nhdr (will also create raw file with similar name)" << endl << 
+      "             - dat (will also create raw file with similar name)" << endl << endl <<
+      " Examples:" << endl <<
+      "  " << filename << " -f head.vff -out head.uvf   // converts head.vff" << endl <<
+      "                                                    into a uvf file" << endl << 
+      "  " << filename << " -f head.uvf -out head.nhdr  // converts head.uvf" << endl << 
+      "                                                    into head.nhdr and" << endl << 
+      "                                                    head.nhdr.raw" << endl << 
+      "  " << filename << " -d .. -out data.uvf         // scanns the parent directory" << endl <<
+      "                                                    for DICOM- and image-stacks" << endl << 
+      "                                                    outputs data0.uvf to" << endl << 
+      "                                                    dataN.uvf" << endl << endl;
 }
 
 int main(int argc, char* argv[])
@@ -110,12 +126,6 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  if (strOutfile == "") {
-    if (strInFile != "")
-      strOutfile = SysTools::ChangeExt(SysTools::GetFilename(strInFile), "uvf");
-    else
-      strOutfile = "converted.uvf";
-  }
 
   HRConsoleOut* debugOut = new HRConsoleOut();
   debugOut->SetOutput(true, true, true, false);
@@ -123,8 +133,29 @@ int main(int argc, char* argv[])
   MasterController masterController((AbstrDebugOut*)debugOut);
   IOManager ioMan(&masterController);
 
+  string targetType = SysTools::ToLowerCase(SysTools::GetExt(strOutfile));
   if (strInFile != "") {
+
+    string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
+
+    /// \todo: remove this once uvf to raw is completed
+    if (sourceType == "uvf") {
+      cout << "Error: Currently uvf is only supported as target type." << endl << endl;
+      return 2;
+    }
+
+    if (sourceType != "uvf" && sourceType != "vff" && sourceType != "dat" && sourceType != "nhdr" && sourceType != "nrrd") {
+      cout << "Error: Unsuported source type." << endl << endl;
+      return 2;
+    }
+
+    if (targetType != "uvf" && targetType != "vff" && targetType != "dat" && targetType != "nhdr" && targetType != "nrrd") {
+      cout << "Error: Unsuported target type." << endl << endl;
+      return 2;
+    }
+
     cout << "Running in file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;
+    
     if (ioMan.ConvertDataset(strInFile, strOutfile)) {
       cout << "Success." << endl << endl;
       return 0;
@@ -132,7 +163,15 @@ int main(int argc, char* argv[])
       cout << "Failure." << endl << endl;
       return 2;
     }
+
   } else {
+
+    /// \todo: remove this once uvf to raw is completed
+    if (targetType != "uvf") {
+      cout << "Error: Currently only uvf is only supported as target type for directory processing." << endl << endl;
+      return 2;
+    }
+
     cout << "Running in directory mode." << endl << "Converting " << strInDir.c_str() << " to " << strOutfile.c_str() << endl << endl;
 
     vector<FileStackInfo*> dirinfo = ioMan.ScanDirectory(strInDir);
