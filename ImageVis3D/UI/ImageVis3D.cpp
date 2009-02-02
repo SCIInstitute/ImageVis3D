@@ -115,7 +115,7 @@ MainWindow::MainWindow(MasterController& masterController,
   QCoreApplication::setApplicationVersion(qstrVersion);
 
   setupUi(this);
-  if (m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
+
 
   SetupWorkspaceMenu();
 
@@ -149,6 +149,7 @@ MainWindow::MainWindow(MasterController& masterController,
   connect(m_pWelcomeDialog, SIGNAL(accepted()),              this, SLOT(CloseWelcome()));
   
   if (!m_bScriptMode && m_bShowWelcomeScreen) ShowWelcomeScreen();
+  if (m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
 }
 
 MainWindow::~MainWindow()
