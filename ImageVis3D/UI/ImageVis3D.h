@@ -336,6 +336,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void CheckForUpdatesInternal();
     void QuietCheckForUpdates();
     bool GetVersionsFromUpdateFile(const std::string& strFilename, float& fIV3DVersion, int& iIV3DSVNVersion, float& fTuvokVersion, int& iTuvokSVNVersion);
+    void DeleteUpdateFile();
 
     // ftp
     FTPDialog*   m_pFTPDialog;

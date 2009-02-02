@@ -115,6 +115,7 @@ MainWindow::MainWindow(MasterController& masterController,
   QCoreApplication::setApplicationVersion(qstrVersion);
 
   setupUi(this);
+  if (m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
 
   SetupWorkspaceMenu();
 
@@ -136,12 +137,9 @@ MainWindow::MainWindow(MasterController& masterController,
   connect(m_pRedrawTimer, SIGNAL(timeout()), this, SLOT(CheckForRedraw()));
   m_pRedrawTimer->start(10);
 
-
   CheckSettings();
   ClearProgressView();
   
-  if (m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
-
   connect(m_pWelcomeDialog, SIGNAL(CheckUpdatesClicked()),   this, SLOT(CheckForUpdates()));
   connect(m_pWelcomeDialog, SIGNAL(OnlineVideoTutClicked()), this, SLOT(OnlineVideoTut()));
   connect(m_pWelcomeDialog, SIGNAL(OnlineHelpClicked()),     this, SLOT(OnlineHelp()));

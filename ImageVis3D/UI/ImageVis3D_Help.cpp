@@ -110,9 +110,7 @@ void MainWindow::CheckForUpdatesInternal() {
   // cleanup updatefile, this codepath is taken for instance when the windows firewall blocked an http request
   if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
     m_pUpdateFile->close();
-    m_pUpdateFile->remove();
-    delete m_pUpdateFile;
-    m_pUpdateFile = NULL;
+    DeleteUpdateFile();
 
     // is seems like m_pHttp gets stuck if the firewall blocked it the first time so lets create a new one
     disconnect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
@@ -141,7 +139,7 @@ void MainWindow::CheckForUpdatesInternal() {
 }
 
 void MainWindow::httpRequestFinished(int requestId, bool error) {
-  if (requestId != m_iHttpGetId) return;
+  if (requestId != m_iHttpGetId || !m_pUpdateFile) return;
 
   if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
     m_pUpdateFile->close();
@@ -178,7 +176,9 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
       }
     }
   }
+}
 
+void MainWindow::DeleteUpdateFile() {
   if (m_pUpdateFile) {
     m_pUpdateFile->remove();
     delete m_pUpdateFile;
@@ -212,8 +212,12 @@ bool MainWindow::GetVersionsFromUpdateFile(const string& strFilename, float& fIV
     if(!updateFile.eof()) { getline (updateFile,line); if(!SysTools::FromString(iIV3DSVNVersion,line)) {updateFile.close(); return false;}} else {updateFile.close(); return false;}
     if(!updateFile.eof()) { getline (updateFile,line); if(!SysTools::FromString(fTuvokVersion,line)) {updateFile.close(); return false;}} else {updateFile.close(); return false;}
     if(!updateFile.eof()) { getline (updateFile,line); if(!SysTools::FromString(iTuvokSVNVersion,line)) {updateFile.close(); return false;}} else {updateFile.close(); return false;}
-  } else return false;
+  } else {
+    DeleteUpdateFile();
+    return false;
+  }
   updateFile.close();
+  DeleteUpdateFile();
 
   return true;
 }

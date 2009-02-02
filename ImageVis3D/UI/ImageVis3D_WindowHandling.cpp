@@ -236,7 +236,6 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   m_pHttp = new QHttp(this);
   connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
   connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
-
 }
 
 // ******************************************
