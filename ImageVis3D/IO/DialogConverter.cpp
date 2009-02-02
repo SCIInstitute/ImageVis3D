@@ -49,11 +49,17 @@ DialogConverter::DialogConverter(QWidget* parent) :
 {
 }
 
-bool DialogConverter::ConvertToUVF(const std::string& strSourceFilename, const std::string& strTargetFilename, const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction)
-{
+bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename, 
+                                   const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction,
+                                   UINT64& iHeaderSkip, UINT64& iComponentSize, UINT64& iComponentCount, 
+                                   bool& bConvertEndianess, bool& bSigned, UINTVECTOR3& vVolumeSize,
+                                   FLOATVECTOR3& vVolumeAspect, std::string& strTitle, std::string& strSource, 
+                                   UVFTables::ElementSemanticTable& eType, std::string& strIntermediateFile,
+                                   bool& bDeleteIntermediateFile) {
+
   if (bNoUserInteraction) return false;
 
-  if (QMessageBox::No == QMessageBox::question(NULL, "RAW Loader", "This file was not recognized by ImageVis3D's build in readers and cannot be converted automatically. Do you want to specify the data set parameters manually?", QMessageBox::Yes, QMessageBox::No)) {
+  if (QMessageBox::No == QMessageBox::question(NULL, "RAW Data Loader", "The file was not recognized by ImageVis3D's build in readers and cannot be converted automatically. Do you want to specify the data set parameters manually?", QMessageBox::Yes, QMessageBox::No)) {
     return false;
   }
   
@@ -67,35 +73,53 @@ bool DialogConverter::ConvertToUVF(const std::string& strSourceFilename, const s
 
     if (rawDialog.ComputeExpectedSize() > iSize) return false;
 
-    UINTVECTOR3   vVolumeSize    = rawDialog.GetSize();
-    FLOATVECTOR3  vVolumeAspect  = rawDialog.GetAspectRatio();
+
+    strTitle = "Raw data";
+    strSource = SysTools::GetFilename(strSourceFilename);
+    eType             = UVFTables::ES_UNDEFINED;
+    iComponentCount = 1; 
+    vVolumeSize    = rawDialog.GetSize();
+    vVolumeAspect  = rawDialog.GetAspectRatio();
     unsigned int  quantID        = rawDialog.GetQuantization();
     unsigned int  encID          = rawDialog.GetEncoding();
-    unsigned int  iHeaderSkip    = rawDialog.GetHeaderSize();
-    bool          bConvEndian    = encID != 1 && rawDialog.IsBigEndian() != EndianConvert::IsBigEndian();
-    bool          bSigned        = quantID == 2 || rawDialog.IsSigned();
+    iHeaderSkip       = rawDialog.GetHeaderSize();
+    bConvertEndianess = encID != 1 && rawDialog.IsBigEndian() != EndianConvert::IsBigEndian();
+    bSigned           = quantID == 2 || rawDialog.IsSigned();
     
 
-    unsigned int iComponentSize = 8;
+    iComponentSize = 8;
     if (quantID == 1) iComponentSize = 16;
       if (quantID == 2) iComponentSize = 32;
 
     if (encID == 0)  {
-      return ConvertRAWDataset(strSourceFilename, strTargetFilename, strTempDir, pMasterController, iHeaderSkip, iComponentSize, 1, bConvEndian, bSigned, 
-                               vVolumeSize, vVolumeAspect, "Raw data", SysTools::GetFilename(strSourceFilename));
+      strIntermediateFile = strSourceFilename;
+      bDeleteIntermediateFile = false;
+      return true;
     } else
     if (encID == 1)  {
-      return ConvertTXTDataset(strSourceFilename, strTargetFilename, strTempDir, pMasterController, iHeaderSkip, iComponentSize, 1, bSigned,
-                               vVolumeSize, vVolumeAspect, "Raw data", SysTools::GetFilename(strSourceFilename));
+
+        string strBinaryFile = strTempDir+SysTools::GetFilename(strSourceFilename)+".binary";
+        bool bResult = ParseTXTDataset(strSourceFilename, strBinaryFile, pMasterController, iHeaderSkip, iComponentSize, iComponentCount, bSigned, vVolumeSize);
+        strIntermediateFile = strBinaryFile;
+        bDeleteIntermediateFile = true;
+        iHeaderSkip = 0;
+        bConvertEndianess = false;
+        return bResult;
     } else
     if (encID == 2)  {
-      return ConvertGZIPDataset(strSourceFilename, strTargetFilename, strTempDir, pMasterController, iHeaderSkip, iComponentSize, 1, bConvEndian, bSigned, 
-                               vVolumeSize, vVolumeAspect, "Raw data", SysTools::GetFilename(strSourceFilename));
-
+        string strUncompressedFile = strTempDir+SysTools::GetFilename(strSourceFilename)+".uncompressed";
+        bool bResult = ExtractGZIPDataset(strSourceFilename, strUncompressedFile, pMasterController, iHeaderSkip);
+        strIntermediateFile = strUncompressedFile;
+        bDeleteIntermediateFile = true;
+        iHeaderSkip = 0;
+        return bResult;
     } else {
-      return ConvertBZIP2Dataset(strSourceFilename, strTargetFilename, strTempDir, pMasterController, iHeaderSkip, iComponentSize, 1, bConvEndian, bSigned,
-                                 vVolumeSize, vVolumeAspect, "Raw data", SysTools::GetFilename(strSourceFilename));
-
+        string strUncompressedFile = strTempDir+SysTools::GetFilename(strSourceFilename)+".uncompressed";
+        bool bResult = ExtractBZIP2Dataset(strSourceFilename, strUncompressedFile, pMasterController, iHeaderSkip);
+        strIntermediateFile = strUncompressedFile;
+        bDeleteIntermediateFile = true;
+        iHeaderSkip = 0;
+        return bResult;
     } 
   }
 
