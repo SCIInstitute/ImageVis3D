@@ -47,7 +47,9 @@ URLDlg::URLDlg(QString title, QString desc, QString url, QWidget* parent, Qt::Wi
 {
   setupUi(this);
   setWindowTitle(title);
-  label_updateIcon->setPixmap(QPixmap::fromImage(QImage(":/Resources/icon_Update.png")));
+  QPixmap p = QPixmap::fromImage(QImage(":/Resources/icon_Update.png"));
+  label_updateIcon->setPixmap(p);
+
   label_desc->setText(desc);
   label_url->setText(url);
 }
