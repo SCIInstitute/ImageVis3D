@@ -412,5 +412,4 @@ void MainWindow::ReportABug() {
       return;
     }
   }
-
 }
