@@ -8,7 +8,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>441</width>
+    <width>529</width>
     <height>394</height>
    </rect>
   </property>
@@ -244,6 +244,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QRadioButton" name="radioButton_32BitInt" >
+           <property name="text" >
+            <string>32bit (int)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QRadioButton" name="radioButton_32BitFloat" >
            <property name="text" >
             <string>32 bit (float)</string>
@@ -470,7 +477,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>293</x>
-     <y>379</y>
+     <y>384</y>
     </hint>
     <hint type="destinationlabel" >
      <x>157</x>
@@ -486,7 +493,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>346</x>
-     <y>379</y>
+     <y>384</y>
     </hint>
     <hint type="destinationlabel" >
      <x>286</x>
@@ -517,8 +524,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>187</x>
-     <y>69</y>
+     <x>339</x>
+     <y>75</y>
     </hint>
     <hint type="destinationlabel" >
      <x>75</x>
@@ -533,8 +540,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>319</x>
-     <y>69</y>
+     <x>509</x>
+     <y>75</y>
     </hint>
     <hint type="destinationlabel" >
      <x>396</x>
@@ -550,7 +557,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>43</x>
-     <y>186</y>
+     <y>194</y>
     </hint>
     <hint type="destinationlabel" >
      <x>8</x>
@@ -566,7 +573,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>131</x>
-     <y>181</y>
+     <y>194</y>
     </hint>
     <hint type="destinationlabel" >
      <x>3</x>
@@ -581,7 +588,7 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>263</x>
+     <x>353</x>
      <y>194</y>
     </hint>
     <hint type="destinationlabel" >
@@ -598,7 +605,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>51</x>
-     <y>247</y>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel" >
      <x>435</x>
@@ -613,8 +620,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>122</x>
-     <y>252</y>
+     <x>125</x>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel" >
      <x>434</x>
@@ -629,8 +636,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>178</x>
-     <y>252</y>
+     <x>183</x>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel" >
      <x>439</x>
@@ -645,8 +652,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>239</x>
-     <y>252</y>
+     <x>248</x>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel" >
      <x>435</x>
@@ -662,7 +669,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>62</x>
-     <y>303</y>
+     <y>317</y>
     </hint>
     <hint type="destinationlabel" >
      <x>237</x>
@@ -678,7 +685,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>26</x>
-     <y>247</y>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel" >
      <x>201</x>
@@ -694,11 +701,107 @@
    <hints>
     <hint type="sourcelabel" >
      <x>224</x>
-     <y>306</y>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel" >
      <x>440</x>
      <y>358</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_32BitInt</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>238</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>521</x>
+     <y>150</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_32BitFloat</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>groupBox_Sign</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>315</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>417</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_32BitInt</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>groupBox_Sign</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>214</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>371</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_16bit</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>groupBox_Sign</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>165</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>442</x>
+     <y>178</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_32BitFloat</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>radioButton_Signed</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>283</x>
+     <y>179</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>471</x>
+     <y>188</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_8bit</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>groupBox_Sign</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>63</x>
+     <y>180</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>412</x>
+     <y>155</y>
     </hint>
    </hints>
   </connection>

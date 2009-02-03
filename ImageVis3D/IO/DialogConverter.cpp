@@ -52,7 +52,7 @@ DialogConverter::DialogConverter(QWidget* parent) :
 bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename, 
                                    const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction,
                                    UINT64& iHeaderSkip, UINT64& iComponentSize, UINT64& iComponentCount, 
-                                   bool& bConvertEndianess, bool& bSigned, UINTVECTOR3& vVolumeSize,
+                                   bool& bConvertEndianess, bool& bSigned, bool& bIsFloat, UINTVECTOR3& vVolumeSize,
                                    FLOATVECTOR3& vVolumeAspect, std::string& strTitle, std::string& strSource, 
                                    UVFTables::ElementSemanticTable& eType, std::string& strIntermediateFile,
                                    bool& bDeleteIntermediateFile) {
@@ -89,7 +89,9 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
 
     iComponentSize = 8;
     if (quantID == 1) iComponentSize = 16;
-      if (quantID == 2) iComponentSize = 32;
+      if (quantID > 1) iComponentSize = 32;
+
+    bIsFloat = quantID == 3;
 
     if (encID == 0)  {
       strIntermediateFile = strSourceFilename;
@@ -97,9 +99,8 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
       return true;
     } else
     if (encID == 1)  {
-
         string strBinaryFile = strTempDir+SysTools::GetFilename(strSourceFilename)+".binary";
-        bool bResult = ParseTXTDataset(strSourceFilename, strBinaryFile, pMasterController, iHeaderSkip, iComponentSize, iComponentCount, bSigned, vVolumeSize);
+        bool bResult = ParseTXTDataset(strSourceFilename, strBinaryFile, pMasterController, iHeaderSkip, iComponentSize, iComponentCount, bSigned, bIsFloat, vVolumeSize);
         strIntermediateFile = strBinaryFile;
         bDeleteIntermediateFile = true;
         iHeaderSkip = 0;

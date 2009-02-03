@@ -114,9 +114,10 @@ FLOATVECTOR3 RAWDialog::GetAspectRatio() {
 }
 
 unsigned int RAWDialog::GetQuantization() {
-  unsigned int iID = 0;
-  if (radioButton_16bit->isChecked()) iID = 1; else
-    if (radioButton_32BitFloat->isChecked()) iID = 2;
+  unsigned int iID = 3;
+  if (radioButton_8bit->isChecked()) iID = 0; else
+    if (radioButton_16bit->isChecked()) iID = 1; else
+      if (radioButton_32BitInt->isChecked()) iID = 2;
   return iID;
 }
 

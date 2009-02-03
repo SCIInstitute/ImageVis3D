@@ -116,7 +116,6 @@ MainWindow::MainWindow(MasterController& masterController,
 
   setupUi(this);
 
-
   SetupWorkspaceMenu();
 
   if (!LoadGeometry("Default.geo", true)) {
