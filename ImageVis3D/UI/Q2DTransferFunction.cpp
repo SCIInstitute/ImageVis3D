@@ -550,7 +550,7 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 
 bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
   // hand the load call over to the TransferFunction1D class
-  if( m_pTrans->Load(strFilename.toStdString()) ) {
+  if( m_pTrans->Load(strFilename.toStdString(), m_pTrans->GetSize() ) ) {
     m_iActiveSwatchIndex = 0;
     m_bBackdropCacheUptodate = false;
     update();

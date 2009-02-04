@@ -338,7 +338,7 @@ void MainWindow::ReportABug() {
     string strTime(QTime::currentTime().toString().toAscii()); 
     reportFile << "Issue Report " << strDate << "  " << strTime << endl << endl << endl;
 
-    reportFile << "Tuvok Version:" << float(TUVOK_VERSION) << " " << TUVOK_VERSION_TYPE;
+    reportFile << "Tuvok Version:" << float(TUVOK_VERSION) << " " << TUVOK_VERSION_TYPE << " " << TUVOK_DETAILS;
 #ifdef TUVOK_SVN_VERSION 
     reportFile << " SVN Version:" << int(TUVOK_SVN_VERSION);
 #endif

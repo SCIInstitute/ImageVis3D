@@ -43,7 +43,7 @@
 using namespace std;
 
 void MainWindow::ShowVersions() {
-  m_MasterController.DebugOut()->printf("Tuvok Version: %g %s",float(TUVOK_VERSION), TUVOK_VERSION_TYPE);
+  m_MasterController.DebugOut()->printf("Tuvok Version: %g %s %s",float(TUVOK_VERSION), TUVOK_VERSION_TYPE, TUVOK_DETAILS);
 #ifdef TUVOK_SVN_VERSION 
   m_MasterController.DebugOut()->printf("SVN Version: %i",int(TUVOK_SVN_VERSION));
 #endif
