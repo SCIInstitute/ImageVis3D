@@ -155,7 +155,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ClearMRUList();
 
     void UpdateMenus();
-    void SaveDataset();
+    void ExportDataset();
 
     void RenderWindowActive(RenderWindow* sender);
     void RenderWindowClosing(RenderWindow* sender);

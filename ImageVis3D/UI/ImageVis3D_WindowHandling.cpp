@@ -699,7 +699,7 @@ void MainWindow::OpenRecentFile(){
 
 void MainWindow::UpdateMenus() {
   bool bHasMdiChild = mdiArea->subWindowList().size() > 0;
-  actionSave_Dataset->setEnabled(bHasMdiChild);
+  actionExport_Dataset->setEnabled(bHasMdiChild);
 
   actionGo_Fullscreen->setEnabled(bHasMdiChild);
   actionCascade->setEnabled(bHasMdiChild);
@@ -728,8 +728,6 @@ void MainWindow::UpdateMenus() {
   actionStastistcs->setVisible(false);
   actionUndo->setVisible(false);
   actionRedo->setVisible(false); 
-  actionSave_Dataset->setVisible(false); 
-
 }
 
 // ******************************************

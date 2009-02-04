@@ -59,7 +59,7 @@
     </widget>
     <addaction name="actionLoadDataset" />
     <addaction name="actionLoad_Dataset_from_Directory" />
-    <addaction name="actionSave_Dataset" />
+    <addaction name="actionExport_Dataset" />
     <addaction name="separator" />
     <addaction name="menuLast_Used_Projects" />
     <addaction name="separator" />
@@ -3885,12 +3885,12 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <string>Load Dataset from File</string>
    </property>
   </action>
-  <action name="actionSave_Dataset" >
+  <action name="actionExport_Dataset" >
    <property name="enabled" >
     <bool>false</bool>
    </property>
    <property name="text" >
-    <string>Save Dataset</string>
+    <string>Export Dataset</string>
    </property>
   </action>
   <action name="actionQuit" >
@@ -4394,10 +4394,10 @@ smaller values while make it apear behind. While the first effect usualy looks m
    </hints>
   </connection>
   <connection>
-   <sender>actionSave_Dataset</sender>
+   <sender>actionExport_Dataset</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>SaveDataset()</slot>
+   <slot>ExportDataset()</slot>
    <hints>
     <hint type="sourcelabel" >
      <x>-1</x>
@@ -5674,7 +5674,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>Use2DTrans()</slot>
   <slot>ClearMRUList()</slot>
   <slot>UpdateMenus()</slot>
-  <slot>SaveDataset()</slot>
+  <slot>ExportDataset()</slot>
   <slot>UseIso()</slot>
   <slot>ClearDebugWin()</slot>
   <slot>SetDebugViewMask()</slot>

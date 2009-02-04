@@ -235,7 +235,7 @@ void MainWindow::LoadDirectory() {
 }
 
 
-void MainWindow::SaveDataset() {
+void MainWindow::ExportDataset() {
   QFileDialog::Options options;
 #ifdef TUVOK_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
@@ -243,17 +243,41 @@ void MainWindow::SaveDataset() {
   QString selectedFilter;
 
   QSettings settings;
-  QString strLastDir = settings.value("Folders/SaveDataset", ".").toString();
+  QString strLastDir = settings.value("Folders/ExportDataset", ".").toString();
+
+  QString dialogString = m_MasterController.IOMan()->GetExportDialogString().c_str();
 
   QString fileName =
-    QFileDialog::getSaveFileName(this, "Save Current Dataset",
+    QFileDialog::getSaveFileName(this, "Export Current Dataset",
          strLastDir,
-         "Universal Volume Format (*.uvf)",&selectedFilter, options);
+         dialogString,&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "uvf").c_str();
-    settings.setValue("Folders/SaveDataset", QFileInfo(fileName).absoluteDir().path());
+    settings.setValue("Folders/ExportDataset", QFileInfo(fileName).absoluteDir().path());
+
+    string filter = selectedFilter.toAscii();
+    size_t start = filter.find_last_of("*.")+1;
+    size_t end = filter.find_last_of(")");
+    string ext = filter.substr(start, end-start);
+    SysTools::RemoveTailingWhitespace(ext);
+    SysTools::RemoveLeadingWhitespace(ext);
+
+    string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()), ext);
+
+
+    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet()->GetInfo()->GetLODLevelCount());
+    int  iLODLevel = 0;
+    if (iMaxLODLevel > 0) {
+      bool bOK = true;
+      iLODLevel = QInputDialog::getInteger(this,
+                                              tr("Which LOD Level do you want to export?"),
+                                              tr("Level:"), 0, 0, iMaxLODLevel, 1, &bOK);
+
+      if (!bOK) return;
+    }
+
+    /// \todo: export the dataset here
+
   }
 
-  // TODO: save the dataset (if we ever need this feature)
 }
