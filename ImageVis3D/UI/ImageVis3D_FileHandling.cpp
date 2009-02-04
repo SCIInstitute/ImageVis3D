@@ -241,7 +241,7 @@ void MainWindow::ExportDataset() {
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/ExportDataset", QFileInfo(fileName).absoluteDir().path());
 
-    string filter = selectedFilter.toAscii();
+    string filter = std::string(selectedFilter.toAscii());
     size_t start = filter.find_last_of("*.")+1;
     size_t end = filter.find_last_of(")");
     string ext = filter.substr(start, end-start);
