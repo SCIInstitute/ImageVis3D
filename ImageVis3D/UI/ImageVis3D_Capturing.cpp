@@ -42,9 +42,7 @@
 #include <QtCore/QSettings>
 
 #include "PleaseWait.h"
-#include "DebugOut/QTLabelOut.h"
 #include "MIPRotDialog.h"
-#include "../Tuvok/DebugOut/MultiplexOut.h"
 
 using namespace std;
 
@@ -131,18 +129,7 @@ void MainWindow::CaptureRotation() {
     m_pActiveRenderWin->ToggleHQCaptureMode();
 
     PleaseWaitDialog pleaseWait(this);
-    // add status label into debug chain
-    AbstrDebugOut* pOldDebug       = m_MasterController.DebugOut();
-    bool           bDeleteOldDebug = m_MasterController.DoDeleteDebugOut();
-    m_MasterController.SetDeleteDebugOut(false);
-
-    MultiplexOut* pMultiOut = new MultiplexOut();
-    m_MasterController.SetDebugOut(pMultiOut, true);
-    QTLabelOut* labelOut = new QTLabelOut(pleaseWait.GetStatusLabel(),
-                                          &pleaseWait);
-    labelOut->SetOutput(true, true, true, false);
-    pMultiOut->AddDebugOut(labelOut,  true);
-    pMultiOut->AddDebugOut(pOldDebug, false);
+    QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
 
     if (eWindowMode == AbstrRenderer::WM_3D)  {
       pleaseWait.SetText("Capturing a full 360° rotation, please wait  ...");
@@ -281,7 +268,7 @@ void MainWindow::CaptureRotation() {
     }
     m_pActiveRenderWin->ToggleHQCaptureMode();
     pleaseWait.close();
-    m_MasterController.SetDebugOut(pOldDebug, bDeleteOldDebug);
+    pleaseWait.DettachLabel();
     m_pActiveRenderWin->GetRenderer()->ScheduleCompleteRedraw();  // to make sure front and backbuffer are valid
   }
 }

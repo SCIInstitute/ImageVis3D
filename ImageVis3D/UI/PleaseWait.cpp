@@ -37,11 +37,48 @@
 
 #include "PleaseWait.h"
 
-PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags) : QDialog(parent, flags)
+PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags) :
+  QDialog(parent, flags),
+  m_pMasterController(NULL),
+  m_pMultiOut(NULL),
+  m_pLabelOut(NULL),
+  m_pOldDebug(NULL),
+  m_bDeleteOldDebug(false)
 {
   setupUi(this);
 }
 
 PleaseWaitDialog::~PleaseWaitDialog(void)
 {
+  DettachLabel();
 }
+
+QTLabelOut* PleaseWaitDialog::AttachLabel(MasterController* pMasterController) {
+  if (m_pLabelOut) return m_pLabelOut;
+
+  m_pMasterController = pMasterController;
+
+  // add status label into debug chain
+  m_pOldDebug       = m_pMasterController->DebugOut();
+  m_bDeleteOldDebug = m_pMasterController->DoDeleteDebugOut();
+  m_pMasterController->SetDeleteDebugOut(false);
+
+  m_pMultiOut = new MultiplexOut();
+  m_pMasterController->SetDebugOut(m_pMultiOut, true);
+  m_pLabelOut = new QTLabelOut(label_Status, this);
+  m_pLabelOut->SetOutput(true, true, true, false);
+  m_pMultiOut->AddDebugOut(m_pLabelOut,  true);
+  m_pMultiOut->AddDebugOut(m_pOldDebug, false);
+
+  return m_pLabelOut;
+}
+
+void PleaseWaitDialog::DettachLabel() {
+  if (m_pOldDebug) {
+    m_pMasterController->SetDebugOut(m_pOldDebug, m_bDeleteOldDebug);
+    m_pOldDebug = NULL;
+    m_pLabelOut = NULL;
+    m_pMultiOut = NULL;
+  }
+}
+

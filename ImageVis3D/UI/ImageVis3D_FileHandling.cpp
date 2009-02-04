@@ -147,33 +147,19 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
 
       if (targetFilename.isEmpty()) return false;
       pleaseWait.SetText("Converting, please wait  ...");
-
-      // add status label into debug chain
-      AbstrDebugOut* pOldDebug       = m_MasterController.DebugOut();
-      bool           bDeleteOldDebug = m_MasterController.DoDeleteDebugOut();
-      m_MasterController.SetDeleteDebugOut(false);
-
-      MultiplexOut* pMultiOut = new MultiplexOut();
-      m_MasterController.SetDebugOut(pMultiOut, true);
-
-      QTLabelOut* labelOut = new QTLabelOut(pleaseWait.GetStatusLabel(),
-                                            &pleaseWait);
+      QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
       labelOut->SetOutput(true, true, true, false);
-
-      pMultiOut->AddDebugOut(labelOut,  true);
-      pMultiOut->AddDebugOut(pOldDebug, false);
-     
+   
       if (!m_MasterController.IOMan()->ConvertDataset(filename.toStdString(), targetFilename.toStdString(), bNoUserInteraction)) {
         QString strText = tr("Unable to convert file %1 into %2.").arg(filename).arg(targetFilename);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
         if (!bNoUserInteraction) ShowCriticalDialog( "Conversion Error", strText);
 
-        m_MasterController.SetDebugOut(pOldDebug, bDeleteOldDebug);
+        pleaseWait.close();
         return false;
       }      
       filename = targetFilename;
       pleaseWait.close();
-      m_MasterController.SetDebugOut(pOldDebug,bDeleteOldDebug);
     }
 
 
@@ -264,20 +250,27 @@ void MainWindow::ExportDataset() {
 
     string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()), ext);
 
-
     int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet()->GetInfo()->GetLODLevelCount());
     int  iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       bool bOK = true;
       iLODLevel = QInputDialog::getInteger(this,
-                                              tr("Which LOD Level do you want to export?"),
-                                              tr("Level:"), 0, 0, iMaxLODLevel, 1, &bOK);
-
+                                           tr("Which LOD Level do you want to export (lower level = higher resolution)?"),
+                                           tr("Level:"), 0, 0, iMaxLODLevel, 1, &bOK);
       if (!bOK) return;
     }
 
-    /// \todo: export the dataset here
+    PleaseWaitDialog pleaseWait(this);
+    pleaseWait.SetText("Exporting, please wait  ...");
+    pleaseWait.AttachLabel(&m_MasterController);
 
+    if (!m_MasterController.IOMan()->ExportDataset(m_pActiveRenderWin->GetRenderer()->GetDataSet(),
+                                              iLODLevel, 
+                                              strCompletefileName, 
+                                              SysTools::GetPath(strCompletefileName))) {  /// \todo maybe come up with something smarter for a temp dir then the target dir
+      ShowCriticalDialog( "Error during dataset export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+    }
+    pleaseWait.close();
   }
 
 }

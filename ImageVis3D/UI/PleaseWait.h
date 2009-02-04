@@ -39,6 +39,9 @@
 #define PLEASEWAIT_H
 
 #include "AutoGen/ui_PleaseWait.h"
+#include "DebugOut/QTLabelOut.h"
+#include "../Tuvok/DebugOut/MultiplexOut.h"
+#include "../Tuvok/Controller/MasterController.h"
 
 class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
 {
@@ -48,6 +51,9 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
                      Qt::WindowFlags flags = Qt::Tool);
     virtual ~PleaseWaitDialog();
 
+    QTLabelOut* AttachLabel(MasterController* pMasterController);
+    void DettachLabel();
+
     void SetText(QString text) {
       label->setText(text);
       if(this->isHidden()) {
@@ -56,6 +62,15 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
       QCoreApplication::processEvents();
     }
     QLabel* GetStatusLabel() {return label_Status;}
+
+  protected:
+    MasterController* m_pMasterController;
+    MultiplexOut* m_pMultiOut;
+    QTLabelOut* m_pLabelOut;
+    AbstrDebugOut* m_pOldDebug;
+    bool           m_bDeleteOldDebug;
+
+
 };
 
 #endif // PLEASEWAIT_H
