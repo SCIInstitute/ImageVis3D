@@ -250,7 +250,7 @@ void MainWindow::ExportDataset() {
 
     string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()), ext);
 
-    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet()->GetInfo()->GetLODLevelCount());
+    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet()->GetInfo()->GetLODLevelCount())-1;
     int  iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       bool bOK = true;

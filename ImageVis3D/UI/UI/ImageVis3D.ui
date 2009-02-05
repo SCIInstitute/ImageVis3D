@@ -59,9 +59,10 @@
     </widget>
     <addaction name="actionLoadDataset" />
     <addaction name="actionLoad_Dataset_from_Directory" />
-    <addaction name="actionExport_Dataset" />
     <addaction name="separator" />
     <addaction name="menuLast_Used_Projects" />
+    <addaction name="separator" />
+    <addaction name="actionExport_Dataset" />
     <addaction name="separator" />
     <addaction name="actionQuit" />
    </widget>
