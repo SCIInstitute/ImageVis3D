@@ -69,7 +69,7 @@ class RenderWindow
     AbstrRenderer* GetRenderer() {return m_Renderer;}
     void CheckForRedraw();
     void SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate=true);
-    const AbstrRenderer::ERenderMode GetRendermode() const {
+    AbstrRenderer::ERenderMode GetRendermode() const {
         return m_Renderer->GetRendermode();
     }
     void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor);
