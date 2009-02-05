@@ -108,7 +108,7 @@ void RenderWindowGL::InitializeRenderer()
       }
 
       char *extensions = NULL;
-      if (glGetString != NULL) extensions = (char*)glGetString(GL_EXTENSIONS);
+      extensions = (char*)glGetString(GL_EXTENSIONS);
       if (extensions != NULL)  ms_glExtString = extensions;
 
       if (bOpenGLFBO && (bOpenGLSO20 || (bOpenGLSL && bOpenGL3DT))) {
