@@ -139,8 +139,8 @@ int main(int argc, char* argv[])
     string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
     /// \todo: remove this once uvf to raw is completed
-    if (sourceType == "uvf") {
-      cout << "Error: Currently uvf is only supported as target type." << endl << endl;
+    if (sourceType == targetType) {
+      cout << "Source type equals target type. Nothing todo." << endl << endl;
       return 2;
     }
 
