@@ -55,8 +55,15 @@ void MainWindow::ShowVersions() {
 }
 
 void MainWindow::ShowGPUInfo(bool bWithExtensions) {
+#if defined(_WIN32) && defined(USE_DIRECTX)
+  if (DynamicDX::IsInitialized()) 
+    m_MasterController.DebugOut()->printf("Direct3DX10 Version %i",DynamicDX::GetD3DX10Version());  
+  else
+    m_MasterController.DebugOut()->printf("DirectX 10 not initialzed");  
+#endif
+
   if (RenderWindow::GetVendorString() == "") {
-    m_MasterController.DebugOut()->printf("Please open a renderwindow first!");
+    m_MasterController.DebugOut()->printf("For the GL specs please open a GL renderwindow first!");
   } else {
 
     m_MasterController.DebugOut()->printf(RenderWindow::GetVendorString().c_str());

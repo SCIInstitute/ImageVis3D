@@ -100,7 +100,6 @@ void MainWindow::QuietCheckForUpdates() {
   CheckForUpdatesInternal();
 }
 
-
 void MainWindow::CheckForUpdates() {
   m_bStartupCheck = false;
   CheckForUpdatesInternal();
@@ -368,8 +367,16 @@ void MainWindow::ReportABug() {
         reportFile << "    Available: " << (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024) <<" MB" << endl;
 
       reportFile << endl << endl << "GPU info:" << endl;
+
+      #if defined(_WIN32) && defined(USE_DIRECTX)
+        if (DynamicDX::IsInitialized()) 
+          reportFile << "Direct3DX10 Version " << DynamicDX::GetD3DX10Version() << endl;
+        else
+          reportFile << "DirectX 10 not initialzed" << endl;
+      #endif
+
       if (RenderWindow::GetVendorString() == "") {
-        reportFile << "No GPU-info discovered yet" << endl;
+        reportFile << "No GL-info discovered yet" << endl;
       } else {
         reportFile << RenderWindow::GetVendorString().c_str() << endl;
         reportFile << "Maximum 3D texture size " << RenderWindow::GetMax3DTexDims() << endl;

@@ -43,11 +43,14 @@
 #define RENDERWINDOWDX_H
 
 #include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/Basics/DynamicDX.h"
 #include "../Tuvok/Basics/ArcBall.h"
 
 #include <string>
 #include <StdDefines.h>
 #include "RenderWindow.h"
+
+
 
 class MainWindow;
 
