@@ -15,6 +15,7 @@ QT               += opengl network
 LIBS              = -L../Tuvok/Build -lTuvok
 RESOURCES         = ImageVis3D.qrc
 RC_FILE 	  = Resources/ImageVis3D.rc
+QMAKE_INFO_PLIST  = ../IV3D.plist
 ICON              = Resources/ImageVis3D.icns
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
