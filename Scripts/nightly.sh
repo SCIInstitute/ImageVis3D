@@ -56,6 +56,8 @@ if test `uname` = "Darwin" ; then
     echo "Building app file ..."
     try bash Scripts/mk_app.sh
     pushd Build/ &>/dev/null
+        sed -i -e "s,VERSION,${IV3D_VERSION}," \
+          ImageVis3D.app/Contents/Info.plist
         tar zcf ${tarball} ImageVis3D.app
         zip -9r ${zipfile} ImageVis3D.app
     popd &>/dev/null
