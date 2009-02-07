@@ -265,12 +265,62 @@ void MainWindow::ExportDataset() {
     pleaseWait.AttachLabel(&m_MasterController);
 
     if (!m_MasterController.IOMan()->ExportDataset(m_pActiveRenderWin->GetRenderer()->GetDataSet(),
-                                              iLODLevel, 
-                                              strCompletefileName, 
-                                              SysTools::GetPath(strCompletefileName))) {  /// \todo maybe come up with something smarter for a temp dir then the target dir
+                                                   iLODLevel,strCompletefileName, 
+                                                   SysTools::GetPath(strCompletefileName))) {  /// \todo maybe come up with something smarter for a temp dir then the target dir
       ShowCriticalDialog( "Error during dataset export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
     }
     pleaseWait.close();
   }
 
+}
+
+
+void MainWindow::ExportMesh() {
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/ExportMesh", ".").toString();
+
+  QString fileName =
+    QFileDialog::getSaveFileName(this, "Export Current Isosurface to Mesh",
+         strLastDir,
+         "Wavefront OBJ file (*.obj)",&selectedFilter, options);
+
+  if (!fileName.isEmpty()) {
+    settings.setValue("Folders/ExportMesh", QFileInfo(fileName).absoluteDir().path());
+    string targetFileName = SysTools::CheckExt(string(fileName.toAscii()), "obj");
+
+    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet()->GetInfo()->GetLODLevelCount())-1;
+    int  iLODLevel = 0;
+    if (iMaxLODLevel > 0) {
+      bool bOK = true;
+      iLODLevel = QInputDialog::getInteger(this,
+                                           tr("Which LOD Level do you want to export (lower level = higher resolution)?"),
+                                           tr("Level:"), 0, 0, iMaxLODLevel, 1, &bOK);
+      if (!bOK) return;
+    }
+
+    PleaseWaitDialog pleaseWait(this);
+    pleaseWait.SetText("Exporting, please wait  ...");
+    pleaseWait.AttachLabel(&m_MasterController);
+
+    int iValue = horizontalSlider_Isovalue->value();
+    DOUBLEVECTOR3 vfRescaleFactors;
+    vfRescaleFactors.x = doubleSpinBox_RescaleX->value();
+    vfRescaleFactors.y = doubleSpinBox_RescaleY->value();
+    vfRescaleFactors.z = doubleSpinBox_RescaleZ->value();
+
+
+    if (!m_MasterController.IOMan()->ExtractIsosurface(m_pActiveRenderWin->GetRenderer()->GetDataSet(),
+                                                       iLODLevel, iValue, vfRescaleFactors, targetFileName, 
+                                                       SysTools::GetPath(targetFileName))) {  /// \todo maybe come up with something smarter for a temp dir then the target dir
+      ShowCriticalDialog( "Error during mesh export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+    }
+    pleaseWait.close();
+
+  }
 }

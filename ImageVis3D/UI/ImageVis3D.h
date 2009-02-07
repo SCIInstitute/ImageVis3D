@@ -156,6 +156,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     void UpdateMenus();
     void ExportDataset();
+    void ExportMesh();
 
     void RenderWindowActive(RenderWindow* sender);
     void RenderWindowClosing(RenderWindow* sender);

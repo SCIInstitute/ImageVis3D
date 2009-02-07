@@ -105,89 +105,6 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug|x64"
-			OutputDirectory="..\Build\$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="..\Build\$(PlatformName)\$(ConfigurationName)\objects"
-			ConfigurationType="1"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="UI"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="QRC"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				TargetEnvironment="3"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(QTDIR64)include&quot;;."
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
-				WarningLevel="4"
-				DebugInformationFormat="3"
-				DisableSpecificWarnings="4127;4512"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd.lib QtGuid.lib QtCored.lib QTNetworkd.lib "
-				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)lib&quot;;&quot;$(QTDIR64)plugins\imageformats&quot;"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				TargetMachine="17"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="..\Build\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\Build\$(PlatformName)\$(ConfigurationName)\objects"
@@ -249,6 +166,258 @@
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug (with DirectX)|Win32"
+			OutputDirectory="..\Build\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\Build\$(PlatformName)\$(ConfigurationName)\objects"
+			ConfigurationType="1"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="UI"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="QRC"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(QTDIR32)include&quot;;."
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;USE_DIRECTX"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4127;4512"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd.lib QtGuid.lib QtCored.lib QTNetworkd.lib"
+				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;;&quot;$(QTDIR32)plugins\imageformats&quot;"
+				DelayLoadDLLs=""
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release (with DirectX)|Win32"
+			OutputDirectory="..\Build\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\Build\$(PlatformName)\$(ConfigurationName)\objects"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="UI"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="QRC"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="&quot;$(QTDIR32)include&quot;;."
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USE_DIRECTX"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4127;4512"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui.lib QtCore.lib QtOpenGL.lib QtNetwork.lib"
+				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;;&quot;$(QTDIR32)plugins\imageformats&quot;"
+				DelayLoadDLLs=""
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|x64"
+			OutputDirectory="..\Build\$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="..\Build\$(PlatformName)\$(ConfigurationName)\objects"
+			ConfigurationType="1"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="UI"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="QRC"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(QTDIR64)include&quot;;."
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				WarningLevel="4"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4127;4512"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd.lib QtGuid.lib QtCored.lib QTNetworkd.lib "
+				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)lib&quot;;&quot;$(QTDIR64)plugins\imageformats&quot;"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -359,89 +528,6 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug (with DirectX)|Win32"
-			OutputDirectory="..\Build\$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="..\Build\$(PlatformName)\$(ConfigurationName)\objects"
-			ConfigurationType="1"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="UI"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="QRC"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(QTDIR32)include&quot;;."
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;USE_DIRECTX"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
-				WarningLevel="4"
-				DebugInformationFormat="4"
-				DisableSpecificWarnings="4127;4512"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmaind.lib QtOpenGLd.lib QtGuid.lib QtCored.lib QTNetworkd.lib"
-				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;;&quot;$(QTDIR32)plugins\imageformats&quot;"
-				DelayLoadDLLs=""
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
 			Name="Debug (with DirectX)|x64"
 			OutputDirectory="..\Build\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="..\Build\$(PlatformName)\$(ConfigurationName)\objects"
@@ -502,92 +588,6 @@
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="17"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release (with DirectX)|Win32"
-			OutputDirectory="..\Build\$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="..\Build\$(PlatformName)\$(ConfigurationName)\objects"
-			ConfigurationType="1"
-			CharacterSet="1"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="UI"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="QRC"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(QTDIR32)include&quot;;."
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USE_DIRECTX"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="4"
-				DebugInformationFormat="3"
-				DisableSpecificWarnings="4127;4512"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui.lib QtCore.lib QtOpenGL.lib QtNetwork.lib"
-				OutputFile="$(OutDir)\$(ProjectName)-32.exe"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR32)lib&quot;;&quot;$(QTDIR32)plugins\imageformats&quot;"
-				DelayLoadDLLs=""
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -830,7 +830,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
+						Name="Release|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -838,7 +838,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release|Win32"
+						Name="Debug|x64"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -989,27 +989,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1029,7 +1009,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1039,7 +1019,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1077,27 +1077,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1117,7 +1097,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1127,7 +1107,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1160,22 +1160,42 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release (with DirectX)|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1195,27 +1215,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Debug (with DirectX)|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1253,27 +1253,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1293,7 +1273,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1303,7 +1283,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1341,27 +1341,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1381,7 +1361,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1391,7 +1371,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1429,27 +1429,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1469,7 +1449,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1479,7 +1459,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1517,27 +1517,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1557,7 +1537,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1567,7 +1547,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1605,27 +1605,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1645,7 +1625,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1655,7 +1635,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1701,27 +1701,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1741,7 +1721,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1751,7 +1731,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1789,27 +1789,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1829,7 +1809,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1839,7 +1819,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1885,7 +1885,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1895,7 +1895,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1933,27 +1933,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1973,7 +1953,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -1983,7 +1963,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -2021,27 +2021,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -2061,7 +2041,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -2071,7 +2051,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -2109,27 +2109,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -2149,7 +2129,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -2159,7 +2139,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -2197,27 +2197,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug|x64"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -2237,7 +2217,7 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Debug (with DirectX)|x64"
+						Name="Release (with DirectX)|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -2247,7 +2227,27 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release (with DirectX)|Win32"
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Performing moc on $(InputName).h"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug (with DirectX)|x64"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -2288,27 +2288,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug|x64"
-							>
-							<Tool
-								Name="VCCustomBuildTool"
-								Description="Performing moc on $(InputName).h"
-								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
 							Name="Release|Win32"
-							>
-							<Tool
-								Name="VCCustomBuildTool"
-								Description="Performing moc on $(InputName).h"
-								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
-								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|x64"
 							>
 							<Tool
 								Name="VCCustomBuildTool"
@@ -2328,7 +2308,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Debug (with DirectX)|x64"
+							Name="Release (with DirectX)|Win32"
 							>
 							<Tool
 								Name="VCCustomBuildTool"
@@ -2338,7 +2318,27 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Release (with DirectX)|Win32"
+							Name="Debug|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug (with DirectX)|x64"
 							>
 							<Tool
 								Name="VCCustomBuildTool"

@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1294</width>
-    <height>1931</height>
+    <height>1932</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -2966,6 +2966,9 @@
            <string>Render Settings</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_25" >
+           <property name="margin" >
+            <number>6</number>
+           </property>
            <item>
             <widget class="QCheckBox" name="checkBox_Lighting" >
              <property name="text" >
@@ -3145,16 +3148,47 @@
    <widget class="QWidget" name="dockWidgetContents_10" >
     <layout class="QVBoxLayout" name="verticalLayout_16" >
      <item>
-      <widget class="QCheckBox" name="checkBox_UseIso" >
-       <property name="minimumSize" >
-        <size>
-         <width>0</width>
-         <height>18</height>
-        </size>
+      <widget class="QFrame" name="frame_11" >
+       <property name="frameShape" >
+        <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="text" >
-        <string>Use Isosurface Rendering</string>
+       <property name="frameShadow" >
+        <enum>QFrame::Raised</enum>
        </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_12" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QCheckBox" name="checkBox_UseIso" >
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>18</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>Use Isosurface Rendering</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="toolButton_ExpMesh" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
+          <property name="minimumSize" >
+           <size>
+            <width>0</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="text" >
+           <string>Export As Mesh</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>
@@ -4085,7 +4119,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <tabstop>radioButton_Intensity</tabstop>
   <tabstop>horizontalSlider_Opacity</tabstop>
   <tabstop>tabWidget_2</tabstop>
-  <tabstop>checkBox_UseIso</tabstop>
   <tabstop>checkBox</tabstop>
  </tabstops>
  <resources/>
@@ -4481,8 +4514,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1284</x>
-     <y>952</y>
+     <x>1189</x>
+     <y>949</y>
     </hint>
     <hint type="destinationlabel" >
      <x>601</x>
@@ -4961,8 +4994,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetLighting(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1264</x>
-     <y>753</y>
+     <x>1267</x>
+     <y>750</y>
     </hint>
     <hint type="destinationlabel" >
      <x>390</x>
@@ -4993,8 +5026,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetSampleRate(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1255</x>
-     <y>855</y>
+     <x>1258</x>
+     <y>852</y>
     </hint>
     <hint type="destinationlabel" >
      <x>389</x>
@@ -5025,8 +5058,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1284</x>
-     <y>952</y>
+     <x>1189</x>
+     <y>949</y>
     </hint>
     <hint type="destinationlabel" >
      <x>1284</x>
@@ -5041,8 +5074,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleGlobalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1264</x>
-     <y>777</y>
+     <x>1267</x>
+     <y>774</y>
     </hint>
     <hint type="destinationlabel" >
      <x>990</x>
@@ -5057,8 +5090,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleLocalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1264</x>
-     <y>801</y>
+     <x>1267</x>
+     <y>798</y>
     </hint>
     <hint type="destinationlabel" >
      <x>989</x>
@@ -5658,6 +5691,22 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>toolButton_ExpMesh</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ExportMesh()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1215</x>
+     <y>937</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>955</x>
+     <y>875</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -5732,5 +5781,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>OnlineVideoTut()</slot>
   <slot>ShowWelcomeScreen()</slot>
   <slot>ReportABug()</slot>
+  <slot>ExportMesh()</slot>
  </slots>
 </ui>
