@@ -220,6 +220,17 @@ void MainWindow::LoadDirectory() {
   }
 }
 
+bool MainWindow::ExportDataset(UINT32 iLODLevel, std::string targetFileName) {
+  PleaseWaitDialog pleaseWait(this);
+  pleaseWait.SetText("Exporting, please wait  ...");
+  pleaseWait.AttachLabel(&m_MasterController);
+
+  bool bResult = m_MasterController.IOMan()->ExportDataset(m_pActiveRenderWin->GetRenderer()->GetDataSet(),
+                                                 iLODLevel,targetFileName, 
+                                                 SysTools::GetPath(targetFileName));  /// \todo maybe come up with something smarter for a temp dir then the target dir
+  pleaseWait.close();
+  return bResult;
+}
 
 void MainWindow::ExportDataset() {
   QFileDialog::Options options;
@@ -264,16 +275,34 @@ void MainWindow::ExportDataset() {
     pleaseWait.SetText("Exporting, please wait  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
-    if (!m_MasterController.IOMan()->ExportDataset(m_pActiveRenderWin->GetRenderer()->GetDataSet(),
-                                                   iLODLevel,strCompletefileName, 
-                                                   SysTools::GetPath(strCompletefileName))) {  /// \todo maybe come up with something smarter for a temp dir then the target dir
+    if (!ExportDataset(iLODLevel, strCompletefileName)) {
       ShowCriticalDialog( "Error during dataset export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
     }
-    pleaseWait.close();
+
   }
 
 }
 
+
+bool MainWindow::ExportMesh(UINT32 iLODLevel, string targetFileName) {
+    PleaseWaitDialog pleaseWait(this);
+    pleaseWait.SetText("Exporting, please wait  ...");
+    pleaseWait.AttachLabel(&m_MasterController);
+
+    int iValue = horizontalSlider_Isovalue->value();
+    DOUBLEVECTOR3 vfRescaleFactors;
+    vfRescaleFactors.x = doubleSpinBox_RescaleX->value();
+    vfRescaleFactors.y = doubleSpinBox_RescaleY->value();
+    vfRescaleFactors.z = doubleSpinBox_RescaleZ->value();
+
+
+    bool bResult = m_MasterController.IOMan()->ExtractIsosurface(m_pActiveRenderWin->GetRenderer()->GetDataSet(),
+                                                       iLODLevel, iValue, vfRescaleFactors, targetFileName, 
+                                                       SysTools::GetPath(targetFileName));  /// \todo maybe come up with something smarter for a temp dir then the target dir
+    pleaseWait.close();
+
+    return bResult;
+}
 
 void MainWindow::ExportMesh() {
   QFileDialog::Options options;
@@ -304,23 +333,7 @@ void MainWindow::ExportMesh() {
       if (!bOK) return;
     }
 
-    PleaseWaitDialog pleaseWait(this);
-    pleaseWait.SetText("Exporting, please wait  ...");
-    pleaseWait.AttachLabel(&m_MasterController);
-
-    int iValue = horizontalSlider_Isovalue->value();
-    DOUBLEVECTOR3 vfRescaleFactors;
-    vfRescaleFactors.x = doubleSpinBox_RescaleX->value();
-    vfRescaleFactors.y = doubleSpinBox_RescaleY->value();
-    vfRescaleFactors.z = doubleSpinBox_RescaleZ->value();
-
-
-    if (!m_MasterController.IOMan()->ExtractIsosurface(m_pActiveRenderWin->GetRenderer()->GetDataSet(),
-                                                       iLODLevel, iValue, vfRescaleFactors, targetFileName, 
-                                                       SysTools::GetPath(targetFileName))) {  /// \todo maybe come up with something smarter for a temp dir then the target dir
+    if(!ExportMesh(UINT32(iLODLevel), targetFileName))
       ShowCriticalDialog( "Error during mesh export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
-    }
-    pleaseWait.close();
-
   }
 }
