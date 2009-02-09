@@ -310,6 +310,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SetContextScaleValueSlider(int iValue);
     void SetBorderSizeValueSlider(int iValue);
 
+    void CompareFiles(const std::string& strFile1, const std::string& strFile2) const;
+
     void RemoveAllLocks(RenderWindow* sender);
     void RemoveAllLocks(RenderWindow* sender, size_t iLockType);
     bool SetLock(size_t iLockType, RenderWindow* winA, RenderWindow* winB);

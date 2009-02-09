@@ -57,6 +57,7 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "modeiso", "","switch to isomode rendering");
   pScriptEngine->RegisterCommand(this, "export", "targetfile [LOD]","export the current dataset into 'targetfile' using LOD level 'LOD' default is 0 (max quality) the filetype is determined by the extension");
   pScriptEngine->RegisterCommand(this, "exportiso", "targetfile [LOD]","export the current isosurface into 'targetfile' using LOD level 'LOD' default is 0 (max quality)");
+  pScriptEngine->RegisterCommand(this, "compare", "file1 file2","compare file1 and file2");
   pScriptEngine->RegisterCommand(this, "close", "","close the current datawindow");
   pScriptEngine->RegisterCommand(this, "resize", "sizeX sizeY","resize the current data window");
   pScriptEngine->RegisterCommand(this, "rotateX", "angle","rotate the data by \"angle\" degree around the x axis");
@@ -88,6 +89,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "modeiso")         { UseIso();} else
   if (strCommand == "export")          { ExportDataset( (strParams.size()>1) ? atoi(strParams[1].c_str()) : 0, strParams[0]); } else
   if (strCommand == "exportiso")       { ExportMesh( (strParams.size()>1) ? atoi(strParams[1].c_str()) : 0, strParams[0]); } else
+  if (strCommand == "compare")         { CompareFiles(strParams[0], strParams[1]);} else
   if (strCommand == "close")           { CloseCurrentView();} else
   if (strCommand == "resize")          { ResizeCurrentView(atoi(strParams[0].c_str()), atoi(strParams[1].c_str()));} else
   if (strCommand == "rotateX")         { RotateCurrentViewX(atof(strParams[0].c_str()));} else
