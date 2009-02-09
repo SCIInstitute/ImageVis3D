@@ -1,9 +1,11 @@
 #!/bin/sh
+cd ${HOME}/imagevis3d
 source Scripts/util.sh
 
 export PATH="${HOME}/sw/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin"
 # this affects what BSD mail uses for the Reply-To header:
 export REPLYTO="tfogal@sci.utah.edu"
+export MAILTO="tfogal@sci.utah.edu"
 
 em="tfogal@sci.utah.edu"
 full_em="tfogal@sci.utah.edu jens@sci.utah.edu"
