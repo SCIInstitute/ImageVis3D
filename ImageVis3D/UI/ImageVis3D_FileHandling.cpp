@@ -340,11 +340,9 @@ void MainWindow::ExportMesh() {
 
 void MainWindow::CompareFiles(const std::string& strFile1, const std::string& strFile2) const {
   string strMessage = "";
-
   if (SysTools::CompareFiles(strFile1, strFile2, &strMessage)) {
     m_MasterController.DebugOut()->Message("MainWindow::CompareFiles", "Files are identical!");
   } else {
     m_MasterController.DebugOut()->Warning("MainWindow::CompareFiles", strMessage.c_str());
   }
-
 }
