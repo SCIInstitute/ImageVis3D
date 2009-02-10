@@ -111,8 +111,8 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  if (!SysTools::FileExists(strFilename)) {
-    cout << "Input file not found" << endl;
+  if (!SysTools::FileExists(strInFile)) {
+    cout << "Input file " << strInFile << " not found" << endl;
     return 2;
   }
 
