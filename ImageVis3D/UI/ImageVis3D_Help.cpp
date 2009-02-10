@@ -238,8 +238,13 @@ void MainWindow::UploadLogToServer() {
 
   delete pFTPTempFile;
 
-  QString qstrID = tr("DebugOut_%1_%2.txt").arg(QTime::currentTime().toString()).arg(QDate::currentDate().toString());
+  QString qstrID = GenUniqueName("DebugOut","txt").c_str();
   FtpTransfer(strSourceName, string(qstrID.toAscii()));
+}
+
+
+std::string MainWindow::GenUniqueName(const std::string& strPrefix, const std::string& strExt) {
+  return string(tr("%1_%2_%3.%4").arg(strPrefix.c_str()).arg(QTime::currentTime().toString()).arg(QDate::currentDate().toString()).arg(strExt.c_str()).toAscii());
 }
 
 bool MainWindow::FtpTransfer(string strSource, string strDest, bool bDeleteSource) {

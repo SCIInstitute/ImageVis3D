@@ -37,6 +37,7 @@
 
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/Basics/Appendix.h"
 #include <QtOpenGL/QtOpenGL>
 
 using namespace std;
@@ -67,7 +68,9 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "capturesingle", "targetfile", "capture a single image into targetfile");
   pScriptEngine->RegisterCommand(this, "capturesequence", "targetfile", "capture a single image into targetfile_counter");
   pScriptEngine->RegisterCommand(this, "stayopen", "", "do not close the app after the end of the script");
-  pScriptEngine->RegisterCommand(this, "upload", "source target yes/no", "upload the file 'source' to the debug server with the name 'target' the last parameter specifices whether the source file is deleted after the transfer is completed, as this call is non blocking it should aonly be called at the end of the script to avoid race conditions");
+  pScriptEngine->RegisterCommand(this, "pack", "source ... target", "pack the files source0 to sourceN into a single file target");
+  pScriptEngine->RegisterCommand(this, "upload", "source [target]", "upload the file 'source' to the debug server with the name 'target' (by default a unique filename is generated automatically)");
+  pScriptEngine->RegisterCommand(this, "delete", "file", "delete the file 'file'");
   pScriptEngine->RegisterCommand(this, "quit", "", "quit ImageVis3D");
 }
 
@@ -101,11 +104,19 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "capturesingle")   { bResult = CaptureFrame(strParams[0]); if (!bResult) {strMessage = "Unable to save file "+strParams[0];}} else
   if (strCommand == "capturesequence") { bResult = CaptureSequence(strParams[0]); if (!bResult) {strMessage = "Unable to save file "+strParams[0];}} else
   if (strCommand == "stayopen")        { m_bStayOpenAfterScriptEnd = true;} else
-  if (strCommand == "upload")          { bResult = FtpTransfer(strParams[0], strParams[1], SysTools::ToLowerCase(strParams[2]) == "yes" );} else
+  if (strCommand == "pack")            { bResult = Pack(strParams);} else
+  if (strCommand == "upload")          { bResult = FtpTransfer(strParams[0], (strParams.size()>1) ? strParams[1].c_str() : GenUniqueName("Script", "data"), false );} else
+  if (strCommand == "delete")          { bResult = remove(strParams[0].c_str()) == 0;} else
   if (strCommand == "quit")            { bResult = close();} else
     return false;
 
   return true;
+}
+
+bool MainWindow::Pack(const std::vector< std::string >& strParams) {
+  vector<string> vFiles(strParams.begin(), strParams.end()-1);
+  Appendix a(strParams[strParams.size()-1], vFiles); 
+  return a.IsOK();
 }
 
 bool MainWindow::RunScript(const std::string& strFilename) {

@@ -350,6 +350,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool         m_bFTPDeleteSource;
     bool         m_bFTPFinished;
     bool         FtpTransfer(std::string strSource, std::string strDest, bool bDeleteSource = true);
+    std::string  GenUniqueName(const std::string& strPrefix, const std::string& strExt="txt");
+    bool         Pack(const std::vector< std::string >& strParams);
+
 };
 
 #endif // IMAGEVIS3D_H
