@@ -330,6 +330,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ShowCriticalDialog(QString strTitle, QString strMessage);
     
     RenderWindow* ActiveRenderWin();
+    QMdiSubWindow* ActiveSubWindow();
     RenderWindow* m_pActiveRenderWin;
     
     // update

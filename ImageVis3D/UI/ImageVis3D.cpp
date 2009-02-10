@@ -525,6 +525,18 @@ void MainWindow::ToggleFullscreen() {
 }
 
 
+QMdiSubWindow* MainWindow::ActiveSubWindow() {
+#ifdef TUVOK_OS_LINUX
+  QCoreApplication::processEvents();
+#endif
+  for (int i = 0;i<mdiArea->subWindowList().size();i++) {
+    QWidget* w = mdiArea->subWindowList().at(i)->widget();
+    RenderWindow* subwindow = WidgetToRenderWin(w);
+    if (subwindow == m_pActiveRenderWin) return mdiArea->subWindowList().at(i);
+  }
+  return NULL;
+}
+
 RenderWindow* MainWindow::ActiveRenderWin() {
 #ifdef TUVOK_OS_LINUX
   QCoreApplication::processEvents();

@@ -405,17 +405,23 @@ bool MainWindow::ApplyWorkspace() {
 
 
 void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
-  if (!ActiveRenderWin()) return;
-  mdiArea->activeSubWindow()->resize(iSizeX, iSizeY);
+  if (ActiveSubWindow()) 
+    ActiveSubWindow()->resize(iSizeX, iSizeY);
+  else
+    if (mdiArea->activeSubWindow()) 
+      mdiArea->activeSubWindow()->resize(iSizeX, iSizeY);
 }
 
 void MainWindow::CloseCurrentView() {
-  if (!ActiveRenderWin()) return;
-  mdiArea->activeSubWindow()->close();
+  if (ActiveSubWindow()) 
+    ActiveSubWindow()->close();
+  else
+    if (mdiArea->activeSubWindow()) 
+      mdiArea->activeSubWindow()->close();
 }
 
 void MainWindow::CloneCurrentView() {
-  if (!ActiveRenderWin()) return;
+  if (!m_pActiveRenderWin) return;
   RenderWindow *renderWin = CreateNewRenderWindow(m_pActiveRenderWin->GetDatasetName());
 
   renderWin->CloneViewState(m_pActiveRenderWin);
@@ -499,21 +505,9 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   connect(renderWin->GetQtWidget(), SIGNAL(StereoDisabled()), this, SLOT(StereoDisabled()));
 
   if(m_pActiveRenderWin != renderWin) {
+    m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","Calling RenderWindowActive");
     QCoreApplication::processEvents();
-#ifdef TUVOK_OS_APPLE
-    // HACK: For some reason on the Mac we need to set the active sub window,
-    // re-process events, and then call our activation function ... doesn't
-    // seem to happen automagically.
-    QList<QMdiSubWindow *>::iterator iter;
-    for(iter = mdiArea->subWindowList().begin(); iter !=
-      mdiArea->subWindowList().end();  ++iter) {
-      if(renderWin->GetQtWidget() == (*iter)->widget()) {
-        mdiArea->setActiveSubWindow(*iter);
-        break;
-      }
-    }
-    QCoreApplication::processEvents();
-#endif
+    RenderWindowActive(renderWin); // if Qt will not call RenderWindowActive, we do it ourselfs
   }
   
   return renderWin;

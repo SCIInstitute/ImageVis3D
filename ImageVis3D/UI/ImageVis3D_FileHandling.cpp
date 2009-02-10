@@ -221,6 +221,10 @@ void MainWindow::LoadDirectory() {
 }
 
 bool MainWindow::ExportDataset(UINT32 iLODLevel, std::string targetFileName) {
+  if (!m_pActiveRenderWin) {
+    m_MasterController.DebugOut()->Warning("MainWindow::ExportDataset", "No active renderwin");
+    return false;
+  }
   PleaseWaitDialog pleaseWait(this);
   pleaseWait.SetText("Exporting, please wait  ...");
   pleaseWait.AttachLabel(&m_MasterController);
@@ -233,6 +237,7 @@ bool MainWindow::ExportDataset(UINT32 iLODLevel, std::string targetFileName) {
 }
 
 void MainWindow::ExportDataset() {
+  if (!m_pActiveRenderWin) return;
   QFileDialog::Options options;
 #ifdef TUVOK_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
@@ -285,6 +290,10 @@ void MainWindow::ExportDataset() {
 
 
 bool MainWindow::ExportMesh(UINT32 iLODLevel, string targetFileName) {
+    if (!m_pActiveRenderWin) {
+      m_MasterController.DebugOut()->Warning("MainWindow::ExportMesh", "No active renderwin");
+      return false;
+    }
     PleaseWaitDialog pleaseWait(this);
     pleaseWait.SetText("Exporting, please wait  ...");
     pleaseWait.AttachLabel(&m_MasterController);
@@ -343,6 +352,6 @@ void MainWindow::CompareFiles(const std::string& strFile1, const std::string& st
   if (SysTools::CompareFiles(strFile1, strFile2, &strMessage)) {
     m_MasterController.DebugOut()->Message("MainWindow::CompareFiles", "Files are identical!");
   } else {
-    m_MasterController.DebugOut()->Warning("MainWindow::CompareFiles", strMessage.c_str());
+    m_MasterController.DebugOut()->Warning("MainWindow::CompareFiles", "%s (Comparing %s %s)", strMessage.c_str(), strFile1.c_str(), strFile2.c_str());
   }
 }
