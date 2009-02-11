@@ -168,6 +168,11 @@ class RenderWindow
     void Cleanup();
 
   private:
+    void SetRotation(const FLOATMATRIX4& mAccumulatedRotation,
+                     const FLOATMATRIX4& mCurrentRotation);
+    void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);
+
+  private:
     MasterController::EVolumeRendererType m_eRendererType;
     MainWindow*       m_MainWindow;
     unsigned int      m_iTimeSliceMSecsActive;
@@ -182,9 +187,6 @@ class RenderWindow
     FLOATMATRIX4      m_mAccumulatedTranslation;
     bool              m_bAbsoluteViewLock;
     bool              m_bCaptureMode;
-
-    void SetRotation(const FLOATMATRIX4& mAccumulatedRotation, const FLOATMATRIX4& mCurrentRotation);
-    void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);
 };
 
 #endif // RENDERWINDOW_H
