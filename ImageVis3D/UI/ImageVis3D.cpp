@@ -427,6 +427,11 @@ void MainWindow::ToggleLocalBBox(bool bRenderBBox)
   if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetLocalBBox(bRenderBBox);
 }
 
+void MainWindow::ToggleClipPlane(bool bClip)
+{
+    m_MasterController.DebugOut()->Message("MainWindow", "ToggleClipPlane");
+}
+
 
 #include <iostream>
 #include "../Tuvok/DebugOut/MultiplexOut.h"

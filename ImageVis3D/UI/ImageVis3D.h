@@ -185,6 +185,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SetIsoValue(int iValue);
     void ToggleGlobalBBox(bool bRenderBBox);
     void ToggleLocalBBox(bool bRenderBBox);
+    void ToggleClipPlane(bool);
 
     void SetRescaleFactors();
     virtual void closeEvent(QCloseEvent *event);
