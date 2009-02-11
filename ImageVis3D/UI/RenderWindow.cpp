@@ -197,8 +197,11 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
   }
 
   if (event->key() == Qt::Key_Space) {
-    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
-    AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode((int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
+    AbstrRenderer::EWindowMode eWinMode =
+      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
+                                       FLOATVECTOR2(m_vWinDim));
+    AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode(
+      (int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
     m_Renderer->SetViewmode(eMode);
 
     if (eMode == AbstrRenderer::VM_SINGLE)
@@ -215,7 +218,9 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
   }
 
   if (event->key() == Qt::Key_X) {
-    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+    AbstrRenderer::EWindowMode eWinMode =
+      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
+                                       FLOATVECTOR2(m_vWinDim));
     bool bFlipX=false, bFlipY=false;
     m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
     bFlipX = !bFlipX;
@@ -223,7 +228,9 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
   }
 
   if (event->key() == Qt::Key_Y) {
-    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+    AbstrRenderer::EWindowMode eWinMode =
+      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
+                                       FLOATVECTOR2(m_vWinDim));
     bool bFlipX=false, bFlipY=false;
     m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
     bFlipY = !bFlipY;
@@ -231,7 +238,9 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
   }
 
   if (event->key() == Qt::Key_M) {
-    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+    AbstrRenderer::EWindowMode eWinMode =
+      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
+                                       FLOATVECTOR2(m_vWinDim));
     bool bUseMIP=false;
     bUseMIP = !m_Renderer->GetUseMIP(eWinMode);
     m_Renderer->SetUseMIP(eWinMode, bUseMIP);
@@ -277,7 +286,6 @@ void RenderWindow::SetupArcBall() {
     m_ArcBall.SetWindowSize(m_vWinDim.x, m_vWinDim.y);
     m_ArcBall.SetWindowOffset(0,0);
   }
-
 }
 
 
