@@ -154,6 +154,32 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
   }
 }
 
+bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool shift, bool left,
+                               bool right)
+{
+  bool bPerformUpdate = false;
+
+  if (m_Renderer->GetRendermode() == AbstrRenderer::RM_ISOSURFACE &&
+      m_Renderer->GetCV() &&
+      shift) {
+    SetCVFocusPos(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+  }
+
+  if (left) {
+    UINTVECTOR2 unsigned_pos(pos.x, pos.y);
+    SetRotationDelta(m_ArcBall.Drag(unsigned_pos).ComputeRotation(),true);
+    bPerformUpdate = true;
+  }
+  if (right) {
+    INTVECTOR2 viPosDelta = m_viMousePos - m_viRightClickPos;
+    m_viRightClickPos = m_viMousePos;
+    SetTranslationDelta(FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x,
+                        float(viPosDelta.y*2) / m_vWinDim.y,0),true);
+    bPerformUpdate = true;
+  }
+  return bPerformUpdate;
+}
+
 void RenderWindow::WheelEvent(QWheelEvent *event) {
   AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
 

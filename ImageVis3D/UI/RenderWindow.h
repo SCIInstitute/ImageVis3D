@@ -168,6 +168,13 @@ class RenderWindow
     void Cleanup();
 
   private:
+    /// Called for a mouse update when in the 3D view mode.
+    /// @param pos new position of the mouse cursor
+    /// @param shift if the shift modifier is held
+    /// @param left  if the left mouse button is pressed
+    /// @param right if the right mouse button is pressed
+    bool MouseMove3D(INTVECTOR2 pos, bool shift, bool left, bool right);
+
     void SetRotation(const FLOATMATRIX4& mAccumulatedRotation,
                      const FLOATMATRIX4& mCurrentRotation);
     void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);
