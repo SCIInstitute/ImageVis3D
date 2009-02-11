@@ -427,7 +427,7 @@ void MainWindow::ToggleLocalBBox(bool bRenderBBox)
   if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetLocalBBox(bRenderBBox);
 }
 
-void MainWindow::ToggleClipPlane(bool bClip)
+void MainWindow::ToggleClipPlane(bool)
 {
     m_MasterController.DebugOut()->Message("MainWindow", "ToggleClipPlane");
 }
