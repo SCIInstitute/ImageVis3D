@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1294</width>
-    <height>1932</height>
+    <width>1041</width>
+    <height>2150</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -42,8 +42,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1294</width>
-     <height>22</height>
+     <width>1041</width>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File" >
@@ -1371,7 +1371,7 @@
   <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="minimumSize" >
     <size>
-     <width>175</width>
+     <width>185</width>
      <height>245</height>
     </size>
    </property>
@@ -1563,8 +1563,8 @@
    </property>
    <property name="minimumSize" >
     <size>
-     <width>174</width>
-     <height>142</height>
+     <width>178</width>
+     <height>165</height>
     </size>
    </property>
    <property name="windowTitle" >
@@ -1611,7 +1611,7 @@
    <property name="minimumSize" >
     <size>
      <width>400</width>
-     <height>378</height>
+     <height>404</height>
     </size>
    </property>
    <property name="windowTitle" >
@@ -1929,7 +1929,7 @@
    <property name="minimumSize" >
     <size>
      <width>445</width>
-     <height>435</height>
+     <height>456</height>
     </size>
    </property>
    <property name="features" >
@@ -4081,6 +4081,20 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <action name="actionReport_an_Issue" >
    <property name="text" >
     <string>Report an Issue</string>
+   </property>
+  </action>
+  <action name="actionClip_Plane" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Clip Plane</string>
+   </property>
+   <property name="toolTip" >
+    <string>Enable a clip plane to slice through the dataset</string>
+   </property>
+   <property name="whatsThis" >
+    <string>Enables a clip plane</string>
    </property>
   </action>
  </widget>
