@@ -155,7 +155,6 @@ MainWindow::~MainWindow()
   if (m_pDebugOut == m_MasterController.DebugOut()) {
     m_MasterController.RemoveDebugOut(m_pDebugOut);
   }
-  delete m_pDebugOut;
 
   // cleanup updatefile, this codepath is taken for instance when the windows firewall blocked an http request
   if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
