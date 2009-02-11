@@ -170,10 +170,11 @@ class RenderWindow
   private:
     /// Called for a mouse update when in the 3D view mode.
     /// @param pos new position of the mouse cursor
-    /// @param shift if the shift modifier is held
-    /// @param left  if the left mouse button is pressed
-    /// @param right if the right mouse button is pressed
-    bool MouseMove3D(INTVECTOR2 pos, bool shift, bool left, bool right);
+    /// @param clearview if this action should affect clearview
+    /// @param rotate    should this action rotate the data
+    /// @param translate should this action translate the data
+    bool MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
+                     bool translate);
 
     void SetRotation(const FLOATMATRIX4& mAccumulatedRotation,
                      const FLOATMATRIX4& mCurrentRotation);

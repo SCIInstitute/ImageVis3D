@@ -123,54 +123,45 @@ void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) FinalizeRotation(true);
 }
 
+// Qt callback; just interprets the event and passes it on to the appropriate
+// ImageVis3D handler.
 void RenderWindow::MouseMoveEvent(QMouseEvent *event)
 {
   m_viMousePos = INTVECTOR2(event->pos().x(), event->pos().y());
-  AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+  AbstrRenderer::EWindowMode eWinMode =
+    m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
+                                     FLOATVECTOR2(m_vWinDim));
+
+  bool clearview = event->modifiers() & Qt::ShiftModifier;
+  bool rotate = event->buttons() & Qt::LeftButton;
+  bool translate = event->buttons() & Qt::RightButton;
 
   // mouse is over the 3D window
-  if (eWinMode == AbstrRenderer::WM_3D ) {
+  if (eWinMode == AbstrRenderer::WM_3D) {
     bool bPerformUpdate = false;
 
-    if (m_Renderer->GetRendermode() == AbstrRenderer::RM_ISOSURFACE &&
-        m_Renderer->GetCV() &&
-        event->modifiers() & Qt::ShiftModifier) {
-      SetCVFocusPos(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
-    }
-
-    if (event->buttons() & Qt::LeftButton) {
-      SetRotationDelta(m_ArcBall.Drag(UINTVECTOR2(event->pos().x(), event->pos().y())).ComputeRotation(),true);
-      bPerformUpdate = true;
-    }
-
-    if (event->buttons() & Qt::RightButton) {
-      INTVECTOR2 viPosDelta = m_viMousePos - m_viRightClickPos;
-      m_viRightClickPos = m_viMousePos;
-      SetTranslationDelta(FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x, float(viPosDelta.y*2) / m_vWinDim.y,0),true);
-      bPerformUpdate = true;
-    }
+    bPerformUpdate = MouseMove3D(m_viMousePos, clearview, rotate, translate);
 
     if (bPerformUpdate) UpdateWindow();
   }
 }
 
-bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool shift, bool left,
-                               bool right)
+bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
+                               bool translate)
 {
   bool bPerformUpdate = false;
 
   if (m_Renderer->GetRendermode() == AbstrRenderer::RM_ISOSURFACE &&
-      m_Renderer->GetCV() &&
-      shift) {
+      m_Renderer->GetCV() && clearview) {
     SetCVFocusPos(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
   }
 
-  if (left) {
+  if (rotate) {
     UINTVECTOR2 unsigned_pos(pos.x, pos.y);
     SetRotationDelta(m_ArcBall.Drag(unsigned_pos).ComputeRotation(),true);
     bPerformUpdate = true;
   }
-  if (right) {
+  if (translate) {
     INTVECTOR2 viPosDelta = m_viMousePos - m_viRightClickPos;
     m_viRightClickPos = m_viMousePos;
     SetTranslationDelta(FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x,
