@@ -152,14 +152,10 @@ MainWindow::MainWindow(MasterController& masterController,
 
 MainWindow::~MainWindow()
 {
-  if (m_DebugOut == m_MasterController.DebugOut()) {
-    m_MasterController.RemoveDebugOut(m_DebugOut);
-  } else {
-    // if the debugger was replaced by a multiplexer (for instance for file logging) remove it from the multiplexer
-    MultiplexOut* p = dynamic_cast<MultiplexOut*>(m_MasterController.DebugOut());
-    if (p != NULL) p->RemoveDebugOut(m_DebugOut);
+  if (m_pDebugOut == m_MasterController.DebugOut()) {
+    m_MasterController.RemoveDebugOut(m_pDebugOut);
   }
-  delete m_DebugOut;
+  delete m_pDebugOut;
 
   // cleanup updatefile, this codepath is taken for instance when the windows firewall blocked an http request
   if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
