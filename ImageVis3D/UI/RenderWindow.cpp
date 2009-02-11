@@ -110,12 +110,15 @@ void RenderWindow::SetCaptureRotationAngle(float fAngle) {
 
 void RenderWindow::MousePressEvent(QMouseEvent *event)
 {
-  AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
-
+  AbstrRenderer::EWindowMode eWinMode =
+    m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
+                                     FLOATVECTOR2(m_vWinDim));
   // mouse is over the 3D window
   if (eWinMode == AbstrRenderer::WM_3D ) {
-    if (event->button() == Qt::RightButton) m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
-    if (event->button() == Qt::LeftButton)  m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+    if (event->button() == Qt::RightButton)
+      m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+    if (event->button() == Qt::LeftButton)
+      m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
   }
 }
 
@@ -193,7 +196,9 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
 
 
   if (event->key() == Qt::Key_C) {
-    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+    AbstrRenderer::EWindowMode eWinMode =
+      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
+                                       FLOATVECTOR2(m_vWinDim));
 
     if (eWinMode == AbstrRenderer::WM_3D) {
       m_Renderer->SetRenderCoordArrows(!m_Renderer->GetRenderCoordArrows());
@@ -201,15 +206,12 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
   }
 
   if (event->key() == Qt::Key_R) {
-    AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+    AbstrRenderer::EWindowMode eWinMode =
+      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
+                                       FLOATVECTOR2(m_vWinDim));
 
     if (eWinMode == AbstrRenderer::WM_3D) {
-      FLOATMATRIX4 mIdentity;
-      m_Renderer->SetRotation(mIdentity);
-      m_Renderer->SetTranslation(mIdentity);
-      m_mCurrentRotation = mIdentity;
-      m_mAccumulatedRotation = mIdentity;
-      m_mAccumulatedTranslation = mIdentity;
+      ResetRenderingParameters();
     }
   }
 
@@ -638,4 +640,14 @@ void RenderWindow::PaintRenderer()
       m_MainWindow->SetRenderProgress(iLevelCount, iWorkingLevelCount, iBrickCount, iWorkingBrick);
     }
   }
+}
+
+void RenderWindow::ResetRenderingParameters()
+{
+  FLOATMATRIX4 mIdentity;
+  m_Renderer->SetRotation(mIdentity);
+  m_Renderer->SetTranslation(mIdentity);
+  m_mCurrentRotation = mIdentity;
+  m_mAccumulatedRotation = mIdentity;
+  m_mAccumulatedTranslation = mIdentity;
 }

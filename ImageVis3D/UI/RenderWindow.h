@@ -180,6 +180,8 @@ class RenderWindow
                      const FLOATMATRIX4& mCurrentRotation);
     void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);
 
+    void ResetRenderingParameters();
+
   private:
     MasterController::EVolumeRendererType m_eRendererType;
     MainWindow*       m_MainWindow;
