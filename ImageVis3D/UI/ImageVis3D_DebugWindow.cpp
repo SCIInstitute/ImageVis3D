@@ -143,16 +143,12 @@ void MainWindow::GetDebugViewMask() {
 }
 
 void MainWindow::ParseAndExecuteDebugCommand() {
-  bool bTemp = m_DebugOut->ShowMessages();
-  m_DebugOut->SetShowMessages(true);
-
-  if (m_DebugOut != m_MasterController.DebugOut())  {
-    m_DebugOut->printf("Debug out is currently redirected to another debug out.");
-  }
+  bool bTemp = GetDebugOut()->ShowMessages();
+  GetDebugOut()->SetShowMessages(true);
 
   m_MasterController.ScriptEngine()->ParseLine(lineEdit_DebugCommand->text().toStdString());
   
-  m_DebugOut->SetShowMessages(bTemp);
+  GetDebugOut()->SetShowMessages(bTemp);
   if (listWidget_DebugOut->count() > 0) 
     listWidget_DebugOut->setCurrentRow(listWidget_DebugOut->count()-1);
 

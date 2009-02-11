@@ -130,7 +130,8 @@ int main(int argc, char* argv[])
   HRConsoleOut* debugOut = new HRConsoleOut();
   debugOut->SetOutput(true, true, true, false);
 
-  MasterController masterController((AbstrDebugOut*)debugOut);
+  MasterController masterController;
+  masterController.AddDebugOut(debugOut);
   IOManager ioMan(&masterController);
 
   string targetType = SysTools::ToLowerCase(SysTools::GetExt(strOutfile));

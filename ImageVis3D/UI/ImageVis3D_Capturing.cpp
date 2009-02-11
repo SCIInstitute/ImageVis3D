@@ -268,7 +268,7 @@ void MainWindow::CaptureRotation() {
     }
     m_pActiveRenderWin->ToggleHQCaptureMode();
     pleaseWait.close();
-    pleaseWait.DettachLabel();
+    pleaseWait.DetachLabel();
     m_pActiveRenderWin->GetRenderer()->ScheduleCompleteRedraw();  // to make sure front and backbuffer are valid
   }
 }

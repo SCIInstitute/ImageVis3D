@@ -54,7 +54,6 @@
 #include <iostream>
 #include <string>
 #include "../Tuvok/Basics/SysTools.h"
-#include "../Tuvok/DebugOut/MultiplexOut.h"
 
 #include "../IO/DialogConverter.h"
 
@@ -153,15 +152,6 @@ MainWindow::MainWindow(MasterController& masterController,
 
 MainWindow::~MainWindow()
 {
-  if (m_DebugOut == m_MasterController.DebugOut()) {
-    m_MasterController.RemoveDebugOut(m_DebugOut);
-  } else {
-    // if the debugger was replaced by a multiplexer (for instance for file logging) remove it from the multiplexer
-    MultiplexOut* p = dynamic_cast<MultiplexOut*>(m_MasterController.DebugOut());
-    if (p != NULL) p->RemoveDebugOut(m_DebugOut);      
-  }
-  delete m_DebugOut;
-
   // cleanup updatefile, this codepath is taken for instance when the windows firewall blocked an http request
   if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
     m_pUpdateFile->close();
@@ -433,10 +423,13 @@ void MainWindow::ToggleLocalBBox(bool bRenderBBox)
 }
 
 
+#include <iostream>
+#include "../Tuvok/DebugOut/MultiplexOut.h"
 void MainWindow::closeEvent(QCloseEvent *event)
 {
   if (m_bAutoSaveGEO) SaveGeometry("Default.geo");
   if (m_bAutoSaveWSP) SaveWorkspace("Default.wsp");
+  m_MasterController.RemoveDebugOut(m_pDebugOut);
   event->accept();
 }
 

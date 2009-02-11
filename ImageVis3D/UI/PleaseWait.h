@@ -40,7 +40,6 @@
 
 #include "AutoGen/ui_PleaseWait.h"
 #include "DebugOut/QTLabelOut.h"
-#include "../Tuvok/DebugOut/MultiplexOut.h"
 #include "../Tuvok/Controller/MasterController.h"
 
 class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
@@ -52,7 +51,7 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
     virtual ~PleaseWaitDialog();
 
     QTLabelOut* AttachLabel(MasterController* pMasterController);
-    void DettachLabel();
+    void DetachLabel();
 
     void SetText(QString text) {
       label->setText(text);
@@ -63,14 +62,11 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
     }
     QLabel* GetStatusLabel() {return label_Status;}
 
+    void closeEvent(QCloseEvent *event);
+
   protected:
     MasterController* m_pMasterController;
-    MultiplexOut* m_pMultiOut;
-    QTLabelOut* m_pLabelOut;
-    AbstrDebugOut* m_pOldDebug;
-    bool           m_bDeleteOldDebug;
-
-
+    QTLabelOut*       m_pLabelOut;
 };
 
 #endif // PLEASEWAIT_H

@@ -41,7 +41,6 @@
 
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/DebugOut/TextfileOut.h"
-#include "../Tuvok/DebugOut/MultiplexOut.h"
 
 #if defined(_WIN32) && defined(USE_DIRECTX)
   #include "../Tuvok/Basics/DynamicDX.h"
@@ -99,16 +98,7 @@ int main(int argc, char* argv[])
 
     textout->printf("Loglevel:%i\n",iLogLevel);
 
-    AbstrDebugOut* pOldDebug       = masterController.DebugOut();
-    bool           bDeleteOldDebug = masterController.DoDeleteDebugOut();
-    masterController.SetDeleteDebugOut(false);
-
-    MultiplexOut* pMultiOut = new MultiplexOut();
-    pMultiOut->SetOutput(true,true,true,true);
-    masterController.SetDebugOut(pMultiOut, true);
-
-    pMultiOut->AddDebugOut(textout, true);
-    pMultiOut->AddDebugOut(pOldDebug, bDeleteOldDebug);
+    masterController.AddDebugOut(textout);
   }
 
   // open the QT window
@@ -116,8 +106,10 @@ int main(int argc, char* argv[])
 
   if (strScriptFile != "") {
     bool bScriptResult =  mainWindow.RunScript(strScriptFile);
-    if (!mainWindow.StayOpen()) 
+    if (!mainWindow.StayOpen()) {
+      mainWindow.close();
       return (bScriptResult) ? 0 : 1;
+    }
   }
 
   int iResult = app.exec();

@@ -79,7 +79,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     virtual ~MainWindow();
     
-    QTOut* GetDebugOut() {return m_DebugOut;}
+    QTOut* GetDebugOut() {return m_pDebugOut;}
 
     // Scriptable implementation
     virtual void RegisterCalls(Scripting* pScriptEngine);
@@ -228,7 +228,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     Q1DTransferFunction*                      m_1DTransferFunction;
     Q2DTransferFunction*                      m_2DTransferFunction;
     QGLWidget*                                m_glShareWidget;
-    QTOut*                                    m_DebugOut;
+    QTOut*                                    m_pDebugOut;
     static const unsigned int                 ms_iMaxRecentFiles = 5;
     QAction*                                  m_recentFileActs[ms_iMaxRecentFiles];
     FLOATVECTOR3                              m_vBackgroundColors[2];

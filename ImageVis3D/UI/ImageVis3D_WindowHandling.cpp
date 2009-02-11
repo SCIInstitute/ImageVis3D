@@ -221,8 +221,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
   DisableAllTrans();
 
-  m_DebugOut = new QTOut(listWidget_DebugOut);
-  m_MasterController.SetDebugOut(m_DebugOut);
+  m_pDebugOut = new QTOut(listWidget_DebugOut);
+  m_MasterController.AddDebugOut(m_pDebugOut);
   GetDebugViewMask();
 
   frame_Expand2DWidgets->hide();
