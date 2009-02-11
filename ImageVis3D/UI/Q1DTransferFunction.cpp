@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -112,7 +112,7 @@ void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
 
   // rescale the histogram to the [0..1] range
   // first find min and max ...
-  unsigned int iMax = vHistogram->GetLinear(0); 
+  unsigned int iMax = vHistogram->GetLinear(0);
   unsigned int iMin = iMax;
   for (size_t i = 0;i<m_vHistogram.GetSize();i++) {
     unsigned int iVal = vHistogram->GetLinear(i);
@@ -150,7 +150,7 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
   QPen penScale(m_colorScale, 1, Qt::SolidLine);
   QPen penLargeScale(m_colorLargeScale, 1, Qt::SolidLine);
   for (unsigned int i = 0;i<m_iMarkersY;i++) {
-    int iPosY = height()-m_iBottomBorder-2 - i*iMarkerSpacingY; 
+    int iPosY = height()-m_iBottomBorder-2 - i*iMarkerSpacingY;
 
     if (i%m_iBigMarkerSpacingY == 0) {
       painter.setPen(penLargeScale);
@@ -189,8 +189,8 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
   pointList.push_back(QPointF(m_iLeftBorder+1, iGridHeight-m_iBottomBorder));
   for (size_t i = 0;i<m_vHistogram.GetSize();i++) {
     float value = min<float>(1.0f, pow(m_vHistogram.Get(i),1.0f/(1+(m_fHistfScale-1)/100.0f)));
-    pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1), 
-                                m_iTopBorder+iGridHeight-value*iGridHeight));  
+    pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1),
+                                m_iTopBorder+iGridHeight-value*iGridHeight));
   }
   pointList.push_back(QPointF(m_iLeftBorder+iGridWidth, m_iTopBorder+iGridHeight));
   pointList.push_back(QPointF(m_iLeftBorder+1, m_iTopBorder+iGridHeight));
@@ -211,7 +211,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
   // draw the tranfer function as one larger polyline
   std::vector<QPointF> pointList(m_vHistogram.GetSize());
   QPen penCurve(m_colorBorder, 1, Qt::SolidLine);
-  
+
   // for every component
   for (unsigned int j = 0;j<4;j++) {
 
@@ -294,7 +294,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
   int iCurrentIndex = int((float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth));
   iCurrentIndex = std::min<int>(iVectorSize-1, std::max<int>(0,iCurrentIndex));
 
-  // compute actual color value 
+  // compute actual color value
   float fValue = (float(m_iTopBorder)+float(iGridHeight)-float(event->y()))/float(iGridHeight);
   fValue    = std::min<float>(1.0f, std::max<float>(0.0f,fValue));
 
@@ -304,7 +304,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
       m_iLastIndex = iCurrentIndex;
       m_fLastValue = fValue;
     }
-    
+
     int iIndexMin, iIndexMax;
     float fValueMin, fValueInc;
 
@@ -361,7 +361,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
     if( m_eExecutionMode == CONTINUOUS ) ApplyFunction();
   } else {
     if (m_bMouseRight) {
-      // set "step" function      
+      // set "step" function
       if (m_iPaintMode & PAINT_RED)   m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,0);
       if (m_iPaintMode & PAINT_GREEN) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,1);
       if (m_iPaintMode & PAINT_BLUE)  m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,2);

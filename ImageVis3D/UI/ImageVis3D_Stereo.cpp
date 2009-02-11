@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -65,6 +65,6 @@ void MainWindow::SetStereoEyeDistance() {
 }
 
 void MainWindow::SetStereoFocalLength() {
-  if (m_pActiveRenderWin == NULL) return;  
+  if (m_pActiveRenderWin == NULL) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoFocalLength(float(horizontalSlider_FocalLength->value())/10.0);
 }

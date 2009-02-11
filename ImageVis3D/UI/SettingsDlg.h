@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -55,7 +55,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     unsigned int  GetLODDelay() const;
     unsigned int  GetActiveTS() const;
     unsigned int  GetInactiveTS() const;
-  
+
     bool          GetShowVersionInTitle() const;
     bool          GetAutoSaveGEO() const;
     bool          GetAutoSaveWSP() const;
@@ -64,7 +64,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetCheckForUpdatesOnStartUp() const;
     bool          GetCheckForDevBuilds() const;
     bool          GetShowWelcomeScreen() const;
-    
+
     unsigned int  GetVolrenType() const;
     FLOATVECTOR3  GetBackgroundColor1() const;
     FLOATVECTOR3  GetBackgroundColor2() const;
@@ -80,12 +80,12 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     int           GetLogoPos() const;
 
 
-    void Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU, 
-                   bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS, 
+    void Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU,
+                   bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
                    bool bShowVersionInTitle,
                    bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                    bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
-                   unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, 
+                   unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo,
                    bool bDownSampleTo8Bits, bool bDisableBorder, bool bAvoidCompositing,
                    const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos);
 
@@ -94,7 +94,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void SetTextOpacity(int iOpacity);
     void SelectBackColor1();
     void SelectBackColor2();
-    void SetMaxMemCheck();    
+    void SetMaxMemCheck();
     void LODDelayChanged();
     void MinFramerateChanged();
     void ActTSChanged();

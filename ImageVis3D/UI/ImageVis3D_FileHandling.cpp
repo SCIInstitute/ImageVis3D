@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -111,7 +111,7 @@ bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
   if (strParams.size() < 1 || strParams.size() > 2)  return false;
   string inFile = strParams[0], convFile;
   if (strParams.size() == 1)  {
-    convFile = SysTools::ChangeExt(inFile, "uvf"); 
+    convFile = SysTools::ChangeExt(inFile, "uvf");
   } else convFile = strParams[1];
 
   return LoadDataset(inFile.c_str(), convFile.c_str(), true);
@@ -130,12 +130,12 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
     }
 
     bool bChecksumFail=false;
-    if ((m_bQuickopen && !m_MasterController.IOMan()->NeedsConversion(filename.toStdString())) || 
+    if ((m_bQuickopen && !m_MasterController.IOMan()->NeedsConversion(filename.toStdString())) ||
         !m_MasterController.IOMan()->NeedsConversion(filename.toStdString(), bChecksumFail)) {
 
       if (bChecksumFail) {
         QString strText = tr("File %1 appears to be a broken UVF file since the header looks ok but the checksum does not match.").arg(filename);
-        m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());        
+        m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
         if (!bNoUserInteraction) ShowCriticalDialog( "Load Error", strText);
         return false;
       }
@@ -148,7 +148,7 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
       pleaseWait.SetText("Converting, please wait  ...");
       QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
       labelOut->SetOutput(true, true, true, false);
-   
+
       if (!m_MasterController.IOMan()->ConvertDataset(filename.toStdString(), targetFilename.toStdString(), bNoUserInteraction)) {
         QString strText = tr("Unable to convert file %1 into %2.").arg(filename).arg(targetFilename);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
@@ -156,7 +156,7 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
 
         pleaseWait.close();
         return false;
-      }      
+      }
       filename = targetFilename;
       pleaseWait.close();
     }
@@ -203,9 +203,9 @@ void MainWindow::LoadDirectory() {
           QString strText =
             tr("Unable to convert file stack from directory %1 into %2.").arg(directoryName).arg(targetFilename);
           ShowCriticalDialog( "Conversion Error", strText);
-          m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", strText.toStdString().c_str());        
-        }      
-      
+          m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", strText.toStdString().c_str());
+        }
+
         RenderWindow *renderWin = CreateNewRenderWindow(targetFilename);
         renderWin->GetQtWidget()->show();
         RenderWindowActive(renderWin);

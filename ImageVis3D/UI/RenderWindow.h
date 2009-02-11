@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -49,7 +49,7 @@
 
 class MainWindow;
 
-class RenderWindow 
+class RenderWindow
 {
   public:
     RenderWindow(MasterController& masterController,
@@ -100,7 +100,7 @@ class RenderWindow
     bool GetAvoidCompositing() const;
 
     void SetUseLighting(bool bLighting, bool bPropagate=true);
-    void SetSampleRateModifier(float fSampleRateModifier, bool bPropagate=true); 
+    void SetSampleRateModifier(float fSampleRateModifier, bool bPropagate=true);
     void SetIsoValue(float fIsoVal, bool bPropagate=true);
     void SetCVIsoValue(float fIsoVal, bool bPropagate=true);
     void SetCVSize(float fSize, bool bPropagate=true);
@@ -131,7 +131,7 @@ class RenderWindow
 
   protected:
     QString           m_strDataset;
-    QString           m_strID;  
+    QString           m_strID;
     AbstrRenderer*    m_Renderer;
     MasterController& m_MasterController;
     bool              m_bRenderSubsysOK;
@@ -172,7 +172,7 @@ class RenderWindow
     MainWindow*       m_MainWindow;
     unsigned int      m_iTimeSliceMSecsActive;
     unsigned int      m_iTimeSliceMSecsInActive;
-    
+
     ArcBall           m_ArcBall;
     INTVECTOR2        m_viRightClickPos;
     INTVECTOR2        m_viMousePos;
@@ -180,7 +180,7 @@ class RenderWindow
     FLOATMATRIX4      m_mAccumulatedRotation;
     FLOATMATRIX4      m_mCaptureStartRotation;
     FLOATMATRIX4      m_mAccumulatedTranslation;
-    bool              m_bAbsoluteViewLock;    
+    bool              m_bAbsoluteViewLock;
     bool              m_bCaptureMode;
 
     void SetRotation(const FLOATMATRIX4& mAccumulatedRotation, const FLOATMATRIX4& mCurrentRotation);

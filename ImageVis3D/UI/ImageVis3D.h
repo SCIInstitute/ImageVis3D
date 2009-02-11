@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -257,7 +257,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool                                      m_bCheckForUpdatesOnStartUp;
     bool                                      m_bCheckForDevBuilds;
     bool                                      m_bShowWelcomeScreen;
-    
+
     bool                                      m_bStayOpenAfterScriptEnd;
 
     RenderWindow* WidgetToRenderWin(QWidget* w);
@@ -284,7 +284,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void AddFileToMRUList(const QString &fileName);
 
     void GetDebugViewMask();
-      
+
     bool LoadDataset(const std::vector< std::string >& strParams);
     bool LoadDataset(QString fileName, QString targetFileName="", bool bNoUserInteraction=false);
 
@@ -328,11 +328,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ShowInformationDialog(QString strTitle, QString strMessage);
     void ShowWarningDialog(QString strTitle, QString strMessage);
     void ShowCriticalDialog(QString strTitle, QString strMessage);
-    
+
     RenderWindow* ActiveRenderWin();
     QMdiSubWindow* ActiveSubWindow();
     RenderWindow* m_pActiveRenderWin;
-    
+
     // update
     QHttp* m_pHttp;
     QFile* m_pUpdateFile;

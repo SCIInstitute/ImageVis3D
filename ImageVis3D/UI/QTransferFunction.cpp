@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -42,7 +42,7 @@ using namespace std;
 
 QTransferFunction::QTransferFunction(MasterController& masterController, QWidget *parent) :
   QWidget(parent),
-  m_MasterController(masterController), 
+  m_MasterController(masterController),
   m_eExecutionMode(CONTINUOUS),
   m_fHistfScale(1.0f),
   m_bBackdropCacheUptodate(false)

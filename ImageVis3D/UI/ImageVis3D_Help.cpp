@@ -166,7 +166,7 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
             u.exec();
           } else {
   #endif
-            if (!m_bStartupCheck) 
+            if (!m_bStartupCheck)
               ShowInformationDialog( tr("Update Check"),tr("This is the most current version of ImageVis3D and Tuvok!"));
   #if defined(IV3D_SVN_VERSION) && defined(TUVOK_SVN_VERSION)
           }
@@ -195,7 +195,7 @@ void MainWindow::readResponseHeader(const QHttpResponseHeader &responseHeader) {
        // these are not error conditions
        break;
     default:
-       if (!m_bStartupCheck) 
+       if (!m_bStartupCheck)
          ShowInformationDialog( tr("Update Check"), tr("Download failed: %1.") .arg(responseHeader.reasonPhrase()));
        m_pHttp->abort();
   }
@@ -325,25 +325,24 @@ void MainWindow::ReportABug() {
   b.SetUserMail(string(settings.value("UserMail", "").toString().toAscii()));
 
   if (b.exec() == QDialog::Accepted) {
-    
     settings.setValue("SubmitSysinfo", b.SubmitSysinfo());
     settings.setValue("SubmitLog", b.SubmitLog());
     settings.setValue("Username", b.GetUsername().c_str());
     settings.setValue("UserMail", b.GetUserMail().c_str());
 
     // first create the report textfile
-    ofstream reportFile("bugreport.txt");  
+    ofstream reportFile("bugreport.txt");
     if (!reportFile.is_open()) {
       ShowWarningDialog("Warning", "Unable to create bugreport.txt, aborting.");
       return;
     }
-    
-    string strDate(QDate::currentDate().toString().toAscii()); 
-    string strTime(QTime::currentTime().toString().toAscii()); 
+
+    string strDate(QDate::currentDate().toString().toAscii());
+    string strTime(QTime::currentTime().toString().toAscii());
     reportFile << "Issue Report " << strDate << "  " << strTime << endl << endl << endl;
 
     reportFile << "Tuvok Version:" << float(TUVOK_VERSION) << " " << TUVOK_VERSION_TYPE << " " << TUVOK_DETAILS;
-#ifdef TUVOK_SVN_VERSION 
+#ifdef TUVOK_SVN_VERSION
     reportFile << " SVN Version:" << int(TUVOK_SVN_VERSION);
 #endif
     reportFile << endl << "ImageVis3D Version:" << float(IV3D_VERSION) << " " << IV3D_VERSION_TYPE;
@@ -368,13 +367,13 @@ void MainWindow::ReportABug() {
 
       reportFile << "GPU Memory: Total " << m_MasterController.MemMan()->GetGPUMem()/(1024*1024) << " MB, Usable " << m_MasterController.SysInfo()->GetMaxUsableGPUMem()/(1024*1024) << " MB" << endl;
       reportFile << "    Used: " << m_MasterController.MemMan()->GetAllocatedGPUMem()/(1024*1024) << " MB (" << m_MasterController.MemMan()->GetAllocatedGPUMem() << " Bytes)" << endl;
-      if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() ) 
+      if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() )
         reportFile << "    Available: " << (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024) <<" MB" << endl;
 
       reportFile << endl << endl << "GPU info:" << endl;
 
       #if defined(_WIN32) && defined(USE_DIRECTX)
-        if (DynamicDX::IsInitialized()) 
+        if (DynamicDX::IsInitialized())
           reportFile << "Direct3DX10 Version " << DynamicDX::GetD3DX10Version() << endl;
         else
           reportFile << "DirectX 10 not initialzed" << endl;

@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -50,7 +50,7 @@ void MainWindow::CheckSettings() {
 
   if (UINT64_INVALID == settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong()) {
       ShowSettings(!m_bScriptMode &&
-                    QMessageBox::No == QMessageBox::question(this, "Initial Setup", 
+                    QMessageBox::No == QMessageBox::question(this, "Initial Setup",
                              "As this is the first "
                              "time you've started ImageVis3D on this system, "
                              "ImageVis3D has been configured with the default "
@@ -59,7 +59,7 @@ void MainWindow::CheckSettings() {
                              "settings need to be configured according to the "
                              "hardware configuration of the machine. Do you want "
                              "to check the settings now?", QMessageBox::Yes, QMessageBox::No));
-  } 
+  }
   ApplySettings();
 }
 
@@ -99,7 +99,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
     bool bDisableBorder = settings.value("DisableBorder", m_bDisableBorder).toBool();
     bool bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
-    
+
     FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0f).toULongLong(),
                             settings.value("Background1G", 0.0f).toULongLong(),
                             settings.value("Background1B", 0.0f).toULongLong());
@@ -120,7 +120,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bIsDirectX10Capable = m_MasterController.SysInfo()->IsDirectX10Capable();
 
     // hand data to form
-    settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU, 
+    settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU,
                           bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS,
                           bShowVersionInTitle,
                           bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
@@ -181,7 +181,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       ApplySettings();
 
       // as the "avoid compositing" setting may enable/disable the ability to do clearview
-      // we must doublecheck the state of the controls 
+      // we must doublecheck the state of the controls
       if (m_pActiveRenderWin) ToggleClearViewControls(int(m_pActiveRenderWin->GetDynamicRange()));
 
       return true;
@@ -192,7 +192,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
 void MainWindow::ApplySettings() {
   QSettings settings;
 
-  // Read settings 
+  // Read settings
   settings.beginGroup("Performance");
   m_bQuickopen    = settings.value("Quickopen", m_bQuickopen).toBool();
   m_iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toUInt();

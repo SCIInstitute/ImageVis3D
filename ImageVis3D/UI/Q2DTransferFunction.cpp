@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -61,7 +61,7 @@ Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWi
   m_iCachedHeight(0),
   m_iCachedWidth(0),
   m_pBackdropCache(NULL),
-  
+
   // border size, may be changed arbitrarily
   m_iBorderSize(4),
   m_iSwatchBorderSize(3),
@@ -99,7 +99,7 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunctio
 
   // resize the histogram vector
   m_vHistogram.Resize(vHistogram->GetSize());
-  
+
   // force the draw routine to recompute the backdrop cache
   m_bBackdropCacheUptodate = false;
 
@@ -143,7 +143,7 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
   // convert the histogram into an image
   // define the bitmap ...
   QImage image(QSize(int(m_vHistogram.GetSize().x), int(m_vHistogram.GetSize().y)), QImage::Format_RGB32);
-  for (size_t y = 0;y<m_vHistogram.GetSize().y;y++) 
+  for (size_t y = 0;y<m_vHistogram.GetSize().y;y++)
     for (size_t x = 0;x<m_vHistogram.GetSize().x;x++) {
       float value = min<float>(1.0f, pow(m_vHistogram.Get(x,y),1.0f/(1+(m_fHistfScale-1)/100.0f)));
       image.setPixel(int(x),
@@ -204,19 +204,19 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
   // render swatches
   for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
     TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
-    
+
     std::vector<QPoint> pointList(currentSwatch.pPoints.size());
-    for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {    
+    for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
       INTVECTOR2 vPixelPos = Rel2Abs(currentSwatch.pPoints[j]);
       pointList[j] = QPoint(vPixelPos.x, vPixelPos.y);
     }
 
     INTVECTOR2 vPixelPos0 = Rel2Abs(currentSwatch.pGradientCoords[0])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize),
-		       vPixelPos1 = Rel2Abs(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize); 
+		       vPixelPos1 = Rel2Abs(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize);
     QLinearGradient linearBrush(vPixelPos0.x, vPixelPos0.y, vPixelPos1.x, vPixelPos1.y);
-    
-    for (size_t j = 0;j<currentSwatch.pGradientStops.size();j++) {      
-      linearBrush.setColorAt(currentSwatch.pGradientStops[j].first, 
+
+    for (size_t j = 0;j<currentSwatch.pGradientStops.size();j++) {
+      linearBrush.setColorAt(currentSwatch.pGradientStops[j].first,
                    QColor(int(currentSwatch.pGradientStops[j].second[0]*255),
                       int(currentSwatch.pGradientStops[j].second[1]*255),
                           int(currentSwatch.pGradientStops[j].second[2]*255),
@@ -230,7 +230,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
 
     if (bDrawWidgets && m_iActiveSwatchIndex == int(i)) {
       painter.setBrush(solidBrush);
-      for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {    
+      for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
         if (m_iPointSelIndex == int(j)) painter.setPen(circlePenSel); else painter.setPen(circlePen);
         painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
       }
@@ -241,7 +241,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
       painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
       vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize,m_iSwatchBorderSize);
       if (m_iGradSelIndex== 1) painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
-      painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);      
+      painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
     }
   }
   if (bDrawWidgets) painter.setRenderHint(painter.Antialiasing, false);
@@ -323,7 +323,7 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
         FLOATVECTOR2 A = currentSwatch.pPoints[j];
         FLOATVECTOR2 B = currentSwatch.pPoints[(j+1)%currentSwatch.pPoints.size()];
 
-        // check if we are deleting a point        
+        // check if we are deleting a point
         if (currentSwatch.pPoints.size() > 3) {
           INTVECTOR2 vPixelDist = Rel2Abs(vfP-A);
           if ( sqrt( float(vPixelDist.x*vPixelDist.x+vPixelDist.y*vPixelDist.y)) <= m_iSwatchBorderSize*3) {
@@ -341,9 +341,9 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
         float t = V^C;          // Intersection point Distance from A
 
         float fDist;
-        if (t >= 0 && t <= d) 
-          fDist = (vfP-(A + V*t)).length(); 
-        else 
+        if (t >= 0 && t <= d)
+          fDist = (vfP-(A + V*t)).length();
+        else
           fDist = std::numeric_limits<float>::max();
 
 
@@ -407,7 +407,7 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
     FLOATVECTOR2 vfCurrentPos = Abs2Rel(vMouseCurrentPos);
 
     FLOATVECTOR2 vfDelta = vfCurrentPos-vfPressPos;
-    
+
     TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
 
     if (m_bDraggingAll)  {
@@ -421,7 +421,7 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
                   float fScaleFactor = vfDelta.x + vfDelta.y;
                   FLOATVECTOR2 vfCenter(0,0);
                   for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) vfCenter += currentSwatch.pPoints[i];
-                  
+
                   vfCenter /= currentSwatch.pPoints.size();
                   FLOATVECTOR2 fvRot(cos(fScaleFactor/10),sin(fScaleFactor/10));
 
@@ -431,17 +431,17 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
                   for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) currentSwatch.pPoints[i] = Rotate(currentSwatch.pPoints[i], fScaleFactor, vfCenter, vfRescale);
                   currentSwatch.pGradientCoords[0] = Rotate(currentSwatch.pGradientCoords[0], fScaleFactor, vfCenter, vfRescale);
                   currentSwatch.pGradientCoords[1] = Rotate(currentSwatch.pGradientCoords[1], fScaleFactor, vfCenter, vfRescale);
-                  
+
 
                   } break;
         case DRM_SCALE : {
                   float fScaleFactor = vfDelta.x + vfDelta.y;
                   FLOATVECTOR2 vfCenter(0,0);
                   for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) vfCenter += currentSwatch.pPoints[i];
-                  
+
                   vfCenter /= currentSwatch.pPoints.size();
 
-                  for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) 
+                  for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++)
                     currentSwatch.pPoints[i] += (currentSwatch.pPoints[i]-vfCenter)*fScaleFactor;
                   currentSwatch.pGradientCoords[0] += (currentSwatch.pGradientCoords[0]-vfCenter)*fScaleFactor;
                   currentSwatch.pGradientCoords[1] += (currentSwatch.pGradientCoords[1]-vfCenter)*fScaleFactor;
@@ -508,7 +508,7 @@ void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
 void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
   // call superclass method
   QWidget::paintEvent(event);
-  
+
   if (m_pTrans == NULL) {
     QPainter painter(this);
     DrawBorder(painter);
@@ -517,7 +517,7 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 
   // as drawing the histogram can become quite expensive we'll cache it in an image and only redraw if needed
   if (!m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
-    
+
     // delete the old pixmap an create a new one if the size has changed
     if ((unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
       delete m_pBackdropCache;
@@ -579,7 +579,7 @@ void Q2DTransferFunction::Transfer2DSetActiveSwatch(const int iActiveSwatch) {
   update();
 }
 
-void Q2DTransferFunction::Transfer2DAddCircleSwatch() {  
+void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
   TFPolygon newSwatch;
 
   FLOATVECTOR2 vPoint(0.8f,0.8f);
@@ -604,7 +604,7 @@ void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
   emit SwatchChange();
 }
 
-void Q2DTransferFunction::Transfer2DAddSwatch() {  
+void Q2DTransferFunction::Transfer2DAddSwatch() {
   TFPolygon newSwatch;
 
   newSwatch.pPoints.push_back(FLOATVECTOR2(0.3f,0.3f));
@@ -630,7 +630,7 @@ void Q2DTransferFunction::Transfer2DAddSwatch() {
 void Q2DTransferFunction::Transfer2DDeleteSwatch(){
   if (m_iActiveSwatchIndex != -1) {
     m_pTrans->m_Swatches.erase(m_pTrans->m_Swatches.begin()+m_iActiveSwatchIndex);
-    
+
     m_iActiveSwatchIndex = min<int>(m_iActiveSwatchIndex, int(m_pTrans->m_Swatches.size()-1));
     m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
     emit SwatchChange();
@@ -654,7 +654,7 @@ void Q2DTransferFunction::Transfer2DDownSwatch(){
     TFPolygon tmp = m_pTrans->m_Swatches[m_iActiveSwatchIndex+1];
     m_pTrans->m_Swatches[m_iActiveSwatchIndex+1] = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
     m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
-    
+
     m_iActiveSwatchIndex++;
     m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
     emit SwatchChange();

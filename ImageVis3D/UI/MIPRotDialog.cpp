@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -40,7 +40,7 @@
 
 using namespace std;
 
-MIPRotDialog::MIPRotDialog(UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD, UINT32 iEyeDist, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
+MIPRotDialog::MIPRotDialog(UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD, UINT32 iEyeDist, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
   QDialog(parent, flags)
 {
 
@@ -55,7 +55,7 @@ void MIPRotDialog::setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoVie
   Ui_MIPRotDialog::setupUi(MIPRotDialog);
 
   spinBox_Images->setValue(iImages);
-  if (bOrthoView) 
+  if (bOrthoView)
     radioButton_Ortho->setChecked(true);
   else
     radioButton_Persp->setChecked(true);
@@ -77,9 +77,9 @@ void MIPRotDialog::UpdateDegreeLabel() {
 
 void MIPRotDialog::UpdateStereoCheckbox() {
   double fDegreePerImage = 360.0/spinBox_Images->value();
-  int iEyeDist = horizontalSlider_EyeDist->value();    
+  int iEyeDist = horizontalSlider_EyeDist->value();
   int iReuseDist = int(iEyeDist/fDegreePerImage);
-  bool bAreImagesReusable = (iReuseDist == iEyeDist/fDegreePerImage); 
+  bool bAreImagesReusable = (iReuseDist == iEyeDist/fDegreePerImage);
 
   if (checkBox_Stereo->isChecked() && !bAreImagesReusable) {
     checkBox_Stereo->setText("Stereo (performance warning)");

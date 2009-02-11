@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -42,7 +42,7 @@
 
 using namespace std;
 
-BrowseData::BrowseData(MasterController& masterController, QDialog* pleaseWaitDialog, QString strDir, QWidget* parent, Qt::WindowFlags flags) : 
+BrowseData::BrowseData(MasterController& masterController, QDialog* pleaseWaitDialog, QString strDir, QWidget* parent, Qt::WindowFlags flags) :
   QDialog(parent, flags),
   m_MasterController(masterController),
   m_bDataFound(false),
@@ -87,7 +87,7 @@ void BrowseData::SetBrightness(int iScale) {
 bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 {
   m_dirInfo = m_MasterController.IOMan()->ScanDirectory(m_strDir.toStdString());
-  
+
   m_vRadioButtons.clear();
 
   for (size_t iStackID = 0;iStackID < m_dirInfo.size();iStackID++) {

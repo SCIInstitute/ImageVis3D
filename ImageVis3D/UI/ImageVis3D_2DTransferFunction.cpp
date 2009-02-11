@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -63,7 +63,7 @@ using namespace std;
 void MainWindow::Transfer2DSwatchesChanged() {
 
   listWidget_Swatches->clear();
-  
+
   for (size_t i = 0;i<m_2DTransferFunction->GetSwatchCount();i++) {
 
     size_t iSize = m_2DTransferFunction->GetSwatchSize(UINT32(i));
@@ -123,7 +123,7 @@ void MainWindow::Transfer2DUpdateGradientBox() {
   listWidget_Gradient->clear();
 
   if (m_2DTransferFunction->GetActiveSwatchIndex() > -1) {
-  
+
     for (size_t i = 0;i<m_2DTransferFunction->GetGradientCount();i++) {
       GradientStop s =  m_2DTransferFunction->GetGradient(UINT32(i));
       QString msg = tr("Stop at %1").arg(s.first);
@@ -133,7 +133,7 @@ void MainWindow::Transfer2DUpdateGradientBox() {
     listWidget_Gradient->
       setCurrentRow(min<int>(iCurrent,
            int(m_2DTransferFunction->GetGradientCount())));
-    
+
   }
 
   Transfer2DUpdateGradientButtons();
@@ -159,7 +159,7 @@ void MainWindow::Transfer2DUpdateGradientButtons() {
       tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(int(s.second[0]*255)).arg(int(s.second[1]*255)).arg(int(s.second[2]*255)).arg(int((1-s.second[0])*255)).arg(int((1-s.second[1])*255)).arg(int((1-s.second[2])*255));
 
     pushButton_ColorChooser->setStyleSheet( strStyle );
-  
+
     horizontalSlider_Opacity->setValue(int(s.second[3]*100));
 
   } else {

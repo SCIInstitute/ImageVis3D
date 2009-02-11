@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -44,22 +44,22 @@ using namespace std;
 
 void MainWindow::ShowVersions() {
   m_MasterController.DebugOut()->printf("Tuvok Version: %g %s %s",float(TUVOK_VERSION), TUVOK_VERSION_TYPE, TUVOK_DETAILS);
-#ifdef TUVOK_SVN_VERSION 
+#ifdef TUVOK_SVN_VERSION
   m_MasterController.DebugOut()->printf("SVN Version: %i",int(TUVOK_SVN_VERSION));
 #endif
   m_MasterController.DebugOut()->printf("ImageVis3D Version: %g %s",float(IV3D_VERSION), IV3D_VERSION_TYPE);
 #ifdef IV3D_SVN_VERSION
   m_MasterController.DebugOut()->printf("SVN Version: %i",int(IV3D_SVN_VERSION));
 #endif
-  m_MasterController.DebugOut()->printf("QT Version: %s",QT_VERSION_STR);    
+  m_MasterController.DebugOut()->printf("QT Version: %s",QT_VERSION_STR);
 }
 
 void MainWindow::ShowGPUInfo(bool bWithExtensions) {
 #if defined(_WIN32) && defined(USE_DIRECTX)
-  if (DynamicDX::IsInitialized()) 
-    m_MasterController.DebugOut()->printf("Direct3DX10 Version %i",DynamicDX::GetD3DX10Version());  
+  if (DynamicDX::IsInitialized())
+    m_MasterController.DebugOut()->printf("Direct3DX10 Version %i",DynamicDX::GetD3DX10Version());
   else
-    m_MasterController.DebugOut()->printf("DirectX 10 not initialzed");  
+    m_MasterController.DebugOut()->printf("DirectX 10 not initialzed");
 #endif
 
   if (RenderWindow::GetVendorString() == "") {
@@ -86,7 +86,7 @@ void MainWindow::ShowGPUInfo(bool bWithExtensions) {
 
 void MainWindow::ListSupportedImages() {
   m_MasterController.DebugOut()->printf("Supported image formats are:");
-  QList<QByteArray> listImageFormats = QImageReader::supportedImageFormats(); 
+  QList<QByteArray> listImageFormats = QImageReader::supportedImageFormats();
   for (int i = 0;i<listImageFormats.size();i++) {
     QByteArray imageFormat = listImageFormats[i];
     QString qStrImageFormat(imageFormat);
@@ -99,17 +99,17 @@ void MainWindow::ShowSysInfo() {
   m_MasterController.DebugOut()->printf("This is a %ubit build.", m_MasterController.MemMan()->GetBitWithMem());
 
   m_MasterController.DebugOut()->printf("CPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetCPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableCPUMem()/(1024*1024));
-  m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)", 
+  m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)",
                                           m_MasterController.MemMan()->GetAllocatedCPUMem()/(1024*1024),
                                           m_MasterController.MemMan()->GetAllocatedCPUMem());
   if (m_MasterController.MemMan()->GetAllocatedCPUMem() < m_MasterController.MemMan()->GetCPUMem() )
     m_MasterController.DebugOut()->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetCPUMem()-m_MasterController.MemMan()->GetAllocatedCPUMem())/(1024*1024));
 
   m_MasterController.DebugOut()->printf("GPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetGPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableGPUMem()/(1024*1024));
-  m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)", 
+  m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)",
                                           m_MasterController.MemMan()->GetAllocatedGPUMem()/(1024*1024),
                                           m_MasterController.MemMan()->GetAllocatedGPUMem());
-  if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() ) 
+  if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() )
     m_MasterController.DebugOut()->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024));
 }
 

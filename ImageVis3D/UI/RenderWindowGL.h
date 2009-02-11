@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -52,7 +52,7 @@ class MainWindow;
 
 class RenderWindowGL : public QGLWidget, public RenderWindow
 {
-  Q_OBJECT  
+  Q_OBJECT
   public:
     RenderWindowGL(MasterController& masterController,
                  MasterController::EVolumeRendererType eType,
@@ -79,7 +79,7 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
 
 
   // **************** Qt widget connector calls
-  protected:  
+  protected:
     virtual void UpdateWindow() {updateGL();}
     virtual void ForceRepaint();
     virtual QWidget* GetQtWidget() {return this;}
@@ -96,21 +96,21 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     QSize sizeHint() const {return QSize(m_vDefaultSize.x, m_vDefaultSize.y);}
 
   public slots:
-    virtual void ToggleRenderWindowView2x2() {RenderWindow::ToggleRenderWindowView2x2();}     
-    virtual void ToggleRenderWindowViewSingle() {RenderWindow::ToggleRenderWindowViewSingle();}   
-    virtual void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {RenderWindow::SetTimeSlices(iActive, iInactive);} 
+    virtual void ToggleRenderWindowView2x2() {RenderWindow::ToggleRenderWindowView2x2();}
+    virtual void ToggleRenderWindowViewSingle() {RenderWindow::ToggleRenderWindowViewSingle();}
+    virtual void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {RenderWindow::SetTimeSlices(iActive, iInactive);}
 
   signals:
-    void StereoDisabled();  
-    void RenderWindowViewChanged(int iViewID);  
-    void WindowActive(RenderWindow* sender);  
-    void WindowInActive(RenderWindow* sender);  
-    void WindowClosing(RenderWindow* sender); 
+    void StereoDisabled();
+    void RenderWindowViewChanged(int iViewID);
+    void WindowActive(RenderWindow* sender);
+    void WindowInActive(RenderWindow* sender);
+    void WindowClosing(RenderWindow* sender);
 
   protected:
-    virtual void initializeGL() {InitializeRenderer();} 
-    virtual void paintGL() {PaintRenderer();}   
-    virtual void resizeGL(int width, int height) {ResizeRenderer(width, height);} 
+    virtual void initializeGL() {InitializeRenderer();}
+    virtual void paintGL() {PaintRenderer();}
+    virtual void resizeGL(int width, int height) {ResizeRenderer(width, height);}
 
     virtual void mousePressEvent(QMouseEvent *event)    {QGLWidget::mousePressEvent(event);   MousePressEvent(event);}
     virtual void mouseReleaseEvent(QMouseEvent *event)  {QGLWidget::mouseReleaseEvent(event); MouseReleaseEvent(event);}

@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -116,7 +116,7 @@ public slots:
 
 signals:
   void SwatchChange();
-  
+
 protected:
   virtual void paintEvent(QPaintEvent *event);
   virtual void mouseMoveEvent(QMouseEvent *event);
@@ -136,7 +136,7 @@ private:
   unsigned int m_iCachedWidth;
   QPixmap*   m_pBackdropCache;
 
-  // border size, may be changed in the constructor 
+  // border size, may be changed in the constructor
   unsigned int m_iBorderSize;
   unsigned int m_iSwatchBorderSize;
 

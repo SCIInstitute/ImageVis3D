@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -59,7 +59,7 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
                                Qt::WindowFlags flags) :
   QWidget(parent, flags),
   RenderWindow(masterController, eType, dataset, iCounter, parent)
-{  
+{
   setBaseSize( sizeHint() );
   m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);
 
@@ -76,13 +76,13 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
   setMouseTracking(true);
 }
 
-RenderWindowDX::~RenderWindowDX() 
+RenderWindowDX::~RenderWindowDX()
 {
 }
 
 void RenderWindowDX::InitializeRenderer()
 {
-  if (m_Renderer == NULL) 
+  if (m_Renderer == NULL)
     m_bRenderSubsysOK = false;
   else
     m_bRenderSubsysOK = m_Renderer->Initialize();
@@ -91,7 +91,7 @@ void RenderWindowDX::InitializeRenderer()
     m_Renderer->Cleanup();
     m_MasterController.ReleaseVolumerenderer(m_Renderer);
     m_Renderer = NULL;
-  } 
+  }
 }
 
 void RenderWindowDX::ForceRepaint() {

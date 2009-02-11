@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -38,17 +38,17 @@
 #include "QDataRadioButton.h"
 #include <QtGui/QMouseEvent>
 
-QDataRadioButton::QDataRadioButton(FileStackInfo* stack, QWidget *parent) : 
-  QRadioButton(parent), 
-  m_iCurrentImage((unsigned int)(-1)),  
+QDataRadioButton::QDataRadioButton(FileStackInfo* stack, QWidget *parent) :
+  QRadioButton(parent),
+  m_iCurrentImage((unsigned int)(-1)),
   m_stackInfo(stack),
   m_fScale(1.0f)
 {
   SetupInfo();
 }
 QDataRadioButton::QDataRadioButton(FileStackInfo* stack, const QString &text, QWidget *parent) :
-  QRadioButton(text, parent), 
-  m_iCurrentImage((unsigned int)(-1)),  
+  QRadioButton(text, parent),
+  m_iCurrentImage((unsigned int)(-1)),
   m_stackInfo(stack),
   m_fScale(1.0f)
 {
@@ -78,7 +78,7 @@ void QDataRadioButton::SetBrightness(float fScale) {
 void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
 
   if (!bForceUpdate && m_iCurrentImage == i) return;
-  
+
   m_iCurrentImage = i;
 
   QIcon icon;
@@ -98,7 +98,7 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
         case 8  :{
               unsigned int i = 0;
               unsigned char* pCharData = (unsigned char*)pData;
-              for (int y = 0;y<image.height();y++) 
+              for (int y = 0;y<image.height();y++)
                 for (int x = 0;x<image.width();x++) {
                   unsigned char value = (unsigned char)(std::min(255.0f,m_fScale*pCharData[i]));
                   image.setPixel(x,y, qRgb(value,value,value));
@@ -108,7 +108,7 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
         case 16 : {
               unsigned int i = 0;
               unsigned short* pShortData = (unsigned short*)pData;
-              for (int y = 0;y<image.height();y++) 
+              for (int y = 0;y<image.height();y++)
                 for (int x = 0;x<image.width();x++) {
                   unsigned char value = (unsigned char)(std::min(255.0f,255.0f*m_fScale*float(pShortData[i])/float((2<<m_stackInfo.m_iStored))));
                   image.setPixel(x,y, qRgb(value,value,value));
@@ -129,7 +129,7 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
 
 
 void QDataRadioButton::SetupInfo() {
-  setMouseTracking(true); 
+  setMouseTracking(true);
 
   size_t iElemCount = m_stackInfo.m_Elements.size();
 

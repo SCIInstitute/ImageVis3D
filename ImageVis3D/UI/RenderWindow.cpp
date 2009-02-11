@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -71,7 +71,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_viMousePos(0,0),
   m_bAbsoluteViewLock(true),
   m_bCaptureMode(false)
-{  
+{
   m_strID = "[%1] %2";
   m_strID = m_strID.arg(iCounter).arg(dataset);
 }
@@ -201,7 +201,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
     AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode((int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
     m_Renderer->SetViewmode(eMode);
 
-    if (eMode == AbstrRenderer::VM_SINGLE) 
+    if (eMode == AbstrRenderer::VM_SINGLE)
       m_Renderer->SetFullWindowmode(eWinMode);
     else
      if (m_Renderer->GetStereo()) {
@@ -211,7 +211,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
 
     SetupArcBall();
     EmitRenderWindowViewChanged(int(m_Renderer->GetViewmode()));
-    UpdateWindow();    
+    UpdateWindow();
   }
 
   if (event->key() == Qt::Key_X) {
@@ -266,7 +266,7 @@ void RenderWindow::SetupArcBall() {
         break;
       }
     }
-    
+
     switch (i3DWindowIndex) {
       case 0 : m_ArcBall.SetWindowOffset(0,0); break;
       case 1 : m_ArcBall.SetWindowOffset(m_vWinDim.x/2,0); break;
@@ -301,7 +301,7 @@ void RenderWindow::ToggleRenderWindowViewSingle() {
 
 void RenderWindow::Cleanup() {
   if (m_Renderer == NULL) return;
-  
+
   m_Renderer->Cleanup();
   m_MasterController.ReleaseVolumerenderer(m_Renderer);
   m_Renderer = NULL;
@@ -312,13 +312,13 @@ void RenderWindow::CheckForRedraw() {
 }
 
 void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {
-  m_Renderer->SetBlendPrecision(eBlendPrecisionMode); 
+  m_Renderer->SetBlendPrecision(eBlendPrecisionMode);
 }
 
 void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS) {
   m_iTimeSliceMSecsActive   = iActiveTS;
   m_iTimeSliceMSecsInActive = iInactiveTS;
-  m_Renderer->SetPerfMeasures(iMinFramerate, iLODDelay); 
+  m_Renderer->SetPerfMeasures(iMinFramerate, iLODDelay);
 }
 
 bool RenderWindow::CaptureFrame(const std::string& strFilename, bool bPreserveTransparency)
@@ -347,7 +347,7 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   return f.CaptureSequenceFrame(strFilename, bPreserveTransparency, strRealFilename);
 }
 
-bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename, 
+bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
                                         bool bPreserveTransparency, std::string* strRealFilename)
 {
   GLFrameCapture f;
@@ -371,7 +371,7 @@ void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagat
 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
-      if (m_bAbsoluteViewLock) 
+      if (m_bAbsoluteViewLock)
         m_vpLocks[0][i]->SetTranslation(m_mAccumulatedTranslation);
       else
         m_vpLocks[0][i]->SetTranslationDelta(trans, false);
@@ -388,7 +388,7 @@ void RenderWindow::FinalizeRotation(bool bPropagate) {
   }
 }
 
-void RenderWindow::SetRotation(const FLOATMATRIX4& mAccumulatedRotation, 
+void RenderWindow::SetRotation(const FLOATMATRIX4& mAccumulatedRotation,
                                const FLOATMATRIX4& mCurrentRotation) {
   m_mAccumulatedRotation = mAccumulatedRotation;
   m_mCurrentRotation = mCurrentRotation;
@@ -403,7 +403,7 @@ void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagat
 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
-      if (m_bAbsoluteViewLock) 
+      if (m_bAbsoluteViewLock)
         m_vpLocks[0][i]->SetRotation(m_mAccumulatedRotation, m_mCurrentRotation);
       else
         m_vpLocks[0][i]->SetRotationDelta(rotDelta, false);
@@ -413,7 +413,7 @@ void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagat
 
 void RenderWindow::CloneViewState(RenderWindow* other) {
   m_mAccumulatedTranslation = other->m_mAccumulatedTranslation;
-  m_mAccumulatedRotation    = other->m_mAccumulatedRotation;  
+  m_mAccumulatedRotation    = other->m_mAccumulatedRotation;
   m_ArcBall.SetTranslation(other->m_ArcBall.GetTranslation());
 
   m_Renderer->SetRotation(m_mAccumulatedRotation);
@@ -424,7 +424,7 @@ void RenderWindow::CloneRendermode(RenderWindow* other) {
   SetRendermode(other->GetRendermode());
 
   m_Renderer->SetUseLighting(other->m_Renderer->GetUseLighting());
-  m_Renderer->SetSampleRateModifier(other->m_Renderer->GetSampleRateModifier()); 
+  m_Renderer->SetSampleRateModifier(other->m_Renderer->GetSampleRateModifier());
   m_Renderer->SetGlobalBBox(other->m_Renderer->GetGlobalBBox());
   m_Renderer->SetLocalBBox(other->m_Renderer->GetLocalBBox());
   m_Renderer->SetIsosufaceColor(other->m_Renderer->GetIsosufaceColor());
@@ -439,7 +439,7 @@ void RenderWindow::CloneRendermode(RenderWindow* other) {
 }
 
 void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate) {
-  m_Renderer->SetRendermode(eRenderMode); 
+  m_Renderer->SetRendermode(eRenderMode);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetRendermode(eRenderMode, false);
@@ -448,8 +448,8 @@ void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bP
 }
 
 void RenderWindow::SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor) {
-  m_Renderer->SetBackgroundColors(vBackColors); 
-  m_Renderer->SetTextColor(vTextColor); 
+  m_Renderer->SetBackgroundColors(vBackColors);
+  m_Renderer->SetTextColor(vTextColor);
 }
 
 void RenderWindow::SetUseLighting(bool bLighting, bool bPropagate) {
@@ -462,7 +462,7 @@ void RenderWindow::SetUseLighting(bool bLighting, bool bPropagate) {
 }
 
 void RenderWindow::SetSampleRateModifier(float fSampleRateModifier, bool bPropagate) {
-  m_Renderer->SetSampleRateModifier(fSampleRateModifier); 
+  m_Renderer->SetSampleRateModifier(fSampleRateModifier);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetSampleRateModifier(fSampleRateModifier, false);
@@ -471,7 +471,7 @@ void RenderWindow::SetSampleRateModifier(float fSampleRateModifier, bool bPropag
 }
 
 void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
-  m_Renderer->SetIsoValue(fIsoVal); 
+  m_Renderer->SetIsoValue(fIsoVal);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetIsoValue(fIsoVal, false);
@@ -480,7 +480,7 @@ void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
 }
 
 void RenderWindow::SetCVIsoValue(float fIsoVal, bool bPropagate) {
-  m_Renderer->SetCVIsoValue(fIsoVal); 
+  m_Renderer->SetCVIsoValue(fIsoVal);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVIsoValue(fIsoVal, false);
@@ -489,7 +489,7 @@ void RenderWindow::SetCVIsoValue(float fIsoVal, bool bPropagate) {
 }
 
 void RenderWindow::SetCVSize(float fSize, bool bPropagate) {
-  m_Renderer->SetCVSize(fSize); 
+  m_Renderer->SetCVSize(fSize);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVSize(fSize, false);
@@ -498,7 +498,7 @@ void RenderWindow::SetCVSize(float fSize, bool bPropagate) {
 }
 
 void RenderWindow::SetCVContextScale(float fScale, bool bPropagate) {
-  m_Renderer->SetCVContextScale(fScale); 
+  m_Renderer->SetCVContextScale(fScale);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVContextScale(fScale, false);
@@ -507,7 +507,7 @@ void RenderWindow::SetCVContextScale(float fScale, bool bPropagate) {
 }
 
 void RenderWindow::SetCVBorderScale(float fScale, bool bPropagate) {
-  m_Renderer->SetCVBorderScale(fScale); 
+  m_Renderer->SetCVBorderScale(fScale);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVBorderScale(fScale, false);
@@ -516,7 +516,7 @@ void RenderWindow::SetCVBorderScale(float fScale, bool bPropagate) {
 }
 
 void RenderWindow::SetGlobalBBox(bool bRenderBBox, bool bPropagate) {
-  m_Renderer->SetGlobalBBox(bRenderBBox); 
+  m_Renderer->SetGlobalBBox(bRenderBBox);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetGlobalBBox(bRenderBBox, false);
@@ -525,7 +525,7 @@ void RenderWindow::SetGlobalBBox(bool bRenderBBox, bool bPropagate) {
 }
 
 void RenderWindow::SetLocalBBox(bool bRenderBBox, bool bPropagate) {
-  m_Renderer->SetLocalBBox(bRenderBBox); 
+  m_Renderer->SetLocalBBox(bRenderBBox);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetLocalBBox(bRenderBBox, false);
@@ -534,7 +534,7 @@ void RenderWindow::SetLocalBBox(bool bRenderBBox, bool bPropagate) {
 }
 
 void RenderWindow::SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
-  m_Renderer->SetIsosufaceColor(vIsoColor); 
+  m_Renderer->SetIsosufaceColor(vIsoColor);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetIsosufaceColor(vIsoColor, false);
@@ -543,7 +543,7 @@ void RenderWindow::SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropag
 }
 
 void RenderWindow::SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
-  m_Renderer->SetCVColor(vIsoColor); 
+  m_Renderer->SetCVColor(vIsoColor);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVColor(vIsoColor, false);
@@ -552,7 +552,7 @@ void RenderWindow::SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
 }
 
 void RenderWindow::SetCV(bool bDoClearView, bool bPropagate) {
-  m_Renderer->SetCV(bDoClearView); 
+  m_Renderer->SetCV(bDoClearView);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCV(bDoClearView, false);
@@ -611,6 +611,6 @@ void RenderWindow::PaintRenderer()
       unsigned int iWorkingBrick      = m_Renderer->GetWorkingBrick();
 
       m_MainWindow->SetRenderProgress(iLevelCount, iWorkingLevelCount, iBrickCount, iWorkingBrick);
-    } 
+    }
   }
 }

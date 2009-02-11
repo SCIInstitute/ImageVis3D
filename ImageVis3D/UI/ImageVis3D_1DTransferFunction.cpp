@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -93,9 +93,9 @@ void MainWindow::Transfer1DSetGroups() {
   if (iRadioState == 0) return;
 
   // apply iRadioState
-  checkBox_Red->setChecked(true);  
-  checkBox_Green->setChecked(true);  
-  checkBox_Blue->setChecked(true);  
+  checkBox_Red->setChecked(true);
+  checkBox_Green->setChecked(true);
+  checkBox_Blue->setChecked(true);
   checkBox_Alpha->setChecked(iRadioState==2);
 
   unsigned int iPaintMode = (Q1DTransferFunction::PAINT_RED |

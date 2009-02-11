@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -89,7 +89,7 @@ private:
   QImage*   m_pPreviewBack;
   QImage*   m_pPreviewColor;
 
-  // borders, may be changed in the constructor 
+  // borders, may be changed in the constructor
   unsigned int m_iLeftBorder;
   unsigned int m_iBottomBorder;
   unsigned int m_iTopPreviewHeight;
@@ -99,7 +99,7 @@ private:
   unsigned int m_iRightBorder;
   unsigned int m_iTopBorder;
 
-  // colors, may be changed in the setcolor 
+  // colors, may be changed in the setcolor
   QColor m_colorHistogram;
   QColor m_colorBack;
   QColor m_colorBorder;
@@ -112,7 +112,7 @@ private:
 
   void SetColor(bool bIsEnabled);
 
-  // scale apearance, may be changed in the constructor 
+  // scale apearance, may be changed in the constructor
   unsigned int m_iMarkersX;
   unsigned int m_iMarkersY;
   unsigned int m_iBigMarkerSpacingX;

@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -116,7 +116,7 @@ void MainWindow::ChangeLocks() {
          if (QString(renderWin->GetWindowID()) == listWidget_Lock->item(i)->text() ) {
             otherWin = renderWin;
             break;
-         } 
+         }
       }
       if (otherWin != NULL) bAddedTransitiveLocks = SetLock(iLockType, m_pActiveRenderWin, otherWin);
     }
@@ -157,7 +157,7 @@ bool MainWindow::SetLock(size_t iLockType, RenderWindow* winA, RenderWindow* win
 bool MainWindow::IsLockedWith(size_t iLockType, RenderWindow* winA, RenderWindow* winB) {
   if (winA == winB) return true;
   for (size_t i = 0;i<winA->m_vpLocks[iLockType].size();i++) {
-    if (winA->m_vpLocks[iLockType][i] == winB) 
+    if (winA->m_vpLocks[iLockType][i] == winB)
       return true;
   }
   return false;

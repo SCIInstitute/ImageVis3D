@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -111,7 +111,7 @@ bool MainWindow::LoadGeometry(QString strFilename,
 
   settings.beginGroup("Geometry");
   bool bOK =
-    restoreGeometry( settings.value("MainWinGeometry").toByteArray() ); 
+    restoreGeometry( settings.value("MainWinGeometry").toByteArray() );
   settings.endGroup();
 
   if (!bOK && bRetryResource) {
@@ -132,7 +132,7 @@ bool MainWindow::LoadGeometry(QString strFilename,
 }
 
 bool MainWindow::SaveGeometry(QString strFilename) {
-  QSettings settings( strFilename, QSettings::IniFormat ); 
+  QSettings settings( strFilename, QSettings::IniFormat );
 
   if (!settings.isWritable()) {
     QString msg = tr("Error saving geometry file %1").arg(strFilename);
@@ -141,7 +141,7 @@ bool MainWindow::SaveGeometry(QString strFilename) {
   }
 
   settings.beginGroup("Geometry");
-  settings.setValue("MainWinGeometry", this->saveGeometry() ); 
+  settings.setValue("MainWinGeometry", this->saveGeometry() );
   settings.endGroup();
 
   return true;
@@ -153,7 +153,7 @@ bool MainWindow::SaveGeometry(QString strFilename) {
 
 void MainWindow::SetTitle() {
   QString qstrTitle;
-  if (m_bShowVersionInTitle) 
+  if (m_bShowVersionInTitle)
     qstrTitle = tr("ImageVis3D Version: %1 %2 [Tuvok %3 %4 %5]").arg(IV3D_VERSION).arg(IV3D_VERSION_TYPE).arg(TUVOK_VERSION).arg(TUVOK_VERSION_TYPE).arg(TUVOK_DETAILS);
   else
     qstrTitle = tr("ImageVis3D");
@@ -189,7 +189,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)),
     this, SLOT(Transfer2DUpdateSwatchButtons()));
   connect(listWidget_Gradient, SIGNAL(currentRowChanged(int)),
-    this, SLOT(Transfer2DUpdateGradientButtons()));  
+    this, SLOT(Transfer2DUpdateGradientButtons()));
 
   connect(pushButton_AddPoly,  SIGNAL(clicked()),
     m_2DTransferFunction, SLOT(Transfer2DAddSwatch()));
@@ -346,10 +346,10 @@ bool MainWindow::LoadWorkspace(QString strFilename,
              bool bSilentFail,
              bool bRetryResource) {
 
-  QSettings settings( strFilename, QSettings::IniFormat ); 
+  QSettings settings( strFilename, QSettings::IniFormat );
 
   settings.beginGroup("Geometry");
-  bool bOK = restoreState( settings.value("DockGeometry").toByteArray() ); 
+  bool bOK = restoreState( settings.value("DockGeometry").toByteArray() );
   settings.endGroup();
 
   if (!bOK && bRetryResource) {
@@ -376,7 +376,7 @@ bool MainWindow::LoadWorkspace(QString strFilename,
 
 
 bool MainWindow::SaveWorkspace(QString strFilename) {
-  QSettings settings( strFilename, QSettings::IniFormat ); 
+  QSettings settings( strFilename, QSettings::IniFormat );
 
   if (!settings.isWritable()) {
     QString msg = tr("Error saving workspace file %1").arg(strFilename);
@@ -385,8 +385,8 @@ bool MainWindow::SaveWorkspace(QString strFilename) {
   }
 
   settings.beginGroup("Geometry");
-  settings.setValue("DockGeometry", this->saveState() ); 
-  settings.endGroup();   
+  settings.setValue("DockGeometry", this->saveState() );
+  settings.endGroup();
 
   return true;
 }
@@ -395,7 +395,7 @@ bool MainWindow::SaveWorkspace(QString strFilename) {
 bool MainWindow::ApplyWorkspace() {
   if (!m_strCurrentWorkspaceFilename.isEmpty())
     return LoadWorkspace(m_strCurrentWorkspaceFilename);
-  else 
+  else
     return false;
 }
 
@@ -427,8 +427,8 @@ void MainWindow::CloneCurrentView() {
   renderWin->CloneViewState(m_pActiveRenderWin);
   renderWin->CloneRendermode(m_pActiveRenderWin);
 
-  if (m_bAutoLockClonedWindow) 
-    for (size_t i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_pActiveRenderWin); 
+  if (m_bAutoLockClonedWindow)
+    for (size_t i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_pActiveRenderWin);
 
   QMdiSubWindow * pActiveWin = mdiArea->activeSubWindow(); // as "show" toggles the active renderwin we need to remeber it
   renderWin->GetQtWidget()->show();
@@ -468,15 +468,15 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
   #if defined(_WIN32) && defined(USE_DIRECTX)
     if (m_eVolumeRendererType >= MasterController::DIRECTX_SBVR) {
-      renderWin = new RenderWindowDX(m_MasterController, m_eVolumeRendererType, dataset, 
-                                       iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
+      renderWin = new RenderWindowDX(m_MasterController, m_eVolumeRendererType, dataset,
+                                       iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
                                        m_bDisableBorder, this, 0);
     } else {
       QGLFormat fmt;
       fmt.setRgba(true);
       fmt.setAlpha(true);
-      renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset, 
-                                     iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
+      renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset,
+                                     iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
                                      m_bDisableBorder, m_glShareWidget, fmt, this, 0);
     }
   #else
@@ -489,8 +489,8 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
     QGLFormat fmt;
     fmt.setAlpha(true);
     fmt.setRgba(true);
-    renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset, 
-                                   iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
+    renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset,
+                                   iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
                                    m_bDisableBorder, m_glShareWidget, fmt, this, 0);
   #endif
 
@@ -523,7 +523,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 #endif
     RenderWindowActive(renderWin); // if Qt will not call RenderWindowActive, we do it ourselfs
   }
-  
+
   return renderWin;
 }
 
@@ -725,7 +725,7 @@ void MainWindow::UpdateMenus() {
   actionInvert_Selection->setEnabled(bHasMdiChild);
   actionStastistcs->setEnabled(bHasMdiChild);
   actionUndo->setEnabled(bHasMdiChild);
-  actionRedo->setEnabled(bHasMdiChild);  
+  actionRedo->setEnabled(bHasMdiChild);
 
   /// \todo implement all of the features we are hiding here
   actionBox->setVisible(false);
@@ -735,7 +735,7 @@ void MainWindow::UpdateMenus() {
   actionInvert_Selection->setVisible(false);
   actionStastistcs->setVisible(false);
   actionUndo->setVisible(false);
-  actionRedo->setVisible(false); 
+  actionRedo->setVisible(false);
 }
 
 // ******************************************
@@ -827,8 +827,8 @@ void MainWindow::ShowWarningDialog(QString strTitle, QString strMessage) {
 void MainWindow::ShowWelcomeScreen() {
 /*
   // This code should center the window in its parent, but for now we just let QT decide where to put the window
-  QSize qSize = this->size(); 
-  QPoint qPos = this->pos(); 
+  QSize qSize = this->size();
+  QPoint qPos = this->pos();
   QSize qWelcomeSize = m_pWelcomeDialog->size();
   QSize qTmp =  (qSize - qWelcomeSize) / 2.0f;
   QPoint qNewWelcomePos(qTmp.width(), qTmp.height());
@@ -845,7 +845,7 @@ void MainWindow::ShowWelcomeScreen() {
     QString text = tr("%1").arg(QFileInfo(files[i]).fileName());
     m_pWelcomeDialog->AddMRUItem(string(text.toAscii()), string(files[i].toAscii()));
   }
- 
+
   m_pWelcomeDialog->setWindowIcon(windowIcon());
   m_pWelcomeDialog->show();
 }

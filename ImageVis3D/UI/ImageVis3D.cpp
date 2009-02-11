@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -127,7 +127,7 @@ MainWindow::MainWindow(MasterController& masterController,
   }
 
   masterController.IOMan()->RegisterFinalConverter(new DialogConverter(this));
-  
+
   UpdateMRUActions();
   UpdateMenus();
 
@@ -137,7 +137,7 @@ MainWindow::MainWindow(MasterController& masterController,
 
   CheckSettings();
   ClearProgressView();
-  
+
   connect(m_pWelcomeDialog, SIGNAL(CheckUpdatesClicked()),   this, SLOT(CheckForUpdates()));
   connect(m_pWelcomeDialog, SIGNAL(OnlineVideoTutClicked()), this, SLOT(OnlineVideoTut()));
   connect(m_pWelcomeDialog, SIGNAL(OnlineHelpClicked()),     this, SLOT(OnlineHelp()));
@@ -145,13 +145,22 @@ MainWindow::MainWindow(MasterController& masterController,
   connect(m_pWelcomeDialog, SIGNAL(OpenFromFileClicked(std::string)),   this, SLOT(LoadDataset(std::string)));
   connect(m_pWelcomeDialog, SIGNAL(OpenFromDirClicked()),    this, SLOT(LoadDirectory()));
   connect(m_pWelcomeDialog, SIGNAL(accepted()),              this, SLOT(CloseWelcome()));
-  
+
   if (!m_bScriptMode && m_bShowWelcomeScreen) ShowWelcomeScreen();
   if (m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
 }
 
 MainWindow::~MainWindow()
 {
+  if (m_DebugOut == m_MasterController.DebugOut()) {
+    m_MasterController.RemoveDebugOut(m_DebugOut);
+  } else {
+    // if the debugger was replaced by a multiplexer (for instance for file logging) remove it from the multiplexer
+    MultiplexOut* p = dynamic_cast<MultiplexOut*>(m_MasterController.DebugOut());
+    if (p != NULL) p->RemoveDebugOut(m_DebugOut);
+  }
+  delete m_DebugOut;
+
   // cleanup updatefile, this codepath is taken for instance when the windows firewall blocked an http request
   if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
     m_pUpdateFile->close();
@@ -290,7 +299,7 @@ void MainWindow::FilterImage() {
 
   m_MasterController.DebugOut()->
     Message("MainWindow::FilterImage",
-      "Performing filter %d on %s.", tab, 
+      "Performing filter %d on %s.", tab,
       m_pActiveRenderWin->GetDatasetName().toStdString().c_str() );
 
   QString fileName = m_pActiveRenderWin->GetDatasetName();
@@ -318,7 +327,7 @@ void MainWindow::SetLighting(bool bLighting) {
 }
 
 void MainWindow::SetSampleRate(int iValue) {
-  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetSampleRateModifier(iValue/100.0f); 
+  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetSampleRateModifier(iValue/100.0f);
   UpdateSampleRateLabel(iValue);
 }
 
@@ -485,7 +494,7 @@ void MainWindow::RotateCurrentViewX(double angle) {
     matRot.RotationX(3.141592653589793238462643383*angle/180.0);
     m_pActiveRenderWin->Rotate(matRot);
   }
-} 
+}
 
 void MainWindow::RotateCurrentViewY(double angle) {
   if (m_pActiveRenderWin) {
@@ -493,7 +502,7 @@ void MainWindow::RotateCurrentViewY(double angle) {
     matRot.RotationY(3.141592653589793238462643383*angle/180.0);
     m_pActiveRenderWin->Rotate(matRot);
   }
-} 
+}
 
 void MainWindow::RotateCurrentViewZ(double angle) {
   if (m_pActiveRenderWin) {
@@ -534,8 +543,8 @@ RenderWindow* MainWindow::ActiveRenderWin() {
 #ifdef TUVOK_OS_LINUX
   QCoreApplication::processEvents();
 #endif
-  if (mdiArea->activeSubWindow()) 
-    return WidgetToRenderWin(mdiArea->activeSubWindow()->widget()); 
+  if (mdiArea->activeSubWindow())
+    return WidgetToRenderWin(mdiArea->activeSubWindow()->widget());
   else
     return NULL;
 }
@@ -543,14 +552,14 @@ RenderWindow* MainWindow::ActiveRenderWin() {
 
 RenderWindow* MainWindow::WidgetToRenderWin(QWidget* w) {
   if (w->objectName() == "RenderWindowGL") {
-    RenderWindowGL* r = static_cast<RenderWindowGL*>(w);  
+    RenderWindowGL* r = static_cast<RenderWindowGL*>(w);
     return static_cast<RenderWindow*>(r);
-  } 
+  }
 #if defined(_WIN32) && defined(USE_DIRECTX)
   if (w->objectName() == "RenderWindowDX") {
-      RenderWindowDX* r = static_cast<RenderWindowDX*>(w);  
+      RenderWindowDX* r = static_cast<RenderWindowDX*>(w);
       return static_cast<RenderWindow*>(r);
-  } 
+  }
 #endif
   return NULL;
 }
