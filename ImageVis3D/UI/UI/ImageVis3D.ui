@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1282</width>
-    <height>2154</height>
+    <width>1041</width>
+    <height>2150</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -42,8 +42,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1282</width>
-     <height>26</height>
+     <width>1041</width>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File" >
@@ -1563,7 +1563,7 @@
    </property>
    <property name="minimumSize" >
     <size>
-     <width>184</width>
+     <width>178</width>
      <height>165</height>
     </size>
    </property>
@@ -1928,7 +1928,7 @@
   <widget class="QDockWidget" name="dockWidget_2DTrans" >
    <property name="minimumSize" >
     <size>
-     <width>446</width>
+     <width>445</width>
      <height>456</height>
     </size>
    </property>
@@ -2973,19 +2973,6 @@
             <widget class="QCheckBox" name="checkBox_Lighting" >
              <property name="text" >
               <string>Lighting</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBox_ClipPlane" >
-             <property name="toolTip" >
-              <string>Enables a clip plane to slice out a portion of the dataset.</string>
-             </property>
-             <property name="whatsThis" >
-              <string>Turns on a clipping plane.</string>
-             </property>
-             <property name="text" >
-              <string>Clip Plane</string>
              </property>
             </widget>
            </item>
@@ -5117,12 +5104,12 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleLocalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>1264</x>
-     <y>825</y>
+     <x>1267</x>
+     <y>798</y>
     </hint>
     <hint type="destinationlabel" >
      <x>989</x>
-     <y>1274</y>
+     <y>1361</y>
     </hint>
    </hints>
   </connection>
@@ -5731,36 +5718,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <hint type="destinationlabel" >
      <x>955</x>
      <y>875</y>
-  </connection>
-  <connection>
-   <sender>actionClip_Plane</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>ToggleClipPlane(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>640</x>
-     <y>1076</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox_ClipPlane</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>ToggleClipPlane(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>1102</x>
-     <y>854</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>640</x>
-     <y>1076</y>
     </hint>
    </hints>
   </connection>
@@ -5809,7 +5766,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>SetIsoValue(int)</slot>
   <slot>ToggleGlobalBBox(bool)</slot>
   <slot>ToggleLocalBBox(bool)</slot>
-  <slot>ToggleClipPlane(bool)</slot>
   <slot>CaptureFrame()</slot>
   <slot>CaptureSequence()</slot>
   <slot>SetCaptureFilename()</slot>
