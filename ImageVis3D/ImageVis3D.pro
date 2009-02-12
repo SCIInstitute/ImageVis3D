@@ -42,6 +42,7 @@ HEADERS += StdDefines.h \
            UI/AboutDlg.h \
            UI/URLDlg.h \
            UI/BugRepDlg.h \
+           UI/LODDlg.h \
            DebugOut/QTOut.h \
            DebugOut/QTLabelOut.h \
            IO/DialogConverter.h
@@ -55,6 +56,7 @@ FORMS += UI/UI/BrowseData.ui \
          UI/UI/Welcome.ui \
          UI/UI/About.ui \
          UI/UI/URLDlg.ui \
+         UI/UI/LODDlg.ui \
          UI/UI/BugRepDlg.ui \
          UI/UI/MIPRotDialog.ui
 
@@ -78,6 +80,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/URLDlg.cpp \
            UI/FTPDialog.cpp \
            UI/BugRepDlg.cpp \
+           UI/LODDlg.cpp \           
            UI/QTransferFunction.cpp \
            UI/Q1DTransferFunction.cpp \
            UI/Q2DTransferFunction.cpp \

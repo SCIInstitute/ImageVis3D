@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1041</width>
-     <height>30</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File" >
@@ -85,6 +85,7 @@
     <addaction name="actionCloneCurrentView" />
     <addaction name="separator" />
     <addaction name="actionLoad_Window_Geometry" />
+    <addaction name="actionSave_DefaultGeometry" />
     <addaction name="actionSave_Window_Geometry" />
    </widget>
    <widget class="QMenu" name="menu_Workspace" >
@@ -93,6 +94,7 @@
     </property>
     <addaction name="actionLoad_Workspace" />
     <addaction name="actionSave_Workspace" />
+    <addaction name="actionSave_DefaultWorkspace" />
     <addaction name="actionReset_Workspace" />
     <addaction name="separator" />
    </widget>
@@ -4097,6 +4099,16 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <string>Enables a clip plane</string>
    </property>
   </action>
+  <action name="actionSave_DefaultWorkspace" >
+   <property name="text" >
+    <string>Save Default</string>
+   </property>
+  </action>
+  <action name="actionSave_DefaultGeometry" >
+   <property name="text" >
+    <string>Save Default</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="0" />
  <tabstops>
@@ -5721,6 +5733,38 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSave_DefaultWorkspace</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SaveDefaultWorkspace()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>520</x>
+     <y>1074</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave_DefaultGeometry</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SaveDefaultGeometry()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>520</x>
+     <y>1074</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -5796,5 +5840,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>ShowWelcomeScreen()</slot>
   <slot>ReportABug()</slot>
   <slot>ExportMesh()</slot>
+  <slot>SaveDefaultWorkspace()</slot>
+  <slot>SaveDefaultGeometry()</slot>
  </slots>
 </ui>

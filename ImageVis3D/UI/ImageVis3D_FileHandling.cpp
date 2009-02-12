@@ -53,6 +53,7 @@
 #include "../Tuvok/Basics/SysTools.h"
 
 #include "DebugOut/QTLabelOut.h"
+#include "LODDlg.h"
 
 using namespace std;
 
@@ -266,13 +267,22 @@ void MainWindow::ExportDataset() {
     string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()), ext);
 
     int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet()->GetInfo()->GetLODLevelCount())-1;
-    int  iLODLevel = 0;
+
+    int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
-      bool bOK = true;
-      iLODLevel = QInputDialog::getInteger(this,
-                                           tr("Which LOD Level do you want to export (lower level = higher resolution)?"),
-                                           tr("Level:"), 0, 0, iMaxLODLevel, 1, &bOK);
-      if (!bOK) return;
+      int iMinLODLevel = 0;
+      vector<QString> vDesc;
+      for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
+        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataSet()->GetInfo()->GetDomainSize(i));
+        QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
+        vDesc.push_back(qstrDesc);
+      }
+      LODDlg lodDlg("Which LOD Level do you want to export?", iMinLODLevel, iMaxLODLevel, vDesc, this);
+
+      if (lodDlg.exec() != QDialog::Accepted) 
+        return;
+      else
+        iLODLevel = lodDlg.GetLOD();
     }
 
     PleaseWaitDialog pleaseWait(this);
@@ -294,7 +304,7 @@ bool MainWindow::ExportMesh(UINT32 iLODLevel, string targetFileName) {
       return false;
     }
     PleaseWaitDialog pleaseWait(this);
-    pleaseWait.SetText("Exporting, please wait  ...");
+    pleaseWait.SetText("Exporting mesh, please wait  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
     int iValue = horizontalSlider_Isovalue->value();
@@ -332,13 +342,22 @@ void MainWindow::ExportMesh() {
     string targetFileName = SysTools::CheckExt(string(fileName.toAscii()), "obj");
 
     int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet()->GetInfo()->GetLODLevelCount())-1;
-    int  iLODLevel = 0;
+
+    int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
-      bool bOK = true;
-      iLODLevel = QInputDialog::getInteger(this,
-                                           tr("Which LOD Level do you want to export (lower level = higher resolution)?"),
-                                           tr("Level:"), 0, 0, iMaxLODLevel, 1, &bOK);
-      if (!bOK) return;
+      int iMinLODLevel = 0;
+      vector<QString> vDesc;
+      for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
+        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataSet()->GetInfo()->GetDomainSize(i));
+        QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
+        vDesc.push_back(qstrDesc);
+      }
+      LODDlg lodDlg("For which LOD Level do you want to compute the mesh?", iMinLODLevel, iMaxLODLevel, vDesc, this);
+
+      if (lodDlg.exec() != QDialog::Accepted) 
+        return;
+      else
+        iLODLevel = lodDlg.GetLOD();
     }
 
     if(!ExportMesh(UINT32(iLODLevel), targetFileName))

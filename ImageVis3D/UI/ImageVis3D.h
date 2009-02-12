@@ -221,6 +221,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void PreserveTransparencyChanged();
 
     void ShowWelcomeScreen();
+    void SaveDefaultWorkspace();
+    void SaveDefaultGeometry();
 
   private :
     QTimer*                                   m_pRedrawTimer;
@@ -277,6 +279,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
           bool bRetryResource = true);
 
     bool SaveGeometry(QString strFilename);
+
+    bool LoadDefaultWorkspace();
+    bool LoadDefaultGeometry();
 
     void SetTitle();
     void setupUi(QMainWindow *MainWindow);

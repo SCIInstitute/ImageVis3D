@@ -117,13 +117,11 @@ MainWindow::MainWindow(MasterController& masterController,
 
   SetupWorkspaceMenu();
 
-  if (!LoadGeometry("Default.geo", true)) {
-    SaveGeometry("Default.geo");
-  }
+  if (!LoadDefaultGeometry()) SaveDefaultGeometry();
 
-  if (!LoadWorkspace("Default.wsp", true)) {
+  if (!LoadDefaultWorkspace()) {
     InitAllWorkspaces();
-    SaveWorkspace("Default.wsp");
+    SaveDefaultWorkspace();
   }
 
   masterController.IOMan()->RegisterFinalConverter(new DialogConverter(this));
@@ -431,17 +429,13 @@ void MainWindow::ToggleClipPlane(bool)
     m_MasterController.DebugOut()->Message("MainWindow", "ToggleClipPlane");
 }
 
-
-#include <iostream>
-#include "../Tuvok/DebugOut/MultiplexOut.h"
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-  if (m_bAutoSaveGEO) SaveGeometry("Default.geo");
-  if (m_bAutoSaveWSP) SaveWorkspace("Default.wsp");
+  if (m_bAutoSaveGEO) SaveDefaultGeometry();
+  if (m_bAutoSaveWSP) SaveDefaultWorkspace();
   m_MasterController.RemoveDebugOut(m_pDebugOut);
   event->accept();
 }
-
 
 void MainWindow::ChooseIsoColor()
 {

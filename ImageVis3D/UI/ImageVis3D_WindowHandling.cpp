@@ -103,9 +103,23 @@ bool MainWindow::SaveGeometry() {
   } return false;
 }
 
+bool MainWindow::LoadDefaultGeometry() {
+  QSettings settings;
+  if (settings.contains("Geometry/MainWinGeometry"))
+    return restoreGeometry( settings.value("Geometry/MainWinGeometry").toByteArray() );
+  else 
+    return false;
+}
+
+void MainWindow::SaveDefaultGeometry() {
+  QSettings settings;
+  settings.setValue("Geometry/MainWinGeometry", saveGeometry() );
+}
+
+
 bool MainWindow::LoadGeometry(QString strFilename,
-            bool bSilentFail,
-            bool bRetryResource) {
+                              bool bSilentFail,
+                              bool bRetryResource) {
 
   QSettings settings( strFilename, QSettings::IniFormat );
 
@@ -339,6 +353,19 @@ bool MainWindow::SaveWorkspace() {
     settings.setValue("Folders/SaveWorkspace", QFileInfo(fileName).absoluteDir().path());
     return SaveWorkspace(fileName);
   } else return false;
+}
+
+bool MainWindow::LoadDefaultWorkspace() {
+  QSettings settings;
+  if (settings.contains("Geometry/DockGeometry"))
+    return restoreState( settings.value("Geometry/DockGeometry").toByteArray() );
+  else 
+    return false;
+}
+
+void MainWindow::SaveDefaultWorkspace() {
+  QSettings settings;
+  settings.setValue("Geometry/DockGeometry", this->saveState() );
 }
 
 
