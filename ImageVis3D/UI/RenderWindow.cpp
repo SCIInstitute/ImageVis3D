@@ -118,8 +118,13 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
   if (eWinMode == AbstrRenderer::WM_3D ) {
     if (event->button() == Qt::RightButton)
       m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
-    if (event->button() == Qt::LeftButton)
+
+    if (event->modifiers() & Qt::ControlModifier &&
+        event->button() == Qt::LeftButton) {
+      m_ClipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+    } else if (event->button() == Qt::LeftButton) {
       m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+    }
   }
 }
 
@@ -136,6 +141,7 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
     m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
                                      FLOATVECTOR2(m_vWinDim));
 
+  bool clip = event->modifiers() & Qt::ControlModifier;
   bool clearview = event->modifiers() & Qt::ShiftModifier;
   bool rotate = event->buttons() & Qt::LeftButton;
   bool translate = event->buttons() & Qt::RightButton;
@@ -144,7 +150,11 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
   if (eWinMode == AbstrRenderer::WM_3D) {
     bool bPerformUpdate = false;
 
-    bPerformUpdate = MouseMove3D(m_viMousePos, clearview, rotate, translate);
+    if(clip) {
+      bPerformUpdate = MouseMoveClip(m_viMousePos, rotate, translate);
+    } else {
+      bPerformUpdate = MouseMove3D(m_viMousePos, clearview, rotate, translate);
+    }
 
     if (bPerformUpdate) UpdateWindow();
   }
