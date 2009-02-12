@@ -5821,6 +5821,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>Expand2DWidgets()</slot>
   <slot>SetSampleRate(int)</slot>
   <slot>SetIsoValue(int)</slot>
+  <slot>ToggleClipPlane(bool)</slot>
   <slot>ToggleGlobalBBox(bool)</slot>
   <slot>ToggleLocalBBox(bool)</slot>
   <slot>CaptureFrame()</slot>
