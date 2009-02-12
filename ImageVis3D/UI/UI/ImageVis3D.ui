@@ -5778,6 +5778,22 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>checkbox_ClipPlane</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ToggleClipPlane(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>879</x>
+     <y>851</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>520</x>
+     <y>1078</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
