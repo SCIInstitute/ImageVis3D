@@ -91,6 +91,9 @@ class RenderWindow
 
     void SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate);
     void SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate);
+    void SetClipPlane(const PLANE<float> &p);
+    void SetClipTranslationDelta(const FLOATVECTOR3& trans, bool);
+    void SetClipRotationDelta(const FLOATMATRIX4& rotDelta, bool);
     void CloneViewState(RenderWindow* other);
     void FinalizeRotation(bool bPropagate);
     void CloneRendermode(RenderWindow* other);
@@ -168,6 +171,13 @@ class RenderWindow
     void Cleanup();
 
   private:
+    /// Called when the mouse is moved, but in a mode where the clip plane
+    /// should be manipulated instead of the dataset.
+    /// @param pos       new position of the mouse cursor
+    /// @param rotate    if this should rotate the clip plane
+    /// @param translate if this should translate the clip plane
+    bool MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate);
+
     /// Called for a mouse update when in the 3D view mode.
     /// @param pos new position of the mouse cursor
     /// @param clearview if this action should affect clearview
@@ -197,6 +207,12 @@ class RenderWindow
     FLOATMATRIX4      m_mAccumulatedTranslation;
     bool              m_bAbsoluteViewLock;
     bool              m_bCaptureMode;
+
+    ArcBall           m_ClipArcBall;
+    FLOATMATRIX4      m_mCurrentClipRotation;
+    FLOATMATRIX4      m_mAccumulatedClipRotation;
+    FLOATMATRIX4      m_mAccumulatedClipTranslation;
+    PLANE<float>      m_ClipPlane;
 };
 
 #endif // RENDERWINDOW_H

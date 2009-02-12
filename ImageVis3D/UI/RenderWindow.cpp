@@ -70,7 +70,8 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_viRightClickPos(0,0),
   m_viMousePos(0,0),
   m_bAbsoluteViewLock(true),
-  m_bCaptureMode(false)
+  m_bCaptureMode(false),
+  m_ClipPlane(0,0,1,0)
 {
   m_strID = "[%1] %2";
   m_strID = m_strID.arg(iCounter).arg(dataset);
@@ -147,6 +148,25 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
 
     if (bPerformUpdate) UpdateWindow();
   }
+}
+
+bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate)
+{
+  bool bUpdate = false;
+  if (rotate) {
+    UINTVECTOR2 upos(static_cast<UINT32>(pos.x),
+                     static_cast<UINT32>(pos.y));
+    SetClipRotationDelta(m_ClipArcBall.Drag(upos).ComputeRotation(),true);
+    bUpdate = true;
+  }
+  if (translate) {
+    INTVECTOR2 viPosDelta = m_viMousePos - m_viRightClickPos;
+    m_viRightClickPos = m_viMousePos;
+    SetClipTranslationDelta(FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x,
+                            float(viPosDelta.y*2) / m_vWinDim.y,0),true);
+    bUpdate = true;
+  }
+  return bUpdate;
 }
 
 bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
@@ -285,6 +305,7 @@ void RenderWindow::FocusOutEvent ( QFocusEvent * event ) {
 void RenderWindow::SetupArcBall() {
   if (m_Renderer->GetViewmode() == AbstrRenderer::VM_TWOBYTWO) {
     m_ArcBall.SetWindowSize(m_vWinDim.x/2, m_vWinDim.y/2);
+    m_ClipArcBall.SetWindowSize(m_vWinDim.x/2, m_vWinDim.y/2);
 
     // find the 3D window
     int i3DWindowIndex = 0;
@@ -296,14 +317,21 @@ void RenderWindow::SetupArcBall() {
     }
 
     switch (i3DWindowIndex) {
-      case 0 : m_ArcBall.SetWindowOffset(0,0); break;
-      case 1 : m_ArcBall.SetWindowOffset(m_vWinDim.x/2,0); break;
-      case 2 : m_ArcBall.SetWindowOffset(0,m_vWinDim.y/2); break;
-      case 3 : m_ArcBall.SetWindowOffset(m_vWinDim.x/2, m_vWinDim.y/2); break;
+      case 0 : m_ArcBall.SetWindowOffset(0,0);
+               m_ClipArcBall.SetWindowOffset(0,0); break;
+      case 1 : m_ArcBall.SetWindowOffset(m_vWinDim.x/2,0);
+               m_ClipArcBall.SetWindowOffset(m_vWinDim.x/2,0); break;
+      case 2 : m_ArcBall.SetWindowOffset(0,m_vWinDim.y/2);
+               m_ClipArcBall.SetWindowOffset(0,m_vWinDim.y/2); break;
+      case 3 : m_ArcBall.SetWindowOffset(m_vWinDim.x/2, m_vWinDim.y/2);
+               m_ClipArcBall.SetWindowOffset(m_vWinDim.x/2, m_vWinDim.y/2); break;
     }
   } else {
     m_ArcBall.SetWindowSize(m_vWinDim.x, m_vWinDim.y);
     m_ArcBall.SetWindowOffset(0,0);
+
+    m_ClipArcBall.SetWindowSize(m_vWinDim.x, m_vWinDim.y);
+    m_ClipArcBall.SetWindowOffset(0,0);
   }
 }
 
@@ -408,6 +436,7 @@ void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagat
 
 void RenderWindow::FinalizeRotation(bool bPropagate) {
   m_mAccumulatedRotation = m_mCurrentRotation;
+  m_mAccumulatedClipRotation = m_mCurrentClipRotation;
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
       m_vpLocks[0][i]->FinalizeRotation(false);
@@ -438,10 +467,63 @@ void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagat
   }
 }
 
+void RenderWindow::SetClipPlane(const PLANE<float>&p) {
+  m_ClipPlane = p;
+  m_Renderer->SetClipPlane(m_ClipPlane);
+}
+
+void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
+                                        bool bPropagate)
+{
+  m_mCurrentClipRotation = m_mAccumulatedClipRotation * rotDelta;
+  m_ClipPlane = PLANE<float>(0,0,1,m_ClipPlane.d());
+  m_ClipPlane.transform(m_mCurrentClipRotation);
+  SetClipPlane(m_ClipPlane);
+
+  if (bPropagate) {
+    for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
+        iter != m_vpLocks[0].end(); ++iter) {
+      if (m_bAbsoluteViewLock) {
+        (*iter)->SetClipPlane(m_ClipPlane);
+      } else {
+        (*iter)->SetClipRotationDelta(rotDelta, false);
+      }
+    }
+  }
+}
+
+// Translates the clip plane by the given vector.
+void RenderWindow::SetClipTranslationDelta(const FLOATVECTOR3 &trans,
+                                           bool bPropagate)
+{
+  m_mAccumulatedClipTranslation.m41 += trans.x / 10.f;
+  m_mAccumulatedClipTranslation.m42 += trans.y / 10.f;
+  m_mAccumulatedClipTranslation.m43 += trans.z / 10.f;
+
+  m_ClipArcBall.SetTranslation(m_mAccumulatedClipTranslation);
+  FLOATMATRIX4 tmp;
+  tmp.Translation(trans.x,trans.y,trans.z);
+  SetClipPlane(m_ClipPlane * tmp);
+
+  if (bPropagate) {
+    for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
+        iter != m_vpLocks[0].end(); ++iter) {
+      if (m_bAbsoluteViewLock) {
+        (*iter)->SetClipPlane(m_ClipPlane);
+      } else {
+        (*iter)->SetClipTranslationDelta(trans, false);
+      }
+    }
+  }
+}
+
 void RenderWindow::CloneViewState(RenderWindow* other) {
   m_mAccumulatedTranslation = other->m_mAccumulatedTranslation;
   m_mAccumulatedRotation    = other->m_mAccumulatedRotation;
+  m_mAccumulatedClipRotation = other->m_mAccumulatedClipRotation;
+  m_mAccumulatedClipTranslation = other->m_mAccumulatedClipTranslation;
   m_ArcBall.SetTranslation(other->m_ArcBall.GetTranslation());
+  m_ClipArcBall.SetTranslation(other->m_ClipArcBall.GetTranslation());
 
   m_Renderer->SetRotation(m_mAccumulatedRotation);
   m_Renderer->SetTranslation(m_mAccumulatedTranslation);
@@ -650,4 +732,8 @@ void RenderWindow::ResetRenderingParameters()
   m_mCurrentRotation = mIdentity;
   m_mAccumulatedRotation = mIdentity;
   m_mAccumulatedTranslation = mIdentity;
+  m_mAccumulatedClipTranslation = mIdentity;
+  m_mCurrentClipRotation = mIdentity;
+  m_mAccumulatedClipRotation = mIdentity;
+  SetClipPlane(PLANE<float>(0,0,1,0));
 }
