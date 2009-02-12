@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>1041</width>
-    <height>2150</height>
+    <height>2157</height>
    </rect>
   </property>
   <property name="sizePolicy" >
@@ -2975,6 +2975,19 @@
             <widget class="QCheckBox" name="checkBox_Lighting" >
              <property name="text" >
               <string>Lighting</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkbox_ClipPlane" >
+             <property name="toolTip" >
+              <string>Enables a clip plane</string>
+             </property>
+             <property name="whatsThis" >
+              <string>Clips the data along a mouse-controlled plane.  Hold control to change clip plane settings.</string>
+             </property>
+             <property name="text" >
+              <string>Clip Plane</string>
              </property>
             </widget>
            </item>
