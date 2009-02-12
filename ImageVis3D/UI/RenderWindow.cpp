@@ -210,7 +210,11 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
   // mouse is over the 3D window
   if (eWinMode == AbstrRenderer::WM_3D ) {
     float fZoom = event->delta()/1000.0f;
-    SetTranslationDelta(FLOATVECTOR3(0,0,fZoom),true);
+    if(event->modifiers() & Qt::ControlModifier) {
+      SetClipTranslationDelta(FLOATVECTOR3(0,0,-fZoom/10.f),true);
+    } else {
+      SetTranslationDelta(FLOATVECTOR3(0,0,fZoom),true);
+    }
   } else {
     int iZoom = event->delta()/120;  // this returns 1 for "most" mice if the wheel is turned one "click"
     m_Renderer->SetSliceDepth(eWinMode, int(m_Renderer->GetSliceDepth(eWinMode))+iZoom);
