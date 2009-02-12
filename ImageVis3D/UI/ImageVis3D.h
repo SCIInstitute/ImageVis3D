@@ -41,7 +41,7 @@
 #define IMAGEVIS3D_H
 
 #include <StdDefines.h>
-#include "../Tuvok/Controller/MasterController.h"
+class MasterController;
 
 #include "AutoGen/ui_ImageVis3D.h"
 #include "RenderWindowGL.h"
