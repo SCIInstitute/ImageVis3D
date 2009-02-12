@@ -1565,7 +1565,7 @@
    </property>
    <property name="minimumSize" >
     <size>
-     <width>178</width>
+     <width>184</width>
      <height>165</height>
     </size>
    </property>
@@ -1930,7 +1930,7 @@
   <widget class="QDockWidget" name="dockWidget_2DTrans" >
    <property name="minimumSize" >
     <size>
-     <width>445</width>
+     <width>446</width>
      <height>456</height>
     </size>
    </property>
