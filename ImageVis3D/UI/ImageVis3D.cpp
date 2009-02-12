@@ -424,9 +424,15 @@ void MainWindow::ToggleLocalBBox(bool bRenderBBox)
   if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetLocalBBox(bRenderBBox);
 }
 
-void MainWindow::ToggleClipPlane(bool)
+void MainWindow::ToggleClipPlane(bool bClip)
 {
-    m_MasterController.DebugOut()->Message("MainWindow", "ToggleClipPlane");
+  m_MasterController.DebugOut()->Message("MainWindow::ToggleClipPlane",
+                                         "clip %d", static_cast<int>(bClip));
+  if(bClip) {
+    m_pActiveRenderWin->GetRenderer()->EnableClipPlane();
+  } else {
+    m_pActiveRenderWin->GetRenderer()->DisableClipPlane();
+  }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
