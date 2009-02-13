@@ -56,6 +56,7 @@
 #include "FTPDialog.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/Appendix.h"
+#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 
 #include <fstream>
 

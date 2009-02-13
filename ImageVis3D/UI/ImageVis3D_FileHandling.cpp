@@ -51,6 +51,7 @@
 #include <iostream>
 #include <string>
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/IO/IOManager.h"
 
 #include "DebugOut/QTLabelOut.h"
 #include "LODDlg.h"

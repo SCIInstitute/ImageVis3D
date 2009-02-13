@@ -54,6 +54,7 @@
 #include <iostream>
 #include <string>
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/IO/IOManager.h"
 
 #include "../IO/DialogConverter.h"
 

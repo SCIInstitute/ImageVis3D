@@ -41,6 +41,7 @@
 
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/DebugOut/TextfileOut.h"
+#include "../Tuvok/IO/IOManager.h"
 
 #if defined(_WIN32) && defined(USE_DIRECTX)
   #include "../Tuvok/Basics/DynamicDX.h"

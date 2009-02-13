@@ -40,6 +40,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
 #include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include <exception>
 #include <limits>
 

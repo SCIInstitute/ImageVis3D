@@ -40,6 +40,7 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "DebugOut/HRConsoleOut.h"
 #include "../Tuvok/StdTuvokDefines.h"
+#include "../Tuvok/IO/IOManager.h"
 
 #include <string>
 #include <vector>

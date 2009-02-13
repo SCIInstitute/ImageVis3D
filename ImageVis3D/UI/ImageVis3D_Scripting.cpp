@@ -38,6 +38,7 @@
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/Appendix.h"
+#include "../Tuvok/Scripting/Scripting.h"
 #include <QtOpenGL/QtOpenGL>
 
 using namespace std;

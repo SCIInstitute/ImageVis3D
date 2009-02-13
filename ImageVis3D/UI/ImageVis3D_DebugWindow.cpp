@@ -37,6 +37,8 @@
 
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
+#include "../Tuvok/Scripting/Scripting.h"
 #include <QtOpenGL/QtOpenGL>
 #include <QtGui/QImageReader>
 

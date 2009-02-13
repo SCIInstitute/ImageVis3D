@@ -39,6 +39,7 @@
 
 #include <QtCore/QFileInfo>
 #include "AutoGen/ui_SettingsDlg.h"
+#include "../Tuvok/IO/IOManager.h"
 
 using namespace std;
 

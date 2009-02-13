@@ -43,6 +43,7 @@
 #include <assert.h>
 #include <sstream>
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
+#include "../Tuvok/IO/IOManager.h"
 
 using namespace std;
 
