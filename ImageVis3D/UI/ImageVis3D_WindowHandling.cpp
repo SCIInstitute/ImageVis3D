@@ -566,6 +566,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
         sender->GetDatasetName().toStdString().c_str());
 
     if (!CheckRenderwindowFitness(m_pActiveRenderWin)) {
+      QMdiSubWindow* w = ActiveSubWindow();
+      if (w) w->close();
       return;
     }
 
