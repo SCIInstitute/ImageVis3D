@@ -55,6 +55,7 @@
 #endif
 */
 
+
 int main(int argc, char* argv[])
 {
   #if defined(_WIN32) && defined(USE_DIRECTX)

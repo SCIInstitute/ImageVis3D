@@ -63,11 +63,12 @@ void ShowUsage(string filename) {
 			filename << " V" << CONV_VERSION << " (using Tuvok V" << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE << ")"<< endl << "  (c) Scientific Computing and Imaging Institute, University of Utah" << endl << endl <<
       " Converts different types of volumes into a UVF file and vice versa." << endl << endl <<
       " Usage:" << endl <<
-			"    " << filename << " -f InFile ^ -d InDir -out OutFile" << endl << endl <<		
+			"    " << filename << " -f InFile ^ -d InDir [-f2 InFile2] -out OutFile " << endl << endl <<		
 			"     Mandatory Arguments:" << endl <<
 			"        -f    the input filename" << endl << 
 			"        XOR" << endl << 
 			"        -d    the input directory" << endl << 
+      endl << 
 			"        -out  the target filename (the extension is used to detect the format)" << endl <<
       "          Supported formats: " << endl <<
       "             - uvf" << endl << 
@@ -75,6 +76,9 @@ void ShowUsage(string filename) {
       "             - nrrd" << endl << 
       "             - nhdr (will also create raw file with similar name)" << endl << 
       "             - dat (will also create raw file with similar name)" << endl << endl <<
+			"     Optional Arguments:" << endl <<
+			"        -f2   second input file to be merged with the first" << endl <<
+			"        -s2   scaling factor for values in the second input file" << endl <<
       " Examples:" << endl <<
       "  " << filename << " -f head.vff -out head.uvf   // converts head.vff" << endl <<
       "                                                    into a uvf file" << endl << 
@@ -108,10 +112,14 @@ int main(int argc, char* argv[])
   }
 
   string strInFile = "";
+  string strInFile2 = "";
   string strInDir = "";
   string strOutfile = "";
+  double fScale = 1.0;
   parameters.GetValue("F",strInFile);
+  parameters.GetValue("F2",strInFile2);
   parameters.GetValue("D",strInDir);
+  parameters.GetValue("S2",fScale);
   parameters.GetValue("OUT",strOutfile);
 
   if (strInFile == "" && strInDir == "") {
@@ -139,12 +147,6 @@ int main(int argc, char* argv[])
 
     string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
-    /// \todo: remove this once uvf to raw is completed
-    if (sourceType == targetType) {
-      cout << "Source type equals target type. Nothing todo." << endl << endl;
-      return 2;
-    }
-
     if (sourceType != "uvf" && sourceType != "vff" && sourceType != "dat" && sourceType != "nhdr" && sourceType != "nrrd") {
       cout << "Error: Unsuported source type." << endl << endl;
       return 2;
@@ -155,17 +157,45 @@ int main(int argc, char* argv[])
       return 2;
     }
 
-    cout << "Running in file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;
-    
-    if (ioMan.ConvertDataset(strInFile, strOutfile)) {
-      cout << "Success." << endl << endl;
-      return 0;
+    if (strInFile2 == "") {
+      cout << "Running in file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;  
+      if (ioMan.ConvertDataset(strInFile, strOutfile)) {
+        cout << "Success." << endl << endl;
+        return 0;
+      } else {
+        cout << "Failure." << endl << endl;
+        return 2;
+      }
     } else {
-      cout << "Failure." << endl << endl;
-      return 2;
+      vector<string> vDataSets;
+      vector<double> vScales;
+      vDataSets.push_back(strInFile);
+      vScales.push_back(1.0);
+      vDataSets.push_back(strInFile2);
+      vScales.push_back(fScale);
+
+      cout << "Running in merge mode." << endl << "Converting";
+      for (size_t i = 0;i<<vDataSets.size();i++) {
+        cout << " " << vDataSets[i];
+      }        
+      cout << " to " << strOutfile<< endl << endl;  
+
+      if (ioMan.MergeDatasets(vDataSets, vScales, strOutfile)) {
+        cout << "Success." << endl << endl;
+        return 0;
+      } else {
+        cout << "Failure." << endl << endl;
+        return 2;
+      }
+
     }
 
   } else {
+
+    if (strInFile2 != "") {
+      cout << "Error: Currently file mergin is only supported in file mode (i.e. specify -f and not -d)." << endl << endl;
+      return 2;
+    }
 
     /// \todo: remove this once uvf to raw is completed
     if (targetType != "uvf") {
