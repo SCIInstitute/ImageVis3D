@@ -79,7 +79,10 @@ void ShowUsage(string filename) {
       "             - dat (will also create raw file with similar name)" << endl << endl <<
 			"     Optional Arguments:" << endl <<
 			"        -f2   second input file to be merged with the first" << endl <<
+			"        -b2   bias factor for values in the second input file" << endl <<
+      "              (use 'm' instead of a minus sign e.g. -b2 m3 will bias by -3)" << endl <<
 			"        -s2   scaling factor for values in the second input file" << endl <<
+      "              (use 'm' instead of a minus sign e.g. -s2 m5 will scale by -5)" << endl <<
       " Examples:" << endl <<
       "  " << filename << " -f head.vff -out head.uvf   // converts head.vff" << endl <<
       "                                                    into a uvf file" << endl << 
@@ -116,12 +119,34 @@ int main(int argc, char* argv[])
   string strInFile2 = "";
   string strInDir = "";
   string strOutfile = "";
+  string strScale;
   double fScale = 1.0;
+  string strBias = "";
+  double fBias = 0.0;
+  parameters.GetValue("D",strInDir);
   parameters.GetValue("F",strInFile);
   parameters.GetValue("F2",strInFile2);
-  parameters.GetValue("D",strInDir);
-  parameters.GetValue("S2",fScale);
+  parameters.GetValue("B2",strBias);
+  parameters.GetValue("S2",strScale);
   parameters.GetValue("OUT",strOutfile);
+
+  // replace "m" by "-"
+  string::size_type pos = 0;
+  if (strScale != "") {
+    while ( (pos = strScale.find("m", pos)) != string::npos ) {
+      strScale.replace( pos, string("m").size(), "-" );
+      pos++;
+    }
+    fScale = atof(strScale.c_str());
+  }
+  if (strBias != "") {
+    pos = 0;
+    while ( (pos = strBias.find("m", pos)) != string::npos ) {
+      strBias.replace( pos, string("m").size(), "-" );
+      pos++;
+    }
+    fBias = atof(strBias.c_str());
+  }
 
   if (strInFile == "" && strInDir == "") {
     cout << "Must specify parameter either 'f' or parameter 'd'." << endl;
@@ -170,10 +195,13 @@ int main(int argc, char* argv[])
     } else {
       vector<string> vDataSets;
       vector<double> vScales;
+      vector<double> vBiases;
       vDataSets.push_back(strInFile);
       vScales.push_back(1.0);
+      vBiases.push_back(0.0);
       vDataSets.push_back(strInFile2);
       vScales.push_back(fScale);
+      vBiases.push_back(fBias);
 
       cout << "Running in merge mode." << endl << "Converting";
       for (size_t i = 0;i<<vDataSets.size();i++) {
@@ -181,7 +209,7 @@ int main(int argc, char* argv[])
       }        
       cout << " to " << strOutfile<< endl << endl;  
 
-      if (ioMan.MergeDatasets(vDataSets, vScales, strOutfile)) {
+      if (ioMan.MergeDatasets(vDataSets, vScales, vBiases, strOutfile)) {
         cout << "Success." << endl << endl;
         return 0;
       } else {
