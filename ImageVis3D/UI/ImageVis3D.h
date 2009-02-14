@@ -156,6 +156,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     void UpdateMenus();
     void ExportDataset();
+    void MergeDatasets();
     bool ExportDataset(UINT32 iLODLevel, std::string targetFileName);
     void ExportMesh();
     bool ExportMesh(UINT32 iLODLevel, std::string targetFileName);

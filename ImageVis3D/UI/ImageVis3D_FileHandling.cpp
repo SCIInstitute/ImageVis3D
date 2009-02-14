@@ -55,6 +55,7 @@
 
 #include "DebugOut/QTLabelOut.h"
 #include "LODDlg.h"
+#include "MergeDlg.h"
 
 using namespace std;
 
@@ -373,4 +374,10 @@ void MainWindow::CompareFiles(const std::string& strFile1, const std::string& st
   } else {
     m_MasterController.DebugOut()->Warning("MainWindow::CompareFiles", "%s (Comparing %s %s)", strMessage.c_str(), strFile1.c_str(), strFile2.c_str());
   }
+}
+
+
+void MainWindow::MergeDatasets() {
+  MergeDlg m(this);
+  m.exec();
 }

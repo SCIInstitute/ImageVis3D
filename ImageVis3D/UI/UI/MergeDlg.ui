@@ -1,0 +1,361 @@
+<ui version="4.0" >
+ <class>MergeDlg</class>
+ <widget class="QDialog" name="MergeDlg" >
+  <property name="windowModality" >
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>402</width>
+    <height>369</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Merge Files</string>
+  </property>
+  <property name="modal" >
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QGroupBox" name="groupBox_2" >
+     <property name="title" >
+      <string>Merge Mode</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_4" >
+      <item>
+       <widget class="QRadioButton" name="radioButton_max" >
+        <property name="text" >
+         <string>Store only the maximum of all data sets</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_add" >
+        <property name="text" >
+         <string>Add all data sets together</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame_2" >
+     <property name="frameShape" >
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="lineWidth" >
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="frame_4" >
+        <property name="frameShape" >
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow" >
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QListWidget" name="listWidget_datasets" />
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox_Info" >
+           <property name="title" >
+            <string>Information</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4" >
+            <item>
+             <widget class="QLabel" name="label_Info" >
+              <property name="text" >
+               <string>Click Analyse to get information about the data set</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_Analyse" >
+              <property name="text" >
+               <string>Analyse</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox" >
+           <property name="title" >
+            <string>Bias and Scale</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_3" >
+            <item>
+             <widget class="QLabel" name="label" >
+              <property name="text" >
+               <string>Bias</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_bias" />
+            </item>
+            <item>
+             <widget class="QLabel" name="label_2" >
+              <property name="text" >
+               <string>Scale</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_scale" />
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2" >
+              <property name="orientation" >
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0" >
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame_3" >
+        <property name="frameShape" >
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow" >
+         <enum>QFrame::Raised</enum>
+        </property>
+        <property name="lineWidth" >
+         <number>0</number>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="pushButton_addData" >
+           <property name="text" >
+            <string>Add Data Set</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_removeData" >
+           <property name="text" >
+            <string>Remove Data Set</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer" >
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame" >
+     <property name="frameShape" >
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="lineWidth" >
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="horizontalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_save" >
+        <property name="text" >
+         <string>Save</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_cancel" >
+        <property name="text" >
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_Analyse</sender>
+   <signal>clicked()</signal>
+   <receiver>MergeDlg</receiver>
+   <slot>AnalyseCurrentDataset()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>95</x>
+     <y>242</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>7</x>
+     <y>148</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listWidget_datasets</sender>
+   <signal>currentRowChanged(int)</signal>
+   <receiver>MergeDlg</receiver>
+   <slot>ChangedActiveDataset()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>141</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>4</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_addData</sender>
+   <signal>clicked()</signal>
+   <receiver>MergeDlg</receiver>
+   <slot>AddDataset()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>335</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>6</x>
+     <y>75</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_removeData</sender>
+   <signal>clicked()</signal>
+   <receiver>MergeDlg</receiver>
+   <slot>RemoveDataset()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>346</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>3</x>
+     <y>188</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_save</sender>
+   <signal>clicked()</signal>
+   <receiver>MergeDlg</receiver>
+   <slot>ExecuteMerge()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>263</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>2</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_cancel</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>MergeDlg</receiver>
+   <slot>CancelMerge()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>331</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>4</x>
+     <y>275</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>AnalyseCurrentDataset()</slot>
+  <slot>ChangedActiveDataset()</slot>
+  <slot>AddDataset()</slot>
+  <slot>RemoveDataset()</slot>
+  <slot>ExecuteMerge()</slot>
+  <slot>CancelMerge()</slot>
+ </slots>
+</ui>
