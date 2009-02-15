@@ -310,6 +310,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void UpdateIsoValLabel(int iValue, int iMaxValue);
     void SetToggleGlobalBBoxLabel(bool bRenderBBox);
     void SetToggleLocalBBoxLabel(bool bRenderBBox);
+    void SetToggleClipEnabledLabel(bool);
+    void SetToggleClipShownLabel(bool);
+    void SetToggleClipLockedLabel(bool);
     void ClearProgressView();
 
     void ToggleClearViewControls(int iRange);

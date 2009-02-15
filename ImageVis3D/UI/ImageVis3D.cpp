@@ -425,6 +425,16 @@ void MainWindow::ToggleGlobalBBox(bool bRenderBBox)
   if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetGlobalBBox(bRenderBBox);
 }
 
+void MainWindow::SetToggleClipEnabledLabel(bool b) {
+  this->checkBox_ClipPlane->setChecked(b);
+}
+void MainWindow::SetToggleClipShownLabel(bool b) {
+  this->checkBox_ClipShow->setChecked(b);
+}
+void MainWindow::SetToggleClipLockedLabel(bool b) {
+  this->checkBox_ClipLockObject->setChecked(b);
+}
+
 void MainWindow::ToggleLocalBBox(bool bRenderBBox)
 {
   if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetLocalBBox(bRenderBBox);
