@@ -435,15 +435,17 @@ void MainWindow::ToggleClipPlane(bool bClip)
   m_MasterController.DebugOut()->Message("MainWindow::ToggleClipPlane",
                                          "clip %d", static_cast<int>(bClip));
   AbstrRenderer *ren = m_pActiveRenderWin->GetRenderer();
+  m_MasterController.DebugOut()->Message(_func_, "ren: %p", ren);
   if(bClip && ren) {
-    m_pActiveRenderWin->GetRenderer()->EnableClipPlane(m_bClipDisplay,
-                                                       m_bClipLocked);
+    ren->DisableClipPlane();
+    ren->EnableClipPlane(m_bClipDisplay, m_bClipLocked);
+    m_MasterController.DebugOut()->Message(_func_, "called enable");
     checkBox_ClipShow->setEnabled(true);
     checkBox_ClipLockObject->setEnabled(true);
   } else {
     checkBox_ClipShow->setEnabled(false);
     checkBox_ClipLockObject->setEnabled(false);
-    m_pActiveRenderWin->GetRenderer()->DisableClipPlane();
+    ren->DisableClipPlane();
   }
 }
 
