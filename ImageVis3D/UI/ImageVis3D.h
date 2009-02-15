@@ -187,6 +187,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ToggleGlobalBBox(bool bRenderBBox);
     void ToggleLocalBBox(bool bRenderBBox);
     void ToggleClipPlane(bool);
+    void ClipToggleLock(bool);
+    void ClipToggleShow(bool);
 
     void SetRescaleFactors();
     virtual void closeEvent(QCloseEvent *event);
@@ -359,6 +361,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool         FtpTransfer(std::string strSource, std::string strDest, bool bDeleteSource = true);
     std::string  GenUniqueName(const std::string& strPrefix, const std::string& strExt="txt");
     bool         Pack(const std::vector< std::string >& strParams);
+
+    bool m_bClipDisplay;
+    bool m_bClipLocked;
 
     friend class MergeDlg;
 };

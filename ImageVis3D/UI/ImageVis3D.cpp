@@ -66,7 +66,6 @@ MainWindow::MainWindow(MasterController& masterController,
            bool bScriptMode, /* = false */
            QWidget* parent /* = 0 */,
            Qt::WindowFlags flags /* = 0 */) :
-
   QMainWindow(parent, flags),
   m_pRedrawTimer(NULL),
   m_MasterController(masterController),
@@ -104,7 +103,9 @@ MainWindow::MainWindow(MasterController& masterController,
   m_pFTPDialog(NULL),
   m_strFTPTempFile(""),
   m_bFTPDeleteSource(true),
-  m_bFTPFinished(true)
+  m_bFTPFinished(true),
+  m_bClipDisplay(true),
+  m_bClipLocked(false)
 {
   RegisterCalls(m_MasterController.ScriptEngine());
 
@@ -155,7 +156,8 @@ MainWindow::~MainWindow()
     m_MasterController.RemoveDebugOut(m_pDebugOut);
   }
 
-  // cleanup updatefile, this codepath is taken for instance when the windows firewall blocked an http request
+  // cleanup updatefile, this codepath is taken for instance when the
+  // windows firewall blocked an http request
   if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
     m_pUpdateFile->close();
     m_pUpdateFile->remove();
@@ -431,10 +433,31 @@ void MainWindow::ToggleClipPlane(bool bClip)
                                          "clip %d", static_cast<int>(bClip));
   AbstrRenderer *ren = m_pActiveRenderWin->GetRenderer();
   if(bClip && ren) {
-    m_pActiveRenderWin->GetRenderer()->EnableClipPlane();
+    m_pActiveRenderWin->GetRenderer()->EnableClipPlane(m_bClipDisplay,
+                                                       m_bClipLocked);
+    checkBox_ClipShow->setEnabled(true);
+    checkBox_ClipLockObject->setEnabled(true);
   } else {
+    checkBox_ClipShow->setEnabled(false);
+    checkBox_ClipLockObject->setEnabled(false);
     m_pActiveRenderWin->GetRenderer()->DisableClipPlane();
   }
+}
+
+void MainWindow::ClipToggleShow(bool bShow)
+{
+  m_MasterController.DebugOut()->Message(_func_, "shown: %d",
+                                         static_cast<int>(bShow));
+  m_bClipDisplay = bShow;
+  ToggleClipPlane(true);
+}
+
+void MainWindow::ClipToggleLock(bool bLock)
+{
+  m_MasterController.DebugOut()->Message(_func_, "locked: %d",
+                                         static_cast<int>(bLock));
+  m_bClipLocked = bLock;
+  ToggleClipPlane(true);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
