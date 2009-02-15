@@ -444,18 +444,16 @@ void MainWindow::ToggleClipPlane(bool bClip)
 {
   m_MasterController.DebugOut()->Message("MainWindow::ToggleClipPlane",
                                          "clip %d", static_cast<int>(bClip));
-  AbstrRenderer *ren = m_pActiveRenderWin->GetRenderer();
-  m_MasterController.DebugOut()->Message(_func_, "ren: %p", ren);
-  if(bClip && ren) {
-    ren->DisableClipPlane();
-    ren->EnableClipPlane(m_bClipDisplay, m_bClipLocked);
-    m_MasterController.DebugOut()->Message(_func_, "called enable");
+  RenderWindow *rw = m_pActiveRenderWin;
+  if(rw == NULL) { return; }
+
+  rw->SetClipPlaneEnabled(bClip);
+  if(bClip) {
     checkBox_ClipShow->setEnabled(true);
     checkBox_ClipLockObject->setEnabled(true);
   } else {
     checkBox_ClipShow->setEnabled(false);
     checkBox_ClipLockObject->setEnabled(false);
-    ren->DisableClipPlane();
   }
 }
 
@@ -463,16 +461,22 @@ void MainWindow::ClipToggleShow(bool bShow)
 {
   m_MasterController.DebugOut()->Message(_func_, "shown: %d",
                                          static_cast<int>(bShow));
+  RenderWindow *rw = m_pActiveRenderWin;
+  if(rw == NULL) { return; }
+
+  rw->SetClipPlaneDisplayed(bShow);
   m_bClipDisplay = bShow;
-  ToggleClipPlane(true);
 }
 
 void MainWindow::ClipToggleLock(bool bLock)
 {
   m_MasterController.DebugOut()->Message(_func_, "locked: %d",
                                          static_cast<int>(bLock));
+  RenderWindow *rw = m_pActiveRenderWin;
+  if(rw == NULL) { return; }
+
+  rw->SetClipPlaneRelativeLock(bLock);
   m_bClipLocked = bLock;
-  ToggleClipPlane(true);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
