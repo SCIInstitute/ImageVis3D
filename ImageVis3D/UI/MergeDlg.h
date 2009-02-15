@@ -43,28 +43,58 @@
 #include <string>
 #include <StdDefines.h>
 
+class MainWindow;
+
+class DataSetListElem {
+public:
+  DataSetListElem(std::string strFilename) : 
+    m_strFilename(strFilename),
+    m_strDisplayName(strFilename), /// \TODO: maybe come up with something "nicer" for display
+    m_bAnalyzed(false),
+    m_fScale(1.0),
+    m_fBias(0.0)
+  {
+  }
+
+  std::string         m_strFilename;
+  std::string         m_strDisplayName;
+
+  bool                m_bAnalyzed;
+  double              m_fScale;
+  double              m_fBias;
+
+  int                       m_iValueType;
+  std::pair<double, double> m_fRange;
+  std::pair<INT64, INT64>   m_iRange;
+  std::pair<UINT64, UINT64> m_uiRange;  
+};
 
 class MergeDlg : public QDialog, protected Ui_MergeDlg
 {
   Q_OBJECT
   public:
-    MergeDlg(QWidget* parent, Qt::WindowFlags flags = Qt::Tool);
+    MergeDlg(MainWindow* parent, Qt::WindowFlags flags = Qt::Tool);
     virtual ~MergeDlg();
-  
+    std::vector<DataSetListElem*> m_vDataSetList;
+    bool UseMax() { return radioButton_max->isChecked(); }
 
   protected slots:
-    void AnalyseCurrentDataset();
+    void AnalyzeCurrentDataset();
     void ChangedActiveDataset();
     void AddDataset();
     void RemoveDataset();
     void ExecuteMerge();
     void CancelMerge();
-
-  signals:
+    void ChangedScale(double fScale);
+    void ChangedBias(double fBias);
 
   private:
+    MainWindow*                     m_pMainWindow;
 
-
+    void UpadeListView();
+    void setupUi();
+    void IsDatasetSelected(bool bIsDatasetsSelected);
+    void UpdateValueFields();
 };
 
 #endif // MERGEDLG_H

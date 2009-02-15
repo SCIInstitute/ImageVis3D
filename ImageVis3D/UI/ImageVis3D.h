@@ -360,6 +360,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     std::string  GenUniqueName(const std::string& strPrefix, const std::string& strExt="txt");
     bool         Pack(const std::vector< std::string >& strParams);
 
+    friend class MergeDlg;
 };
 
 #endif // IMAGEVIS3D_H

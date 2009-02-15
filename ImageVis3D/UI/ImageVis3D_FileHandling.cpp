@@ -44,6 +44,7 @@
 #include <QtCore/QSettings>
 #include <QtGui/QInputDialog>
 #include <QtGui/QColorDialog>
+#include <QtGui/QMessageBox>
 
 #include "PleaseWait.h"
 
@@ -87,26 +88,26 @@ void MainWindow::LoadDataset() {
 
 
 QString MainWindow::GetConvFilename() {
-    QFileDialog::Options options;
-    #ifdef TUVOK_OS_APPLE
-      options |= QFileDialog::DontUseNativeDialog;
-    #endif
-    QString selectedFilter;
+  QFileDialog::Options options;
+  #ifdef TUVOK_OS_APPLE
+    options |= QFileDialog::DontUseNativeDialog;
+  #endif
+  QString selectedFilter;
 
-    QSettings settings;
-    QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
 
-    QString targetFilename =
-      QFileDialog::getSaveFileName(this, "Select filename for converted data",
-           strLastDir,
-           "Universal Volume Format (*.uvf)",&selectedFilter, options);
+  QString targetFilename =
+    QFileDialog::getSaveFileName(this, "Select filename for converted data",
+         strLastDir,
+         "Universal Volume Format (*.uvf)",&selectedFilter, options);
 
-    if (!targetFilename.isEmpty()) {
-      targetFilename = SysTools::CheckExt(string(targetFilename.toAscii()), "uvf").c_str();
-      settings.setValue("Folders/GetConvFilename", QFileInfo(targetFilename).absoluteDir().path());
-    }
+  if (!targetFilename.isEmpty()) {
+    targetFilename = SysTools::CheckExt(string(targetFilename.toAscii()), "uvf").c_str();
+    settings.setValue("Folders/GetConvFilename", QFileInfo(targetFilename).absoluteDir().path());
+  }
 
-    return targetFilename;
+  return targetFilename;
 }
 
 
@@ -379,5 +380,54 @@ void MainWindow::CompareFiles(const std::string& strFile1, const std::string& st
 
 void MainWindow::MergeDatasets() {
   MergeDlg m(this);
-  m.exec();
+  if (m.exec() == QDialog::Accepted) {
+    vector <string> strFilenames;
+    vector <double> vScales;
+    vector<double>  vBiases;
+    
+    for (size_t i = 0;i<m.m_vDataSetList.size();i++) {
+      strFilenames.push_back(m.m_vDataSetList[i]->m_strFilename);
+      vScales.push_back(m.m_vDataSetList[i]->m_fScale);
+      vBiases.push_back(m.m_vDataSetList[i]->m_fBias);
+    }
+
+
+    QFileDialog::Options options;
+  #ifdef TUVOK_OS_APPLE
+    options |= QFileDialog::DontUseNativeDialog;
+  #endif
+    QString selectedFilter;
+
+    QSettings settings;
+    QString strLastDir = settings.value("Folders/MergedOutput", ".").toString();
+
+    QString dialogString = tr("%1,%2").arg(m_MasterController.IOMan()->GetExportDialogString().c_str()).arg("Universal Volume Format (*.uvf);;");
+
+    QString fileName =
+      QFileDialog::getSaveFileName(this, "Merged Dataset",
+           strLastDir,
+           dialogString,&selectedFilter, options);
+
+    if (!fileName.isEmpty()) {
+      settings.setValue("Folders/MergedOutput", QFileInfo(fileName).absoluteDir().path());
+
+      PleaseWaitDialog pleaseWait(this);
+      pleaseWait.SetText("Merging ...");
+      pleaseWait.AttachLabel(&m_MasterController);
+      if (!m_MasterController.IOMan()->MergeDatasets(strFilenames, vScales, vBiases, string(fileName.toAscii()), m.UseMax())) {
+        ShowCriticalDialog("Data set Merge Error", "Unable to merge the selected data sets, make sure that the size and type of the data sets are the same.");
+        return;
+      }
+      pleaseWait.close();
+    }
+
+    if (!m_bScriptMode) {
+      if (QMessageBox::No == QMessageBox::question(NULL, "Dataset Merger", "Do you want to load the merged data set now?", QMessageBox::Yes, QMessageBox::No)) {
+        return;
+      }
+
+      QString targetFilename = tr("%1%2").arg(fileName).arg(".uvf");
+      LoadDataset(fileName, targetFilename);
+    }
+  }
 }
