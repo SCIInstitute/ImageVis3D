@@ -655,6 +655,42 @@ void RenderWindow::SetLocalBBox(bool bRenderBBox, bool bPropagate) {
     }
   }
 }
+void RenderWindow::SetClipPlaneEnabled(bool enable, bool bPropagate)
+{
+  if(enable) {
+    m_Renderer->EnableClipPlane();
+  } else {
+    m_Renderer->DisableClipPlane();
+  }
+  if(bPropagate) {
+    for(std::vector<RenderWindow*>::iterator locks = m_vpLocks[1].begin();
+        locks != m_vpLocks[1].end(); ++locks) {
+      (*locks)->SetClipPlaneEnabled(enable, false);
+    }
+  }
+}
+
+void RenderWindow::SetClipPlaneDisplayed(bool bDisp, bool bPropagate)
+{
+  m_Renderer->ShowClipPlane(bDisp);
+  if(bPropagate) {
+    for(std::vector<RenderWindow*>::iterator locks = m_vpLocks[1].begin();
+        locks != m_vpLocks[1].end(); ++locks) {
+      (*locks)->SetClipPlaneDisplayed(bDisp, false);
+    }
+  }
+}
+
+void RenderWindow::SetClipPlaneRelativeLock(bool bLock, bool bPropagate)
+{
+  m_Renderer->ClipPlaneRelativeLock(bLock);
+  if(bPropagate) {
+    for(std::vector<RenderWindow*>::iterator locks = m_vpLocks[1].begin();
+        locks != m_vpLocks[1].end(); ++locks) {
+      (*locks)->SetClipPlaneRelativeLock(bLock, false);
+    }
+  }
+}
 
 void RenderWindow::SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
   m_Renderer->SetIsosufaceColor(vIsoColor);

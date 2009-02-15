@@ -111,6 +111,9 @@ class RenderWindow
     void SetCVBorderScale(float fScale, bool bPropagate=true);
     void SetGlobalBBox(bool bRenderBBox, bool bPropagate=true);
     void SetLocalBBox(bool bRenderBBox, bool bPropagate=true);
+    void SetClipPlaneEnabled(bool, bool bPropagate = true);
+    void SetClipPlaneDisplayed(bool, bool bPropagate = true);
+    void SetClipPlaneRelativeLock(bool, bool bPropagate = true);
     void SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCV(bool bDoClearView, bool bPropagate=true);
