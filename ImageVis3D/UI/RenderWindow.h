@@ -40,12 +40,12 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
-#include "../Tuvok/Controller/MasterController.h"
-
-#include <QtGui/QListWidget>
-#include "../Tuvok/Basics/ArcBall.h"
 #include <string>
+#include <QtGui/QListWidget>
 #include <StdDefines.h>
+#include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/Basics/ArcBall.h"
+#include "../Tuvok/Basics/Plane.h"
 
 class MainWindow;
 
@@ -91,7 +91,7 @@ class RenderWindow
 
     void SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate);
     void SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate);
-    void SetClipPlane(const PLANE<float> &p);
+    void SetClipPlane(const ExtendedPlane &p);
     void SetClipTranslationDelta(const FLOATVECTOR3& trans, bool);
     void SetClipRotationDelta(const FLOATMATRIX4& rotDelta, bool);
     void CloneViewState(RenderWindow* other);
@@ -212,7 +212,7 @@ class RenderWindow
     FLOATMATRIX4      m_mCurrentClipRotation;
     FLOATMATRIX4      m_mAccumulatedClipRotation;
     FLOATMATRIX4      m_mAccumulatedClipTranslation;
-    PLANE<float>      m_ClipPlane;
+    ExtendedPlane     m_ClipPlane;
 };
 
 #endif // RENDERWINDOW_H

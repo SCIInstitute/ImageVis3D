@@ -70,8 +70,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_viRightClickPos(0,0),
   m_viMousePos(0,0),
   m_bAbsoluteViewLock(true),
-  m_bCaptureMode(false),
-  m_ClipPlane(0,0,1,0)
+  m_bCaptureMode(false)
 {
   m_strID = "[%1] %2";
   m_strID = m_strID.arg(iCounter).arg(dataset);
@@ -481,7 +480,7 @@ void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagat
   }
 }
 
-void RenderWindow::SetClipPlane(const PLANE<float>&p) {
+void RenderWindow::SetClipPlane(const ExtendedPlane &p) {
   m_ClipPlane = p;
   m_Renderer->SetClipPlane(m_ClipPlane);
 }
@@ -490,9 +489,10 @@ void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
                                         bool bPropagate)
 {
   m_mCurrentClipRotation = m_mAccumulatedClipRotation * rotDelta;
-  m_ClipPlane = PLANE<float>(0,0,1,m_ClipPlane.d());
-  m_ClipPlane.transform(m_mCurrentClipRotation);
-  SetClipPlane(m_ClipPlane);
+  ExtendedPlane pln(ExtendedPlane::ms_Plane, ExtendedPlane::ms_Perpendicular);
+  pln.d() = m_ClipPlane.d();
+  pln.Transform(m_mCurrentClipRotation);
+  SetClipPlane(pln);
 
   if (bPropagate) {
     for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
