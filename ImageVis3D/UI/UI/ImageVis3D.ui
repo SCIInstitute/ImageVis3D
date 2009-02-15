@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1041</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File" >
@@ -3044,7 +3044,7 @@
             <number>6</number>
            </property>
            <item>
-            <widget class="QCheckBox" name="checkbox_ClipPlane" >
+            <widget class="QCheckBox" name="checkBox_ClipPlane" >
              <property name="toolTip" >
               <string>Enables a clip plane</string>
              </property>
@@ -5811,7 +5811,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    </hints>
   </connection>
   <connection>
-   <sender>checkbox_ClipPlane</sender>
+   <sender>checkBox_ClipPlane</sender>
    <signal>toggled(bool)</signal>
    <receiver>MainWindow</receiver>
    <slot>ToggleClipPlane(bool)</slot>
