@@ -401,7 +401,7 @@ void MainWindow::MergeDatasets() {
     QSettings settings;
     QString strLastDir = settings.value("Folders/MergedOutput", ".").toString();
 
-    QString dialogString = tr("%1,%2").arg(m_MasterController.IOMan()->GetExportDialogString().c_str()).arg("Universal Volume Format (*.uvf);;");
+    QString dialogString = tr("%1%2").arg(m_MasterController.IOMan()->GetExportDialogString().c_str()).arg("Universal Volume Format (*.uvf);;");
 
     QString fileName =
       QFileDialog::getSaveFileName(this, "Merged Dataset",
