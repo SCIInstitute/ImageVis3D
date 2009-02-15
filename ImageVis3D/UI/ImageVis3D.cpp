@@ -429,7 +429,8 @@ void MainWindow::ToggleClipPlane(bool bClip)
 {
   m_MasterController.DebugOut()->Message("MainWindow::ToggleClipPlane",
                                          "clip %d", static_cast<int>(bClip));
-  if(bClip) {
+  AbstrRenderer *ren = m_pActiveRenderWin->GetRenderer();
+  if(bClip && ren) {
     m_pActiveRenderWin->GetRenderer()->EnableClipPlane();
   } else {
     m_pActiveRenderWin->GetRenderer()->DisableClipPlane();
