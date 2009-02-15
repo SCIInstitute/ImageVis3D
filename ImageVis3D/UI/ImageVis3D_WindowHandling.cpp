@@ -610,6 +610,12 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
     SetToggleGlobalBBoxLabel(m_pActiveRenderWin->GetRenderer()->GetGlobalBBox());
     SetToggleLocalBBoxLabel(m_pActiveRenderWin->GetRenderer()->GetLocalBBox());
+
+    AbstrRenderer *const ren = m_pActiveRenderWin->GetRenderer();
+    SetToggleClipEnabledLabel(ren->ClipPlaneEnabled());
+    SetToggleClipShownLabel(ren->ClipPlaneShown());
+    SetToggleClipLockedLabel(ren->ClipPlaneLocked());
+
     ClearProgressView();
 
     ToggleClearViewControls(iRange);
