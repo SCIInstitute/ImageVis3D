@@ -71,6 +71,7 @@ void MergeDlg::AnalyzeCurrentDataset() {
 
     RangeInfo info;
     if (m_pMainWindow->m_MasterController.IOMan()->AnalyzeDataset(m_vDataSetList[iCurrent]->m_strFilename, info)) {
+      m_vDataSetList[iCurrent]->m_vAspect = info.m_vAspect;
       m_vDataSetList[iCurrent]->m_vDomainSize = info.m_vDomainSize;
       m_vDataSetList[iCurrent]->m_iComponentSize = info.m_iComponentSize;
       m_vDataSetList[iCurrent]->m_bAnalyzed = true;
@@ -177,23 +178,35 @@ void MergeDlg::UpdateValueFields() {
   if (m_vDataSetList[iCurrent]->m_bAnalyzed) {
     QString strDesc;
     switch (m_vDataSetList[iCurrent]->m_iValueType) {
-      case 0 : strDesc = tr("%1 x %2 x %3 %4bit floating point data in the range %5 to %6").arg(m_vDataSetList[iCurrent]->m_vDomainSize.x)
+      case 0 : strDesc = tr("%1 x %2 x %3 (%4 x %5 x %6) %7bit floating point data in the range %8 to %9")
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vDomainSize.x)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_vDomainSize.y)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_vDomainSize.z)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vAspect.x)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vAspect.y)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vAspect.z)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_iComponentSize)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_fRange.first)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_fRange.second);
                break;
-      case 1 : strDesc = tr("%1 x %2 x %3 %4bit integer data in the range %5 to %6").arg(m_vDataSetList[iCurrent]->m_vDomainSize.x)
+      case 1 : strDesc = tr("%1 x %2 x %3 (%4 x %5 x %6) %7bit integer data in the range %8 to %9")
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vDomainSize.x)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_vDomainSize.y)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_vDomainSize.z)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vAspect.x)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vAspect.y)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vAspect.z)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_iComponentSize)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_iRange.first)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_iRange.second);
                break;
-      case 2 : strDesc = tr("%1 x %2 x %3 %4bit integer data in the range %5 to %6").arg(m_vDataSetList[iCurrent]->m_vDomainSize.x)
+      case 2 : strDesc = tr("%1 x %2 x %3 (%4 x %5 x %6) %7bit integer data in the range %8 to %9")
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vDomainSize.x)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_vDomainSize.y)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_vDomainSize.z)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vAspect.x)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vAspect.y)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vAspect.z)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_iComponentSize)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_uiRange.first)
                                                                                            .arg(m_vDataSetList[iCurrent]->m_uiRange.second);

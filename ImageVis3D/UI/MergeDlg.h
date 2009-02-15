@@ -55,6 +55,7 @@ public:
     m_fScale(1.0),
     m_fBias(0.0),
     m_vDomainSize(0,0,0),
+    m_vAspect(0,0,0),
     m_iComponentSize(0),
     m_iValueType(-1)
   {
@@ -68,6 +69,7 @@ public:
   double              m_fBias;
 
   UINTVECTOR3               m_vDomainSize;
+  FLOATVECTOR3              m_vAspect;
   UINT64                    m_iComponentSize;
   int                       m_iValueType;
   std::pair<double, double> m_fRange;
