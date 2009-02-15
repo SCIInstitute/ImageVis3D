@@ -148,6 +148,9 @@ MainWindow::MainWindow(MasterController& masterController,
 
   if (!m_bScriptMode && m_bShowWelcomeScreen) ShowWelcomeScreen();
   if (m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
+
+  checkBox_ClipShow->setEnabled(false);
+  checkBox_ClipLockObject->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
