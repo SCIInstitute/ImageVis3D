@@ -71,6 +71,8 @@ void MergeDlg::AnalyzeCurrentDataset() {
 
     RangeInfo info;
     if (m_pMainWindow->m_MasterController.IOMan()->AnalyzeDataset(m_vDataSetList[iCurrent]->m_strFilename, info)) {
+      m_vDataSetList[iCurrent]->m_vDomainSize = info.m_vDomainSize;
+      m_vDataSetList[iCurrent]->m_iComponentSize = info.m_iComponentSize;
       m_vDataSetList[iCurrent]->m_bAnalyzed = true;
       m_vDataSetList[iCurrent]->m_iValueType = info.m_iValueType;
       m_vDataSetList[iCurrent]->m_fRange = info.m_fRange;
@@ -175,11 +177,26 @@ void MergeDlg::UpdateValueFields() {
   if (m_vDataSetList[iCurrent]->m_bAnalyzed) {
     QString strDesc;
     switch (m_vDataSetList[iCurrent]->m_iValueType) {
-      case 0 : strDesc = tr("The data set contains floting point data in the range %1 to %2").arg(m_vDataSetList[iCurrent]->m_fRange.first).arg(m_vDataSetList[iCurrent]->m_fRange.second);
+      case 0 : strDesc = tr("%1 x %2 x %3 %4bit floating point data in the range %5 to %6").arg(m_vDataSetList[iCurrent]->m_vDomainSize.x)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vDomainSize.y)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vDomainSize.z)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_iComponentSize)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_fRange.first)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_fRange.second);
                break;
-      case 1 : strDesc = tr("The data set contains integer data in the range %1 to %2").arg(m_vDataSetList[iCurrent]->m_iRange.first).arg(m_vDataSetList[iCurrent]->m_iRange.second);
+      case 1 : strDesc = tr("%1 x %2 x %3 %4bit integer data in the range %5 to %6").arg(m_vDataSetList[iCurrent]->m_vDomainSize.x)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vDomainSize.y)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vDomainSize.z)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_iComponentSize)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_iRange.first)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_iRange.second);
                break;
-      case 2 : strDesc = tr("The data set contains integer data in the range %1 to %2").arg(m_vDataSetList[iCurrent]->m_uiRange.first).arg(m_vDataSetList[iCurrent]->m_uiRange.second);
+      case 2 : strDesc = tr("%1 x %2 x %3 %4bit integer data in the range %5 to %6").arg(m_vDataSetList[iCurrent]->m_vDomainSize.x)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vDomainSize.y)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_vDomainSize.z)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_iComponentSize)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_uiRange.first)
+                                                                                           .arg(m_vDataSetList[iCurrent]->m_uiRange.second);
                break;
       default : strDesc = "The dataset description is invalid.";
               break;

@@ -600,7 +600,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
     checkBox_Lighting->setChecked(m_pActiveRenderWin->GetRenderer()->GetUseLighting());
     SetSampleRateSlider(int(m_pActiveRenderWin->GetRenderer()->GetSampleRateModifier()*100));
-    int iRange = int(m_pActiveRenderWin->GetRenderer()->Get1DTrans()->GetSize());
+    int iRange = int(m_pActiveRenderWin->GetDynamicRange())-1;
     SetIsoValueSlider(int(m_pActiveRenderWin->GetRenderer()->GetIsoValue()*iRange), iRange);
 
     DOUBLEVECTOR3 vfRescaleFactors =  m_pActiveRenderWin->GetRenderer()->GetRescaleFactors();

@@ -42,6 +42,7 @@
 #include <vector>
 #include <string>
 #include <StdDefines.h>
+#include "../Tuvok/Basics/Vectors.h"
 
 class MainWindow;
 
@@ -52,7 +53,10 @@ public:
     m_strDisplayName(strFilename), /// \TODO: maybe come up with something "nicer" for display
     m_bAnalyzed(false),
     m_fScale(1.0),
-    m_fBias(0.0)
+    m_fBias(0.0),
+    m_vDomainSize(0,0,0),
+    m_iComponentSize(0),
+    m_iValueType(-1)
   {
   }
 
@@ -63,6 +67,8 @@ public:
   double              m_fScale;
   double              m_fBias;
 
+  UINTVECTOR3               m_vDomainSize;
+  UINT64                    m_iComponentSize;
   int                       m_iValueType;
   std::pair<double, double> m_fRange;
   std::pair<INT64, INT64>   m_iRange;
