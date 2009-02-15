@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>1041</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File" >
@@ -3040,6 +3040,9 @@
            <string>Clip Plane</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_19" >
+           <property name="margin" >
+            <number>6</number>
+           </property>
            <item>
             <widget class="QCheckBox" name="checkbox_ClipPlane" >
              <property name="toolTip" >
