@@ -41,6 +41,7 @@
 #include "DebugOut/HRConsoleOut.h"
 #include "../Tuvok/StdTuvokDefines.h"
 #include "../Tuvok/IO/IOManager.h"
+#include "../Tuvok/IO/DirectoryParser.h"
 
 #include <string>
 #include <vector>

@@ -43,6 +43,7 @@
 #include <QtCore/QSettings>
 
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/IO/AbstrConverter.h"
 #include "../Tuvok/IO/IOManager.h"
 
 using namespace std;
