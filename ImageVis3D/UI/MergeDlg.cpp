@@ -133,9 +133,11 @@ void MergeDlg::AddDataset() {
     m_vDataSetList.push_back(l);
     UpadeListView();
     listWidget_datasets->setCurrentRow(int(m_vDataSetList.size()-1));
+
+    if (checkBox_AutoAnalyze->isChecked()) AnalyzeCurrentDataset();
+    pushButton_save->setEnabled(true);
   }
 
-  pushButton_save->setEnabled(true);
 }
 
 void MergeDlg::RemoveDataset() {

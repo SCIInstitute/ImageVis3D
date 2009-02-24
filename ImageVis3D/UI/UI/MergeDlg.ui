@@ -133,6 +133,16 @@
            </property>
           </spacer>
          </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_AutoAnalyze" >
+           <property name="text" >
+            <string>Auto-Analyze</string>
+           </property>
+           <property name="checked" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
