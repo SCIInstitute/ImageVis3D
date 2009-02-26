@@ -40,11 +40,11 @@
 
 #include "RenderWindowDX.h"
 #include "ImageVis3D.h"
+#include "../Tuvok/Renderer/DX/DXRenderer.h"
 
 #include <QtGui/QtGui>
 #include <assert.h>
 #include <sstream>
-#include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 
 using namespace std;
 
