@@ -55,7 +55,7 @@ public:
                             const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction,
                             UINT64& iHeaderSkip, UINT64& iComponentSize, UINT64& iComponentCount, 
                             bool& bConvertEndianess, bool& bSigned, bool& bIsFloat, UINTVECTOR3& vVolumeSize,
-                            FLOATVECTOR3& vVolumeAspect, std::string& strTitle, std::string& strSource, 
+                            FLOATVECTOR3& vVolumeAspect, std::string& strTitle,
                             UVFTables::ElementSemanticTable& eType, std::string& strIntermediateFile,
                             bool& bDeleteIntermediateFile);
 
