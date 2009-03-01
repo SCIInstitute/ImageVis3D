@@ -159,6 +159,7 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
   }
 }
 
+// A mouse movement which should only affect the clip plane.
 bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate)
 {
   bool bUpdate = false;
@@ -178,6 +179,8 @@ bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate)
   return bUpdate;
 }
 
+// Move the mouse by the given amount.  Flags tell which rendering parameters
+// should be affected by the mouse movement.
 bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
                                bool translate)
 {
@@ -197,7 +200,8 @@ bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
     INTVECTOR2 viPosDelta = m_viMousePos - m_viRightClickPos;
     m_viRightClickPos = m_viMousePos;
     SetTranslationDelta(FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x,
-                        float(viPosDelta.y*2) / m_vWinDim.y,0),true);
+                                     float(viPosDelta.y*2) / m_vWinDim.y,0),
+                        true);
     bPerformUpdate = true;
   }
   return bPerformUpdate;
@@ -209,13 +213,18 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
   // mouse is over the 3D window
   if (eWinMode == AbstrRenderer::WM_3D ) {
     float fZoom = event->delta()/1000.0f;
+
+    // User can hold control to modify only the clip plane.  Note however that
+    // if the plane is locked to the volume, we'll end up translating the plane
+    // regardless of whether or not control is held.
     if(event->modifiers() & Qt::ControlModifier) {
       SetClipTranslationDelta(FLOATVECTOR3(0,0,-fZoom/10.f),true);
     } else {
       SetTranslationDelta(FLOATVECTOR3(0,0,fZoom),true);
     }
   } else {
-    int iZoom = event->delta()/120;  // this returns 1 for "most" mice if the wheel is turned one "click"
+    // this returns 1 for "most" mice if the wheel is turned one "click"
+    int iZoom = event->delta()/120;
     m_Renderer->SetSliceDepth(eWinMode, int(m_Renderer->GetSliceDepth(eWinMode))+iZoom);
   }
   UpdateWindow();
