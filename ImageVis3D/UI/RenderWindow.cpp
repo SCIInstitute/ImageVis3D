@@ -125,6 +125,7 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
       m_ClipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
     } else if (event->button() == Qt::LeftButton) {
       m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+      m_ClipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
     }
   }
 }
@@ -448,6 +449,10 @@ void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagat
   m_Renderer->SetTranslation(m_mAccumulatedTranslation);
   m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
 
+  if(GetRenderer()->ClipPlaneLocked()) {
+    SetClipTranslationDelta(trans, bPropagate);
+  }
+
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
       if (m_bAbsoluteViewLock)
@@ -460,6 +465,9 @@ void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagat
 
 void RenderWindow::FinalizeRotation(bool bPropagate) {
   m_mAccumulatedRotation = m_mCurrentRotation;
+  // Reset the clip matrix we'll apply; the state is already stored/applied in
+  // the ExtendedPlane instance.
+  m_mCurrentClipRotation = FLOATMATRIX4();
   m_mAccumulatedClipRotation = m_mCurrentClipRotation;
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
@@ -480,6 +488,10 @@ void RenderWindow::SetRotation(const FLOATMATRIX4& mAccumulatedRotation,
 void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate) {
   m_mCurrentRotation = m_mAccumulatedRotation * rotDelta;
   m_Renderer->SetRotation(m_mCurrentRotation);
+
+  if(m_Renderer->ClipPlaneLocked()) {
+    SetClipRotationDelta(rotDelta, bPropagate);
+  }
 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
