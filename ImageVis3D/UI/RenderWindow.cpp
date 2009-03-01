@@ -221,7 +221,13 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
     // if the plane is locked to the volume, we'll end up translating the plane
     // regardless of whether or not control is held.
     if(event->modifiers() & Qt::ControlModifier) {
-      SetClipTranslationDelta(FLOATVECTOR3(0,0,-fZoom/10.f),true);
+      // this is a bit strange, and still not technically correct.  What we
+      // want is to translate the plane's Z in the plane's coordinate system,
+      // not our coordinate system, or so I thought.  It appears:
+      //    CurrentClipRotation * Translation(0,0,fZoom/10) *
+      //      inverse(CurrentClipRotation)
+      // Doesn't give us what we want either, so I might be off base there.
+      SetClipTranslationDelta(FLOATVECTOR3(fZoom/10.f,fZoom/10.f,0.f),true);
     } else {
       SetTranslationDelta(FLOATVECTOR3(0,0,fZoom),true);
     }
@@ -508,14 +514,24 @@ void RenderWindow::SetClipPlane(const ExtendedPlane &p) {
   m_Renderer->SetClipPlane(m_ClipPlane);
 }
 
+// Applies the given rotation matrix to the clip plane.
+// Basically, we're going to translate the plane back to the origin, do the
+// rotation, and then push the plane back out to where it should be.  This
+// avoids any sort of issues w.r.t. rotating about the wrong point.
 void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
                                         bool bPropagate)
 {
   m_mCurrentClipRotation = m_mAccumulatedClipRotation * rotDelta;
-  ExtendedPlane pln(ExtendedPlane::ms_Plane, ExtendedPlane::ms_Perpendicular);
-  pln.d() = m_ClipPlane.d();
-  pln.Transform(m_mCurrentClipRotation);
-  SetClipPlane(pln);
+  FLOATVECTOR3 pt = m_PlaneAtClick.Point();
+  FLOATMATRIX4 from_pt_to_0, from_0_to_pt;
+
+  from_pt_to_0.Translation(-pt.x,-pt.y,-pt.z);
+  from_0_to_pt.Translation(pt.x,pt.y,pt.z);
+
+  ExtendedPlane rotated = m_PlaneAtClick;
+  rotated.Transform(from_pt_to_0 * m_mCurrentClipRotation * from_0_to_pt);
+
+  SetClipPlane(rotated);
 
   if (bPropagate) {
     for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
@@ -533,14 +549,9 @@ void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
 void RenderWindow::SetClipTranslationDelta(const FLOATVECTOR3 &trans,
                                            bool bPropagate)
 {
-  m_mAccumulatedClipTranslation.m41 += trans.x / 10.f;
-  m_mAccumulatedClipTranslation.m42 += trans.y / 10.f;
-  m_mAccumulatedClipTranslation.m43 += trans.z / 10.f;
-
-  m_ClipArcBall.SetTranslation(m_mAccumulatedClipTranslation);
-  FLOATMATRIX4 tmp;
-  tmp.Translation(trans.x,trans.y,trans.z);
-  SetClipPlane(m_ClipPlane * tmp);
+  FLOATMATRIX4 translation;
+  translation.Translation(trans.x, -trans.y, trans.z);
+  SetClipPlane(m_ClipPlane * translation);
 
   if (bPropagate) {
     for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
