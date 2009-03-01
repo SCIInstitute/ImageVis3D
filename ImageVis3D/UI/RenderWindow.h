@@ -216,6 +216,9 @@ class RenderWindow
     FLOATMATRIX4      m_mAccumulatedClipRotation;
     FLOATMATRIX4      m_mAccumulatedClipTranslation;
     ExtendedPlane     m_ClipPlane;
+    ExtendedPlane     m_PlaneAtClick; ///< temp storage to maintain the clip
+                                      /// plane state when the user
+                                      /// left-clicked.
 };
 
 #endif // RENDERWINDOW_H

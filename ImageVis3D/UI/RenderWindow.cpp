@@ -115,6 +115,8 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
                                      FLOATVECTOR2(m_vWinDim));
   // mouse is over the 3D window
   if (eWinMode == AbstrRenderer::WM_3D ) {
+    m_PlaneAtClick = m_ClipPlane;
+
     if (event->button() == Qt::RightButton)
       m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
 
