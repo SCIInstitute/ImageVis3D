@@ -403,9 +403,8 @@ void MainWindow::ReportABug() {
     reportFile.close();
 
     // combine everything into a single file
-    vector<string> vFiles;
+    vector<string> vFiles = b.GetDataFilenames();
     vFiles.push_back("bugreport.txt");
-    if (b.GetDataFilename() != "") vFiles.push_back(b.GetDataFilename());
 
     Appendix a("report.apx", vFiles);
 

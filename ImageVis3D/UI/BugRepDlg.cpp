@@ -55,7 +55,20 @@ BugRepDlg::~BugRepDlg(void)
 {
 }
 
-void BugRepDlg::SelectFile() {
+void BugRepDlg::RemoveFile() {
+  int iCurrent = listWidget_files->currentRow();
+  if (iCurrent >= 0) {
+     listWidget_files->takeItem(iCurrent);
+  }
+
+  if (listWidget_files->count() > 0) {
+    listWidget_files->setCurrentRow(min(iCurrent,int(listWidget_files->count()-1)));
+  }
+
+  pushButton_remove->setEnabled(listWidget_files->count() > 0);
+}
+
+void BugRepDlg::AddFiles() {
   QFileDialog::Options options;
 #ifdef TUVOK_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
@@ -65,13 +78,19 @@ void BugRepDlg::SelectFile() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/BugReportFilename", ".").toString();
 
-  QString fileName = QFileDialog::getOpenFileName(this,"Select File", strLastDir,
+  QStringList fileNames = QFileDialog::getOpenFileNames(this,"Select File", strLastDir,
              "All Files (*.*)",&selectedFilter, options);
 
-  if (!fileName.isEmpty()) {
-    settings.setValue("Folders/CaptureFilename", QFileInfo(fileName).absoluteDir().path());
-    lineEdit_file->setText(fileName);
+  if (!fileNames.isEmpty()) {
+    settings.setValue("Folders/BugReportFilename", QFileInfo(fileNames[0]).absoluteDir().path());
+    for (int i = 0;i<fileNames.count();i++) {
+      listWidget_files->addItem(fileNames[i]);
+    }
+
+    listWidget_files->setCurrentRow(listWidget_files->count()-1);
+    pushButton_remove->setEnabled(true);
   }
+
 }
 
 string BugRepDlg::GetDescription() const {
@@ -94,8 +113,12 @@ string BugRepDlg::GetUserMail() const {
   return string(lineEdit_email->text().toAscii());
 }
 
-string BugRepDlg::GetDataFilename() const {
-  return string(lineEdit_file->text().toAscii());
+vector<string> BugRepDlg::GetDataFilenames() const {
+  vector<string> v;
+  for (int i = 0;i<listWidget_files->count();i++) {
+    v.push_back(string(listWidget_files->item(i)->text().toAscii()));
+  }
+  return v;
 }
 
 void BugRepDlg::SetSubmitSysinfo(bool bSubmitSysinfo) {

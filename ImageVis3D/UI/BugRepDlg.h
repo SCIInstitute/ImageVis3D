@@ -55,7 +55,7 @@ class BugRepDlg : public QDialog, protected Ui_BugRepDlg
     bool SubmitLog() const;
     std::string GetUsername() const;
     std::string GetUserMail() const;
-    std::string GetDataFilename() const;
+    std::vector<std::string> GetDataFilenames() const;
 
     void SetSubmitSysinfo(bool bSubmitSysinfo);
     void SetSubmitLog(bool bSubmitLog);
@@ -63,7 +63,8 @@ class BugRepDlg : public QDialog, protected Ui_BugRepDlg
     void SetUserMail(std::string strMail);
 
   protected slots:
-    void SelectFile();
+    void AddFiles();
+    void RemoveFile();
 };
 
 #endif // BUGREPDLG_H
