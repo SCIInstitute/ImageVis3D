@@ -78,6 +78,8 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
 
 RenderWindowDX::~RenderWindowDX()
 {
+  // ignore mouse/keyboard events while we're killing ourself.
+  GetQtWidget()->setEnabled(false);
 }
 
 void RenderWindowDX::InitializeRenderer()

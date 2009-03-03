@@ -75,7 +75,11 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
 
 RenderWindowGL::~RenderWindowGL()
 {
-  makeCurrent(); // call makeCurrent here for the cleanup call in the parent destructor to work properly
+  // needed for the cleanup call in the parent destructor to work properly
+  makeCurrent();
+
+  // ignore mouse/keyboard events while we're killing ourself.
+  GetQtWidget()->setEnabled(false);
 }
 
 void RenderWindowGL::InitializeRenderer()
