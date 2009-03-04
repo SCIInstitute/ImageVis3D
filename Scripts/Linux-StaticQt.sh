@@ -32,6 +32,6 @@ if test $? -ne 0 ; then
     exit 1
 fi
 
-nice -n 19 make -j6
+nice -n 19 make -j6 || exit 1
 
-make install
+make install || exit 1
