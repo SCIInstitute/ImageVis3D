@@ -37,7 +37,7 @@
 
 #include <QtGui/QApplication>
 #include <UI/ImageVis3D.h>
-#include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/Controller/Controller.h"
 
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/DebugOut/TextfileOut.h"
@@ -83,12 +83,10 @@ int main(int argc, char* argv[])
   parameters.GetValue("LOGLEVEL",iLogLevel);
   parameters.GetValue("SCRIPT",strScriptFile);
 
-  // create the master controller
-  MasterController masterController;
-
   // create the QT window
   QApplication app( argc, argv );
-  MainWindow mainWindow(masterController, strScriptFile!="", 0, Qt::Window);
+  MainWindow mainWindow(Controller::Instance(), strScriptFile!="", 0,
+                        Qt::Window);
   
   // if using a logfile inject that file-logger into the debug out chain
   if (bUseLogFile) {
@@ -100,7 +98,7 @@ int main(int argc, char* argv[])
 
     textout->printf("Loglevel:%i\n",iLogLevel);
 
-    masterController.AddDebugOut(textout);
+    Controller::Instance().AddDebugOut(textout);
   }
 
   // open the QT window
