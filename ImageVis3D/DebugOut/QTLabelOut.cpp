@@ -83,7 +83,7 @@ void QTLabelOut::printf(const char* format, ...) const
 #endif
 }
 
-void QTLabelOut::_printf(const char* format, ...)
+void QTLabelOut::_printf(const char* format, ...) const
 {
   if (!m_label) return;
   char buff[16384];

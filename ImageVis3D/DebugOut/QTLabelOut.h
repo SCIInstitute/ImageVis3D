@@ -60,7 +60,7 @@ class QTLabelOut : public AbstrDebugOut {
     QLabel *m_label;
     QDialog *m_parent;
 
-    void _printf(const char* format, ...);
+    void _printf(const char* format, ...) const;
 };
 
 #endif // QTLABELOUT_H

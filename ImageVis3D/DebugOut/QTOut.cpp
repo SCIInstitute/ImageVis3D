@@ -78,7 +78,7 @@ void QTOut::printf(const char* format, ...) const
   m_listWidget->addItem ( buff );
 }
 
-void QTOut::_printf(const char* format, ...)
+void QTOut::_printf(const char* format, ...) const
 {
   char buff[16384];
   va_list args;

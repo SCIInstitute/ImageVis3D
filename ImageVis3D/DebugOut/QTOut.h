@@ -57,7 +57,7 @@ class QTOut : public AbstrDebugOut {
   private:
     QListWidget *m_listWidget;
 
-    void _printf(const char* format, ...);
+    void _printf(const char* format, ...) const;
 };
 
 #endif // QTOut_H
