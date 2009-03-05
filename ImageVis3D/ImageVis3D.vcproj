@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ImageVis3D"
 	ProjectGUID="{85742DE8-68C9-4140-A6A7-412CF789DECA}"
 	RootNamespace="test"
@@ -389,7 +389,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(QTDIR32)include&quot;;."
+				AdditionalIncludeDirectories="&quot;$(QTDIR32)include&quot;;.;../Tuvok/3rdParty"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;USE_DIRECTX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
