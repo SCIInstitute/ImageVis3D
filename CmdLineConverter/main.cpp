@@ -36,7 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include <QtGui/QApplication>
-#include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "DebugOut/HRConsoleOut.h"
 #include "../Tuvok/StdTuvokDefines.h"
@@ -165,9 +165,8 @@ int main(int argc, char* argv[])
   HRConsoleOut* debugOut = new HRConsoleOut();
   debugOut->SetOutput(true, true, true, false);
 
-  MasterController masterController;
-  masterController.AddDebugOut(debugOut);
-  IOManager ioMan(&masterController);
+  Controller::Instance().AddDebugOut(debugOut);
+  IOManager ioMan;
 
   string targetType = SysTools::ToLowerCase(SysTools::GetExt(strOutfile));
   if (strInFile != "") {
