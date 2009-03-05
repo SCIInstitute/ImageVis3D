@@ -64,7 +64,7 @@ QTOut::~QTOut() {
   Message("QTOut::~QTOut","Shutting down QTListviewDebug out");
 }
 
-void QTOut::printf(const char* format, ...)
+void QTOut::printf(const char* format, ...) const
 {
   if (!m_bShowOther) return;
   char buff[16384];

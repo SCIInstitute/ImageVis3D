@@ -65,7 +65,7 @@ QTLabelOut::QTLabelOut(QLabel *label, QDialog *parent) :
 QTLabelOut::~QTLabelOut() {
 }
 
-void QTLabelOut::printf(const char* format, ...)
+void QTLabelOut::printf(const char* format, ...) const
 {
   if (!m_label && !m_bShowOther) return;
   char buff[16384];

@@ -47,7 +47,7 @@ HRConsoleOut::HRConsoleOut() {
 HRConsoleOut::~HRConsoleOut() {
 }
 
-void HRConsoleOut::printf(const char* format, ...)
+void HRConsoleOut::printf(const char* format, ...) const
 {
   if (!m_bShowOther) return;
 
