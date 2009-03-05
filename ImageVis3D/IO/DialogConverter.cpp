@@ -50,7 +50,7 @@ DialogConverter::DialogConverter(QWidget* parent) :
 }
 
 bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename, 
-                                   const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction,
+                                   const std::string& strTempDir, bool bNoUserInteraction,
                                    UINT64& iHeaderSkip, UINT64& iComponentSize, UINT64& iComponentCount, 
                                    bool& bConvertEndianess, bool& bSigned, bool& bIsFloat, UINTVECTOR3& vVolumeSize,
                                    FLOATVECTOR3& vVolumeAspect, std::string& strTitle,
@@ -99,7 +99,7 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
     } else
     if (encID == 1)  {
         string strBinaryFile = strTempDir+SysTools::GetFilename(strSourceFilename)+".binary";
-        bool bResult = ParseTXTDataset(strSourceFilename, strBinaryFile, pMasterController, iHeaderSkip, iComponentSize, iComponentCount, bSigned, bIsFloat, vVolumeSize);
+        bool bResult = ParseTXTDataset(strSourceFilename, strBinaryFile, iHeaderSkip, iComponentSize, iComponentCount, bSigned, bIsFloat, vVolumeSize);
         strIntermediateFile = strBinaryFile;
         bDeleteIntermediateFile = true;
         iHeaderSkip = 0;
@@ -108,14 +108,14 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
     } else
     if (encID == 2)  {
         string strUncompressedFile = strTempDir+SysTools::GetFilename(strSourceFilename)+".uncompressed";
-        bool bResult = ExtractGZIPDataset(strSourceFilename, strUncompressedFile, pMasterController, iHeaderSkip);
+        bool bResult = ExtractGZIPDataset(strSourceFilename, strUncompressedFile, iHeaderSkip);
         strIntermediateFile = strUncompressedFile;
         bDeleteIntermediateFile = true;
         iHeaderSkip = 0;
         return bResult;
     } else {
         string strUncompressedFile = strTempDir+SysTools::GetFilename(strSourceFilename)+".uncompressed";
-        bool bResult = ExtractBZIP2Dataset(strSourceFilename, strUncompressedFile, pMasterController, iHeaderSkip);
+        bool bResult = ExtractBZIP2Dataset(strSourceFilename, strUncompressedFile, iHeaderSkip);
         strIntermediateFile = strUncompressedFile;
         bDeleteIntermediateFile = true;
         iHeaderSkip = 0;

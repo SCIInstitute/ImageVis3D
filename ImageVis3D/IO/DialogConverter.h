@@ -44,15 +44,13 @@
 #include "../Tuvok/IO/RAWConverter.h"
 #include <QtGui/QWidget>
 
-class MasterController;
-
 class DialogConverter : public RAWConverter {
 public:
   DialogConverter(QWidget* parent);
   virtual ~DialogConverter() {}
 
   virtual bool ConvertToRAW(const std::string& strSourceFilename, 
-                            const std::string& strTempDir, MasterController* pMasterController, bool bNoUserInteraction,
+                            const std::string& strTempDir, bool bNoUserInteraction,
                             UINT64& iHeaderSkip, UINT64& iComponentSize, UINT64& iComponentCount, 
                             bool& bConvertEndianess, bool& bSigned, bool& bIsFloat, UINTVECTOR3& vVolumeSize,
                             FLOATVECTOR3& vVolumeAspect, std::string& strTitle,
