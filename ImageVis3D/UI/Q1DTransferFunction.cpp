@@ -97,7 +97,7 @@ void Q1DTransferFunction::PreparePreviewData() {
 }
 
 void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
-          TransferFunction1D* pTrans) {
+                                  TransferFunction1D* pTrans) {
   m_pTrans = pTrans;
   if (m_pTrans == NULL) return;
 
