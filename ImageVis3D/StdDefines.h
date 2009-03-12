@@ -41,8 +41,8 @@
 
 #include "../Tuvok/StdTuvokDefines.h"
 
-#define IV3D_VERSION 0.054
-#define IV3D_VERSION_TYPE "beta (Biblical Magi)"
+#define IV3D_VERSION 0.06
+#define IV3D_VERSION_TYPE "beta"
 
 #define HELP_URL  "http://www.sci.utah.edu/cibc/wiki/index.php/CIBC:Project:ImageVis3D#Manual"
 #define TUTORIAL_URL  "http://www.sci.utah.edu/cibc/wiki/index.php/CIBC:Project:ImageVis3D#Video_Tutorials"
