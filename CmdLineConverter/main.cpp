@@ -173,16 +173,6 @@ int main(int argc, char* argv[])
 
     string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
-    if (sourceType != "uvf" && sourceType != "vff" && sourceType != "dat" && sourceType != "nhdr" && sourceType != "nrrd") {
-      cout << "Error: Unsupported source type." << endl << endl;
-      return 2;
-    }
-
-    if (targetType != "uvf" && targetType != "vff" && targetType != "dat" && targetType != "nhdr" && targetType != "nrrd") {
-      cout << "Error: Unsupported target type." << endl << endl;
-      return 2;
-    }
-
     if (strInFile2 == "") {
       cout << "Running in file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;  
       if (ioMan.ConvertDataset(strInFile, strOutfile)) {
