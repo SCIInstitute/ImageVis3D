@@ -41,7 +41,7 @@
 
 #include "../Tuvok/StdTuvokDefines.h"
 
-#define IV3D_VERSION 0.06
+#define IV3D_VERSION 0.07
 #define IV3D_VERSION_TYPE "beta"
 
 #define HELP_URL  "http://www.sci.utah.edu/cibc/wiki/index.php/CIBC:Project:ImageVis3D#Manual"
