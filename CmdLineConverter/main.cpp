@@ -174,12 +174,12 @@ int main(int argc, char* argv[])
     string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
     if (sourceType != "uvf" && sourceType != "vff" && sourceType != "dat" && sourceType != "nhdr" && sourceType != "nrrd") {
-      cout << "Error: Unsuported source type." << endl << endl;
+      cout << "Error: Unsupported source type." << endl << endl;
       return 2;
     }
 
     if (targetType != "uvf" && targetType != "vff" && targetType != "dat" && targetType != "nhdr" && targetType != "nrrd") {
-      cout << "Error: Unsuported target type." << endl << endl;
+      cout << "Error: Unsupported target type." << endl << endl;
       return 2;
     }
 
