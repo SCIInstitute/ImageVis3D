@@ -186,8 +186,13 @@ void MainWindow::LoadDirectory() {
     QFileDialog::getExistingDirectory(this, "Load Dataset from Directory",strLastDir);
 
   if (!directoryName.isEmpty()) {
-    pleaseWait.SetText("Scanning directory for files, please wait  ...");
     settings.setValue("Folders/LoadDirectory", directoryName);
+
+    pleaseWait.SetText("Scanning directory for files, please wait  ...");
+
+    QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
+    labelOut->SetOutput(true, true, true, false);
+
     BrowseData browseDataDialog(m_MasterController, (QDialog*)&pleaseWait,directoryName, this);
 
     if (browseDataDialog.DataFound()) {
