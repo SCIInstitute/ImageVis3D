@@ -150,8 +150,7 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
 
       if (targetFilename.isEmpty()) return false;
       pleaseWait.SetText("Converting, please wait  ...");
-      QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
-      labelOut->SetOutput(true, true, true, false);
+      pleaseWait.AttachLabel(&m_MasterController);
 
       if (!m_MasterController.IOMan()->ConvertDataset(filename.toStdString(), targetFilename.toStdString(), bNoUserInteraction)) {
         QString strText = tr("Unable to convert file %1 into %2.").arg(filename).arg(targetFilename);
@@ -190,10 +189,9 @@ void MainWindow::LoadDirectory() {
 
     pleaseWait.SetText("Scanning directory for files, please wait  ...");
 
-    QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
-    labelOut->SetOutput(true, true, true, false);
+    pleaseWait.AttachLabel(&m_MasterController);
 
-    BrowseData browseDataDialog(m_MasterController, (QDialog*)&pleaseWait,directoryName, this);
+    BrowseData browseDataDialog(m_MasterController, (QDialog*)&pleaseWait, directoryName, this);
 
     if (browseDataDialog.DataFound()) {
       if (browseDataDialog.exec() == QDialog::Accepted) {
@@ -208,6 +206,9 @@ void MainWindow::LoadDirectory() {
         if (targetFilename.isEmpty()) return;
 
         pleaseWait.SetText("Converting, please wait  ...");
+        // label has been tetached when the dialog was closed by BrowseData
+        pleaseWait.AttachLabel(&m_MasterController);
+
         if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFilename.toStdString())) {
           QString strText =
             tr("Unable to convert file stack from directory %1 into %2.").arg(directoryName).arg(targetFilename);

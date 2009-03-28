@@ -65,7 +65,8 @@ QTLabelOut* PleaseWaitDialog::AttachLabel(MasterController* pMasterController) {
 void PleaseWaitDialog::DetachLabel() {
   if(m_pMasterController) {
     m_pMasterController->RemoveDebugOut(m_pLabelOut);
-  }
+  }  
+  m_pLabelOut = NULL;
 }
 
 void PleaseWaitDialog::closeEvent(QCloseEvent *)
