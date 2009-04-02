@@ -43,6 +43,9 @@
 #include <string>
 #include <StdDefines.h>
 #include "../Tuvok/Basics/Vectors.h"
+#include "boost/cstdint.hpp"
+
+using boost::int64_t;
 
 class MainWindow;
 
@@ -68,13 +71,13 @@ public:
   double              m_fScale;
   double              m_fBias;
 
-  UINTVECTOR3               m_vDomainSize;
-  FLOATVECTOR3              m_vAspect;
-  UINT64                    m_iComponentSize;
-  int                       m_iValueType;
-  std::pair<double, double> m_fRange;
-  std::pair<INT64, INT64>   m_iRange;
-  std::pair<UINT64, UINT64> m_uiRange;  
+  UINTVECTOR3                 m_vDomainSize;
+  FLOATVECTOR3                m_vAspect;
+  UINT64                      m_iComponentSize;
+  int                         m_iValueType;
+  std::pair<double, double>   m_fRange;
+  std::pair<int64_t, int64_t> m_iRange;
+  std::pair<UINT64, UINT64>   m_uiRange;
 };
 
 class MergeDlg : public QDialog, protected Ui_MergeDlg
