@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include "ImageVis3D.h"
 #include <QtGui/QMessageBox>
 #include <QtNetwork/QHttp>
@@ -57,7 +58,6 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/Appendix.h"
-#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 
 #include <fstream>
 

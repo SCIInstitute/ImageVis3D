@@ -43,9 +43,10 @@
 #include <string>
 #include <QtGui/QListWidget>
 #include <StdDefines.h>
-#include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/Basics/ArcBall.h"
 #include "../Tuvok/Basics/Plane.h"
+#include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/Renderer/AbstrRenderer.h"
 
 class MainWindow;
 

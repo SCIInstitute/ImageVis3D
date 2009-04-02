@@ -35,12 +35,11 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
-#include "ImageVis3D.h"
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include "../Tuvok/Scripting/Scripting.h"
-#include <QtOpenGL/QtOpenGL>
+#include "ImageVis3D.h"
 #include <QtGui/QImageReader>
 
 using namespace std;

@@ -38,6 +38,7 @@
 #ifndef SETTINGSDLG_H
 #define SETTINGSDLG_H
 
+#include "../Tuvok/Basics/Vectors.h"
 #include "../Tuvok/Controller/MasterController.h"
 #include "UI/AutoGen/ui_SettingsDlg.h"
 

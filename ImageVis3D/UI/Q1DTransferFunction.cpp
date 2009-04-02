@@ -35,6 +35,8 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <iostream>
+
 #include "Q1DTransferFunction.h"
 
 #include <QtGui/QPainter>
@@ -43,8 +45,7 @@
 
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/Basics/MathTools.h"
-
-#include <iostream>
+#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 
 using namespace std;
 

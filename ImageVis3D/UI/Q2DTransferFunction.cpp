@@ -35,14 +35,13 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
-
+#include <exception>
+#include <limits>
 #include "Q2DTransferFunction.h"
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
-#include <exception>
-#include <limits>
 
 #ifdef max
   #undef max

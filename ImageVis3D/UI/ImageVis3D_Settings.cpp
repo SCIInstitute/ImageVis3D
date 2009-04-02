@@ -35,10 +35,10 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
-#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include <QtCore/QSettings>
 #include <QtGui/QMessageBox>
 #include <QtGui/QMdiSubWindow>

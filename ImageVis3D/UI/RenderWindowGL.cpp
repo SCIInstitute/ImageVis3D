@@ -35,13 +35,13 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <sstream>
+#include "3rdParty/GLEW/glew.h"
 #include "RenderWindowGL.h"
 #include "ImageVis3D.h"
 
 #include <QtGui/QtGui>
 #include <QtOpenGL/QtOpenGL>
-#include <assert.h>
-#include <sstream>
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 #include "../Tuvok/IO/IOManager.h"
 

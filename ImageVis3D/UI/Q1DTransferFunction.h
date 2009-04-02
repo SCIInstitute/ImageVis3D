@@ -42,7 +42,6 @@
 
 #include "QTransferFunction.h"
 #include "../Tuvok/IO/TransferFunction1D.h"
-#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 
 class MasterController;
 

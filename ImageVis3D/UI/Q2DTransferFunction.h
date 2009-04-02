@@ -41,7 +41,6 @@
 #define Q2DTRANSFERFUNCTION
 
 #include "QTransferFunction.h"
-#include "../Tuvok/IO/TransferFunction1D.h"
 #include "../Tuvok/IO/TransferFunction2D.h"
 
 #define Q2DT_PAINT_NONE  0
