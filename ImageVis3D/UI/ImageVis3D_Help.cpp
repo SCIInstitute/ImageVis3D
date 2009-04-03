@@ -58,6 +58,10 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/Appendix.h"
+#ifdef TUVOK_OS_WINDOWS
+#	include <ShellAPI.h>
+#	include <windows.h>
+#endif
 
 #include <fstream>
 

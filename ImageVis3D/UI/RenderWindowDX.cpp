@@ -36,15 +36,19 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #if defined(_WIN32) && defined(USE_DIRECTX)
-
+#include <cassert>
+#include <sstream>
+/// @todo FIXME -- remove (obviously)!
+/// We need this first because GPUMemMan depends on OpenGL
+/// but shouldn't, and GLEW will blow up if we don't include
+/// GLEW before GL includes.
+#include <GL/glew.h>
 
 #include "RenderWindowDX.h"
 #include "ImageVis3D.h"
 #include "../Tuvok/Renderer/DX/DXRenderer.h"
 
 #include <QtGui/QtGui>
-#include <assert.h>
-#include <sstream>
 
 using namespace std;
 
