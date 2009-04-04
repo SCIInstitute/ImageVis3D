@@ -59,6 +59,7 @@
 #include "MergeDlg.h"
 
 using namespace std;
+using namespace tuvok;
 
 // ******************************************
 // Dataset
