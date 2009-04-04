@@ -239,9 +239,11 @@ bool MainWindow::ExportDataset(UINT32 iLODLevel, std::string targetFileName) {
   pleaseWait.AttachLabel(&m_MasterController);
 
   /// \todo come up with something smarter for a temp dir then the target dir
+  const UVFDataset *ds = dynamic_cast<UVFDataset*>(
+    &(m_pActiveRenderWin->GetRenderer()->GetDataSet())
+  );
   bool bResult = m_MasterController.IOMan()->ExportDataset(
-                            &(m_pActiveRenderWin->GetRenderer()->GetDataSet()),
-                            iLODLevel, targetFileName,
+                            ds, iLODLevel, targetFileName,
                             SysTools::GetPath(targetFileName));
 
   pleaseWait.close();
@@ -325,10 +327,15 @@ bool MainWindow::ExportMesh(UINT32 iLODLevel, string targetFileName) {
     vfRescaleFactors.y = doubleSpinBox_RescaleY->value();
     vfRescaleFactors.z = doubleSpinBox_RescaleZ->value();
 
-
-    bool bResult = m_MasterController.IOMan()->ExtractIsosurface(&(m_pActiveRenderWin->GetRenderer()->GetDataSet()),
-                                                       iLODLevel, iValue, vfRescaleFactors, targetFileName, 
-                                                       SysTools::GetPath(targetFileName));  /// \todo maybe come up with something smarter for a temp dir then the target dir
+    const UVFDataset *ds = dynamic_cast<UVFDataset*>(
+      &(m_pActiveRenderWin->GetRenderer()->GetDataSet())
+    );
+    /// \todo maybe come up with something smarter for a temp dir then
+    /// the target dir
+    bool bResult = m_MasterController.IOMan()->ExtractIsosurface(
+                      ds, iLODLevel, iValue, vfRescaleFactors,
+                      targetFileName, SysTools::GetPath(targetFileName)
+                   );
     pleaseWait.close();
 
     return bResult;
