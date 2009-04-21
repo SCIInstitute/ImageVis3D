@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "../Tuvok/IO/Tuvok_QtPlugins.h"
 #include <QtGui/QApplication>
 #include <UI/ImageVis3D.h>
 #include "../Tuvok/Controller/Controller.h"
