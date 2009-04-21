@@ -118,7 +118,6 @@ void RenderWindowGL::InitializeRenderer()
       if (extensions != NULL)  ms_glExtString = extensions;
 
       if (bOpenGLFBO && (bOpenGLSO20 || (bOpenGLSL && bOpenGL3DT))) {
-
         if (ms_iMax3DTexDims < BRICKSIZE) {
           WARNING("Maximum supported texture size (%i) is smaller than the "
                   "size required by the IO subsystem (%i).", ms_iMax3DTexDims,
@@ -133,14 +132,15 @@ void RenderWindowGL::InitializeRenderer()
         T_ERROR("Insufficient OpenGL support:");
 
         if (!bOpenGLSO) {
-          T_ERROR("OpenGL shader objects not suported (GL_ARB_shader_objects)");
+          T_ERROR("OpenGL shader objects not supported "
+                  "(GL_ARB_shader_objects)");
         }
         if (!bOpenGLSL) {
           T_ERROR("OpenGL shading language version 1.0 not supported"
                   " (GL_ARB_shading_language_100)");
         }
         if (!bOpenGL3DT) {
-          T_ERROR("OpenGL 3D textures not suported (GL_EXT_texture3D)");
+          T_ERROR("OpenGL 3D textures not supported (GL_EXT_texture3D)");
         }
         if (!bOpenGLFBO) {
           T_ERROR("OpenGL framebuffer objects not supported "
@@ -157,7 +157,6 @@ void RenderWindowGL::InitializeRenderer()
     m_bRenderSubsysOK = false;
   else
     m_bRenderSubsysOK = m_Renderer->Initialize();
-
 
   if (!m_bRenderSubsysOK) {
     m_Renderer->Cleanup();

@@ -83,7 +83,14 @@ void MainWindow::LoadDataset() {
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/LoadDataset", QFileInfo(fileName).absoluteDir().path());
-    LoadDataset(fileName);
+    if(!LoadDataset(fileName)) {
+      ShowCriticalDialog("Render window initialization failed.",
+                         "Could not open a render window!  This normally "
+                         "means ImageVis3D does not support your GPU.  Please"
+                         " check the debug log ('Help | Debug Window') for "
+                         "errors, and/or use 'Help | Report an Issue' to "
+                         "notify the ImageVis3D developers.");
+    }
   };
 }
 
@@ -126,7 +133,6 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
   PleaseWaitDialog pleaseWait(this);
 
   if (!filename.isEmpty()) {
-
     if (!SysTools::FileExists(string(filename.toAscii()))) {
         QString strText = tr("File %1 not found.").arg(filename);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
@@ -167,12 +173,19 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
 
 
     RenderWindow *renderWin = CreateNewRenderWindow(filename);
+    if(!renderWin->IsRenderSubsysOK()) {
+      delete renderWin;
+      return false;
+    }
+
     renderWin->GetQtWidget()->show();  // calls RenderWindowActive automatically
     UpdateMenus();
-
     AddFileToMRUList(filename);
+
     return true;
-  } else return false;
+  } else {
+    return false;
+  }
 }
 
 

@@ -595,6 +595,12 @@ RenderWindow* MainWindow::ActiveRenderWin() {
 
 
 RenderWindow* MainWindow::WidgetToRenderWin(QWidget* w) {
+  // Given Widget might actually be NULL, in the case that window (GL)
+  // initialization failed, but Qt got asked to process an interaction event
+  // (e.g. a mouse move) before the `close' event.  MainWindow::CheckForRedraw
+  // has the same issue; see the comment there for more info.
+  if (w == NULL) { return NULL; }
+
   if (w->objectName() == "RenderWindowGL") {
     RenderWindowGL* r = static_cast<RenderWindowGL*>(w);
     return static_cast<RenderWindow*>(r);

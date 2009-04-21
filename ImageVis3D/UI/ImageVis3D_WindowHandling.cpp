@@ -40,7 +40,6 @@
 #include "RenderWindowGL.h"
 #include "RenderWindowDX.h"
 
-
 #include <QtCore/QTimer>
 #include <QtGui/QMdiSubWindow>
 #include <QtGui/QFileDialog>
@@ -53,6 +52,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/SysTools.h"
 
 using namespace std;
@@ -548,7 +548,15 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
     }
     QCoreApplication::processEvents();
 #endif
-    RenderWindowActive(renderWin); // if Qt will not call RenderWindowActive, we do it ourselfs
+    if(!renderWin->IsRenderSubsysOK()) {
+      T_ERROR("Could not initialize render window!");
+    } else {
+      // Despite us registering it as the appropriate callback, Qt doesn't like
+      // to call this for us w/in a timeframe which is useful.  Awesome.  So we
+      // do it manually, to make sure the window is initialized before we
+      // start using it.
+      RenderWindowActive(renderWin);
+    }
   }
 
   return renderWin;
@@ -701,7 +709,15 @@ void MainWindow::CheckForRedraw() {
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {
     QWidget* w = mdiArea->subWindowList().at(i)->widget();
     RenderWindow* r = WidgetToRenderWin(w);
-    r->CheckForRedraw();
+    // It can happen that our window was created, yet GL initialization failed
+    // so it never got into a valid state.  Then a Qt event can pop up before
+    // the `invalid window' detection code gets reached, and in that event
+    // we'll end up checking for redraw.
+    // In short: this method can end up being called even if we don't have a
+    // render window.
+    if(r) {
+      r->CheckForRedraw();
+    }
   }
 }
 
