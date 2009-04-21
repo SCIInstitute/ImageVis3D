@@ -42,6 +42,7 @@
 
 #include <QtGui/QtGui>
 #include <QtOpenGL/QtOpenGL>
+#include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 #include "../Tuvok/IO/IOManager.h"
 
@@ -88,7 +89,7 @@ void RenderWindowGL::InitializeRenderer()
   if (bFirstTime) {
     int err = glewInit();
     if (err != GLEW_OK) {
-      m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "Error initializing GLEW: %s",glewGetErrorString(err));
+      T_ERROR("Error initializing GLEW: %s", glewGetErrorString(err));
       m_bRenderSubsysOK = false;
       return;
     } else {
@@ -98,7 +99,7 @@ void RenderWindowGL::InitializeRenderer()
       stringstream s;
       s << vendor << " " << renderer << " with OpenGL version " << version;
       ms_gpuVendorString = s.str();
-      m_MasterController.DebugOut()->Message("RenderWindowGL::InitializeRenderer", "Starting up GL! Running on a %s", ms_gpuVendorString.c_str());
+      MESSAGE("Starting up GL!  Running on a %s", ms_gpuVendorString.c_str());
 
       bool bOpenGLSO20 = atof((const char*)version) >= 2.0;
       bool bOpenGLSO   = glewGetExtension("GL_ARB_shader_objects");
@@ -119,20 +120,32 @@ void RenderWindowGL::InitializeRenderer()
       if (bOpenGLFBO && (bOpenGLSO20 || (bOpenGLSL && bOpenGL3DT))) {
 
         if (ms_iMax3DTexDims < BRICKSIZE) {
-          m_MasterController.DebugOut()->Warning("RenderWindowGL::InitializeRenderer", "Maximum supported texture size (%i) is smaller than required by the IO subsystem (%i).", ms_iMax3DTexDims, int(BRICKSIZE));
+          WARNING("Maximum supported texture size (%i) is smaller than the "
+                  "size required by the IO subsystem (%i).", ms_iMax3DTexDims,
+                  int(BRICKSIZE));
         } else {
-          m_MasterController.DebugOut()->Message("RenderWindowGL::InitializeRenderer", "Maximum supported texture size %i (required by the IO subsystem %i).", ms_iMax3DTexDims, int(BRICKSIZE));
+          MESSAGE("Maximum supported texture size: %i (required by IO "
+                  "subsystem: %i)", ms_iMax3DTexDims, int(BRICKSIZE));
         }
 
         m_bRenderSubsysOK = true;
       } else {
-        m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "Insufficient OpenGL support:");
+        T_ERROR("Insufficient OpenGL support:");
 
-        if (!bOpenGLSO) m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "OpenGL shader objects not suported (GL_ARB_shader_objects)");
-        if (!bOpenGLSL) m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "OpenGL shading language version 1.0 not suported (GL_ARB_shading_language_100)");
-        if (!bOpenGL3DT) m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "OpenGL 3D textures not suported (GL_EXT_texture3D)");
-        if (!bOpenGLFBO) m_MasterController.DebugOut()->Error("RenderWindowGL::InitializeRenderer", "OpenGL framebuffer objects not suported (GL_EXT_framebuffer_object)");
-
+        if (!bOpenGLSO) {
+          T_ERROR("OpenGL shader objects not suported (GL_ARB_shader_objects)");
+        }
+        if (!bOpenGLSL) {
+          T_ERROR("OpenGL shading language version 1.0 not supported"
+                  " (GL_ARB_shading_language_100)");
+        }
+        if (!bOpenGL3DT) {
+          T_ERROR("OpenGL 3D textures not suported (GL_EXT_texture3D)");
+        }
+        if (!bOpenGLFBO) {
+          T_ERROR("OpenGL framebuffer objects not supported "
+                  "(GL_EXT_framebuffer_object)");
+        }
         m_bRenderSubsysOK = false;
       }
     }
