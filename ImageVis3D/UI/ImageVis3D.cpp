@@ -357,6 +357,14 @@ void MainWindow::SetIsoValue(int iValue) {
   }
 }
 
+void MainWindow::SetClearViewIsoValue(float fValue) {
+  if (m_pActiveRenderWin != NULL) {
+    int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange())-1;
+    m_pActiveRenderWin->SetCVIsoValue(fValue);
+    UpdateIsoValLabel(int(fValue*iMaxSize), iMaxSize);
+  }
+}
+
 void MainWindow::SetIsoValueSlider(int iValue, int iMaxValue) {
   horizontalSlider_Isovalue->setMaximum(iMaxValue);
   horizontalSlider_Isovalue->setValue(iValue);

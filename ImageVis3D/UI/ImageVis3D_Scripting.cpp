@@ -54,6 +54,8 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "open1d", "sourcefile","open 1D transfer function sourcefile");
   pScriptEngine->RegisterCommand(this, "open2d", "sourcefile","open 2D transfer function sourcefile");
   pScriptEngine->RegisterCommand(this, "setiso", "isovalue","set an isovalue from 0 to 1");
+  pScriptEngine->RegisterCommand(this, "setcviso", "isovalue",
+                                       "set an isovalue from 0 to 1");
   pScriptEngine->RegisterCommand(this, "mode1d", "","switch to 1D transfer function rendering");
   pScriptEngine->RegisterCommand(this, "mode2d", "","switch to 2D transfer function rendering");
   pScriptEngine->RegisterCommand(this, "modeiso", "","switch to isomode rendering");
@@ -90,6 +92,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "open1d")          { bResult = Transfer1DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0];}} else
   if (strCommand == "open2d")          { bResult = Transfer2DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0];}} else
   if (strCommand == "setiso")          { SetIsoValue(float(atof(strParams[0].c_str())));} else
+  if (strCommand == "setcviso")        { SetClearViewIsoValue(float(atof(strParams[0].c_str()))); } else
   if (strCommand == "mode1d")          { Use1DTrans();} else
   if (strCommand == "mode2d")          { Use2DTrans();} else
   if (strCommand == "modeiso")         { UseIso();} else

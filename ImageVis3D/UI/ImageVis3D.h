@@ -184,6 +184,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SetSampleRate(int iValue);
     void SetIsoValue(float fValue);
     void SetIsoValue(int iValue);
+    void SetClearViewIsoValue(float fValue);
     void ToggleGlobalBBox(bool bRenderBBox);
     void ToggleLocalBBox(bool bRenderBBox);
     void ToggleClipPlane(bool);
