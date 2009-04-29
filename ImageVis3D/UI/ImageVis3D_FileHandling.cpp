@@ -294,14 +294,14 @@ void MainWindow::ExportDataset() {
 
     string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()), ext);
 
-    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo()->GetLODLevelCount())-1;
+    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo().GetLODLevelCount())-1;
 
     int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       int iMinLODLevel = 0;
       vector<QString> vDesc;
       for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
-        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo()->GetDomainSize(i));
+        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo().GetDomainSize(i));
         QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
         vDesc.push_back(qstrDesc);
       }
@@ -374,14 +374,14 @@ void MainWindow::ExportMesh() {
     settings.setValue("Folders/ExportMesh", QFileInfo(fileName).absoluteDir().path());
     string targetFileName = SysTools::CheckExt(string(fileName.toAscii()), "obj");
 
-    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo()->GetLODLevelCount())-1;
+    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo().GetLODLevelCount())-1;
 
     int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       int iMinLODLevel = 0;
       vector<QString> vDesc;
       for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
-        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo()->GetDomainSize(i));
+        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo().GetDomainSize(i));
         QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
         vDesc.push_back(qstrDesc);
       }
