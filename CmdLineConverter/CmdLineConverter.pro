@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE          = app
-CONFIG           += link_prl static warn_on stl exceptions x86 ppc
+CONFIG           += link_prl static warn_on stl exceptions
 TARGET            = Build/UVFConverter
 QTPLUGIN         += qjpeg qtiff qgif
 DEPENDPATH       += .
