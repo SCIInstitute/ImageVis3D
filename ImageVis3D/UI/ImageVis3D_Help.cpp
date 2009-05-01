@@ -366,15 +366,44 @@ void MainWindow::ReportABug() {
     if (b.SubmitSysinfo() ) {
       reportFile << endl << endl << "Memory info:" << endl;
 
-      reportFile << "CPU Memory: Total " << m_MasterController.MemMan()->GetCPUMem()/(1024*1024) << " MB, Usable " << m_MasterController.SysInfo()->GetMaxUsableCPUMem()/(1024*1024) << " MB" << endl;
-      reportFile << "    Used: " << m_MasterController.MemMan()->GetAllocatedCPUMem()/(1024*1024) << " MB (" << m_MasterController.MemMan()->GetAllocatedCPUMem() << " Bytes)" << endl;
-      if (m_MasterController.MemMan()->GetAllocatedCPUMem() < m_MasterController.MemMan()->GetCPUMem() )
-        reportFile << "    Available: " << (m_MasterController.MemMan()->GetCPUMem()-m_MasterController.MemMan()->GetAllocatedCPUMem())/(1024*1024) << "MB" << endl;;
+      const UINT64 mb = 1024*1024;
+      reportFile << "CPU Memory: Total "
+                 << m_MasterController.MemMan()->GetCPUMem()/mb
+                 << " MB, Usable "
+                 << m_MasterController.SysInfo()->GetMaxUsableCPUMem()/mb
+                 << " MB" << endl;
+      reportFile << "    Used: "
+                 << m_MasterController.MemMan()->GetAllocatedCPUMem()/mb
+                 << " MB ("
+                 << m_MasterController.MemMan()->GetAllocatedCPUMem()
+                 << " Bytes)" << endl;
 
-      reportFile << "GPU Memory: Total " << m_MasterController.MemMan()->GetGPUMem()/(1024*1024) << " MB, Usable " << m_MasterController.SysInfo()->GetMaxUsableGPUMem()/(1024*1024) << " MB" << endl;
-      reportFile << "    Used: " << m_MasterController.MemMan()->GetAllocatedGPUMem()/(1024*1024) << " MB (" << m_MasterController.MemMan()->GetAllocatedGPUMem() << " Bytes)" << endl;
-      if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() )
-        reportFile << "    Available: " << (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024) <<" MB" << endl;
+      if (m_MasterController.MemMan()->GetAllocatedCPUMem() <
+          m_MasterController.MemMan()->GetCPUMem()) {
+        reportFile << "    Available: "
+                   << (m_MasterController.MemMan()->GetCPUMem() -
+                       m_MasterController.MemMan()->GetAllocatedCPUMem())/mb
+                   << "MB" << endl;
+      }
+
+      reportFile << "GPU Memory: Total "
+                 << m_MasterController.MemMan()->GetGPUMem()/mb
+                 << " MB, Usable "
+                 << m_MasterController.SysInfo()->GetMaxUsableGPUMem()/mb
+                 << " MB" << endl;
+      reportFile << "    Used: "
+                 << m_MasterController.MemMan()->GetAllocatedGPUMem()/mb
+                 << " MB ("
+                 << m_MasterController.MemMan()->GetAllocatedGPUMem()
+                 << " Bytes)" << endl;
+
+      if (m_MasterController.MemMan()->GetAllocatedGPUMem() <
+          m_MasterController.MemMan()->GetGPUMem()) {
+        reportFile << "    Available: "
+                   << (m_MasterController.MemMan()->GetGPUMem() -
+                       m_MasterController.MemMan()->GetAllocatedGPUMem())/mb
+                   <<" MB" << endl;
+      }
 
       reportFile << endl << endl << "GPU info:" << endl;
 
@@ -389,14 +418,14 @@ void MainWindow::ReportABug() {
         reportFile << "No GL-info discovered yet" << endl;
       } else {
         reportFile << RenderWindow::GetVendorString().c_str() << endl;
-        reportFile << "Maximum 3D texture size " << RenderWindow::GetMax3DTexDims() << endl;
+        reportFile << "Maximum 3D texture size "
+                   << RenderWindow::GetMax3DTexDims() << endl;
         reportFile << "Supported GL extensions:" << endl;
         reportFile << RenderWindowGL::GetExtString() << endl;
       }
-
     }
 
-    if (b.SubmitLog() ) {
+    if (b.SubmitLog()) {
       reportFile << endl << endl << "Debug Log:" << endl;
       for (int i = 0;i<listWidget_DebugOut->count();i++) {
         string line(listWidget_DebugOut->item(i)->text().toAscii());
@@ -414,7 +443,8 @@ void MainWindow::ReportABug() {
 
     remove("bugreport.txt");
     if (!a.IsOK()) {
-      ShowWarningDialog("Warning", "Unable to create report file report.apx, aborting.");
+      ShowWarningDialog("Warning", "Unable to create report file report.apx,"
+                                   " aborting.");
       return;
     }
 

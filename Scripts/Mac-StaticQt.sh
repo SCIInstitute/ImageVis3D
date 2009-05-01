@@ -1,21 +1,22 @@
 #!/bin/sh
 
-rm -fr qt-mac-opensource-src-4.4.3
+VERSION=4.5.1
+echo "Removing old build..."
+rm -fr qt-mac-opensource-src-${VERSION}
 
-tarball="qt-mac-opensource-src-4.4.3.tar"
-# If the user re-compressed it as bzip2, use that.
+tarball="qt-mac-opensource-src-${VERSION}.tar"
+echo "Extracting..."
+# Do they have a bzip'd or a gzip'd tarball?
 if test -f ${tarball}.bz2 ; then
     tar jxf ${tarball}.bz2
 else
     tar zxf ${tarball}.gz
 fi
-pushd qt-mac-opensource-src-4.4.3
+pushd qt-mac-opensource-src-${VERSION} || exit 1
 echo "yes" | \
 ./configure \
         -prefix ${HOME}/sw \
-        -universal \
-        -arch x86 \
-        -arch ppc \
+        -opensource \
         -static \
         -qt-libjpeg \
         -no-openssl \
@@ -34,7 +35,7 @@ if test $? -ne 0; then
         exit 1
 fi
 
-make sub-src || exit 1
+time nice make -j4 sub-src || exit 1
 make install || exit 1
 
 popd
