@@ -36,7 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include <sstream>
-#include "3rdParty/GLEW/glew.h"
+#include "GL/glew.h"
 #include "RenderWindowGL.h"
 #include "ImageVis3D.h"
 
