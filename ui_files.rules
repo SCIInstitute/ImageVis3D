@@ -7,7 +7,7 @@
 		<CustomBuildRule
 			Name="UI"
 			DisplayName="Compile QT UserInterface File (*.ui)"
-			CommandLine="$(QTDIR32)bin\uic.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)..\AutoGen\ui_$(InputName).h&quot;"
+			CommandLine="$(QTDIR32)\bin\uic.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)..\AutoGen\ui_$(InputName).h&quot;"
 			Outputs="$(InputDir)..\AutoGen\ui_$(InputName).h"
 			FileExtensions="*.ui"
 			ExecutionDescription="Creating UI File ui_$(InputName).h ..."
@@ -18,7 +18,7 @@
     		<CustomBuildRule
 			Name="QRC"
 			DisplayName="Compile QRC Recource File (*.qrc)"
-			CommandLine="$(QTDIR32)bin\rcc.exe &quot;$(InputPath)&quot; -o &quot;$(OutDir)..\..\..\rcc\qrc_$(InputName).cpp&quot;"
+			CommandLine="$(QTDIR32)\bin\rcc.exe &quot;$(InputPath)&quot; -o &quot;$(OutDir)..\..\..\rcc\qrc_$(InputName).cpp&quot;"
 			Outputs="$(OutDir)..\..\..\rcc\qrc_$(InputName).cpp"
 			FileExtensions="*.qrc"
 			ExecutionDescription="Creating CPP File from resource $(InputName).rcc ..."
