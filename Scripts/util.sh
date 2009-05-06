@@ -31,6 +31,27 @@ function _vcs
     fi
 }
 
+# Updates a git-svn repository.  One argument: a directory to cd to first.
+function git_svn_update
+{
+    pushd "$@"
+    git diff --exit-code --quiet &>/dev/null
+    local saved=0
+    if test $? -ne 0 ; then
+        git stash save "uncomitted changes from `date`"
+        saved=1
+    fi
+    git checkout master
+    $VCS rebase
+    git checkout private
+    git rebase master
+    if test $saved -eq 1 ; then
+        git stash pop
+    fi
+
+    popd
+}
+
 # Does the appropriate update, based on $VCS.  For git, assumes you do your
 # personal work in a branch `private'
 function vcs_update
@@ -41,34 +62,9 @@ function vcs_update
     if test "x${VCS}" = "xsvn" ; then
         svn update
     else
-        git diff --exit-code --quiet &>/dev/null
-        saved=0
-        if test $? -ne 0 ; then
-            git stash save "uncomitted changes from `date`"
-            saved=1
-        fi
-        git checkout master
-        $VCS rebase
-        git checkout private
-        git rebase master
-        if test $saved -eq 1 ; then
-            git stash pop
-        fi
-        saved=0
-
-        pushd Tuvok
-            git diff --exit-code --quiet &>/dev/null
-            if test $? -ne 0 ; then
-                git stash save "uncomitted changes from `date`"
-                saved=1
-            fi
-            $VCS rebase
-            git checkout private
-            git rebase master
-            if test $saved -eq 1 ; then
-                git stash pop
-            fi
-        popd
+        git_svn_update "."
+        git_svn_update "Tuvok"
+        git_svn_update "Tuvok/Basics"
     fi
 }
 
