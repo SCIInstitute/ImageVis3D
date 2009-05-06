@@ -36,8 +36,8 @@
 
 #pragma once
 
-#ifndef STDDEFINES_H
-#define STDDEFINES_H
+#ifndef STDIMAGEVISDEFINES_H
+#define STDIMAGEVISDEFINES_H
 
 #include "../Tuvok/StdTuvokDefines.h"
 
@@ -66,4 +66,4 @@
   #define UPDATE_VERSION_FILE "Linux_Latest_Version.txt"
 #endif
 
-#endif // STDDEFINES_H
+#endif // STDIMAGEVISDEFINES_H
