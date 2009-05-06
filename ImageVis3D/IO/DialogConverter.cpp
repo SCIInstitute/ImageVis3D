@@ -38,7 +38,7 @@
 #include "../UI/RAWDialog.h"
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/Basics/SysTools.h"
-#include "../Tuvok/IO/UVF/LargeRAWFile.h"
+#include "../Tuvok/Basics/LargeRAWFile.h"
 
 #include <QtGui/QMessageBox>
 
