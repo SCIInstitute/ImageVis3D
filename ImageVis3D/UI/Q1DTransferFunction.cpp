@@ -214,8 +214,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
   QPen penCurve(m_colorBorder, 1, Qt::SolidLine);
 
   // for every component
-  for (unsigned int j = 0;j<4;j++) {
-
+  for (unsigned int j=0; j < 4; j++) {
     // select the color
     switch (j) {
     case 0  : penCurve.setColor(m_colorRedLine);   break;
@@ -225,9 +224,11 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
     }
 
     // define the polyline
-    for (size_t i = 0;i<pointList.size();i++) {
-      pointList[i]= QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(pointList.size()-1),
-          m_iTopBorder+iGridHeight-m_pTrans->vColorData[i][j]*iGridHeight);
+    for (size_t i=0; i < pointList.size(); i++) {
+      pointList[i] = QPointF(
+          m_iLeftBorder + 1 + float(iGridWidth) * i / (pointList.size() - 1),
+          m_iTopBorder + iGridHeight - m_pTrans->vColorData[i][j] * iGridHeight
+      );
     }
 
     // draw the polyline
@@ -244,7 +245,10 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
           int(m_pTrans->vColorData[x][3]*255)));
   }
 
-  QRect prevRect(m_iLeftBorder+1, m_iTopBorder-(m_iTopPreviewHeight+m_iTopPreviewDist),width()-(m_iLeftBorder+3+m_iRightBorder),m_iTopPreviewHeight);
+  QRect prevRect(m_iLeftBorder+1,
+                 m_iTopBorder - (m_iTopPreviewHeight + m_iTopPreviewDist),
+                 width() - (m_iLeftBorder + 3 + m_iRightBorder),
+                 m_iTopPreviewHeight);
   painter.drawImage(prevRect,*m_pPreviewBack);
   painter.drawImage(prevRect,*m_pPreviewColor);
 }
@@ -475,7 +479,7 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
   // the image captured before (or cached from a previous call)
   painter.drawImage(0,0,m_pBackdropCache->toImage());
 
-  // and the funtion plots
+  // and the function plots
   DrawFunctionPlots(painter);
 }
 
