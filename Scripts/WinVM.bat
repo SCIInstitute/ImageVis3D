@@ -1,5 +1,5 @@
 cd..
-set path=%path%;C:\Program Files (x86)\CollabNet Subversion Client;C:\Program Files (x86)\CollabNet Subversion
+set path=%path%;C:\Program Files (x86)\CollabNet Subversion Client;C:\Program Files (x86)\CollabNet Subversion;C:\Program Files (x86)\Inno Setup 5
 
 SETLOCAL ENABLEDELAYEDEXPANSION 
 
