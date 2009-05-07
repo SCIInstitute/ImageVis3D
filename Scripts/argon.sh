@@ -35,7 +35,7 @@ echo "" >> ${status}
 echo "-------------------------------------" >> ${status}
 
 try cd ${HOME}/imagevis3d
-rm -f *.tar.gz *.zip warnings
+rm -f *.tar.gz *.zip *.dmg warnings
 mailtry sh Scripts/nightly.sh
 cat warnings >> ${status}
 subj=""
