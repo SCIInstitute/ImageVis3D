@@ -39,14 +39,16 @@ AppCopyright=Copyright (c) 2009 Scientific Computing and Imaging Institute, Univ
 DefaultDirName={pf}\ImageVis3D
 DefaultGroupName=ImageVis3D
 OutputDir="Scripts\installer"
-OutputBaseFilename=ImageVis3D_1.0
+OutputBaseFilename=ImageVis3D-1.0-64bit
 AllowNoIcons=no
 Compression=lzma
 SolidCompression=yes
-SourceDir=C:\Users\admin\Desktop\iv3d\imagevis3d-svn
-LicenseFile=C:\Users\admin\Desktop\iv3d\imagevis3d-svn\LICENSE
+SourceDir=../../
+LicenseFile=LICENSE
 ; Install on Windows XP or newer (actually a Windows NT build number)
 MinVersion=0,5.01
+ArchitecturesAllowed=x64
+ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
