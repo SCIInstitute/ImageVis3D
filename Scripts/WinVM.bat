@@ -1,5 +1,5 @@
 cd..
-set path=%path%;C:\Program Files (x86)\CollabNet Subversion
+set path=%path%;C:\Program Files (x86)\CollabNet Subversion Client;C:\Program Files (x86)\CollabNet Subversion
 
 SETLOCAL ENABLEDELAYEDEXPANSION 
 
@@ -7,7 +7,14 @@ date /t > result.txt
 time /t  >> result.txt
 echo Start >> result.txt
 
-svn up
+svn cleanup
+cd Tuvok
+  svn cleanup
+  cd Basics
+    svn cleanup
+  cd ..
+cd ..
+svn update
 
 time /t  >> result.txt
 echo SVN completed >> result.txt
