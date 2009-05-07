@@ -49,6 +49,7 @@ if test "$1" != "-q" ; then
 fi
 devb="/usr/sci/projects/sciweb/devbuilds/imagevis3d/"
 mailtry scp *.zip tfogal@shell.sci.utah.edu:${devb}
+mailtry scp *.dmg tfogal@shell.sci.utah.edu:${devb}
 
 # Now update the `latest version' symlink.
 fn_zip=$(nm_zipfile)

@@ -62,6 +62,7 @@ if test `uname` = "Darwin" ; then
         zip -9r ${zipfile} ImageVis3D.app
     popd &>/dev/null
     mv Build/${tarball} Build/${zipfile} .
+    hdiutil create -srcfolder Build/ImageVis3D.app ${zipfile%%zip}dmg
 elif test `uname` = "Linux" ; then
     mkdir staging
     pushd staging
