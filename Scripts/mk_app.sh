@@ -1,4 +1,5 @@
 #!/bin/bash
+source Scripts/util.sh || source util.sh
 
 TARGETPATH=Build
 TARGETAPP=ImageVis3D.app
@@ -9,14 +10,8 @@ if test -n "$1" -a -d "$1" ; then
     PREFIX="$1"
 fi
 
-function error
-{
-    echo "$@"
-    exit 1
-}
-
 if ! test -d "${PREFIX}" ; then
-    error "$PREFIX does not exist, build the application first!"
+    die "$PREFIX does not exist, build the application first!"
 fi
 
 echo "Copying Shaders ..."

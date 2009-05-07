@@ -35,7 +35,7 @@ if test $? -ne 0; then
         exit 1
 fi
 
-time nice make -j4 sub-src || exit 1
-make install || exit 1
+nice make -j4 sub-src || exit 1
+nice make install || exit 1
 
 popd
