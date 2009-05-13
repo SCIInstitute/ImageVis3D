@@ -81,6 +81,16 @@ public:
   size_t GetSwatchSize(unsigned int i) {
     return m_pTrans->m_Swatches[i].pPoints.size();}
 
+  bool GetActiveGradientType() {
+    if(static_cast<size_t>(m_iActiveSwatchIndex) >=
+       m_pTrans->m_Swatches.size()) {
+      return false;
+    }
+    return m_pTrans->m_Swatches[m_iActiveSwatchIndex].bRadial;
+  }
+
+  void SetActiveGradientType(bool bRadial);
+
   size_t GetGradientCount() {
     if(static_cast<size_t>(m_iActiveSwatchIndex) >=
        m_pTrans->m_Swatches.size()) {

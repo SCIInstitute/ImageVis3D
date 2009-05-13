@@ -213,10 +213,17 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
 
     INTVECTOR2 vPixelPos0 = Rel2Abs(currentSwatch.pGradientCoords[0])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize),
 		       vPixelPos1 = Rel2Abs(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize);
-    QLinearGradient linearBrush(vPixelPos0.x, vPixelPos0.y, vPixelPos1.x, vPixelPos1.y);
+
+    QGradient* pGradientBrush;
+    if (currentSwatch.bRadial) {
+      double r = sqrt( pow(double(vPixelPos0.x-vPixelPos1.x),2.0) + pow(double(vPixelPos0.y-vPixelPos1.y),2.0));
+      pGradientBrush = new QRadialGradient(vPixelPos0.x, vPixelPos0.y, r);
+    } else {
+      pGradientBrush = new QLinearGradient(vPixelPos0.x, vPixelPos0.y, vPixelPos1.x, vPixelPos1.y);
+    }
 
     for (size_t j = 0;j<currentSwatch.pGradientStops.size();j++) {
-      linearBrush.setColorAt(currentSwatch.pGradientStops[j].first,
+      pGradientBrush->setColorAt(currentSwatch.pGradientStops[j].first,
                    QColor(int(currentSwatch.pGradientStops[j].second[0]*255),
                       int(currentSwatch.pGradientStops[j].second[1]*255),
                           int(currentSwatch.pGradientStops[j].second[2]*255),
@@ -224,8 +231,9 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
     }
 
     if (bDrawWidgets && m_iActiveSwatchIndex == int(i)) painter.setPen(borderPen); else painter.setPen(noBorderPen);
-    painter.setBrush(linearBrush);
+    painter.setBrush(*pGradientBrush);
     painter.drawPolygon(&pointList[0], int(currentSwatch.pPoints.size()));
+    delete pGradientBrush;
     painter.setBrush(Qt::NoBrush);
 
     if (bDrawWidgets && m_iActiveSwatchIndex == int(i)) {
@@ -661,6 +669,16 @@ void Q2DTransferFunction::Transfer2DDownSwatch(){
   }
 }
 
+void Q2DTransferFunction::SetActiveGradientType(bool bRadial) {
+  if(static_cast<size_t>(m_iActiveSwatchIndex) <
+     m_pTrans->m_Swatches.size()) {
+       if (m_pTrans->m_Swatches[m_iActiveSwatchIndex].bRadial != bRadial) {
+          m_pTrans->m_Swatches[m_iActiveSwatchIndex].bRadial = bRadial;
+          m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+          update();
+       }
+  }
+}
 
 void Q2DTransferFunction::AddGradient(GradientStop stop) {
   for (std::vector< GradientStop >::iterator i = m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.begin();i<m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.end();i++) {

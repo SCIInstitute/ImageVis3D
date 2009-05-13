@@ -131,6 +131,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void Transfer2DDeleteGradient();
     void Transfer2DChooseGradientColor();
     void Transfer2DChooseGradientOpacity();
+    void Transfer2DToggleGradientType();
     void Transfer2DLoad();
     bool Transfer2DLoad(std::string strFilename);
     void Transfer2DSave();
@@ -140,6 +141,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     void Transfer2DSwatchesChanged();
     void Transfer2DUpdateSwatchButtons();
+    void Transfer2DUpdateGradientType();
     void Transfer2DUpdateGradientBox();
     void Transfer2DUpdateGradientButtons();
 

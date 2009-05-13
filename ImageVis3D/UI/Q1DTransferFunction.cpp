@@ -366,11 +366,14 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
     if( m_eExecutionMode == CONTINUOUS ) ApplyFunction();
   } else {
     if (m_bMouseRight) {
+
+      bool bShiftPressed = ( event->modifiers() & Qt::ShiftModifier);
+
       // set "step" function
-      if (m_iPaintMode & PAINT_RED)   m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,0);
-      if (m_iPaintMode & PAINT_GREEN) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,1);
-      if (m_iPaintMode & PAINT_BLUE)  m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,2);
-      if (m_iPaintMode & PAINT_ALPHA) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,3);
+      if (m_iPaintMode & PAINT_RED)   m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,0, bShiftPressed);
+      if (m_iPaintMode & PAINT_GREEN) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,1, bShiftPressed);
+      if (m_iPaintMode & PAINT_BLUE)  m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,2, bShiftPressed);
+      if (m_iPaintMode & PAINT_ALPHA) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,3, bShiftPressed);
 
       // redraw this widget
       update();

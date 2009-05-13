@@ -99,9 +99,20 @@ void MainWindow::Transfer2DSwatchesChanged() {
   listWidget_Swatches->setCurrentRow(iCurrent);
 
   Transfer2DUpdateSwatchButtons();
-  Transfer2DUpdateGradientBox();
 }
 
+
+void MainWindow::Transfer2DUpdateGradientType() {
+  bool b = m_2DTransferFunction->GetActiveGradientType();
+  if (b) 
+    radioButton_spherGrad->setChecked(true);
+  else
+    radioButton_linGrad->setChecked(true);
+}
+
+void MainWindow::Transfer2DToggleGradientType() {
+  m_2DTransferFunction->SetActiveGradientType(radioButton_spherGrad->isChecked());
+}
 
 void MainWindow::Transfer2DUpdateSwatchButtons() {
 
@@ -137,6 +148,7 @@ void MainWindow::Transfer2DUpdateGradientBox() {
   }
 
   Transfer2DUpdateGradientButtons();
+  Transfer2DUpdateGradientType();
 }
 
 
