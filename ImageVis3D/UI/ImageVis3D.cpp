@@ -185,7 +185,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::SetAndCheckRunningFlag() {
   QSettings settings;
-  UINT32 iInstanceCounter = settings.value("InstanceCounter", 1).toUInt();
+  UINT32 iInstanceCounter = settings.value("InstanceCounter", 0).toUInt();
 
   if (iInstanceCounter) {
 
@@ -196,7 +196,7 @@ void MainWindow::SetAndCheckRunningFlag() {
 
     if (bWriteLogFile && SysTools::FileExists(string(strLogFileName.toAscii()))) {
       if (QMessageBox::Yes == QMessageBox::question(this, "Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to submit the logfile?", QMessageBox::Yes, QMessageBox::No)) {
-        iInstanceCounter = 1;
+        iInstanceCounter = 0;
 
         ReportABug(string(strLogFileName.toAscii()));
         remove(strLogFileName.toAscii());
@@ -204,7 +204,7 @@ void MainWindow::SetAndCheckRunningFlag() {
     } else {
       if (!bWriteLogFile) {
         if (QMessageBox::Yes == QMessageBox::question(this, "Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to enable debugging?", QMessageBox::Yes, QMessageBox::No)) {
-          iInstanceCounter = 1;
+          iInstanceCounter = 0;
           settings.setValue("Performance/WriteLogFile", true);
           settings.setValue("Performance/LogLevel", 2);
         }
