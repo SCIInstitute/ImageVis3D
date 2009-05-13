@@ -120,9 +120,9 @@ MainWindow::MainWindow(MasterController& masterController,
   QString qstrVersion = tr("%1").arg(IV3D_VERSION);
   QCoreApplication::setApplicationVersion(qstrVersion);
 
-  SetAndCheckRunningFlag();
-
   setupUi(this);
+
+  SetAndCheckRunningFlag();
 
   SetupWorkspaceMenu();
 
@@ -196,21 +196,18 @@ void MainWindow::SetAndCheckRunningFlag() {
 
     if (bWriteLogFile && SysTools::FileExists(string(strLogFileName.toAscii()))) {
       if (QMessageBox::Yes == QMessageBox::question(this, "Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to submit the logfile?", QMessageBox::Yes, QMessageBox::No)) {
-        iInstanceCounter = 0;
-
         ReportABug(string(strLogFileName.toAscii()));
         remove(strLogFileName.toAscii());
       }
     } else {
       if (!bWriteLogFile) {
         if (QMessageBox::Yes == QMessageBox::question(this, "Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to enable debugging?", QMessageBox::Yes, QMessageBox::No)) {
-          iInstanceCounter = 0;
           settings.setValue("Performance/WriteLogFile", true);
           settings.setValue("Performance/LogLevel", 2);
         }
       }
     }
-
+    iInstanceCounter = 0;
   }
 
   settings.setValue("InstanceCounter", iInstanceCounter+1);

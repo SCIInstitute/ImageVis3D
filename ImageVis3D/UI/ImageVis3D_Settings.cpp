@@ -153,6 +153,9 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("LODDelay", settingsDlg.GetLODDelay());
       settings.setValue("ActiveTS", settingsDlg.GetActiveTS());
       settings.setValue("InactiveTS", settingsDlg.GetInactiveTS());
+      settings.setValue("WriteLogFile", settingsDlg.GetWriteLogFile());
+      settings.setValue("LogFileName", settingsDlg.GetLogFileName().c_str());
+      settings.setValue("LogLevel", settingsDlg.GetLogLevel());
       settings.endGroup();
 
       settings.beginGroup("UI");
