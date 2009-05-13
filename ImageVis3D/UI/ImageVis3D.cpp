@@ -41,6 +41,7 @@
 
 #include <QtCore/QSettings>
 #include <QtCore/QFileInfo>
+#include <QtGui/QMessageBox>
 
 #include <QtGui/QMdiSubWindow>
 #include <QtGui/QCloseEvent>
@@ -76,6 +77,9 @@ MainWindow::MainWindow(MasterController& masterController,
   m_iLODDelay(1000),
   m_iActiveTS(500),
   m_iInactiveTS(100),
+  m_bWriteLogFile(false),
+  m_strLogFileName("debugLog.txt"),
+  m_iLogLevel(2),
   m_pWelcomeDialog(new WelcomeDialog(this, Qt::Tool)),
   m_iBlendPrecisionMode(0),
   m_bPowerOfTwo(true),
@@ -94,6 +98,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bCheckForDevBuilds(false),
   m_bShowWelcomeScreen(true),
   m_bStayOpenAfterScriptEnd(false),
+  m_pTextout(NULL),
   m_pActiveRenderWin(false),
   m_pHttp(NULL),
   m_pUpdateFile(NULL),
@@ -114,6 +119,8 @@ MainWindow::MainWindow(MasterController& masterController,
   QCoreApplication::setApplicationName("ImageVis3D");
   QString qstrVersion = tr("%1").arg(IV3D_VERSION);
   QCoreApplication::setApplicationVersion(qstrVersion);
+
+  SetAndCheckRunningFlag();
 
   setupUi(this);
 
@@ -172,8 +179,51 @@ MainWindow::~MainWindow()
   delete m_pFTPDialog;
   m_pRedrawTimer->stop();
   delete m_pRedrawTimer;
+
+  RemoveRunningFlag();
 }
 
+void MainWindow::SetAndCheckRunningFlag() {
+  QSettings settings;
+  UINT32 iInstanceCounter = settings.value("InstanceCounter", 1).toUInt();
+
+  if (iInstanceCounter) {
+
+    settings.beginGroup("Performance");
+    bool bWriteLogFile = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
+    QString strLogFileName = settings.value("LogFileName", m_strLogFileName).toString();
+    settings.endGroup();
+
+    if (bWriteLogFile && SysTools::FileExists(string(strLogFileName.toAscii()))) {
+      if (QMessageBox::Yes == QMessageBox::question(this, "Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to submit the logfile?", QMessageBox::Yes, QMessageBox::No)) {
+        iInstanceCounter = 1;
+
+        ReportABug(string(strLogFileName.toAscii()));
+        remove(strLogFileName.toAscii());
+      }
+    } else {
+      if (!bWriteLogFile) {
+        if (QMessageBox::Yes == QMessageBox::question(this, "Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to enable debugging?", QMessageBox::Yes, QMessageBox::No)) {
+          iInstanceCounter = 1;
+          settings.setValue("Performance/WriteLogFile", true);
+          settings.setValue("Performance/LogLevel", 2);
+        }
+      }
+    }
+
+  }
+
+  settings.setValue("InstanceCounter", iInstanceCounter+1);
+}
+
+void MainWindow::RemoveRunningFlag() {
+  QSettings settings;
+  UINT32 iInstanceCounter = settings.value("InstanceCounter", 1).toUInt();
+  if (iInstanceCounter > 1) 
+    settings.setValue("InstanceCounter", iInstanceCounter-1);
+  else 
+    settings.setValue("InstanceCounter", 0);
+}
 
 // ******************************************
 // Filter Function Dock

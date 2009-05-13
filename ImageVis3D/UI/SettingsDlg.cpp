@@ -305,6 +305,7 @@ void SettingsDlg::SetLogoLabel() {
 
 void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU,
                             bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
+                            bool bWriteLogFile, const std::string& strLogFileName, UINT32 iLogLevel,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
@@ -320,6 +321,10 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   horizontalSlider_LODDelay->setValue(iLODDelay);
   horizontalSlider_ActTS->setValue(iActiveTS);
   horizontalSlider_InactTS->setValue(iInactiveTS);
+
+  checkBox_WriteLogfile->setChecked(bWriteLogFile);
+  lineEdit_filename->setText(strLogFileName.c_str());
+  horizontalSlider_loglevel->setValue(iLogLevel);
 
   checkBox_ShowVersionInTitle->setChecked(bShowVersionInTitle);
   checkBox_SaveGEOOnExit->setChecked(bAutoSaveGEO);
@@ -414,6 +419,17 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   m_bInit = false;
 }
 
+bool SettingsDlg::GetWriteLogFile() const {
+  return checkBox_WriteLogfile->isChecked();
+}
+
+const string SettingsDlg::GetLogFileName() const {
+  return string(lineEdit_filename->text().toAscii());
+}
+
+UINT32 SettingsDlg::GetLogLevel() const {
+  return horizontalSlider_loglevel->value();
+}
 
 void SettingsDlg::WarnAPIMethodChange() {
   if (m_bWarnAPIChange && !m_bInit) {
@@ -455,6 +471,33 @@ int SettingsDlg::GetLogoPos() const {
   if (radioButton_logoTR->isChecked()) return 1;
   if (radioButton_logoBL->isChecked()) return 2;
   return 3;
+}
+
+void SettingsDlg::PickLogFile() {
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/LogFile", ".").toString();
+
+  QFileDialog::Options options;
+#ifdef TUVOK_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
+  QString fileName =
+    QFileDialog::getSaveFileName(this, "Select Logfile", strLastDir,
+         "All Files (*.*)",&selectedFilter, options);
+
+  if (!fileName.isEmpty()) {
+    QDir qdir(QDir::current());
+    QString strRelFilename = qdir.relativeFilePath(fileName);
+
+    if (!strRelFilename.contains("..")) fileName = strRelFilename;
+
+    settings.setValue("Folders/LogFile", QFileInfo(fileName).absoluteDir().path());
+    
+    lineEdit_filename->setText(fileName);
+  }
+
 }
 
 void SettingsDlg::SelectLogo() {

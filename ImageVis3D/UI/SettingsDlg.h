@@ -51,11 +51,16 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     UINT64        GetGPUMem() const;
     UINT64        GetCPUMem() const;
+
     bool          GetQuickopen() const;
     unsigned int  GetMinFramerate() const;
     unsigned int  GetLODDelay() const;
     unsigned int  GetActiveTS() const;
     unsigned int  GetInactiveTS() const;
+
+    bool          GetWriteLogFile() const;
+    const std::string GetLogFileName() const;
+    UINT32        GetLogLevel() const;
 
     bool          GetShowVersionInTitle() const;
     bool          GetAutoSaveGEO() const;
@@ -83,6 +88,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     void Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU,
                    bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
+                   bool bWriteLogFile, const std::string& strLogFileName, UINT32 iLogLevel,
                    bool bShowVersionInTitle,
                    bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                    bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
@@ -103,6 +109,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void WarnAPIMethodChange();
     void SelectLogo();
     void RemoveLogo();
+    void PickLogFile();
 
   private:
     MasterController& m_MasterController;
@@ -113,6 +120,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool              m_bInit;
     int               m_InitialGPUMemMax;
     bool              m_bWarnAPIChange;
+
 
     void setupUi(QDialog *SettingsDlg);
     void SetLogoLabel();

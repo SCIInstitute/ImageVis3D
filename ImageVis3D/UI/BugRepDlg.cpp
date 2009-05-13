@@ -44,11 +44,15 @@
 
 using namespace std;
 
-BugRepDlg::BugRepDlg(QWidget* parent, Qt::WindowFlags flags) : 
+BugRepDlg::BugRepDlg(QWidget* parent, Qt::WindowFlags flags, const string& strSubmitFile) : 
   QDialog(parent, flags)
 {
   setupUi(this);
   label_Icon->setPixmap(QPixmap::fromImage(QImage(":/Resources/bug.png")));
+
+  if (strSubmitFile != "") {
+    listWidget_files->addItem(strSubmitFile.c_str());
+  }
 }
 
 BugRepDlg::~BugRepDlg(void)

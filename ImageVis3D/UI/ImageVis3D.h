@@ -42,6 +42,7 @@
 
 #include <StdDefines.h>
 class MasterController;
+class TextfileOut;
 
 #include "AutoGen/ui_ImageVis3D.h"
 #include "RenderWindowGL.h"
@@ -246,6 +247,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     unsigned int                              m_iLODDelay;
     unsigned int                              m_iActiveTS;
     unsigned int                              m_iInactiveTS;
+    bool                                      m_bWriteLogFile;
+    QString                                   m_strLogFileName;
+    unsigned int                              m_iLogLevel;
+
     WelcomeDialog*                            m_pWelcomeDialog;
 
     unsigned int                              m_iBlendPrecisionMode;
@@ -341,6 +346,13 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ShowInformationDialog(QString strTitle, QString strMessage);
     void ShowWarningDialog(QString strTitle, QString strMessage);
     void ShowCriticalDialog(QString strTitle, QString strMessage);
+
+    void SetAndCheckRunningFlag();
+    void RemoveRunningFlag();
+    void ReportABug(const std::string& strFile);
+    void ToggleLogFile();
+
+    TextfileOut* m_pTextout;
 
     RenderWindow* ActiveRenderWin();
     QMdiSubWindow* ActiveSubWindow();

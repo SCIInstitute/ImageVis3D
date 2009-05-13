@@ -36,6 +36,10 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
+#include "../Tuvok/DebugOut/TextfileOut.h"
+#include "../Tuvok/Controller/Controller.h"
+
+
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
@@ -81,6 +85,9 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     unsigned int iLODDelay = settings.value("LODDelay", m_iLODDelay).toUInt();
     unsigned int iActiveTS = settings.value("ActiveTS", m_iActiveTS).toUInt();
     unsigned int iInactiveTS = settings.value("InactiveTS", m_iInactiveTS).toUInt();
+    bool bWriteLogFile = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
+    QString strLogFileName = settings.value("LogFileName", m_strLogFileName).toString();
+    unsigned int iLogLevel = settings.value("LogLevel", m_iLogLevel).toUInt();
     settings.endGroup();
 
     settings.beginGroup("UI");
@@ -124,6 +131,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     // hand data to form
     settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU,
                           bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS,
+                          bWriteLogFile, string(strLogFileName.toAscii()), iLogLevel,
                           bShowVersionInTitle,
                           bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
                           bCheckForUpdatesOnStartUp, bCheckForDevBuilds, bShowWelcomeScreen,
@@ -196,11 +204,14 @@ void MainWindow::ApplySettings() {
 
   // Read settings
   settings.beginGroup("Performance");
-  m_bQuickopen    = settings.value("Quickopen", m_bQuickopen).toBool();
-  m_iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
-  m_iLODDelay     = settings.value("LODDelay", m_iLODDelay).toUInt();
-  m_iActiveTS     = settings.value("ActiveTS", m_iActiveTS).toUInt();
-  m_iInactiveTS   = settings.value("InactiveTS", m_iInactiveTS).toUInt();
+  m_bQuickopen     = settings.value("Quickopen", m_bQuickopen).toBool();
+  m_iMinFramerate  = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
+  m_iLODDelay      = settings.value("LODDelay", m_iLODDelay).toUInt();
+  m_iActiveTS      = settings.value("ActiveTS", m_iActiveTS).toUInt();
+  m_iInactiveTS    = settings.value("InactiveTS", m_iInactiveTS).toUInt();
+  m_bWriteLogFile  = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
+  m_strLogFileName = settings.value("LogFileName", m_strLogFileName).toString();
+  m_iLogLevel      = settings.value("LogLevel", m_iLogLevel).toUInt();
   settings.endGroup();
 
   settings.beginGroup("UI");
@@ -256,6 +267,7 @@ void MainWindow::ApplySettings() {
   m_MasterController.SysInfo()->SetMaxUsableCPUMem(iMaxCPU);
   m_MasterController.SysInfo()->SetMaxUsableGPUMem(iMaxGPU);
   m_MasterController.MemMan()->MemSizesChanged();
+  ToggleLogFile();
 }
 
 void MainWindow::ApplySettings(RenderWindow* renderWin) {
@@ -267,4 +279,24 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
   renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
   renderWin->SetAbsoluteViewLock(m_bAbsoluteViewLocks);
   renderWin->SetAvoidCompositing(m_bAvoidCompositing);
+}
+
+
+void MainWindow::ToggleLogFile() {
+  if ( m_pTextout && string(m_strLogFileName.toAscii()) != m_pTextout->GetFileName()) {
+    Controller::Instance().RemoveDebugOut(m_pTextout);
+    m_pTextout = NULL;
+  }
+    
+  if (m_bWriteLogFile) {
+    bool bNewOut = !m_pTextout;
+    if (!m_pTextout) 
+      m_pTextout = new TextfileOut(string(m_strLogFileName.toAscii()));
+  
+    m_pTextout->SetShowErrors(true);
+    m_pTextout->SetShowWarnings(m_iLogLevel > 0);
+    m_pTextout->SetShowMessages(m_iLogLevel > 1);
+
+    if (bNewOut) Controller::Instance().AddDebugOut(m_pTextout);
+  } 
 }

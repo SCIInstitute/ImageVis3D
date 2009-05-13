@@ -47,7 +47,7 @@ class BugRepDlg : public QDialog, protected Ui_BugRepDlg
 {
   Q_OBJECT
   public:
-    BugRepDlg(QWidget* parent, Qt::WindowFlags flags = Qt::Tool);
+    BugRepDlg(QWidget* parent, Qt::WindowFlags flags = Qt::Tool, const std::string& strSubmitFile="");
     virtual ~BugRepDlg();
 
     std::string GetDescription() const;

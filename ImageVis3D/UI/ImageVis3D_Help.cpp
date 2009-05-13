@@ -321,7 +321,11 @@ void MainWindow::CloseWelcome() {
 }
 
 void MainWindow::ReportABug() {
-  BugRepDlg b(this);
+  ReportABug("");
+}
+
+void MainWindow::ReportABug(const string& strFile) {
+  BugRepDlg b(this, Qt::Tool, strFile);
 
   QSettings settings;
   settings.beginGroup("BugReport");
