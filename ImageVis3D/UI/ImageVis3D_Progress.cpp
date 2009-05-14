@@ -47,8 +47,8 @@ void MainWindow::ClearProgressView() {
 
 void MainWindow::SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick) {
   if (dockWidget_ProgressView->isVisible()) {
-    label_ProgressDesc->setVisible(false);
-    groupBox_RenderProgress->setVisible(true);
+    if (label_ProgressDesc->isVisible()) label_ProgressDesc->setVisible(false);
+    if (!groupBox_RenderProgress->isVisible()) groupBox_RenderProgress->setVisible(true);
 
     QString msg = tr("LOD %1/%2").arg(iCurrentCount).arg(iLODCount);
     label_LODProgress->setText(msg);
