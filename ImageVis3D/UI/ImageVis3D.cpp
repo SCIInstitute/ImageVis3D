@@ -140,7 +140,7 @@ MainWindow::MainWindow(MasterController& masterController,
 
   m_pRedrawTimer = new QTimer(this);
   connect(m_pRedrawTimer, SIGNAL(timeout()), this, SLOT(CheckForRedraw()));
-  m_pRedrawTimer->start(10);
+  m_pRedrawTimer->start(20);
 
   CheckSettings();
   ClearProgressView();

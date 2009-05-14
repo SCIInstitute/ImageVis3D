@@ -278,7 +278,7 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
 
   renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
   renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
-  renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/10, m_iActiveTS, m_iInactiveTS);
+  renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/m_pRedrawTimer->interval(), m_iActiveTS, m_iInactiveTS);
   renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
   renderWin->SetAbsoluteViewLock(m_bAbsoluteViewLocks);
   renderWin->SetAvoidCompositing(m_bAvoidCompositing);

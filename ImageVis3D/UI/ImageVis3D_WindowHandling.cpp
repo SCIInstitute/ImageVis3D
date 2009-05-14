@@ -707,6 +707,7 @@ void MainWindow::ToggleRenderWindowViewSingle() {
 }
 
 void MainWindow::CheckForRedraw() {
+  m_pRedrawTimer->stop();
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {
     QWidget* w = mdiArea->subWindowList().at(i)->widget();
     RenderWindow* r = WidgetToRenderWin(w);
@@ -720,6 +721,7 @@ void MainWindow::CheckForRedraw() {
       r->CheckForRedraw();
     }
   }
+  m_pRedrawTimer->start(20);
 }
 
 // ******************************************
