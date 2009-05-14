@@ -190,11 +190,12 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   verticalLayout_2DTrans->addWidget(m_2DTransferFunction);
 
   connect(verticalSlider_2DTransHistScale, SIGNAL(valueChanged(int)),
-    m_2DTransferFunction, SLOT(SetHistogtramScale(int)));
+    m_2DTransferFunction, SLOT(SetHistogramScale(int)));
   connect(verticalSlider_1DTransHistScale, SIGNAL(valueChanged(int)),
-    m_1DTransferFunction, SLOT(SetHistogtramScale(int)));
+    m_1DTransferFunction, SLOT(SetHistogramScale(int)));
 
   verticalSlider_2DTransHistScale->setValue(1500);
+  verticalSlider_1DTransHistScale->setValue(500);
 
   connect(m_2DTransferFunction, SIGNAL(SwatchChange()),
     this, SLOT(Transfer2DSwatchesChanged()));

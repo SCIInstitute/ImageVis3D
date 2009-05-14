@@ -60,17 +60,17 @@ public:
   }
 
 public slots:
-  virtual void SetHistogtramScale(int iScale) {
-    SetHistogtramScale(float(iScale));
+  virtual void SetHistogramScale(int iScale) {
+    SetHistogramScale(float(iScale));
   }
 
-  virtual void SetHistogtramScale(float fScale) {
+  virtual void SetHistogramScale(float fScale) {
     m_fHistfScale = fScale;
     m_bBackdropCacheUptodate = false;
     update();
   }
 
-  float GetHistogtramScale() {
+  float GetHistogramScale() {
     return m_fHistfScale;
   }
 
