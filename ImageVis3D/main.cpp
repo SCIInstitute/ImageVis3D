@@ -42,6 +42,7 @@
 
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/DebugOut/TextfileOut.h"
+#include "../Tuvok/DebugOut/ConsoleOut.h"
 #include "../Tuvok/IO/IOManager.h"
 
 #if defined(_WIN32) && defined(USE_DIRECTX)
@@ -91,15 +92,20 @@ int main(int argc, char* argv[])
   
   // if using a logfile inject that file-logger into the debug out chain
   if (bUseLogFile) {
-    TextfileOut* textout = new TextfileOut(strLogFileName);
+    AbstrDebugOut *dbgOut;
+    if(strLogFileName == "-") {
+      dbgOut = new ConsoleOut();
+    } else {
+      dbgOut = new TextfileOut(strLogFileName);
+    }
   
-    textout->SetShowErrors(true);
-    textout->SetShowWarnings(iLogLevel > 0);
-    textout->SetShowMessages(iLogLevel > 1);
+    dbgOut->SetShowErrors(true);
+    dbgOut->SetShowWarnings(iLogLevel > 0);
+    dbgOut->SetShowMessages(iLogLevel > 1);
 
-    textout->printf("Loglevel:%i\n",iLogLevel);
+    dbgOut->printf("Loglevel:%i\n",iLogLevel);
 
-    Controller::Instance().AddDebugOut(textout);
+    Controller::Instance().AddDebugOut(dbgOut);
   }
 
   // open the QT window
