@@ -252,10 +252,10 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
   connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
 
-#ifdef TUVOK_OS_APPLE
-    label_LODProgress->setVisible(true);
-#else
-    label_LODProgress->setVisible(false);
+  // hide progress labels on systems that support text on top of the actual progressbars
+#ifndef TUVOK_OS_APPLE
+    frame_24->setVisible(false);
+    frame_23->setVisible(false);
 #endif
 }
 
