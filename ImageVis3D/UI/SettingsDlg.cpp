@@ -305,7 +305,7 @@ void SettingsDlg::SetLogoLabel() {
 
 void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU,
                             bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
-                            bool bWriteLogFile, const std::string& strLogFileName, UINT32 iLogLevel,
+                            bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, UINT32 iLogLevel,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
@@ -323,6 +323,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   horizontalSlider_InactTS->setValue(iInactiveTS);
 
   checkBox_WriteLogfile->setChecked(bWriteLogFile);
+  checkBox_ShowCrashDialog->setChecked(bShowCrashDialog);  
   lineEdit_filename->setText(strLogFileName.c_str());
   horizontalSlider_loglevel->setValue(iLogLevel);
 
@@ -421,6 +422,10 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
 
 bool SettingsDlg::GetWriteLogFile() const {
   return checkBox_WriteLogfile->isChecked();
+}
+
+bool SettingsDlg::GetShowCrashDialog() const {
+  return checkBox_ShowCrashDialog->isChecked();
 }
 
 const string SettingsDlg::GetLogFileName() const {

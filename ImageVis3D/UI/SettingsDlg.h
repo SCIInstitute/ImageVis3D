@@ -59,6 +59,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     unsigned int  GetInactiveTS() const;
 
     bool          GetWriteLogFile() const;
+    bool          GetShowCrashDialog() const;
+
     const std::string GetLogFileName() const;
     UINT32        GetLogLevel() const;
 
@@ -88,7 +90,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     void Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU,
                    bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
-                   bool bWriteLogFile, const std::string& strLogFileName, UINT32 iLogLevel,
+                   bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, UINT32 iLogLevel,
                    bool bShowVersionInTitle,
                    bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                    bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,

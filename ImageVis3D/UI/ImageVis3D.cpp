@@ -50,6 +50,7 @@
 #include <QtNetwork/QHttp>
 
 #include "PleaseWait.h"
+#include "CrashDetDlg.h"
 
 #include <fstream>
 #include <iostream>
@@ -187,27 +188,40 @@ void MainWindow::SetAndCheckRunningFlag() {
   QSettings settings;
   UINT32 iInstanceCounter = settings.value("InstanceCounter", 0).toUInt();
 
+  
+
   if (iInstanceCounter) {
 
     settings.beginGroup("Performance");
     bool bWriteLogFile = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
+    bool bShowCrashDialog = settings.value("ShowCrashDialog", true).toBool();
     QString strLogFileName = settings.value("LogFileName", m_strLogFileName).toString();
     settings.endGroup();
+  
 
-    if (bWriteLogFile && SysTools::FileExists(string(strLogFileName.toAscii()))) {
-      if (QMessageBox::Yes == QMessageBox::question(this, "Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to submit the logfile?", QMessageBox::Yes, QMessageBox::No)) {
-        ReportABug(string(strLogFileName.toAscii()));
-        remove(strLogFileName.toAscii());
-      }
-    } else {
-      if (!bWriteLogFile) {
-        if (QMessageBox::Yes == QMessageBox::question(this, "Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to enable debugging?", QMessageBox::Yes, QMessageBox::No)) {
-          settings.setValue("Performance/WriteLogFile", true);
-          settings.setValue("Performance/LogLevel", 2);
+    if (bShowCrashDialog) {
+      CrashDetDlg* d = NULL;
+      if (bWriteLogFile && SysTools::FileExists(string(strLogFileName.toAscii()))) {
+        d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to submit the logfile?", false, this);
+        if (d->exec() == QMessageBox::Yes) {
+          ReportABug(string(strLogFileName.toAscii()));
+          remove(strLogFileName.toAscii());
+        }
+      } else {
+        if (!bWriteLogFile) {
+          d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to enable debugging?", false, this);
+          if (d->exec() == QMessageBox::Yes) {
+            settings.setValue("Performance/WriteLogFile", true);
+            settings.setValue("Performance/LogLevel", 2);
+          }
         }
       }
+      iInstanceCounter = 0;
+      if (d) {
+        settings.setValue("Performance/ShowCrashDialog", !d->GetDontShowAgain());
+        delete d;
+      }
     }
-    iInstanceCounter = 0;
   }
 
   settings.setValue("InstanceCounter", iInstanceCounter+1);

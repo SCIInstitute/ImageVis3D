@@ -86,6 +86,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     unsigned int iActiveTS = settings.value("ActiveTS", m_iActiveTS).toUInt();
     unsigned int iInactiveTS = settings.value("InactiveTS", m_iInactiveTS).toUInt();
     bool bWriteLogFile = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
+    bool bShowCrashDialog = settings.value("ShowCrashDialog", true).toBool();
     QString strLogFileName = settings.value("LogFileName", m_strLogFileName).toString();
     unsigned int iLogLevel = settings.value("LogLevel", m_iLogLevel).toUInt();
     settings.endGroup();
@@ -131,7 +132,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     // hand data to form
     settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU,
                           bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS,
-                          bWriteLogFile, string(strLogFileName.toAscii()), iLogLevel,
+                          bWriteLogFile, bShowCrashDialog, string(strLogFileName.toAscii()), iLogLevel,
                           bShowVersionInTitle,
                           bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
                           bCheckForUpdatesOnStartUp, bCheckForDevBuilds, bShowWelcomeScreen,
@@ -154,6 +155,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("ActiveTS", settingsDlg.GetActiveTS());
       settings.setValue("InactiveTS", settingsDlg.GetInactiveTS());
       settings.setValue("WriteLogFile", settingsDlg.GetWriteLogFile());
+      settings.setValue("ShowCrashDialog", settingsDlg.GetShowCrashDialog());      
       settings.setValue("LogFileName", settingsDlg.GetLogFileName().c_str());
       settings.setValue("LogLevel", settingsDlg.GetLogLevel());
       settings.endGroup();

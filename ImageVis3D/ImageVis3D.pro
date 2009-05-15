@@ -45,6 +45,7 @@ HEADERS += StdDefines.h \
            UI/BugRepDlg.h \
            UI/LODDlg.h \
            UI/MergeDlg.h \
+           UI/CrashDetDlg.h \
            DebugOut/QTOut.h \
            DebugOut/QTLabelOut.h \
            IO/DialogConverter.h
@@ -56,6 +57,7 @@ FORMS += UI/UI/BrowseData.ui \
          UI/UI/RAWDialog.ui \
          UI/UI/FTPDialog.ui \
          UI/UI/Welcome.ui \
+         UI/UI/CrashDetDlg.ui \
          UI/UI/About.ui \
          UI/UI/URLDlg.ui \
          UI/UI/LODDlg.ui \
@@ -94,6 +96,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/RAWDialog.cpp \
            UI/MIPRotDialog.cpp \           
            UI/MergeDlg.cpp \
+           UI/CrashDetDlg.cpp \
            DebugOut/QTOut.cpp \
            DebugOut/QTLabelOut.cpp \
            IO/DialogConverter.cpp \
