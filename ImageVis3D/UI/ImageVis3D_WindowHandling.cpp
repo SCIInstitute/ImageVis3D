@@ -194,6 +194,10 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   connect(verticalSlider_1DTransHistScale, SIGNAL(valueChanged(int)),
     m_1DTransferFunction, SLOT(SetHistogramScale(int)));
 
+  // These values need to be different than the initial values set via Qt's
+  // `designer'.  It ensures that setValue generates a `change' event, which in
+  // turn makes sure the initial rendering of the TF histograms match what the
+  // value on the slider is.
   verticalSlider_2DTransHistScale->setValue(1500);
   verticalSlider_1DTransHistScale->setValue(500);
 
