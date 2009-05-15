@@ -58,10 +58,10 @@ void MainWindow::SetRenderProgress(unsigned int iLODCount, unsigned int iCurrent
     msg = msg + " (%p%)";
     progressBar_Frame->setFormat(msg);
 #endif
-    progressBar_Frame->setValue((unsigned int)(iCurrentCount * 100.0f / iLODCount));
+    progressBar_Frame->setValue((unsigned int)((float(iCurrentCount) - 1.0f + float(iWorkingBrick)/float(iBrickCount)) * 100.0f / float(iLODCount)));
     progressBar_Frame->repaint();
 
-    msg = tr("Brick %1/%2").arg(iWorkingBrick).arg(iBrickCount);
+    msg = tr("Brick %1/%2 of LOD %3").arg(iWorkingBrick).arg(iBrickCount).arg(iCurrentCount);
 #ifdef TUVOK_OS_APPLE
     label_BrickProgress->setText(msg);
     label_BrickProgress->repaint();
