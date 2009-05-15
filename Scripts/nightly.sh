@@ -31,10 +31,10 @@ fi
 # use qmake to generate makefiles, potentially in debug mode.
 D_TUVOK="-DTUVOK_SVN_VERSION=${R_TUVOK}"
 D_IV3D="-DIV3D_SVN_VERSION=${R_IMAGEVIS3D}"
-CF="-fno-strict-aliasing ${D_TUVOK} ${D_IV3D}"
+CF="-fno-strict-aliasing ${D_TUVOK} ${D_IV3D} -U_DEBUG -DNDEBUG"
 CFG="release"
 if test "x$1" = "x-debug"; then
-    CF="${CF} -Wextra -D_GLIBCXX_DEBUG -g"
+    CF="${CF} -Wextra -D_GLIBCXX_DEBUG -D_DEBUG -UNDEBUG -g"
     CFG="debug"
 fi
 ${qmake} \
