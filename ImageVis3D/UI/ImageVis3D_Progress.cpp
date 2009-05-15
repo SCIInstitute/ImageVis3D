@@ -52,13 +52,17 @@ void MainWindow::SetRenderProgress(unsigned int iLODCount, unsigned int iCurrent
 
     QString msg = tr("LOD %1/%2").arg(iCurrentCount).arg(iLODCount);
     label_LODProgress->setText(msg);
+    msg = msg + " (%p%)";
     progressBar_Frame->setValue((unsigned int)(iCurrentCount * 100.0f / iLODCount));
+    progressBar_Frame->setFormat(msg);
     label_LODProgress->repaint();
     progressBar_Frame->repaint();
 
     msg = tr("Brick %1/%2").arg(iWorkingBrick).arg(iBrickCount);
     label_BrickProgress->setText(msg);
+    msg = msg + " (%p%)";
     progressBar_Level->setValue((unsigned int)(iWorkingBrick * 100.0f / iBrickCount));
+    progressBar_Level->setFormat(msg);
     label_BrickProgress->repaint();
     progressBar_Level->repaint();
 
