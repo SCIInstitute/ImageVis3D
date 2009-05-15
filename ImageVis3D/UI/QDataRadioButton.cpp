@@ -37,6 +37,8 @@
 
 #include "QDataRadioButton.h"
 #include <QtGui/QMouseEvent>
+#include "../Tuvok/IO/TuvokJPEG.h"
+#include "../Tuvok/IO/DICOM/DICOMParser.h"
 
 QDataRadioButton::QDataRadioButton(FileStackInfo* stack, QWidget *parent) :
   QRadioButton(parent),
@@ -84,44 +86,47 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
   QIcon icon;
 
   void* pData = NULL;
-  m_stackInfo.m_Elements[i]->GetData(&pData);
   if (m_stackInfo.m_bIsJPEGEncoded) {
-    unsigned int iLength = m_stackInfo.m_Elements[i]->GetDataSize();
-    QImage image;
-    image.loadFromData((uchar*)pData, iLength);
-    icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::Off);
+    tuvok::JPEG jpg(m_stackInfo.m_Elements[i]->m_strFileName,
+                    dynamic_cast<SimpleDICOMFileInfo*>
+                      (m_stackInfo.m_Elements[i])->GetOffsetToData());
+    const char *jpg_data = jpg.data();
+    pData = new char[m_stackInfo.m_Elements[i]->GetDataSize()];
+    std::copy(jpg_data, jpg_data + jpg.size(), (char*)pData);
   } else {
-    QImage image(m_stackInfo.m_ivSize.x, m_stackInfo.m_ivSize.y, QImage::Format_RGB32);
-
-    if (m_stackInfo.m_iComponentCount == 1) {
-      switch (m_stackInfo.m_iAllocated) {
-        case 8  :{
-              unsigned int i = 0;
-              unsigned char* pCharData = (unsigned char*)pData;
-              for (int y = 0;y<image.height();y++)
-                for (int x = 0;x<image.width();x++) {
-                  unsigned char value = (unsigned char)(std::min(255.0f,m_fScale*pCharData[i]));
-                  image.setPixel(x,y, qRgb(value,value,value));
-                  i++;
-                }
-               } break;
-        case 16 : {
-              unsigned int i = 0;
-              unsigned short* pShortData = (unsigned short*)pData;
-              for (int y = 0;y<image.height();y++)
-                for (int x = 0;x<image.width();x++) {
-                  unsigned char value = (unsigned char)(std::min(255.0f,255.0f*m_fScale*float(pShortData[i])/float((2<<m_stackInfo.m_iStored))));
-                  image.setPixel(x,y, qRgb(value,value,value));
-                  i++;
-                }
-               } break;
-        default  : break; /// \todo handle other bitwith data
-      }
-    } else {
-      /// \todo handle color data
-    }
-    icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::Off);
+    m_stackInfo.m_Elements[i]->GetData(&pData);
   }
+  QImage image(m_stackInfo.m_ivSize.x, m_stackInfo.m_ivSize.y, QImage::Format_RGB32);
+
+  if (m_stackInfo.m_iComponentCount == 1) {
+    switch (m_stackInfo.m_iAllocated) {
+      case 8  :{
+            unsigned int i = 0;
+            unsigned char* pCharData = (unsigned char*)pData;
+            for (int y = 0;y<image.height();y++)
+              for (int x = 0;x<image.width();x++) {
+                unsigned char value = (unsigned char)(std::min(255.0f,m_fScale*pCharData[i]));
+                image.setPixel(x,y, qRgb(value,value,value));
+                i++;
+              }
+             } break;
+      case 16 : {
+            unsigned int i = 0;
+            unsigned short* pShortData = (unsigned short*)pData;
+            for (int y = 0;y<image.height();y++)
+              for (int x = 0;x<image.width();x++) {
+                unsigned char value = (unsigned char)(std::min(255.0f,255.0f*m_fScale*float(pShortData[i])/float((2<<m_stackInfo.m_iStored))));
+                image.setPixel(x,y, qRgb(value,value,value));
+                i++;
+              }
+             } break;
+      default  : break; /// \todo handle other bitwith data
+    }
+  } else {
+    /// \todo handle color data
+  }
+  icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::Off);
+
   delete [] (char*)pData;
   setIcon(icon);
   update();
