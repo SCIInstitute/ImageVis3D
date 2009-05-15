@@ -51,19 +51,26 @@ void MainWindow::SetRenderProgress(unsigned int iLODCount, unsigned int iCurrent
     if (!groupBox_RenderProgress->isVisible()) groupBox_RenderProgress->setVisible(true);
 
     QString msg = tr("LOD %1/%2").arg(iCurrentCount).arg(iLODCount);
+#ifdef TUVOK_OS_APPLE
     label_LODProgress->setText(msg);
-    msg = msg + " (%p%)";
-    progressBar_Frame->setValue((unsigned int)(iCurrentCount * 100.0f / iLODCount));
-    progressBar_Frame->setFormat(msg);
     label_LODProgress->repaint();
+#else
+    msg = msg + " (%p%)";
+    progressBar_Frame->setFormat(msg);
+#endif
+    progressBar_Frame->setValue((unsigned int)(iCurrentCount * 100.0f / iLODCount));
     progressBar_Frame->repaint();
 
     msg = tr("Brick %1/%2").arg(iWorkingBrick).arg(iBrickCount);
+#ifdef TUVOK_OS_APPLE
     label_BrickProgress->setText(msg);
-    msg = msg + " (%p%)";
-    progressBar_Level->setValue((unsigned int)(iWorkingBrick * 100.0f / iBrickCount));
-    progressBar_Level->setFormat(msg);
     label_BrickProgress->repaint();
+#else
+    msg = msg + " (%p%)";
+    progressBar_Level->setFormat(msg);
+#endif
+
+    progressBar_Level->setValue((unsigned int)(iWorkingBrick * 100.0f / iBrickCount));
     progressBar_Level->repaint();
 
 #ifdef TUVOK_OS_APPLE
