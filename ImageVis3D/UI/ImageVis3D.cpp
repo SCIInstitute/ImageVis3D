@@ -203,14 +203,14 @@ void MainWindow::SetAndCheckRunningFlag() {
       CrashDetDlg* d = NULL;
       if (bWriteLogFile && SysTools::FileExists(string(strLogFileName.toAscii()))) {
         d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to submit the logfile?", false, this);
-        if (d->exec() == QMessageBox::Yes) {
+        if (d->exec() == QDialog::Accepted) {
           ReportABug(string(strLogFileName.toAscii()));
           remove(strLogFileName.toAscii());
         }
       } else {
         if (!bWriteLogFile) {
           d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to enable debugging?", false, this);
-          if (d->exec() == QMessageBox::Yes) {
+          if (d->exec() == QDialog::Accepted) {
             settings.setValue("Performance/WriteLogFile", true);
             settings.setValue("Performance/LogLevel", 2);
           }
