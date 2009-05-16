@@ -459,7 +459,14 @@ void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagat
   m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
 
   if(GetRenderer()->ClipPlaneLocked()) {
-    SetClipTranslationDelta(trans, bPropagate);
+    // We can't use SetClipTranslationDelta, because it forces the clip plane
+    // to stay locked along its own normal.  We're not necessarily translating
+    // along the clip's normal when doing a regular translation (in fact, it's
+    // almost inconceivable that we would be), so we need to do the translation
+    // ourself.
+    FLOATMATRIX4 translation;
+    translation.Translation(trans.x, -trans.y, trans.z);
+    SetClipPlane(m_ClipPlane * translation);
   }
 
   if (bPropagate){
@@ -528,8 +535,17 @@ void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
   FLOATVECTOR3 pt = m_PlaneAtClick.Point();
   FLOATMATRIX4 from_pt_to_0, from_0_to_pt;
 
-  from_pt_to_0.Translation(-pt.x,-pt.y,-pt.z);
-  from_0_to_pt.Translation(pt.x,pt.y,pt.z);
+  // We want to translate the plane to the *dataset's* origin before rotating,
+  // not the origin of the entire 3D domain!  The difference is particularly
+  // relevant when the clip plane is outside the dataset's domain: the `center'
+  // of the plane (*cough*) should rotate about the dataset, not about the
+  // plane itself.
+  from_pt_to_0.Translation(-m_mAccumulatedTranslation.m41,
+                           -m_mAccumulatedTranslation.m42,
+                           -m_mAccumulatedTranslation.m43);
+  from_0_to_pt.Translation(m_mAccumulatedTranslation.m41,
+                           m_mAccumulatedTranslation.m42,
+                           m_mAccumulatedTranslation.m43);
 
   ExtendedPlane rotated = m_PlaneAtClick;
   rotated.Transform(from_pt_to_0 * m_mCurrentClipRotation * from_0_to_pt);
@@ -548,13 +564,24 @@ void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
   }
 }
 
-// Translates the clip plane by the given vector.
+// Translates the clip plane by the given vector, projected along the clip
+// plane's normal.
 void RenderWindow::SetClipTranslationDelta(const FLOATVECTOR3 &trans,
                                            bool bPropagate)
 {
   FLOATMATRIX4 translation;
-  translation.Translation(trans.x, -trans.y, trans.z);
-  SetClipPlane(m_ClipPlane * translation);
+
+  // Get the scalar projection of the user's translation along the clip plane's
+  // normal.
+  float sproj = trans ^ m_ClipPlane.Plane().xyz();
+  // The actual translation is along the clip's normal, weighted by the user's
+  // translation.
+  FLOATVECTOR3 tr = sproj * m_ClipPlane.Plane().xyz();
+  translation.Translation(tr.x, tr.y, tr.z);
+
+  ExtendedPlane translated = m_ClipPlane;
+  translated.Transform(translation);
+  SetClipPlane(translated);
 
   if (bPropagate) {
     for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
