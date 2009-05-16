@@ -1884,6 +1884,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="toolTip" >
+        <string>1D Histogram.  The X axis represents your data; the Y axis details how many times that data value occurs in the dataset.</string>
+       </property>
        <property name="frameShape" >
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -2616,6 +2619,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="toolTip" >
+        <string>2D histogram.  The X axis represents your data; Y axis represents the magnitude of the gradient in your data; the opacity represents how often that combination appears in your data.</string>
+       </property>
        <property name="frameShape" >
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -2953,7 +2959,7 @@
               <item>
                <widget class="QRadioButton" name="radioButton_UpdateOnRelease" >
                 <property name="toolTip" >
-                 <string>Changes to the transfer function affect the volume only on mouse release. Select this option if the continous mode is to slow in your machine.</string>
+                 <string>Changes to the transfer function affect the volume only on mouse release. Select this option if the continous mode is too slow in your machine.</string>
                 </property>
                 <property name="statusTip" >
                  <string>Changes to the transfer function affect the volume only on mouse release. Select this option if the continous mode is to slow in your machine.</string>
@@ -3015,6 +3021,9 @@
            </property>
            <item>
             <widget class="QCheckBox" name="checkBox_Lighting" >
+             <property name="toolTip" >
+              <string>Compute per-voxel lighting</string>
+             </property>
              <property name="text" >
               <string>Lighting</string>
              </property>
@@ -3022,6 +3031,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_GBBox" >
+             <property name="toolTip" >
+              <string>Display the bounding box of the dataset</string>
+             </property>
              <property name="text" >
               <string>Global Bounding Box</string>
              </property>
@@ -3029,6 +3041,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_LBBox" >
+             <property name="toolTip" >
+              <string>Display per-brick bounding boxes.</string>
+             </property>
              <property name="text" >
               <string>Local Bounding Box</string>
              </property>
@@ -3055,6 +3070,9 @@
               </item>
               <item>
                <widget class="QSlider" name="horizontalSlider_Sampling" >
+                <property name="toolTip" >
+                 <string>Sampling rate.  Lower for increased performance.  Raise to generate high-quality images.</string>
+                </property>
                 <property name="minimum" >
                  <number>1</number>
                 </property>
@@ -3099,6 +3117,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_ClipShow" >
+             <property name="toolTip" >
+              <string>Display a widget detailing the location and orientation of the clip plane</string>
+             </property>
              <property name="text" >
               <string>Show</string>
              </property>
@@ -3106,8 +3127,14 @@
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_ClipLockObject" >
+             <property name="toolTip" >
+              <string>Rotate the clip plane when rotating the dataset.</string>
+             </property>
              <property name="text" >
               <string>Lock to Object</string>
+             </property>
+             <property name="checked" >
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -3249,6 +3276,9 @@
             <width>0</width>
             <height>18</height>
            </size>
+          </property>
+          <property name="toolTip" >
+           <string>Switch to the isosurface rendering mode.</string>
           </property>
           <property name="text" >
            <string>Use Isosurface Rendering</string>
@@ -3474,6 +3504,9 @@
                <height>19</height>
               </size>
              </property>
+             <property name="toolTip" >
+              <string>Radius of the ClearView lens</string>
+             </property>
              <property name="orientation" >
               <enum>Qt::Horizontal</enum>
              </property>
@@ -3493,6 +3526,9 @@
                <width>0</width>
                <height>19</height>
               </size>
+             </property>
+             <property name="toolTip" >
+              <string>Controls the amount of information retained in the context isosurface</string>
              </property>
              <property name="orientation" >
               <enum>Qt::Horizontal</enum>
