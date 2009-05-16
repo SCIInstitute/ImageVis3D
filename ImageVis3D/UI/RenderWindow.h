@@ -220,6 +220,10 @@ class RenderWindow
     ExtendedPlane     m_PlaneAtClick; ///< temp storage to maintain the clip
                                       /// plane state when the user
                                       /// left-clicked.
+    /// We implicitly lock the clip plane to the dataset when  it is disabled.
+    /// This saves the value at disabling time, so we can restore it when the
+    /// clip plane is re-enabled.
+    bool              m_SavedClipLocked;
 };
 
 #endif // RENDERWINDOW_H

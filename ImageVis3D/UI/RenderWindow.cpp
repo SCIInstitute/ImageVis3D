@@ -71,7 +71,8 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_viRightClickPos(0,0),
   m_viMousePos(0,0),
   m_bAbsoluteViewLock(true),
-  m_bCaptureMode(false)
+  m_bCaptureMode(false),
+  m_SavedClipLocked(true)
 {
   m_strID = "[%1] %2";
   m_strID = m_strID.arg(iCounter).arg(dataset);
@@ -723,9 +724,22 @@ void RenderWindow::SetClipPlaneEnabled(bool enable, bool bPropagate)
 {
   if(enable) {
     m_Renderer->EnableClipPlane();
+    // Restore the locking setting which was active when the clip plane was
+    // disabled.
+    SetClipPlaneRelativeLock(m_SavedClipLocked, bPropagate);
   } else {
+    // Disable the clip plane, and then implicitly lock it to the volume.  This
+    // means that the clip plane will appear `follow' the volume while it is
+    // disabled, which is a bit unintuitive in some sense.
+    // However, it might occur that interactions that happen while the clip
+    // plane is disabled could cause it to clip the entire volume when
+    // re-enabled, which is *very* confusing.  By keeping it locked while
+    // disabled, this is prevented, so it's the lesser of the two evils.
+    m_SavedClipLocked = m_Renderer->ClipPlaneLocked();
     m_Renderer->DisableClipPlane();
+    SetClipPlaneRelativeLock(true, bPropagate);
   }
+
   if(bPropagate) {
     for(std::vector<RenderWindow*>::iterator locks = m_vpLocks[1].begin();
         locks != m_vpLocks[1].end(); ++locks) {
