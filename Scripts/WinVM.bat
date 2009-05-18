@@ -181,11 +181,11 @@ xcopy ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WI
 del ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip
 
 if !BUILD32!==TRUE (
-  xcopy ..\Scripts\installer\ImageVis3D-1.0-32bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%-32bit-installer.exe /Y
+  echo f | xcopy ..\Scripts\installer\ImageVis3D-1.0-32bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%-32bit-installer.exe /Y
 )
 
 if !BUILD64!==TRUE (
-  xcopy ..\Scripts\installer\ImageVis3D-1.0-64bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%-64bit-installer.exe /Y
+  echo f | xcopy ..\Scripts\installer\ImageVis3D-1.0-64bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%-64bit-installer.exe /Y
 )
 
 
