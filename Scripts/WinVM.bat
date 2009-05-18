@@ -79,7 +79,8 @@ echo Build Environment completed >> result.txt
 echo on
 
 IF EXIST out64.txt del out64.txt
-devenv ImageVis3D.sln /rebuild "%CONFIG%|x64" /out out64.txt
+rem devenv ImageVis3D.sln /rebuild "%CONFIG%|x64" /out out64.txt
+msbuild ImageVis3D.sln /nologo /p:Configuration=%CONFIG%,Platform=x64 /t:rebuild /fileLogger  /fileLoggerParameters:LogFile=out64.txt 
 IF ERRORLEVEL 0 (
   set FAILED64=FALSE
 ) ELSE (
@@ -105,7 +106,8 @@ IF EXIST "CmdLineConverter\Build\x64\%CONFIG%\UVFConverter64.exe" (
 )
 
 IF EXIST out32.txt del out32.txt
-devenv ImageVis3D.sln /rebuild "%CONFIG%|win32" /out out32.txt
+rem devenv ImageVis3D.sln /rebuild "%CONFIG%|win32" /out out32.txt
+msbuild ImageVis3D.sln /nologo /p:Configuration=%CONFIG%,Platform=win32 /t:rebuild /fileLogger /fileLoggerParameters:LogFile=out32.txt 
 IF ERRORLEVEL 0 (
   set FAILED32=FALSE
 ) ELSE (
