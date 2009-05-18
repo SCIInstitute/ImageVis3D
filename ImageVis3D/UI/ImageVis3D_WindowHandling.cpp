@@ -256,10 +256,13 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
   connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
 
-  // hide progress labels on systems that support text on top of the actual progressbars
 #ifndef DETECTED_OS_APPLE
+    // hide progress labels on systems that support text on top of the actual progressbars
     frame_24->setVisible(false);
     frame_23->setVisible(false);
+
+    // hide edit menu as the preference item (the only item in edit right now) is magically moved on OS X to the program menu
+    menu_Edit->isVisible(false);
 #endif
 }
 
