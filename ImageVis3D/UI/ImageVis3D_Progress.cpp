@@ -52,8 +52,9 @@ void MainWindow::SetRenderProgress(unsigned int iLODCount, unsigned int iCurrent
 
     QString msg = tr("LOD %1/%2").arg(iCurrentCount).arg(iLODCount);
 #ifdef TUVOK_OS_APPLE
-    label_LODProgress->setText(msg);
-    label_LODProgress->repaint();
+    /// todo: label update has been removed until the delay-LOD issue on the mac is resolved
+    //label_LODProgress->setText(msg);
+    //label_LODProgress->repaint();
 #else
     msg = msg + " (%p%)";
     progressBar_Frame->setFormat(msg);
@@ -63,8 +64,9 @@ void MainWindow::SetRenderProgress(unsigned int iLODCount, unsigned int iCurrent
 
     msg = tr("Brick %1/%2 of LOD %3").arg(iWorkingBrick).arg(iBrickCount).arg(iCurrentCount);
 #ifdef TUVOK_OS_APPLE
-    label_BrickProgress->setText(msg);
-    label_BrickProgress->repaint();
+    /// todo: label update has been removed until the delay-LOD issue on the mac is resolved
+    //label_BrickProgress->setText(msg);
+    //label_BrickProgress->repaint();
 #else
     msg = msg + " (%p%)";
     progressBar_Level->setFormat(msg);
