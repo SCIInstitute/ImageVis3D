@@ -90,6 +90,7 @@ time /t  >> result.txt
 IF EXIST "Build\x64\%CONFIG%\ImageVis3D-64.exe" (
   set BUILD64=TRUE
   echo ImageVis 64bit build completed >> result.txt
+  iscc Scripts\installer\64.iss
 ) ELSE (
   set BUILD64=FALSE
   echo ImageVis 64bit build failed >> result.txt
@@ -115,6 +116,7 @@ time /t  >> result.txt
 IF EXIST "Build\Win32\%CONFIG%\ImageVis3D-32.exe" (
   set BUILD32=TRUE
   echo ImageVis 32bit build completed >> result.txt
+  iscc Scripts\installer\32.iss
 ) ELSE (
   set BUILD32=FALSE
   echo ImageVis 32bit build failed >> result.txt
@@ -177,6 +179,15 @@ del . /F /S /Q
 
 xcopy ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WIN /Y
 del ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip
+
+if !BUILD32!==TRUE (
+  xcopy ..\Scripts\installer\ImageVis3D-1.0-32bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%-32bit-installer.exe /Y
+)
+
+if !BUILD64!==TRUE (
+  xcopy ..\Scripts\installer\ImageVis3D-1.0-64bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%-64bit-installer.exe /Y
+)
+
 
 IF EXIST ..\UVFConverter_Win_r%REVSTR%.zip (
   time /t  >> ..\result.txt

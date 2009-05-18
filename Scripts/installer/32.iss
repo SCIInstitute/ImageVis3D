@@ -67,7 +67,7 @@ Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Micros
 
 
 ; ImageVis3D
-Source: "build\Win32\Release\ImageVis3D-32.exe"; DestDir: "{app}"; Flags: ignoreversion replacesameversion
+Source: "build\Win32\Release (with DirectX)\ImageVis3D-32.exe"; DestDir: "{app}"; Flags: ignoreversion replacesameversion
 Source: "Tuvok\Shaders\*"; DestDir: "{app}\Shaders"; Excludes: ".svn"; Flags: ignoreversion replacesameversion
 
 [Icons]
