@@ -639,6 +639,11 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
     ToggleClearViewControls(iRange);
     UpdateLockView();
+
+    /// todo: once the clip planes work on apple with the ray-caster, remove this
+#ifdef TUVOK_OS_APPLE
+    groupBox_ClipPlane->setVisible(m_pActiveRenderWin->GetRenderer()->GetRendererType() != AbstrRenderer::RT_RC);
+#endif
   }
 }
 
