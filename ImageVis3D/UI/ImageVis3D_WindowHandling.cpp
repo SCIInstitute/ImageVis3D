@@ -640,7 +640,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     ToggleClearViewControls(iRange);
     UpdateLockView();
 
-    /// todo: once the clip planes work on apple with the ray-caster, remove this
+    /// todo: once the clip planes work on apple with the ray-caster, remove this (also see GLRaycaster.cpp)
 #ifdef DETECTED_OS_APPLE
     groupBox_ClipPlane->setVisible(m_pActiveRenderWin->GetRenderer()->GetRendererType() != AbstrRenderer::RT_RC);
 #endif
