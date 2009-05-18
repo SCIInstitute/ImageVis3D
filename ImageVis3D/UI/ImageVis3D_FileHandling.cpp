@@ -67,7 +67,7 @@ using namespace tuvok;
 
 void MainWindow::LoadDataset() {
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;
@@ -97,7 +97,7 @@ void MainWindow::LoadDataset() {
 
 QString MainWindow::GetConvFilename() {
   QFileDialog::Options options;
-  #ifdef TUVOK_OS_APPLE
+  #ifdef DETECTED_OS_APPLE
     options |= QFileDialog::DontUseNativeDialog;
   #endif
   QString selectedFilter;
@@ -211,7 +211,7 @@ void MainWindow::LoadDirectory() {
       if (browseDataDialog.exec() == QDialog::Accepted) {
 
         QFileDialog::Options options;
-      #ifdef TUVOK_OS_APPLE
+      #ifdef DETECTED_OS_APPLE
         options |= QFileDialog::DontUseNativeDialog;
       #endif
         QString selectedFilter;
@@ -267,7 +267,7 @@ bool MainWindow::ExportDataset(UINT32 iLODLevel, std::string targetFileName) {
 void MainWindow::ExportDataset() {
   if (!m_pActiveRenderWin) return;
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;
@@ -357,7 +357,7 @@ bool MainWindow::ExportMesh(UINT32 iLODLevel, string targetFileName) {
 
 void MainWindow::ExportMesh() {
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;
@@ -423,7 +423,7 @@ void MainWindow::MergeDatasets() {
 
 
     QFileDialog::Options options;
-  #ifdef TUVOK_OS_APPLE
+  #ifdef DETECTED_OS_APPLE
     options |= QFileDialog::DontUseNativeDialog;
   #endif
     QString selectedFilter;

@@ -79,7 +79,7 @@ void QDataRadioButton::SetBrightness(float fScale) {
 
 
 
-#ifdef TUVOK_OS_WINDOWS
+#ifdef DETECTED_OS_WINDOWS
   #pragma warning(disable:4996)
 #endif
 
@@ -138,7 +138,7 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
   update();
 }
 
-#ifdef TUVOK_OS_WINDOWS
+#ifdef DETECTED_OS_WINDOWS
   #pragma warning(default:4996)
 #endif
 

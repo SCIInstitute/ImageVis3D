@@ -67,7 +67,7 @@ bool MainWindow::LoadGeometry() {
   QString strLastDir = settings.value("Folders/LoadGeometry", ".").toString();
 
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;
@@ -87,7 +87,7 @@ bool MainWindow::SaveGeometry() {
   QString strLastDir = settings.value("Folders/SaveGeometry", ".").toString();
 
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;
@@ -257,7 +257,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
 
   // hide progress labels on systems that support text on top of the actual progressbars
-#ifndef TUVOK_OS_APPLE
+#ifndef DETECTED_OS_APPLE
     frame_24->setVisible(false);
     frame_23->setVisible(false);
 #endif
@@ -330,7 +330,7 @@ bool MainWindow::LoadWorkspace() {
   QString strLastDir = settings.value("Folders/LoadWorkspace", ".").toString();
 
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;
@@ -350,7 +350,7 @@ bool MainWindow::SaveWorkspace() {
   QString strLastDir = settings.value("Folders/SaveWorkspace", ".").toString();
 
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;
@@ -545,7 +545,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   if(m_pActiveRenderWin != renderWin) {
     m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","Calling RenderWindowActive");
     QCoreApplication::processEvents();
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
     // HACK: For some reason on the Mac we need to set the active sub window,
     // re-process events, and then call our activation function ... doesn't
     // seem to happen automagically.
@@ -641,7 +641,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     UpdateLockView();
 
     /// todo: once the clip planes work on apple with the ray-caster, remove this
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
     groupBox_ClipPlane->setVisible(m_pActiveRenderWin->GetRenderer()->GetRendererType() != AbstrRenderer::RT_RC);
 #endif
   }

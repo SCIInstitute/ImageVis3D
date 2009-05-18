@@ -79,7 +79,7 @@ void BrowseData::accept() {
 void BrowseData::SetBrightness(int iScale) {
   for (size_t i = 0;i < m_vRadioButtons.size();i++)
     m_vRadioButtons[i]->SetBrightness(float(iScale));
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   QCoreApplication::processEvents();
 #endif
 }

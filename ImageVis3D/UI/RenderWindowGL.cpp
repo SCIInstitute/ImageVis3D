@@ -167,7 +167,7 @@ void RenderWindowGL::InitializeRenderer()
 
 void RenderWindowGL::ForceRepaint() {
   repaint();
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   QCoreApplication::processEvents();
 #endif
 }

@@ -58,7 +58,7 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/Appendix.h"
-#ifdef TUVOK_OS_WINDOWS
+#ifdef DETECTED_OS_WINDOWS
 #	include <ShellAPI.h>
 #	include <windows.h>
 #endif
@@ -290,25 +290,25 @@ void MainWindow::FtpSuccess() {
 }
 
 void MainWindow::OnlineHelp() {
-#ifdef TUVOK_OS_WINDOWS
+#ifdef DETECTED_OS_WINDOWS
   ShellExecuteA(NULL, "open", HELP_URL, NULL,NULL,SW_SHOWDEFAULT);
 #endif
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   system("open "HELP_URL);
 #endif
-#ifdef TUVOK_OS_LINUX
+#ifdef DETECTED_OS_LINUX
   system("firefox "HELP_URL);  /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif
 }
 
 void MainWindow::OnlineVideoTut() {
-#ifdef TUVOK_OS_WINDOWS
+#ifdef DETECTED_OS_WINDOWS
   ShellExecuteA(NULL, "open", TUTORIAL_URL, NULL,NULL,SW_SHOWDEFAULT);
 #endif
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   system("open "TUTORIAL_URL);
 #endif
-#ifdef TUVOK_OS_LINUX
+#ifdef DETECTED_OS_LINUX
   system("firefox "TUTORIAL_URL); /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif
 }

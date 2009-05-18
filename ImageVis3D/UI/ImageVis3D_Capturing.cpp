@@ -275,7 +275,7 @@ void MainWindow::CaptureRotation() {
 
 void MainWindow::SetCaptureFilename() {
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;

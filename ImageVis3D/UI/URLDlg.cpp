@@ -37,7 +37,7 @@
 
 #include "URLDlg.h"
 
-#ifdef TUVOK_OS_WINDOWS
+#ifdef DETECTED_OS_WINDOWS
   #include <windows.h>
 #endif
 
@@ -62,14 +62,14 @@ void URLDlg::Download()
 {
   accept();
   
-#ifdef TUVOK_OS_WINDOWS
+#ifdef DETECTED_OS_WINDOWS
   ShellExecuteA(NULL, "open", m_strURL.toAscii(), NULL,NULL, SW_SHOWDEFAULT);
 #endif
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   m_strURL = tr("open %1").arg(m_strURL);
   system(m_strURL.toAscii());
 #endif
-#ifdef TUVOK_OS_LINUX  
+#ifdef DETECTED_OS_LINUX  
   m_strURL = tr("firefox %1").arg(m_strURL);
   system(m_strURL.toAscii()); /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif

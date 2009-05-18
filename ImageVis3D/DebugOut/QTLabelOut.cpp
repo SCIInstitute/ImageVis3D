@@ -78,7 +78,7 @@ void QTLabelOut::printf(const char* format, ...) const
 #endif
   m_label->setText ( buff );
   m_label->repaint();
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   QCoreApplication::processEvents();
 #endif
 }
@@ -96,7 +96,7 @@ void QTLabelOut::_printf(const char* format, ...) const
 #endif
   m_label->setText ( buff );
   m_label->repaint();
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   QCoreApplication::processEvents();
 #endif
 }

@@ -114,7 +114,7 @@ void MergeDlg::ChangedActiveDataset() {
 
 void MergeDlg::AddDataset() {
   QFileDialog::Options options;
-  #ifdef TUVOK_OS_APPLE
+  #ifdef DETECTED_OS_APPLE
     options |= QFileDialog::DontUseNativeDialog;
   #endif
   QString selectedFilter;

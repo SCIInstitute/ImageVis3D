@@ -483,7 +483,7 @@ void SettingsDlg::PickLogFile() {
   QString strLastDir = settings.value("Folders/LogFile", ".").toString();
 
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;
@@ -510,7 +510,7 @@ void SettingsDlg::SelectLogo() {
   QString strLastDir = settings.value("Folders/LogoLoad", ".").toString();
 
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
   QString selectedFilter;

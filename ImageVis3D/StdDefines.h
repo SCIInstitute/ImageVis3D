@@ -51,17 +51,17 @@
 #define UPDATE_VERSION_PATH "http://software.sci.utah.edu/devbuilds/imagevis3d/"
 #define UPDATE_NIGHTLY_PATH "http://software.sci.utah.edu/devbuilds/imagevis3d/"
 #define UPDATE_STABLE_PATH  "http://software.sci.utah.edu/SCIdownload.php?item=imagevis3d"
-#ifdef TUVOK_OS_WINDOWS
+#ifdef DETECTED_OS_WINDOWS
   #define UPDATE_FILE "ImageVis3D-Windows-Latest.zip"
   #define UPDATE_VERSION_FILE "Windows_Latest_Version.txt"
 #endif
 
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   #define UPDATE_FILE "ImageVis3D-OSX-Latest.zip"
   #define UPDATE_VERSION_FILE "OSX_Latest_Version.txt"
 #endif
 
-#ifdef TUVOK_OS_LINUX
+#ifdef DETECTED_OS_LINUX
   #define UPDATE_FILE "ImageVis3D-Linux-Latest.zip"
   #define UPDATE_VERSION_FILE "Linux_Latest_Version.txt"
 #endif

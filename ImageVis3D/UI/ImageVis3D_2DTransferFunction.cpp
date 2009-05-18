@@ -241,7 +241,7 @@ void MainWindow::Transfer2DLoad() {
 
   QString selectedFilter;
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
 
@@ -262,7 +262,7 @@ void MainWindow::Transfer2DSave() {
 
   QString selectedFilter;
   QFileDialog::Options options;
-#ifdef TUVOK_OS_APPLE
+#ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
 
