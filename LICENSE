@@ -23,3 +23,9 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
+
+
+Additionally, this program utilizes code from the Qt software package.
+Qt may be downloaded at: http://www.qtsoftware.com/.  You may also
+contact the ImageVis3D team on the `iv3d-users@sci.utah.edu' mailing
+list to request the Qt package in source form.
