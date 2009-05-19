@@ -54,7 +54,7 @@ mailtry scp *.dmg tfogal@shell.sci.utah.edu:${devb}
 # Now update the `latest version' symlink.
 fn_zip=$(nm_zipfile)
 fn_zip="${devb}/${fn_zip}"
-fn_latest="${devb}/ImageVis3D-OSX-Latest.zip"
+fn_latest="${devb}/ImageVis3D-OSX-10.4-Latest.zip"
 mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_latest}
 mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_latest%%zip}dmg
 mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_zip} ${fn_latest}
