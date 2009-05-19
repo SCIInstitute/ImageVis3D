@@ -104,13 +104,13 @@ function sci_arch
         opsys="osx"
     fi
     if test "x${arch}" = "xi386" -o "x${arch}" = "xi686" ; then
-        arch="32"
+        arch="32bit"
     elif test "x${arch}" = "xx86_64" ; then
-        arch="64"
+        arch="64bit"
     fi
     # else who knows .. just stick with the uname output, there's no convention
     # anymore anyway.
-    echo "${opsys}${arch}"
+    echo "${opsys}-${arch}"
 }
 
 # Gives the name of the appropriate tarball.
