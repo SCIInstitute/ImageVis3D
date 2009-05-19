@@ -12,6 +12,16 @@ LIBS              = -L../Tuvok/Build -lTuvok
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 
+# If this is a 10.5 machine, build for both x86 and x86_64.  Not
+# the best idea (there's no guarantee the machine will have a
+# 64bit compiler), but the best we can do via qmake.
+unix {
+    exists(/Developer/SDKs/MacOSX10.5.sdk/) {
+        CONFIG += x86 x86_64
+        CONFIG -= static
+    }
+}
+
 # Input
 HEADERS += DebugOut/HRConsoleOut.h
 
