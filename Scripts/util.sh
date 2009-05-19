@@ -102,6 +102,12 @@ function sci_arch
     local opsys=`uname -s`
     if test "x${opsys}" = "xDarwin" ; then
         opsys="osx"
+        # 10.4?  10.5?  This gets the system version.
+        local sysver=$(system_profiler                          \
+                         -detailLevel mini SPSoftwareDataType | \
+                       grep "System Version:" |                 \
+                       awk '{print $6}')
+        opsys="${opsys}${sysver}"
     fi
     if test "x${arch}" = "xi386" -o "x${arch}" = "xi686" ; then
         arch="32bit"
