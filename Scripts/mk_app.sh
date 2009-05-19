@@ -31,10 +31,10 @@ echo "Running Qt's mac deployment tool."
 ${macdeployqt} ${PREFIX}
 
 echo "Fixing the errors that Qt's mac deployment tool doesn't."
-echo "pwd: `pwd`"
 for pgn in libqgif.dylib libqjpeg.dylib libqtiff.dylib ; do
     install_name_tool -change \
         @executable_path/../Frameworks/${pgn} \
         @executable_path/../PlugIns/imageformats/libqgiff.dylib \
-        ${PREFIX}/Contents/MacOS/ImageVis3D
+        ${PREFIX}/Contents/MacOS/ImageVis3D || \
+        echo "install_name_tool failed for ${pgn}; probably fine."
 done
