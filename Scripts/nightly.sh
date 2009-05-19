@@ -24,9 +24,11 @@ fi
 # specific Qt.
 if test -n "${QT_BIN}" -a -x "${QT_BIN}/qmake" ; then
     qmake="${QT_BIN}/qmake"
+    macdeployqt="${QT_BIN}/macdeployqt"
     echo "QT_BIN set; using ${qmake} instead of `which qmake`"
 else
     qmake="qmake"
+    macdeployqt="macdeployqt"
 fi
 # use qmake to generate makefiles, potentially in debug mode.
 D_TUVOK="-DTUVOK_SVN_VERSION=${R_TUVOK}"
@@ -62,6 +64,7 @@ if test `uname` = "Darwin" ; then
         zip -9r ${zipfile} ImageVis3D.app
     popd &>/dev/null
     mv Build/${tarball} Build/${zipfile} .
+    ${macdeployqt} Build/ImageVis3D.app
     hdiutil create                    \
       -volname "ImageVis3D"           \
       -srcfolder Build/ImageVis3D.app \
