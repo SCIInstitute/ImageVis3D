@@ -260,7 +260,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     // hide progress labels on systems that support text on top of the actual progressbars
     frame_24->setVisible(false);
     frame_23->setVisible(false);
-
+#else
     // hide edit menu as the preference item (the only item in edit right now) is magically moved on OS X to the program menu
     menu_Edit->setVisible(false);
 #endif
