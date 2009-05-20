@@ -60,7 +60,7 @@ void MainWindow::CheckSettings() {
                              "As this is the first "
                              "time you've started ImageVis3D on this system, "
                              "ImageVis3D has been configured with the default "
-                             "parameters. You may want to check this inital "
+                             "parameters. You may want to verify this inital "
                              "configuration. In particular, the memory usage "
                              "settings need to be configured according to the "
                              "hardware configuration of the machine. Do you want "

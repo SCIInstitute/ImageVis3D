@@ -70,7 +70,7 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "translate", "x y z","translate the data by [x,y,z]");
   pScriptEngine->RegisterCommand(this, "capturesingle", "targetfile", "capture a single image into targetfile");
   pScriptEngine->RegisterCommand(this, "capturesequence", "targetfile", "capture a single image into targetfile_counter");
-  pScriptEngine->RegisterCommand(this, "stayopen", "", "do not close the app after the end of the script");
+  pScriptEngine->RegisterCommand(this, "stayopen", "", "do not close the application at the end of the script");
   pScriptEngine->RegisterCommand(this, "pack", "source ... target", "pack the files source0 to sourceN into a single file target");
   pScriptEngine->RegisterCommand(this, "upload", "source [target]", "upload the file 'source' to the debug server with the name 'target' (by default a unique filename is generated automatically)");
   pScriptEngine->RegisterCommand(this, "delete", "file", "delete the file 'file'");

@@ -223,12 +223,6 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
     // if the plane is locked to the volume, we'll end up translating the plane
     // regardless of whether or not control is held.
     if(event->modifiers() & Qt::ControlModifier) {
-      // this is a bit strange, and still not technically correct.  What we
-      // want is to translate the plane's Z in the plane's coordinate system,
-      // not our coordinate system, or so I thought.  It appears:
-      //    CurrentClipRotation * Translation(0,0,fZoom/10) *
-      //      inverse(CurrentClipRotation)
-      // Doesn't give us what we want either, so I might be off base there.
       SetClipTranslationDelta(FLOATVECTOR3(fZoom/10.f,fZoom/10.f,0.f),true);
     } else {
       SetTranslationDelta(FLOATVECTOR3(0,0,fZoom),true);

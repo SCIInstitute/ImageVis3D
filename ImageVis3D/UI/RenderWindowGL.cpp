@@ -178,5 +178,5 @@ void RenderWindowGL::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrec
 }
 
 void RenderWindowGL::ToggleFullscreen() {
-// TODO
+	/// \todo find out how to do this in QT, if fixed remember to remove the setVisible(false) in ImageVis3D
 }

@@ -1094,7 +1094,7 @@
         <enum>Qt::DefaultContextMenu</enum>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
@@ -2302,9 +2302,9 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QRadioButton" name="radioButton_spherGrad">
+                  <widget class="QRadioButton" name="radioButton_radGrad">
                    <property name="text">
-                    <string>Spherical</string>
+                    <string>Radial</string>
                    </property>
                   </widget>
                  </item>
@@ -2685,26 +2685,44 @@
         <string>Rescale</string>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_18">
+        <property name="margin">
+         <number>9</number>
+        </property>
         <item>
          <widget class="QDoubleSpinBox" name="doubleSpinBox_RescaleX">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="decimals">
-           <number>1</number>
+           <number>4</number>
           </property>
           <property name="minimum">
-           <double>1.000000000000000</double>
+           <double>0.001000000000000</double>
           </property>
           <property name="singleStep">
            <double>0.100000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.000000000000000</double>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="doubleSpinBox_RescaleY">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="decimals">
-           <number>1</number>
+           <number>4</number>
           </property>
           <property name="minimum">
-           <double>1.000000000000000</double>
+           <double>0.001000000000000</double>
           </property>
           <property name="singleStep">
            <double>0.100000000000000</double>
@@ -2713,14 +2731,23 @@
         </item>
         <item>
          <widget class="QDoubleSpinBox" name="doubleSpinBox_RescaleZ">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="decimals">
-           <number>1</number>
+           <number>4</number>
           </property>
           <property name="minimum">
-           <double>1.000000000000000</double>
+           <double>0.001000000000000</double>
           </property>
           <property name="singleStep">
            <double>0.100000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.000000000000000</double>
           </property>
          </widget>
         </item>
@@ -2730,7 +2757,7 @@
      <item>
       <widget class="QGroupBox" name="groupBox_9">
        <property name="title">
-        <string>Rendermode</string>
+        <string>Render Mode</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_15">
         <property name="spacing">
@@ -3215,7 +3242,7 @@
         <item>
          <widget class="QRadioButton" name="radioButton_RenderModeLock">
           <property name="text">
-           <string>Rendermode</string>
+           <string>Render Mode</string>
           </property>
          </widget>
         </item>
@@ -4335,7 +4362,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
   </action>
   <action name="actionMerge_Data_Sets">
    <property name="text">
-    <string>Merge Data Sets</string>
+    <string>Merge Datasets</string>
    </property>
   </action>
  </widget>
@@ -6075,7 +6102,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    </hints>
   </connection>
   <connection>
-   <sender>radioButton_spherGrad</sender>
+   <sender>radioButton_radGrad</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>Transfer2DToggleGradientType()</slot>

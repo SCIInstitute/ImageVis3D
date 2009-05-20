@@ -105,13 +105,13 @@ void MainWindow::Transfer2DSwatchesChanged() {
 void MainWindow::Transfer2DUpdateGradientType() {
   bool b = m_2DTransferFunction->GetActiveGradientType();
   if (b) 
-    radioButton_spherGrad->setChecked(true);
+    radioButton_radGrad->setChecked(true);
   else
     radioButton_linGrad->setChecked(true);
 }
 
 void MainWindow::Transfer2DToggleGradientType() {
-  m_2DTransferFunction->SetActiveGradientType(radioButton_spherGrad->isChecked());
+  m_2DTransferFunction->SetActiveGradientType(radioButton_radGrad->isChecked());
 }
 
 void MainWindow::Transfer2DUpdateSwatchButtons() {

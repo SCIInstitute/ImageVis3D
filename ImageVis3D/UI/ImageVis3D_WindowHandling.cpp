@@ -256,6 +256,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
   connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
 
+// DIRTY HACKS BEGIN
+
 #ifndef DETECTED_OS_APPLE
     // hide progress labels on systems that support text on top of the actual progressbars
     frame_24->setVisible(false);
@@ -264,6 +266,11 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     // hide edit menu as the preference item (the only item in edit right now) is magically moved on OS X to the program menu
     menu_Edit->setVisible(false);
 #endif
+
+	/// \todo remove this once we figured out how to do fullscreen 
+	actionGo_Fullscreen->setVisible(false);
+
+// DIRTY HACKS END
 }
 
 // ******************************************
@@ -272,7 +279,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
 void MainWindow::SetupWorkspaceMenu() {
 
-/// \todo Implement more functionality of the other workspaces
+/// \todo Implement the functionality of the other workspaces
 
 //  menu_Workspace->addAction(dockWidget_Tools->toggleViewAction());
 //  menu_Workspace->addAction(dockWidget_Filters->toggleViewAction());
@@ -670,9 +677,9 @@ void MainWindow::ToggleClearViewControls(int iRange) {
 void MainWindow::SetRescaleFactors() {
   if (!m_pActiveRenderWin) return;
   DOUBLEVECTOR3 vfRescaleFactors;
-  vfRescaleFactors.x = doubleSpinBox_RescaleX->value();
-  vfRescaleFactors.y = doubleSpinBox_RescaleY->value();
-  vfRescaleFactors.z = doubleSpinBox_RescaleZ->value();
+  vfRescaleFactors.x = std::max<float>(0.001f,doubleSpinBox_RescaleX->value());
+  vfRescaleFactors.y = std::max<float>(0.001f,doubleSpinBox_RescaleY->value());
+  vfRescaleFactors.z = std::max<float>(0.001f,doubleSpinBox_RescaleZ->value());
   m_pActiveRenderWin->GetRenderer()->SetRescaleFactors(vfRescaleFactors);
 }
 

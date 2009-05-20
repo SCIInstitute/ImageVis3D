@@ -59,7 +59,7 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
 
   if (bNoUserInteraction) return false;
 
-  if (QMessageBox::No == QMessageBox::question(NULL, "RAW Data Loader", "The file was not recognized by ImageVis3D's build in readers and cannot be converted automatically. Do you want to specify the data set parameters manually?", QMessageBox::Yes, QMessageBox::No)) {
+  if (QMessageBox::No == QMessageBox::question(NULL, "RAW Data Loader", "The file was not recognized by ImageVis3D's built-in readers and cannot be converted automatically. Do you want to specify the data set parameters manually?", QMessageBox::Yes, QMessageBox::No)) {
     return false;
   }
   
