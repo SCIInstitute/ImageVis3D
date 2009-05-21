@@ -30,6 +30,14 @@ fi
 echo "Running Qt's mac deployment tool."
 ${macdeployqt} ${PREFIX}
 
+echo "Copying ImageVis3D Manual into app.."
+pushd ${PREFIX}/Contents/Resources
+  rm -f ImageVis3D.pdf
+  gforge="https://gforge.sci.utah.edu/gf"
+  manual="${gforge}/download/docmanfileversion/1/109/ImageVis3D.pdf"
+  curl -kLO ${manual}
+popd
+
 echo "Fixing the errors that Qt's mac deployment tool doesn't."
 for pgn in libqgif.dylib libqjpeg.dylib libqtiff.dylib ; do
     install_name_tool -change \
