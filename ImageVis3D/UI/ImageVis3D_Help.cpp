@@ -37,10 +37,7 @@
 
 #include <cstdio>
 #include "../Tuvok/Basics/StdDefines.h"
-#ifdef DETECTED_OS_WINDOWS
-#	include <ShellAPI.h>
-#	include <windows.h>
-#endif
+
 #ifdef DETECTED_OS_LINUX
 # include <libgen.h>
 # include <unistd.h>
@@ -60,8 +57,14 @@
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QSettings>
+
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include "ImageVis3D.h"
+
+#ifdef DETECTED_OS_WINDOWS
+#	include <ShellAPI.h>
+#	include <windows.h>
+#endif
 
 #include "URLDlg.h"
 #include "AboutDlg.h"
@@ -71,6 +74,7 @@
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/Appendix.h"
 #include "../Tuvok/Controller/Controller.h"
+
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ImageVis3D"
 	ProjectGUID="{85742DE8-68C9-4140-A6A7-412CF789DECA}"
 	RootNamespace="test"
@@ -53,7 +53,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR32)\include&quot;"
+				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR32)\include&quot;;../Tuvok/3rdParty/zlib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -136,7 +136,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR64)\include&quot;"
+				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR64)\include&quot;;../Tuvok/3rdParty/zlib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -220,7 +220,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR32)\include&quot;"
+				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR32)\include&quot;;../Tuvok/3rdParty/zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -306,7 +306,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR64)\include&quot;"
+				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR64)\include&quot;;../Tuvok/3rdParty/zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -389,7 +389,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR32)\include&quot;"
+				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR32)\include&quot;;../Tuvok/3rdParty/zlib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;USE_DIRECTX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -473,7 +473,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR64)\include&quot;"
+				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR64)\include&quot;;../Tuvok/3rdParty/zlib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;USE_DIRECTX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -558,7 +558,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR32)\include&quot;"
+				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR32)\include&quot;;../Tuvok/3rdParty/zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USE_DIRECTX"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -645,7 +645,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR64)\include&quot;"
+				AdditionalIncludeDirectories="..\Tuvok;..\Tuvok\3rdParty\boost;..\Tuvok\3rdParty\GLEW;.;&quot;$(QTDIR64)\include&quot;;../Tuvok/3rdParty/zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USE_DIRECTX"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -703,7 +703,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Ressource Files"
+			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
@@ -1284,7 +1284,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -1294,7 +1294,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -1304,7 +1304,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -1314,7 +1314,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -1324,7 +1324,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -1334,7 +1334,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -1344,7 +1344,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
@@ -1354,7 +1354,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Performing moc on $(InputName).h"
-							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+							CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
