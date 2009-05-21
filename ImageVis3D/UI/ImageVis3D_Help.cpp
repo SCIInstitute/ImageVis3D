@@ -307,7 +307,8 @@ void MainWindow::OpenManual() {
   string manualOpenCall = "open " + SysTools::GetFromResourceOnMac(MANUAL_NAME);
   system(manualOpenCall.c_str());
 #elif defined(DETECTED_OS_LINUX)
-  system("firefox "MANUAL_NAME);  /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
+  /// @todo don't assume xpdf is installed.
+  system("xpdf " MANUAL_NAME);
 #endif
 }
 
