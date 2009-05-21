@@ -73,11 +73,13 @@ class WelcomeDialog : public QDialog, protected Ui_Welcome
     virtual void OpenFromFile();
     virtual void OpenFromDir();
     virtual void OpenMRU();
+    virtual void OpenManual();
 
   signals:
     void CheckUpdatesClicked();
     void OnlineVideoTutClicked();
     void OnlineHelpClicked();
+    void OpenManualClicked();
     void OpenFromFileClicked();
     void OpenFromFileClicked(std::string filename);
     void OpenFromDirClicked();

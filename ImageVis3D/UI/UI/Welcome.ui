@@ -1,122 +1,123 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>Welcome</class>
- <widget class="QDialog" name="Welcome" >
-  <property name="windowModality" >
+ <widget class="QDialog" name="Welcome">
+  <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
-  <property name="geometry" >
+  <property name="geometry">
    <rect>
     <x>0</x>
-    <y>0</y>
-    <width>602</width>
-    <height>503</height>
+    <y>13</y>
+    <width>582</width>
+    <height>477</height>
    </rect>
   </property>
-  <property name="sizePolicy" >
-   <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Welcome To ImageVis3D</string>
   </property>
-  <property name="locale" >
-   <locale country="UnitedStates" language="English" />
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
   </property>
-  <property name="sizeGripEnabled" >
+  <property name="sizeGripEnabled">
    <bool>false</bool>
   </property>
-  <property name="modal" >
+  <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label_logo" >
-     <property name="minimumSize" >
+    <widget class="QLabel" name="label_logo">
+     <property name="minimumSize">
       <size>
        <width>0</width>
        <height>150</height>
       </size>
      </property>
-     <property name="maximumSize" >
+     <property name="maximumSize">
       <size>
        <width>16777215</width>
        <height>150</height>
       </size>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>30</pointsize>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Welcome To ImageVis3D</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame" >
-     <property name="frameShape" >
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
-     <property name="frameShadow" >
+     <property name="frameShadow">
       <enum>QFrame::Plain</enum>
      </property>
-     <property name="lineWidth" >
+     <property name="lineWidth">
       <number>0</number>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout" >
-      <property name="margin" >
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="margin">
        <number>0</number>
       </property>
       <item>
-       <widget class="QGroupBox" name="groupBox_OpenFile" >
-        <property name="title" >
+       <widget class="QGroupBox" name="groupBox_OpenFile">
+        <property name="title">
          <string>Open a File</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_OpenFile" >
+        <layout class="QVBoxLayout" name="verticalLayout_OpenFile">
          <item>
-          <widget class="QPushButton" name="pushButton_OpenFromFile" >
-           <property name="minimumSize" >
+          <widget class="QPushButton" name="pushButton_OpenFromFile">
+           <property name="minimumSize">
             <size>
              <width>0</width>
              <height>23</height>
             </size>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Open Data Set from File</string>
            </property>
-           <property name="autoDefault" >
+           <property name="autoDefault">
             <bool>false</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_OpenFromDirectoy" >
-           <property name="minimumSize" >
+          <widget class="QPushButton" name="pushButton_OpenFromDirectoy">
+           <property name="minimumSize">
             <size>
              <width>0</width>
              <height>23</height>
             </size>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Open Data Set from a Directory</string>
            </property>
-           <property name="autoDefault" >
+           <property name="autoDefault">
             <bool>false</bool>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_2" >
-           <property name="orientation" >
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
              <height>180</height>
@@ -128,49 +129,56 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_2" >
-        <property name="title" >
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="title">
          <string>Get Help</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2" >
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QPushButton" name="pushButton_GotoOnlineHelp" >
-           <property name="minimumSize" >
+          <widget class="QPushButton" name="pushButton_manual">
+           <property name="text">
+            <string>Open Local Manual</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_GotoOnlineHelp">
+           <property name="minimumSize">
             <size>
              <width>0</width>
              <height>23</height>
             </size>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Goto Online Help</string>
            </property>
-           <property name="autoDefault" >
+           <property name="autoDefault">
             <bool>false</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_OnlineVideoTutorials" >
-           <property name="minimumSize" >
+          <widget class="QPushButton" name="pushButton_OnlineVideoTutorials">
+           <property name="minimumSize">
             <size>
              <width>0</width>
              <height>23</height>
             </size>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Goto Online Video Tutorials</string>
            </property>
-           <property name="autoDefault" >
+           <property name="autoDefault">
             <bool>false</bool>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer" >
-           <property name="orientation" >
+          <spacer name="verticalSpacer">
+           <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
              <height>40</height>
@@ -179,17 +187,17 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_CheckForNewVersion" >
-           <property name="minimumSize" >
+          <widget class="QPushButton" name="pushButton_CheckForNewVersion">
+           <property name="minimumSize">
             <size>
              <width>0</width>
              <height>23</height>
             </size>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Check for new Version</string>
            </property>
-           <property name="autoDefault" >
+           <property name="autoDefault">
             <bool>false</bool>
            </property>
           </widget>
@@ -201,33 +209,33 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame_2" >
-     <property name="frameShape" >
+    <widget class="QFrame" name="frame_2">
+     <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
-     <property name="frameShadow" >
+     <property name="frameShadow">
       <enum>QFrame::Plain</enum>
      </property>
-     <property name="lineWidth" >
+     <property name="lineWidth">
       <number>0</number>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" >
-      <property name="margin" >
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="margin">
        <number>0</number>
       </property>
       <item>
-       <widget class="QCheckBox" name="checkBox_ShowAtStartup" >
-        <property name="text" >
+       <widget class="QCheckBox" name="checkBox_ShowAtStartup">
+        <property name="text">
          <string>Do not show this welcome screen at startup (can also be changed in the preferences)</string>
         </property>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer" >
-        <property name="orientation" >
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
           <height>20</height>
@@ -236,20 +244,20 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_Close" >
-        <property name="minimumSize" >
+       <widget class="QPushButton" name="pushButton_Close">
+        <property name="minimumSize">
          <size>
           <width>0</width>
           <height>23</height>
          </size>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Close</string>
         </property>
-        <property name="autoDefault" >
+        <property name="autoDefault">
          <bool>false</bool>
         </property>
-        <property name="default" >
+        <property name="default">
          <bool>true</bool>
         </property>
        </widget>
@@ -267,13 +275,13 @@
    <receiver>Welcome</receiver>
    <slot>CheckUpdates()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>502</x>
      <y>418</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>635</x>
-     <y>387</y>
+    <hint type="destinationlabel">
+     <x>581</x>
+     <y>400</y>
     </hint>
    </hints>
   </connection>
@@ -283,13 +291,13 @@
    <receiver>Welcome</receiver>
    <slot>OnlineVideoTut()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>458</x>
-     <y>232</y>
+    <hint type="sourcelabel">
+     <x>562</x>
+     <y>284</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>635</x>
-     <y>192</y>
+    <hint type="destinationlabel">
+     <x>581</x>
+     <y>205</y>
     </hint>
    </hints>
   </connection>
@@ -299,13 +307,13 @@
    <receiver>Welcome</receiver>
    <slot>OnlineHelp()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>516</x>
-     <y>193</y>
+    <hint type="sourcelabel">
+     <x>562</x>
+     <y>255</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>634</x>
-     <y>68</y>
+    <hint type="destinationlabel">
+     <x>581</x>
+     <y>81</y>
     </hint>
    </hints>
   </connection>
@@ -315,13 +323,13 @@
    <receiver>Welcome</receiver>
    <slot>OpenFromDir()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>213</x>
-     <y>226</y>
+    <hint type="sourcelabel">
+     <x>232</x>
+     <y>253</y>
     </hint>
-    <hint type="destinationlabel" >
-     <x>635</x>
-     <y>223</y>
+    <hint type="destinationlabel">
+     <x>581</x>
+     <y>236</y>
     </hint>
    </hints>
   </connection>
@@ -331,11 +339,11 @@
    <receiver>Welcome</receiver>
    <slot>OpenFromFile()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>208</x>
-     <y>197</y>
+    <hint type="sourcelabel">
+     <x>227</x>
+     <y>224</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>379</x>
      <y>442</y>
     </hint>
@@ -347,27 +355,44 @@
    <receiver>Welcome</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>573</x>
-     <y>454</y>
+    <hint type="sourcelabel">
+     <x>572</x>
+     <y>480</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>465</x>
      <y>475</y>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_manual</sender>
+   <signal>clicked()</signal>
+   <receiver>Welcome</receiver>
+   <slot>OpenManual()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>495</x>
+     <y>206</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>586</x>
+     <y>156</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>CheckUpdates()</slot>
-  <slot>OnlineHelp()</slot>
-  <slot>OnlineVideoTut()</slot>
-  <slot>OpenFromFile()</slot>
-  <slot>OpenFromDir()</slot>
   <signal>CheckUpdatesClicked()</signal>
   <signal>OnlineHelpClicked()</signal>
   <signal>OnlineVideoTutClicked()</signal>
   <signal>OpenFromFileClicked()</signal>
   <signal>OpenFromDirClicked()</signal>
+  <slot>CheckUpdates()</slot>
+  <slot>OnlineHelp()</slot>
+  <slot>OnlineVideoTut()</slot>
+  <slot>OpenFromFile()</slot>
+  <slot>OpenFromDir()</slot>
+  <slot>OpenManual()</slot>
  </slots>
 </ui>

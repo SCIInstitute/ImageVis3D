@@ -62,8 +62,12 @@ void WelcomeDialog::OnlineVideoTut()
 
 void WelcomeDialog::OnlineHelp()
 {
-
   emit OnlineHelpClicked();
+}
+
+void WelcomeDialog::OpenManual()
+{
+  emit OpenManualClicked();
 }
 
 void WelcomeDialog::OpenFromFile()

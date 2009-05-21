@@ -64,7 +64,7 @@ void MainWindow::UpdateLockView() {
     QWidget* w = mdiArea->subWindowList().at(i)->widget();
     RenderWindow* renderWin = WidgetToRenderWin(w);
 
-    if (renderWin != m_pActiveRenderWin) {
+    if (renderWin != NULL && renderWin != m_pActiveRenderWin) {
       listWidget_Lock->addItem(renderWin->GetWindowID());
 
       // check if lock for this item is allready set

@@ -291,13 +291,22 @@ void MainWindow::FtpSuccess() {
 
 void MainWindow::OnlineHelp() {
 #ifdef DETECTED_OS_WINDOWS
-  ShellExecuteA(NULL, "open", HELP_URL, NULL,NULL,SW_SHOWDEFAULT);
+  ShellExecuteA(NULL, "open", HELP_URL , NULL,NULL,SW_SHOWDEFAULT);
+#elif DETECTED_OS_APPLE
+    system("open "HELP_URL);
+#elif DETECTED_OS_LINUX
+  system("firefox "MANUAL_NAME );  /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif
-#ifdef DETECTED_OS_APPLE
-  system("open "HELP_URL);
-#endif
-#ifdef DETECTED_OS_LINUX
-  system("firefox "HELP_URL);  /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
+}
+
+void MainWindow::OpenManual() {
+#ifdef DETECTED_OS_WINDOWS
+  ShellExecuteA(NULL, "open", MANUAL_NAME, NULL,NULL,SW_SHOWDEFAULT);
+#elif DETECTED_OS_APPLE
+  string manualOpenCall = "open " + SysTools::GetFromResourceOnMac(MANUAL_NAME);
+  system(manualOpenCall.c_str());
+#elif DETECTED_OS_LINUX
+  system("firefox "MANUAL_NAME);  /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif
 }
 

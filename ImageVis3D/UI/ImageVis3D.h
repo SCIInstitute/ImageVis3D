@@ -108,6 +108,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void CloneCurrentView();
     void CheckForUpdates();
     void OnlineHelp();
+    void OpenManual();
     void OnlineVideoTut();
     void CloseWelcome();
     void ReportABug();
