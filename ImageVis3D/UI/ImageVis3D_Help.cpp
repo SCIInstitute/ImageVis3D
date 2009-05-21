@@ -35,6 +35,18 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <cstdio>
+#include "../Tuvok/Basics/StdDefines.h"
+#ifdef DETECTED_OS_WINDOWS
+#	include <ShellAPI.h>
+#	include <windows.h>
+#endif
+#ifdef DETECTED_OS_LINUX
+# include <libgen.h>
+# include <unistd.h>
+#endif
+#include <fstream>
+
 #include <QtGui/QMessageBox>
 #include <QtNetwork/QHttp>
 #include <QtNetwork/QHttpResponseHeader>
@@ -58,12 +70,7 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/Appendix.h"
-#ifdef DETECTED_OS_WINDOWS
-#	include <ShellAPI.h>
-#	include <windows.h>
-#endif
-
-#include <fstream>
+#include "../Tuvok/Controller/Controller.h"
 
 using namespace std;
 
@@ -300,6 +307,12 @@ void MainWindow::OnlineHelp() {
 #endif
 }
 
+#ifdef DETECTED_OS_LINUX
+static bool readable(const std::string &f) {
+  return (access(f.c_str(), R_OK) == 0);
+}
+#endif
+
 void MainWindow::OpenManual() {
 #ifdef DETECTED_OS_WINDOWS
   ShellExecuteA(NULL, "open", MANUAL_NAME, NULL,NULL,SW_SHOWDEFAULT);
@@ -307,8 +320,32 @@ void MainWindow::OpenManual() {
   string manualOpenCall = "open " + SysTools::GetFromResourceOnMac(MANUAL_NAME);
   system(manualOpenCall.c_str());
 #elif defined(DETECTED_OS_LINUX)
+  /// Find out where our binary lives.  The manual is placed in the same
+  /// directory in the case of the binary tarballs we provide.
+  std::vector<std::string> paths;
+  char linkbuf[1024];
+  memset(linkbuf, 0, 1024);
+  if(readlink("/proc/self/exe", linkbuf, 1024) == -1) {
+    T_ERROR("Error reading /proc/self/exe; ignoring binary directory while "
+            "searching for manual.");
+  } else {
+    paths.push_back(std::string(dirname(linkbuf)));
+  }
+  paths.push_back("/usr/share/doc/imagevis3d/");
+  paths.push_back("/usr/local/share/doc/imagevis3d/");
+  paths.push_back(".");
+  std::vector<std::string>::const_iterator found = find_if(paths.begin(),
+                                                           paths.end(),
+                                                           readable);
+  if(found == paths.end()) {
+    T_ERROR("Could not find manual...");
+    return;
+  }
   /// @todo don't assume xpdf is installed.
-  system("xpdf " MANUAL_NAME);
+  char manual[2048];
+  snprintf(manual, 2048, "xpdf %s/%s", (*found).c_str(), MANUAL_NAME);
+  /// @todo for that matter, don't use system either, it freezes our process.
+  system(manual);
 #endif
 }
 
