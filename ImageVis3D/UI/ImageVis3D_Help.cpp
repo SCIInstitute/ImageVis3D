@@ -295,7 +295,8 @@ void MainWindow::OnlineHelp() {
 #elif defined(DETECTED_OS_APPLE)
     system("open "HELP_URL);
 #elif defined(DETECTED_OS_LINUX)
-  system("firefox "MANUAL_NAME );  /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
+  /// @todo don't assume firefox is installed.
+  system("firefox " HELP_URL);
 #endif
 }
 
@@ -318,7 +319,8 @@ void MainWindow::OnlineVideoTut() {
   system("open "TUTORIAL_URL);
 #endif
 #ifdef DETECTED_OS_LINUX
-  system("firefox "TUTORIAL_URL); /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
+  /// @todo don't assume firefox is installed.
+  system("firefox " TUTORIAL_URL);
 #endif
 }
 
