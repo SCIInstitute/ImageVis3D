@@ -35,8 +35,6 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
-#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
-#include "ImageVis3D.h"
 #include <QtGui/QMessageBox>
 #include <QtNetwork/QHttp>
 #include <QtNetwork/QHttpResponseHeader>
@@ -50,6 +48,8 @@
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QSettings>
+#include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
+#include "ImageVis3D.h"
 
 #include "URLDlg.h"
 #include "AboutDlg.h"
@@ -292,9 +292,9 @@ void MainWindow::FtpSuccess() {
 void MainWindow::OnlineHelp() {
 #ifdef DETECTED_OS_WINDOWS
   ShellExecuteA(NULL, "open", HELP_URL , NULL,NULL,SW_SHOWDEFAULT);
-#elif DETECTED_OS_APPLE
+#elif defined(DETECTED_OS_APPLE)
     system("open "HELP_URL);
-#elif DETECTED_OS_LINUX
+#elif defined(DETECTED_OS_LINUX)
   system("firefox "MANUAL_NAME );  /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif
 }
@@ -302,10 +302,10 @@ void MainWindow::OnlineHelp() {
 void MainWindow::OpenManual() {
 #ifdef DETECTED_OS_WINDOWS
   ShellExecuteA(NULL, "open", MANUAL_NAME, NULL,NULL,SW_SHOWDEFAULT);
-#elif DETECTED_OS_APPLE
+#elif defined(DETECTED_OS_APPLE)
   string manualOpenCall = "open " + SysTools::GetFromResourceOnMac(MANUAL_NAME);
   system(manualOpenCall.c_str());
-#elif DETECTED_OS_LINUX
+#elif defined(DETECTED_OS_LINUX)
   system("firefox "MANUAL_NAME);  /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif
 }
