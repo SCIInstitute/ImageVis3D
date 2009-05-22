@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <algorithm>
 #include <cstdio>
 #include "../Tuvok/Basics/StdDefines.h"
 
