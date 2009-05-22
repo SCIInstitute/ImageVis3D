@@ -100,7 +100,7 @@ void Q1DTransferFunction::PreparePreviewData() {
 void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
                                   TransferFunction1D* pTrans) {
   m_pTrans = pTrans;
-  if (m_pTrans == NULL) return;
+  if (m_pTrans == NULL || vHistogram == NULL) return;
 
   // resize internal histogram, we only consider histogram values to the maximum entry that is non-zero
   m_vHistogram.Resize(vHistogram->GetFilledSize());
