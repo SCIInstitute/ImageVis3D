@@ -506,7 +506,8 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
       ShowCriticalDialog( "Error during render window initialization.", "The system was unable to open a render window, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
     }
     return bIsOK;
-  } return false;
+  }
+  return false;
 }
 
 RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
@@ -576,8 +577,8 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
       // to call this for us w/in a timeframe which is useful.  Awesome.  So we
       // do it manually, to make sure the window is initialized before we
       // start using it.
-      MESSAGE("Initial focred RenderWindowActive call.");
-      RenderWindowActive(renderWin);
+      MESSAGE("Attempting to force QGL initialization");
+      renderWin->GetQtWidget()->repaint();
     }
   }
 
@@ -932,4 +933,3 @@ void MainWindow::ShowWelcomeScreen() {
   m_pWelcomeDialog->setWindowIcon(windowIcon());
   m_pWelcomeDialog->show();
 }
-
