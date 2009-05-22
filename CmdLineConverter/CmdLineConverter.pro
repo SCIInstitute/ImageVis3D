@@ -6,6 +6,7 @@ TEMPLATE          = app
 CONFIG           += link_prl static warn_on stl exceptions
 TARGET            = Build/UVFConverter
 QTPLUGIN         += qjpeg qtiff qgif
+QT               += opengl
 DEPENDPATH       += .
 INCLUDEPATH      += . ../Tuvok/3rdParty/boost ../Tuvok/3rdParty/GLEW
 LIBS              = -L../Tuvok/Build -lTuvok
