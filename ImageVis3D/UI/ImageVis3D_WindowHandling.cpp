@@ -487,10 +487,10 @@ void MainWindow::CloneCurrentView() {
 bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow) {
   if (renderWin) {
     bool bIsOK = renderWin->IsRenderSubsysOK();
-    m_MasterController.DebugOut()->Message("IOManager::CheckRenderwindowFitness","Renderwindow healthy.");
+    m_MasterController.DebugOut()->Message("MainWindow::CheckRenderwindowFitness","Renderwindow healthy.");
 
     if (bIfNotOkShowMessageAndCloseWindow && !bIsOK) {
-      m_MasterController.DebugOut()->Error("IOManager::CheckRenderwindowFitness","Unable to initialize the render window, see previous error messages for details.");
+      m_MasterController.DebugOut()->Error("MainWindow::CheckRenderwindowFitness","Unable to initialize the render window, see previous error messages for details.");
 
       // find window in mdi area
       for (int i = 0;i<mdiArea->subWindowList().size();i++) {
@@ -576,6 +576,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
       // to call this for us w/in a timeframe which is useful.  Awesome.  So we
       // do it manually, to make sure the window is initialized before we
       // start using it.
+      MESSAGE("Initial focred RenderWindowActive call.");
       RenderWindowActive(renderWin);
     }
   }
@@ -600,15 +601,18 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
       return;
     }
 
+    MESSAGE("Getting 1D Transfer Function.");
     m_1DTransferFunction->
       SetData(&sender->GetRenderer()->GetDataSet().Get1DHistogram(),
               sender->GetRenderer()->Get1DTrans());
     m_1DTransferFunction->update();
+    MESSAGE("Getting 2D Transfer Function.");
     m_2DTransferFunction->
       SetData(&sender->GetRenderer()->GetDataSet().Get2DHistogram(),
               sender->GetRenderer()->Get2DTrans());
     m_2DTransferFunction->update();
 
+    MESSAGE("Getting other Renderwindow parameters.");
     AbstrRenderer::ERenderMode e = m_pActiveRenderWin->GetRendermode();
 
     switch (e) {
