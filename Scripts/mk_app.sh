@@ -34,7 +34,7 @@ echo "Copying ImageVis3D Manual into app.."
 pushd ${PREFIX}/Contents/Resources
   rm -f ImageVis3D.pdf
   gforge="https://gforge.sci.utah.edu/gf"
-  manual="${gforge}/download/docmanfileversion/4/119/ImageVis3D.pdf"
+  manual="${gforge}/download/docmanfileversion/7/124/ImageVis3D.pdf"
   curl -kLO ${manual}
 popd
 
