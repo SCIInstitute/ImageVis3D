@@ -1,5 +1,5 @@
 cd..
-set path=%path%;C:\Program Files (x86)\CollabNet Subversion Client;C:\Program Files (x86)\CollabNet Subversion;C:\Program Files (x86)\Inno Setup 5
+set path=%path%;C:\Program Files (x86)\CollabNet Subversion Client;C:\Program Files (x86)\CollabNet Subversion;C:\Program Files (x86)\Inno Setup 5;C:\tools
 
 SETLOCAL ENABLEDELAYEDEXPANSION 
 
@@ -23,6 +23,11 @@ svn info > rev1.txt
 cd Tuvok
 svn info > ..\rev2.txt
 cd ..
+pushd Scripts\installer
+  del /f ImageVis3D.pdf
+  wget --no-check-certificate https://gforge.sci.utah.edu/gf/download/docmanfileversion/4/119/ImageVis3D.pdf
+popd
+
 
 for /f "tokens=1,2" %%i in (rev1.txt) do if %%i==Revision: set IV3DVERSION=%%j
 for /f "tokens=1,2" %%i in (rev2.txt) do if %%i==Revision: set TUVOKVERSION=%%j
