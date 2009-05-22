@@ -263,8 +263,9 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     frame_24->setVisible(false);
     frame_23->setVisible(false);
 #else
-    // hide edit menu as the preference item (the only item in edit right now) is magically moved on OS X to the program menu
-    menu_Edit->setVisible(false);
+ // hide edit menu as the preference item (the only item in edit right now) is magically moved on OS X to the program menu
+  menu_Edit->setVisible(false);
+  delete menu_Edit;
 #endif
 
 	/// \todo remove this once we figured out how to do fullscreen 
@@ -655,10 +656,6 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     ToggleClearViewControls(iRange);
     UpdateLockView();
 
-    /// todo: once the clip planes work on apple with the ray-caster, remove this (also see GLRaycaster.cpp)
-#ifdef DETECTED_OS_APPLE
-    groupBox_ClipPlane->setVisible(m_pActiveRenderWin->GetRenderer()->GetRendererType() != AbstrRenderer::RT_RC);
-#endif
   }
 }
 
