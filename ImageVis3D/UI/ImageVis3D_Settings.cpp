@@ -278,6 +278,8 @@ void MainWindow::ApplySettings() {
 void MainWindow::ApplySettings(RenderWindow* renderWin) {
   QSettings settings;
 
+  if (!renderWin) return;
+
   renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
   renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
   renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/m_pRedrawTimer->interval(), m_iActiveTS, m_iInactiveTS);
