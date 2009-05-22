@@ -230,7 +230,9 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
   } else {
     // this returns 1 for "most" mice if the wheel is turned one "click"
     int iZoom = event->delta()/120;
-    m_Renderer->SetSliceDepth(eWinMode, int(m_Renderer->GetSliceDepth(eWinMode))+iZoom);
+    int iNewSliceDepth = std::max<int>(0,int(m_Renderer->GetSliceDepth(eWinMode))+iZoom);
+    iNewSliceDepth = std::min<int>(iNewSliceDepth, m_Renderer->GetDataSet().GetInfo().GetDomainSize()[size_t(eWinMode)]-1);
+    m_Renderer->SetSliceDepth(eWinMode, UINT64(iNewSliceDepth));
   }
   UpdateWindow();
 }
