@@ -30,7 +30,7 @@ include($$join(TEMP, "/"))
 # If that contains the `shared' configuration, the installed Qt is shared.
 # In that case, disable the image plugins.
 contains(QMAKE_PRL_CONFIG, shared) {
-  message(Shared build, ensuring there will be image plugins linked in.)
+  message("Shared build, ensuring there will be image plugins linked in.")
   QTPLUGIN -= qgif qjpeg qtiff
 } else {
   message("Static build, forcing image plugins to get loaded.")
