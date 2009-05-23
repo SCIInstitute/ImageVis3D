@@ -1,0 +1,50 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH IMAGEVIS3D SECTION "May 19, 2009"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+imagevis3d \- desktop out of core volume rendering application.
+.SH SYNOPSIS
+.B imagevis3d
+.RI [ options ] " files" ...
+.SH DESCRIPTION
+\fBimagevis3d\fP
+is a volume rendering application designed to handle extremely large data.  By
+bricking a dataset (splitting it into constant-sized chunks) and only requiring
+one chunk to be resident in main memory, ImageVis3D's memory usage remains
+constant across dataset sizes.
+.PP
+ImageVis3D uses Tuvok to render and composite the bricks.  Tuvok relies heavily
+on GLSL to provide accelerated volume rendering.  As such, a somewhat recent
+video card is required.  In practice, this effectively means that Linux systems
+currently require a nvidia card with nvidia's drivers.
+.SH OPTIONS
+The command line options of \fBimagevis3d\fP are:
+.TP
+.B \-script \fIfilename\fP
+Runs the script file given in \fIfilename\fP.
+.TP
+.B \-log [\fIfilename\fP, \fI\-\fP]
+Logs debug information \fIfilename\fP, or stdout (\fI\-\fP)
+.TP
+.B \-loglevel [\fI0\fP, \fI1\fP, \fI2\fP]
+Changes the verbosity of the log.
+.SH AUTHOR
+imagevis3d was written by the SCI Institute, with support from the NIH NCRR and
+DOE VACET programs.
+.PP
+This manual page was written by Tom Fogal <tfogal@sci.utah.edu>,
+for the Debian project (but may be used by others).
