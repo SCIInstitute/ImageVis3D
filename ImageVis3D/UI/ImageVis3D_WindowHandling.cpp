@@ -264,6 +264,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     frame_23->setVisible(false);
 #else
  // hide edit menu as the preference item (the only item in edit right now) is magically moved on OS X to the program menu
+  menu_File->addAction(actionSettings);
+  menu_Edit->removeAction(actionSettings);
   delete menu_Edit;
 #endif
 
