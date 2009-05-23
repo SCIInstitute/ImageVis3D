@@ -28,7 +28,8 @@ echo "yes" | \
         -qt-gif \
         -no-framework \
         -make libs \
-        -fast
+        -make tools \
+        -sdk "/Developer/SDKs/MacOSX10.4u.sdk/"
 
 if test $? -ne 0; then
         echo "configure failed"
