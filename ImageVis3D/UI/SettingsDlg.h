@@ -46,7 +46,10 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 {
   Q_OBJECT
   public:
-    SettingsDlg(bool bWarnAPIChange, MasterController& masterController, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    SettingsDlg(bool bWarnAPIChange,
+                MasterController& masterController,
+                QWidget* parent = 0,
+                Qt::WindowFlags flags = 0);
     virtual ~SettingsDlg();
 
     UINT64        GetGPUMem() const;
@@ -88,16 +91,37 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     QString       GetLogoFilename() const;
     int           GetLogoPos() const;
 
-
-    void Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU,
-                   bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
-                   bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, UINT32 iLogLevel,
+    void Data2Form(bool bIsDirectX10Capable,
+                   UINT64 iMaxCPU, UINT64 iMaxGPU,
+                   bool bQuickopen,
+                   unsigned int iMinFramerate,
+                   unsigned int iLODDelay,
+                   unsigned int iActiveTS,
+                   unsigned int iInactiveTS,
+                   bool bWriteLogFile,
+                   bool bShowCrashDialog,
+                   const std::string& strLogFileName,
+                   UINT32 iLogLevel,
                    bool bShowVersionInTitle,
-                   bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
-                   bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
-                   unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo,
-                   bool bDownSampleTo8Bits, bool bDisableBorder, bool bAvoidCompositing, bool bNoRCClipplanes,
-                   const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos);
+                   bool bAutoSaveGEO,
+                   bool bAutoSaveWSP,
+                   bool bAutoLockClonedWindow,
+                   bool bAbsoluteViewLocks,
+                   bool bCheckForUpdatesOnStartUp,
+                   bool bCheckForDevBuilds,
+                   bool bShowWelcomeScreen,
+                   unsigned int iVolRenType,
+                   unsigned int iBlendPrecision,
+                   bool bPowerOfTwo,
+                   bool bDownSampleTo8Bits,
+                   bool bDisableBorder,
+                   bool bAvoidCompositing,
+                   bool bNoRCClipplanes,
+                   const FLOATVECTOR3& vBackColor1,
+                   const FLOATVECTOR3& vBackColor2,
+                   const FLOATVECTOR4& vTextColor,
+                   const QString& strLogo,
+                   int iLogoPos);
 
   protected slots:
     void SelectTextColor();
