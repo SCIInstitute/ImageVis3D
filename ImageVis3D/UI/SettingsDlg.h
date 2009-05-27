@@ -83,6 +83,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetDownSampleTo8Bits() const;
     bool          GetDisableBorder() const;
     bool          GetAvoidCompositing() const;
+    bool          GetNoRCClipplanes() const;
 
     QString       GetLogoFilename() const;
     int           GetLogoPos() const;
@@ -95,7 +96,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                    bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
                    unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo,
-                   bool bDownSampleTo8Bits, bool bDisableBorder, bool bAvoidCompositing,
+                   bool bDownSampleTo8Bits, bool bDisableBorder, bool bAvoidCompositing, bool bNoRCClipplanes,
                    const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos);
 
   protected slots:
@@ -122,7 +123,6 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool              m_bInit;
     int               m_InitialGPUMemMax;
     bool              m_bWarnAPIChange;
-
 
     void setupUi(QDialog *SettingsDlg);
     void SetLogoLabel();

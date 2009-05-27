@@ -65,7 +65,7 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
   RenderWindow(masterController, eType, dataset, iCounter, parent)
 {
   setBaseSize( sizeHint() );
-  m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);
+  m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder, false);
 
   if (m_Renderer) {
     ((DXRenderer*)m_Renderer)->SetWinID(parent->winId());  // hand over the handle of the window we are sitting in not the widget inside the window

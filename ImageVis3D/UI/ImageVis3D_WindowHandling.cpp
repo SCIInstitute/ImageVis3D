@@ -527,8 +527,9 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
       fmt.setRgba(true);
       fmt.setAlpha(true);
       renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset,
-                                     iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
-                                     m_bDisableBorder, m_glShareWidget, fmt, this, 0);
+                                     iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
+                                     m_bDisableBorder, m_bNoRCClipplanes,
+                                     m_glShareWidget, fmt, this, 0);
     }
   #else
     if (m_eVolumeRendererType >= MasterController::DIRECTX_SBVR) {
@@ -541,8 +542,9 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
     fmt.setAlpha(true);
     fmt.setRgba(true);
     renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset,
-                                   iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
-                                   m_bDisableBorder, m_glShareWidget, fmt, this, 0);
+                                   iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
+                                   m_bDisableBorder, m_bNoRCClipplanes,
+                                   m_glShareWidget, fmt, this, 0);
   #endif
 
   if (renderWin && renderWin->GetRenderer()) {
@@ -657,6 +659,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     ToggleClearViewControls(iRange);
     UpdateLockView();
 
+    groupBox_ClipPlane->setVisible( m_pActiveRenderWin->GetRenderer()->CanDoClipPlane());
   }
 }
 

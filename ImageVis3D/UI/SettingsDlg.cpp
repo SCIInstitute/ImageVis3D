@@ -310,7 +310,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits,
-                            bool bDisableBorder, bool bAvoidCompositing,
+                            bool bDisableBorder, bool bAvoidCompositing, bool bNoRCClipplanes,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
   m_bInit = true;
   horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
@@ -387,6 +387,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   checkBox_AvoidCompositing->setChecked(bAvoidCompositing);
   checkBox_DisableBorder->setChecked(bDisableBorder);
   checkBox_DownSampleTo8Bits->setChecked(bDownSampleTo8Bits);
+  checkBox_NoRCClipplanes->setChecked(bNoRCClipplanes);
 
   QString strStyle =
   tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
@@ -457,7 +458,6 @@ bool SettingsDlg::GetDownSampleTo8Bits() const {
   return checkBox_DownSampleTo8Bits->isChecked();
 }
 
-
 bool SettingsDlg::GetDisableBorder() const {
   return checkBox_DisableBorder->isChecked();
 }
@@ -466,6 +466,9 @@ bool SettingsDlg::GetAvoidCompositing() const {
   return checkBox_AvoidCompositing->isChecked();
 }
 
+bool SettingsDlg::GetNoRCClipplanes() const {
+  return checkBox_NoRCClipplanes->isChecked();
+}
 
 QString SettingsDlg::GetLogoFilename() const {
   return m_strLogoFilename;

@@ -109,6 +109,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
     bool bDisableBorder = settings.value("DisableBorder", m_bDisableBorder).toBool();
     bool bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
+    bool bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
 
     FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0f).toULongLong(),
                             settings.value("Background1G", 0.0f).toULongLong(),
@@ -137,7 +138,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
                           bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
                           bCheckForUpdatesOnStartUp, bCheckForDevBuilds, bShowWelcomeScreen,
                           iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
-                          bDisableBorder, bAvoidCompositing,
+                          bDisableBorder, bAvoidCompositing, bNoRCClipplanes,
                           vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
 
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
@@ -166,6 +167,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("AutoSaveWSP", settingsDlg.GetAutoSaveWSP());
       settings.setValue("AutoLockClonedWindow", settingsDlg.GetAutoLockClonedWindow());
       settings.setValue("AbsoluteViewLocks", settingsDlg.GetAbsoluteViewLocks());
+     
       settings.setValue("CheckForUpdatesOnStartUp", settingsDlg.GetCheckForUpdatesOnStartUp());
       settings.setValue("CheckForDevBuilds", settingsDlg.GetCheckForDevBuilds());
       settings.setValue("ShowWelcomeScreen", settingsDlg.GetShowWelcomeScreen());
@@ -178,6 +180,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("DownSampleTo8Bits", settingsDlg.GetDownSampleTo8Bits());
       settings.setValue("DisableBorder", settingsDlg.GetDisableBorder());
       settings.setValue("AvoidCompositing", settingsDlg.GetAvoidCompositing());
+      settings.setValue("NoRCClipplanes", settingsDlg.GetNoRCClipplanes());
       settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
       settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
       settings.setValue("Background1B", settingsDlg.GetBackgroundColor1().z);
@@ -239,6 +242,8 @@ void MainWindow::ApplySettings() {
   m_bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
   m_bDisableBorder = settings.value("DisableBorder", m_bDisableBorder).toBool();
   m_bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
+  m_bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
+
 
   m_vBackgroundColors[0] = FLOATVECTOR3(settings.value("Background1R", 0.0f).toULongLong(),
                           settings.value("Background1G", 0.0f).toULongLong(),

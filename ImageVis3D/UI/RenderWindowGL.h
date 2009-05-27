@@ -61,6 +61,7 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
                  bool bUseOnlyPowerOfTwo,
                  bool bDownSampleTo8Bits,
                  bool bDisableBorder,
+                 bool bNoRCClipplanes,
                  QGLWidget* glShareWidget,
                  const QGLFormat& fmt,
                  QWidget* parent,

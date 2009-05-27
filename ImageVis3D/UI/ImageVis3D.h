@@ -261,6 +261,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool                                      m_bDownSampleTo8Bits;
     bool                                      m_bDisableBorder;
     bool                                      m_bAvoidCompositing;
+    bool                                      m_bNoRCClipplanes;
     bool                                      m_bAutoSaveGEO;
     bool                                      m_bAutoSaveWSP;
     MasterController::EVolumeRendererType     m_eVolumeRendererType;

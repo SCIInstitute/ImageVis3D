@@ -57,6 +57,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
                                bool bUseOnlyPowerOfTwo,
                                bool bDownSampleTo8Bits,
                                bool bDisableBorder,
+                               bool bNoRCClipplanes,
                                QGLWidget* glShareWidget,
                                const QGLFormat& fmt,
                                QWidget* parent,
@@ -64,7 +65,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   QGLWidget(fmt, parent, glShareWidget, flags),
   RenderWindow(masterController, eType, dataset, iCounter, parent)
 {
-  m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder);
+  m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder, bNoRCClipplanes);
   m_Renderer->LoadDataset(m_strDataset.toStdString());
   SetupArcBall();
 

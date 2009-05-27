@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>361</width>
-    <height>503</height>
+    <height>527</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -865,6 +865,13 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="checkBox_NoRCClipplanes">
+            <property name="text">
+             <string>Disable Clipplanes in Raycaster</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -1099,8 +1106,8 @@
    <slot>SelectBackColor1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>579</y>
+     <x>128</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
      <x>319</x>
@@ -1115,8 +1122,8 @@
    <slot>SelectBackColor2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>579</y>
+     <x>225</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1131,8 +1138,8 @@
    <slot>SelectTextColor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>579</y>
+     <x>128</x>
+     <y>321</y>
     </hint>
     <hint type="destinationlabel">
      <x>278</x>
@@ -1147,8 +1154,8 @@
    <slot>SetTextOpacity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>579</y>
+     <x>225</x>
+     <y>324</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1179,8 +1186,8 @@
    <slot>LODDelayChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>157</x>
-     <y>151</y>
+     <x>235</x>
+     <y>334</y>
     </hint>
     <hint type="destinationlabel">
      <x>119</x>
@@ -1195,8 +1202,8 @@
    <slot>MinFramerateChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>157</x>
-     <y>124</y>
+     <x>235</x>
+     <y>334</y>
     </hint>
     <hint type="destinationlabel">
      <x>209</x>
@@ -1211,8 +1218,8 @@
    <slot>ActTSChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>157</x>
-     <y>178</y>
+     <x>235</x>
+     <y>334</y>
     </hint>
     <hint type="destinationlabel">
      <x>160</x>
@@ -1227,8 +1234,8 @@
    <slot>InactTSChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>157</x>
-     <y>205</y>
+     <x>235</x>
+     <y>334</y>
     </hint>
     <hint type="destinationlabel">
      <x>11</x>
@@ -1243,8 +1250,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>98</y>
+     <x>91</x>
+     <y>66</y>
     </hint>
     <hint type="destinationlabel">
      <x>35</x>
@@ -1259,8 +1266,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>61</x>
-     <y>107</y>
+     <x>31</x>
+     <y>66</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -1275,8 +1282,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>98</y>
+     <x>192</x>
+     <y>66</y>
     </hint>
     <hint type="destinationlabel">
      <x>92</x>
@@ -1291,8 +1298,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>98</y>
+     <x>263</x>
+     <y>66</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1307,8 +1314,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>106</x>
-     <y>416</y>
+     <x>30</x>
+     <y>184</y>
     </hint>
     <hint type="destinationlabel">
      <x>159</x>
@@ -1323,8 +1330,8 @@
    <slot>RemoveLogo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>51</x>
-     <y>741</y>
+     <x>31</x>
+     <y>438</y>
     </hint>
     <hint type="destinationlabel">
      <x>26</x>
@@ -1339,8 +1346,8 @@
    <slot>SelectLogo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>51</x>
-     <y>741</y>
+     <x>31</x>
+     <y>407</y>
     </hint>
     <hint type="destinationlabel">
      <x>351</x>
@@ -1355,8 +1362,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>416</y>
+     <x>30</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
      <x>349</x>
@@ -1371,8 +1378,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>416</y>
+     <x>209</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
      <x>354</x>
@@ -1387,12 +1394,28 @@
    <slot>PickLogFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>319</x>
-     <y>297</y>
+     <x>330</x>
+     <y>476</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
      <y>453</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_NoRCClipplanes</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>WarnAPIMethodChange()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>64</x>
+     <y>241</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>357</x>
+     <y>265</y>
     </hint>
    </hints>
   </connection>
