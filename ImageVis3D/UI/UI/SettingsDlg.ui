@@ -868,7 +868,7 @@
           <item row="2" column="1">
            <widget class="QCheckBox" name="checkBox_NoRCClipplanes">
             <property name="text">
-             <string>Disable Clipplanes in Raycaster</string>
+             <string>Disable clip planes in Raycaster</string>
             </property>
            </widget>
           </item>
