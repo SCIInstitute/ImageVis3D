@@ -25,7 +25,7 @@ svn info > ..\rev2.txt
 cd ..
 pushd Scripts\installer
   del /f ImageVis3D.pdf
-  wget --no-check-certificate https://gforge.sci.utah.edu/gf/download/docmanfileversion/8/140/ImageVis3D.pdf
+  wget --no-check-certificate http://software.sci.utah.edu/releases/iv3d_docs/ImageVis3D.pdf
 popd
 
 
