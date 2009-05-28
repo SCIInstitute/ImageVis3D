@@ -33,8 +33,7 @@ ${macdeployqt} ${PREFIX}
 echo "Copying ImageVis3D Manual into app.."
 pushd ${PREFIX}/Contents/Resources
   rm -f ImageVis3D.pdf
-  gforge="https://gforge.sci.utah.edu/gf"
-  manual="${gforge}/download/docmanfileversion/7/124/ImageVis3D.pdf"
+  manual="http://software.sci.utah.edu/releases/iv3d_docs/ImageVis3D.pdf"
   curl -kLO ${manual}
 popd
 

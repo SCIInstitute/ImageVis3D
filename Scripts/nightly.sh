@@ -76,8 +76,8 @@ elif test `uname` = "Linux" ; then
         mkdir "${dir}"
         cp ../Build/ImageVis3D ./${dir}
         cp -R ../Tuvok/Shaders ./${dir}
-        gforge="https://gforge.sci.utah.edu/gf"
-        manual="${gforge}/download/docmanfileversion/8/140/ImageVis3D.pdf"
+        sci_sw="http://software.sci.utah.edu"
+        manual="${sci_sw}/releases/iv3d_docs/ImageVis3D.pdf"
         wget -q --no-check-certificate ${manual}
         mv $(basename ${manual}) ${dir}
         GZIP="--best" tar zcf "${tarball}" ${dir}
