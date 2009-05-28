@@ -26,7 +26,7 @@
 ;
 ; ImageVis3D 64 bit installer script: creates an installer for amd64 systems.
 ; From the root of the ImageVis3D subversion tree, process this file with
-; "iscc.exe" from Inno Setup 5.  
+; "iscc.exe" from Inno Setup 5.
 [Setup]
 AppName=ImageVis3D
 AppVerName=ImageVis3D 1.0
@@ -38,10 +38,11 @@ AppUpdatesURL=http://software.sci.utah.edu/
 AppCopyright=Copyright (c) 2009 Scientific Computing and Imaging Institute, University of Utah.
 DefaultDirName={pf}\ImageVis3D
 DefaultGroupName=ImageVis3D
-OutputDir="Scripts\installer"
+OutputDir=Scripts\installer
 OutputBaseFilename=ImageVis3D-1.0-64bit
 AllowNoIcons=no
-Compression=lzma
+Compression=lzma/ultra
+InternalCompressLevel=ultra
 SolidCompression=yes
 SourceDir=../../
 LicenseFile=LICENSE
@@ -51,38 +52,38 @@ ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: english; MessagesFile: compiler:Default.isl
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked
 
 [Dirs]
-Name: "{app}";
-Name: "{userappdata}\ImageVis3D"; Flags: uninsalwaysuninstall
+Name: {app}
+Name: {userappdata}\ImageVis3D; Flags: uninsalwaysuninstall
 
 [Files]
 ; Dependencies.
 ;   MS redistributable crap.
-Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\amd64\Microsoft.VC90.CRT\*"; DestDir: "{app}"; Flags: recursesubdirs
+Source: C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\amd64\Microsoft.VC90.CRT\*; DestDir: {app}; Flags: recursesubdirs
 ;Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\amd64\Microsoft.VC90.MFC\*"; DestDir: "{app}"; Flags: recursesubdirs
 ;Source: "vcredist_x64.exe"; DestDir: {tmp}; DestName: vcredist.exe; Flags: deleteafterinstall;
 
 
 ; ImageVis3D
-Source: "build\x64\Release (with DirectX)\ImageVis3D-64.exe"; DestDir: "{app}"; Flags: ignoreversion replacesameversion
-Source: "Tuvok\Shaders\*"; DestDir: "{app}\Shaders"; Excludes: ".svn"; Flags: ignoreversion replacesameversion
-Source: "Scripts\installer\ImageVis3D.pdf"; DestDir: "{app}";  Flags: ignoreversion replacesameversion
+Source: build\x64\Release (with DirectX)\ImageVis3D-64.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
+Source: Tuvok\Shaders\*; DestDir: {app}\Shaders; Excludes: .svn; Flags: ignoreversion replacesameversion
+Source: Scripts\installer\ImageVis3D.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
 
 [Icons]
-Name: "{group}\ImageVis3D"; Filename: "{app}\ImageVis3D-64.exe"; WorkingDir: "{app}"
-Name: "{commondesktop}\ImageVis3D"; Filename: "{app}\ImageVis3D-64.exe"; WorkingDir: "{app}"
-Name: "{group}\{cm:UninstallProgram,ImageVis3D}" ; Filename: "{uninstallexe}"
-Name: "{group}\Manual"; Filename: "{app}\ImageVis3D.pdf"; WorkingDir: "{app}"
+Name: {group}\ImageVis3D; Filename: {app}\ImageVis3D-64.exe; WorkingDir: {app}
+Name: {commondesktop}\ImageVis3D; Filename: {app}\ImageVis3D-64.exe; WorkingDir: {app}
+Name: {group}\{cm:UninstallProgram,ImageVis3D}; Filename: {uninstallexe}
+Name: {group}\Manual; Filename: {app}\ImageVis3D.pdf; WorkingDir: {app}
 
 
 [Run]
-Filename: "{app}\ImageVis3D-64.exe"; Description: "{cm:LaunchProgram,ImageVis3D}"; Flags: nowait postinstall
+Filename: {app}\ImageVis3D-64.exe; Description: {cm:LaunchProgram,ImageVis3D}; Flags: nowait postinstall
 ;Filename: {tmp}\vcredist.exe; StatusMsg: "Installing required Visual C++ runtime..."
 
 [UninstallDelete]
-Type: filesandordirs; Name: "{userappdata}\ImageVis3D*"
+Type: filesandordirs; Name: {userappdata}\ImageVis3D*
