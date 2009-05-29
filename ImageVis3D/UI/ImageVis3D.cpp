@@ -189,19 +189,17 @@ MainWindow::~MainWindow()
 void MainWindow::SetAndCheckRunningFlag() {
   QSettings settings;
   UINT32 iInstanceCounter = settings.value("InstanceCounter", 0).toUInt();
+  UINT32 iSaneCounter = settings.value("SaneCounter", 0).toUInt();
 
-  
+  settings.beginGroup("Performance");
+  bool bWriteLogFile = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
+  bool bShowCrashDialog = settings.value("ShowCrashDialog", true).toBool();
+  QString strLogFileName = settings.value("LogFileName", m_strLogFileName).toString();
+  settings.endGroup();
 
-  if (iInstanceCounter) {
-
-    settings.beginGroup("Performance");
-    bool bWriteLogFile = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
-    bool bShowCrashDialog = settings.value("ShowCrashDialog", true).toBool();
-    QString strLogFileName = settings.value("LogFileName", m_strLogFileName).toString();
-    settings.endGroup();
-  
-
+ if (iInstanceCounter) {
     if (bShowCrashDialog) {
+      settings.setValue("SaneCounter", 0);
       CrashDetDlg* d = NULL;
       if (bWriteLogFile && SysTools::FileExists(string(strLogFileName.toAscii()))) {
         d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to submit the logfile?", false, this);
@@ -215,6 +213,9 @@ void MainWindow::SetAndCheckRunningFlag() {
           if (d->exec() == QDialog::Accepted) {
             settings.setValue("Performance/WriteLogFile", true);
             settings.setValue("Performance/LogLevel", 2);
+          } else {
+            // if debuging was not enabled assume that has been opended multiple times
+            settings.setValue("SaneCounter", iSaneCounter);
           }
         }
       }
@@ -224,6 +225,15 @@ void MainWindow::SetAndCheckRunningFlag() {
         delete d;
       }
     }
+  } else {
+    if (bShowCrashDialog && bWriteLogFile && iSaneCounter > 10) {
+      CrashDetDlg* d = new CrashDetDlg("Crash recovery", "ImageVis3D did not crash the last 10 times it was used. Do you want to disable debug logging now?", false, this);
+      if (d->exec() == QDialog::Accepted) {
+        settings.setValue("Performance/WriteLogFile", false);
+      }
+      settings.setValue("Performance/ShowCrashDialog", !d->GetDontShowAgain());
+      delete d;
+    }
   }
 
   settings.setValue("InstanceCounter", iInstanceCounter+1);
@@ -231,11 +241,11 @@ void MainWindow::SetAndCheckRunningFlag() {
 
 void MainWindow::RemoveRunningFlag() {
   QSettings settings;
-  UINT32 iInstanceCounter = settings.value("InstanceCounter", 1).toUInt();
-  if (iInstanceCounter > 1) 
-    settings.setValue("InstanceCounter", iInstanceCounter-1);
-  else 
-    settings.setValue("InstanceCounter", 0);
+//  UINT32 iInstanceCounter = settings.value("InstanceCounter", 1).toUInt();
+  settings.setValue("InstanceCounter", 0);
+
+  UINT32 iSaneCounter = settings.value("SaneCounter", 0).toUInt();
+  settings.setValue("SaneCounter", iSaneCounter+1);
 }
 
 // ******************************************
