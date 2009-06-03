@@ -239,83 +239,71 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
 
 void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
 
-  if (event->key() == Qt::Key_F) {
-    ToggleFullscreen();
-  }
+  AbstrRenderer::EWindowMode eWinMode =
+    m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
+                                     FLOATVECTOR2(m_vWinDim));
+  switch (event->key()) {
+    case Qt::Key_F : ToggleFullscreen(); 
+                     break;
+    case Qt::Key_C : if (eWinMode == AbstrRenderer::WM_3D) {
+                       m_Renderer->SetRenderCoordArrows(!m_Renderer->GetRenderCoordArrows());
+                     }
+                     break;
+    case Qt::Key_P : m_Renderer->Set2DPlanesIn3DView(!m_Renderer->Get2DPlanesIn3DView());
+                     break;
 
+    case Qt::Key_R : if (eWinMode == AbstrRenderer::WM_3D) {
+                        ResetRenderingParameters();
+                     }
+                     break;
+    case Qt::Key_Space : {
+                            AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode(
+                                (int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
+                            m_Renderer->SetViewmode(eMode);
 
-  if (event->key() == Qt::Key_C) {
-    AbstrRenderer::EWindowMode eWinMode =
-      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
-                                       FLOATVECTOR2(m_vWinDim));
+                            if (eMode == AbstrRenderer::VM_SINGLE)
+                              m_Renderer->SetFullWindowmode(eWinMode);
+                            else
+                             if (m_Renderer->GetStereo()) {
+                               m_Renderer->SetStereo(false);
+                               EmitStereoDisabled();
+                             }
 
-    if (eWinMode == AbstrRenderer::WM_3D) {
-      m_Renderer->SetRenderCoordArrows(!m_Renderer->GetRenderCoordArrows());
-    }
-  }
+                            SetupArcBall();
+                            EmitRenderWindowViewChanged(int(m_Renderer->GetViewmode()));
+                            UpdateWindow();
+                         }
+                         break;
+    case Qt::Key_X : {
+                        bool bFlipX=false, bFlipY=false;
+                        m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
+                        bFlipX = !bFlipX;
+                        m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);
+                     }
+                     break;
 
-  if (event->key() == Qt::Key_P) {
-      m_Renderer->Set2DPlanesIn3DView(!m_Renderer->Get2DPlanesIn3DView());
-  }
+    case Qt::Key_Y : {
+                        bool bFlipX=false, bFlipY=false;
+                        m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
+                        bFlipY = !bFlipY;
+                        m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);
+                     }
+                     break;
+    case Qt::Key_M : {
+                        bool bUseMIP=false;
+                        bUseMIP = !m_Renderer->GetUseMIP(eWinMode);
+                        m_Renderer->SetUseMIP(eWinMode, bUseMIP);
+                     }
+                     break;
+    case Qt::Key_A : {
+                        m_ArcBall.SetUseTranslation(!m_ArcBall.GetUseTranslation());
+                     }
+                     break;
+    case Qt::Key_PageUp : SetTranslationDelta(FLOATVECTOR3(0,0,0.01f),true);
+                     break;
 
-  if (event->key() == Qt::Key_R) {
-    AbstrRenderer::EWindowMode eWinMode =
-      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
-                                       FLOATVECTOR2(m_vWinDim));
-
-    if (eWinMode == AbstrRenderer::WM_3D) {
-      ResetRenderingParameters();
-    }
-  }
-
-  if (event->key() == Qt::Key_Space) {
-    AbstrRenderer::EWindowMode eWinMode =
-      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
-                                       FLOATVECTOR2(m_vWinDim));
-    AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode(
-      (int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
-    m_Renderer->SetViewmode(eMode);
-
-    if (eMode == AbstrRenderer::VM_SINGLE)
-      m_Renderer->SetFullWindowmode(eWinMode);
-    else
-     if (m_Renderer->GetStereo()) {
-       m_Renderer->SetStereo(false);
-       EmitStereoDisabled();
-     }
-
-    SetupArcBall();
-    EmitRenderWindowViewChanged(int(m_Renderer->GetViewmode()));
-    UpdateWindow();
-  }
-
-  if (event->key() == Qt::Key_X) {
-    AbstrRenderer::EWindowMode eWinMode =
-      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
-                                       FLOATVECTOR2(m_vWinDim));
-    bool bFlipX=false, bFlipY=false;
-    m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
-    bFlipX = !bFlipX;
-    m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);
-  }
-
-  if (event->key() == Qt::Key_Y) {
-    AbstrRenderer::EWindowMode eWinMode =
-      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
-                                       FLOATVECTOR2(m_vWinDim));
-    bool bFlipX=false, bFlipY=false;
-    m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
-    bFlipY = !bFlipY;
-    m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);
-  }
-
-  if (event->key() == Qt::Key_M) {
-    AbstrRenderer::EWindowMode eWinMode =
-      m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
-                                       FLOATVECTOR2(m_vWinDim));
-    bool bUseMIP=false;
-    bUseMIP = !m_Renderer->GetUseMIP(eWinMode);
-    m_Renderer->SetUseMIP(eWinMode, bUseMIP);
+    case Qt::Key_PageDown : SetTranslationDelta(FLOATVECTOR3(0,0,-0.01f),true);
+                     break;
   }
 }
 
