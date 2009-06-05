@@ -299,10 +299,10 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
                         m_ArcBall.SetUseTranslation(!m_ArcBall.GetUseTranslation());
                      }
                      break;
-    case Qt::Key_PageUp : SetTranslationDelta(FLOATVECTOR3(0,0,0.01f),true);
+    case Qt::Key_PageDown : SetTranslationDelta(FLOATVECTOR3(0,0,0.01f),true);
                      break;
 
-    case Qt::Key_PageDown : SetTranslationDelta(FLOATVECTOR3(0,0,-0.01f),true);
+    case Qt::Key_PageUp : SetTranslationDelta(FLOATVECTOR3(0,0,-0.01f),true);
                      break;
   }
 }
