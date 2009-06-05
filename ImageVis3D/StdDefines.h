@@ -41,7 +41,7 @@
 
 #include "../Tuvok/StdTuvokDefines.h"
 
-#define IV3D_VERSION 1.01
+#define IV3D_VERSION 1.1
 #define IV3D_VERSION_TYPE "Release"
 
 #define MANUAL_NAME  "ImageVis3D.pdf"
