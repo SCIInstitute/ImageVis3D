@@ -45,13 +45,14 @@
 #define IV3D_VERSION_TYPE "Release"
 
 #define MANUAL_NAME  "ImageVis3D.pdf"
-#define HELP_URL  "http://www.sci.utah.edu/cibc/wiki/index.php/CIBC:Project:ImageVis3D#Manual"
+#define HELP_URL  "http://www.sci.utah.edu/releases/iv3d_docs/ImageVis3D.pdf"
 #define TUTORIAL_URL  "http://www.sci.utah.edu/cibc/wiki/index.php/CIBC:Project:ImageVis3D#Video_Tutorials"
+#define DEMO_DATA_URL  "http://www.sci.utah.edu/download/IV3DData.html"
 #define DEBUG_DUMP_SERVER   "ftp://ftp.sci.utah.edu"
 #define DEBUG_DUMP_PATH     "upload/ImageVis3D/"
-#define UPDATE_VERSION_PATH "http://software.sci.utah.edu/devbuilds/imagevis3d/"
-#define UPDATE_NIGHTLY_PATH "http://software.sci.utah.edu/devbuilds/imagevis3d/"
-#define UPDATE_STABLE_PATH  "http://software.sci.utah.edu/SCIdownload.php?item=imagevis3d"
+#define UPDATE_VERSION_PATH "http://www.sci.utah.edu/devbuilds/imagevis3d/"
+#define UPDATE_NIGHTLY_PATH "http://www.sci.utah.edu/devbuilds/imagevis3d/"
+#define UPDATE_STABLE_PATH  "http://www.sci.utah.edu/download/imagevis3d.html"
 #ifdef DETECTED_OS_WINDOWS
   #define UPDATE_FILE "ImageVis3D-Windows-Latest.zip"
   #define UPDATE_VERSION_FILE "Windows_Latest_Version.txt"
