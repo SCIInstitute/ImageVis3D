@@ -65,6 +65,11 @@ void WelcomeDialog::OnlineHelp()
   emit OnlineHelpClicked();
 }
 
+void WelcomeDialog::GetExampleData()
+{
+  emit GetExampleDataClicked();
+}
+
 void WelcomeDialog::OpenManual()
 {
   emit OpenManualClicked();

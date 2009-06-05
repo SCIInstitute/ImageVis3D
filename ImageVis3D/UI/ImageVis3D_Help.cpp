@@ -367,6 +367,19 @@ void MainWindow::OnlineVideoTut() {
 #endif
 }
 
+void MainWindow::GetExampleData() {
+#ifdef DETECTED_OS_WINDOWS
+  ShellExecuteA(NULL, "open", DEMO_DATA_URL, NULL,NULL,SW_SHOWDEFAULT);
+#endif
+#ifdef DETECTED_OS_APPLE
+  system("open "DEMO_DATA_URL);
+#endif
+#ifdef DETECTED_OS_LINUX
+  /// @todo don't assume firefox is installed.
+  system("firefox " DEMO_DATA_URL);
+#endif
+}
+
 void MainWindow::CloseWelcome() {
   if (m_pWelcomeDialog->ShowAtStartup() != m_bShowWelcomeScreen) {
     QSettings settings;

@@ -110,6 +110,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void OnlineHelp();
     void OpenManual();
     void OnlineVideoTut();
+    void GetExampleData();
     void CloseWelcome();
     void ReportABug();
 
