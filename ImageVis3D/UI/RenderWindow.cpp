@@ -217,7 +217,7 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
 
   // mouse is over the 3D window
   if (eWinMode == AbstrRenderer::WM_3D ) {
-    float fZoom = event->delta()/1000.0f;
+    float fZoom = -event->delta()/1000.0f;
 
     // User can hold control to modify only the clip plane.  Note however that
     // if the plane is locked to the volume, we'll end up translating the plane

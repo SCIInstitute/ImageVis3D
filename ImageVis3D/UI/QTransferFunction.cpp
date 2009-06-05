@@ -45,6 +45,7 @@ QTransferFunction::QTransferFunction(MasterController& masterController, QWidget
   m_MasterController(masterController),
   m_eExecutionMode(CONTINUOUS),
   m_fHistfScale(1.0f),
-  m_bBackdropCacheUptodate(false)
+  m_bBackdropCacheUptodate(false),
+  m_bHistogramChanged(false)
 {
 }

@@ -56,6 +56,7 @@ enum EDragMode {
   DRM_MOVE,
   DRM_ROTATE,
   DRM_SCALE,
+  DRM_MOVE_ZOOM,
   DRM_NONE
 };
 
@@ -131,6 +132,7 @@ protected:
   virtual void mouseMoveEvent(QMouseEvent *event);
   virtual void mousePressEvent(QMouseEvent *event);
   virtual void mouseReleaseEvent(QMouseEvent *event);
+  virtual void wheelEvent(QWheelEvent *event);
   virtual void changeEvent(QEvent * event);
 
 private:
@@ -144,6 +146,9 @@ private:
   unsigned int m_iCachedHeight;
   unsigned int m_iCachedWidth;
   QPixmap*   m_pBackdropCache;
+  
+  // cached image of the histogram
+  QImage* m_pHistImage;
 
   // border size, may be changed in the constructor
   unsigned int m_iBorderSize;
@@ -168,12 +173,15 @@ private:
   bool    m_bDragging;
   bool    m_bDraggingAll;
   EDragMode  m_eDragMode;
+  FLOATVECTOR4  m_vZoomWindow;
 
   // drawing routines
   void DrawBorder(QPainter& painter);
   void DrawHistogram(QPainter& painter);
   void DrawSwatches(QPainter& painter, bool bDrawWidgets);
   void Draw1DTrans(QPainter& painter);
+
+  void GenerateHistogramImage();
 
   // helper
   INTVECTOR2   Rel2Abs(FLOATVECTOR2 vfCoord);

@@ -565,7 +565,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
   if (m_bAutoSaveGEO) SaveDefaultGeometry();
   if (m_bAutoSaveWSP) SaveDefaultWorkspace();
   m_MasterController.RemoveDebugOut(m_pDebugOut);
-  event->accept();
+  event->accept(); 
 }
 
 void MainWindow::ChooseIsoColor()

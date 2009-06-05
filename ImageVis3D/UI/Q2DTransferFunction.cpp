@@ -61,6 +61,7 @@ Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWi
   m_iCachedHeight(0),
   m_iCachedWidth(0),
   m_pBackdropCache(NULL),
+  m_pHistImage(NULL),
 
   // border size, may be changed arbitrarily
   m_iBorderSize(4),
@@ -72,15 +73,17 @@ Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWi
   m_vMousePressPos(0,0),
   m_bDragging(false),
   m_bDraggingAll(false),
-  m_eDragMode(DRM_NONE)
+  m_eDragMode(DRM_NONE),
+  m_vZoomWindow(0.0f,0.0f,1.0f,1.0f)
 {
   SetColor(isEnabled());
 }
 
 Q2DTransferFunction::~Q2DTransferFunction(void)
 {
-  // delete the backdrop cache pixmap
+  // delete the cache pixmap and image
   delete m_pBackdropCache;
+  delete m_pHistImage;
 }
 
 QSize Q2DTransferFunction::minimumSizeHint() const
@@ -99,9 +102,6 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunctio
 
   // resize the histogram vector
   m_vHistogram.Resize(vHistogram->GetSize());
-
-  // force the draw routine to recompute the backdrop cache
-  m_bBackdropCacheUptodate = false;
 
   // if the histogram is empty we are done
   if (m_vHistogram.GetSize().area() == 0)  return;
@@ -124,6 +124,9 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunctio
   // Upload the new TF to the GPU.
   m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
 
+  // force the draw routine to recompute the backdrop cache
+  m_bHistogramChanged = true;
+
   emit SwatchChange();
 }
 
@@ -137,16 +140,23 @@ void Q2DTransferFunction::DrawBorder(QPainter& painter) {
   painter.drawRect(backRect);
 }
 
-void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
+
+void Q2DTransferFunction::GenerateHistogramImage() {
   if (m_pTrans == NULL) return;
 
   // convert the histogram into an image
   // define the bitmap ...
-  QImage image(QSize(int(m_vHistogram.GetSize().x), int(m_vHistogram.GetSize().y)), QImage::Format_RGB32);
+  if (!m_pHistImage || 
+      m_pHistImage->height() != m_vHistogram.GetSize().x || 
+      m_pHistImage->width() != m_vHistogram.GetSize().y) {
+    delete m_pHistImage;
+    m_pHistImage = new QImage(QSize(int(m_vHistogram.GetSize().x), int(m_vHistogram.GetSize().y)), QImage::Format_RGB32);
+  }
+
   for (size_t y = 0;y<m_vHistogram.GetSize().y;y++)
     for (size_t x = 0;x<m_vHistogram.GetSize().x;x++) {
       float value = min<float>(1.0f, pow(m_vHistogram.Get(x,y),1.0f/(1+(m_fHistfScale-1)/100.0f)));
-      image.setPixel(int(x),
+      m_pHistImage->setPixel(int(x),
          int(m_vHistogram.GetSize().y-(y+1)),
          qRgb(int(m_colorBack.red()  * (1.0f-value) +
                   m_colorHistogram.red()  * value),
@@ -156,32 +166,35 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
                   m_colorHistogram.blue() * value)));
     }
 
+  m_bBackdropCacheUptodate = false;
+  m_bHistogramChanged = false;
+}
+
+void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
+  if (m_pTrans == NULL) return;
+
+  if (m_bHistogramChanged) GenerateHistogramImage();
+
   // ... draw it
   QRectF target(m_iBorderSize/2, m_iBorderSize/2,
     width()-m_iBorderSize, height()-m_iBorderSize);
-  QRectF source(0.0, 0.0,
-    m_vHistogram.GetSize().x, m_vHistogram.GetSize().y);
-  painter.drawImage( target, image, source );
+  QRectF source(m_vZoomWindow.x * m_vHistogram.GetSize().x,
+                m_vZoomWindow.y * m_vHistogram.GetSize().y,
+                m_vZoomWindow.z * m_vHistogram.GetSize().x,
+                m_vZoomWindow.w * m_vHistogram.GetSize().y);
+  painter.drawImage( target, *m_pHistImage, source );
 }
 
 
 
 INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
-  return INTVECTOR2(int(m_iSwatchBorderSize/2+
-      m_iBorderSize/2+vfCoord.x*
-      (width()-m_iBorderSize-m_iSwatchBorderSize)),
-        int(m_iSwatchBorderSize/2+
-      m_iBorderSize/2+vfCoord.y*
-      (height()-m_iBorderSize-m_iSwatchBorderSize)));
+  return INTVECTOR2(int(-m_vZoomWindow.x/m_vZoomWindow.z * width() +m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x/m_vZoomWindow.z* (width()-m_iBorderSize-m_iSwatchBorderSize)),
+                    int(-m_vZoomWindow.y/m_vZoomWindow.w * height()+m_iSwatchBorderSize/2+ m_iBorderSize/2+vfCoord.y/m_vZoomWindow.w* (height()-m_iBorderSize-m_iSwatchBorderSize)));
 }
 
 FLOATVECTOR2 Q2DTransferFunction::Abs2Rel(INTVECTOR2 vCoord) {
-  return FLOATVECTOR2((float(vCoord.x)-m_iSwatchBorderSize/2.0f+
-           m_iBorderSize/2.0f)/
-          float(width()-m_iBorderSize-m_iSwatchBorderSize),
-          (float(vCoord.y)-m_iSwatchBorderSize/2.0f+
-           m_iBorderSize/2.0f)/
-          float(height()-m_iBorderSize-m_iSwatchBorderSize));
+  return FLOATVECTOR2((float(vCoord.x)*m_vZoomWindow.z-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.x * width())/float(width()-m_iBorderSize-m_iSwatchBorderSize),
+                      (float(vCoord.y)*m_vZoomWindow.w-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.y * height())/float(height()-m_iBorderSize-m_iSwatchBorderSize));
 }
 
 void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
@@ -212,7 +225,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
     }
 
     INTVECTOR2 vPixelPos0 = Rel2Abs(currentSwatch.pGradientCoords[0])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize),
-		       vPixelPos1 = Rel2Abs(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize);
+		           vPixelPos1 = Rel2Abs(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize);
 
     QGradient* pGradientBrush;
     if (currentSwatch.bRadial) {
@@ -225,7 +238,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
     for (size_t j = 0;j<currentSwatch.pGradientStops.size();j++) {
       pGradientBrush->setColorAt(currentSwatch.pGradientStops[j].first,
                    QColor(int(currentSwatch.pGradientStops[j].second[0]*255),
-                      int(currentSwatch.pGradientStops[j].second[1]*255),
+                          int(currentSwatch.pGradientStops[j].second[1]*255),
                           int(currentSwatch.pGradientStops[j].second[2]*255),
                           int(currentSwatch.pGradientStops[j].second[3]*255)));
     }
@@ -259,6 +272,13 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
   if (m_pTrans == NULL) return;
   // call superclass method
   QWidget::mousePressEvent(event);
+
+  // middle mouse button drags entire view
+  if (event->button() == Qt::MidButton) {
+    m_vMousePressPos = INTVECTOR2(event->x(), event->y());
+    m_eDragMode = DRM_MOVE_ZOOM;
+    return;
+  }
 
   bool bShiftPressed = ( event->modifiers() & Qt::ShiftModifier);
   bool bCtrlPressed = ( event->modifiers() & Qt::ControlModifier);
@@ -372,6 +392,28 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
   }
 }
 
+void Q2DTransferFunction::wheelEvent(QWheelEvent *event) {
+  float fZoom = 1.0f-event->delta()/5000.0f;
+
+  FLOATVECTOR2 vNewSize(std::min(1.0f,m_vZoomWindow.z*fZoom), 
+                        std::min(1.0f,m_vZoomWindow.w*fZoom));
+ 
+  m_vZoomWindow.x += (m_vZoomWindow.z-vNewSize.x)/2.0f;
+  m_vZoomWindow.y += (m_vZoomWindow.w-vNewSize.y)/2.0f;
+
+  m_vZoomWindow.z = vNewSize.x;
+  m_vZoomWindow.w = vNewSize.y;
+
+  if (m_vZoomWindow.x + m_vZoomWindow.z > 1.0f) m_vZoomWindow.x = 1.0f-m_vZoomWindow.z;
+  if (m_vZoomWindow.y + m_vZoomWindow.w > 1.0f) m_vZoomWindow.y = 1.0f-m_vZoomWindow.w;
+  if (m_vZoomWindow.x < 0) m_vZoomWindow.x = 0;
+  if (m_vZoomWindow.y < 0) m_vZoomWindow.y = 0;
+
+
+  m_bBackdropCacheUptodate = false;
+  repaint();
+}
+
 void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   if (m_pTrans == NULL) return;
   // call superclass method
@@ -381,6 +423,7 @@ void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   m_bDraggingAll = false;
   m_iPointSelIndex = -1;
   m_iGradSelIndex = -1;
+  m_eDragMode = DRM_NONE;
 
   update();
 
@@ -406,6 +449,36 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
   if (m_pTrans == NULL) return;
   // call superclass method
   QWidget::mouseMoveEvent(event);
+
+  if (m_eDragMode == DRM_MOVE_ZOOM) {
+    INTVECTOR2 vMouseCurrentPos(event->x(), event->y());
+
+    FLOATVECTOR2 vfPressPos = Abs2Rel(m_vMousePressPos);
+    FLOATVECTOR2 vfCurrentPos = Abs2Rel(vMouseCurrentPos);
+
+    FLOATVECTOR2 vfDelta = vfPressPos-vfCurrentPos;
+
+    FLOATVECTOR2 vfWinShift;
+
+    if (vfDelta.x < 0) 
+      vfWinShift.x = std::max(vfDelta.x, -m_vZoomWindow.x);
+    else
+      vfWinShift.x = std::min(vfDelta.x, 1.0f-(m_vZoomWindow.x+m_vZoomWindow.z));
+
+    if (vfDelta.y < 0) 
+      vfWinShift.y = std::max(vfDelta.y, -m_vZoomWindow.y);
+    else
+      vfWinShift.y = std::min(vfDelta.y, 1.0f-(m_vZoomWindow.y+m_vZoomWindow.w));
+
+    m_vZoomWindow.x += vfWinShift.x;
+    m_vZoomWindow.y += vfWinShift.y;
+    m_bBackdropCacheUptodate = false;
+
+    m_vMousePressPos = vMouseCurrentPos;
+    update();
+
+    return;
+  }
 
   if (m_bDragging) {
 
@@ -475,25 +548,26 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void Q2DTransferFunction::SetColor(bool bIsEnabled) {
-    if (bIsEnabled) {
-      m_colorHistogram = QColor(255,255,255);
-      m_colorBack = QColor(Qt::black);
-      m_colorBorder = QColor(255, 255, 255);
-      m_colorSwatchBorder = QColor(180, 0, 0);
-      m_colorSwatchBorderCircle = QColor(200, 200, 0);
-      m_colorSwatchGradCircle = QColor(0, 255, 0);
-      m_colorSwatchGradCircleSel = QColor(255, 255, 255);
-      m_colorSwatchBorderCircleSel = QColor(255, 255, 255);
-    } else {
-      m_colorHistogram = QColor(55,55,55);
-      m_colorBack = QColor(Qt::black);
-      m_colorBorder = QColor(100, 100, 100);
-      m_colorSwatchBorder = QColor(100, 50, 50);
-      m_colorSwatchBorderCircle = QColor(100, 100, 50);
-      m_colorSwatchGradCircle = QColor(50, 100, 50);
-      m_colorSwatchGradCircleSel = m_colorSwatchGradCircle;
-      m_colorSwatchBorderCircleSel = m_colorSwatchBorderCircle;
-    }
+  if (bIsEnabled) {
+    m_colorHistogram = QColor(255,255,255);
+    m_colorBack = QColor(Qt::black);
+    m_colorBorder = QColor(255, 255, 255);
+    m_colorSwatchBorder = QColor(180, 0, 0);
+    m_colorSwatchBorderCircle = QColor(200, 200, 0);
+    m_colorSwatchGradCircle = QColor(0, 255, 0);
+    m_colorSwatchGradCircleSel = QColor(255, 255, 255);
+    m_colorSwatchBorderCircleSel = QColor(255, 255, 255);
+  } else {
+    m_colorHistogram = QColor(55,55,55);
+    m_colorBack = QColor(Qt::black);
+    m_colorBorder = QColor(100, 100, 100);
+    m_colorSwatchBorder = QColor(100, 50, 50);
+    m_colorSwatchBorderCircle = QColor(100, 100, 50);
+    m_colorSwatchGradCircle = QColor(50, 100, 50);
+    m_colorSwatchGradCircleSel = m_colorSwatchGradCircle;
+    m_colorSwatchBorderCircleSel = m_colorSwatchBorderCircle;
+  }
+  m_bHistogramChanged = true;
 }
 
 void Q2DTransferFunction::changeEvent(QEvent * event) {
@@ -509,8 +583,14 @@ void Q2DTransferFunction::changeEvent(QEvent * event) {
 
 
 void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
-  QRect imageRect(m_iBorderSize/2, m_iBorderSize/2, width()-m_iBorderSize, height()-m_iBorderSize);
-  painter.drawImage(imageRect,m_pTrans->Get1DTransImage());
+  QRectF imageRect(m_iBorderSize/2, m_iBorderSize/2, 
+                  width()-m_iBorderSize, height()-m_iBorderSize);
+
+  QRectF source(m_vZoomWindow.x * m_pTrans->Get1DTransImage().width(),
+                m_vZoomWindow.y * m_pTrans->Get1DTransImage().height(),
+                m_vZoomWindow.z * m_pTrans->Get1DTransImage().width(),
+                m_vZoomWindow.w * m_pTrans->Get1DTransImage().height());
+  painter.drawImage(imageRect,m_pTrans->Get1DTransImage(), source);
 }
 
 void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
@@ -524,7 +604,7 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
   }
 
   // as drawing the histogram can become quite expensive we'll cache it in an image and only redraw if needed
-  if (!m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
+  if (m_bHistogramChanged || !m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
 
     // delete the old pixmap an create a new one if the size has changed
     if ((unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
@@ -590,15 +670,16 @@ void Q2DTransferFunction::Transfer2DSetActiveSwatch(const int iActiveSwatch) {
 void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
   TFPolygon newSwatch;
 
-  FLOATVECTOR2 vPoint(0.8f,0.8f);
+  FLOATVECTOR2 vPoint(m_vZoomWindow.x + 0.8f*m_vZoomWindow.z, m_vZoomWindow.y + 0.8f*m_vZoomWindow.w);
+  FLOATVECTOR2 vCenter(m_vZoomWindow.x + 0.5f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
   unsigned int iNumberOfSegments = 20;
   for (unsigned int i = 0;i<iNumberOfSegments;i++) {
     newSwatch.pPoints.push_back(vPoint);
-    vPoint = Rotate(vPoint, 6.283185f/float(iNumberOfSegments), FLOATVECTOR2(0.5f,0.5f), FLOATVECTOR2(1,1));
+    vPoint = Rotate(vPoint, 6.283185f/float(iNumberOfSegments), vCenter, FLOATVECTOR2(1,1));
   }
 
-  newSwatch.pGradientCoords[0] = FLOATVECTOR2(0,0.5f);
-  newSwatch.pGradientCoords[1] = FLOATVECTOR2(1,0.5f);
+  newSwatch.pGradientCoords[0] = FLOATVECTOR2(m_vZoomWindow.x + 0.1f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
+  newSwatch.pGradientCoords[1] = FLOATVECTOR2(m_vZoomWindow.x + 0.9f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
 
   GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),g2(0.5f,FLOATVECTOR4(1,1,1,1)),g3(1,FLOATVECTOR4(0,0,0,0));
   newSwatch.pGradientStops.push_back(g1);
@@ -615,13 +696,13 @@ void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
 void Q2DTransferFunction::Transfer2DAddSwatch() {
   TFPolygon newSwatch;
 
-  newSwatch.pPoints.push_back(FLOATVECTOR2(0.3f,0.3f));
-  newSwatch.pPoints.push_back(FLOATVECTOR2(0.3f,0.7f));
-  newSwatch.pPoints.push_back(FLOATVECTOR2(0.7f,0.7f));
-  newSwatch.pPoints.push_back(FLOATVECTOR2(0.7f,0.3f));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(m_vZoomWindow.x + 0.3f*m_vZoomWindow.z, m_vZoomWindow.y + 0.3f*m_vZoomWindow.w));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(m_vZoomWindow.x + 0.3f*m_vZoomWindow.z, m_vZoomWindow.y + 0.7f*m_vZoomWindow.w));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(m_vZoomWindow.x + 0.7f*m_vZoomWindow.z, m_vZoomWindow.y + 0.7f*m_vZoomWindow.w));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(m_vZoomWindow.x + 0.7f*m_vZoomWindow.z, m_vZoomWindow.y + 0.3f*m_vZoomWindow.w));
 
-  newSwatch.pGradientCoords[0] = FLOATVECTOR2(0.3f,0.5f);
-  newSwatch.pGradientCoords[1] = FLOATVECTOR2(0.7f,0.5f);
+  newSwatch.pGradientCoords[0] = FLOATVECTOR2(m_vZoomWindow.x + 0.3f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
+  newSwatch.pGradientCoords[1] = FLOATVECTOR2(m_vZoomWindow.x + 0.7f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
 
   GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),g2(0.5f,FLOATVECTOR4(1,1,1,1)),g3(1,FLOATVECTOR4(0,0,0,0));
   newSwatch.pGradientStops.push_back(g1);

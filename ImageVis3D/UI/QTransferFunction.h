@@ -67,6 +67,7 @@ public slots:
   virtual void SetHistogramScale(float fScale) {
     m_fHistfScale = fScale;
     m_bBackdropCacheUptodate = false;
+    m_bHistogramChanged = true;
     update();
   }
 
@@ -81,6 +82,7 @@ protected:
   executionMode     m_eExecutionMode;
   float             m_fHistfScale;
   bool              m_bBackdropCacheUptodate;
+  bool              m_bHistogramChanged;
 };
 
 
