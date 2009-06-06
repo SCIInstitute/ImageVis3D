@@ -65,6 +65,7 @@ function vcs_update
         git_svn_update "."
         git_svn_update "Tuvok"
         git_svn_update "Tuvok/Basics"
+        git_svn_update "Tuvok/IO"
     fi
 }
 
