@@ -147,8 +147,8 @@ void Q2DTransferFunction::GenerateHistogramImage() {
   // convert the histogram into an image
   // define the bitmap ...
   if (!m_pHistImage || 
-      m_pHistImage->height() != m_vHistogram.GetSize().x || 
-      m_pHistImage->width() != m_vHistogram.GetSize().y) {
+      static_cast<size_t>(m_pHistImage->height()) != m_vHistogram.GetSize().x ||
+      static_cast<size_t>(m_pHistImage->width()) != m_vHistogram.GetSize().y) {
     delete m_pHistImage;
     m_pHistImage = new QImage(QSize(int(m_vHistogram.GetSize().x), int(m_vHistogram.GetSize().y)), QImage::Format_RGB32);
   }
