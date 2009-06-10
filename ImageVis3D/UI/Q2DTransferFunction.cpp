@@ -193,8 +193,8 @@ INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
 }
 
 FLOATVECTOR2 Q2DTransferFunction::Abs2Rel(INTVECTOR2 vCoord) {
-  return FLOATVECTOR2((float(vCoord.x)*m_vZoomWindow.z-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.x * width())/float(width()-m_iBorderSize-m_iSwatchBorderSize)*width()/m_iCachedWidth,
-                      (float(vCoord.y)*m_vZoomWindow.w-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.y * height())/float(height()-m_iBorderSize-m_iSwatchBorderSize)*height()/m_iCachedHeight);
+  return FLOATVECTOR2((float(vCoord.x)*m_vZoomWindow.z-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.x * width())/float(width()-m_iBorderSize-m_iSwatchBorderSize),
+                      (float(vCoord.y)*m_vZoomWindow.w-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.y * height())/float(height()-m_iBorderSize-m_iSwatchBorderSize));
 }
 
 void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
@@ -308,12 +308,13 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
       m_iPointSelIndex = -1;
       m_iGradSelIndex = -1;
 
+      FLOATVECTOR2 vfP = Abs2Rel(m_vMousePressPos);
       // find closest corner point
       float fMinDist = std::numeric_limits<float>::max();
       for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
-        INTVECTOR2 point = Rel2Abs(currentSwatch.pPoints[j]);
 
-        float fDist = sqrt( float(m_vMousePressPos.x-point.x)*float(m_vMousePressPos.x-point.x) +  float(m_vMousePressPos.y-point.y)*float(m_vMousePressPos.y-point.y) );
+        float fDist = sqrt( float(vfP.x-currentSwatch.pPoints[j].x)*float(vfP.x-currentSwatch.pPoints[j].x)
+                         +  float(vfP.y-currentSwatch.pPoints[j].y)*float(vfP.y-currentSwatch.pPoints[j].y) );
 
         if (fMinDist > fDist) {
           fMinDist = fDist;
@@ -324,9 +325,8 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
 
       // find closest gradient coord
       for (size_t j = 0;j<2;j++) {
-        INTVECTOR2 point = Rel2Abs(currentSwatch.pGradientCoords[j]);
-
-        float fDist = sqrt( float(m_vMousePressPos.x-point.x)*float(m_vMousePressPos.x-point.x) +  float(m_vMousePressPos.y-point.y)*float(m_vMousePressPos.y-point.y) );
+        float fDist = sqrt( float(vfP.x-currentSwatch.pGradientCoords[j].x)*float(vfP.x-currentSwatch.pGradientCoords[j].x)
+                         +  float(vfP.y-currentSwatch.pGradientCoords[j].y)*float(vfP.y-currentSwatch.pGradientCoords[j].y) );
 
         if (fMinDist > fDist) {
           fMinDist = fDist;
@@ -353,7 +353,7 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
 
         // check if we are deleting a point
         if (currentSwatch.pPoints.size() > 3) {
-          INTVECTOR2 vPixelDist = Rel2Abs(vfP-A);
+          INTVECTOR2 vPixelDist = Rel2Abs(vfP)-Rel2Abs(A);
           if ( sqrt( float(vPixelDist.x*vPixelDist.x+vPixelDist.y*vPixelDist.y)) <= m_iSwatchBorderSize*3) {
             currentSwatch.pPoints.erase(currentSwatch.pPoints.begin()+j);
             iInsertIndex = -1;
@@ -648,17 +648,33 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
   }
 
   // now draw everything rest into this widget
-  QPainter painter(this);
-  painter.eraseRect(0,0,w,h);
+  QPainter painter;
+
+
+  QPixmap tmp(w, h);
+  painter.begin(&tmp);
+
+
+  //painter.eraseRect(0,0,w,h);
 
   // the image captured before (or cached from a previous call)
   painter.drawImage(0,0,m_pBackdropCache->toImage());
 
   // and the swatches
-  painter.setClipRegion(QRegion(0,0,w,h));
-  painter.setClipping(true);
+  //painter.setClipRegion(QRegion(0,0,w,h));
+  //painter.setClipping(true);
   DrawSwatches(painter, true);
-  painter.setClipping(false);
+  //painter.setClipping(false);
+
+  painter.end();
+  painter.begin(this);
+
+  QRectF source(0.0, 0.0, w, h);
+  QRectF target(0.0, 0.0, width(), height());
+
+  painter.drawImage(target, tmp.toImage(), source);
+
+  painter.end();
 }
 
 bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
