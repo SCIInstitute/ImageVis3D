@@ -136,7 +136,7 @@ void Q2DTransferFunction::DrawBorder(QPainter& painter) {
   painter.setPen(borderPen);
 
   painter.setBrush(m_colorBack);
-  QRect backRect(0,0,width(),height());
+  QRect backRect(0,0,painter.viewport().width(),painter.viewport().height());
   painter.drawRect(backRect);
 }
 
@@ -177,7 +177,7 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
 
   // ... draw it
   QRectF target(m_iBorderSize/2, m_iBorderSize/2,
-    width()-m_iBorderSize, height()-m_iBorderSize);
+    painter.viewport().width()-m_iBorderSize, painter.viewport().height()-m_iBorderSize);
   QRectF source(m_vZoomWindow.x * m_vHistogram.GetSize().x,
                 m_vZoomWindow.y * m_vHistogram.GetSize().y,
                 m_vZoomWindow.z * m_vHistogram.GetSize().x,
@@ -188,13 +188,13 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
 
 
 INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
-  return INTVECTOR2(int(-m_vZoomWindow.x/m_vZoomWindow.z * width() +m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x/m_vZoomWindow.z* (width()-m_iBorderSize-m_iSwatchBorderSize)),
-                    int(-m_vZoomWindow.y/m_vZoomWindow.w * height()+m_iSwatchBorderSize/2+ m_iBorderSize/2+vfCoord.y/m_vZoomWindow.w* (height()-m_iBorderSize-m_iSwatchBorderSize)));
+  return INTVECTOR2(int(-m_vZoomWindow.x/m_vZoomWindow.z * m_iCachedWidth +m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x/m_vZoomWindow.z* (m_iCachedWidth-m_iBorderSize-m_iSwatchBorderSize)),
+                    int(-m_vZoomWindow.y/m_vZoomWindow.w * m_iCachedHeight+m_iSwatchBorderSize/2+ m_iBorderSize/2+vfCoord.y/m_vZoomWindow.w* (m_iCachedHeight-m_iBorderSize-m_iSwatchBorderSize)));
 }
 
 FLOATVECTOR2 Q2DTransferFunction::Abs2Rel(INTVECTOR2 vCoord) {
-  return FLOATVECTOR2((float(vCoord.x)*m_vZoomWindow.z-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.x * width())/float(width()-m_iBorderSize-m_iSwatchBorderSize),
-                      (float(vCoord.y)*m_vZoomWindow.w-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.y * height())/float(height()-m_iBorderSize-m_iSwatchBorderSize));
+  return FLOATVECTOR2((float(vCoord.x)*m_vZoomWindow.z-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.x * width())/float(width()-m_iBorderSize-m_iSwatchBorderSize)*width()/m_iCachedWidth,
+                      (float(vCoord.y)*m_vZoomWindow.w-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.y * height())/float(height()-m_iBorderSize-m_iSwatchBorderSize)*height()/m_iCachedHeight);
 }
 
 void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
@@ -570,6 +570,12 @@ void Q2DTransferFunction::SetColor(bool bIsEnabled) {
   m_bHistogramChanged = true;
 }
 
+void Q2DTransferFunction::resizeEvent ( QResizeEvent * event ) {
+  QTransferFunction::resizeEvent(event);
+
+  m_bBackdropCacheUptodate = false;
+}
+
 void Q2DTransferFunction::changeEvent(QEvent * event) {
   // call superclass method
   QWidget::changeEvent(event);
@@ -584,13 +590,28 @@ void Q2DTransferFunction::changeEvent(QEvent * event) {
 
 void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
   QRectF imageRect(m_iBorderSize/2, m_iBorderSize/2, 
-                  width()-m_iBorderSize, height()-m_iBorderSize);
+                  painter.viewport().width()-m_iBorderSize, painter.viewport().height()-m_iBorderSize);
 
   QRectF source(m_vZoomWindow.x * m_pTrans->Get1DTransImage().width(),
                 m_vZoomWindow.y * m_pTrans->Get1DTransImage().height(),
                 m_vZoomWindow.z * m_pTrans->Get1DTransImage().width(),
                 m_vZoomWindow.w * m_pTrans->Get1DTransImage().height());
   painter.drawImage(imageRect,m_pTrans->Get1DTransImage(), source);
+}
+
+
+void Q2DTransferFunction::ComputeCachedImageSize(UINT32 &w , UINT32 &h) const {
+  // find an image size that has the same aspect ratio as the histogram
+  // but is no smaler than the widget
+
+  w = UINT32(width());
+  float fRatio = float(m_pTrans->GetRenderSize().x) / float(m_pTrans->GetRenderSize().y);
+  h = w / fRatio;
+
+  if (h > UINT32(height())) {
+    h = UINT32(height());
+    w = h * fRatio;
+  }
 }
 
 void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
@@ -603,14 +624,14 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
     return;
   }
 
-  // as drawing the histogram can become quite expensive we'll cache it in an image and only redraw if needed
-  if (m_bHistogramChanged || !m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
+  UINT32 w,h;
+  ComputeCachedImageSize(w,h);
 
-    // delete the old pixmap an create a new one if the size has changed
-    if ((unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
-      delete m_pBackdropCache;
-      m_pBackdropCache = new QPixmap(width(),height());
-    }
+  // as drawing the histogram can become quite expensive we'll cache it in an image and only redraw if needed
+  if (m_bHistogramChanged || !m_bBackdropCacheUptodate || h != m_iCachedHeight || w != m_iCachedWidth) {
+
+    delete m_pBackdropCache;
+    m_pBackdropCache = new QPixmap(w,h);
 
     // attach a painter to the pixmap
     QPainter image_painter(m_pBackdropCache);
@@ -622,18 +643,22 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 
     // update change detection states
     m_bBackdropCacheUptodate = true;
-    m_iCachedHeight = height();
-    m_iCachedWidth = width();
+    m_iCachedHeight = h;
+    m_iCachedWidth = w;
   }
 
   // now draw everything rest into this widget
   QPainter painter(this);
+  painter.eraseRect(0,0,w,h);
 
   // the image captured before (or cached from a previous call)
   painter.drawImage(0,0,m_pBackdropCache->toImage());
 
   // and the swatches
+  painter.setClipRegion(QRegion(0,0,w,h));
+  painter.setClipping(true);
   DrawSwatches(painter, true);
+  painter.setClipping(false);
 }
 
 bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {

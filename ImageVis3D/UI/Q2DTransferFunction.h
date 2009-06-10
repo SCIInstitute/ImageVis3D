@@ -60,6 +60,13 @@ enum EDragMode {
   DRM_NONE
 };
 
+enum EQ2DTransferFunctionMode {
+  TFM_EXPERT = 0,
+  TFM_BASIC,
+  TFM_INVALID
+};
+
+
 class Q2DTransferFunction : public QTransferFunction
 {
   Q_OBJECT
@@ -113,6 +120,10 @@ public:
 
   virtual void ApplyFunction();
 
+  void Toggle2DTFMode() { m_TransferFunctionMode = EQ2DTransferFunctionMode((int(m_TransferFunctionMode)+1)%int(TFM_INVALID)); update();}
+  void Set2DTFMode(EQ2DTransferFunctionMode TransferFunctionMode) { m_TransferFunctionMode = TransferFunctionMode; update();}
+  const EQ2DTransferFunctionMode Get2DTFMode() const { return m_TransferFunctionMode;}
+
 public slots:
   void Transfer2DSetActiveSwatch(const int iActiveSwatch);
   void Transfer2DAddSwatch();
@@ -134,6 +145,7 @@ protected:
   virtual void mouseReleaseEvent(QMouseEvent *event);
   virtual void wheelEvent(QWheelEvent *event);
   virtual void changeEvent(QEvent * event);
+  virtual void resizeEvent( QResizeEvent * event );
 
 private:
   // states
@@ -141,11 +153,13 @@ private:
   TransferFunction2D*    m_pTrans;
   unsigned int      m_iPaintmode;
   int            m_iActiveSwatchIndex;
+  EQ2DTransferFunctionMode m_TransferFunctionMode;
 
   // cached image of the backdrop
   unsigned int m_iCachedHeight;
   unsigned int m_iCachedWidth;
   QPixmap*   m_pBackdropCache;
+  QPixmap*   m_pSwatchImage;
   
   // cached image of the histogram
   QImage* m_pHistImage;
@@ -182,6 +196,7 @@ private:
   void Draw1DTrans(QPainter& painter);
 
   void GenerateHistogramImage();
+  void ComputeCachedImageSize(UINT32 &w , UINT32 &h) const;
 
   // helper
   INTVECTOR2   Rel2Abs(FLOATVECTOR2 vfCoord);

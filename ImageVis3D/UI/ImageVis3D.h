@@ -137,6 +137,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void Transfer2DLoad();
     bool Transfer2DLoad(std::string strFilename);
     void Transfer2DSave();
+    void Transfer2DToggleTFMode();
 
     void SetUpdateMode();
     void ApplyUpdate();

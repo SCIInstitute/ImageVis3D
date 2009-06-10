@@ -1939,8 +1939,8 @@
   <widget class="QDockWidget" name="dockWidget_2DTrans">
    <property name="minimumSize">
     <size>
-     <width>458</width>
-     <height>522</height>
+     <width>432</width>
+     <height>464</height>
     </size>
    </property>
    <property name="features">
@@ -2536,6 +2536,13 @@
                 </property>
                </widget>
               </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_ToggleBasic">
+                <property name="text">
+                 <string>Basic Mode</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </item>
@@ -2617,8 +2624,8 @@
       <widget class="QFrame" name="frame_2DTrans">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
+         <horstretch>1</horstretch>
+         <verstretch>2</verstretch>
         </sizepolicy>
        </property>
        <property name="toolTip">
@@ -4773,7 +4780,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DLoad()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>729</x>
+     <x>669</x>
      <y>2284</y>
     </hint>
     <hint type="destinationlabel">
@@ -4789,7 +4796,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DSave()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>906</x>
+     <x>788</x>
      <y>2284</y>
     </hint>
     <hint type="destinationlabel">
@@ -6142,6 +6149,22 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_ToggleBasic</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Transfer2DToggleTFMode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>855</x>
+     <y>2268</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>603</x>
+     <y>1774</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -6225,5 +6248,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>ClipToggleLock(bool)</slot>
   <slot>Transfer2DToggleGradientType()</slot>
   <slot>OpenManual()</slot>
+  <slot>Transfer2DToggleTFMode()</slot>
  </slots>
 </ui>

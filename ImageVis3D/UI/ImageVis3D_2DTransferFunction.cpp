@@ -277,3 +277,16 @@ void MainWindow::Transfer2DSave() {
   }
 }
 
+
+void MainWindow::Transfer2DToggleTFMode() {
+  m_2DTransferFunction->Toggle2DTFMode();
+  EQ2DTransferFunctionMode tfMode = m_2DTransferFunction->Get2DTFMode();
+
+  if ( tfMode  == TFM_EXPERT ) {
+    frame_2DTransEditWrapper->setVisible(true);
+    frame_Expand2DWidgets->setVisible(true);
+  } else {
+    frame_2DTransEditWrapper->setVisible(false);
+    frame_Expand2DWidgets->setVisible(false);
+  }
+}
