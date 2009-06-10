@@ -172,7 +172,7 @@ void MainWindow::RemoveAllLocks(RenderWindow* sender, size_t iLockType) {
   for (int j = 0;j<mdiArea->subWindowList().size();j++) {
     QWidget* w = mdiArea->subWindowList().at(j)->widget();
     RenderWindow* otherWin = WidgetToRenderWin(w);
-    if (otherWin == sender) continue;
+    if (otherWin == sender || otherWin == NULL) continue;
 
     for (size_t k = 0;k<otherWin->m_vpLocks[iLockType].size();) {
       if (otherWin->m_vpLocks[iLockType][k] == sender) {
