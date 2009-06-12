@@ -42,6 +42,7 @@
 
 #include "QTransferFunction.h"
 #include "../Tuvok/IO/TransferFunction2D.h"
+#include <QtGui/QMouseEvent>
 
 #define Q2DT_PAINT_NONE  0
 #define Q2DT_PAINT_RED   1
@@ -146,6 +147,9 @@ protected:
   virtual void wheelEvent(QWheelEvent *event);
   virtual void changeEvent(QEvent * event);
   virtual void resizeEvent( QResizeEvent * event );
+  virtual void keyPressEvent( QKeyEvent * event );
+  virtual void keyReleaseEvent( QKeyEvent * event );
+
 
 private:
   // states
@@ -192,6 +196,7 @@ private:
   bool    m_bDraggingAll;
   EDragMode  m_eDragMode;
   FLOATVECTOR4  m_vZoomWindow;
+  Qt::MouseButton m_mouseButton;
 
   // drawing routines
   void DrawBorder(QPainter& painter);
@@ -211,6 +216,9 @@ private:
           float angle,
           FLOATVECTOR2 center,
           FLOATVECTOR2 rescale);
+
+  void SetDragMode(bool bShiftPressed, bool bCtrlPressed);
+  void DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mouseButton);
 };
 
 

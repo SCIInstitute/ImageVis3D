@@ -39,7 +39,7 @@
 #include <limits>
 #include "Q2DTransferFunction.h"
 #include <QtGui/QPainter>
-#include <QtGui/QMouseEvent>
+
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 
@@ -77,6 +77,8 @@ Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWi
   m_vZoomWindow(0.0f,0.0f,1.0f,1.0f)
 {
   SetColor(isEnabled());
+
+  setFocusPolicy(Qt::StrongFocus);
 }
 
 Q2DTransferFunction::~Q2DTransferFunction(void)
@@ -324,21 +326,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
   }
 }
 
-void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
-  if (m_pTrans == NULL) return;
-  // call superclass method
-  QWidget::mousePressEvent(event);
-
-  // middle mouse button drags entire view
-  if (event->button() == Qt::MidButton) {
-    m_vMousePressPos = INTVECTOR2(event->x(), event->y());
-    m_eDragMode = DRM_MOVE_ZOOM;
-    return;
-  }
-
-  bool bShiftPressed = ( event->modifiers() & Qt::ShiftModifier);
-  bool bCtrlPressed = ( event->modifiers() & Qt::ControlModifier);
-
+void Q2DTransferFunction::SetDragMode(bool bShiftPressed, bool bCtrlPressed) {
   if (bShiftPressed)
     if(bCtrlPressed)
       m_eDragMode = DRM_ROTATE;
@@ -350,13 +338,31 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
     else
       m_eDragMode = DRM_NONE;
 
+}
+
+void Q2DTransferFunction::keyReleaseEvent(QKeyEvent *event) {
+  SetDragMode( event->modifiers() & Qt::ShiftModifier,
+               event->modifiers() & Qt::ControlModifier);
+  DragInit(m_vMousePressPos, m_mouseButton);
+}
+
+
+void Q2DTransferFunction::keyPressEvent(QKeyEvent *event) {
+  SetDragMode( event->modifiers() & Qt::ShiftModifier,
+               event->modifiers() & Qt::ControlModifier);
+  DragInit(m_vMousePressPos, m_mouseButton);
+}
+
+
+void Q2DTransferFunction::DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mouseButton) {
+  m_vMousePressPos = vMousePressPos;
+  m_mouseButton = mouseButton;
 
   if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex<int(m_pTrans->m_Swatches.size())) {
-    m_vMousePressPos = INTVECTOR2(event->x(), event->y());
     TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
 
     // left mouse drags points around
-    if (event->button() == Qt::LeftButton) {
+    if (mouseButton == Qt::LeftButton) {
 
       m_bDragging = true;
       m_bDraggingAll = m_eDragMode != DRM_NONE;
@@ -394,7 +400,7 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
     }
 
     // right mouse removes / adds points
-    if (event->button() == Qt::RightButton) {
+    if (mouseButton == Qt::RightButton) {
 
       FLOATVECTOR2 vfP = Screen2Normalized(m_vMousePressPos);
 
@@ -448,6 +454,25 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
   }
 }
 
+void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
+  if (m_pTrans == NULL) return;
+  // call superclass method
+  QWidget::mousePressEvent(event);
+
+  // middle mouse button drags entire view
+  if (event->button() == Qt::MidButton) {
+    m_vMousePressPos = INTVECTOR2(event->x(), event->y());
+    m_eDragMode = DRM_MOVE_ZOOM;
+    return;
+  }
+
+  SetDragMode( event->modifiers() & Qt::ShiftModifier,
+               event->modifiers() & Qt::ControlModifier);
+
+  INTVECTOR2 vMousePressPos = INTVECTOR2(event->x(), event->y());
+  DragInit(vMousePressPos, event->button());
+}
+
 void Q2DTransferFunction::wheelEvent(QWheelEvent *event) {
   float fZoom = 1.0f-event->delta()/5000.0f;
 
@@ -470,6 +495,9 @@ void Q2DTransferFunction::wheelEvent(QWheelEvent *event) {
   repaint();
 }
 
+
+
+
 void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   if (m_pTrans == NULL) return;
   // call superclass method
@@ -480,6 +508,7 @@ void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   m_iPointSelIndex = -1;
   m_iGradSelIndex = -1;
   m_eDragMode = DRM_NONE;
+  m_mouseButton = Qt::NoButton;
 
   update();
 
