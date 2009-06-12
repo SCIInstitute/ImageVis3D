@@ -187,30 +187,104 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
 
 
 
-INTVECTOR2 Q2DTransferFunction::Rel2Abs(FLOATVECTOR2 vfCoord) {
+INTVECTOR2 Q2DTransferFunction::Normalized2Offscreen(FLOATVECTOR2 vfCoord) {
   return INTVECTOR2(int(-m_vZoomWindow.x/m_vZoomWindow.z * m_iCachedWidth +m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x/m_vZoomWindow.z* (m_iCachedWidth-m_iBorderSize-m_iSwatchBorderSize)),
                     int(-m_vZoomWindow.y/m_vZoomWindow.w * m_iCachedHeight+m_iSwatchBorderSize/2+ m_iBorderSize/2+vfCoord.y/m_vZoomWindow.w* (m_iCachedHeight-m_iBorderSize-m_iSwatchBorderSize)));
 }
 
-FLOATVECTOR2 Q2DTransferFunction::Abs2Rel(INTVECTOR2 vCoord) {
+INTVECTOR2 Q2DTransferFunction::Normalized2Screen(FLOATVECTOR2 vfCoord) {
+  return INTVECTOR2(int(-m_vZoomWindow.x/m_vZoomWindow.z * width() +m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x/m_vZoomWindow.z* (width()-m_iBorderSize-m_iSwatchBorderSize)),
+                    int(-m_vZoomWindow.y/m_vZoomWindow.w * height()+m_iSwatchBorderSize/2+ m_iBorderSize/2+vfCoord.y/m_vZoomWindow.w* (height()-m_iBorderSize-m_iSwatchBorderSize)));
+}
+
+FLOATVECTOR2 Q2DTransferFunction::Screen2Normalized(INTVECTOR2 vCoord) {
   return FLOATVECTOR2((float(vCoord.x)*m_vZoomWindow.z-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.x * width())/float(width()-m_iBorderSize-m_iSwatchBorderSize),
                       (float(vCoord.y)*m_vZoomWindow.w-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.y * height())/float(height()-m_iBorderSize-m_iSwatchBorderSize));
 }
 
-void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
+void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
   if (m_pTrans == NULL) return;
 
-  if (bDrawWidgets) {
-    painter.setRenderHint(painter.Antialiasing, true);
-    painter.translate(+0.5, +0.5);  /// \todo check if we need this
+  painter.setRenderHint(painter.Antialiasing, true);
+  painter.translate(+0.5, +0.5);  /// \todo check if we need this
+
+  QPen borderPen(m_colorSwatchBorder,         m_iSwatchBorderSize, Qt::SolidLine);
+  QPen borderPenHighlight(m_colorSwatchBorderHighlight, m_iSwatchBorderSize/2, Qt::SolidLine);
+  QPen borderPenHighlightCenter(m_colorBorder, 1, Qt::SolidLine);
+  QPen inactiveBorderPen(m_colorSwatchBorderInactive, m_iSwatchBorderSize, Qt::SolidLine);
+  QPen inactiveBorderHighlight(m_colorSwatchBorderInactiveHighlight, m_iSwatchBorderSize/2, Qt::SolidLine);
+  QPen noBorderPen(Qt::NoPen);
+  QPen circlePen(m_colorSwatchBorderCircle, m_iSwatchBorderSize, Qt::SolidLine);
+  QPen circlePenHighlight(m_colorSwatchBorderCircleHighlight, m_iSwatchBorderSize/2, Qt::SolidLine);
+  QPen gradCircePen(m_colorSwatchGradCircle, m_iSwatchBorderSize/2, Qt::SolidLine);
+  QPen circlePenSel(m_colorSwatchBorderCircleSel, m_iSwatchBorderSize, Qt::SolidLine);
+  QPen gradCircePenSel(m_colorSwatchGradCircleSel, m_iSwatchBorderSize/2, Qt::SolidLine);
+
+  QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
+
+
+  // render swatches
+  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
+    TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
+
+    std::vector<QPoint> pointList(currentSwatch.pPoints.size());
+    for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
+      INTVECTOR2 vPixelPos = Normalized2Screen(currentSwatch.pPoints[j]);
+      pointList[j] = QPoint(vPixelPos.x, vPixelPos.y);
+    }
+
+    if (m_iActiveSwatchIndex == int(i)) 
+      painter.setPen(borderPen); 
+    else 
+      painter.setPen(inactiveBorderPen);
+    painter.setBrush(Qt::NoBrush);
+    painter.drawPolygon(&pointList[0], int(currentSwatch.pPoints.size()));
+
+    if (m_iActiveSwatchIndex == int(i)) 
+      painter.setPen(borderPenHighlight); 
+    else 
+      painter.setPen(inactiveBorderHighlight);
+    painter.drawPolygon(&pointList[0], int(currentSwatch.pPoints.size()));
+
+
+    painter.setBrush(solidBrush);
+    for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
+      if (m_iPointSelIndex == int(j)) 
+        painter.setPen(circlePenSel); 
+      else 
+        painter.setPen(circlePen);
+      painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
+
+      if (m_iPointSelIndex != int(j)) {
+        painter.setPen(circlePenHighlight);
+        painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
+      }
+    }
+
+    painter.setBrush(Qt::NoBrush);
+    if (m_iActiveSwatchIndex == int(i) && m_iGradSelIndex== 0) 
+      painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
+    INTVECTOR2 vPixelPos = Normalized2Screen(currentSwatch.pGradientCoords[0])-INTVECTOR2(m_iSwatchBorderSize,m_iSwatchBorderSize);
+    painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
+    vPixelPos = Normalized2Screen(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize,m_iSwatchBorderSize);
+    if (m_iActiveSwatchIndex == int(i) && m_iGradSelIndex== 1) 
+      painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
+    painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
   }
 
-  QPen borderPen(m_colorSwatchBorder,       m_iSwatchBorderSize, Qt::SolidLine);
+  painter.setRenderHint(painter.Antialiasing, false);
+}
+
+void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
+  if (m_pTrans == NULL) return;
+
   QPen noBorderPen(Qt::NoPen);
   QPen circlePen(m_colorSwatchBorderCircle, m_iSwatchBorderSize, Qt::SolidLine);
   QPen gradCircePen(m_colorSwatchGradCircle, m_iSwatchBorderSize/2, Qt::SolidLine);
   QPen circlePenSel(m_colorSwatchBorderCircleSel, m_iSwatchBorderSize, Qt::SolidLine);
   QPen gradCircePenSel(m_colorSwatchGradCircleSel, m_iSwatchBorderSize/2, Qt::SolidLine);
+
+  painter.setPen(noBorderPen);
 
   QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
 
@@ -220,12 +294,12 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
 
     std::vector<QPoint> pointList(currentSwatch.pPoints.size());
     for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
-      INTVECTOR2 vPixelPos = Rel2Abs(currentSwatch.pPoints[j]);
+      INTVECTOR2 vPixelPos = Normalized2Offscreen(currentSwatch.pPoints[j]);
       pointList[j] = QPoint(vPixelPos.x, vPixelPos.y);
     }
 
-    INTVECTOR2 vPixelPos0 = Rel2Abs(currentSwatch.pGradientCoords[0])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize),
-		           vPixelPos1 = Rel2Abs(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize);
+    INTVECTOR2 vPixelPos0 = Normalized2Offscreen(currentSwatch.pGradientCoords[0])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize),
+		           vPixelPos1 = Normalized2Offscreen(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize, m_iSwatchBorderSize);
 
     QGradient* pGradientBrush;
     if (currentSwatch.bRadial) {
@@ -243,29 +317,11 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter, bool bDrawWidgets) {
                           int(currentSwatch.pGradientStops[j].second[3]*255)));
     }
 
-    if (bDrawWidgets && m_iActiveSwatchIndex == int(i)) painter.setPen(borderPen); else painter.setPen(noBorderPen);
     painter.setBrush(*pGradientBrush);
     painter.drawPolygon(&pointList[0], int(currentSwatch.pPoints.size()));
     delete pGradientBrush;
     painter.setBrush(Qt::NoBrush);
-
-    if (bDrawWidgets && m_iActiveSwatchIndex == int(i)) {
-      painter.setBrush(solidBrush);
-      for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
-        if (m_iPointSelIndex == int(j)) painter.setPen(circlePenSel); else painter.setPen(circlePen);
-        painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
-      }
-
-      painter.setBrush(Qt::NoBrush);
-      if (m_iGradSelIndex== 0) painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
-      INTVECTOR2 vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[0])-INTVECTOR2(m_iSwatchBorderSize,m_iSwatchBorderSize);
-      painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
-      vPixelPos = Rel2Abs(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize,m_iSwatchBorderSize);
-      if (m_iGradSelIndex== 1) painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
-      painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
-    }
   }
-  if (bDrawWidgets) painter.setRenderHint(painter.Antialiasing, false);
 }
 
 void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
@@ -308,7 +364,7 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
       m_iPointSelIndex = -1;
       m_iGradSelIndex = -1;
 
-      FLOATVECTOR2 vfP = Abs2Rel(m_vMousePressPos);
+      FLOATVECTOR2 vfP = Screen2Normalized(m_vMousePressPos);
       // find closest corner point
       float fMinDist = std::numeric_limits<float>::max();
       for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
@@ -340,7 +396,7 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
     // right mouse removes / adds points
     if (event->button() == Qt::RightButton) {
 
-      FLOATVECTOR2 vfP = Abs2Rel(m_vMousePressPos);
+      FLOATVECTOR2 vfP = Screen2Normalized(m_vMousePressPos);
 
       // find closest edge and compute the point on that edge
       float fMinDist = std::numeric_limits<float>::max();
@@ -353,7 +409,7 @@ void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
 
         // check if we are deleting a point
         if (currentSwatch.pPoints.size() > 3) {
-          INTVECTOR2 vPixelDist = Rel2Abs(vfP)-Rel2Abs(A);
+          INTVECTOR2 vPixelDist = Normalized2Offscreen(vfP)-Normalized2Offscreen(A);
           if ( sqrt( float(vPixelDist.x*vPixelDist.x+vPixelDist.y*vPixelDist.y)) <= m_iSwatchBorderSize*3) {
             currentSwatch.pPoints.erase(currentSwatch.pPoints.begin()+j);
             iInsertIndex = -1;
@@ -453,8 +509,8 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
   if (m_eDragMode == DRM_MOVE_ZOOM) {
     INTVECTOR2 vMouseCurrentPos(event->x(), event->y());
 
-    FLOATVECTOR2 vfPressPos = Abs2Rel(m_vMousePressPos);
-    FLOATVECTOR2 vfCurrentPos = Abs2Rel(vMouseCurrentPos);
+    FLOATVECTOR2 vfPressPos = Screen2Normalized(m_vMousePressPos);
+    FLOATVECTOR2 vfCurrentPos = Screen2Normalized(vMouseCurrentPos);
 
     FLOATVECTOR2 vfDelta = vfPressPos-vfCurrentPos;
 
@@ -484,8 +540,8 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 
     INTVECTOR2 vMouseCurrentPos(event->x(), event->y());
 
-    FLOATVECTOR2 vfPressPos = Abs2Rel(m_vMousePressPos);
-    FLOATVECTOR2 vfCurrentPos = Abs2Rel(vMouseCurrentPos);
+    FLOATVECTOR2 vfPressPos = Screen2Normalized(m_vMousePressPos);
+    FLOATVECTOR2 vfCurrentPos = Screen2Normalized(vMouseCurrentPos);
 
     FLOATVECTOR2 vfDelta = vfCurrentPos-vfPressPos;
 
@@ -553,7 +609,11 @@ void Q2DTransferFunction::SetColor(bool bIsEnabled) {
     m_colorBack = QColor(Qt::black);
     m_colorBorder = QColor(255, 255, 255);
     m_colorSwatchBorder = QColor(180, 0, 0);
+    m_colorSwatchBorderHighlight = QColor(255, 190, 190);
+    m_colorSwatchBorderInactive = QColor(50, 50, 50);
+    m_colorSwatchBorderInactiveHighlight = QColor(120, 120, 120);
     m_colorSwatchBorderCircle = QColor(200, 200, 0);
+    m_colorSwatchBorderCircleHighlight = QColor(255, 255, 0);
     m_colorSwatchGradCircle = QColor(0, 255, 0);
     m_colorSwatchGradCircleSel = QColor(255, 255, 255);
     m_colorSwatchBorderCircleSel = QColor(255, 255, 255);
@@ -562,7 +622,11 @@ void Q2DTransferFunction::SetColor(bool bIsEnabled) {
     m_colorBack = QColor(Qt::black);
     m_colorBorder = QColor(100, 100, 100);
     m_colorSwatchBorder = QColor(100, 50, 50);
+    m_colorSwatchBorderHighlight = QColor(150, 70, 70);
+    m_colorSwatchBorderInactive = QColor(50, 50, 50);
+    m_colorSwatchBorderInactiveHighlight = QColor(70, 70, 70);
     m_colorSwatchBorderCircle = QColor(100, 100, 50);
+    m_colorSwatchBorderCircleHighlight = QColor(200, 200, 60);
     m_colorSwatchGradCircle = QColor(50, 100, 50);
     m_colorSwatchGradCircleSel = m_colorSwatchGradCircle;
     m_colorSwatchBorderCircleSel = m_colorSwatchBorderCircle;
@@ -661,10 +725,7 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
   painter.drawImage(0,0,m_pBackdropCache->toImage());
 
   // and the swatches
-  //painter.setClipRegion(QRegion(0,0,w,h));
-  //painter.setClipping(true);
-  DrawSwatches(painter, true);
-  //painter.setClipping(false);
+  DrawSwatches(painter);
 
   painter.end();
   painter.begin(this);
@@ -673,6 +734,7 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
   QRectF target(0.0, 0.0, width(), height());
 
   painter.drawImage(target, tmp.toImage(), source);
+  DrawSwatcheDecoration(painter);
 
   painter.end();
 }

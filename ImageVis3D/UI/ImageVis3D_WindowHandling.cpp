@@ -272,7 +272,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 	/// \todo remove this once we figured out how to do fullscreen 
 	actionGo_Fullscreen->setVisible(false);
 
-  pushButton_ToggleBasic->setVisible(false);
+  //pushButton_ToggleBasic->setVisible(false);
 // DIRTY HACKS END
 }
 

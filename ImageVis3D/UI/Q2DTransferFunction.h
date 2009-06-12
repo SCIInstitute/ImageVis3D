@@ -173,7 +173,11 @@ private:
   QColor m_colorBack;
   QColor m_colorBorder;
   QColor m_colorSwatchBorder;
+  QColor m_colorSwatchBorderHighlight;
+  QColor m_colorSwatchBorderInactive;
+  QColor m_colorSwatchBorderInactiveHighlight;
   QColor m_colorSwatchBorderCircle;
+  QColor m_colorSwatchBorderCircleHighlight;
   QColor m_colorSwatchGradCircle;
   QColor m_colorSwatchBorderCircleSel;
   QColor m_colorSwatchGradCircleSel;
@@ -192,15 +196,17 @@ private:
   // drawing routines
   void DrawBorder(QPainter& painter);
   void DrawHistogram(QPainter& painter);
-  void DrawSwatches(QPainter& painter, bool bDrawWidgets);
+  void DrawSwatches(QPainter& painter);
+  void DrawSwatcheDecoration(QPainter& painter);
   void Draw1DTrans(QPainter& painter);
 
   void GenerateHistogramImage();
   void ComputeCachedImageSize(UINT32 &w , UINT32 &h) const;
 
   // helper
-  INTVECTOR2   Rel2Abs(FLOATVECTOR2 vfCoord);
-  FLOATVECTOR2 Abs2Rel(INTVECTOR2   vCoord);
+  INTVECTOR2   Normalized2Offscreen(FLOATVECTOR2 vfCoord);
+  INTVECTOR2   Normalized2Screen(FLOATVECTOR2 vfCoord);
+  FLOATVECTOR2 Screen2Normalized(INTVECTOR2   vCoord);
   FLOATVECTOR2 Rotate(FLOATVECTOR2 point,
           float angle,
           FLOATVECTOR2 center,
