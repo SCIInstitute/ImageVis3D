@@ -227,7 +227,14 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     connect(m_recentFileActs[i], SIGNAL(triggered()),
       this, SLOT(OpenRecentFile()));
     menuLast_Used_Projects->addAction(m_recentFileActs[i]);
+
+    m_recentWSFileActs[i] = new QAction(this);
+    m_recentWSFileActs[i]->setVisible(false);
+    connect(m_recentWSFileActs[i], SIGNAL(triggered()),
+      this, SLOT(OpenRecentWSFile()));
+    menuMost_Recently_Used_Workspaces->addAction(m_recentWSFileActs[i]);
   }
+
 
   setWindowIcon(QIcon(QPixmap::fromImage(QImage(":/Resources/icon_16.png"))));
 
@@ -306,6 +313,55 @@ void MainWindow::SetupWorkspaceMenu() {
 
   menu_Help->addAction(dockWidget_Debug->toggleViewAction());
 }
+
+void MainWindow::ClearWSMRUList()
+{
+  QSettings settings;
+  QStringList files;
+  files.clear();
+  settings.setValue("Menu/WS_MRU", files);
+
+  UpdateMRUActions();
+}
+
+void MainWindow::AddFileToWSMRUList(const QString &fileName)
+{
+  if (m_bScriptMode || fileName == "") return;
+
+  QSettings settings;
+  QStringList files = settings.value("Menu/WS_MRU").toStringList();
+
+  files.removeAll(fileName);
+  files.prepend(fileName);
+  while ((unsigned int)(files.size()) > ms_iMaxRecentFiles)
+    files.removeLast();
+
+  settings.setValue("Menu/WS_MRU", files);
+
+  UpdateWSMRUActions();
+}
+
+
+void MainWindow::UpdateWSMRUActions()
+{
+  QSettings settings;
+  QStringList files = settings.value("Menu/WS_MRU").toStringList();
+
+  int numRecentFiles = qMin(files.size(), (int)ms_iMaxRecentFiles);
+
+  for (int i = 0; i < numRecentFiles; ++i) {
+    QString text = tr("&%1 %2").arg(i + 1).arg(QFileInfo(files[i]).fileName());
+    m_recentWSFileActs[i]->setText(text);
+    m_recentWSFileActs[i]->setData(files[i]);
+    m_recentWSFileActs[i]->setVisible(true);
+    QString shortcut = tr("Ctrl+Shift+%1").arg(i + 1);
+    m_recentWSFileActs[i]->setShortcut(QKeySequence(shortcut));
+  }
+
+  for (unsigned int j = numRecentFiles; j < ms_iMaxRecentFiles; ++j)
+    m_recentWSFileActs[j]->setVisible(false);
+}
+
 
 void MainWindow::InitAllWorkspaces() {
   dockWidget_Tools->setVisible(false);
@@ -421,6 +477,8 @@ bool MainWindow::LoadWorkspace(QString strFilename,
   }
 
   m_strCurrentWorkspaceFilename = strFilename;
+
+  if (bOK) AddFileToWSMRUList(strFilename);
 
   return bOK;
 }
@@ -791,6 +849,14 @@ void MainWindow::OpenRecentFile(){
   }
 }
 
+void MainWindow::OpenRecentWSFile(){
+  QAction *action = qobject_cast<QAction *>(sender());
+
+  if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
+    if (action) LoadWorkspace(action->data().toString());
+  } 
+}
+
 void MainWindow::UpdateMenus() {
   bool bHasMdiChild = mdiArea->subWindowList().size() > 0;
   actionExport_Dataset->setEnabled(bHasMdiChild);
@@ -856,7 +922,6 @@ void MainWindow::AddFileToMRUList(const QString &fileName)
   UpdateMRUActions();
 }
 
-
 void MainWindow::UpdateMRUActions()
 {
   QSettings settings;
@@ -869,6 +934,8 @@ void MainWindow::UpdateMRUActions()
     m_recentFileActs[i]->setText(text);
     m_recentFileActs[i]->setData(files[i]);
     m_recentFileActs[i]->setVisible(true);
+    QString shortcut = tr("Ctrl+%1").arg(i + 1);
+    m_recentFileActs[i]->setShortcut(QKeySequence(shortcut));
   }
 
   for (unsigned int j = numRecentFiles; j < ms_iMaxRecentFiles; ++j)

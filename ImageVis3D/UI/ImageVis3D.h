@@ -158,7 +158,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool SaveGeometry();
 
     void OpenRecentFile();
+    void OpenRecentWSFile();
     void ClearMRUList();
+    void ClearWSMRUList();
 
     void UpdateMenus();
     void ExportDataset();
@@ -244,6 +246,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     QTOut*                                    m_pDebugOut;
     static const unsigned int                 ms_iMaxRecentFiles = 5;
     QAction*                                  m_recentFileActs[ms_iMaxRecentFiles];
+    QAction*                                  m_recentWSFileActs[ms_iMaxRecentFiles];
     FLOATVECTOR3                              m_vBackgroundColors[2];
     FLOATVECTOR4                              m_vTextColor;
     bool                                      m_bShowVersionInTitle;
@@ -300,6 +303,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     void SetTitle();
     void setupUi(QMainWindow *MainWindow);
+
+    
+    void UpdateWSMRUActions();
+    void AddFileToWSMRUList(const QString &fileName);
 
     void UpdateMRUActions();
     void AddFileToMRUList(const QString &fileName);

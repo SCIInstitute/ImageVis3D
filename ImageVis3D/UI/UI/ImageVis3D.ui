@@ -94,7 +94,16 @@
     <property name="title">
      <string>Workspace</string>
     </property>
+    <widget class="QMenu" name="menuMost_Recently_Used_Workspaces">
+     <property name="title">
+      <string>Most Recently Used Workspaces</string>
+     </property>
+     <addaction name="actionClear_WS_MRU_List"/>
+     <addaction name="separator"/>
+    </widget>
     <addaction name="actionLoad_Workspace"/>
+    <addaction name="menuMost_Recently_Used_Workspaces"/>
+    <addaction name="separator"/>
     <addaction name="actionSave_Workspace"/>
     <addaction name="actionSave_DefaultWorkspace"/>
     <addaction name="actionReset_Workspace"/>
@@ -1615,8 +1624,8 @@
   <widget class="QDockWidget" name="dockWidget_1DTrans">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>196</width>
+     <height>378</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -1939,8 +1948,8 @@
   <widget class="QDockWidget" name="dockWidget_2DTrans">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>432</width>
+     <height>464</height>
     </size>
    </property>
    <property name="features">
@@ -4186,6 +4195,9 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <property name="text">
     <string>Load Dataset from File</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
   <action name="actionExport_Dataset">
    <property name="enabled">
@@ -4259,6 +4271,9 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <property name="text">
     <string>About</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
   </action>
   <action name="actionOpen_Online_Help">
    <property name="text">
@@ -4299,6 +4314,9 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <property name="text">
     <string>Load Workspace</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+W, Ctrl+S</string>
+   </property>
   </action>
   <action name="actionSave_Workspace">
    <property name="text">
@@ -4313,6 +4331,9 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <action name="actionLoad_Dataset_from_Directory">
    <property name="text">
     <string>Load Dataset from Directory</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="actionLoad_Window_Geometry">
@@ -4343,6 +4364,9 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <action name="actionWelcome_Screen">
    <property name="text">
     <string>Welcome Screen</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
    </property>
   </action>
   <action name="actionReport_an_Issue">
@@ -4382,6 +4406,14 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <action name="actionOpen_Local_Manual">
    <property name="text">
     <string>Open Local Manual</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
+  </action>
+  <action name="actionClear_WS_MRU_List">
+   <property name="text">
+    <string>Clear List</string>
    </property>
   </action>
  </widget>
@@ -6168,6 +6200,22 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionClear_WS_MRU_List</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ClearWSMRUList()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>582</x>
+     <y>1160</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -6252,5 +6300,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>Transfer2DToggleGradientType()</slot>
   <slot>OpenManual()</slot>
   <slot>Transfer2DToggleTFMode()</slot>
+  <slot>ClearWSMRUList()</slot>
  </slots>
 </ui>

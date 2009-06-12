@@ -138,6 +138,7 @@ MainWindow::MainWindow(MasterController& masterController,
   masterController.IOMan()->RegisterFinalConverter(new DialogConverter(this));
 
   UpdateMRUActions();
+  UpdateWSMRUActions();  
   UpdateMenus();
 
   m_pRedrawTimer = new QTimer(this);
