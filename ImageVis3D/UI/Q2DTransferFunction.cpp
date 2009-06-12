@@ -251,13 +251,13 @@ void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
 
     painter.setBrush(solidBrush);
     for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
-      if (m_iPointSelIndex == int(j)) 
+      if (m_iActiveSwatchIndex == int(i) && m_iPointSelIndex == int(j)) 
         painter.setPen(circlePenSel); 
       else 
         painter.setPen(circlePen);
       painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
 
-      if (m_iPointSelIndex != int(j)) {
+      if (m_iActiveSwatchIndex != int(i) || m_iPointSelIndex != int(j)) {
         painter.setPen(circlePenHighlight);
         painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
       }
