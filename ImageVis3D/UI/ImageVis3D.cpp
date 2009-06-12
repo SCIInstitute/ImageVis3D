@@ -296,6 +296,13 @@ void MainWindow::Use2DTrans() {
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(true);
 
+
+  int iCurrent = m_2DTransferFunction->GetActiveSwatchIndex();
+  if (iCurrent < 0 && m_2DTransferFunction->GetSwatchCount() > 0) {
+    m_2DTransferFunction->Transfer2DSetActiveSwatch(0);
+    Transfer2DSwatchesChanged();
+  }
+
   if (m_pActiveRenderWin) m_pActiveRenderWin->SetRendermode(AbstrRenderer::RM_2DTRANS);
 }
 
