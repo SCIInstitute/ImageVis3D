@@ -58,6 +58,7 @@ Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWi
   m_pTrans(NULL),
   m_iPaintmode(Q2DT_PAINT_NONE),
   m_iActiveSwatchIndex(-1),
+  m_TransferFunctionMode(TFM_EXPERT),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
   m_pBackdropCache(NULL),

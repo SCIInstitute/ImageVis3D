@@ -252,6 +252,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   GetDebugViewMask();
 
   frame_Expand2DWidgets->hide();
+  frame_Simple2DTransControls->hide();
   UpdateLockView();
 
   QSettings settings;
@@ -262,6 +263,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   m_pHttp = new QHttp(this);
   connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
   connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
+ 
 
 // DIRTY HACKS BEGIN
 
@@ -301,17 +303,26 @@ void MainWindow::SetupWorkspaceMenu() {
   radioButton_FiltersLock->setVisible(false);
 
   menu_Workspace->addAction(dockWidget_RenderOptions->toggleViewAction());
+  dockWidget_RenderOptions->toggleViewAction()->setShortcut(tr("Ctrl+Alt+1"));
   menu_Workspace->addAction(dockWidget_ProgressView->toggleViewAction());
+  dockWidget_ProgressView->toggleViewAction()->setShortcut(tr("Ctrl+Alt+2"));
   menu_Workspace->addSeparator();
   menu_Workspace->addAction(dockWidget_1DTrans->toggleViewAction());
+  dockWidget_1DTrans->toggleViewAction()->setShortcut(tr("Ctrl+Alt+3"));
   menu_Workspace->addAction(dockWidget_2DTrans->toggleViewAction());
+  dockWidget_2DTrans->toggleViewAction()->setShortcut(tr("Ctrl+Alt+4"));
   menu_Workspace->addAction(dockWidget_IsoSurface->toggleViewAction());
+  dockWidget_IsoSurface->toggleViewAction()->setShortcut(tr("Ctrl+Alt+5"));
   menu_Workspace->addSeparator();
   menu_Workspace->addAction(dockWidget_LockOptions->toggleViewAction());
+  dockWidget_LockOptions->toggleViewAction()->setShortcut(tr("Ctrl+Alt+6"));
   menu_Workspace->addAction(dockWidget_Recorder->toggleViewAction());
+  dockWidget_Recorder->toggleViewAction()->setShortcut(tr("Ctrl+Alt+7"));
   menu_Workspace->addAction(dockWidget_Stereo->toggleViewAction());
+  dockWidget_Stereo->toggleViewAction()->setShortcut(tr("Ctrl+Alt+8"));
 
   menu_Help->addAction(dockWidget_Debug->toggleViewAction());
+  dockWidget_Debug->toggleViewAction()->setShortcut(tr("Ctrl+D"));
 }
 
 void MainWindow::ClearWSMRUList()

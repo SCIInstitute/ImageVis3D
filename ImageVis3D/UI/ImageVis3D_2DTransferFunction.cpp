@@ -283,10 +283,10 @@ void MainWindow::Transfer2DToggleTFMode() {
   EQ2DTransferFunctionMode tfMode = m_2DTransferFunction->Get2DTFMode();
 
   if ( tfMode  == TFM_EXPERT ) {
-    frame_2DTransEditWrapper->setVisible(true);
-    frame_Expand2DWidgets->setVisible(true);
+    frame_Simple2DTransControls->setVisible(false);
+    frame_Expert2DTransControls->setVisible(true);
   } else {
-    frame_2DTransEditWrapper->setVisible(false);
-    frame_Expand2DWidgets->setVisible(false);
+    frame_Simple2DTransControls->setVisible(true);
+    frame_Expert2DTransControls->setVisible(false);
   }
 }

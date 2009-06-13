@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1166</width>
-    <height>2321</height>
+    <width>1453</width>
+    <height>2397</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -43,7 +43,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1166</width>
+     <width>1453</width>
      <height>22</height>
     </rect>
    </property>
@@ -1622,12 +1622,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_1DTrans">
-   <property name="minimumSize">
-    <size>
-     <width>196</width>
-     <height>378</height>
-    </size>
-   </property>
    <property name="windowTitle">
     <string>1D Transferfunction Editor</string>
    </property>
@@ -1666,10 +1660,10 @@
         <property name="bottomMargin">
          <number>6</number>
         </property>
-        <item row="0" column="0">
+        <item row="1" column="0">
          <widget class="QCheckBox" name="checkBox_Use1DTrans">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="minimumSize">
            <size>
@@ -1685,7 +1679,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
+        <item row="4" column="0">
          <widget class="QFrame" name="frame_1DTransEdit">
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
@@ -1884,6 +1878,38 @@
           </layout>
          </widget>
         </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_1DIndicator">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>1D Transfer Function Enabled</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <spacer name="verticalSpacer_16">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
      </item>
@@ -1946,10 +1972,16 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_2DTrans">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="minimumSize">
     <size>
-     <width>432</width>
-     <height>464</height>
+     <width>891</width>
+     <height>419</height>
     </size>
    </property>
    <property name="features">
@@ -1964,7 +1996,7 @@
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QHBoxLayout" name="horizontalLayout_11">
      <item>
-      <widget class="QFrame" name="frame_2DTransEditWrapper">
+      <widget class="QFrame" name="frame_Expert2DTransControls">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -1977,97 +2009,47 @@
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_12">
-        <property name="spacing">
-         <number>3</number>
-        </property>
-        <property name="leftMargin">
-         <number>3</number>
-        </property>
-        <property name="topMargin">
-         <number>3</number>
-        </property>
-        <property name="rightMargin">
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_23">
+        <property name="margin">
          <number>0</number>
         </property>
-        <property name="bottomMargin">
-         <number>6</number>
-        </property>
         <item>
-         <widget class="QFrame" name="frame_4">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Plain</enum>
-          </property>
-          <property name="lineWidth">
-           <number>0</number>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_15">
-           <property name="margin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QCheckBox" name="checkBox_Use2DTrans">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>18</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Use 2D Transfer Function</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="toolButton_Collapse2D">
-             <property name="toolTip">
-              <string>Collapse the polygon selcetion part of the 2D transfer function.</string>
-             </property>
-             <property name="statusTip">
-              <string>Collapse the polygon selcetion part of the 2D transfer function.</string>
-             </property>
-             <property name="whatsThis">
-              <string>Collapse the polygon selcetion part of the 2D transfer function.</string>
-             </property>
-             <property name="text">
-              <string>&lt;</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_2DTransEdit">
-          <property name="enabled">
-           <bool>false</bool>
+         <widget class="QFrame" name="frame_2DTransEditWrapper">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Plain</enum>
+           <enum>QFrame::Raised</enum>
           </property>
-          <property name="lineWidth">
-           <number>0</number>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_24">
+          <layout class="QVBoxLayout" name="verticalLayout_12">
            <property name="spacing">
+            <number>3</number>
+           </property>
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
             <number>0</number>
            </property>
-           <property name="margin">
-            <number>0</number>
+           <property name="bottomMargin">
+            <number>6</number>
            </property>
            <item>
-            <widget class="QFrame" name="frame_Polygons">
+            <widget class="QFrame" name="frame_4">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -2076,189 +2058,82 @@
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
+              <enum>QFrame::Plain</enum>
              </property>
              <property name="lineWidth">
               <number>0</number>
              </property>
-             <layout class="QGridLayout" name="gridLayout_10">
-              <property name="horizontalSpacing">
-               <number>0</number>
-              </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
               <property name="margin">
                <number>0</number>
               </property>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_10">
-                <property name="text">
-                 <string>Polygons</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QListWidget" name="listWidget_Swatches">
+              <item>
+               <widget class="QCheckBox" name="checkBox_Use2DTrans">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="toolTip">
-                 <string>Select the current polygon here.</string>
-                </property>
-                <property name="statusTip">
-                 <string>Select the current polygon here.</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QFrame" name="frame_14">
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <property name="lineWidth">
-                 <number>0</number>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_21">
-                 <item>
-                  <widget class="QPushButton" name="pushButton_AddPoly">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>23</height>
-                    </size>
-                   </property>
-                   <property name="toolTip">
-                    <string>Add a new quad to the 2D transfer function.</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Add a new quad to the 2D transfer function.</string>
-                   </property>
-                   <property name="text">
-                    <string>Add Quad</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_AddCircle">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>23</height>
-                    </size>
-                   </property>
-                   <property name="toolTip">
-                    <string>Add a new circle to the 2D transfer function.</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Add a new circle to the 2D transfer function.</string>
-                   </property>
-                   <property name="text">
-                    <string>Add Circle</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_DelPoly">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>23</height>
-                    </size>
-                   </property>
-                   <property name="toolTip">
-                    <string>Delete the currrent polygonfrom the 2D transfer function.</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Delete the currrent polygonfrom the 2D transfer function.</string>
-                   </property>
-                   <property name="text">
-                    <string>Delete</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_UpPoly">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>23</height>
-                    </size>
-                   </property>
-                   <property name="toolTip">
-                    <string>Move the current polygon up in the the blending order.</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Move the current polygon up in the the blending order.</string>
-                   </property>
-                   <property name="text">
-                    <string>Up</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_DownPoly">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>23</height>
-                    </size>
-                   </property>
-                   <property name="toolTip">
-                    <string>Move the current polygon down in the the blending order.</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Move the current polygon down in the the blending order.</string>
-                   </property>
-                   <property name="text">
-                    <string>Down</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <spacer name="verticalSpacer_10">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>0</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_Gradient">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="maximumSize">
+                <property name="minimumSize">
                  <size>
-                  <width>16777215</width>
-                  <height>20</height>
+                  <width>0</width>
+                  <height>18</height>
                  </size>
                 </property>
                 <property name="text">
-                 <string>Gradient</string>
+                 <string>Use 2D Transfer Function</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_2DIndicator">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>18</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QToolButton" name="toolButton_Collapse2D">
+                <property name="toolTip">
+                 <string>Collapse the polygon selcetion part of the 2D transfer function.</string>
+                </property>
+                <property name="statusTip">
+                 <string>Collapse the polygon selcetion part of the 2D transfer function.</string>
+                </property>
+                <property name="whatsThis">
+                 <string>Collapse the polygon selcetion part of the 2D transfer function.</string>
+                </property>
+                <property name="text">
+                 <string>&lt;</string>
                 </property>
                </widget>
               </item>
@@ -2266,9 +2141,25 @@
             </widget>
            </item>
            <item>
-            <widget class="QFrame" name="frame_Gradient">
+            <widget class="QLabel" name="label_10">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Polygons</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_2DTransEdit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -2277,62 +2168,30 @@
               <enum>QFrame::NoFrame</enum>
              </property>
              <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
+              <enum>QFrame::Plain</enum>
              </property>
              <property name="lineWidth">
               <number>0</number>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_22">
+             <layout class="QVBoxLayout" name="verticalLayout_24">
+              <property name="spacing">
+               <number>0</number>
+              </property>
               <property name="margin">
                <number>0</number>
               </property>
               <item>
-               <widget class="QFrame" name="frame_20">
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <property name="lineWidth">
-                 <number>0</number>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_28">
-                 <property name="margin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QRadioButton" name="radioButton_linGrad">
-                   <property name="text">
-                    <string>Linear</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="radioButton_radGrad">
-                   <property name="text">
-                    <string>Radial</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QFrame" name="frame_3">
+               <widget class="QFrame" name="frame_Polygons">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="maximumSize">
+                <property name="minimumSize">
                  <size>
-                  <width>16777215</width>
-                  <height>60</height>
+                  <width>100</width>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="frameShape">
@@ -2344,38 +2203,312 @@
                 <property name="lineWidth">
                  <number>0</number>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_14">
+                <layout class="QHBoxLayout" name="horizontalLayout_27">
                  <property name="margin">
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QListWidget" name="listWidget_Gradient">
+                  <widget class="QListWidget" name="listWidget_Swatches">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>0</height>
-                    </size>
-                   </property>
                    <property name="maximumSize">
                     <size>
-                     <width>16777215</width>
+                     <width>150</width>
                      <height>16777215</height>
                     </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Select the current polygon here.</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Select the current polygon here.</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_16">
+                  <widget class="QFrame" name="frame_28">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_37">
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_AddPoly">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>23</height>
+                       </size>
+                      </property>
+                      <property name="toolTip">
+                       <string>Add a new quad to the 2D transfer function.</string>
+                      </property>
+                      <property name="statusTip">
+                       <string>Add a new quad to the 2D transfer function.</string>
+                      </property>
+                      <property name="text">
+                       <string>Add Quad</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_AddCircle">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>23</height>
+                       </size>
+                      </property>
+                      <property name="toolTip">
+                       <string>Add a new circle to the 2D transfer function.</string>
+                      </property>
+                      <property name="statusTip">
+                       <string>Add a new circle to the 2D transfer function.</string>
+                      </property>
+                      <property name="text">
+                       <string>Add Circle</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_DelPoly">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>23</height>
+                       </size>
+                      </property>
+                      <property name="toolTip">
+                       <string>Delete the currrent polygonfrom the 2D transfer function.</string>
+                      </property>
+                      <property name="statusTip">
+                       <string>Delete the currrent polygonfrom the 2D transfer function.</string>
+                      </property>
+                      <property name="text">
+                       <string>Delete</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_UpPoly">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>23</height>
+                       </size>
+                      </property>
+                      <property name="toolTip">
+                       <string>Move the current polygon up in the the blending order.</string>
+                      </property>
+                      <property name="statusTip">
+                       <string>Move the current polygon up in the the blending order.</string>
+                      </property>
+                      <property name="text">
+                       <string>Up</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_DownPoly">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>23</height>
+                       </size>
+                      </property>
+                      <property name="toolTip">
+                       <string>Move the current polygon down in the the blending order.</string>
+                      </property>
+                      <property name="statusTip">
+                       <string>Move the current polygon down in the the blending order.</string>
+                      </property>
+                      <property name="text">
+                       <string>Down</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_10">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame_Gradient">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <property name="lineWidth">
+                 <number>0</number>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_22">
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QFrame" name="frame_20">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <property name="lineWidth">
+                    <number>0</number>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_28">
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="label_Gradient">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Gradient</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer_14">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="radioButton_linGrad">
+                      <property name="text">
+                       <string>Linear</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="radioButton_radGrad">
+                      <property name="text">
+                       <string>Radial</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_3">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>1</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="maximumSize">
                     <size>
                      <width>16777215</width>
-                     <height>16777215</height>
+                     <height>60</height>
                     </size>
                    </property>
                    <property name="frameShape">
@@ -2387,27 +2520,157 @@
                    <property name="lineWidth">
                     <number>0</number>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_20">
+                   <layout class="QHBoxLayout" name="horizontalLayout_14">
                     <property name="margin">
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="QPushButton" name="pushButton_AddStop">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>23</height>
-                       </size>
+                     <widget class="QListWidget" name="listWidget_Gradient">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
                       </property>
-                      <property name="text">
-                       <string>Add</string>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>16777215</height>
+                       </size>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButton_DelStop">
-                      <property name="enabled">
-                       <bool>false</bool>
+                     <widget class="QFrame" name="frame_16">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::NoFrame</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Raised</enum>
+                      </property>
+                      <property name="lineWidth">
+                       <number>0</number>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_20">
+                       <property name="margin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QPushButton" name="pushButton_AddStop">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>23</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Add</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="pushButton_DelStop">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>23</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Delete</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="verticalSpacer_17">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_ChooseColor">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <property name="lineWidth">
+                    <number>0</number>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_5">
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_ColorChooser">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>23</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Choose Color</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_Opacity">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
                       </property>
                       <property name="minimumSize">
                        <size>
@@ -2416,7 +2679,29 @@
                        </size>
                       </property>
                       <property name="text">
-                       <string>Delete</string>
+                       <string>Opacity:</string>
+                      </property>
+                      <property name="buddy">
+                       <cstring>horizontalSlider_Opacity</cstring>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSlider" name="horizontalSlider_Opacity">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="maximum">
+                       <number>100</number>
+                      </property>
+                      <property name="value">
+                       <number>80</number>
+                      </property>
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
                       </property>
                      </widget>
                     </item>
@@ -2427,9 +2712,12 @@
                </widget>
               </item>
               <item>
-               <widget class="QFrame" name="frame_ChooseColor">
-                <property name="enabled">
-                 <bool>false</bool>
+               <widget class="QFrame" name="frame_12">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
                 <property name="frameShape">
                  <enum>QFrame::NoFrame</enum>
@@ -2440,27 +2728,14 @@
                 <property name="lineWidth">
                  <number>0</number>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <layout class="QHBoxLayout" name="horizontalLayout_6">
                  <property name="margin">
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QPushButton" name="pushButton_ColorChooser">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>23</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Choose Color</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label_Opacity">
+                  <widget class="QPushButton" name="pushButton_Load2DTrans">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
@@ -2472,29 +2747,39 @@
                     </size>
                    </property>
                    <property name="text">
-                    <string>Opacity:</string>
-                   </property>
-                   <property name="buddy">
-                    <cstring>horizontalSlider_Opacity</cstring>
+                    <string>Load</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QSlider" name="horizontalSlider_Opacity">
+                  <widget class="QPushButton" name="pushButton_Save2DTrans">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
-                   <property name="maximum">
-                    <number>100</number>
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>23</height>
+                    </size>
                    </property>
-                   <property name="value">
-                    <number>80</number>
+                   <property name="text">
+                    <string>Save</string>
                    </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_ToggleBasic">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Basic Mode</string>
                    </property>
                   </widget>
                  </item>
@@ -2504,8 +2789,163 @@
              </layout>
             </widget>
            </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_Expand2DWidgets">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_11">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item>
-            <widget class="QFrame" name="frame_12">
+            <widget class="QToolButton" name="toolButton">
+             <property name="toolTip">
+              <string>Expand the polygon selcetion part of the 2D transfer function.</string>
+             </property>
+             <property name="statusTip">
+              <string>Expand the polygon selcetion part of the 2D transfer function.</string>
+             </property>
+             <property name="whatsThis">
+              <string>Expand the polygon selcetion part of the 2D transfer function.</string>
+             </property>
+             <property name="text">
+              <string>&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_11">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>350</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frame_verticalLayout">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_32">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QFrame" name="frame_2DTrans">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string/>
+          </property>
+          <property name="statusTip">
+           <string>2D histogram.  The X axis represents your data; Y axis represents the magnitude of the gradient in your data; the opacity represents how often that combination appears in your data.</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2DTrans">
+           <property name="spacing">
+            <number>9</number>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_Simple2DTransControls">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_36">
+           <property name="margin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QFrame" name="frame_27">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
              </property>
@@ -2515,12 +2955,200 @@
              <property name="lineWidth">
               <number>0</number>
              </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <layout class="QHBoxLayout" name="horizontalLayout_26">
               <property name="margin">
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_Load2DTrans">
+               <spacer name="horizontalSpacer_15">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_NewTriangle">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>23</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>New &quot;Triangle&quot;</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_NewRectangle">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>23</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>New Rectangle</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_Delete">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>23</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Delete</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_26">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_24">
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="horizontalSpacer_16">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_ColorChooser_SimpleUI">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>23</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Choose Color</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_Opacity_SimpleUI">
+                <property name="text">
+                 <string>Opacity</string>
+                </property>
+                <property name="buddy">
+                 <cstring>horizontalSlider_Opacity_SimpleUI</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="horizontalSlider_Opacity_SimpleUI">
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>80</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_10">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_25">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_25">
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="horizontalSpacer_9">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_9">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -2533,7 +3161,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_Save2DTrans">
+               <widget class="QPushButton" name="pushButton_2">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -2546,11 +3174,50 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_ToggleBasic">
+               <widget class="QPushButton" name="pushButton_ExpertMode">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>23</height>
+                 </size>
+                </property>
                 <property name="text">
-                 <string>Basic Mode</string>
+                 <string>Expert Mode</string>
                 </property>
                </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_2DIndicator_SimpleUI">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>2D Transfer Function Enabled</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="checkBox_Use2DTrans_SimpleUI">
+                <property name="text">
+                 <string>Use 2D Transfer Function</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_17">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </widget>
@@ -2562,108 +3229,13 @@
       </widget>
      </item>
      <item>
-      <widget class="QFrame" name="frame_Expand2DWidgets">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
+      <widget class="QSlider" name="verticalSlider_2DTransHistScale">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Plain</enum>
-       </property>
-       <property name="lineWidth">
-        <number>0</number>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_11">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>3</number>
-        </property>
-        <property name="topMargin">
-         <number>3</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QToolButton" name="toolButton">
-          <property name="toolTip">
-           <string>Expand the polygon selcetion part of the 2D transfer function.</string>
-          </property>
-          <property name="statusTip">
-           <string>Expand the polygon selcetion part of the 2D transfer function.</string>
-          </property>
-          <property name="whatsThis">
-           <string>Expand the polygon selcetion part of the 2D transfer function.</string>
-          </property>
-          <property name="text">
-           <string>&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_11">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>0</width>
-            <height>350</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QFrame" name="frame_2DTrans">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>1</horstretch>
-         <verstretch>2</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string/>
-       </property>
-       <property name="statusTip">
-        <string>2D histogram.  The X axis represents your data; Y axis represents the magnitude of the gradient in your data; the opacity represents how often that combination appears in your data.</string>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-       <property name="lineWidth">
-        <number>0</number>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2DTrans">
-        <property name="spacing">
-         <number>9</number>
-        </property>
-        <property name="margin">
-         <number>0</number>
-        </property>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSlider" name="verticalSlider_2DTransHistScale">
        <property name="minimumSize">
         <size>
          <width>20</width>
@@ -3335,6 +3907,32 @@
            <string>Use Isosurface Rendering</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_IsoDIndicator">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Isosurface Enabled</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_13">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <widget class="QToolButton" name="toolButton_ExpMesh">
@@ -4206,20 +4804,32 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <property name="text">
     <string>Export Dataset</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
   </action>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="action2_x_2_View">
    <property name="text">
     <string>2 x 2 View</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+V, Ctrl+2</string>
+   </property>
   </action>
   <action name="actionSinge_View">
    <property name="text">
     <string>Single View</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V, Ctrl+1</string>
    </property>
   </action>
   <action name="actionBox">
@@ -4266,6 +4876,9 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <property name="text">
     <string>Go Fullscreen</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F</string>
+   </property>
   </action>
   <action name="actionAbout">
    <property name="text">
@@ -4279,6 +4892,9 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <property name="text">
     <string>Open Online Help</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
   </action>
   <action name="actionClear_List">
    <property name="text">
@@ -4289,25 +4905,40 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <property name="text">
     <string>Clone View</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionCascade">
    <property name="text">
     <string>Cascade</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
   <action name="actionTile">
    <property name="text">
     <string>Tile</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+T</string>
+   </property>
   </action>
   <action name="actionNext">
    <property name="text">
     <string>Next View</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+N</string>
+   </property>
   </action>
   <action name="actionPrevious">
    <property name="text">
     <string>Previous View</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+P</string>
    </property>
   </action>
   <action name="actionLoad_Workspace">
@@ -4315,17 +4946,23 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <string>Load Workspace</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+W, Ctrl+S</string>
+    <string>Ctrl+Alt+L</string>
    </property>
   </action>
   <action name="actionSave_Workspace">
    <property name="text">
     <string>Save Workspace</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
+   </property>
   </action>
   <action name="actionReset_Workspace">
    <property name="text">
     <string>Reset Workspace</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+R</string>
    </property>
   </action>
   <action name="actionLoad_Dataset_from_Directory">
@@ -4340,25 +4977,40 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <property name="text">
     <string>Load Window Geometry</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+L</string>
+   </property>
   </action>
   <action name="actionSave_Window_Geometry">
    <property name="text">
     <string>Save Window Geometry</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="actionCheck_for_Updates">
    <property name="text">
     <string>Check for Updates</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
   </action>
   <action name="actionOpen_Online_Video_Tutorials">
    <property name="text">
     <string>Open Online Video Tutorials</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
   <action name="actionWelcome_Screen">
@@ -4372,6 +5024,9 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <action name="actionReport_an_Issue">
    <property name="text">
     <string>Report an Issue</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
   </action>
   <action name="actionClip_Plane">
@@ -4390,17 +5045,23 @@ smaller values while make it apear behind. While the first effect usualy looks m
   </action>
   <action name="actionSave_DefaultWorkspace">
    <property name="text">
-    <string>Save Default</string>
+    <string>Save Default Workspace</string>
    </property>
   </action>
   <action name="actionSave_DefaultGeometry">
    <property name="text">
     <string>Save Default</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+D</string>
+   </property>
   </action>
   <action name="actionMerge_Data_Sets">
    <property name="text">
     <string>Merge Datasets</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
    </property>
   </action>
   <action name="actionOpen_Local_Manual">
@@ -4688,7 +5349,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>154</x>
-     <y>1826</y>
+     <y>1884</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4703,8 +5364,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>879</x>
-     <y>1830</y>
+     <x>375</x>
+     <y>1868</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4784,7 +5445,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>154</x>
-     <y>2226</y>
+     <y>2140</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4800,7 +5461,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>154</x>
-     <y>2255</y>
+     <y>2169</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4815,7 +5476,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DLoad()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>669</x>
+     <x>355</x>
      <y>2284</y>
     </hint>
     <hint type="destinationlabel">
@@ -4831,7 +5492,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DSave()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>788</x>
+     <x>486</x>
      <y>2284</y>
     </hint>
     <hint type="destinationlabel">
@@ -4847,8 +5508,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1061</x>
-     <y>1181</y>
+     <x>942</x>
+     <y>1204</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4863,8 +5524,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>949</x>
-     <y>746</y>
+     <x>930</x>
+     <y>771</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4879,8 +5540,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>949</x>
-     <y>781</y>
+     <x>930</x>
+     <y>806</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4895,8 +5556,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>949</x>
-     <y>816</y>
+     <x>930</x>
+     <y>841</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4911,8 +5572,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>1885</y>
+     <x>154</x>
+     <y>1931</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4927,8 +5588,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>1920</y>
+     <x>154</x>
+     <y>1954</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4943,8 +5604,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>1955</y>
+     <x>154</x>
+     <y>1977</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4975,8 +5636,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>2165</y>
+     <x>154</x>
+     <y>2102</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -4991,8 +5652,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>2122</y>
+     <x>154</x>
+     <y>2079</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5008,7 +5669,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>365</x>
-     <y>1337</y>
+     <y>1381</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5024,7 +5685,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>71</x>
-     <y>1337</y>
+     <y>1381</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5040,7 +5701,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>225</x>
-     <y>1337</y>
+     <y>1381</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5056,7 +5717,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>147</x>
-     <y>1337</y>
+     <y>1381</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5072,7 +5733,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>284</x>
-     <y>1337</y>
+     <y>1381</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5088,7 +5749,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>154</x>
-     <y>2284</y>
+     <y>2198</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5104,7 +5765,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>154</x>
-     <y>1826</y>
+     <y>1884</y>
     </hint>
     <hint type="destinationlabel">
      <x>154</x>
@@ -5119,7 +5780,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DAddGradient()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>906</x>
+     <x>618</x>
      <y>2197</y>
     </hint>
     <hint type="destinationlabel">
@@ -5135,7 +5796,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DDeleteGradient()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>906</x>
+     <x>618</x>
      <y>2228</y>
     </hint>
     <hint type="destinationlabel">
@@ -5151,8 +5812,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DUpdateGradientBox()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>879</x>
-     <y>1830</y>
+     <x>375</x>
+     <y>1868</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5167,7 +5828,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DChooseGradientColor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>705</x>
+     <x>397</x>
      <y>2261</y>
     </hint>
     <hint type="destinationlabel">
@@ -5183,7 +5844,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DChooseGradientOpacity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>906</x>
+     <x>618</x>
      <y>2259</y>
     </hint>
     <hint type="destinationlabel">
@@ -5199,8 +5860,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ApplyUpdate()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1112</x>
-     <y>823</y>
+     <x>1137</x>
+     <y>848</y>
     </hint>
     <hint type="destinationlabel">
      <x>687</x>
@@ -5215,8 +5876,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1112</x>
-     <y>755</y>
+     <x>1137</x>
+     <y>780</y>
     </hint>
     <hint type="destinationlabel">
      <x>685</x>
@@ -5231,8 +5892,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1112</x>
-     <y>776</y>
+     <x>1137</x>
+     <y>801</y>
     </hint>
     <hint type="destinationlabel">
      <x>683</x>
@@ -5247,8 +5908,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1112</x>
-     <y>797</y>
+     <x>1137</x>
+     <y>822</y>
     </hint>
     <hint type="destinationlabel">
      <x>680</x>
@@ -5263,8 +5924,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>2079</y>
+     <x>154</x>
+     <y>2056</y>
     </hint>
     <hint type="destinationlabel">
      <x>415</x>
@@ -5280,7 +5941,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>182</x>
-     <y>623</y>
+     <y>654</y>
     </hint>
     <hint type="destinationlabel">
      <x>419</x>
@@ -5296,7 +5957,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>455</x>
-     <y>1564</y>
+     <y>1618</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5327,8 +5988,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetLighting(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1114</x>
-     <y>874</y>
+     <x>1139</x>
+     <y>899</y>
     </hint>
     <hint type="destinationlabel">
      <x>390</x>
@@ -5343,12 +6004,12 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>879</x>
-     <y>1830</y>
+     <x>375</x>
+     <y>1868</y>
     </hint>
     <hint type="destinationlabel">
-     <x>860</x>
-     <y>2155</y>
+     <x>618</x>
+     <y>2284</y>
     </hint>
    </hints>
   </connection>
@@ -5359,8 +6020,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetSampleRate(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1105</x>
-     <y>976</y>
+     <x>1130</x>
+     <y>1001</y>
     </hint>
     <hint type="destinationlabel">
      <x>389</x>
@@ -5376,7 +6037,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1122</x>
-     <y>1213</y>
+     <y>1236</y>
     </hint>
     <hint type="destinationlabel">
      <x>390</x>
@@ -5391,8 +6052,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1061</x>
-     <y>1181</y>
+     <x>942</x>
+     <y>1204</y>
     </hint>
     <hint type="destinationlabel">
      <x>1031</x>
@@ -5407,8 +6068,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleGlobalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1114</x>
-     <y>898</y>
+     <x>1139</x>
+     <y>923</y>
     </hint>
     <hint type="destinationlabel">
      <x>990</x>
@@ -5423,8 +6084,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleLocalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1114</x>
-     <y>922</y>
+     <x>1139</x>
+     <y>947</y>
     </hint>
     <hint type="destinationlabel">
      <x>989</x>
@@ -5487,8 +6148,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>917</x>
-     <y>674</y>
+     <x>913</x>
+     <y>699</y>
     </hint>
     <hint type="destinationlabel">
      <x>1008</x>
@@ -5503,8 +6164,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1019</x>
-     <y>674</y>
+     <x>1029</x>
+     <y>699</y>
     </hint>
     <hint type="destinationlabel">
      <x>1005</x>
@@ -5519,8 +6180,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1121</x>
-     <y>674</y>
+     <x>1146</x>
+     <y>699</y>
     </hint>
     <hint type="destinationlabel">
      <x>1007</x>
@@ -5552,7 +6213,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1156</x>
-     <y>1263</y>
+     <y>1286</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -5568,7 +6229,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1122</x>
-     <y>1308</y>
+     <y>1331</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -5584,7 +6245,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1156</x>
-     <y>1379</y>
+     <y>1402</y>
     </hint>
     <hint type="destinationlabel">
      <x>1003</x>
@@ -5600,7 +6261,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1156</x>
-     <y>1424</y>
+     <y>1447</y>
     </hint>
     <hint type="destinationlabel">
      <x>1004</x>
@@ -5616,7 +6277,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1156</x>
-     <y>1469</y>
+     <y>1492</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -5631,8 +6292,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>80</x>
-     <y>990</y>
+     <x>90</x>
+     <y>1025</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
@@ -5647,8 +6308,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>360</x>
-     <y>1018</y>
+     <x>370</x>
+     <y>1049</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -5663,8 +6324,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>244</x>
-     <y>1066</y>
+     <x>254</x>
+     <y>1097</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -5679,8 +6340,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>299</x>
-     <y>1042</y>
+     <x>309</x>
+     <y>1073</y>
     </hint>
     <hint type="destinationlabel">
      <x>382</x>
@@ -5712,7 +6373,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>99</x>
-     <y>1639</y>
+     <y>1673</y>
     </hint>
     <hint type="destinationlabel">
      <x>388</x>
@@ -5728,7 +6389,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>202</x>
-     <y>1684</y>
+     <y>1718</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -5744,7 +6405,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>344</x>
-     <y>1729</y>
+     <y>1763</y>
     </hint>
     <hint type="destinationlabel">
      <x>383</x>
@@ -5759,8 +6420,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ParseAndExecuteDebugCommand()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>334</x>
-     <y>1582</y>
+     <x>372</x>
+     <y>1615</y>
     </hint>
     <hint type="destinationlabel">
      <x>122</x>
@@ -5807,8 +6468,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Show1DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1002</x>
-     <y>760</y>
+     <x>958</x>
+     <y>772</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -5823,8 +6484,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Show2DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1002</x>
-     <y>795</y>
+     <x>958</x>
+     <y>807</y>
     </hint>
     <hint type="destinationlabel">
      <x>957</x>
@@ -5839,8 +6500,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ShowIsoEdit()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1002</x>
-     <y>830</y>
+     <x>958</x>
+     <y>842</y>
     </hint>
     <hint type="destinationlabel">
      <x>958</x>
@@ -5855,8 +6516,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Collapse2DWidgets()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>906</x>
-     <y>1831</y>
+     <x>618</x>
+     <y>1869</y>
     </hint>
     <hint type="destinationlabel">
      <x>671</x>
@@ -5871,8 +6532,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Expand2DWidgets()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>936</x>
-     <y>1831</y>
+     <x>648</x>
+     <y>1869</y>
     </hint>
     <hint type="destinationlabel">
      <x>896</x>
@@ -5888,7 +6549,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1156</x>
-     <y>1239</y>
+     <y>1262</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -5904,7 +6565,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1156</x>
-     <y>1334</y>
+     <y>1357</y>
     </hint>
     <hint type="destinationlabel">
      <x>956</x>
@@ -5936,7 +6597,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>446</x>
-     <y>1337</y>
+     <y>1381</y>
     </hint>
     <hint type="destinationlabel">
      <x>466</x>
@@ -6032,7 +6693,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1155</x>
-     <y>1184</y>
+     <y>1207</y>
     </hint>
     <hint type="destinationlabel">
      <x>955</x>
@@ -6079,8 +6740,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleClipPlane(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>918</x>
-     <y>1034</y>
+     <x>915</x>
+     <y>1059</y>
     </hint>
     <hint type="destinationlabel">
      <x>520</x>
@@ -6111,8 +6772,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ClipToggleShow(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1014</x>
-     <y>1034</y>
+     <x>1027</x>
+     <y>1059</y>
     </hint>
     <hint type="destinationlabel">
      <x>717</x>
@@ -6127,8 +6788,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ClipToggleLock(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1114</x>
-     <y>1034</y>
+     <x>1139</x>
+     <y>1059</y>
     </hint>
     <hint type="destinationlabel">
      <x>715</x>
@@ -6143,7 +6804,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DToggleGradientType()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>906</x>
+     <x>618</x>
      <y>2142</y>
     </hint>
     <hint type="destinationlabel">
@@ -6159,7 +6820,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DToggleGradientType()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>906</x>
+     <x>618</x>
      <y>2166</y>
     </hint>
     <hint type="destinationlabel">
@@ -6191,8 +6852,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DToggleTFMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>855</x>
-     <y>2268</y>
+     <x>618</x>
+     <y>2284</y>
     </hint>
     <hint type="destinationlabel">
      <x>603</x>
@@ -6213,6 +6874,86 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <hint type="destinationlabel">
      <x>582</x>
      <y>1160</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_9</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Transfer2DLoad()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>699</x>
+     <y>2280</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>588</x>
+     <y>1807</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Transfer2DSave()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>778</x>
+     <y>2273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>731</x>
+     <y>1807</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ExpertMode</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Transfer2DToggleTFMode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>868</x>
+     <y>2273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>774</x>
+     <y>1785</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ColorChooser_SimpleUI</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Transfer2DChooseGradientColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>728</x>
+     <y>2246</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>880</x>
+     <y>1815</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_Opacity_SimpleUI</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Transfer2DChooseGradientOpacity()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>920</x>
+     <y>2249</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>779</x>
+     <y>1773</y>
     </hint>
    </hints>
   </connection>

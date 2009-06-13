@@ -262,13 +262,21 @@ void MainWindow::RemoveRunningFlag() {
 void MainWindow::Use1DTrans() {
   if (!m_pActiveRenderWin) return;
 
+  label_2DIndicator->setVisible(false);
+  label_2DIndicator_SimpleUI->setVisible(false);
+  label_IsoDIndicator->setVisible(false);
+
   checkBox_Use2DTrans->setChecked(false);
-  checkBox_Use2DTrans->setEnabled(true);
+  checkBox_Use2DTrans->setVisible(true);
+  checkBox_Use2DTrans_SimpleUI->setChecked(false);
+  checkBox_Use2DTrans_SimpleUI->setVisible(true);
   checkBox_UseIso->setChecked(false);
-  checkBox_UseIso->setEnabled(true);
-  checkBox_Use1DTrans->setEnabled(false);
+  checkBox_UseIso->setVisible(true);
   checkBox_Use1DTrans->setChecked(true);
+  checkBox_Use1DTrans->setVisible(false);
   radioButton_1DTrans->setChecked(true);
+
+  label_1DIndicator->setVisible(true);
 
   checkBox_Lighting->setEnabled(true);
 
@@ -283,13 +291,22 @@ void MainWindow::Use1DTrans() {
 void MainWindow::Use2DTrans() {
   if (!m_pActiveRenderWin) return;
 
+  label_1DIndicator->setVisible(false);
+  label_IsoDIndicator->setVisible(false);
+
   checkBox_Use1DTrans->setChecked(false);
-  checkBox_Use1DTrans->setEnabled(true);
+  checkBox_Use1DTrans->setVisible(true);
   checkBox_UseIso->setChecked(false);
-  checkBox_UseIso->setEnabled(true);
-  checkBox_Use2DTrans->setEnabled(false);
+  checkBox_UseIso->setVisible(true);
+  checkBox_Use2DTrans_SimpleUI->setChecked(true);
+  checkBox_Use2DTrans_SimpleUI->setVisible(false); 
   checkBox_Use2DTrans->setChecked(true);
+  checkBox_Use2DTrans->setVisible(false);
   radioButton_2DTrans->setChecked(true);
+
+  label_2DIndicator->setVisible(true);
+  label_2DIndicator_SimpleUI->setVisible(true);
+  label_2DIndicator->setText("2D Transfer Function Enabled");
 
   checkBox_Lighting->setEnabled(true);
 
@@ -311,13 +328,22 @@ void MainWindow::Use2DTrans() {
 void MainWindow::UseIso() {
   if (!m_pActiveRenderWin) return;
 
+  label_1DIndicator->setVisible(false);
+  label_2DIndicator->setVisible(false);
+  label_2DIndicator->setText("");
+  label_2DIndicator_SimpleUI->setVisible(false);
+
   checkBox_Use2DTrans->setChecked(false);
-  checkBox_Use2DTrans->setEnabled(true);
+  checkBox_Use2DTrans->setVisible(true);
+  checkBox_Use2DTrans_SimpleUI->setChecked(false);
+  checkBox_Use2DTrans_SimpleUI->setVisible(true);
   checkBox_Use1DTrans->setChecked(false);
-  checkBox_Use1DTrans->setEnabled(true);
-  checkBox_UseIso->setEnabled(false);
+  checkBox_Use1DTrans->setVisible(true);
   checkBox_UseIso->setChecked(true);
+  checkBox_UseIso->setVisible(false);
   radioButton_Iso->setChecked(true);
+
+  label_IsoDIndicator->setVisible(true);
 
   checkBox_Lighting->setEnabled(false);
 
@@ -330,13 +356,20 @@ void MainWindow::UseIso() {
 
 
 void MainWindow::DisableAllTrans() {
+  label_1DIndicator->setVisible(false);
+  label_2DIndicator->setVisible(false);
+  label_2DIndicator->setText("");
+  label_2DIndicator_SimpleUI->setVisible(false);
+  label_IsoDIndicator->setVisible(false);
+
+  checkBox_Use2DTrans_SimpleUI->setChecked(false);
+  checkBox_Use2DTrans_SimpleUI->setVisible(false);
   checkBox_Use2DTrans->setChecked(false);
-  checkBox_Use2DTrans->setEnabled(false);
+  checkBox_Use2DTrans->setVisible(false);
   checkBox_UseIso->setChecked(false);
-  checkBox_UseIso->setEnabled(false);
-  checkBox_Use1DTrans->setEnabled(false);
+  checkBox_UseIso->setVisible(false);
   checkBox_Use1DTrans->setChecked(false);
-  radioButton_1DTrans->setChecked(false);
+  checkBox_Use1DTrans->setVisible(false);
 
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(false);
