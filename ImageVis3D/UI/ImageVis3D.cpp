@@ -374,6 +374,8 @@ void MainWindow::DisableAllTrans() {
 
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(false);
+
+  listWidget_Swatches->clear();
 }
 
 
