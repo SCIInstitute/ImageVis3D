@@ -77,6 +77,7 @@ enum EQ2DSimpleEDragMode {
   SDM_POLY,
   SDM_EDGE,
   SDM_VERTEX,
+  SDM_GRAD_CENTER,
   SDM_NONE
 };
 
@@ -111,7 +112,7 @@ public:
     return m_pTrans->m_Swatches[i].pPoints.size();}
 
   bool GetActiveGradientType() {
-    if(static_cast<size_t>(m_iActiveSwatchIndex) >=
+    if(!m_pTrans || static_cast<size_t>(m_iActiveSwatchIndex) >=
        m_pTrans->m_Swatches.size()) {
       return false;
     }
@@ -121,14 +122,14 @@ public:
   void SetActiveGradientType(bool bRadial);
 
   size_t GetGradientCount() {
-    if(static_cast<size_t>(m_iActiveSwatchIndex) >=
+    if(!m_pTrans || static_cast<size_t>(m_iActiveSwatchIndex) >=
        m_pTrans->m_Swatches.size()) {
       return 0;
     }
     return m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.size();
   }
   GradientStop GetGradient(unsigned int i) {
-    if(static_cast<size_t>(m_iActiveSwatchIndex) >=
+    if(!m_pTrans || static_cast<size_t>(m_iActiveSwatchIndex) >=
        m_pTrans->m_Swatches.size()) {
       // need to return something invalid.
       return GradientStop(0.0, FLOATVECTOR4(0,0,0,0));
@@ -256,8 +257,9 @@ private:
   int PickSwatch(const FLOATVECTOR2& pickPos) const;
   int PickEdge(const FLOATVECTOR2& pickPos, int& iEdgeIndex) const;
   int PickVertex(const FLOATVECTOR2& pickPos, int& iVertexIndex) const;
-  void DrawPolyVertex(QPainter& painter, QPoint& p);
-  void DrawPolyVertex(QPainter& painter, const INTVECTOR2& p);
+  int PickGradient(const FLOATVECTOR2& pickPos) const;
+  void DrawPolyVertex(QPainter& painter, QPoint& p, bool bBorderVertex=true);
+  void DrawPolyVertex(QPainter& painter, const INTVECTOR2& p, bool bBorderVertex=true);
 };
 
 

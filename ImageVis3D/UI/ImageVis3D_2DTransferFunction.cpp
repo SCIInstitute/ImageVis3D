@@ -153,9 +153,7 @@ void MainWindow::Transfer2DUpdateGradientBox() {
 
 
 void MainWindow::Transfer2DUpdateGradientButtons() {
-
-  pushButton_AddStop->
-    setEnabled(m_2DTransferFunction->GetActiveSwatchIndex() != -1);
+  pushButton_AddStop->setEnabled(m_2DTransferFunction->GetActiveSwatchIndex() != -1);
 
   int iCurrent;
   if ( m_2DTransferFunction->Get2DTFMode() == TFM_EXPERT)
@@ -173,18 +171,23 @@ void MainWindow::Transfer2DUpdateGradientButtons() {
 
     QString strStyle =
       tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(int(s.second[0]*255)).arg(int(s.second[1]*255)).arg(int(s.second[2]*255)).arg(int((1-s.second[0])*255)).arg(int((1-s.second[1])*255)).arg(int((1-s.second[2])*255));
-
-    pushButton_ColorChooser->setStyleSheet( strStyle );
-    pushButton_ColorChooser_SimpleUI->setStyleSheet( strStyle );
-
-    horizontalSlider_Opacity->setValue(int(s.second[3]*100));
-    horizontalSlider_Opacity_SimpleUI->setValue(int(s.second[3]*100));
+    
+    if ( m_2DTransferFunction->Get2DTFMode() == TFM_EXPERT) {
+      pushButton_ColorChooser->setStyleSheet( strStyle );
+      horizontalSlider_Opacity->setValue(int(s.second[3]*100));
+    } else {
+      pushButton_ColorChooser_SimpleUI->setStyleSheet( strStyle );
+      horizontalSlider_Opacity_SimpleUI->setValue(int(s.second[3]*100));
+    }
 
   } else {
-    pushButton_ColorChooser->setStyleSheet( "" );
-    pushButton_ColorChooser_SimpleUI->setStyleSheet( "" );
-    horizontalSlider_Opacity->setValue(0);
-    horizontalSlider_Opacity_SimpleUI->setValue(0);
+    if ( m_2DTransferFunction->Get2DTFMode() == TFM_EXPERT) {
+      pushButton_ColorChooser->setStyleSheet( "" );
+      horizontalSlider_Opacity->setValue(0);
+    } else {
+      pushButton_ColorChooser_SimpleUI->setStyleSheet( "" );
+      horizontalSlider_Opacity_SimpleUI->setValue(0);
+    }
   }
 }
 
@@ -321,6 +324,8 @@ void MainWindow::Transfer2DToggleTFMode() {
   E2DTransferFunctionMode tfMode = m_2DTransferFunction->Get2DTFMode();
 
   if ( tfMode  == TFM_EXPERT ) {
+    listWidget_Gradient->setCurrentRow(min<int>(1,int(m_2DTransferFunction->GetGradientCount())-1));
+
     frame_Simple2DTransControls->setVisible(false);
     frame_Expert2DTransControls->setVisible(true);
   } else {
@@ -329,4 +334,7 @@ void MainWindow::Transfer2DToggleTFMode() {
   }
 
   Transfer2DUpdateGradientButtons();
+
+  QSettings settings;
+  settings.setValue("UI/2DTFMode", int(tfMode));
 }

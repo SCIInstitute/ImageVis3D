@@ -67,6 +67,14 @@ void MainWindow::CheckSettings() {
                              "to check the settings now?", QMessageBox::Yes, QMessageBox::No));
   }
   ApplySettings();
+
+  // Apply startup settings
+
+  E2DTransferFunctionMode tfMode = (E2DTransferFunctionMode)(settings.value("UI/2DTFMode", int(TFM_BASIC)).toInt());
+
+  if (tfMode != m_2DTransferFunction->Get2DTFMode()) {
+    Transfer2DToggleTFMode();
+  }
 }
 
 bool MainWindow::ShowSettings(bool bInitializeOnly) {
