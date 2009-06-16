@@ -248,7 +248,7 @@ private:
   // For simple mode
   E2DSimpleModePolyType ClassifySwatch(TFPolygon& polygon, FLOATVECTOR2& vPseudoTrisHandle) const;
   void ComputeGradientForPseudoTris(TFPolygon& swatch, const FLOATVECTOR4& color);  
-  bool Q2DTransferFunction::PointInPolygon(const FLOATVECTOR2& point, const TFPolygon& poly) const;
+  bool PointInPolygon(const FLOATVECTOR2& point, const TFPolygon& poly) const;
   std::vector<SimpleSwatchInfo> m_vSimpleSwatchInfo;
   EQ2DSimpleEDragMode m_eSimpleDragMode;
   int m_iSimpleDragModeSubindex;
