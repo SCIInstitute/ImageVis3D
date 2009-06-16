@@ -143,7 +143,7 @@ public:
 
   void Toggle2DTFMode();
   void Set2DTFMode(E2DTransferFunctionMode TransferFunctionMode);
-  const E2DTransferFunctionMode Get2DTFMode() const { return m_eTransferFunctionMode;}
+  E2DTransferFunctionMode Get2DTFMode() const { return m_eTransferFunctionMode;}
 
 public slots:
   void Transfer2DSetActiveSwatch(const int iActiveSwatch);

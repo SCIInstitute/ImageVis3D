@@ -40,7 +40,7 @@
 #include "Q2DTransferFunction.h"
 #include <QtGui/QPainter>
 
-#include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 
 #ifdef max
@@ -572,8 +572,8 @@ bool Q2DTransferFunction::PointInPolygon(const FLOATVECTOR2& point, const TFPoly
   bool oddHits=false;
 
   for (i=0; i<poly.pPoints.size(); i++) {
-    if (poly.pPoints[i].y<point.y && poly.pPoints[j].y>=point.y ||
-        poly.pPoints[j].y<point.y && poly.pPoints[i].y>=point.y) {
+    if ((poly.pPoints[i].y<point.y && poly.pPoints[j].y>=point.y) ||
+        (poly.pPoints[j].y<point.y && poly.pPoints[i].y>=point.y)) {
       if (poly.pPoints[i].x+(point.y-poly.pPoints[i].y)/
           (poly.pPoints[j].y-poly.pPoints[i].y)*
           (poly.pPoints[j].x-poly.pPoints[i].x)<point.x) {
@@ -823,6 +823,9 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
       TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
 
       switch (m_eSimpleDragMode) {
+        case SDM_NONE:
+          T_ERROR("No drag mode configured!");
+          break;
         case SDM_POLY : {
           if (m_vSimpleSwatchInfo[m_iActiveSwatchIndex].m_eType == PT_PSEUDOTRIS) vfDelta.y = 0.0;
 
