@@ -157,7 +157,11 @@ void MainWindow::Transfer2DUpdateGradientButtons() {
   pushButton_AddStop->
     setEnabled(m_2DTransferFunction->GetActiveSwatchIndex() != -1);
 
-  int iCurrent = listWidget_Gradient->currentRow();
+  int iCurrent;
+  if ( m_2DTransferFunction->Get2DTFMode() == TFM_EXPERT)
+    iCurrent = listWidget_Gradient->currentRow();
+  else 
+    iCurrent = min<int>(1,int(m_2DTransferFunction->GetGradientCount())-1);
 
   pushButton_DelStop->setEnabled(iCurrent >= 0);
   frame_ChooseColor->setEnabled(iCurrent >= 0);
@@ -165,7 +169,7 @@ void MainWindow::Transfer2DUpdateGradientButtons() {
   if (iCurrent >= 0 && m_2DTransferFunction->GetSwatchCount() > 0) {
 
     GradientStop s =
-      m_2DTransferFunction->GetGradient(listWidget_Gradient->currentRow());
+      m_2DTransferFunction->GetGradient(iCurrent);
 
     QString strStyle =
       tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(int(s.second[0]*255)).arg(int(s.second[1]*255)).arg(int(s.second[2]*255)).arg(int((1-s.second[0])*255)).arg(int((1-s.second[1])*255)).arg(int((1-s.second[2])*255));
@@ -174,10 +178,13 @@ void MainWindow::Transfer2DUpdateGradientButtons() {
     pushButton_ColorChooser_SimpleUI->setStyleSheet( strStyle );
 
     horizontalSlider_Opacity->setValue(int(s.second[3]*100));
+    horizontalSlider_Opacity_SimpleUI->setValue(int(s.second[3]*100));
 
   } else {
     pushButton_ColorChooser->setStyleSheet( "" );
+    pushButton_ColorChooser_SimpleUI->setStyleSheet( "" );
     horizontalSlider_Opacity->setValue(0);
+    horizontalSlider_Opacity_SimpleUI->setValue(0);
   }
 }
 
@@ -215,13 +222,43 @@ void MainWindow::Transfer2DChooseGradientColor() {
   Transfer2DUpdateGradientButtons();
 }
 
-
 void MainWindow::Transfer2DChooseGradientOpacity() {
 
   GradientStop s =
     m_2DTransferFunction->GetGradient(listWidget_Gradient->currentRow());
   s.second[3] = horizontalSlider_Opacity->value()/100.0f;
   m_2DTransferFunction->SetGradient(listWidget_Gradient->currentRow(),s);
+}
+
+
+void MainWindow::Transfer2DChooseGradientColorSimpleUI() {
+  if (m_2DTransferFunction->GetActiveSwatchIndex() == -1) return;
+  int iIndex = min<int>(1,int(m_2DTransferFunction->GetGradientCount())-1);
+  if (iIndex < 0) return;
+
+
+  GradientStop s = m_2DTransferFunction->GetGradient(iIndex);
+
+
+  QColor color = QColorDialog::getColor(Qt::green, this);
+  s.second[0] = color.red()/255.0f;
+  s.second[1] = color.green()/255.0f;
+  s.second[2] = color.blue()/255.0f;
+
+
+  m_2DTransferFunction->SetGradient(iIndex,s);
+
+  Transfer2DUpdateGradientButtons();
+}
+
+void MainWindow::Transfer2DChooseGradientOpacitySimpleUI() {
+  if (m_2DTransferFunction->GetActiveSwatchIndex() == -1) return;
+  int iIndex = min<int>(1,int(m_2DTransferFunction->GetGradientCount())-1);
+  if (iIndex < 0) return;
+
+  GradientStop s = m_2DTransferFunction->GetGradient(iIndex);
+  s.second[3] = horizontalSlider_Opacity_SimpleUI->value()/100.0f;
+  m_2DTransferFunction->SetGradient(iIndex,s);
 }
 
 
@@ -290,4 +327,6 @@ void MainWindow::Transfer2DToggleTFMode() {
     frame_Simple2DTransControls->setVisible(true);
     frame_Expert2DTransControls->setVisible(false);
   }
+
+  Transfer2DUpdateGradientButtons();
 }

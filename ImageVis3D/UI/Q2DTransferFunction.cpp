@@ -853,8 +853,8 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
             currentSwatch.pGradientCoords[0] = FLOATVECTOR2(currentSwatch.pPoints[1].x, (currentSwatch.pPoints[0].y+currentSwatch.pPoints[1].y)/2.0f);
             currentSwatch.pGradientCoords[1] = FLOATVECTOR2(currentSwatch.pPoints[2].x, (currentSwatch.pPoints[2].y+currentSwatch.pPoints[3].y)/2.0f);
   
-          } else {
-
+          } else { // pseudo triangle
+            
             switch (m_iSimpleDragModeSubindex) {
               case 1 : currentSwatch.pPoints[1] += vfDelta;
                        currentSwatch.pPoints[2] += vfDelta;
@@ -862,6 +862,13 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
               case 3 : currentSwatch.pPoints[0].y += vfDelta.y;
                        currentSwatch.pPoints[3].y += vfDelta.y;
                        break;
+            }
+
+            // make sure the lower edge (which happens to be close to 1 as the coordinate system has the 
+            // origin in the upper left corner) of the pseudo triangle is not shrunk to a point
+            if (currentSwatch.pPoints[0].y > 0.95f) {
+              currentSwatch.pPoints[0].y = 0.95f;
+              currentSwatch.pPoints[3].y = 0.95f;
             }
 
             // user dragged the top line under the botom line -> swap lines

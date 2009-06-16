@@ -219,6 +219,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     m_2DTransferFunction, SLOT(Transfer2DAddPseudoTrisSwatch()));
   connect(pushButton_NewRectangle,SIGNAL(clicked()),
     m_2DTransferFunction, SLOT(Transfer2DAddRectangleSwatch()));
+  connect(pushButton_DelPoly_SimpleUI,  SIGNAL(clicked()),
+    m_2DTransferFunction, SLOT(Transfer2DDeleteSwatch()));
 
   connect(pushButton_DelPoly,  SIGNAL(clicked()),
     m_2DTransferFunction, SLOT(Transfer2DDeleteSwatch()));

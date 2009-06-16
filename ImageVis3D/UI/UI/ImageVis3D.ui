@@ -2999,7 +2999,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_Delete">
+               <widget class="QPushButton" name="pushButton_DelPoly_SimpleUI">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -5349,7 +5349,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>154</x>
-     <y>1884</y>
+     <y>2000</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5364,8 +5364,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>375</x>
-     <y>1868</y>
+     <x>423</x>
+     <y>1984</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5445,7 +5445,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>154</x>
-     <y>2140</y>
+     <y>2256</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5461,7 +5461,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>154</x>
-     <y>2169</y>
+     <y>2285</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5476,8 +5476,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DLoad()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>355</x>
-     <y>2284</y>
+     <x>352</x>
+     <y>2360</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5492,8 +5492,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DSave()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>486</x>
-     <y>2284</y>
+     <x>433</x>
+     <y>2360</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5508,8 +5508,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>942</x>
-     <y>1204</y>
+     <x>1189</x>
+     <y>1278</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5524,8 +5524,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>930</x>
-     <y>771</y>
+     <x>1177</x>
+     <y>810</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5540,8 +5540,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>930</x>
-     <y>806</y>
+     <x>1177</x>
+     <y>845</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5556,8 +5556,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>930</x>
-     <y>841</y>
+     <x>1177</x>
+     <y>880</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5572,8 +5572,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>1931</y>
+     <x>163</x>
+     <y>2047</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5588,8 +5588,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>1954</y>
+     <x>163</x>
+     <y>2070</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5604,8 +5604,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>1977</y>
+     <x>163</x>
+     <y>2093</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5620,8 +5620,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetColors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>1990</y>
+     <x>154</x>
+     <y>2116</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5636,8 +5636,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>2102</y>
+     <x>163</x>
+     <y>2218</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5652,8 +5652,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>2079</y>
+     <x>163</x>
+     <y>2195</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5669,7 +5669,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>365</x>
-     <y>1381</y>
+     <y>1465</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5685,7 +5685,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>71</x>
-     <y>1381</y>
+     <y>1465</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5701,7 +5701,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>225</x>
-     <y>1381</y>
+     <y>1465</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5717,7 +5717,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>147</x>
-     <y>1381</y>
+     <y>1465</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5733,7 +5733,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>284</x>
-     <y>1381</y>
+     <y>1465</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5749,7 +5749,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>154</x>
-     <y>2198</y>
+     <y>2314</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5765,11 +5765,11 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>154</x>
-     <y>1884</y>
+     <y>2000</y>
     </hint>
     <hint type="destinationlabel">
      <x>154</x>
-     <y>1894</y>
+     <y>2314</y>
     </hint>
    </hints>
   </connection>
@@ -5780,8 +5780,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DAddGradient()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>618</x>
-     <y>2197</y>
+     <x>508</x>
+     <y>2271</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5796,8 +5796,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DDeleteGradient()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>618</x>
-     <y>2228</y>
+     <x>508</x>
+     <y>2300</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5812,8 +5812,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DUpdateGradientBox()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>375</x>
-     <y>1868</y>
+     <x>423</x>
+     <y>1984</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5828,8 +5828,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DChooseGradientColor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>397</x>
-     <y>2261</y>
+     <x>352</x>
+     <y>2337</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5844,8 +5844,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DChooseGradientOpacity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>618</x>
-     <y>2259</y>
+     <x>508</x>
+     <y>2335</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5860,8 +5860,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ApplyUpdate()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1137</x>
-     <y>848</y>
+     <x>1424</x>
+     <y>887</y>
     </hint>
     <hint type="destinationlabel">
      <x>687</x>
@@ -5876,8 +5876,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1137</x>
-     <y>780</y>
+     <x>1424</x>
+     <y>819</y>
     </hint>
     <hint type="destinationlabel">
      <x>685</x>
@@ -5892,8 +5892,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1137</x>
-     <y>801</y>
+     <x>1424</x>
+     <y>840</y>
     </hint>
     <hint type="destinationlabel">
      <x>683</x>
@@ -5908,8 +5908,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetUpdateMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1137</x>
-     <y>822</y>
+     <x>1424</x>
+     <y>861</y>
     </hint>
     <hint type="destinationlabel">
      <x>680</x>
@@ -5924,8 +5924,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer1DSetGroups()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>2056</y>
+     <x>163</x>
+     <y>2172</y>
     </hint>
     <hint type="destinationlabel">
      <x>415</x>
@@ -5941,7 +5941,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>182</x>
-     <y>654</y>
+     <y>695</y>
     </hint>
     <hint type="destinationlabel">
      <x>419</x>
@@ -5957,7 +5957,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>455</x>
-     <y>1618</y>
+     <y>1722</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5988,8 +5988,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetLighting(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1139</x>
-     <y>899</y>
+     <x>1426</x>
+     <y>938</y>
     </hint>
     <hint type="destinationlabel">
      <x>390</x>
@@ -6004,12 +6004,12 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>375</x>
-     <y>1868</y>
+     <x>423</x>
+     <y>1984</y>
     </hint>
     <hint type="destinationlabel">
-     <x>618</x>
-     <y>2284</y>
+     <x>514</x>
+     <y>2360</y>
     </hint>
    </hints>
   </connection>
@@ -6020,8 +6020,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetSampleRate(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1130</x>
-     <y>1001</y>
+     <x>1417</x>
+     <y>1040</y>
     </hint>
     <hint type="destinationlabel">
      <x>389</x>
@@ -6036,8 +6036,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetIsoValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1122</x>
-     <y>1236</y>
+     <x>1409</x>
+     <y>1310</y>
     </hint>
     <hint type="destinationlabel">
      <x>390</x>
@@ -6052,12 +6052,12 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>942</x>
-     <y>1204</y>
+     <x>1189</x>
+     <y>1278</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1031</x>
-     <y>1439</y>
+     <x>1443</x>
+     <y>1569</y>
     </hint>
    </hints>
   </connection>
@@ -6068,8 +6068,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleGlobalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1139</x>
-     <y>923</y>
+     <x>1426</x>
+     <y>962</y>
     </hint>
     <hint type="destinationlabel">
      <x>990</x>
@@ -6084,8 +6084,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleLocalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1139</x>
-     <y>947</y>
+     <x>1426</x>
+     <y>986</y>
     </hint>
     <hint type="destinationlabel">
      <x>989</x>
@@ -6100,7 +6100,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>CaptureFrame()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>969</x>
+     <x>1239</x>
      <y>143</y>
     </hint>
     <hint type="destinationlabel">
@@ -6116,7 +6116,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>CaptureSequence()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1130</x>
+     <x>1442</x>
      <y>143</y>
     </hint>
     <hint type="destinationlabel">
@@ -6148,8 +6148,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>913</x>
-     <y>699</y>
+     <x>1173</x>
+     <y>738</y>
     </hint>
     <hint type="destinationlabel">
      <x>1008</x>
@@ -6164,8 +6164,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1029</x>
-     <y>699</y>
+     <x>1303</x>
+     <y>738</y>
     </hint>
     <hint type="destinationlabel">
      <x>1005</x>
@@ -6180,8 +6180,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1146</x>
-     <y>699</y>
+     <x>1433</x>
+     <y>738</y>
     </hint>
     <hint type="destinationlabel">
      <x>1007</x>
@@ -6212,8 +6212,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleClearView()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1156</x>
-     <y>1286</y>
+     <x>1443</x>
+     <y>1360</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -6228,8 +6228,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetFocusIsoValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1122</x>
-     <y>1331</y>
+     <x>1409</x>
+     <y>1405</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -6244,8 +6244,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetFocusSize(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1156</x>
-     <y>1402</y>
+     <x>1443</x>
+     <y>1476</y>
     </hint>
     <hint type="destinationlabel">
      <x>1003</x>
@@ -6260,8 +6260,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetContextScale(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1156</x>
-     <y>1447</y>
+     <x>1443</x>
+     <y>1521</y>
     </hint>
     <hint type="destinationlabel">
      <x>1004</x>
@@ -6276,8 +6276,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetBorderSize(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1156</x>
-     <y>1492</y>
+     <x>1443</x>
+     <y>1566</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -6292,8 +6292,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>90</x>
-     <y>1025</y>
+     <x>100</x>
+     <y>1083</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
@@ -6308,8 +6308,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>370</x>
-     <y>1049</y>
+     <x>380</x>
+     <y>1107</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -6324,8 +6324,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>254</x>
-     <y>1097</y>
+     <x>264</x>
+     <y>1155</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -6340,8 +6340,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>309</x>
-     <y>1073</y>
+     <x>319</x>
+     <y>1131</y>
     </hint>
     <hint type="destinationlabel">
      <x>382</x>
@@ -6373,7 +6373,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>99</x>
-     <y>1673</y>
+     <y>1777</y>
     </hint>
     <hint type="destinationlabel">
      <x>388</x>
@@ -6389,7 +6389,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>202</x>
-     <y>1718</y>
+     <y>1822</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -6405,7 +6405,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>344</x>
-     <y>1763</y>
+     <y>1867</y>
     </hint>
     <hint type="destinationlabel">
      <x>383</x>
@@ -6421,7 +6421,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>372</x>
-     <y>1615</y>
+     <y>1719</y>
     </hint>
     <hint type="destinationlabel">
      <x>122</x>
@@ -6452,7 +6452,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetCaptureFilename()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1155</x>
+     <x>1442</x>
      <y>88</y>
     </hint>
     <hint type="destinationlabel">
@@ -6468,8 +6468,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Show1DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>958</x>
-     <y>772</y>
+     <x>1205</x>
+     <y>811</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -6484,8 +6484,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Show2DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>958</x>
-     <y>807</y>
+     <x>1205</x>
+     <y>846</y>
     </hint>
     <hint type="destinationlabel">
      <x>957</x>
@@ -6500,8 +6500,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ShowIsoEdit()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>958</x>
-     <y>842</y>
+     <x>1205</x>
+     <y>881</y>
     </hint>
     <hint type="destinationlabel">
      <x>958</x>
@@ -6516,8 +6516,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Collapse2DWidgets()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>618</x>
-     <y>1869</y>
+     <x>514</x>
+     <y>1985</y>
     </hint>
     <hint type="destinationlabel">
      <x>671</x>
@@ -6532,8 +6532,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Expand2DWidgets()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>648</x>
-     <y>1869</y>
+     <x>544</x>
+     <y>1985</y>
     </hint>
     <hint type="destinationlabel">
      <x>896</x>
@@ -6548,8 +6548,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ChooseIsoColor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1156</x>
-     <y>1262</y>
+     <x>1443</x>
+     <y>1336</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -6564,8 +6564,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ChooseFocusColor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1156</x>
-     <y>1357</y>
+     <x>1443</x>
+     <y>1431</y>
     </hint>
     <hint type="destinationlabel">
      <x>956</x>
@@ -6597,7 +6597,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>446</x>
-     <y>1381</y>
+     <y>1465</y>
     </hint>
     <hint type="destinationlabel">
      <x>466</x>
@@ -6692,8 +6692,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ExportMesh()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1155</x>
-     <y>1207</y>
+     <x>1442</x>
+     <y>1281</y>
     </hint>
     <hint type="destinationlabel">
      <x>955</x>
@@ -6740,8 +6740,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleClipPlane(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>915</x>
-     <y>1059</y>
+     <x>1175</x>
+     <y>1098</y>
     </hint>
     <hint type="destinationlabel">
      <x>520</x>
@@ -6772,8 +6772,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ClipToggleShow(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1027</x>
-     <y>1059</y>
+     <x>1301</x>
+     <y>1098</y>
     </hint>
     <hint type="destinationlabel">
      <x>717</x>
@@ -6788,8 +6788,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ClipToggleLock(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1139</x>
-     <y>1059</y>
+     <x>1426</x>
+     <y>1098</y>
     </hint>
     <hint type="destinationlabel">
      <x>715</x>
@@ -6804,8 +6804,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DToggleGradientType()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>618</x>
-     <y>2142</y>
+     <x>448</x>
+     <y>2241</y>
     </hint>
     <hint type="destinationlabel">
      <x>535</x>
@@ -6820,8 +6820,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DToggleGradientType()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>618</x>
-     <y>2166</y>
+     <x>508</x>
+     <y>2241</y>
     </hint>
     <hint type="destinationlabel">
      <x>535</x>
@@ -6852,8 +6852,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DToggleTFMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>618</x>
-     <y>2284</y>
+     <x>514</x>
+     <y>2360</y>
     </hint>
     <hint type="destinationlabel">
      <x>603</x>
@@ -6884,8 +6884,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DLoad()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>699</x>
-     <y>2280</y>
+     <x>779</x>
+     <y>2366</y>
     </hint>
     <hint type="destinationlabel">
      <x>588</x>
@@ -6900,8 +6900,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DSave()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>778</x>
-     <y>2273</y>
+     <x>860</x>
+     <y>2366</y>
     </hint>
     <hint type="destinationlabel">
      <x>731</x>
@@ -6916,8 +6916,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Transfer2DToggleTFMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>868</x>
-     <y>2273</y>
+     <x>941</x>
+     <y>2366</y>
     </hint>
     <hint type="destinationlabel">
      <x>774</x>
@@ -6929,11 +6929,11 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <sender>pushButton_ColorChooser_SimpleUI</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer2DChooseGradientColor()</slot>
+   <slot>Transfer2DChooseGradientColorSimpleUI()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>728</x>
-     <y>2246</y>
+     <x>891</x>
+     <y>2337</y>
     </hint>
     <hint type="destinationlabel">
      <x>880</x>
@@ -6945,15 +6945,31 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <sender>horizontalSlider_Opacity_SimpleUI</sender>
    <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
-   <slot>Transfer2DChooseGradientOpacity()</slot>
+   <slot>Transfer2DChooseGradientOpacitySimpleUI()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>920</x>
-     <y>2249</y>
+     <x>1176</x>
+     <y>2335</y>
     </hint>
     <hint type="destinationlabel">
      <x>779</x>
      <y>1773</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_Use2DTrans_SimpleUI</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Use2DTrans()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1151</x>
+     <y>2351</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1015</x>
+     <y>1922</y>
     </hint>
    </hints>
   </connection>
@@ -7042,5 +7058,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>OpenManual()</slot>
   <slot>Transfer2DToggleTFMode()</slot>
   <slot>ClearWSMRUList()</slot>
+  <slot>Transfer2DChooseGradientOpacitySimpleUI()</slot>
+  <slot>Transfer2DChooseGradientColorSimpleUI()</slot>
  </slots>
 </ui>

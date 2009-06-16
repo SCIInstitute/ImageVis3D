@@ -133,6 +133,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void Transfer2DDeleteGradient();
     void Transfer2DChooseGradientColor();
     void Transfer2DChooseGradientOpacity();
+    void Transfer2DChooseGradientColorSimpleUI();
+    void Transfer2DChooseGradientOpacitySimpleUI();
     void Transfer2DToggleGradientType();
     void Transfer2DLoad();
     bool Transfer2DLoad(std::string strFilename);
