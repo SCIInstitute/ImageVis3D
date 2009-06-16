@@ -171,6 +171,7 @@ void MainWindow::Transfer2DUpdateGradientButtons() {
       tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(int(s.second[0]*255)).arg(int(s.second[1]*255)).arg(int(s.second[2]*255)).arg(int((1-s.second[0])*255)).arg(int((1-s.second[1])*255)).arg(int((1-s.second[2])*255));
 
     pushButton_ColorChooser->setStyleSheet( strStyle );
+    pushButton_ColorChooser_SimpleUI->setStyleSheet( strStyle );
 
     horizontalSlider_Opacity->setValue(int(s.second[3]*100));
 

@@ -173,7 +173,6 @@ protected:
   virtual void keyPressEvent( QKeyEvent * event );
   virtual void keyReleaseEvent( QKeyEvent * event );
 
-
 private:
   // states
   NormalizedHistogram2D    m_vHistogram;
@@ -192,15 +191,14 @@ private:
   QImage* m_pHistImage;
 
   // border size, may be changed in the constructor
-  unsigned int m_iBorderSize;
   unsigned int m_iSwatchBorderSize;
 
   // colors, may be changed in the setcolor routine
   QColor m_colorHistogram;
   QColor m_colorBack;
-  QColor m_colorBorder;
   QColor m_colorSwatchBorder;
   QColor m_colorSwatchBorderHighlight;
+  QColor m_colorSwatchBorderHighlightCenter;
   QColor m_colorSwatchBorderInactive;
   QColor m_colorSwatchBorderInactiveHighlight;
   QColor m_colorSwatchBorderCircle;
@@ -222,7 +220,7 @@ private:
   Qt::MouseButton m_mouseButton;
 
   // drawing routines
-  void DrawBorder(QPainter& painter);
+  void ClearToBlack(QPainter& painter);
   void DrawHistogram(QPainter& painter);
   void DrawSwatches(QPainter& painter);
   void DrawSwatcheDecoration(QPainter& painter);
@@ -248,6 +246,7 @@ private:
   // For simple mode
   E2DSimpleModePolyType ClassifySwatch(TFPolygon& polygon, FLOATVECTOR2& vPseudoTrisHandle) const;
   void ComputeGradientForPseudoTris(TFPolygon& swatch, const FLOATVECTOR4& color);  
+  void RecomputeLowerPseudoTrisPoints(TFPolygon& currentSwatch, const FLOATVECTOR2& vHandePos);
   bool PointInPolygon(const FLOATVECTOR2& point, const TFPolygon& poly) const;
   std::vector<SimpleSwatchInfo> m_vSimpleSwatchInfo;
   EQ2DSimpleEDragMode m_eSimpleDragMode;
