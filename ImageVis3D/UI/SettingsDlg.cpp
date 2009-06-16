@@ -179,9 +179,12 @@ bool SettingsDlg::GetCheckForDevBuilds() const {
   return checkBox_CheckForDevBuilds->isChecked();
 }
 
-
 bool SettingsDlg::GetShowWelcomeScreen() const {
   return checkBox_ShowWelcomeScreen->isChecked();
+}
+
+bool SettingsDlg::GetInvertWheel() const {
+  return checkBox_InvWheel->isChecked();
 }
 
 FLOATVECTOR3  SettingsDlg::GetBackgroundColor1() const {
@@ -309,6 +312,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
+                            bool bInvWheel,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits,
                             bool bDisableBorder, bool bAvoidCompositing, bool bNoRCClipplanes,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
@@ -335,6 +339,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   checkBox_CheckForUpdatesOnStartUp->setChecked(bCheckForUpdatesOnStartUp);
   checkBox_CheckForDevBuilds->setChecked(bCheckForDevBuilds);
   checkBox_ShowWelcomeScreen->setChecked(bShowWelcomeScreen);
+  checkBox_InvWheel->setChecked(bInvWheel);
 
   m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
   m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));

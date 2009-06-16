@@ -280,6 +280,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool                                      m_bCheckForUpdatesOnStartUp;
     bool                                      m_bCheckForDevBuilds;
     bool                                      m_bShowWelcomeScreen;
+    bool                                      m_bInvWheel;
 
     bool                                      m_bStayOpenAfterScriptEnd;
 

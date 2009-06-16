@@ -75,6 +75,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetCheckForUpdatesOnStartUp() const;
     bool          GetCheckForDevBuilds() const;
     bool          GetShowWelcomeScreen() const;
+    bool          GetInvertWheel() const;
 
     unsigned int  GetVolrenType() const;
     FLOATVECTOR3  GetBackgroundColor1() const;
@@ -110,6 +111,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bCheckForUpdatesOnStartUp,
                    bool bCheckForDevBuilds,
                    bool bShowWelcomeScreen,
+                   bool bInvWheel,
                    unsigned int iVolRenType,
                    unsigned int iBlendPrecision,
                    bool bPowerOfTwo,

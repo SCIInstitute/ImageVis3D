@@ -108,6 +108,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bCheckForUpdatesOnStartUp = settings.value("CheckForUpdatesOnStartUp", m_bCheckForUpdatesOnStartUp).toBool();
     bool bCheckForDevBuilds = settings.value("CheckForDevBuilds", m_bCheckForDevBuilds).toBool();
     bool bShowWelcomeScreen = settings.value("ShowWelcomeScreen", m_bShowWelcomeScreen).toBool();
+    bool bInvWheel = settings.value("InvertMouseWheel", m_bInvWheel).toBool();
     settings.endGroup();
 
     settings.beginGroup("Renderer");
@@ -145,6 +146,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
                           bShowVersionInTitle,
                           bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
                           bCheckForUpdatesOnStartUp, bCheckForDevBuilds, bShowWelcomeScreen,
+                          bInvWheel,
                           iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
                           bDisableBorder, bAvoidCompositing, bNoRCClipplanes,
                           vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
@@ -179,6 +181,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("CheckForUpdatesOnStartUp", settingsDlg.GetCheckForUpdatesOnStartUp());
       settings.setValue("CheckForDevBuilds", settingsDlg.GetCheckForDevBuilds());
       settings.setValue("ShowWelcomeScreen", settingsDlg.GetShowWelcomeScreen());
+      settings.setValue("InvertMouseWheel", settingsDlg.GetInvertWheel());
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -240,6 +243,7 @@ void MainWindow::ApplySettings() {
   m_bCheckForUpdatesOnStartUp = settings.value("CheckForUpdatesOnStartUp", m_bCheckForUpdatesOnStartUp).toBool();
   m_bCheckForDevBuilds = settings.value("CheckForDevBuilds", m_bCheckForDevBuilds).toBool();
   m_bShowWelcomeScreen = settings.value("ShowWelcomeScreen", m_bShowWelcomeScreen).toBool();
+  m_bInvWheel = settings.value("InvertMouseWheel", m_bInvWheel).toBool();
 
   settings.endGroup();
 
@@ -299,6 +303,7 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
   renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
   renderWin->SetAbsoluteViewLock(m_bAbsoluteViewLocks);
   renderWin->SetAvoidCompositing(m_bAvoidCompositing);
+  renderWin->SetInvMouseWheel(m_bInvWheel);
 }
 
 

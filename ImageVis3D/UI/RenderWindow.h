@@ -103,6 +103,9 @@ class RenderWindow
     void SetAvoidCompositing(bool bAvoidCompositing);
     bool GetAvoidCompositing() const;
 
+    void SetInvMouseWheel(const bool bInvWheel) {m_bInvWheel = bInvWheel;}
+    bool GetInvMouseWheel() const {return m_bInvWheel;}
+    
     void SetUseLighting(bool bLighting, bool bPropagate=true);
     void SetSampleRateModifier(float fSampleRateModifier, bool bPropagate=true);
     void SetIsoValue(float fIsoVal, bool bPropagate=true);
@@ -196,6 +199,7 @@ class RenderWindow
 
     void ResetRenderingParameters();
 
+
   private:
     MasterController::EVolumeRendererType m_eRendererType;
     MainWindow*       m_MainWindow;
@@ -211,6 +215,7 @@ class RenderWindow
     FLOATMATRIX4      m_mAccumulatedTranslation;
     bool              m_bAbsoluteViewLock;
     bool              m_bCaptureMode;
+    bool              m_bInvWheel;
 
     ArcBall           m_ClipArcBall;
     FLOATMATRIX4      m_mCurrentClipRotation;
