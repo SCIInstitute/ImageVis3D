@@ -61,12 +61,32 @@ enum EDragMode {
   DRM_NONE
 };
 
-enum EQ2DTransferFunctionMode {
+enum E2DTransferFunctionMode {
   TFM_EXPERT = 0,
   TFM_BASIC,
   TFM_INVALID
 };
 
+enum E2DSimpleModePolyType {
+  PT_PSEUDOTRIS = 0,
+  PT_RECTANGLE,
+  PT_OTHER
+};
+
+enum EQ2DSimpleEDragMode {
+  SDM_POLY,
+  SDM_EDGE,
+  SDM_VERTEX,
+  SDM_NONE
+};
+
+class SimpleSwatchInfo {
+public:
+  SimpleSwatchInfo(E2DSimpleModePolyType eType=PT_OTHER, FLOATVECTOR2 vHandlePos=FLOATVECTOR2(0,0)) : m_eType(eType), m_vHandlePos(vHandlePos) {}
+  
+  E2DSimpleModePolyType m_eType;
+  FLOATVECTOR2           m_vHandlePos;
+};
 
 class Q2DTransferFunction : public QTransferFunction
 {
@@ -121,14 +141,17 @@ public:
 
   virtual void ApplyFunction();
 
-  void Toggle2DTFMode() { m_TransferFunctionMode = EQ2DTransferFunctionMode((int(m_TransferFunctionMode)+1)%int(TFM_INVALID)); update();}
-  void Set2DTFMode(EQ2DTransferFunctionMode TransferFunctionMode) { m_TransferFunctionMode = TransferFunctionMode; update();}
-  const EQ2DTransferFunctionMode Get2DTFMode() const { return m_TransferFunctionMode;}
+  void Toggle2DTFMode();
+  void Set2DTFMode(E2DTransferFunctionMode TransferFunctionMode);
+  const E2DTransferFunctionMode Get2DTFMode() const { return m_eTransferFunctionMode;}
 
 public slots:
   void Transfer2DSetActiveSwatch(const int iActiveSwatch);
   void Transfer2DAddSwatch();
   void Transfer2DAddCircleSwatch();
+
+  void Transfer2DAddRectangleSwatch();
+  void Transfer2DAddPseudoTrisSwatch();
   void Transfer2DDeleteSwatch();
   void Transfer2DUpSwatch();
   void Transfer2DDownSwatch();
@@ -153,11 +176,11 @@ protected:
 
 private:
   // states
-  NormalizedHistogram2D  m_vHistogram;
-  TransferFunction2D*    m_pTrans;
-  unsigned int      m_iPaintmode;
-  int            m_iActiveSwatchIndex;
-  EQ2DTransferFunctionMode m_TransferFunctionMode;
+  NormalizedHistogram2D    m_vHistogram;
+  TransferFunction2D*      m_pTrans;
+  unsigned int             m_iPaintmode;
+  int                      m_iActiveSwatchIndex;
+  E2DTransferFunctionMode m_eTransferFunctionMode;
 
   // cached image of the backdrop
   unsigned int m_iCachedHeight;
@@ -209,9 +232,9 @@ private:
   void ComputeCachedImageSize(UINT32 &w , UINT32 &h) const;
 
   // helper
-  INTVECTOR2   Normalized2Offscreen(FLOATVECTOR2 vfCoord);
-  INTVECTOR2   Normalized2Screen(FLOATVECTOR2 vfCoord);
-  FLOATVECTOR2 Screen2Normalized(INTVECTOR2   vCoord);
+  INTVECTOR2   Normalized2Offscreen(FLOATVECTOR2 vfCoord) const;
+  INTVECTOR2   Normalized2Screen(FLOATVECTOR2 vfCoord) const;
+  FLOATVECTOR2 Screen2Normalized(INTVECTOR2   vCoord) const;
   FLOATVECTOR2 Rotate(FLOATVECTOR2 point,
           float angle,
           FLOATVECTOR2 center,
@@ -219,6 +242,23 @@ private:
 
   void SetDragMode(bool bShiftPressed, bool bCtrlPressed);
   void DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mouseButton);
+
+  void DrawPolygonWithCool3DishBorder(QPainter& painter, std::vector<QPoint>& pointList, QPen& borderPen, QPen& borderPenHighlight);
+
+  // For simple mode
+  E2DSimpleModePolyType ClassifySwatch(TFPolygon& polygon, FLOATVECTOR2& vPseudoTrisHandle) const;
+  void ComputeGradientForPseudoTris(TFPolygon& swatch, const FLOATVECTOR4& color);  
+  bool Q2DTransferFunction::PointInPolygon(const FLOATVECTOR2& point, const TFPolygon& poly) const;
+  std::vector<SimpleSwatchInfo> m_vSimpleSwatchInfo;
+  EQ2DSimpleEDragMode m_eSimpleDragMode;
+  int m_iSimpleDragModeSubindex;
+  void UpdateSwatchType(size_t i);
+  void UpdateSwatchTypes();
+  int PickSwatch(const FLOATVECTOR2& pickPos) const;
+  int PickEdge(const FLOATVECTOR2& pickPos, int& iEdgeIndex) const;
+  int PickVertex(const FLOATVECTOR2& pickPos, int& iVertexIndex) const;
+  void DrawPolyVertex(QPainter& painter, QPoint& p);
+  void DrawPolyVertex(QPainter& painter, const INTVECTOR2& p);
 };
 
 

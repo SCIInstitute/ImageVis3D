@@ -58,7 +58,7 @@ Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWi
   m_pTrans(NULL),
   m_iPaintmode(Q2DT_PAINT_NONE),
   m_iActiveSwatchIndex(-1),
-  m_TransferFunctionMode(TFM_EXPERT),
+  m_eTransferFunctionMode(TFM_EXPERT),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
   m_pBackdropCache(NULL),
@@ -75,7 +75,9 @@ Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWi
   m_bDragging(false),
   m_bDraggingAll(false),
   m_eDragMode(DRM_NONE),
-  m_vZoomWindow(0.0f,0.0f,1.0f,1.0f)
+  m_vZoomWindow(0.0f,0.0f,1.0f,1.0f),
+  m_eSimpleDragMode(SDM_NONE),
+  m_iSimpleDragModeSubindex(0)
 {
   SetColor(isEnabled());
 
@@ -188,21 +190,70 @@ void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
   painter.drawImage( target, *m_pHistImage, source );
 }
 
-
-
-INTVECTOR2 Q2DTransferFunction::Normalized2Offscreen(FLOATVECTOR2 vfCoord) {
+INTVECTOR2 Q2DTransferFunction::Normalized2Offscreen(FLOATVECTOR2 vfCoord) const {
   return INTVECTOR2(int(-m_vZoomWindow.x/m_vZoomWindow.z * m_iCachedWidth +m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x/m_vZoomWindow.z* (m_iCachedWidth-m_iBorderSize-m_iSwatchBorderSize)),
                     int(-m_vZoomWindow.y/m_vZoomWindow.w * m_iCachedHeight+m_iSwatchBorderSize/2+ m_iBorderSize/2+vfCoord.y/m_vZoomWindow.w* (m_iCachedHeight-m_iBorderSize-m_iSwatchBorderSize)));
 }
 
-INTVECTOR2 Q2DTransferFunction::Normalized2Screen(FLOATVECTOR2 vfCoord) {
+INTVECTOR2 Q2DTransferFunction::Normalized2Screen(FLOATVECTOR2 vfCoord) const {
   return INTVECTOR2(int(-m_vZoomWindow.x/m_vZoomWindow.z * width() +m_iSwatchBorderSize/2+m_iBorderSize/2+vfCoord.x/m_vZoomWindow.z* (width()-m_iBorderSize-m_iSwatchBorderSize)),
                     int(-m_vZoomWindow.y/m_vZoomWindow.w * height()+m_iSwatchBorderSize/2+ m_iBorderSize/2+vfCoord.y/m_vZoomWindow.w* (height()-m_iBorderSize-m_iSwatchBorderSize)));
 }
 
-FLOATVECTOR2 Q2DTransferFunction::Screen2Normalized(INTVECTOR2 vCoord) {
+FLOATVECTOR2 Q2DTransferFunction::Screen2Normalized(INTVECTOR2 vCoord) const {
   return FLOATVECTOR2((float(vCoord.x)*m_vZoomWindow.z-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.x * width())/float(width()-m_iBorderSize-m_iSwatchBorderSize),
                       (float(vCoord.y)*m_vZoomWindow.w-m_iSwatchBorderSize/2.0f+m_iBorderSize/2.0f+m_vZoomWindow.y * height())/float(height()-m_iBorderSize-m_iSwatchBorderSize));
+}
+
+E2DSimpleModePolyType Q2DTransferFunction::ClassifySwatch(TFPolygon& polygon, FLOATVECTOR2& vPseudoTrisHandle) const {
+  // check the most basic properties first (four vertices, linear gradient, and exactly 3 gradient stops)
+  if (polygon.pPoints.size() == 4 && !polygon.bRadial && polygon.pGradientStops.size() == 3) {
+
+    // check if the top and bottom edge are parallel to the x-axis
+    if (polygon.pPoints[1].y == polygon.pPoints[2].y && polygon.pPoints[0].y == polygon.pPoints[3].y) {
+
+      // check if the left and right edge are parallel to the y-axis -> rectangle
+      if (polygon.pPoints[0].x == polygon.pPoints[1].x && polygon.pPoints[2].x == polygon.pPoints[3].x) {
+        return PT_RECTANGLE;
+      } else {
+        // check if the left and right edge are intersecting "near" the x-axis
+
+        double x1 = polygon.pPoints[0].x, y1 = polygon.pPoints[0].y;
+        double x2 = polygon.pPoints[1].x, y2 = polygon.pPoints[1].y;
+        double x3 = polygon.pPoints[2].x, y3 = polygon.pPoints[2].y;
+        double x4 = polygon.pPoints[3].x, y4 = polygon.pPoints[3].y;
+
+
+        double u = ((x4-x3)*(y1-y3)-(y4-y3)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1));
+
+        double h = y1 + u *(y2-y1);
+
+        if (fabs(h-1.0f) < 0.01) {
+          vPseudoTrisHandle = FLOATVECTOR2(x1 + u *(x2-x1),1.0);
+          return PT_PSEUDOTRIS;
+        }
+      }
+
+    }
+
+  }
+  return PT_OTHER;
+}
+
+void Q2DTransferFunction::DrawPolygonWithCool3DishBorder(QPainter& painter, std::vector<QPoint>& pointList, QPen& borderPen, QPen& borderPenHighlight) {
+  painter.setPen(borderPen); 
+  painter.setBrush(Qt::NoBrush);
+  painter.drawPolygon(&pointList[0], int(pointList.size()));
+  painter.setPen(borderPenHighlight); 
+  painter.drawPolygon(&pointList[0], int(pointList.size()));
+}
+
+void Q2DTransferFunction::DrawPolyVertex(QPainter& painter, QPoint& p) {
+  DrawPolyVertex(painter, INTVECTOR2(p.x(), p.y()));
+}
+
+void Q2DTransferFunction::DrawPolyVertex(QPainter& painter, const INTVECTOR2& p) {
+  painter.drawEllipse(p.x-m_iSwatchBorderSize, p.y-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
 }
 
 void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
@@ -236,43 +287,83 @@ void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
       pointList[j] = QPoint(vPixelPos.x, vPixelPos.y);
     }
 
-    if (m_iActiveSwatchIndex == int(i)) 
-      painter.setPen(borderPen); 
-    else 
-      painter.setPen(inactiveBorderPen);
-    painter.setBrush(Qt::NoBrush);
-    painter.drawPolygon(&pointList[0], int(currentSwatch.pPoints.size()));
 
-    if (m_iActiveSwatchIndex == int(i)) 
-      painter.setPen(borderPenHighlight); 
-    else 
-      painter.setPen(inactiveBorderHighlight);
-    painter.drawPolygon(&pointList[0], int(currentSwatch.pPoints.size()));
+    if (m_eTransferFunctionMode == TFM_BASIC) {
+      // for the simple Seg3D like interface to work we classify polygons into three categories: 
+      //  1. rectangles
+      //  2. the "seg3d triangle" which really is a trapezoid
+      //  3. anything else (in particular any polygon that is not a quad)
+      
+      FLOATVECTOR2 vHandle            = m_vSimpleSwatchInfo[i].m_vHandlePos;
+      E2DSimpleModePolyType polyType = m_vSimpleSwatchInfo[i].m_eType;
 
-
-    painter.setBrush(solidBrush);
-    for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
-      if (m_iActiveSwatchIndex == int(i) && m_iPointSelIndex == int(j)) 
-        painter.setPen(circlePenSel); 
+      if (m_iActiveSwatchIndex == int(i)) 
+        DrawPolygonWithCool3DishBorder(painter, pointList, borderPen, borderPenHighlight); 
       else 
-        painter.setPen(circlePen);
-      painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
+        DrawPolygonWithCool3DishBorder(painter,  pointList, inactiveBorderPen, inactiveBorderHighlight);
 
-      if (m_iActiveSwatchIndex != int(i) || m_iPointSelIndex != int(j)) {
-        painter.setPen(circlePenHighlight);
-        painter.drawEllipse(pointList[j].x()-m_iSwatchBorderSize, pointList[j].y()-m_iSwatchBorderSize, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
+      switch (polyType) {
+        case PT_PSEUDOTRIS : {
+                              INTVECTOR2 vPixelPos = Normalized2Screen(vHandle);
+
+                              pointList[1] = pointList[3];
+                              pointList[2] = QPoint(vPixelPos.x, vPixelPos.y);
+                              pointList.pop_back();
+                              if (m_iActiveSwatchIndex == int(i)) 
+                                DrawPolygonWithCool3DishBorder(painter, pointList, borderPen, borderPenHighlight); 
+                              else 
+                                DrawPolygonWithCool3DishBorder(painter,  pointList, inactiveBorderPen, inactiveBorderHighlight);
+                              DrawPolyVertex(painter, vPixelPos);
+
+                             }
+                             break;
+        case PT_RECTANGLE  : 
+                            DrawPolyVertex(painter, pointList[0]);
+                            DrawPolyVertex(painter, pointList[1]);
+                            DrawPolyVertex(painter, pointList[2]);
+                            DrawPolyVertex(painter, pointList[3]);
+                            break;
+        default : break;
       }
-    }
 
-    painter.setBrush(Qt::NoBrush);
-    if (m_iActiveSwatchIndex == int(i) && m_iGradSelIndex== 0) 
-      painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
-    INTVECTOR2 vPixelPos = Normalized2Screen(currentSwatch.pGradientCoords[0])-INTVECTOR2(m_iSwatchBorderSize,m_iSwatchBorderSize);
-    painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
-    vPixelPos = Normalized2Screen(currentSwatch.pGradientCoords[1])-INTVECTOR2(m_iSwatchBorderSize,m_iSwatchBorderSize);
-    if (m_iActiveSwatchIndex == int(i) && m_iGradSelIndex== 1) 
-      painter.setPen(gradCircePenSel); else painter.setPen(gradCircePen);
-    painter.drawEllipse(vPixelPos.x, vPixelPos.y, m_iSwatchBorderSize*2, m_iSwatchBorderSize*2);
+
+    } else {
+
+      // shape
+      if (m_iActiveSwatchIndex == int(i)) 
+        DrawPolygonWithCool3DishBorder(painter, pointList, borderPen, borderPenHighlight); 
+      else 
+        DrawPolygonWithCool3DishBorder(painter,  pointList, inactiveBorderPen, inactiveBorderHighlight);
+
+      // vertices
+      painter.setBrush(solidBrush);
+      for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
+        if (m_iActiveSwatchIndex == int(i) && m_iPointSelIndex == int(j)) 
+          painter.setPen(circlePenSel); 
+        else 
+          painter.setPen(circlePen);
+        DrawPolyVertex(painter,pointList[j]);
+
+        if (m_iActiveSwatchIndex != int(i) || m_iPointSelIndex != int(j)) {
+          painter.setPen(circlePenHighlight);
+          DrawPolyVertex(painter,pointList[j]);
+        }
+      }
+
+      // gradient coords
+      if (m_iActiveSwatchIndex == int(i)) {
+        painter.setBrush(Qt::NoBrush);
+        for (int j = 0;j<2;j++) {
+          if (m_iGradSelIndex==j) 
+            painter.setPen(gradCircePenSel); 
+          else 
+            painter.setPen(gradCircePen);
+          INTVECTOR2 vPixelPos = Normalized2Screen(currentSwatch.pGradientCoords[j])-INTVECTOR2(m_iSwatchBorderSize,m_iSwatchBorderSize);
+          DrawPolyVertex(painter, vPixelPos);
+        }
+      }
+
+    }
   }
 
   painter.setRenderHint(painter.Antialiasing, false);
@@ -359,100 +450,204 @@ void Q2DTransferFunction::DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mo
   m_vMousePressPos = vMousePressPos;
   m_mouseButton = mouseButton;
 
-  if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex<int(m_pTrans->m_Swatches.size())) {
-    TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+  if (m_eTransferFunctionMode == TFM_EXPERT) {
 
-    // left mouse drags points around
-    if (mouseButton == Qt::LeftButton) {
+    if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex<int(m_pTrans->m_Swatches.size())) {
+      TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
 
-      m_bDragging = true;
-      m_bDraggingAll = m_eDragMode != DRM_NONE;
+      // left mouse drags points around
+      if (mouseButton == Qt::LeftButton) {
 
-      m_iPointSelIndex = -1;
-      m_iGradSelIndex = -1;
+        m_bDragging = true;
+        m_bDraggingAll = m_eDragMode != DRM_NONE;
 
-      FLOATVECTOR2 vfP = Screen2Normalized(m_vMousePressPos);
-      // find closest corner point
-      float fMinDist = std::numeric_limits<float>::max();
-      for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
+        m_iPointSelIndex = -1;
+        m_iGradSelIndex = -1;
 
-        float fDist = sqrt( float(vfP.x-currentSwatch.pPoints[j].x)*float(vfP.x-currentSwatch.pPoints[j].x)
-                         +  float(vfP.y-currentSwatch.pPoints[j].y)*float(vfP.y-currentSwatch.pPoints[j].y) );
+        FLOATVECTOR2 vfP = Screen2Normalized(m_vMousePressPos);
+        // find closest corner point
+        float fMinDist = std::numeric_limits<float>::max();
+        for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
 
-        if (fMinDist > fDist) {
-          fMinDist = fDist;
-          m_iPointSelIndex = int(j);
-          m_iGradSelIndex = -1;
-        }
-      }
+          float fDist = sqrt( float(vfP.x-currentSwatch.pPoints[j].x)*float(vfP.x-currentSwatch.pPoints[j].x)
+                           +  float(vfP.y-currentSwatch.pPoints[j].y)*float(vfP.y-currentSwatch.pPoints[j].y) );
 
-      // find closest gradient coord
-      for (size_t j = 0;j<2;j++) {
-        float fDist = sqrt( float(vfP.x-currentSwatch.pGradientCoords[j].x)*float(vfP.x-currentSwatch.pGradientCoords[j].x)
-                         +  float(vfP.y-currentSwatch.pGradientCoords[j].y)*float(vfP.y-currentSwatch.pGradientCoords[j].y) );
-
-        if (fMinDist > fDist) {
-          fMinDist = fDist;
-          m_iPointSelIndex = -1;
-          m_iGradSelIndex = int(j);
-        }
-      }
-
-    }
-
-    // right mouse removes / adds points
-    if (mouseButton == Qt::RightButton) {
-
-      FLOATVECTOR2 vfP = Screen2Normalized(m_vMousePressPos);
-
-      // find closest edge and compute the point on that edge
-      float fMinDist = std::numeric_limits<float>::max();
-      FLOATVECTOR2 vfInserCoord;
-      int iInsertIndex = -1;
-
-      for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
-        FLOATVECTOR2 A = currentSwatch.pPoints[j];
-        FLOATVECTOR2 B = currentSwatch.pPoints[(j+1)%currentSwatch.pPoints.size()];
-
-        // check if we are deleting a point
-        if (currentSwatch.pPoints.size() > 3) {
-          INTVECTOR2 vPixelDist = Normalized2Offscreen(vfP)-Normalized2Offscreen(A);
-          if ( sqrt( float(vPixelDist.x*vPixelDist.x+vPixelDist.y*vPixelDist.y)) <= m_iSwatchBorderSize*3) {
-            currentSwatch.pPoints.erase(currentSwatch.pPoints.begin()+j);
-            iInsertIndex = -1;
-            emit SwatchChange();
-            break;
+          if (fMinDist > fDist) {
+            fMinDist = fDist;
+            m_iPointSelIndex = int(j);
+            m_iGradSelIndex = -1;
           }
         }
 
+        // find closest gradient coord
+        for (size_t j = 0;j<2;j++) {
+          float fDist = sqrt( float(vfP.x-currentSwatch.pGradientCoords[j].x)*float(vfP.x-currentSwatch.pGradientCoords[j].x)
+                           +  float(vfP.y-currentSwatch.pGradientCoords[j].y)*float(vfP.y-currentSwatch.pGradientCoords[j].y) );
 
-        FLOATVECTOR2 C = vfP - A;    // Vector from a to Point
-        float d = (B - A).length();    // Length of the line segment
-        FLOATVECTOR2 V = (B - A)/d;    // Unit Vector from A to B
-        float t = V^C;          // Intersection point Distance from A
-
-        float fDist;
-        if (t >= 0 && t <= d)
-          fDist = (vfP-(A + V*t)).length();
-        else
-          fDist = std::numeric_limits<float>::max();
-
-
-        if (fDist < fMinDist) {
-          fMinDist = fDist;
-          vfInserCoord = vfP;
-          iInsertIndex = int(j+1);
+          if (fMinDist > fDist) {
+            fMinDist = fDist;
+            m_iPointSelIndex = -1;
+            m_iGradSelIndex = int(j);
+          }
         }
 
       }
 
-      if (iInsertIndex >= 0) {
-        currentSwatch.pPoints.insert(currentSwatch.pPoints.begin()+iInsertIndex, vfInserCoord);
-        emit SwatchChange();
+      // right mouse removes / adds points
+      if (mouseButton == Qt::RightButton) {
+
+        FLOATVECTOR2 vfP = Screen2Normalized(m_vMousePressPos);
+
+        // find closest edge and compute the point on that edge
+        float fMinDist = std::numeric_limits<float>::max();
+        FLOATVECTOR2 vfInserCoord;
+        int iInsertIndex = -1;
+
+        for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
+          FLOATVECTOR2 A = currentSwatch.pPoints[j];
+          FLOATVECTOR2 B = currentSwatch.pPoints[(j+1)%currentSwatch.pPoints.size()];
+
+          // check if we are deleting a point
+          if (currentSwatch.pPoints.size() > 3) {
+            INTVECTOR2 vPixelDist = Normalized2Offscreen(vfP)-Normalized2Offscreen(A);
+            if ( sqrt( float(vPixelDist.x*vPixelDist.x+vPixelDist.y*vPixelDist.y)) <= m_iSwatchBorderSize*3) {
+              currentSwatch.pPoints.erase(currentSwatch.pPoints.begin()+j);
+              iInsertIndex = -1;
+              emit SwatchChange();
+              break;
+            }
+          }
+
+
+          FLOATVECTOR2 C = vfP - A;    // Vector from a to Point
+          float d = (B - A).length();    // Length of the line segment
+          FLOATVECTOR2 V = (B - A)/d;    // Unit Vector from A to B
+          float t = V^C;          // Intersection point Distance from A
+
+          float fDist;
+          if (t >= 0 && t <= d)
+            fDist = (vfP-(A + V*t)).length();
+          else
+            fDist = std::numeric_limits<float>::max();
+
+
+          if (fDist < fMinDist) {
+            fMinDist = fDist;
+            vfInserCoord = vfP;
+            iInsertIndex = int(j+1);
+          }
+
+        }
+
+        if (iInsertIndex >= 0) {
+          currentSwatch.pPoints.insert(currentSwatch.pPoints.begin()+iInsertIndex, vfInserCoord);
+          emit SwatchChange();
+        }
+      }
+      update();
+    }
+  } else {
+    m_eSimpleDragMode = SDM_NONE;
+    if (mouseButton != Qt::LeftButton) return;
+    
+    FLOATVECTOR2 vfP = Screen2Normalized(m_vMousePressPos);
+    m_iActiveSwatchIndex = PickVertex(vfP, m_iSimpleDragModeSubindex);
+    if (m_iActiveSwatchIndex != -1)  {
+      m_eSimpleDragMode = SDM_VERTEX;
+      m_bDragging = true;
+    } else {
+      m_iActiveSwatchIndex = PickEdge(vfP, m_iSimpleDragModeSubindex);
+      if (m_iActiveSwatchIndex != -1)  {
+        m_eSimpleDragMode = SDM_EDGE;
+        m_bDragging = true;
+      } else {
+        m_iActiveSwatchIndex = PickSwatch(vfP);
+        if (m_iActiveSwatchIndex != -1)  {
+          m_eSimpleDragMode = SDM_POLY;
+          m_bDragging = true;
+        } else return;
       }
     }
+
+    emit SwatchChange();
     update();
   }
+}
+
+
+bool Q2DTransferFunction::PointInPolygon(const FLOATVECTOR2& point, const TFPolygon& poly) const {
+  size_t  i,j=poly.pPoints.size()-1 ;
+  bool oddHits=false;
+
+  for (i=0; i<poly.pPoints.size(); i++) {
+    if (poly.pPoints[i].y<point.y && poly.pPoints[j].y>=point.y ||
+        poly.pPoints[j].y<point.y && poly.pPoints[i].y>=point.y) {
+      if (poly.pPoints[i].x+(point.y-poly.pPoints[i].y)/
+          (poly.pPoints[j].y-poly.pPoints[i].y)*
+          (poly.pPoints[j].x-poly.pPoints[i].x)<point.x) {
+        oddHits=!oddHits; 
+      }
+    }
+    j=i;
+  }
+  return oddHits; 
+} 
+
+int Q2DTransferFunction::PickEdge(const FLOATVECTOR2& pickPos, int& iEdgeIndex) const {
+  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
+    if (m_vSimpleSwatchInfo[i].m_eType != PT_OTHER) continue; // skip everything but the pseudotris and rectangles
+    TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
+
+    for (int j = 0;j<currentSwatch.pPoints.size();j++) {
+      FLOATVECTOR2 A = currentSwatch.pPoints[j];
+      FLOATVECTOR2 B = currentSwatch.pPoints[(j+1)%currentSwatch.pPoints.size()];
+
+      FLOATVECTOR2 C = pickPos - A;  // Vector from a to Point
+      float d = (B - A).length();    // Length of the line segment
+      FLOATVECTOR2 V = (B - A)/d;    // Unit Vector from A to B
+      float t = V^C;                 // Intersection point Distance from A
+
+      float fDist;
+      if (t >= 0 && t <= d)
+        fDist = (pickPos-(A + V*t)).length();
+      else
+        fDist = std::numeric_limits<float>::max();
+
+      if (fDist <= float(m_iSwatchBorderSize)/max(width(), height())) {
+        iEdgeIndex = int(j);
+        return int(i);
+      }
+    }
+
+  }
+  return -1;
+}
+
+int Q2DTransferFunction::PickVertex(const FLOATVECTOR2& pickPos, int& iVertexIndex) const {
+  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
+    if (m_vSimpleSwatchInfo[i].m_eType != PT_RECTANGLE) continue; // consider only the rectangles
+    TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];  
+
+    for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
+      FLOATVECTOR2 A = currentSwatch.pPoints[j];      
+      INTVECTOR2 vPixelDist = Normalized2Screen(pickPos)-Normalized2Screen(A);
+      if ( sqrt( float(vPixelDist.x*vPixelDist.x+vPixelDist.y*vPixelDist.y)) <= m_iSwatchBorderSize*3) {
+        iVertexIndex = int(j);
+        return int(i);
+      }
+    }
+  }
+  return -1;
+}
+
+int Q2DTransferFunction::PickSwatch(const FLOATVECTOR2& pickPos) const {
+  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
+    TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];  
+    if (PointInPolygon(pickPos, currentSwatch)) {
+      return int(i);
+    }
+  }
+  return -1;
 }
 
 void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
@@ -495,8 +690,6 @@ void Q2DTransferFunction::wheelEvent(QWheelEvent *event) {
   m_bBackdropCacheUptodate = false;
   repaint();
 }
-
-
 
 
 void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
@@ -572,55 +765,95 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 
     FLOATVECTOR2 vfPressPos = Screen2Normalized(m_vMousePressPos);
     FLOATVECTOR2 vfCurrentPos = Screen2Normalized(vMouseCurrentPos);
-
     FLOATVECTOR2 vfDelta = vfCurrentPos-vfPressPos;
 
-    TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+    if (m_eTransferFunctionMode == TFM_EXPERT) {
 
-    if (m_bDraggingAll)  {
-      switch (m_eDragMode) {
-        case DRM_MOVE : {
-                  for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) currentSwatch.pPoints[i] += vfDelta;
-                  currentSwatch.pGradientCoords[0] += vfDelta;
-                  currentSwatch.pGradientCoords[1] += vfDelta;
-                } break;
-        case DRM_ROTATE : {
-                  float fScaleFactor = vfDelta.x + vfDelta.y;
-                  FLOATVECTOR2 vfCenter(0,0);
-                  for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) vfCenter += currentSwatch.pPoints[i];
+      TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
 
-                  vfCenter /= currentSwatch.pPoints.size();
-                  FLOATVECTOR2 fvRot(cos(fScaleFactor/10),sin(fScaleFactor/10));
-
-                  FLOATVECTOR2 vfRescale(width(),height());
-                  vfRescale /= max(width(),height());
-
-                  for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) currentSwatch.pPoints[i] = Rotate(currentSwatch.pPoints[i], fScaleFactor, vfCenter, vfRescale);
-                  currentSwatch.pGradientCoords[0] = Rotate(currentSwatch.pGradientCoords[0], fScaleFactor, vfCenter, vfRescale);
-                  currentSwatch.pGradientCoords[1] = Rotate(currentSwatch.pGradientCoords[1], fScaleFactor, vfCenter, vfRescale);
-
-
+      if (m_bDraggingAll)  {
+        switch (m_eDragMode) {
+          case DRM_MOVE : {
+                    for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) currentSwatch.pPoints[i] += vfDelta;
+                    currentSwatch.pGradientCoords[0] += vfDelta;
+                    currentSwatch.pGradientCoords[1] += vfDelta;
                   } break;
-        case DRM_SCALE : {
-                  float fScaleFactor = vfDelta.x + vfDelta.y;
-                  FLOATVECTOR2 vfCenter(0,0);
-                  for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) vfCenter += currentSwatch.pPoints[i];
+          case DRM_ROTATE : {
+                    float fScaleFactor = vfDelta.x + vfDelta.y;
+                    FLOATVECTOR2 vfCenter(0,0);
+                    for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) vfCenter += currentSwatch.pPoints[i];
 
-                  vfCenter /= currentSwatch.pPoints.size();
+                    vfCenter /= currentSwatch.pPoints.size();
+                    FLOATVECTOR2 fvRot(cos(fScaleFactor/10),sin(fScaleFactor/10));
 
-                  for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++)
-                    currentSwatch.pPoints[i] += (currentSwatch.pPoints[i]-vfCenter)*fScaleFactor;
-                  currentSwatch.pGradientCoords[0] += (currentSwatch.pGradientCoords[0]-vfCenter)*fScaleFactor;
-                  currentSwatch.pGradientCoords[1] += (currentSwatch.pGradientCoords[1]-vfCenter)*fScaleFactor;
+                    FLOATVECTOR2 vfRescale(width(),height());
+                    vfRescale /= max(width(),height());
 
-                  } break;
-        default : break;
+                    for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) currentSwatch.pPoints[i] = Rotate(currentSwatch.pPoints[i], fScaleFactor, vfCenter, vfRescale);
+                    currentSwatch.pGradientCoords[0] = Rotate(currentSwatch.pGradientCoords[0], fScaleFactor, vfCenter, vfRescale);
+                    currentSwatch.pGradientCoords[1] = Rotate(currentSwatch.pGradientCoords[1], fScaleFactor, vfCenter, vfRescale);
+
+
+                    } break;
+          case DRM_SCALE : {
+                    float fScaleFactor = vfDelta.x + vfDelta.y;
+                    FLOATVECTOR2 vfCenter(0,0);
+                    for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) vfCenter += currentSwatch.pPoints[i];
+
+                    vfCenter /= currentSwatch.pPoints.size();
+
+                    for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++)
+                      currentSwatch.pPoints[i] += (currentSwatch.pPoints[i]-vfCenter)*fScaleFactor;
+                    currentSwatch.pGradientCoords[0] += (currentSwatch.pGradientCoords[0]-vfCenter)*fScaleFactor;
+                    currentSwatch.pGradientCoords[1] += (currentSwatch.pGradientCoords[1]-vfCenter)*fScaleFactor;
+
+                    } break;
+          default : break;
+        }
+      } else {
+        if (m_iPointSelIndex >= 0)  {
+          currentSwatch.pPoints[m_iPointSelIndex] += vfDelta;
+        } else {
+          currentSwatch.pGradientCoords[m_iGradSelIndex] += vfDelta;
+        }
       }
     } else {
-      if (m_iPointSelIndex >= 0)  {
-        currentSwatch.pPoints[m_iPointSelIndex] += vfDelta;
-      } else {
-        currentSwatch.pGradientCoords[m_iGradSelIndex] += vfDelta;
+      if (m_iActiveSwatchIndex < 0) return;
+
+      switch (m_eSimpleDragMode) {
+        case SDM_POLY : {
+          if (m_vSimpleSwatchInfo[m_iActiveSwatchIndex].m_eType == PT_PSEUDOTRIS) vfDelta.y = 0.0;
+
+          TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+          for (unsigned int i= 0;i<currentSwatch.pPoints.size();i++) currentSwatch.pPoints[i] += vfDelta;
+          currentSwatch.pGradientCoords[0] += vfDelta;
+          currentSwatch.pGradientCoords[1] += vfDelta;
+          UpdateSwatchType(m_iActiveSwatchIndex);
+        } break;
+        case SDM_EDGE : {
+        } break;
+        case SDM_VERTEX : {
+          TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+          
+          currentSwatch.pPoints[m_iSimpleDragModeSubindex] += vfDelta;
+
+          switch (m_iSimpleDragModeSubindex) {
+            case 0 : currentSwatch.pPoints[1].x = currentSwatch.pPoints[0].x; 
+                     currentSwatch.pPoints[3].y = currentSwatch.pPoints[0].y; 
+                     break;
+            case 1 : currentSwatch.pPoints[0].x = currentSwatch.pPoints[1].x; 
+                     currentSwatch.pPoints[2].y = currentSwatch.pPoints[1].y; 
+                     break;
+            case 2 : currentSwatch.pPoints[3].x = currentSwatch.pPoints[2].x; 
+                     currentSwatch.pPoints[1].y = currentSwatch.pPoints[2].y; 
+                     break;
+            case 3 : currentSwatch.pPoints[2].x = currentSwatch.pPoints[3].x; 
+                     currentSwatch.pPoints[0].y = currentSwatch.pPoints[3].y; 
+                     break;
+          }
+          currentSwatch.pGradientCoords[0] = FLOATVECTOR2(currentSwatch.pPoints[1].x, (currentSwatch.pPoints[0].y+currentSwatch.pPoints[1].y)/2.0f);
+          currentSwatch.pGradientCoords[1] = FLOATVECTOR2(currentSwatch.pPoints[2].x, (currentSwatch.pPoints[2].y+currentSwatch.pPoints[3].y)/2.0f);
+        } break;
       }
     }
 
@@ -744,7 +977,6 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
   // now draw everything rest into this widget
   QPainter painter;
 
-
   QPixmap tmp(w, h);
   painter.begin(&tmp);
 
@@ -849,6 +1081,78 @@ void Q2DTransferFunction::Transfer2DAddSwatch() {
   emit SwatchChange();
 }
 
+void Q2DTransferFunction::Transfer2DAddRectangleSwatch() {
+  TFPolygon newSwatch;
+
+  newSwatch.pPoints.push_back(FLOATVECTOR2(m_vZoomWindow.x + 0.3f*m_vZoomWindow.z, m_vZoomWindow.y + 0.3f*m_vZoomWindow.w));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(m_vZoomWindow.x + 0.3f*m_vZoomWindow.z, m_vZoomWindow.y + 0.7f*m_vZoomWindow.w));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(m_vZoomWindow.x + 0.7f*m_vZoomWindow.z, m_vZoomWindow.y + 0.7f*m_vZoomWindow.w));
+  newSwatch.pPoints.push_back(FLOATVECTOR2(m_vZoomWindow.x + 0.7f*m_vZoomWindow.z, m_vZoomWindow.y + 0.3f*m_vZoomWindow.w));
+
+  newSwatch.pGradientCoords[0] = FLOATVECTOR2(m_vZoomWindow.x + 0.3f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
+  newSwatch.pGradientCoords[1] = FLOATVECTOR2(m_vZoomWindow.x + 0.7f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
+
+  GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),g2(0.5,FLOATVECTOR4(rand()/float(RAND_MAX),rand()/float(RAND_MAX),rand()/float(RAND_MAX),1)),g3(1,FLOATVECTOR4(0,0,0,0));
+  newSwatch.pGradientStops.push_back(g1);
+  newSwatch.pGradientStops.push_back(g2);
+  newSwatch.pGradientStops.push_back(g3);
+
+  m_pTrans->m_Swatches.push_back(newSwatch);
+
+  UpdateSwatchTypes();
+
+  m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
+  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  emit SwatchChange();
+}
+
+
+void Q2DTransferFunction::ComputeGradientForPseudoTris(TFPolygon& swatch, const FLOATVECTOR4& color) {
+  GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),
+               g2(0.5f,color),
+               g3(1.0f,FLOATVECTOR4(0,0,0,0));
+  swatch.pGradientStops.clear();
+  swatch.pGradientStops.push_back(g1);
+  swatch.pGradientStops.push_back(g2);
+  swatch.pGradientStops.push_back(g3);
+
+  FLOATVECTOR2 vTop       = (swatch.pPoints[1]+swatch.pPoints[2])/2.0f;
+  FLOATVECTOR2 vBottom    = (swatch.pPoints[3]+swatch.pPoints[0])/2.0f;
+  FLOATVECTOR2 vDirection = vBottom-vTop;
+  FLOATVECTOR2 vPerpendicular(vDirection.y,-vDirection.x);
+  vPerpendicular.normalize();
+  vPerpendicular *= (swatch.pPoints[1]-swatch.pPoints[2]).length()/2.0f;
+
+  swatch.pGradientCoords[0] = vTop-vPerpendicular;
+  swatch.pGradientCoords[1] = vTop+vPerpendicular;
+}
+
+void Q2DTransferFunction::Transfer2DAddPseudoTrisSwatch() {
+  TFPolygon newSwatch;
+
+  FLOATVECTOR2 p1 = FLOATVECTOR2(m_vZoomWindow.x + 0.3f*m_vZoomWindow.z, m_vZoomWindow.y + 0.3f*m_vZoomWindow.w);
+  FLOATVECTOR2 p2 = FLOATVECTOR2(m_vZoomWindow.x + 0.7f*m_vZoomWindow.z, m_vZoomWindow.y + 0.3f*m_vZoomWindow.w);
+
+  FLOATVECTOR2 handlePoint = FLOATVECTOR2((p2.x+p1.x)/2.0f,1.0f);
+
+  FLOATVECTOR2 p0 = (p1+handlePoint)/2.0f;
+  FLOATVECTOR2 p3 = (p2+handlePoint)/2.0f;
+
+  newSwatch.pPoints.push_back(p0);
+  newSwatch.pPoints.push_back(p1);
+  newSwatch.pPoints.push_back(p2);
+  newSwatch.pPoints.push_back(p3);
+  ComputeGradientForPseudoTris(newSwatch, FLOATVECTOR4(rand()/float(RAND_MAX),rand()/float(RAND_MAX),rand()/float(RAND_MAX),1));
+
+  m_pTrans->m_Swatches.push_back(newSwatch);
+  UpdateSwatchTypes();
+
+  m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
+  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  emit SwatchChange();
+}
+
+
 void Q2DTransferFunction::Transfer2DDeleteSwatch(){
   if (m_iActiveSwatchIndex != -1) {
     m_pTrans->m_Swatches.erase(m_pTrans->m_Swatches.begin()+m_iActiveSwatchIndex);
@@ -915,5 +1219,32 @@ void Q2DTransferFunction::DeleteGradient(unsigned int i) {
 void Q2DTransferFunction::SetGradient(unsigned int i, GradientStop stop) {
   m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops[i] = stop;
   m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  update();
+}
+
+
+void Q2DTransferFunction::UpdateSwatchType(size_t i) {
+  TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
+  FLOATVECTOR2 vHandle;
+  E2DSimpleModePolyType polyType = ClassifySwatch(currentSwatch,vHandle);
+  m_vSimpleSwatchInfo[i] = SimpleSwatchInfo(polyType,vHandle);
+}
+
+
+void Q2DTransferFunction::UpdateSwatchTypes() {
+  m_vSimpleSwatchInfo.clear();
+  m_vSimpleSwatchInfo.resize(m_pTrans->m_Swatches.size());
+  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
+    UpdateSwatchType(i);
+  }
+}
+
+void Q2DTransferFunction::Toggle2DTFMode() { 
+  Set2DTFMode(E2DTransferFunctionMode((int(m_eTransferFunctionMode)+1)%int(TFM_INVALID))); 
+}
+
+void Q2DTransferFunction::Set2DTFMode(E2DTransferFunctionMode TransferFunctionMode) { 
+  m_eTransferFunctionMode = TransferFunctionMode; 
+  if (m_eTransferFunctionMode == TFM_BASIC) UpdateSwatchTypes();
   update();
 }
