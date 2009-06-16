@@ -190,8 +190,8 @@ INTVECTOR2 Q2DTransferFunction::Normalized2Screen(FLOATVECTOR2 vfCoord) const {
 }
 
 FLOATVECTOR2 Q2DTransferFunction::Screen2Normalized(INTVECTOR2 vCoord) const {
-  return FLOATVECTOR2((float(vCoord.x)*m_vZoomWindow.z-m_vZoomWindow.x * width())/float(width()),
-                      (float(vCoord.y)*m_vZoomWindow.w-m_vZoomWindow.y * height())/float(height()));
+  return FLOATVECTOR2(float(vCoord.x)*m_vZoomWindow.z/width()+m_vZoomWindow.x,
+                      float(vCoord.y)*m_vZoomWindow.w/height()+m_vZoomWindow.y);
 }
 
 E2DSimpleModePolyType Q2DTransferFunction::ClassifySwatch(TFPolygon& polygon, FLOATVECTOR2& vPseudoTrisHandle) const {
@@ -1182,15 +1182,19 @@ void Q2DTransferFunction::ComputeGradientForPseudoTris(TFPolygon& swatch, const 
   swatch.pGradientStops.push_back(g2);
   swatch.pGradientStops.push_back(g3);
 
-  FLOATVECTOR2 vTop       = (swatch.pPoints[1]+swatch.pPoints[2])/2.0f;
-  FLOATVECTOR2 vBottom    = (swatch.pPoints[3]+swatch.pPoints[0])/2.0f;
-  FLOATVECTOR2 vDirection = vBottom-vTop;
+  FLOATVECTOR2 persCorrection(m_iCachedWidth,m_iCachedHeight);
+  persCorrection /= persCorrection.maxVal();
+
+
+  FLOATVECTOR2 vTop       = (swatch.pPoints[1]+swatch.pPoints[2])*persCorrection/2.0f;
+  FLOATVECTOR2 vBottom    = (swatch.pPoints[3]+swatch.pPoints[0])*persCorrection/2.0f;
+  FLOATVECTOR2 vDirection = (vBottom-vTop);
   FLOATVECTOR2 vPerpendicular(vDirection.y,-vDirection.x);
   vPerpendicular.normalize();
   vPerpendicular *= (swatch.pPoints[1]-swatch.pPoints[2]).length()/2.0f;
 
-  swatch.pGradientCoords[0] = vTop-vPerpendicular;
-  swatch.pGradientCoords[1] = vTop+vPerpendicular;
+  swatch.pGradientCoords[0] = (vTop-vPerpendicular)/persCorrection;
+  swatch.pGradientCoords[1] = (vTop+vPerpendicular)/persCorrection;
 }
 
 void Q2DTransferFunction::Transfer2DAddPseudoTrisSwatch() {
