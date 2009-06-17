@@ -114,7 +114,7 @@ public:
   int GetActiveSwatchIndex() {
     return m_iActiveSwatchIndex;}
   size_t GetSwatchCount() {
-    return m_pTrans->m_Swatches.size();}
+    return (m_pTrans) ? m_pTrans->m_Swatches.size() : 0;}
   size_t GetSwatchSize(unsigned int i) {
     return m_pTrans->m_Swatches[i].pPoints.size();}
 
