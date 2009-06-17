@@ -237,19 +237,19 @@ SimpleSwatchInfo Q2DTransferFunction::ClassifySwatch(TFPolygon& polygon) const {
 
           return SimpleSwatchInfo(PT_PSEUDOTRIS,FLOATVECTOR2(x1 + u *(x2-x1),1.0),"Triangle");
         } else {
-          return SimpleSwatchInfo(PT_OTHER,FLOATVECTOR2(0,0),"Other (wrong distance to lower bound)");
+          return SimpleSwatchInfo(PT_OTHER,FLOATVECTOR2(0,0),"Polygon (wrong distance to lower bound)");
         }
       }
     }
   } 
 
-  string otherDesc = "Other (";
+  string otherDesc = "Polygon (";
   if (polygon.pPoints.size() != 4) otherDesc += "not a quadrilateral, ";
     else {
-      if (fabs(polygon.pPoints[0].x - polygon.pPoints[1].x) > 0.01 || 
-          fabs(polygon.pPoints[2].x - polygon.pPoints[3].x) > 0.01) otherDesc += "not y-axis aligned, ";
       if (fabs(polygon.pPoints[1].y - polygon.pPoints[2].y) > 0.01 || 
           fabs(polygon.pPoints[0].y - polygon.pPoints[3].y) > 0.01) otherDesc += "not x-axis aligned, ";
+      if (fabs(polygon.pPoints[0].x - polygon.pPoints[1].x) > 0.01 || 
+          fabs(polygon.pPoints[2].x - polygon.pPoints[3].x) > 0.01) otherDesc += "not y-axis aligned, ";
     }
   if (polygon.bRadial) otherDesc += "radial gradient, ";
   if (polygon.pGradientStops.size() != 3) otherDesc += "custom gradient, ";
