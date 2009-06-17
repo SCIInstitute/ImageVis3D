@@ -145,6 +145,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ApplyUpdate();
 
     void Transfer2DSwatchesChanged();
+    void Transfer2DSwatcheTypeChanged(int i);
     void Transfer2DUpdateSwatchButtons();
     void Transfer2DUpdateGradientType();
     void Transfer2DUpdateGradientBox();
@@ -367,6 +368,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void RemoveRunningFlag();
     void ReportABug(const std::string& strFile);
     void ToggleLogFile();
+
+    void UpdatePolyTypeLabel(int iCurrent);
 
     TextfileOut* m_pTextout;
 

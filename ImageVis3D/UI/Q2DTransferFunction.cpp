@@ -194,16 +194,27 @@ FLOATVECTOR2 Q2DTransferFunction::Screen2Normalized(INTVECTOR2 vCoord) const {
                       float(vCoord.y)*m_vZoomWindow.w/height()+m_vZoomWindow.y);
 }
 
-E2DSimpleModePolyType Q2DTransferFunction::ClassifySwatch(TFPolygon& polygon, FLOATVECTOR2& vPseudoTrisHandle) const {
+SimpleSwatchInfo Q2DTransferFunction::ClassifySwatch(TFPolygon& polygon) const {
   // check the most basic properties first (four vertices, linear gradient, and exactly 3 gradient stops)
   if (polygon.pPoints.size() == 4 && !polygon.bRadial && polygon.pGradientStops.size() == 3) {
 
     // check if the top and bottom edge are parallel to the x-axis
-    if (polygon.pPoints[1].y == polygon.pPoints[2].y && polygon.pPoints[0].y == polygon.pPoints[3].y) {
+    if (fabs(polygon.pPoints[1].y - polygon.pPoints[2].y) < 0.01 && 
+        fabs(polygon.pPoints[0].y - polygon.pPoints[3].y) < 0.01) {
+
+      // snap points if they are close but really the same
+      polygon.pPoints[1].y = polygon.pPoints[2].y;
+      polygon.pPoints[0].y = polygon.pPoints[3].y;
 
       // check if the left and right edge are parallel to the y-axis -> rectangle
-      if (polygon.pPoints[0].x == polygon.pPoints[1].x && polygon.pPoints[2].x == polygon.pPoints[3].x) {
-        return PT_RECTANGLE;
+      if (fabs(polygon.pPoints[0].x - polygon.pPoints[1].x) < 0.01 && 
+          fabs(polygon.pPoints[2].x - polygon.pPoints[3].x) < 0.01 ) {
+
+        // snap points if they are close but really the same
+        polygon.pPoints[0].x = polygon.pPoints[1].x;
+        polygon.pPoints[2].x = polygon.pPoints[3].x;
+            
+        return SimpleSwatchInfo(PT_RECTANGLE,FLOATVECTOR2(0,0),"Rectangle");;
       } else {
         // check if the left and right edge are intersecting "near" the x-axis
 
@@ -212,21 +223,39 @@ E2DSimpleModePolyType Q2DTransferFunction::ClassifySwatch(TFPolygon& polygon, FL
         double x3 = polygon.pPoints[2].x, y3 = polygon.pPoints[2].y;
         double x4 = polygon.pPoints[3].x, y4 = polygon.pPoints[3].y;
 
-
         double u = ((x4-x3)*(y1-y3)-(y4-y3)*(x1-x3))/((y4-y3)*(x2-x1)-(x4-x3)*(y2-y1));
 
         double h = y1 + u *(y2-y1);
 
         if (fabs(h-1.0f) < 0.01) {
-          vPseudoTrisHandle = FLOATVECTOR2(x1 + u *(x2-x1),1.0);
-          return PT_PSEUDOTRIS;
+        
+          // when an "other primitive" snaps to a triangle, the edges may be in the wrong order 
+          if (polygon.pPoints[1].y > polygon.pPoints[0].y) {
+            std::swap(polygon.pPoints[0],polygon.pPoints[1]);
+            std::swap(polygon.pPoints[2],polygon.pPoints[3]);
+          }
+
+          return SimpleSwatchInfo(PT_PSEUDOTRIS,FLOATVECTOR2(x1 + u *(x2-x1),1.0),"Triangle");
+        } else {
+          return SimpleSwatchInfo(PT_OTHER,FLOATVECTOR2(0,0),"Other (wrong distance to lower bound)");
         }
       }
-
     }
+  } 
 
-  }
-  return PT_OTHER;
+  string otherDesc = "Other (";
+  if (polygon.pPoints.size() != 4) otherDesc += "not a quadrilateral, ";
+    else {
+      if (fabs(polygon.pPoints[0].x - polygon.pPoints[1].x) > 0.01 || 
+          fabs(polygon.pPoints[2].x - polygon.pPoints[3].x) > 0.01) otherDesc += "not y-axis aligned, ";
+      if (fabs(polygon.pPoints[1].y - polygon.pPoints[2].y) > 0.01 || 
+          fabs(polygon.pPoints[0].y - polygon.pPoints[3].y) > 0.01) otherDesc += "not x-axis aligned, ";
+    }
+  if (polygon.bRadial) otherDesc += "radial gradient, ";
+  if (polygon.pGradientStops.size() != 3) otherDesc += "custom gradient, ";
+  otherDesc = otherDesc.substr(0,otherDesc.size()-2) + ")";
+
+  return SimpleSwatchInfo(PT_OTHER,FLOATVECTOR2(0,0),otherDesc);
 }
 
 void Q2DTransferFunction::DrawPolygonWithCool3DishBorder(QPainter& painter, std::vector<QPoint>& pointList, QPen& borderPen, QPen& borderPenHighlight) {
@@ -551,6 +580,8 @@ void Q2DTransferFunction::DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mo
   } else {
     m_eSimpleDragMode = SDM_NONE;
     if (mouseButton != Qt::LeftButton) return;
+
+    int iPrevIndex = m_iActiveSwatchIndex;
     
     FLOATVECTOR2 vfP = Screen2Normalized(m_vMousePressPos);
     m_iActiveSwatchIndex = PickVertex(vfP, m_iSimpleDragModeSubindex);
@@ -572,7 +603,10 @@ void Q2DTransferFunction::DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mo
           if (m_iActiveSwatchIndex != -1)  {
             m_eSimpleDragMode = SDM_POLY;
             m_bDragging = true;
-          } else return;
+          } else {
+            if (iPrevIndex != m_iActiveSwatchIndex) SwatchChange();
+            return;
+          }
         }
       }
     }
@@ -879,6 +913,7 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
           if (m_vSimpleSwatchInfo[m_iActiveSwatchIndex].m_eType == PT_OTHER) {
             currentSwatch.pPoints[m_iSimpleDragModeSubindex] += vfDelta;
             currentSwatch.pPoints[(m_iSimpleDragModeSubindex+1)%currentSwatch.pPoints.size()] += vfDelta;
+            UpdateSwatchType(m_iActiveSwatchIndex);
           } else if (m_vSimpleSwatchInfo[m_iActiveSwatchIndex].m_eType == PT_RECTANGLE) { 
             switch (m_iSimpleDragModeSubindex) {
               case 0 : currentSwatch.pPoints[0].x += vfDelta.x; 
@@ -928,6 +963,7 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
         case SDM_VERTEX : {
           if (m_vSimpleSwatchInfo[m_iActiveSwatchIndex].m_eType == PT_OTHER) {
             currentSwatch.pPoints[m_iSimpleDragModeSubindex] += vfDelta;
+            UpdateSwatchType(m_iActiveSwatchIndex);
           } else 
             if (m_vSimpleSwatchInfo[m_iActiveSwatchIndex].m_eType == PT_RECTANGLE) { 
             currentSwatch.pPoints[m_iSimpleDragModeSubindex] += vfDelta;
@@ -1150,7 +1186,7 @@ void Q2DTransferFunction::Set1DTrans(const TransferFunction1D* p1DTrans) {
 }
 
 void Q2DTransferFunction::Transfer2DSetActiveSwatch(const int iActiveSwatch) {
-  if (iActiveSwatch == -1 && m_pTrans->m_Swatches.size() > 0) return;
+  if (iActiveSwatch == -1 && m_pTrans && m_pTrans->m_Swatches.size() > 0) return;
   m_iActiveSwatchIndex = iActiveSwatch;
   update();
 }
@@ -1241,7 +1277,6 @@ void Q2DTransferFunction::ComputeGradientForPseudoTris(TFPolygon& swatch, const 
 
   FLOATVECTOR2 persCorrection(m_iCachedWidth,m_iCachedHeight);
   persCorrection /= persCorrection.maxVal();
-
 
   FLOATVECTOR2 vTop       = (swatch.pPoints[1]+swatch.pPoints[2])*persCorrection/2.0f;
   FLOATVECTOR2 vBottom    = (swatch.pPoints[3]+swatch.pPoints[0])*persCorrection/2.0f;
@@ -1351,10 +1386,10 @@ void Q2DTransferFunction::SetGradient(unsigned int i, GradientStop stop) {
 
 
 void Q2DTransferFunction::UpdateSwatchType(size_t i) {
-  TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
-  FLOATVECTOR2 vHandle;
-  E2DSimpleModePolyType polyType = ClassifySwatch(currentSwatch,vHandle);
-  m_vSimpleSwatchInfo[i] = SimpleSwatchInfo(polyType,vHandle);
+  std::string desc = m_vSimpleSwatchInfo[i].m_strDesc;
+  m_vSimpleSwatchInfo[i] = ClassifySwatch(m_pTrans->m_Swatches[i]);
+
+  if (desc != m_vSimpleSwatchInfo[i].m_strDesc) emit SwatchTypeChange(int(i));
 }
 
 
@@ -1376,4 +1411,13 @@ void Q2DTransferFunction::Set2DTFMode(E2DTransferFunctionMode TransferFunctionMo
   m_eTransferFunctionMode = TransferFunctionMode; 
   if (m_eTransferFunctionMode == TFM_BASIC) UpdateSwatchTypes();
   update();
+}
+
+
+std::string Q2DTransferFunction::GetSwatchDesciption() const {
+  if (int(m_vSimpleSwatchInfo.size()) > m_iActiveSwatchIndex) {
+    return m_vSimpleSwatchInfo[m_iActiveSwatchIndex].m_strDesc;
+  } else {
+    return "";
+  }
 }

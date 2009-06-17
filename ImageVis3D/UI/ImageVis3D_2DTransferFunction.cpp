@@ -99,6 +99,12 @@ void MainWindow::Transfer2DSwatchesChanged() {
   listWidget_Swatches->setCurrentRow(iCurrent);
 
   Transfer2DUpdateSwatchButtons();
+  UpdatePolyTypeLabel(iCurrent);
+}
+
+void MainWindow::Transfer2DSwatcheTypeChanged(int iIndex) {
+  int iCurrent = m_2DTransferFunction->GetActiveSwatchIndex();
+  if (iIndex == iCurrent) UpdatePolyTypeLabel(iCurrent);
 }
 
 
@@ -331,10 +337,19 @@ void MainWindow::Transfer2DToggleTFMode() {
   } else {
     frame_Simple2DTransControls->setVisible(true);
     frame_Expert2DTransControls->setVisible(false);
+
+    UpdatePolyTypeLabel(m_2DTransferFunction->GetActiveSwatchIndex());
   }
 
   Transfer2DUpdateGradientButtons();
 
   QSettings settings;
   settings.setValue("UI/2DTFMode", int(tfMode));
+}
+
+void MainWindow::UpdatePolyTypeLabel(int iCurrent) {
+  if (iCurrent >= 0) 
+    pushButton_DelPoly_SimpleUI->setText(tr("Delete current %1").arg(m_2DTransferFunction->GetSwatchDesciption().c_str()));
+  else 
+    pushButton_DelPoly_SimpleUI->setText("Delete");
 }

@@ -292,6 +292,8 @@ void MainWindow::Use1DTrans() {
 void MainWindow::Use2DTrans() {
   if (!m_pActiveRenderWin) return;
 
+  frame_Simple2DTransControls->setEnabled(true);
+
   label_1DIndicator->setVisible(false);
   label_IsoDIndicator->setVisible(false);
 
@@ -315,6 +317,10 @@ void MainWindow::Use2DTrans() {
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(true);
 
+  frame_top_simpleUI->setEnabled(true);
+  frame_center_simpleUI->setEnabled(true);
+  frame_bottomL_simpleUI->setEnabled(true);
+  frame_2DTransEdit->setEnabled(true);
 
   int iCurrent = m_2DTransferFunction->GetActiveSwatchIndex();
   if (iCurrent < 0 && m_2DTransferFunction->GetSwatchCount() > 0) {
@@ -374,6 +380,11 @@ void MainWindow::DisableAllTrans() {
 
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(false);
+
+  frame_top_simpleUI->setEnabled(false);
+  frame_center_simpleUI->setEnabled(false);
+  frame_bottomL_simpleUI->setEnabled(false);
+  frame_2DTransEdit->setEnabled(false);
 
   listWidget_Swatches->clear();
 }

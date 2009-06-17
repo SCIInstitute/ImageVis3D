@@ -83,10 +83,17 @@ enum EQ2DSimpleEDragMode {
 
 class SimpleSwatchInfo {
 public:
-  SimpleSwatchInfo(E2DSimpleModePolyType eType=PT_OTHER, FLOATVECTOR2 vHandlePos=FLOATVECTOR2(0,0)) : m_eType(eType), m_vHandlePos(vHandlePos) {}
+  SimpleSwatchInfo(const E2DSimpleModePolyType& eType=PT_OTHER, 
+                   const FLOATVECTOR2& vHandlePos=FLOATVECTOR2(0,0),
+                   const std::string& desc="" ) : 
+    m_eType(eType),
+    m_vHandlePos(vHandlePos),
+    m_strDesc(desc) 
+  {}
   
   E2DSimpleModePolyType m_eType;
-  FLOATVECTOR2           m_vHandlePos;
+  FLOATVECTOR2          m_vHandlePos;
+  std::string           m_strDesc;
 };
 
 class Q2DTransferFunction : public QTransferFunction
@@ -145,6 +152,7 @@ public:
   void Toggle2DTFMode();
   void Set2DTFMode(E2DTransferFunctionMode TransferFunctionMode);
   E2DTransferFunctionMode Get2DTFMode() const { return m_eTransferFunctionMode;}
+  std::string GetSwatchDesciption() const;
 
 public slots:
   void Transfer2DSetActiveSwatch(const int iActiveSwatch);
@@ -162,6 +170,7 @@ public slots:
 
 signals:
   void SwatchChange();
+  void SwatchTypeChange(int i);
 
 protected:
   virtual void paintEvent(QPaintEvent *event);
@@ -245,7 +254,7 @@ private:
   void DrawPolygonWithCool3DishBorder(QPainter& painter, std::vector<QPoint>& pointList, QPen& borderPen, QPen& borderPenHighlight);
 
   // For simple mode
-  E2DSimpleModePolyType ClassifySwatch(TFPolygon& polygon, FLOATVECTOR2& vPseudoTrisHandle) const;
+  SimpleSwatchInfo ClassifySwatch(TFPolygon& polygon) const;
   void ComputeGradientForPseudoTris(TFPolygon& swatch, const FLOATVECTOR4& color);  
   void RecomputeLowerPseudoTrisPoints(TFPolygon& currentSwatch, const FLOATVECTOR2& vHandePos);
   bool PointInPolygon(const FLOATVECTOR2& point, const TFPolygon& poly) const;

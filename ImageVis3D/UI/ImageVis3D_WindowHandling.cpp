@@ -203,6 +203,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
   connect(m_2DTransferFunction, SIGNAL(SwatchChange()),
     this, SLOT(Transfer2DSwatchesChanged()));
+  connect(m_2DTransferFunction, SIGNAL(SwatchTypeChange(int)),
+    this, SLOT(Transfer2DSwatcheTypeChanged(int)));
   connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)),
     m_2DTransferFunction, SLOT(Transfer2DSetActiveSwatch(int)));
   connect(listWidget_Swatches, SIGNAL(currentRowChanged(int)),
@@ -271,7 +273,10 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   m_pHttp = new QHttp(this);
   connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
   connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
- 
+
+  pushButton_NewTriangle->setStyleSheet( "QPushButton { background: rgb(0, 150, 0); color: rgb(255, 255, 255) }" );
+  pushButton_NewRectangle->setStyleSheet( "QPushButton { background: rgb(0, 150, 0); color: rgb(255, 255, 255) }" );
+  pushButton_DelPoly_SimpleUI->setStyleSheet( "QPushButton { background: rgb(150, 0, 0); color: rgb(255, 255, 255) }" );
 
 // DIRTY HACKS BEGIN
 
