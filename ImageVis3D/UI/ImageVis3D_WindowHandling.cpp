@@ -714,7 +714,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
                 break;
     }
 
-    dockWidget_Stereo->setEnabled(true);
+    EnableStereoWidgets();
     checkBox_Stereo->setChecked(m_pActiveRenderWin->GetRenderer()->GetStereo());
     horizontalSlider_EyeDistance->setValue(int(m_pActiveRenderWin->GetRenderer()->GetStereoEyeDist()*100));
     horizontalSlider_FocalLength->setValue(int(m_pActiveRenderWin->GetRenderer()->GetStereoFocalLength()*10));
@@ -781,6 +781,17 @@ void MainWindow::RenderWindowViewChanged(int iMode) {
   groupBox_MovieCapture->setEnabled(iMode == 0);
 }
 
+void MainWindow::EnableStereoWidgets() {
+  checkBox_Stereo->setEnabled(true);
+  horizontalSlider_EyeDistance->setEnabled(true);
+  horizontalSlider_FocalLength->setEnabled(true);
+}
+void MainWindow::DisableStereoWidgets() {
+  checkBox_Stereo->setEnabled(false);
+  horizontalSlider_EyeDistance->setEnabled(false);
+  horizontalSlider_FocalLength->setEnabled(false);
+}
+
 void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   m_MasterController.DebugOut()->
     Message("MainWindow::RenderWindowClosing",
@@ -801,7 +812,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
   DisableAllTrans();
 
-  dockWidget_Stereo->setEnabled(false);
+  DisableStereoWidgets();
 
   ClearProgressView();
 

@@ -176,6 +176,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void RenderWindowClosing(RenderWindow* sender);
     void StereoDisabled();
     void RenderWindowViewChanged(int iMode);
+    void EnableStereoWidgets();
+    void DisableStereoWidgets();
 
     void ShowVersions();
     void ShowGPUInfo(bool bWithExtensions);

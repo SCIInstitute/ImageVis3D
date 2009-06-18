@@ -164,6 +164,7 @@ MainWindow::MainWindow(MasterController& masterController,
 
   checkBox_ClipShow->setEnabled(false);
   checkBox_ClipLockObject->setEnabled(false);
+  DisableStereoWidgets();
 }
 
 MainWindow::~MainWindow()
