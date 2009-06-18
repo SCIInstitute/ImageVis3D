@@ -53,6 +53,7 @@
 #define UPDATE_VERSION_PATH "http://www.sci.utah.edu/devbuilds/imagevis3d/"
 #define UPDATE_NIGHTLY_PATH "http://www.sci.utah.edu/devbuilds/imagevis3d/"
 #define UPDATE_STABLE_PATH  "http://www.sci.utah.edu/download/imagevis3d.html"
+#define SCI_ORGANIZATION_DOMAIN "http://software.sci.utah.edu/"
 #ifdef DETECTED_OS_WINDOWS
   #define UPDATE_FILE "ImageVis3D-Windows-Latest.zip"
   #define UPDATE_VERSION_FILE "Windows_Latest_Version.txt"

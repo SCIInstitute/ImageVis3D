@@ -118,7 +118,7 @@ MainWindow::MainWindow(MasterController& masterController,
   RegisterCalls(m_MasterController.ScriptEngine());
 
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
-  QCoreApplication::setOrganizationDomain("http://software.sci.utah.edu/");
+  QCoreApplication::setOrganizationDomain(SCI_ORGANIZATION_DOMAIN);
   QCoreApplication::setApplicationName("ImageVis3D");
   QString qstrVersion = tr("%1").arg(IV3D_VERSION);
   QCoreApplication::setApplicationVersion(qstrVersion);
