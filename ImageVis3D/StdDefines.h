@@ -46,7 +46,7 @@
 
 #define MANUAL_NAME  "ImageVis3D.pdf"
 #define HELP_URL  "http://www.sci.utah.edu/images/docs/imagevis3d.pdf"
-#define TUTORIAL_URL "http://www.sci.utah.edu/cibc/software/41-imagevis3d.html"
+#define TUTORIAL_URL "http://www.imagevis3d.org/"
 #define DEMO_DATA_URL  "http://www.sci.utah.edu/download/IV3DData.html"
 #define DEBUG_DUMP_SERVER   "ftp://ftp.sci.utah.edu"
 #define DEBUG_DUMP_PATH     "upload/ImageVis3D/"
