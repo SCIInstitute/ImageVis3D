@@ -1089,15 +1089,15 @@ void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
 
 void Q2DTransferFunction::ComputeCachedImageSize(UINT32 &w , UINT32 &h) const {
   // find an image size that has the same aspect ratio as the histogram
-  // but is no smaler than the widget
+  // but is no smaller than the widget
 
   w = UINT32(width());
   float fRatio = float(m_pTrans->GetRenderSize().x) / float(m_pTrans->GetRenderSize().y);
-  h = w / fRatio;
+  h = static_cast<UINT32>(w / fRatio);
 
   if (h > UINT32(height())) {
     h = UINT32(height());
-    w = h * fRatio;
+    w = static_cast<UINT32>(h * fRatio);
   }
 }
 
