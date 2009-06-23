@@ -674,8 +674,9 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
 
 void MainWindow::RenderWindowActive(RenderWindow* sender) {
-  // to make sure we are only calling this code if the renderwindow changes and not just if the same window gets
-  // reactivated, keep track of the last active window
+  // to make sure we are only calling this code if the renderwindow changes,
+  // and not just if the same window gets reactivated, keep track of the
+  // last active window
   if (m_pActiveRenderWin != sender) {
     m_pActiveRenderWin = sender;
     m_MasterController.DebugOut()->
@@ -742,7 +743,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     ToggleClearViewControls(iRange);
     UpdateLockView();
 
-    groupBox_ClipPlane->setVisible( m_pActiveRenderWin->GetRenderer()->CanDoClipPlane());
+    groupBox_ClipPlane->setVisible(m_pActiveRenderWin->GetRenderer()->CanDoClipPlane());
   }
 }
 
@@ -793,6 +794,7 @@ void MainWindow::DisableStereoWidgets() {
 }
 
 void MainWindow::RenderWindowClosing(RenderWindow* sender) {
+  sender->GetQtWidget()->setEnabled(false);
   m_MasterController.DebugOut()->
     Message("MainWindow::RenderWindowClosing",
       "ACK that %s is now closing",

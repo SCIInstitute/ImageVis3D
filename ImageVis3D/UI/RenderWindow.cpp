@@ -309,8 +309,8 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
 }
 
 void RenderWindow::CloseEvent(QCloseEvent*) {
-  Cleanup();
   EmitWindowClosing();
+  Cleanup();
 }
 
 void RenderWindow::FocusInEvent ( QFocusEvent * event ) {
