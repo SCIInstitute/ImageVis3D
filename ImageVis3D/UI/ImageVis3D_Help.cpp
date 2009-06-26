@@ -208,14 +208,13 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
             QString qstrURL = tr("%1%2").arg(UPDATE_NIGHTLY_PATH).arg(UPDATE_FILE);
             URLDlg u(tr("Update Check"), qstrMessage, qstrURL, this);
             u.exec();
-          }
-#else
+          } else // if() continued after #endif!
+#endif
           if (!m_bStartupCheck) {
             ShowInformationDialog(tr("Update Check"),
                                   tr("This is the most current version "
                                      "of ImageVis3D and Tuvok!"));
           }
-#endif
         }
       } else {
         T_ERROR("Could not parse versions file.");
