@@ -195,8 +195,8 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
                                    arg(std::string(tuvok).c_str());
           URLDlg u(tr("Update Check"), qstrMessage, UPDATE_STABLE_PATH, this);
           u.exec();
-        } else {
-          // Check for an updated devbuild, if the user cares for them.
+        } else if(iv3d == local_iv3d && tuvok == local_tuvok) {
+          // Then check svn revisions, if the user cares for devbuilds.
 #if defined(IV3D_SVN_VERSION) && defined(TUVOK_SVN_VERSION)
           if(m_bCheckForDevBuilds &&
              (local_iv3d.svn < iv3d.svn || local_tuvok.svn < tuvok.svn)) {
@@ -209,14 +209,16 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
             URLDlg u(tr("Update Check"), qstrMessage, qstrURL, this);
             u.exec();
           }
+#else
+          if (!m_bStartupCheck) {
+            ShowInformationDialog(tr("Update Check"),
+                                  tr("This is the most current version "
+                                     "of ImageVis3D and Tuvok!"));
+          }
 #endif
         }
       } else {
-        if (!m_bStartupCheck) {
-          ShowInformationDialog(tr("Update Check"),
-                                tr("This is the most current version "
-                                   "of ImageVis3D and Tuvok!"));
-        }
+        T_ERROR("Could not parse versions file.");
       }
     }
   }
@@ -250,6 +252,12 @@ MainWindow::VersionNumber::operator std::string() const {
   std::ostringstream oss;
   oss << this->major << "." << this->minor << "." << this->patch;
   return oss.str();
+}
+bool MainWindow::VersionNumber::operator==(const VersionNumber &vn) const
+{
+  return this->major == vn.major &&
+         this->minor == vn.minor &&
+         this->patch == vn.patch;
 }
 bool MainWindow::VersionNumber::operator>(const VersionNumber &vn) const
 {

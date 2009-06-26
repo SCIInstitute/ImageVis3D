@@ -386,7 +386,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
       size_t patch;
       size_t svn; ///< revision
       /// Compares only version #'s, ignores svn revision.
+      ///@{
+      bool operator ==(const struct VersionNumber &) const;
       bool operator > (const struct VersionNumber &) const;
+      ///@}
       /// Converts major/minor/patch into a string.
       operator std::string() const;
     };
