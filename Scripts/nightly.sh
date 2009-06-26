@@ -56,7 +56,8 @@ if test `uname` = "Darwin" ; then
     echo "Building app file ..."
     try bash Scripts/mk_app.sh
     pushd Build/ &>/dev/null
-        sed -i -e "s,VERSION,${IV3D_VERSION}," \
+        ver="${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}"
+        sed -i -e "s,VERSION,${ver}," \
           ImageVis3D.app/Contents/Info.plist
         tar zcf ${tarball} ImageVis3D.app
         zip -9r ${zipfile} ImageVis3D.app
@@ -72,7 +73,8 @@ if test `uname` = "Darwin" ; then
 elif test `uname` = "Linux" ; then
     mkdir staging
     pushd staging
-        dir="ImageVis3D_${IV3D_VERSION}"
+        ver="${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}"
+        dir="ImageVis3D_${ver}"
         mkdir "${dir}"
         cp ../Build/ImageVis3D ./${dir}
         cp -R ../Tuvok/Shaders ./${dir}
@@ -86,9 +88,9 @@ elif test `uname` = "Linux" ; then
     rm -r staging
 fi
 rm -f latest
-echo "${IV3D_VERSION}" > latest
+echo "${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}" > latest
 echo "${R_IMAGEVIS3D}" >> latest
-echo "${TUVOK_VERSION}" >> latest
+echo "${TUVOK_MAJOR}.${TUVOK_MINOR}.${TUVOK_PATCH}" >> latest
 echo "${R_TUVOK}" >> latest
 
 echo "Warnings:"

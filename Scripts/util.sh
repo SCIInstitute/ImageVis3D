@@ -87,12 +87,28 @@ function revision
 # TUVOK_VERSION.
 function version
 {
-    export IV3D_VERSION=` \
-        grep "IV3D_VERSION " ImageVis3D/StdDefines.h | \
+    export IV3D_MAJOR=` \
+        grep "IV3D_MAJOR" ImageVis3D/StdDefines.h | \
         awk '{ print $3 }'`
-    export TUVOK_VERSION=` \
-        grep "TUVOK_VERSION " Tuvok/StdTuvokDefines.h | \
+    export IV3D_MINOR=` \
+        grep "IV3D_MAJOR" ImageVis3D/StdDefines.h | \
         awk '{ print $3 }'`
+    export IV3D_PATCH=` \
+        grep "IV3D_MAJOR" ImageVis3D/StdDefines.h | \
+        awk '{ print $3 }'`
+
+    export TUVOK_MAJOR=` \
+        grep "TUVOK_MAJOR" Tuvok/StdTuvokDefines.h | \
+        awk '{ print $3 }'`
+    export TUVOK_MINOR=` \
+        grep "TUVOK_MINOR" Tuvok/StdTuvokDefines.h | \
+        awk '{ print $3 }'`
+    export TUVOK_PATCH=` \
+        grep "TUVOK_PATCH" Tuvok/StdTuvokDefines.h | \
+        awk '{ print $3 }'`
+
+    export IV3D_VERSION="${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}"
+    export TUVOK_VERSION="${TUVOK_MAJOR}.${TUVOK_MINOR}.${TUVOK_PATCH}"
 }
 
 # Determine the architecture name according SCI conventions.  Basically, this

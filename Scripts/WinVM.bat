@@ -32,8 +32,15 @@ popd
 
 for /f "tokens=1,2" %%i in (rev1.txt) do if %%i==Revision: set IV3DVERSION=%%j
 for /f "tokens=1,2" %%i in (rev2.txt) do if %%i==Revision: set TUVOKVERSION=%%j
-for /f "tokens=2,3" %%i in (ImageVis3D\StdDefines.h) do if %%i==IV3D_VERSION set IV3DCODEVERSION=%%j
-for /f "tokens=2,3" %%i in (Tuvok\StdTuvokDefines.h) do if %%i==TUVOK_VERSION set TUVOCCODEVERSION=%%j
+for /f "tokens=2,3" %%i in (ImageVis3D\StdDefines.h) do if %%i==IV3D_MAJOR set IV3D_MAJOR=%%j
+for /f "tokens=2,3" %%i in (ImageVis3D\StdDefines.h) do if %%i==IV3D_MINOR set IV3D_MINOR=%%j
+for /f "tokens=2,3" %%i in (ImageVis3D\StdDefines.h) do if %%i==IV3D_PATCH set IV3D_PATCH=%%j
+for /f "tokens=2,3" %%i in (Tuvok\StdTuvokDefines.h) do if %%i==TUVOK_MAJOR set TUVOK_MAJOR=%%j
+for /f "tokens=2,3" %%i in (Tuvok\StdTuvokDefines.h) do if %%i==TUVOK_MINOR set TUVOK_MINOR=%%j
+for /f "tokens=2,3" %%i in (Tuvok\StdTuvokDefines.h) do if %%i==TUVOK_PATCH set TUVOK_PATCH=%%j
+
+set TUVOKCODEVERSION=%TUVOK_MAJOR%.%TUVOK_MINOR%.%TUVOK_PATCH%
+set IV3DCODEVERSION=%IV3D_MAJOR%.%IV3D_MINOR%.%IV3D_PATCH%
 
 del rev1.txt
 del rev2.txt
@@ -169,7 +176,7 @@ IF EXIST ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip (
 
 echo %IV3DCODEVERSION% >   Windows_Latest_Version.txt
 echo %IV3DVERSION% >>      Windows_Latest_Version.txt
-echo %TUVOCCODEVERSION% >> Windows_Latest_Version.txt
+echo %TUVOKCODEVERSION% >> Windows_Latest_Version.txt
 echo %TUVOKVERSION% >>     Windows_Latest_Version.txt
 xcopy Windows_Latest_Version.txt \\geronimo\share\IV3D-WIN /Y
 del Windows_Latest_Version.txt

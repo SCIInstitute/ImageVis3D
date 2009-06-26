@@ -35,6 +35,7 @@ pushd ${PREFIX}/Contents/Resources
   rm -f ImageVis3D.pdf
   manual="http://www.sci.utah.edu/images/docs/imagevis3d.pdf"
   curl -kLO ${manual}
+  mv $(basename ${manual}) ImageVis3D.pdf
 popd
 
 echo "Fixing the errors that Qt's mac deployment tool doesn't."

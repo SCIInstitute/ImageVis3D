@@ -166,29 +166,56 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
     if (error) {
       if (!m_bStartupCheck) ShowInformationDialog( tr("Update Check"),tr("Download failed: %1.").arg(m_pHttp->errorString()));
     } else {
-      float fIV3DVersion = 0;
-      int iIV3DSVNVersion = 0;
-      float fTuvokVersion = 0;
-      int iTuvokSVNVersion = 0;
-      if (GetVersionsFromUpdateFile(string(m_pUpdateFile->fileName().toAscii()), fIV3DVersion, iIV3DSVNVersion, fTuvokVersion, iTuvokSVNVersion)) {
-        if (fIV3DVersion > float(IV3D_VERSION) || fTuvokVersion > float(TUVOK_VERSION)) {
-          QString qstrMessage = tr("The new ImageVis3D version %1 was found (%2 Tuvok). You SHOULD download the newer version at").arg(fIV3DVersion).arg(fTuvokVersion);
+      struct VersionNumber iv3d;
+      struct VersionNumber tuvok;
+#ifdef IV3D_SVN_VERSION
+      size_t iv3d_svn = IV3D_SVN_VERSION;
+#else
+      size_t iv3d_svn = 0;
+#endif
+#ifdef TUVOK_SVN_VERSION
+      size_t tuvok_svn = TUVOK_SVN_VERSION;
+#else
+      size_t tuvok_svn = 0;
+#endif
+      if (GetVersionsFromUpdateFile(string(m_pUpdateFile->fileName().toAscii()),
+                                    iv3d, tuvok)) {
+        const struct VersionNumber local_iv3d = {
+          IV3D_MAJOR, IV3D_MINOR, IV3D_PATCH, iv3d_svn
+        };
+        const struct VersionNumber local_tuvok = {
+          TUVOK_MAJOR, TUVOK_MINOR, TUVOK_PATCH, tuvok_svn
+        };
+        // First check the release version numbers.
+        if(iv3d > local_iv3d || tuvok > local_tuvok) {
+          QString qstrMessage = tr("A newer ImageVis3D was found "
+                                   "(version %1, %2 Tuvok). "
+                                   "You SHOULD download the newer version at").
+                                   arg(std::string(iv3d).c_str()).
+                                   arg(std::string(tuvok).c_str());
           URLDlg u(tr("Update Check"), qstrMessage, UPDATE_STABLE_PATH, this);
           u.exec();
         } else {
-  #if defined(IV3D_SVN_VERSION) && defined(TUVOK_SVN_VERSION)
-          if (m_bCheckForDevBuilds && (iIV3DSVNVersion > int(IV3D_SVN_VERSION) || iTuvokSVNVersion > int(TUVOK_SVN_VERSION))) {
-            QString qstrMessage = tr("A new SVN devbuild (%1-%2) of ImageVis3D was found. You MAY want to download the newer version at").arg(iIV3DSVNVersion).arg(iTuvokSVNVersion);
+          // Check for an updated devbuild, if the user cares for them.
+#if defined(IV3D_SVN_VERSION) && defined(TUVOK_SVN_VERSION)
+          if(m_bCheckForDevBuilds &&
+             (local_iv3d.svn < iv3d.svn || local_tuvok.svn < tuvok.svn)) {
+            QString qstrMessage = tr("A new SVN devbuild (%1-%2) of "
+                                     "ImageVis3D was found. You MAY "
+                                     "want to download the newer version at").
+                                     arg(std::string(iv3d).c_str()).
+                                     arg(std::string(tuvok).c_str());
             QString qstrURL = tr("%1%2").arg(UPDATE_NIGHTLY_PATH).arg(UPDATE_FILE);
             URLDlg u(tr("Update Check"), qstrMessage, qstrURL, this);
             u.exec();
-          } else {
-  #endif
-            if (!m_bStartupCheck)
-              ShowInformationDialog( tr("Update Check"),tr("This is the most current version of ImageVis3D and Tuvok!"));
-  #if defined(IV3D_SVN_VERSION) && defined(TUVOK_SVN_VERSION)
           }
-  #endif
+#endif
+        }
+      } else {
+        if (!m_bStartupCheck) {
+          ShowInformationDialog(tr("Update Check"),
+                                tr("This is the most current version "
+                                   "of ImageVis3D and Tuvok!"));
         }
       }
     }
@@ -219,20 +246,71 @@ void MainWindow::readResponseHeader(const QHttpResponseHeader &responseHeader) {
   }
 }
 
-bool MainWindow::GetVersionsFromUpdateFile(const string& strFilename, float& fIV3DVersion, int& iIV3DSVNVersion, float& fTuvokVersion, int& iTuvokSVNVersion) {
+MainWindow::VersionNumber::operator std::string() const {
+  std::ostringstream oss;
+  oss << this->major << "." << this->minor << "." << this->patch;
+  return oss.str();
+}
+bool MainWindow::VersionNumber::operator>(const VersionNumber &vn) const
+{
+  return this->major > vn.major ||
+         (this->major == vn.major && this->minor > vn.minor) ||
+         (this->major == vn.major && this->minor == vn.minor &&
+          this->patch > vn.patch);
+}
+
+bool MainWindow::GetVersionsFromUpdateFile(const std::string& strFilename,
+                                           struct VersionNumber& iv3d,
+                                           struct VersionNumber& tuvok) {
   string line ="";
   ifstream updateFile(strFilename.c_str(),ios::binary);
 
-  if (updateFile.is_open())
-  {
-    if(!updateFile.eof()) { getline (updateFile,line); if(!SysTools::FromString(fIV3DVersion,line)) {updateFile.close(); return false;}} else {updateFile.close(); return false;}
-    if(!updateFile.eof()) { getline (updateFile,line); if(!SysTools::FromString(iIV3DSVNVersion,line)) {updateFile.close(); return false;}} else {updateFile.close(); return false;}
-    if(!updateFile.eof()) { getline (updateFile,line); if(!SysTools::FromString(fTuvokVersion,line)) {updateFile.close(); return false;}} else {updateFile.close(); return false;}
-    if(!updateFile.eof()) { getline (updateFile,line); if(!SysTools::FromString(iTuvokSVNVersion,line)) {updateFile.close(); return false;}} else {updateFile.close(); return false;}
-  } else {
+#define CHECK_EOF() \
+  do { \
+    if(updateFile.eof()) { updateFile.close(); return false; } \
+  } while(0)
+
+  if(!updateFile.is_open()) {
     DeleteUpdateFile();
     return false;
   }
+
+  CHECK_EOF();
+
+  char skip; // use to skip the "." characters in version strings.
+  // IV3D version.
+  getline(updateFile, line);
+  { std::istringstream iss(line);
+    iss >> iv3d.major >> skip >> iv3d.minor >> skip >> iv3d.patch;
+    MESSAGE("read iv3d vnumber: %u.%u.%u",
+            static_cast<unsigned int>(iv3d.major),
+            static_cast<unsigned int>(iv3d.minor),
+            static_cast<unsigned int>(iv3d.patch));
+  }
+  CHECK_EOF();
+  // IV3D svn revision.
+  getline(updateFile, line);
+  { std::istringstream iss(line);
+    iss >> iv3d.svn;
+  }
+  CHECK_EOF();
+
+  // Tuvok version
+  getline(updateFile, line);
+  { std::istringstream iss(line);
+    iss >> tuvok.major >> skip >> tuvok.minor >> skip >> tuvok.patch;
+    MESSAGE("read tuvok vnumber: %u.%u.%u",
+            static_cast<unsigned int>(tuvok.major),
+            static_cast<unsigned int>(tuvok.minor),
+            static_cast<unsigned int>(tuvok.patch));
+  }
+  CHECK_EOF();
+  // Tuvok svn revision
+  getline(updateFile, line);
+  { std::istringstream iss(line);
+    iss >> tuvok.svn;
+  }
+
   updateFile.close();
   DeleteUpdateFile();
 
@@ -418,11 +496,13 @@ void MainWindow::ReportABug(const string& strFile) {
     string strTime(QTime::currentTime().toString().toAscii());
     reportFile << "Issue Report " << strDate << "  " << strTime << endl << endl << endl;
 
-    reportFile << "Tuvok Version:" << float(TUVOK_VERSION) << " " << TUVOK_VERSION_TYPE << " " << TUVOK_DETAILS;
+    reportFile << "Tuvok Version:" << TUVOK_VERSION << " "
+               << TUVOK_VERSION_TYPE << " " << TUVOK_DETAILS;
 #ifdef TUVOK_SVN_VERSION
     reportFile << " SVN Version:" << int(TUVOK_SVN_VERSION);
 #endif
-    reportFile << endl << "ImageVis3D Version:" << float(IV3D_VERSION) << " " << IV3D_VERSION_TYPE;
+    reportFile << std::endl << "ImageVis3D Version:" << IV3D_VERSION
+               << " " << IV3D_VERSION_TYPE;
 #ifdef IV3D_SVN_VERSION
     reportFile << " SVN Version:" << int(IV3D_SVN_VERSION);
 #endif

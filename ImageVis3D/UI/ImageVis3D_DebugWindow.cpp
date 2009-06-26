@@ -45,11 +45,11 @@
 using namespace std;
 
 void MainWindow::ShowVersions() {
-  m_MasterController.DebugOut()->printf("Tuvok Version: %g %s %s",float(TUVOK_VERSION), TUVOK_VERSION_TYPE, TUVOK_DETAILS);
+  m_MasterController.DebugOut()->printf("Tuvok Version: %s %s %s",TUVOK_VERSION, TUVOK_VERSION_TYPE, TUVOK_DETAILS);
 #ifdef TUVOK_SVN_VERSION
   m_MasterController.DebugOut()->printf("SVN Version: %i",int(TUVOK_SVN_VERSION));
 #endif
-  m_MasterController.DebugOut()->printf("ImageVis3D Version: %g %s",float(IV3D_VERSION), IV3D_VERSION_TYPE);
+  m_MasterController.DebugOut()->printf("ImageVis3D Version: %s %s",IV3D_VERSION, IV3D_VERSION_TYPE);
 #ifdef IV3D_SVN_VERSION
   m_MasterController.DebugOut()->printf("SVN Version: %i",int(IV3D_SVN_VERSION));
 #endif

@@ -380,6 +380,16 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     RenderWindow* m_pActiveRenderWin;
 
     // update
+    struct VersionNumber {
+      size_t major;
+      size_t minor;
+      size_t patch;
+      size_t svn; ///< revision
+      /// Compares only version #'s, ignores svn revision.
+      bool operator > (const struct VersionNumber &) const;
+      /// Converts major/minor/patch into a string.
+      operator std::string() const;
+    };
     QHttp* m_pHttp;
     QFile* m_pUpdateFile;
     int    m_iHttpGetId;
@@ -387,7 +397,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool   m_bScriptMode;
     void CheckForUpdatesInternal();
     void QuietCheckForUpdates();
-    bool GetVersionsFromUpdateFile(const std::string& strFilename, float& fIV3DVersion, int& iIV3DSVNVersion, float& fTuvokVersion, int& iTuvokSVNVersion);
+    bool GetVersionsFromUpdateFile(const std::string& strFilename,
+                                   struct VersionNumber& iv3d,
+                                   struct VersionNumber& tuvok);
     void DeleteUpdateFile();
 
     // ftp
