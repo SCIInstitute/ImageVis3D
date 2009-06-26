@@ -33,7 +33,7 @@ ${macdeployqt} ${PREFIX}
 echo "Copying ImageVis3D Manual into app.."
 pushd ${PREFIX}/Contents/Resources
   rm -f ImageVis3D.pdf
-  manual="http://software.sci.utah.edu/releases/iv3d_docs/ImageVis3D.pdf"
+  manual="http://www.sci.utah.edu/images/docs/imagevis3d.pdf"
   curl -kLO ${manual}
 popd
 
