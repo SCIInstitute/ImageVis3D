@@ -151,3 +151,10 @@ function nm_zipfile
     local tb_name=$(nm_tarball)
     echo "${tb_name%%.tar.gz}.zip"
 }
+
+# Finds out the current URL for the manual.
+function manual
+{
+  m=`grep HELP_URL ../ImageVis3D/StdDefines.h | awk '{print $3}'`
+  echo "${m}"
+}

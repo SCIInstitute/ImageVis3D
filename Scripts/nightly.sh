@@ -78,9 +78,9 @@ elif test `uname` = "Linux" ; then
         mkdir "${dir}"
         cp ../Build/ImageVis3D ./${dir}
         cp -R ../Tuvok/Shaders ./${dir}
-        manual="http://www.sci.utah.edu/images/docs/imagevis3d.pdf"
-        wget -q --no-check-certificate ${manual}
-        mv $(basename ${manual}) ImageVis3D.pdf
+        man=$(manual)
+        wget -q --no-check-certificate ${man}
+        mv $(basename ${man}) ImageVis3D.pdf # uppercase it.
         mv ImageVis3D.pdf ${dir}
         GZIP="--best" tar zcf "${tarball}" ${dir}
         mv "${tarball}" ../
