@@ -35,6 +35,9 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#ifdef DEBUG_PROVENANCE
+#include <iostream>
+#endif
 #include "../Tuvok/IO/Tuvok_QtPlugins.h"
 #include <QtGui/QApplication>
 #include <UI/ImageVis3D.h>
@@ -58,6 +61,11 @@
 #endif
 */
 
+#ifdef DEBUG_PROVENANCE
+static void provenance(std::string s) {
+  std::cout << "provenance: " << s << std::endl;
+}
+#endif
 
 int main(int argc, char* argv[])
 {
@@ -107,6 +115,9 @@ int main(int argc, char* argv[])
 
     Controller::Instance().AddDebugOut(dbgOut);
   }
+#ifdef DEBUG_PROVENANCE
+  Controller::Instance().RegisterProvenanceCB(provenance);
+#endif
 
   // open the QT window
   mainWindow.show();
