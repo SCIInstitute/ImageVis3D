@@ -262,6 +262,7 @@ bool MainWindow::ExportDataset(UINT32 iLODLevel, std::string targetFileName) {
                             SysTools::GetPath(targetFileName));
 
   pleaseWait.close();
+
   return bResult;
 }
 
@@ -320,6 +321,10 @@ void MainWindow::ExportDataset() {
 
     if (!ExportDataset(iLODLevel, strCompletefileName)) {
       ShowCriticalDialog( "Error during dataset export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+    } else {
+      pleaseWait.hide();
+      QString msg = tr("The dataset has been exported as %1.").arg(strCompletefileName.c_str());
+      ShowInformationDialog( tr("Export successful"), msg);
     }
 
   }
