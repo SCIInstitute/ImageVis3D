@@ -692,12 +692,12 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
     MESSAGE("Getting 1D Transfer Function.");
     m_1DTransferFunction->
-      SetData(&sender->GetRenderer()->GetDataSet().Get1DHistogram(),
+      SetData(&sender->GetRenderer()->GetDataset().Get1DHistogram(),
               sender->GetRenderer()->Get1DTrans());
     m_1DTransferFunction->update();
     MESSAGE("Getting 2D Transfer Function.");
     m_2DTransferFunction->
-      SetData(&sender->GetRenderer()->GetDataSet().Get2DHistogram(),
+      SetData(&sender->GetRenderer()->GetDataset().Get2DHistogram(),
               sender->GetRenderer()->Get2DTrans());
     m_2DTransferFunction->update();
 

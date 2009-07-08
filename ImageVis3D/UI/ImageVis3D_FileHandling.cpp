@@ -255,7 +255,7 @@ bool MainWindow::ExportDataset(UINT32 iLODLevel, std::string targetFileName) {
 
   /// \todo come up with something smarter for a temp dir then the target dir
   const UVFDataset *ds = dynamic_cast<UVFDataset*>(
-    &(m_pActiveRenderWin->GetRenderer()->GetDataSet())
+    &(m_pActiveRenderWin->GetRenderer()->GetDataset())
   );
   bool bResult = m_MasterController.IOMan()->ExportDataset(
                             ds, iLODLevel, targetFileName,
@@ -295,14 +295,14 @@ void MainWindow::ExportDataset() {
 
     string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()), ext);
 
-    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo().GetLODLevelCount())-1;
+    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataset().GetInfo().GetLODLevelCount())-1;
 
     int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       int iMinLODLevel = 0;
       vector<QString> vDesc;
       for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
-        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo().GetDomainSize(i));
+        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataset().GetInfo().GetDomainSize(i));
         QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
         vDesc.push_back(qstrDesc);
       }
@@ -343,7 +343,7 @@ bool MainWindow::ExportMesh(UINT32 iLODLevel, string targetFileName) {
     vfRescaleFactors.z = doubleSpinBox_RescaleZ->value();
 
     const UVFDataset *ds = dynamic_cast<UVFDataset*>(
-      &(m_pActiveRenderWin->GetRenderer()->GetDataSet())
+      &(m_pActiveRenderWin->GetRenderer()->GetDataset())
     );
     /// \todo maybe come up with something smarter for a temp dir then
     /// the target dir
@@ -375,14 +375,14 @@ void MainWindow::ExportMesh() {
     settings.setValue("Folders/ExportMesh", QFileInfo(fileName).absoluteDir().path());
     string targetFileName = SysTools::CheckExt(string(fileName.toAscii()), "obj");
 
-    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo().GetLODLevelCount())-1;
+    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataset().GetInfo().GetLODLevelCount())-1;
 
     int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       int iMinLODLevel = 0;
       vector<QString> vDesc;
       for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
-        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataSet().GetInfo().GetDomainSize(i));
+        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataset().GetInfo().GetDomainSize(i));
         QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
         vDesc.push_back(qstrDesc);
       }
