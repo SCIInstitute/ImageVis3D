@@ -327,14 +327,20 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Tuvok.lib opengl32.lib glu32.lib gdi32.lib user32.lib qtmain.lib QtGui.lib QtCore.lib QtOpenGL.lib QtNetwork.lib"
+				ShowProgress="2"
 				OutputFile="$(OutDir)\$(ProjectName)-64.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)Tuvok\Build\$(PlatformName)\$(ConfigurationName)&quot;;&quot;$(QTDIR64)\lib&quot;;&quot;$(QTDIR64)\plugins\imageformats&quot;"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				LinkTimeCodeGeneration="0"
+				TurnOffAssemblyGeneration="false"
+				SupportUnloadOfDelayLoadedDLL="true"
 				TargetMachine="17"
+				Profile="false"
 			/>
 			<Tool
 				Name="VCALinkTool"
