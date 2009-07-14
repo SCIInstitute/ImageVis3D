@@ -439,6 +439,7 @@ void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation) {
   m_mAccumulatedTranslation = mAccumulatedTranslation;
   m_Renderer->SetTranslation(m_mAccumulatedTranslation);
   m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+  Controller::Instance().Provenance("translation", "translate");
 }
 
 void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate) {
@@ -475,11 +476,12 @@ void RenderWindow::FinalizeRotation(bool bPropagate) {
   // the ExtendedPlane instance.
   m_mCurrentClipRotation = FLOATMATRIX4();
   m_mAccumulatedClipRotation = m_mCurrentClipRotation;
-  if (bPropagate){
+  if (bPropagate) {
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
       m_vpLocks[0][i]->FinalizeRotation(false);
     }
   }
+  Controller::Instance().Provenance("rotation", "rotate?");
 }
 
 void RenderWindow::SetRotation(const FLOATMATRIX4& mAccumulatedRotation,
@@ -822,6 +824,9 @@ void RenderWindow::ResizeRenderer(int width, int height)
   if (m_Renderer != NULL) {
     m_Renderer->Resize(UINTVECTOR2(width, height));
     SetupArcBall();
+    std::ostringstream wsize;
+    wsize << m_vWinDim[0] << " " << m_vWinDim[1] << std::ends;
+    Controller::Instance().Provenance("window", "resize", wsize.str());
   }
 }
 

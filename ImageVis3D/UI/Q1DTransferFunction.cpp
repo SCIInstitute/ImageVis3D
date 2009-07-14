@@ -43,7 +43,7 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 
-#include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/MathTools.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 
@@ -278,7 +278,11 @@ void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   if (event->button() == Qt::RightButton) m_bMouseRight = false;
 
   // send message to update the GLtexture
-  if( m_eExecutionMode == ONRELEASE )ApplyFunction();
+  if(m_eExecutionMode == ONRELEASE) {
+    ApplyFunction();
+  }
+
+  Controller::Instance().Provenance("1dtf", "set_tf_1d");
 }
 
 void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {

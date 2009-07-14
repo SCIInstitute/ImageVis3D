@@ -765,7 +765,11 @@ void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   update();
 
   // send message to update the GLtexture
-  if( m_eExecutionMode == ONRELEASE ) ApplyFunction();
+  if(m_eExecutionMode == ONRELEASE) {
+    ApplyFunction();
+  }
+
+  Controller::Instance().Provenance("2dtf", "set_tf_2d");
 }
 
 void Q2DTransferFunction::ApplyFunction() {
