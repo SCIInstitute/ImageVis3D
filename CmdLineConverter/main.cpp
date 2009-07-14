@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
         cout << "Success." << endl << endl;
         return 0;
       } else {
-        cout << "Failure." << endl << endl;
+        cout << "Conversion failed!" << endl << endl;
         return 2;
       }
     } else {
@@ -203,7 +203,7 @@ int main(int argc, char* argv[])
         cout << "Success." << endl << endl;
         return 0;
       } else {
-        cout << "Failure." << endl << endl;
+        cout << "Merging datasets failed!" << endl << endl;
         return 2;
       }
 
@@ -243,7 +243,7 @@ int main(int argc, char* argv[])
       if (ioMan.ConvertDataset(dirinfo[i], vStrFilenames[i])) {
         cout << "Success." << endl << endl;
       } else {
-        cout << "Failure." << endl << endl;
+        cout << "Conversion failed!" << endl << endl;
         iFailCount++;
         for (size_t i = 0;i<dirinfo.size();i++) delete dirinfo[i];
         return 3;
