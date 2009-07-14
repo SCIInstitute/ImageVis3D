@@ -76,6 +76,8 @@ void QTLabelOut::printf(const char* format, ...) const
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  va_end(args);
+
   m_label->setText ( buff );
   m_label->repaint();
 #ifdef DETECTED_OS_APPLE
@@ -94,6 +96,8 @@ void QTLabelOut::_printf(const char* format, ...) const
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  va_end(args);
+
   m_label->setText ( buff );
   m_label->repaint();
 #ifdef DETECTED_OS_APPLE
@@ -110,6 +114,8 @@ void QTLabelOut::Message(const char* , const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  va_end(args);
+
   if (!m_bShowMessages) return;
   _printf(buff);
 }
@@ -123,6 +129,8 @@ void QTLabelOut::Warning(const char* , const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  va_end(args);
+
   if (!m_bShowWarnings) return;
   _printf("WARNING: %s",buff);
 }
@@ -136,8 +144,8 @@ void QTLabelOut::Error(const char* , const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  va_end(args);
+
   if (!m_bShowErrors) return;
   _printf("ERROR: %s", buff);
 }
-
-

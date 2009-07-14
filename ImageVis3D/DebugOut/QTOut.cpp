@@ -75,6 +75,8 @@ void QTOut::printf(const char* format, ...) const
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  va_end(args);
+
   m_listWidget->addItem ( buff );
 }
 
@@ -88,6 +90,8 @@ void QTOut::_printf(const char* format, ...) const
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  va_end(args);
+
   m_listWidget->addItem ( buff );
 }
 
@@ -100,6 +104,8 @@ void QTOut::Message(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  va_end(args);
+
   if (m_bRecordLists[2]) {
     stringstream s;
     s << source << "->" << buff;
@@ -118,6 +124,8 @@ void QTOut::Warning(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  va_end(args);
+
   if (m_bRecordLists[1]) {
     stringstream s;
     s << source << "->" << buff;
@@ -136,6 +144,8 @@ void QTOut::Error(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  va_end(args);
+
   if (m_bRecordLists[0]) {
     stringstream s;
     s << source << "->" << buff;
