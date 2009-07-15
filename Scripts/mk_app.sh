@@ -30,12 +30,12 @@ fi
 echo "Running Qt's mac deployment tool."
 ${macdeployqt} ${PREFIX}
 
-echo "Copying ImageVis3D Manual into app.."
+echo "Copying ImageVis3D Manual into app..."
+man=$(manual)
 pushd ${PREFIX}/Contents/Resources
   rm -f ImageVis3D.pdf
-  man=$(manual)
-  curl -kLO ${man}
-  mv $(basename ${man}) ImageVis3D.pdf
+  curl -kLO "${man}"
+  mv $(basename "${man}") ImageVis3D.pdf
 popd
 
 echo "Fixing the errors that Qt's mac deployment tool doesn't."

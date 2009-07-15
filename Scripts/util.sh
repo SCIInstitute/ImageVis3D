@@ -155,6 +155,7 @@ function nm_zipfile
 # Finds out the current URL for the manual.
 function manual
 {
-  m=`grep HELP_URL ./ImageVis3D/StdDefines.h | awk '{print $3}'`
+  m=$(grep HELP_URL ./ImageVis3D/StdDefines.h | awk '{print $3}' | \
+      cut -d \" -f 2)
   echo "${m}"
 }
