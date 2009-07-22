@@ -72,13 +72,13 @@ if test `uname` = "Darwin" ; then
     hdiutil internet-enable -yes ${zipfile%%zip}dmg
 elif test `uname` = "Linux" ; then
     mkdir staging
+    man=$(manual)
     pushd staging
         ver="${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}"
         dir="ImageVis3D_${ver}"
         mkdir "${dir}"
         cp ../Build/ImageVis3D ./${dir}
         cp -R ../Tuvok/Shaders ./${dir}
-        man=$(manual)
         wget -q --no-check-certificate "${man}"
         mv $(basename "${man}") ImageVis3D.pdf # uppercase it.
         mv ImageVis3D.pdf ${dir}
