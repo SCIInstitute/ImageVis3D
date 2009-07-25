@@ -86,6 +86,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
 
     // load other settings here
     UINT64 iMaxCPU = std::min<UINT64>(settings.value("Memory/MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+    string strTempDir(settings.value("Memory/TempDir", m_strTempDir.c_str()).toString().toAscii());
 
     settings.beginGroup("Performance");
     bool bQuickopen = settings.value("Quickopen", m_bQuickopen).toBool();
@@ -109,6 +110,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bCheckForDevBuilds = settings.value("CheckForDevBuilds", m_bCheckForDevBuilds).toBool();
     bool bShowWelcomeScreen = settings.value("ShowWelcomeScreen", m_bShowWelcomeScreen).toBool();
     bool bInvWheel = settings.value("InvertMouseWheel", m_bInvWheel).toBool();
+    bool bI3MFeatures = settings.value("I3MFeatures", m_bI3MFeatures).toBool();
     settings.endGroup();
 
     settings.beginGroup("Renderer");
@@ -140,13 +142,13 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bIsDirectX10Capable = m_MasterController.SysInfo()->IsDirectX10Capable();
 
     // hand data to form
-    settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU,
+    settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU, strTempDir,
                           bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS,
                           bWriteLogFile, bShowCrashDialog, string(strLogFileName.toAscii()), iLogLevel,
                           bShowVersionInTitle,
                           bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
                           bCheckForUpdatesOnStartUp, bCheckForDevBuilds, bShowWelcomeScreen,
-                          bInvWheel,
+                          bInvWheel, bI3MFeatures,
                           iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
                           bDisableBorder, bAvoidCompositing, bNoRCClipplanes,
                           vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
@@ -157,6 +159,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.beginGroup("Memory");
       settings.setValue("MaxGPUMem", settingsDlg.GetGPUMem());
       settings.setValue("MaxCPUMem", settingsDlg.GetCPUMem());
+      settings.setValue("TempDir", settingsDlg.GetTempDir().c_str());
       settings.endGroup();
 
       settings.beginGroup("Performance");
@@ -182,6 +185,8 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("CheckForDevBuilds", settingsDlg.GetCheckForDevBuilds());
       settings.setValue("ShowWelcomeScreen", settingsDlg.GetShowWelcomeScreen());
       settings.setValue("InvertMouseWheel", settingsDlg.GetInvertWheel());
+      settings.setValue("I3MFeatures", settingsDlg.GetI3MFeatures());
+
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -244,8 +249,10 @@ void MainWindow::ApplySettings() {
   m_bCheckForDevBuilds = settings.value("CheckForDevBuilds", m_bCheckForDevBuilds).toBool();
   m_bShowWelcomeScreen = settings.value("ShowWelcomeScreen", m_bShowWelcomeScreen).toBool();
   m_bInvWheel = settings.value("InvertMouseWheel", m_bInvWheel).toBool();
-
+  m_bI3MFeatures = settings.value("I3MFeatures", m_bI3MFeatures).toBool();
   settings.endGroup();
+
+  actionTransfer_to_ImageVis3D_Mobile_Device->setVisible(m_bI3MFeatures);
 
   settings.beginGroup("Renderer");
   m_eVolumeRendererType = (MasterController::EVolumeRendererType)settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
@@ -255,7 +262,6 @@ void MainWindow::ApplySettings() {
   m_bDisableBorder = settings.value("DisableBorder", m_bDisableBorder).toBool();
   m_bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
   m_bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
-
 
   m_vBackgroundColors[0] = FLOATVECTOR3(settings.value("Background1R", 0.0f).toULongLong(),
                           settings.value("Background1G", 0.0f).toULongLong(),
@@ -277,6 +283,7 @@ void MainWindow::ApplySettings() {
   settings.beginGroup("Memory");
   UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
   UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
+  m_strTempDir = string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
   settings.endGroup();
 
   // Apply window settings

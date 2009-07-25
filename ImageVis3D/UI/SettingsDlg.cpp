@@ -131,6 +131,10 @@ UINT64 SettingsDlg::GetCPUMem() const {
   return UINT64(horizontalSlider_CPUMem->value())*1024*1024;
 }
 
+std::string SettingsDlg::GetTempDir() const {
+  return std::string(lineEdit_TempDir->text().toAscii());
+}
+
 bool SettingsDlg::GetQuickopen() const {
   return checkBoxQuickload->checkState() == Qt::Checked;
 }
@@ -185,6 +189,10 @@ bool SettingsDlg::GetShowWelcomeScreen() const {
 
 bool SettingsDlg::GetInvertWheel() const {
   return checkBox_InvWheel->isChecked();
+}
+
+bool SettingsDlg::GetI3MFeatures() const {
+  return checkBox_I3MFeatures->isChecked();
 }
 
 FLOATVECTOR3  SettingsDlg::GetBackgroundColor1() const {
@@ -306,19 +314,20 @@ void SettingsDlg::SetLogoLabel() {
   }
 }
 
-void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU,
+void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU, const std::string& tempDir, 
                             bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, UINT32 iLogLevel,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
-                            bool bInvWheel,
+                            bool bInvWheel, bool bI3MFeatures,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits,
                             bool bDisableBorder, bool bAvoidCompositing, bool bNoRCClipplanes,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
   m_bInit = true;
   horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
   horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
+  lineEdit_TempDir->setText(tempDir.c_str());
 
   checkBoxQuickload->setChecked(bQuickopen);
   horizontalSlider_MinFramerate->setValue(iMinFramerate);
@@ -340,6 +349,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   checkBox_CheckForDevBuilds->setChecked(bCheckForDevBuilds);
   checkBox_ShowWelcomeScreen->setChecked(bShowWelcomeScreen);
   checkBox_InvWheel->setChecked(bInvWheel);
+  checkBox_I3MFeatures->setChecked(bI3MFeatures);
 
   m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
   m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));
@@ -544,4 +554,16 @@ void SettingsDlg::SelectLogo() {
 void SettingsDlg::RemoveLogo() {
   m_strLogoFilename = "";
   SetLogoLabel();
+}
+
+
+void SettingsDlg::SelectTempDir() {
+  QString directoryName =
+    QFileDialog::getExistingDirectory(this, "Select directory for temporary files",lineEdit_TempDir->text());
+
+  if (!directoryName.isEmpty()) {
+    if (directoryName[directoryName.size()-1] != '/' &&
+        directoryName[directoryName.size()-1] != '\\') directoryName = directoryName+'/';
+    lineEdit_TempDir->setText(directoryName);
+  }
 }

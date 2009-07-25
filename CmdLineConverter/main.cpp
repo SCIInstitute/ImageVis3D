@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
 
     if (strInFile2 == "") {
       cout << "Running in file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;  
-      if (ioMan.ConvertDataset(strInFile, strOutfile)) {
+      if (ioMan.ConvertDataset(strInFile, strOutfile, SysTools::GetPath(strOutfile))) { // HACK: use the output file's dir as temp dir
         cout << "Success." << endl << endl;
         return 0;
       } else {
@@ -199,7 +199,7 @@ int main(int argc, char* argv[])
       }        
       cout << " to " << strOutfile<< endl << endl;  
 
-      if (ioMan.MergeDatasets(vDataSets, vScales, vBiases, strOutfile)) {
+      if (ioMan.MergeDatasets(vDataSets, vScales, vBiases, strOutfile, SysTools::GetPath(strOutfile))) {  // HACK: use the output file's dir as temp dir
         cout << "Success." << endl << endl;
         return 0;
       } else {
@@ -212,11 +212,11 @@ int main(int argc, char* argv[])
   } else {
 
     if (strInFile2 != "") {
-      cout << "Error: Currently file mergin is only supported in file mode (i.e. specify -f and not -d)." << endl << endl;
+      cout << "Error: Currently file merging is only supported in file mode (i.e. specify -f and not -d)." << endl << endl;
       return 2;
     }
 
-    /// \todo: remove this once uvf to raw is completed
+    /// \todo: remove this restricition (one solution would be to create a UVF first and then convert it to whatever is needed)
     if (targetType != "uvf") {
       cout << "Error: Currently only uvf is only supported as target type for directory processing." << endl << endl;
       return 2;
@@ -240,7 +240,7 @@ int main(int argc, char* argv[])
 
     int iFailCount = 0;
     for (size_t i = 0;i<dirinfo.size();i++) {
-      if (ioMan.ConvertDataset(dirinfo[i], vStrFilenames[i])) {
+      if (ioMan.ConvertDataset(dirinfo[i], vStrFilenames[i], SysTools::GetPath(vStrFilenames[i]))) {
         cout << "Success." << endl << endl;
       } else {
         cout << "Conversion failed!" << endl << endl;

@@ -88,11 +88,14 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     bool RunScript(const std::string& strFilename);
     bool StayOpen() const {return m_bStayOpenAfterScriptEnd;}
+    const std::string& GetTempDir() {return m_strTempDir;}
 
   public slots:
     void SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick);
 
   protected slots:
+    void TransferToI3M();
+    
     void FtpFail();
     void FtpSuccess();
 
@@ -254,6 +257,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     QAction*                                  m_recentWSFileActs[ms_iMaxRecentFiles];
     FLOATVECTOR3                              m_vBackgroundColors[2];
     FLOATVECTOR4                              m_vTextColor;
+    std::string                               m_strTempDir;
     bool                                      m_bShowVersionInTitle;
     bool                                      m_bQuickopen;
     unsigned int                              m_iMinFramerate;
@@ -272,6 +276,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool                                      m_bDisableBorder;
     bool                                      m_bAvoidCompositing;
     bool                                      m_bNoRCClipplanes;
+    bool                                      m_bI3MFeatures;
     bool                                      m_bAutoSaveGEO;
     bool                                      m_bAutoSaveWSP;
     MasterController::EVolumeRendererType     m_eVolumeRendererType;

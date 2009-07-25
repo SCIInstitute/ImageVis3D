@@ -280,15 +280,15 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
 // DIRTY HACKS BEGIN
 
-#ifndef DETECTED_OS_APPLE
+#ifdef DETECTED_OS_APPLE
+    // hide edit menu as the preference item (the only item in edit right now) is magically moved on OS X to the program menu
+    menu_File->addAction(actionSettings);
+    menu_Edit->removeAction(actionSettings);
+    delete menu_Edit;
+#else
     // hide progress labels on systems that support text on top of the actual progressbars
     frame_24->setVisible(false);
     frame_23->setVisible(false);
-#else
- // hide edit menu as the preference item (the only item in edit right now) is magically moved on OS X to the program menu
-  menu_File->addAction(actionSettings);
-  menu_Edit->removeAction(actionSettings);
-  delete menu_Edit;
 #endif
 
 	/// \todo remove this once we figured out how to do fullscreen 
@@ -897,6 +897,7 @@ void MainWindow::OpenRecentWSFile(){
 void MainWindow::UpdateMenus() {
   bool bHasMdiChild = mdiArea->subWindowList().size() > 0;
   actionExport_Dataset->setEnabled(bHasMdiChild);
+  actionTransfer_to_ImageVis3D_Mobile_Device->setEnabled(bHasMdiChild);
 
   actionGo_Fullscreen->setEnabled(bHasMdiChild);
   actionCascade->setEnabled(bHasMdiChild);

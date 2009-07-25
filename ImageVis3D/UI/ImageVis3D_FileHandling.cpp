@@ -160,7 +160,7 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
       pleaseWait.SetText("Converting, please wait  ...");
       pleaseWait.AttachLabel(&m_MasterController);
 
-      if (!m_MasterController.IOMan()->ConvertDataset(filename.toStdString(), targetFilename.toStdString(), bNoUserInteraction)) {
+      if (!m_MasterController.IOMan()->ConvertDataset(filename.toStdString(), targetFilename.toStdString(), m_strTempDir, bNoUserInteraction)) {
         QString strText = tr("Unable to convert file %1 into %2.").arg(filename).arg(targetFilename);
         m_MasterController.DebugOut()->Error("MainWindow::LoadDataset", strText.toStdString().c_str());
         if (!bNoUserInteraction) ShowCriticalDialog( "Conversion Error", strText);
@@ -224,7 +224,7 @@ void MainWindow::LoadDirectory() {
         // label has been tetached when the dialog was closed by BrowseData
         pleaseWait.AttachLabel(&m_MasterController);
 
-        if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFilename.toStdString())) {
+        if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFilename.toStdString(), m_strTempDir)) {
           QString strText =
             tr("Unable to convert file stack from directory %1 into %2.").arg(directoryName).arg(targetFilename);
           ShowCriticalDialog( "Conversion Error", strText);
@@ -253,13 +253,12 @@ bool MainWindow::ExportDataset(UINT32 iLODLevel, std::string targetFileName) {
   pleaseWait.SetText("Exporting, please wait  ...");
   pleaseWait.AttachLabel(&m_MasterController);
 
-  /// \todo come up with something smarter for a temp dir then the target dir
   const UVFDataset *ds = dynamic_cast<UVFDataset*>(
     &(m_pActiveRenderWin->GetRenderer()->GetDataset())
   );
   bool bResult = m_MasterController.IOMan()->ExportDataset(
                             ds, iLODLevel, targetFileName,
-                            SysTools::GetPath(targetFileName));
+                            m_strTempDir);
 
   pleaseWait.close();
 
@@ -350,11 +349,9 @@ bool MainWindow::ExportMesh(UINT32 iLODLevel, string targetFileName) {
     const UVFDataset *ds = dynamic_cast<UVFDataset*>(
       &(m_pActiveRenderWin->GetRenderer()->GetDataset())
     );
-    /// \todo maybe come up with something smarter for a temp dir then
-    /// the target dir
     bool bResult = m_MasterController.IOMan()->ExtractIsosurface(
                       ds, iLODLevel, iValue, vfRescaleFactors,
-                      targetFileName, SysTools::GetPath(targetFileName)
+                      targetFileName, m_strTempDir
                    );
     pleaseWait.close();
 
@@ -450,7 +447,7 @@ void MainWindow::MergeDatasets() {
       PleaseWaitDialog pleaseWait(this);
       pleaseWait.SetText("Merging ...");
       pleaseWait.AttachLabel(&m_MasterController);
-      if (!m_MasterController.IOMan()->MergeDatasets(strFilenames, vScales, vBiases, string(fileName.toAscii()), m.UseMax())) {
+      if (!m_MasterController.IOMan()->MergeDatasets(strFilenames, vScales, vBiases, string(fileName.toAscii()), m_strTempDir, m.UseMax())) {
         ShowCriticalDialog("Data set Merge Error", "Unable to merge the selected data sets, make sure that the size and type of the data sets are the same.");
         return;
       }

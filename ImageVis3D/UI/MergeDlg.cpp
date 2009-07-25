@@ -71,7 +71,7 @@ void MergeDlg::AnalyzeCurrentDataset() {
     pleaseWait.AttachLabel(&m_pMainWindow->m_MasterController);
 
     RangeInfo info;
-    if (m_pMainWindow->m_MasterController.IOMan()->AnalyzeDataset(m_vDataSetList[iCurrent]->m_strFilename, info)) {
+    if (m_pMainWindow->m_MasterController.IOMan()->AnalyzeDataset(m_vDataSetList[iCurrent]->m_strFilename, info, m_pMainWindow->GetTempDir())) {
       m_vDataSetList[iCurrent]->m_vAspect = info.m_vAspect;
       m_vDataSetList[iCurrent]->m_vDomainSize = info.m_vDomainSize;
       m_vDataSetList[iCurrent]->m_iComponentSize = info.m_iComponentSize;

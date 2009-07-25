@@ -64,6 +64,7 @@
     <addaction name="menuLast_Used_Projects"/>
     <addaction name="separator"/>
     <addaction name="actionMerge_Data_Sets"/>
+    <addaction name="actionTransfer_to_ImageVis3D_Mobile_Device"/>
     <addaction name="actionExport_Dataset"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
@@ -5062,6 +5063,20 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <string>Clear List</string>
    </property>
   </action>
+  <action name="actionTransfer_to_ImageVis3D_Mobile_Device">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Transfer to ImageVis3D Mobile Device</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+E</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="0"/>
  <tabstops>
@@ -6958,6 +6973,22 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionTransfer_to_ImageVis3D_Mobile_Device</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>TransferToI3M()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>726</x>
+     <y>1198</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -7045,5 +7076,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>ClearWSMRUList()</slot>
   <slot>Transfer2DChooseGradientOpacitySimpleUI()</slot>
   <slot>Transfer2DChooseGradientColorSimpleUI()</slot>
+  <slot>TransferToI3M()</slot>
  </slots>
 </ui>

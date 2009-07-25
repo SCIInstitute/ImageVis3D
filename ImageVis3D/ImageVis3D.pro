@@ -67,6 +67,7 @@ HEADERS += StdDefines.h \
            UI/RAWDialog.h \
            UI/MIPRotDialog.h \ 
            UI/Welcome.h \
+           UI/I3MDialog.h \           
            UI/AboutDlg.h \
            UI/URLDlg.h \
            UI/BugRepDlg.h \
@@ -86,6 +87,7 @@ FORMS += UI/UI/BrowseData.ui \
          UI/UI/Welcome.ui \
          UI/UI/CrashDetDlg.ui \
          UI/UI/About.ui \
+         UI/UI/I3MDialog.ui \
          UI/UI/URLDlg.ui \
          UI/UI/LODDlg.ui \
          UI/UI/BugRepDlg.ui \
@@ -106,8 +108,10 @@ SOURCES += UI/BrowseData.cpp \
            UI/ImageVis3D_Stereo.cpp \
            UI/ImageVis3D_Scripting.cpp \
            UI/ImageVis3D_Help.cpp \
+           UI/ImageVis3D_I3M.cpp \
            UI/PleaseWait.cpp \
            UI/Welcome.cpp \
+           UI/I3MDialog.cpp \
            UI/AboutDlg.cpp \
            UI/URLDlg.cpp \
            UI/FTPDialog.cpp \

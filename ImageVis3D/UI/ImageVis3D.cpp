@@ -72,6 +72,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_pRedrawTimer(NULL),
   m_MasterController(masterController),
   m_strCurrentWorkspaceFilename(""),
+  m_strTempDir("."),  // changed in the constructor
   m_bShowVersionInTitle(true),
   m_bQuickopen(true),
   m_iMinFramerate(10),
@@ -88,6 +89,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bDisableBorder(false),
   m_bAvoidCompositing(false),
   m_bNoRCClipplanes(false),
+  m_bI3MFeatures(false),
   m_bAutoSaveGEO(true),
   m_bAutoSaveWSP(true),
   m_eVolumeRendererType(MasterController::OPENGL_SBVR),
@@ -124,6 +126,9 @@ MainWindow::MainWindow(MasterController& masterController,
   QCoreApplication::setApplicationVersion(qstrVersion);
 
   setupUi(this);
+  
+  SysTools::GetTempDirectory(m_strTempDir);
+
 
   SetAndCheckRunningFlag();
 

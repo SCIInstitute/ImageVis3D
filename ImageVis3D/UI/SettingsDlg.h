@@ -54,6 +54,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     UINT64        GetGPUMem() const;
     UINT64        GetCPUMem() const;
+    std::string   GetTempDir() const;
 
     bool          GetQuickopen() const;
     unsigned int  GetMinFramerate() const;
@@ -76,6 +77,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetCheckForDevBuilds() const;
     bool          GetShowWelcomeScreen() const;
     bool          GetInvertWheel() const;
+    bool          GetI3MFeatures() const;
 
     unsigned int  GetVolrenType() const;
     FLOATVECTOR3  GetBackgroundColor1() const;
@@ -94,6 +96,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     void Data2Form(bool bIsDirectX10Capable,
                    UINT64 iMaxCPU, UINT64 iMaxGPU,
+                   const std::string& tempDir, 
                    bool bQuickopen,
                    unsigned int iMinFramerate,
                    unsigned int iLODDelay,
@@ -112,6 +115,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bCheckForDevBuilds,
                    bool bShowWelcomeScreen,
                    bool bInvWheel,
+                   bool bI3MFeatures,
                    unsigned int iVolRenType,
                    unsigned int iBlendPrecision,
                    bool bPowerOfTwo,
@@ -139,6 +143,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void SelectLogo();
     void RemoveLogo();
     void PickLogFile();
+    void SelectTempDir();
 
   private:
     MasterController& m_MasterController;
