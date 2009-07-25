@@ -65,7 +65,10 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   QGLWidget(fmt, parent, glShareWidget, flags),
   RenderWindow(masterController, eType, dataset, iCounter, parent)
 {
-  m_Renderer = masterController.RequestNewVolumerenderer(eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder, bNoRCClipplanes);
+  m_Renderer = masterController.RequestNewVolumeRenderer(
+                  eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
+                  bDisableBorder, bNoRCClipplanes, false
+               );
   m_Renderer->LoadDataset(m_strDataset.toStdString());
   SetupArcBall();
 
