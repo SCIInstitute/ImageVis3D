@@ -45,7 +45,7 @@
 #define IV3D_MINOR 1
 #define IV3D_PATCH 1
 
-#define IV3D_VERSION "1.1.1"
+#define IV3D_VERSION "1.2"
 #define IV3D_VERSION_TYPE "Release"
 
 #define MANUAL_NAME  "ImageVis3D.pdf"
