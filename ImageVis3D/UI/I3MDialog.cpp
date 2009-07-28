@@ -97,7 +97,7 @@ I3MDialog::~I3MDialog(void)
   // if port is open close it and then delete it
   if (m_tcpServer->isListening()) m_tcpServer->close();
   delete m_tcpServer;
-  if (m_bDataNotConverted) CleanupTemp();
+  if (!m_bDataNotConverted) CleanupTemp();
 }
 
 void I3MDialog::Start()
