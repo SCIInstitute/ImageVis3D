@@ -139,9 +139,9 @@ void MainWindow::CaptureRotation() {
       while (i < iNumImages) {
         labelOut->SetOutput(true, true, true, false);
         if (i==0)
-          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
+          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i%% completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
         else
-          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i percent completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
+          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i%% completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
         labelOut->SetOutput(false, false, false, false);
         fAngle = float(i)/float(iNumImages) * 360.0f;
         m_pActiveRenderWin->SetCaptureRotationAngle(fAngle);
@@ -180,14 +180,14 @@ void MainWindow::CaptureRotation() {
           labelOut->SetOutput(true, true, true, false);
           if (bStereo) {
             if (i==0)
-              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 1 of 3: %i percent completed\nProcessing Image %i of %i (the first image may be slower due to caching)",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
+              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 1 of 3: %i%% completed\nProcessing Image %i of %i (the first image may be slower due to caching)",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
             else
-              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 1 of 3: %i percent completed\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages);
+              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 1 of 3: %i%% completed\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages);
           } else {
             if (i==0)
-              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "%i percent completed\nProcessing Image %i of %i (the first image may be slower due to caching)",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
+              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "%i%% completed\nProcessing Image %i of %i (the first image may be slower due to caching)",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
             else
-              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "%i percent completed\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages);
+              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "%i%% completed\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages);
           }
           labelOut->SetOutput(false, false, false, false);
 
@@ -227,7 +227,7 @@ void MainWindow::CaptureRotation() {
             string strSourceR = vstrRightEyeImageVector[i];
             string strTarget  = SysTools::FindNextSequenceName(lineEditCaptureFile->text().toStdString());
 
-            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 2 of 3: %i percent completed\nCreating stereo image %s from %s and %s \nProcessing Image %i of %i", int(100*float(i)/float(iNumImages)), SysTools::GetFilename(strTarget).c_str(), SysTools::GetFilename(strSourceL).c_str(), SysTools::GetFilename(strSourceR).c_str(), i+1,iNumImages );
+            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 2 of 3: %i%% completed\nCreating stereo image %s from %s and %s \nProcessing Image %i of %i", int(100*float(i)/float(iNumImages)), SysTools::GetFilename(strTarget).c_str(), SysTools::GetFilename(strSourceL).c_str(), SysTools::GetFilename(strSourceR).c_str(), i+1,iNumImages );
 
             QImage imageLeft(strSourceL.c_str());
             QImage imageRight(strSourceR.c_str());
@@ -254,7 +254,7 @@ void MainWindow::CaptureRotation() {
             imageRight.save(strTarget.c_str());
           }
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
-            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 3 of 3: %i percent completed\nCleanup\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
+            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 3 of 3: %i%% completed\nCleanup\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
             remove(vstrRightEyeImageVector[i].c_str());
             if (SysTools::FileExists(vstrLeftEyeImageVector[i])) remove(vstrLeftEyeImageVector[i].c_str());
           }

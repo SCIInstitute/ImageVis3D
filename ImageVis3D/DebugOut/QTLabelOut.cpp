@@ -106,6 +106,8 @@ void QTLabelOut::_printf(const char* format, ...) const
 }
 
 void QTLabelOut::Message(const char* , const char* format, ...) {
+  if (!m_bShowMessages) return;
+
   char buff[16384];
   va_list args;
   va_start(args, format);
@@ -116,11 +118,13 @@ void QTLabelOut::Message(const char* , const char* format, ...) {
 #endif
   va_end(args);
 
-  if (!m_bShowMessages) return;
+  ReplaceSpecialChars(buff, 16384);
   _printf(buff);
 }
 
 void QTLabelOut::Warning(const char* , const char* format, ...) {
+  if (!m_bShowWarnings) return;
+
   char buff[16384];
   va_list args;
   va_start(args, format);
@@ -131,11 +135,12 @@ void QTLabelOut::Warning(const char* , const char* format, ...) {
 #endif
   va_end(args);
 
-  if (!m_bShowWarnings) return;
   _printf("WARNING: %s",buff);
 }
 
 void QTLabelOut::Error(const char* , const char* format, ...) {
+  if (!m_bShowErrors) return;
+
   char buff[16384];
   va_list args;
   va_start(args, format);
@@ -146,6 +151,5 @@ void QTLabelOut::Error(const char* , const char* format, ...) {
 #endif
   va_end(args);
 
-  if (!m_bShowErrors) return;
   _printf("ERROR: %s", buff);
 }
