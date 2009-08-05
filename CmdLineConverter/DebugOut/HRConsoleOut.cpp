@@ -38,6 +38,7 @@
 #include <algorithm>
 #include <cstdarg>
 #include <cstring>
+#include <iostream>
 
 #include "HRConsoleOut.h"
 #include "../../Tuvok/Basics/Console.h"
