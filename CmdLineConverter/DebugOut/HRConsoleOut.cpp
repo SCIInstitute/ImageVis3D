@@ -35,8 +35,9 @@
   \date    August 2008
 */
 
-#include <iostream>
-using namespace std;
+#include <algorithm>
+#include <cstdarg>
+#include <cstring>
 
 #include "HRConsoleOut.h"
 #include "../../Tuvok/Basics/Console.h"
@@ -59,6 +60,7 @@ void HRConsoleOut::printf(const char* format, ...) const
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
+  ReplaceSpecialChars(buff, 16384);
   Console::printf("%s\n",buff);
 }
 
@@ -72,7 +74,7 @@ void HRConsoleOut::Message(const char* , const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-  cout << buff << endl;
+  std::cout << buff << std::endl;
 }
 
 void HRConsoleOut::Warning(const char* source, const char* format, ...) {
@@ -85,7 +87,7 @@ void HRConsoleOut::Warning(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-  cout << "WARNING (" << source << "): "<< buff << endl;
+  std::cout << "WARNING (" << source << "): "<< buff << std::endl;
 }
 
 void HRConsoleOut::Error(const char* source, const char* format, ...) {
@@ -98,5 +100,5 @@ void HRConsoleOut::Error(const char* source, const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-  cout << "ERROR (" << source << "): "<< buff << endl;
+  std::cout << "ERROR (" << source << "): "<< buff << std::endl;
 }
