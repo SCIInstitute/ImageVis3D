@@ -35,9 +35,9 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "../Tuvok/Basics/StdDefines.h"
 #include <algorithm>
 #include <cstdio>
-#include "../Tuvok/Basics/StdDefines.h"
 
 #ifdef DETECTED_OS_LINUX
 # include <libgen.h>

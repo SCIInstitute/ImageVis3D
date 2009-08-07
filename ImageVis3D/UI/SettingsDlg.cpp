@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "../Tuvok/StdTuvokDefines.h"
 #include "SettingsDlg.h"
 #include <QtGui/QColorDialog>
 #include <QtGui/QMessageBox>

@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "../Tuvok/StdTuvokDefines.h"
 #if defined(_WIN32) && defined(USE_DIRECTX)
 #include <cassert>
 #include <sstream>

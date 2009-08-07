@@ -35,12 +35,14 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
-#include "RenderWindow.h"
-#include "ImageVis3D.h"
-
-#include <QtGui/QtGui>
-#include <assert.h>
+#include "../Tuvok/StdTuvokDefines.h"
+#include <cassert>
 #include <sstream>
+#include <QtGui/QtGui>
+
+#include "RenderWindow.h"
+
+#include "ImageVis3D.h"
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 

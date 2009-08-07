@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "../Tuvok/StdTuvokDefines.h"
 #include <sstream>
 #include "GL/glew.h"
 #include "RenderWindowGL.h"

@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "../Tuvok/StdTuvokDefines.h"
 #include "QTransferFunction.h"
 #include "../Tuvok/Controller/MasterController.h"
 

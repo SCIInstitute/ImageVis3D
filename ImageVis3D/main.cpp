@@ -35,6 +35,8 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "../Tuvok/StdTuvokDefines.h"
+
 #ifdef DEBUG_PROVENANCE
 #include <iostream>
 #endif
