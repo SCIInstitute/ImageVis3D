@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ExtractDebugInfo"
 	ProjectGUID="{5494E269-CBE9-443E-9C3D-997B141FDDC7}"
 	RootNamespace="ExtractDebugInfo"
@@ -197,6 +197,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/U&quot;_SECURE_SCL&quot; /D&quot;_SECURE_SCL=0&quot;"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(QTDIR32)\include&quot;;."
@@ -277,6 +278,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/U&quot;_SECURE_SCL&quot; /D&quot;_SECURE_SCL=0&quot;"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(QTDIR64)\include&quot;;."
@@ -509,6 +511,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/U&quot;_SECURE_SCL&quot; /D&quot;_SECURE_SCL=0&quot;"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(QTDIR32)\include&quot;;."
@@ -589,6 +592,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/U&quot;_SECURE_SCL&quot; /D&quot;_SECURE_SCL=0&quot;"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(QTDIR64)\include&quot;;."
