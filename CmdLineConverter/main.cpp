@@ -35,11 +35,12 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "../Tuvok/StdTuvokDefines.h"
 #include <QtGui/QApplication>
+
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "DebugOut/HRConsoleOut.h"
-#include "../Tuvok/StdTuvokDefines.h"
 #include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/IO/DirectoryParser.h"
 
