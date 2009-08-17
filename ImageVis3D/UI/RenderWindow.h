@@ -121,7 +121,7 @@ class RenderWindow
     void SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCV(bool bDoClearView, bool bPropagate=true);
-    void SetCVFocusPos(const FLOATVECTOR2& vMousePos, bool bPropagate=true);
+    void SetCVFocusPos(const INTVECTOR2& vMousePos, bool bPropagate=true);
 
     size_t GetDynamicRange() const;
     FLOATVECTOR3 GetIsosufaceColor() const;

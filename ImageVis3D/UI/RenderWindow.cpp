@@ -196,7 +196,7 @@ bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
 
   if (m_Renderer->GetRendermode() == AbstrRenderer::RM_ISOSURFACE &&
       m_Renderer->GetCV() && clearview) {
-    SetCVFocusPos(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+    SetCVFocusPos(m_viMousePos);
   }
 
   if (rotate) {
@@ -790,11 +790,11 @@ void RenderWindow::SetCV(bool bDoClearView, bool bPropagate) {
   }
 }
 
-void RenderWindow::SetCVFocusPos(const FLOATVECTOR2& vMousePos, bool bPropagate) {
-  m_Renderer->SetCVFocusPos(vMousePos);
+void RenderWindow::SetCVFocusPos(const INTVECTOR2& viMousePos, bool bPropagate) {
+  m_Renderer->SetCVFocusPos(viMousePos);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
-      m_vpLocks[1][i]->SetCVFocusPos(vMousePos, false);
+      m_vpLocks[1][i]->SetCVFocusPos(viMousePos, false);
     }
   }
 }
