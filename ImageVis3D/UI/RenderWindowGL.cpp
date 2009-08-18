@@ -72,7 +72,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
                );
   // so far we are not rendering anything but the volume therefore
   // disable the depth-buffer to offscreen copy operations
-  //m_Renderer->SetConsiderPreviousDepthbuffer(false);
+  m_Renderer->SetConsiderPreviousDepthbuffer(false);
   m_Renderer->LoadDataset(m_strDataset.toStdString());
   SetupArcBall();
 
