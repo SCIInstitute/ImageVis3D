@@ -71,9 +71,8 @@ void ShowUsage(string filename) {
   std::vector< std::pair <std::string, std::string > > importList = ioMan.GetImportFormatList();
   std::vector< std::pair <std::string, std::string > > exportList = ioMan.GetExportFormatList();
 
-
 	cout << endl <<
-			filename << " V" << CONV_VERSION << " (using Tuvok V" << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE << ")"<< endl << "  (c) Scientific Computing and Imaging Institute, University of Utah" << endl << endl <<
+			filename << " V" << CONV_VERSION << " (using Tuvok V" << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE << ")" << endl << endl <<
       " Converts different types of volumetric data." << endl << endl <<
       " Usage:" << endl <<
 			"    " << filename << " -f InFile ^ -d InDir [-f2 InFile2] -out OutFile " << endl << endl <<		
@@ -86,7 +85,7 @@ void ShowUsage(string filename) {
       cout <<
       "        XOR" << endl << 
 			"        -d    the input directory" << endl << 
-      "          Supported formats: " << endl <<
+      "          Supported file formats in that directory: " << endl <<
       "             DICOM" << endl;
 #ifndef TUVOK_NO_QT
       QList<QByteArray> listImageFormats = QImageReader::supportedImageFormats();
@@ -99,7 +98,7 @@ void ShowUsage(string filename) {
 #endif
       cout << endl << 
 			"        -out  the target filename (the extension is used to detect the format)" << endl <<
-      "          Supported file formats in that directory: " << endl;
+      "          Supported formats: " << endl;
       for (size_t i = 0;i<exportList.size();i++) {
         cout << "             " << exportList[i].first.c_str() << " (" << exportList[i].second.c_str() << ")" << endl;
       }
