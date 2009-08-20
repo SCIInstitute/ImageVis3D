@@ -189,6 +189,7 @@ int main(int argc, char* argv[])
 
   HRConsoleOut* debugOut = new HRConsoleOut();
   debugOut->SetOutput(true, true, true, false);
+  debugOut->SetClearOldMessage(true);
 
   Controller::Instance().AddDebugOut(debugOut);
   IOManager ioMan;

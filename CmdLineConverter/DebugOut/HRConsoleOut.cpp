@@ -43,7 +43,10 @@
 #include "HRConsoleOut.h"
 #include "../../Tuvok/Basics/Console.h"
 
-HRConsoleOut::HRConsoleOut() {
+HRConsoleOut::HRConsoleOut() :
+  m_bClearOldMessage(false),
+  m_iLengthLastMessage(0)
+{
 }
 
 HRConsoleOut::~HRConsoleOut() {
@@ -62,7 +65,7 @@ void HRConsoleOut::printf(const char* format, ...) const
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
   ReplaceSpecialChars(buff, 16384);
-  Console::printf("%s\n",buff);
+  std::cout << buff << std::endl;
 }
 
 void HRConsoleOut::Message(const char* , const char* format, ...) {
@@ -75,7 +78,15 @@ void HRConsoleOut::Message(const char* , const char* format, ...) {
 #else
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
-  std::cout << buff << std::endl;
+
+  if ( m_bClearOldMessage ) {
+    for (size_t i=0;i<strlen(buff);i++) if (buff[i] == '\n') buff[i] = ' ';
+    std::cout << "\r" << buff;
+    for (size_t i=strlen(buff);i<m_iLengthLastMessage;i++) std::cout << " ";
+    m_iLengthLastMessage = strlen(buff);
+  } else {
+    std::cout << buff << std::endl;
+  }
 }
 
 void HRConsoleOut::Warning(const char* source, const char* format, ...) {
@@ -89,6 +100,7 @@ void HRConsoleOut::Warning(const char* source, const char* format, ...) {
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
   std::cout << "WARNING (" << source << "): "<< buff << std::endl;
+  m_iLengthLastMessage = 0;
 }
 
 void HRConsoleOut::Error(const char* source, const char* format, ...) {
@@ -102,4 +114,5 @@ void HRConsoleOut::Error(const char* source, const char* format, ...) {
   vsnprintf( buff, sizeof(buff), format, args);
 #endif
   std::cout << "ERROR (" << source << "): "<< buff << std::endl;
+  m_iLengthLastMessage = 0;
 }
