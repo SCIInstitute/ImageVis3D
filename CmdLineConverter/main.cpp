@@ -61,24 +61,49 @@ using namespace std;
 #endif
   */
 
+#ifndef TUVOK_NO_QT
+  #include <QtGui/QImageReader>
+#endif
+
 void ShowUsage(string filename) {
+  IOManager ioMan;
+
+  std::vector< std::pair <std::string, std::string > > importList = ioMan.GetImportFormatList();
+  std::vector< std::pair <std::string, std::string > > exportList = ioMan.GetExportFormatList();
+
+
 	cout << endl <<
 			filename << " V" << CONV_VERSION << " (using Tuvok V" << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE << ")"<< endl << "  (c) Scientific Computing and Imaging Institute, University of Utah" << endl << endl <<
-      " Converts different types of volumes into a UVF file and vice versa." << endl << endl <<
+      " Converts different types of volumetric data." << endl << endl <<
       " Usage:" << endl <<
 			"    " << filename << " -f InFile ^ -d InDir [-f2 InFile2] -out OutFile " << endl << endl <<		
 			"     Mandatory Arguments:" << endl <<
 			"        -f    the input filename" << endl << 
-			"        XOR" << endl << 
+      "          Supported formats: " << endl;
+      for (size_t i = 0;i<importList.size();i++) {
+        cout << "             " << importList[i].first.c_str() << " (" << importList[i].second.c_str() << ")" << endl;
+      }
+      cout <<
+      "        XOR" << endl << 
 			"        -d    the input directory" << endl << 
-      endl << 
-			"        -out  the target filename (the extension is used to detect the format)" << endl <<
       "          Supported formats: " << endl <<
-      "             - uvf" << endl << 
-      "             - vff" << endl << 
-      "             - nrrd" << endl << 
-      "             - nhdr (will also create raw file with similar name)" << endl << 
-      "             - dat (will also create raw file with similar name)" << endl << endl <<
+      "             DICOM" << endl;
+#ifndef TUVOK_NO_QT
+      QList<QByteArray> listImageFormats = QImageReader::supportedImageFormats();
+      for (size_t i = 0;i<exportList.size();i++) {
+        QByteArray imageFormat = listImageFormats[int(i)];
+        QString qStrImageFormat(imageFormat);
+        string strImageFormat = qStrImageFormat.toStdString();
+        cout << "             " << strImageFormat.c_str() << endl;
+      }
+#endif
+      cout << endl << 
+			"        -out  the target filename (the extension is used to detect the format)" << endl <<
+      "          Supported file formats in that directory: " << endl;
+      for (size_t i = 0;i<exportList.size();i++) {
+        cout << "             " << exportList[i].first.c_str() << " (" << exportList[i].second.c_str() << ")" << endl;
+      }
+      cout <<
 			"     Optional Arguments:" << endl <<
 			"        -f2   second input file to be merged with the first" << endl <<
 			"        -b2   bias factor for values in the second input file" << endl <<
