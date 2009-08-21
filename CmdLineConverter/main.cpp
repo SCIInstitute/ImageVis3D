@@ -186,6 +186,11 @@ int main(int argc, char* argv[])
     return 1;
   }
 
+  if (strOutfile == "") {
+    cout << "Must specify output file." << endl;
+    ShowUsage(strFilename);
+    return 1;
+  }
 
   HRConsoleOut* debugOut = new HRConsoleOut();
   debugOut->SetOutput(true, true, true, false);
