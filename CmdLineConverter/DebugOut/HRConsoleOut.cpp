@@ -44,8 +44,8 @@
 #include "../../Tuvok/Basics/Console.h"
 
 HRConsoleOut::HRConsoleOut() :
-  m_bClearOldMessage(false),
-  m_iLengthLastMessage(0)
+  m_iLengthLastMessage(0),
+  m_bClearOldMessage(false)
 {
 }
 
