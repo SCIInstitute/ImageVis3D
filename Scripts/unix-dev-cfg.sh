@@ -9,8 +9,12 @@ if test -n "${QT_BIN}" ; then
 else
     qm="qmake"
 fi
-${qm} \
-    QMAKE_CONFIG="debug" \
-    QMAKE_CFLAGS="${CF}" \
-    QMAKE_CXXFLAGS="${CF} ${CXF}" \
-    -recursive
+for d in . tuvok/IO/test ; do
+  pushd ${d} &>/dev/null
+    ${qm} \
+        QMAKE_CONFIG="debug" \
+        QMAKE_CFLAGS="${CF}" \
+        QMAKE_CXXFLAGS="${CF} ${CXF}" \
+        -recursive
+  popd &>/dev/null
+done
