@@ -63,6 +63,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_Renderer(NULL),
   m_MasterController(masterController),
   m_bRenderSubsysOK(true),   // be optimistic :-)
+  m_draggedWindow(AbstrRenderer::WM_INVALID),
   m_vWinDim(0,0),
   m_vMinSize(vMinSize),
   m_vDefaultSize(vDefaultSize),
@@ -133,10 +134,18 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
       m_ClipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
     }
   }
+  else if (eWinMode == AbstrRenderer::WM_DIVIDER_HORIZONTAL ||
+           eWinMode == AbstrRenderer::WM_DIVIDER_VERTICAL ||
+           eWinMode == AbstrRenderer::WM_DIVIDER_BOTH) 
+    {
+      m_draggedWindow = eWinMode;
+      m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+    }
 }
 
 void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) FinalizeRotation(true);
+  m_draggedWindow = AbstrRenderer::WM_INVALID;
 }
 
 // Qt callback; just interprets the event and passes it on to the appropriate
@@ -153,6 +162,12 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
   bool rotate = event->buttons() & Qt::LeftButton;
   bool translate = event->buttons() & Qt::RightButton;
 
+  if (m_draggedWindow == AbstrRenderer::WM_DIVIDER_HORIZONTAL ||
+      m_draggedWindow == AbstrRenderer::WM_DIVIDER_VERTICAL ||
+      m_draggedWindow == AbstrRenderer::WM_DIVIDER_BOTH) {
+    eWinMode = m_draggedWindow;
+  }
+
   // mouse is over the 3D window
   if (eWinMode == AbstrRenderer::WM_3D) {
     bool bPerformUpdate = false;
@@ -164,6 +179,28 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
     }
 
     if (bPerformUpdate) UpdateWindow();
+  }
+  else if ( (m_draggedWindow == AbstrRenderer::WM_DIVIDER_HORIZONTAL ||
+             m_draggedWindow == AbstrRenderer::WM_DIVIDER_VERTICAL ||
+             m_draggedWindow == AbstrRenderer::WM_DIVIDER_BOTH) &&
+            (event->buttons() & (Qt::LeftButton|Qt::RightButton)) ) {
+    FLOATVECTOR2 viPosDelta (m_viMousePos - m_viRightClickPos);
+    m_viRightClickPos = m_viMousePos;
+    FLOATVECTOR2 delta = viPosDelta / FLOATVECTOR2(m_vWinDim);
+    FLOATVECTOR2 frac = m_Renderer->WindowFraction2x2();
+    if (eWinMode == AbstrRenderer::WM_DIVIDER_HORIZONTAL ||
+        eWinMode == AbstrRenderer::WM_DIVIDER_BOTH) {
+      frac.y -= delta.y;
+      if (frac.y < 0) frac.y = 0;
+      if (frac.y > 1) frac.y = 1;
+    }
+    if (eWinMode == AbstrRenderer::WM_DIVIDER_VERTICAL ||
+        eWinMode == AbstrRenderer::WM_DIVIDER_BOTH) {
+      frac.x += delta.x;
+      if (frac.x < 0) frac.x = 0;
+      if (frac.x > 1) frac.x = 1;
+    }
+    m_Renderer->SetWindowFraction2x2(frac);
   }
 }
 
@@ -230,7 +267,9 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
     } else {
       SetTranslationDelta(FLOATVECTOR3(0,0,fZoom),true);
     }
-  } else {
+  } else if (eWinMode == AbstrRenderer::WM_SAGITTAL ||
+             eWinMode == AbstrRenderer::WM_AXIAL || 
+             eWinMode == AbstrRenderer::WM_CORONAL)   {
     // this returns 1 for "most" mice if the wheel is turned one "click"
     int iZoom = event->delta()/120;
     int iNewSliceDepth = std::max<int>(0,int(m_Renderer->GetSliceDepth(eWinMode))+iZoom);

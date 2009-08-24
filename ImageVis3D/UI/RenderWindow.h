@@ -145,6 +145,7 @@ class RenderWindow
     AbstrRenderer*    m_Renderer;
     MasterController& m_MasterController;
     bool              m_bRenderSubsysOK;
+    AbstrRenderer::EWindowMode m_draggedWindow;
     UINTVECTOR2       m_vWinDim;
     UINTVECTOR2       m_vMinSize;
     UINTVECTOR2       m_vDefaultSize;
