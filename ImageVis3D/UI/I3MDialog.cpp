@@ -220,9 +220,8 @@ void I3MDialog::SendData()
 
 bool I3MDialog::ConvertData() {
   QString labelText = label_files->text();
-  label_files->setText("Converting "+labelText);
+  label_files->setText("Converting\n"+labelText);
   
-
   // UVF to I3M
 
   // first, find the smalest LOD with every dimension larger or equal to 128 (if possible)
@@ -258,6 +257,8 @@ bool I3MDialog::ConvertData() {
 
   label_Status->setText(tr("Conversion complete!"));
   label_Status->update();
+
+  label_files->setText("Sharing\n"+labelText);
 
   m_bDataNotConverted = false;
   return true;
