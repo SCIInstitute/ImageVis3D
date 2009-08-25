@@ -24,8 +24,7 @@ PREFIX="${HOME}/sw"
     -qt-libjpeg        \
     -openssl-linked    \
     -no-dbus           \
-    -opengl            \
-    -no-tablet
+    -opengl
 
 if test $? -ne 0 ; then
     echo "configure error"
