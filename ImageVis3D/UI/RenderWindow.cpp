@@ -201,6 +201,7 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
       if (frac.x > 1) frac.x = 1;
     }
     m_Renderer->SetWindowFraction2x2(frac);
+    SetupArcBall();
   }
 }
 
@@ -366,9 +367,10 @@ void RenderWindow::FocusOutEvent ( QFocusEvent * event ) {
 }
 
 void RenderWindow::SetupArcBall() {
+
   if (m_Renderer->GetViewmode() == AbstrRenderer::VM_TWOBYTWO) {
-    m_ArcBall.SetWindowSize(m_vWinDim.x/2, m_vWinDim.y/2);
-    m_ClipArcBall.SetWindowSize(m_vWinDim.x/2, m_vWinDim.y/2);
+
+    FLOATVECTOR2 vWinFraction = m_Renderer->WindowFraction2x2();
 
     // find the 3D window
     int i3DWindowIndex = 0;
@@ -381,13 +383,26 @@ void RenderWindow::SetupArcBall() {
 
     switch (i3DWindowIndex) {
       case 0 : m_ArcBall.SetWindowOffset(0,0);
-               m_ClipArcBall.SetWindowOffset(0,0); break;
-      case 1 : m_ArcBall.SetWindowOffset(m_vWinDim.x/2,0);
-               m_ClipArcBall.SetWindowOffset(m_vWinDim.x/2,0); break;
-      case 2 : m_ArcBall.SetWindowOffset(0,m_vWinDim.y/2);
-               m_ClipArcBall.SetWindowOffset(0,m_vWinDim.y/2); break;
-      case 3 : m_ArcBall.SetWindowOffset(m_vWinDim.x/2, m_vWinDim.y/2);
-               m_ClipArcBall.SetWindowOffset(m_vWinDim.x/2, m_vWinDim.y/2); break;
+               m_ClipArcBall.SetWindowOffset(0,0);
+               m_ArcBall.SetWindowSize((vWinFraction.x)*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
+               m_ClipArcBall.SetWindowSize((vWinFraction.x)*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
+               break;
+      case 1 : m_ArcBall.SetWindowOffset(vWinFraction.x*m_vWinDim.x,0);
+               m_ClipArcBall.SetWindowOffset(vWinFraction.x*m_vWinDim.x,0);
+               m_ArcBall.SetWindowSize((1.0f-vWinFraction.x)*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
+               m_ClipArcBall.SetWindowSize((1.0f-vWinFraction.x)*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
+               break;
+      case 2 : m_ArcBall.SetWindowOffset(0,(1.0f-vWinFraction.y)*m_vWinDim.y);
+               m_ClipArcBall.SetWindowOffset(0,(1.0f-vWinFraction.y)*m_vWinDim.y);
+               m_ArcBall.SetWindowSize((vWinFraction.x)*m_vWinDim.x, (vWinFraction.y)*m_vWinDim.y);
+               m_ClipArcBall.SetWindowSize((vWinFraction.x)*m_vWinDim.x, (vWinFraction.y)*m_vWinDim.y);
+               break;
+      case 3 : m_ArcBall.SetWindowOffset(vWinFraction.x*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
+               m_ClipArcBall.SetWindowOffset(vWinFraction.x*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
+               m_ArcBall.SetWindowSize((1.0f-vWinFraction.x)*m_vWinDim.x, (vWinFraction.y)*m_vWinDim.y);
+               m_ClipArcBall.SetWindowSize((1.0f-vWinFraction.x)*m_vWinDim.x, (vWinFraction.y)*m_vWinDim.y);
+               break;
+
     }
   } else {
     m_ArcBall.SetWindowSize(m_vWinDim.x, m_vWinDim.y);
