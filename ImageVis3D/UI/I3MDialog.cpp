@@ -43,7 +43,6 @@
 #include <fstream>
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/IO/IOManager.h"
-#include "../Tuvok/IO/Metadata.h"
 #include "DebugOut/QTLabelOut.h"
 
 using namespace tuvok;
@@ -225,9 +224,9 @@ bool I3MDialog::ConvertData() {
   // UVF to I3M
 
   // first, find the smalest LOD with every dimension larger or equal to 128 (if possible)
-  int iLODLevel = int(m_currentDataset->GetInfo().GetLODLevelCount())-1;
+  int iLODLevel = int(m_currentDataset->GetLODLevelCount())-1;
   for (;iLODLevel>0;iLODLevel--) {
-    UINTVECTOR3 vLODSize = UINTVECTOR3(m_currentDataset->GetInfo().GetDomainSize(iLODLevel));
+    UINTVECTOR3 vLODSize = UINTVECTOR3(m_currentDataset->GetDomainSize(iLODLevel));
     if (vLODSize.x >= 128 &&
         vLODSize.y >= 128 &&
         vLODSize.z >= 128) break;
