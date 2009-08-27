@@ -67,7 +67,7 @@ QTLabelOut::~QTLabelOut() {
 
 void QTLabelOut::printf(const char* format, ...) const
 {
-  if (!m_label && !m_bShowOther) return;
+  if (!m_label) return;
   char buff[16384];
   va_list args;
   va_start(args, format);
