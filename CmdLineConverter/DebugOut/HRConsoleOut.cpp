@@ -52,7 +52,7 @@ HRConsoleOut::HRConsoleOut() :
 HRConsoleOut::~HRConsoleOut() {
 }
 
-void HRConsoleOut::printf(enum DebugChannel channel, const char* source,
+void HRConsoleOut::printf(enum DebugChannel channel, const char*,
                           const char* msg)
 {
   char buff[16384];
@@ -67,12 +67,10 @@ void HRConsoleOut::printf(enum DebugChannel channel, const char* source,
     }
   }
 
-  std::cout << "\r" << ChannelToString(channel) << " (" << source << "): "
-            << buff;
+  std::cout << "\r" << buff;
 
-  if (m_bClearOldMessage) {
-    size_t len = strlen(ChannelToString(channel)) + 2 + strlen(source) + 3 +
-                 strlen(buff);
+  if (m_bClearOldMessage && channel == CHANNEL_MESSAGE) {
+    size_t len = strlen(buff);
     // Clear the rest of the line, in case this message is shorter than the
     // last one was.
     for (size_t i=len;i<m_iLengthLastMessage;i++) {
@@ -81,7 +79,9 @@ void HRConsoleOut::printf(enum DebugChannel channel, const char* source,
     m_iLengthLastMessage = len;
   } else {
     std::cout << std::endl;
+    m_iLengthLastMessage = 0;
   }
+  std::cout.flush();
 }
 
 void HRConsoleOut::printf(const char *s) const
