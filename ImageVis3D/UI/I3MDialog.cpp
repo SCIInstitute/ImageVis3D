@@ -49,6 +49,7 @@ using namespace tuvok;
 
 I3MDialog::I3MDialog(MasterController* pMasterController, const UVFDataset* currentDataset, const std::string& strTmpDir, QWidget* parent, Qt::WindowFlags flags) : 
   QDialog(parent, flags),
+  m_iSendMessage(0),
   m_tcpServer(NULL),
   m_iPort(22),
   m_currentDataset(currentDataset),
@@ -175,10 +176,9 @@ void I3MDialog::SendData()
   }
 
   // update label to notify the user about the upcomming send operation
-	static unsigned int iSendMessage = 0;
   label_Status->setText(tr("The server is running on port %1.\n"
                           "Connected! Sending dataset to device %2.")
-					  .arg(m_tcpServer->serverPort()).arg(++iSendMessage)  );
+					  .arg(m_tcpServer->serverPort()).arg(++m_iSendMessage)  );
 
   // open socket
   QTcpSocket *clientConnection = m_tcpServer->nextPendingConnection();
@@ -201,14 +201,14 @@ void I3MDialog::SendData()
 	clientConnection->disconnectFromHost();
 
   // update label
-	if (iSendMessage == 1) {
+	if (m_iSendMessage == 1) {
 		label_Status->setText(tr("The server is running on port %1.\n"
 								"Dataset send to mobile device.")
 								.arg(m_tcpServer->serverPort()) );
 	} else {
 		label_Status->setText(tr("The server is running on port %1.\n"
 								"Dataset send to %2 mobile devices.")
-								.arg(m_tcpServer->serverPort()).arg(iSendMessage)  );
+								.arg(m_tcpServer->serverPort()).arg(m_iSendMessage)  );
 	}
 
   // delete arrays

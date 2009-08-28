@@ -58,6 +58,7 @@ class I3MDialog : public QDialog, protected Ui_I3MDialog
     virtual void SelectPort();
 
   protected:
+  	UINT32         m_iSendMessage;
     QTcpServer*    m_tcpServer;
     UINT32         m_iPort;
     const tuvok::UVFDataset* m_currentDataset;
