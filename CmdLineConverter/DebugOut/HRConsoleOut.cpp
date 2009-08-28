@@ -52,65 +52,40 @@ HRConsoleOut::HRConsoleOut() :
 HRConsoleOut::~HRConsoleOut() {
 }
 
-void HRConsoleOut::printf(const char* format, ...) const
+void HRConsoleOut::printf(enum DebugChannel channel, const char* source,
+                          const char* msg)
 {
   char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  ReplaceSpecialChars(buff, 16384);
-  std::cout << buff << std::endl;
-}
+  strncpy(buff, msg, 16384);
 
-void HRConsoleOut::Message(const char* , const char* format, ...) {
-  if (!m_bShowMessages) return;
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
+  if (m_bClearOldMessage) {
+    // Remove any newlines from the string.
+    for (size_t i=0;i<strlen(buff);i++) {
+      if (buff[i] == '\n') {
+        buff[i] = ' ';
+      }
+    }
+  }
 
-  if ( m_bClearOldMessage ) {
-    for (size_t i=0;i<strlen(buff);i++) if (buff[i] == '\n') buff[i] = ' ';
-    std::cout << "\r" << buff;
-    for (size_t i=strlen(buff);i<m_iLengthLastMessage;i++) std::cout << " ";
-    m_iLengthLastMessage = strlen(buff);
+  std::cout << "\r" << ChannelToString(channel) << " (" << source << "): "
+            << buff;
+
+  if (m_bClearOldMessage) {
+    size_t len = strlen(ChannelToString(channel)) + 2 + strlen(source) + 3 +
+                 strlen(buff);
+    // Clear the rest of the line, in case this message is shorter than the
+    // last one was.
+    for (size_t i=len;i<m_iLengthLastMessage;i++) {
+      std::cout << " ";
+    }
+    m_iLengthLastMessage = len;
   } else {
-    std::cout << buff << std::endl;
+    std::cout << std::endl;
   }
 }
 
-void HRConsoleOut::Warning(const char* source, const char* format, ...) {
-  if (!m_bShowWarnings) return;
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  std::cout << "WARNING (" << source << "): "<< buff << std::endl;
-  m_iLengthLastMessage = 0;
-}
-
-void HRConsoleOut::Error(const char* source, const char* format, ...) {
-  if (!m_bShowErrors) return;
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  std::cout << "ERROR (" << source << "): "<< buff << std::endl;
-  m_iLengthLastMessage = 0;
+void HRConsoleOut::printf(const char *s) const
+{
+  // Always make a new line for this version.
+  std::cout << s << std::endl;
 }

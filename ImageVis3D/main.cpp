@@ -113,7 +113,11 @@ int main(int argc, char* argv[])
     dbgOut->SetShowWarnings(iLogLevel > 0);
     dbgOut->SetShowMessages(iLogLevel > 1);
 
-    dbgOut->printf("Loglevel:%i\n",iLogLevel);
+    {
+      std::ostringstream loglevel;
+      loglevel << "Loglevel: " << iLogLevel;
+      dbgOut->printf(loglevel.str().c_str());
+    }
 
     Controller::Instance().AddDebugOut(dbgOut);
   }

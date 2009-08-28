@@ -64,92 +64,23 @@ QTOut::~QTOut() {
   Message("QTOut::~QTOut","Shutting down QTListviewDebug out");
 }
 
-void QTOut::printf(const char* format, ...) const
+void QTOut::printf(enum DebugChannel channel, const char* source,
+                   const char* buff)
 {
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  va_end(args);
+  std::ostringstream msg;
+  msg << ChannelToString(channel) << " (" << source << "): " << buff;
 
-  m_listWidget->addItem ( buff );
+  m_listWidget->addItem(msg.str().c_str());
+
+  if(static_cast<size_t>(channel) < m_bRecordLists.size() &&
+     m_bRecordLists[channel]) {
+    m_strLists[channel].push_back(msg.str());
+  }
 }
 
-void QTOut::_printf(const char* format, ...) const
+void QTOut::printf(const char *s) const
 {
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  va_end(args);
+  m_listWidget->addItem(s);
 
-  m_listWidget->addItem ( buff );
-}
-
-void QTOut::Message(const char* source, const char* format, ...) {
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  va_end(args);
-
-  if (m_bRecordLists[2]) {
-    stringstream s;
-    s << source << "->" << buff;
-    m_strMessageList.push_back(s.str());
-  }
-  if (!m_bShowMessages) return;
-  _printf("MESSAGE (%s): %s",source, buff);
-}
-
-void QTOut::Warning(const char* source, const char* format, ...) {
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  va_end(args);
-
-  if (m_bRecordLists[1]) {
-    stringstream s;
-    s << source << "->" << buff;
-    m_strWarningList.push_back(s.str());
-  }
-  if (!m_bShowWarnings) return;
-  _printf("WARNING (%s): %s",source, buff);
-}
-
-void QTOut::Error(const char* source, const char* format, ...) {
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  va_end(args);
-
-  if (m_bRecordLists[0]) {
-    stringstream s;
-    s << source << "->" << buff;
-    m_strErrorList.push_back(s.str());
-  }
-  if (!m_bShowErrors) return;
-  _printf("ERROR (%s): %s",source, buff);
+  // Can't record on a channel.. we don't know what channel this is!
 }

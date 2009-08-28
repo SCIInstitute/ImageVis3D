@@ -42,8 +42,6 @@
 #include <cstdio>
 #include <sstream>
 
-using namespace std;
-
 #ifdef WIN32
   #include <windows.h>
   // undef stupid windows defines to max and min
@@ -65,91 +63,27 @@ QTLabelOut::QTLabelOut(QLabel *label, QDialog *parent) :
 QTLabelOut::~QTLabelOut() {
 }
 
-void QTLabelOut::printf(const char* format, ...) const
+void QTLabelOut::printf(enum DebugChannel channel, const char* source,
+                        const char* buff)
 {
-  if (!m_label) return;
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  va_end(args);
+  if(!m_label) return;
 
-  m_label->setText ( buff );
+  std::ostringstream text;
+  text << ChannelToString(channel) << " (" << source << ") " << buff;
+  m_label->setText(text.str().c_str());
   m_label->repaint();
 #ifdef DETECTED_OS_APPLE
   QCoreApplication::processEvents();
 #endif
 }
 
-void QTLabelOut::_printf(const char* format, ...) const
+void QTLabelOut::printf(const char *s) const
 {
-  if (!m_label) return;
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  va_end(args);
+  if(!m_label) return;
 
-  m_label->setText ( buff );
+  m_label->setText(s);
   m_label->repaint();
 #ifdef DETECTED_OS_APPLE
   QCoreApplication::processEvents();
 #endif
-}
-
-void QTLabelOut::Message(const char* , const char* format, ...) {
-  if (!m_bShowMessages) return;
-
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  va_end(args);
-
-  ReplaceSpecialChars(buff, 16384);
-  _printf(buff);
-}
-
-void QTLabelOut::Warning(const char* , const char* format, ...) {
-  if (!m_bShowWarnings) return;
-
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  va_end(args);
-
-  _printf("WARNING: %s",buff);
-}
-
-void QTLabelOut::Error(const char* , const char* format, ...) {
-  if (!m_bShowErrors) return;
-
-  char buff[16384];
-  va_list args;
-  va_start(args, format);
-#ifdef WIN32
-  _vsnprintf_s( buff, 16384, sizeof(buff), format, args);
-#else
-  vsnprintf( buff, sizeof(buff), format, args);
-#endif
-  va_end(args);
-
-  _printf("ERROR: %s", buff);
 }

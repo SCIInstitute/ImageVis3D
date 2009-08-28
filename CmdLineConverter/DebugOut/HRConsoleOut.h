@@ -51,10 +51,9 @@ class HRConsoleOut : public AbstrDebugOut{
     void SetClearOldMessage(bool bClearOldMessage) {m_bClearOldMessage = bClearOldMessage;}
     bool GetClearOldMessage() {return m_bClearOldMessage;}
 
-    virtual void printf(const char* format, ...) const;
-    virtual void Message(const char* source, const char* format, ...);
-    virtual void Warning(const char* source, const char* format, ...);
-    virtual void Error(const char* source, const char* format, ...);
+    virtual void printf(enum DebugChannel, const char* source,
+                        const char* msg);
+    virtual void printf(const char *s) const;
 
   private:
     size_t m_iLengthLastMessage;

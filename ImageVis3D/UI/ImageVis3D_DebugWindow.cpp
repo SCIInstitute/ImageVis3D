@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <sstream>
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
@@ -45,21 +46,26 @@
 using namespace std;
 
 void MainWindow::ShowVersions() {
-  m_MasterController.DebugOut()->printf("Tuvok Version: %s %s %s",TUVOK_VERSION, TUVOK_VERSION_TYPE, TUVOK_DETAILS);
+  std::ostringstream versions;
+  versions << "Tuvok Version: " << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE
+           << " " << TUVOK_DETAILS << "\n"
 #ifdef TUVOK_SVN_VERSION
-  m_MasterController.DebugOut()->printf("SVN Version: %i",int(TUVOK_SVN_VERSION));
+           << "SVN Version: " << int(TUVOK_SVN_VERSION) << "\n"
 #endif
-  m_MasterController.DebugOut()->printf("ImageVis3D Version: %s %s",IV3D_VERSION, IV3D_VERSION_TYPE);
+           << "ImageVis3D Version: " << IV3D_VERSION " " << IV3D_VERSION_TYPE
 #ifdef IV3D_SVN_VERSION
-  m_MasterController.DebugOut()->printf("SVN Version: %i",int(IV3D_SVN_VERSION));
+           << "\nSVN Version: " << int(IV3D_SVN_VERSION) << "\n"
 #endif
-  m_MasterController.DebugOut()->printf("QT Version: %s",QT_VERSION_STR);
+           << "Qt Version: " << QT_VERSION_STR;
+  m_MasterController.DebugOut()->printf(versions.str().c_str());
 }
 
 void MainWindow::ShowGPUInfo(bool bWithExtensions) {
 #if defined(_WIN32) && defined(USE_DIRECTX)
   if (DynamicDX::IsInitialized())
-    m_MasterController.DebugOut()->printf("Direct3DX10 Version %i",DynamicDX::GetD3DX10Version());
+    std::ostringstream d3dver;
+    d3dver << "Direct3DX10 Version " << DynamicDX::GetD3DX10Version();
+    m_MasterController.DebugOut()->printf(d3dver.str().c_str());
   else
     m_MasterController.DebugOut()->printf("DirectX 10 not initialzed");
 #endif
@@ -67,9 +73,15 @@ void MainWindow::ShowGPUInfo(bool bWithExtensions) {
   if (RenderWindow::GetVendorString() == "") {
     m_MasterController.DebugOut()->printf("For the GL specs please open a GL renderwindow first!");
   } else {
+    AbstrDebugOut *dbg = m_MasterController.DebugOut();
 
-    m_MasterController.DebugOut()->printf(RenderWindow::GetVendorString().c_str());
-    m_MasterController.DebugOut()->printf("Maximum 3D texture size %i",int(RenderWindow::GetMax3DTexDims()));
+    dbg->printf(RenderWindow::GetVendorString().c_str());
+    {
+      std::ostringstream tex_size;
+      tex_size << "Maximum 3D texture size "
+               << int(RenderWindow::GetMax3DTexDims());
+      dbg->printf(tex_size.str().c_str());
+    }
 
     if (!bWithExtensions) return;
 
@@ -77,10 +89,12 @@ void MainWindow::ShowGPUInfo(bool bWithExtensions) {
       m_MasterController.DebugOut()->printf("Supported GL extensions:");
 
       vector< string > vExtensions = SysTools::Tokenize(RenderWindowGL::GetExtString());
+      std::ostringstream ext;
       for (size_t i = 0;i<vExtensions.size();i++) {
-        m_MasterController.DebugOut()->printf("  %s",vExtensions[i].c_str());
+        ext << "  " << vExtensions[i] << "\n";
       }
-      m_MasterController.DebugOut()->printf("%i extensions found",int(vExtensions.size()));
+      ext << vExtensions.size() << " extensions found.";
+      dbg->printf(ext.str().c_str());
     }
   }
 }
@@ -98,21 +112,39 @@ void MainWindow::ListSupportedImages() {
 }
 
 void MainWindow::ShowSysInfo() {
-  m_MasterController.DebugOut()->printf("This is a %ubit build.", m_MasterController.MemMan()->GetBitWithMem());
+  std::ostringstream sysinfo;
+  const GPUMemMan *mm = m_MasterController.MemMan();
 
-  m_MasterController.DebugOut()->printf("CPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetCPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableCPUMem()/(1024*1024));
-  m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)",
-                                          m_MasterController.MemMan()->GetAllocatedCPUMem()/(1024*1024),
-                                          m_MasterController.MemMan()->GetAllocatedCPUMem());
-  if (m_MasterController.MemMan()->GetAllocatedCPUMem() < m_MasterController.MemMan()->GetCPUMem() )
-    m_MasterController.DebugOut()->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetCPUMem()-m_MasterController.MemMan()->GetAllocatedCPUMem())/(1024*1024));
+  const size_t one_megabyte = 1024*1024;
+  UINT64 cpu_mem = mm->GetCPUMem();
+  UINT64 max_cpu_mem = m_MasterController.SysInfo()->GetMaxUsableCPUMem();
 
-  m_MasterController.DebugOut()->printf("GPU Memory: Total %llu MB, Usable %llu MB", m_MasterController.MemMan()->GetGPUMem()/(1024*1024), m_MasterController.SysInfo()->GetMaxUsableGPUMem()/(1024*1024));
-  m_MasterController.DebugOut()->printf("    Used: %llu MB (%llu Bytes)",
-                                          m_MasterController.MemMan()->GetAllocatedGPUMem()/(1024*1024),
-                                          m_MasterController.MemMan()->GetAllocatedGPUMem());
-  if (m_MasterController.MemMan()->GetAllocatedGPUMem() < m_MasterController.MemMan()->GetGPUMem() )
-    m_MasterController.DebugOut()->printf("    Available: %llu MB", (m_MasterController.MemMan()->GetGPUMem()-m_MasterController.MemMan()->GetAllocatedGPUMem())/(1024*1024));
+  sysinfo << "This is a " << m_MasterController.MemMan()->GetBitWithMem()
+          << "\nCPU Memory: Total " << cpu_mem / one_megabyte << " MB, "
+          << "Usable " << max_cpu_mem << "MB\n"
+          << "    Used: " << mm->GetAllocatedCPUMem()/one_megabyte << " MB "
+          << "(" << mm->GetAllocatedCPUMem() << " bytes)\n";
+
+  if (m_MasterController.MemMan()->GetAllocatedCPUMem() <
+      m_MasterController.MemMan()->GetCPUMem()) {
+    sysinfo << "    Available: "
+            << (mm->GetCPUMem() - mm->GetAllocatedCPUMem())/one_megabyte
+            << "\n";
+  }
+
+  sysinfo << "GPU Memory: Total " << mm->GetGPUMem()/one_megabyte << " MB, "
+          << "Usable "
+          << m_MasterController.SysInfo()->GetMaxUsableGPUMem()/one_megabyte
+          << "    Used: " << mm->GetAllocatedGPUMem()/one_megabyte << " MB ("
+          << mm->GetAllocatedGPUMem() << " Bytes)";
+
+  if (m_MasterController.MemMan()->GetAllocatedGPUMem() <
+      m_MasterController.MemMan()->GetGPUMem()) {
+    sysinfo << "    Available: "
+            << (mm->GetGPUMem() - mm->GetAllocatedGPUMem())/one_megabyte
+            << "\n";
+  }
+  m_MasterController.DebugOut()->printf(sysinfo.str().c_str());
 }
 
 void MainWindow::ClearDebugWin() {
