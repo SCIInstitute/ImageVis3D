@@ -62,11 +62,11 @@ void MainWindow::ShowVersions() {
 
 void MainWindow::ShowGPUInfo(bool bWithExtensions) {
 #if defined(_WIN32) && defined(USE_DIRECTX)
-  if (DynamicDX::IsInitialized())
+  if (DynamicDX::IsInitialized()) {
     std::ostringstream d3dver;
     d3dver << "Direct3DX10 Version " << DynamicDX::GetD3DX10Version();
     m_MasterController.DebugOut()->printf(d3dver.str().c_str());
-  else
+  } else
     m_MasterController.DebugOut()->printf("DirectX 10 not initialzed");
 #endif
 
