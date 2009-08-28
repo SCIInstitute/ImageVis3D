@@ -63,13 +63,13 @@ QTLabelOut::QTLabelOut(QLabel *label, QDialog *parent) :
 QTLabelOut::~QTLabelOut() {
 }
 
-void QTLabelOut::printf(enum DebugChannel channel, const char* source,
+void QTLabelOut::printf(enum DebugChannel, const char*,
                         const char* buff)
 {
   if(!m_label) return;
 
   std::ostringstream text;
-  text << ChannelToString(channel) << " (" << source << ") " << buff;
+  text << buff;
   m_label->setText(text.str().c_str());
   m_label->repaint();
 #ifdef DETECTED_OS_APPLE
