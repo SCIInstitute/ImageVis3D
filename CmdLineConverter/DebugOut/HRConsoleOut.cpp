@@ -56,7 +56,11 @@ void HRConsoleOut::printf(enum DebugChannel channel, const char*,
                           const char* msg)
 {
   char buff[16384];
+#ifdef WIN32
+  strncpy_s(buff, 16384, msg, 16384);
+#else
   strncpy(buff, msg, 16384);
+#endif
 
   if (m_bClearOldMessage) {
     // Remove any newlines from the string.
