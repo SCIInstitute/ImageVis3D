@@ -288,8 +288,12 @@ void SettingsDlg::LODDelayChanged() {
 }
 
 void SettingsDlg::MinFramerateChanged() {
-  QString text= tr("%1 fps").arg(horizontalSlider_MinFramerate->value());
-  label_MinFrameRateDisplay->setText(text);
+  if (horizontalSlider_MinFramerate->value() > 0) {
+    QString text= tr("%1 fps").arg(horizontalSlider_MinFramerate->value());
+    label_MinFrameRateDisplay->setText(text);
+  } else {
+    label_MinFrameRateDisplay->setText(tr("< 1 fps"));
+  }
 }
 
 void SettingsDlg::ActTSChanged() {
