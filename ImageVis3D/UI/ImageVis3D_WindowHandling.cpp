@@ -335,7 +335,7 @@ void MainWindow::SetupWorkspaceMenu() {
   dockWidget_Stereo->toggleViewAction()->setShortcut(tr("Ctrl+Alt+8"));
 
   menu_Help->addAction(dockWidget_Debug->toggleViewAction());
-  dockWidget_Debug->toggleViewAction()->setShortcut(tr("Ctrl+D"));
+  dockWidget_Debug->toggleViewAction()->setShortcut(tr("Ctrl+Alt+D"));
 }
 
 void MainWindow::ClearWSMRUList()
