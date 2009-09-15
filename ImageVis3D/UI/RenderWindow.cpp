@@ -450,10 +450,10 @@ void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecis
   m_Renderer->SetBlendPrecision(eBlendPrecisionMode);
 }
 
-void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS) {
+void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, bool bUseAllMeans, float fScreenResDecFactor, float fSampleDecFactor, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS) {
   m_iTimeSliceMSecsActive   = iActiveTS;
   m_iTimeSliceMSecsInActive = iInactiveTS;
-  m_Renderer->SetPerfMeasures(iMinFramerate, iLODDelay);
+  m_Renderer->SetPerfMeasures(iMinFramerate, bUseAllMeans, fScreenResDecFactor, fSampleDecFactor, iLODDelay);
 }
 
 bool RenderWindow::CaptureFrame(const std::string& strFilename, bool bPreserveTransparency)

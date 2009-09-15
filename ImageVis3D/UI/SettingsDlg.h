@@ -58,6 +58,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     bool          GetQuickopen() const;
     unsigned int  GetMinFramerate() const;
+    bool          GetUseAllMeans() const;
     unsigned int  GetLODDelay() const;
     unsigned int  GetActiveTS() const;
     unsigned int  GetInactiveTS() const;
@@ -99,6 +100,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    const std::string& tempDir, 
                    bool bQuickopen,
                    unsigned int iMinFramerate,
+                   bool bUseAllMeans,
                    unsigned int iLODDelay,
                    unsigned int iActiveTS,
                    unsigned int iInactiveTS,

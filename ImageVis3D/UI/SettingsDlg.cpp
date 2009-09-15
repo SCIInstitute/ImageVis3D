@@ -144,6 +144,10 @@ unsigned int SettingsDlg::GetMinFramerate() const {
   return (unsigned int)(horizontalSlider_MinFramerate->value());
 }
 
+bool SettingsDlg::GetUseAllMeans() const {
+  return checkBox_useAllMeans->checkState() == Qt::Checked;
+}
+
 unsigned int SettingsDlg::GetLODDelay() const {
   return (unsigned int)(horizontalSlider_LODDelay->value());
 }
@@ -320,7 +324,7 @@ void SettingsDlg::SetLogoLabel() {
 }
 
 void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU, const std::string& tempDir, 
-                            bool bQuickopen, unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
+                            bool bQuickopen, unsigned int iMinFramerate, bool bUseAllMeans, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, UINT32 iLogLevel,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
@@ -336,6 +340,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
 
   checkBoxQuickload->setChecked(bQuickopen);
   horizontalSlider_MinFramerate->setValue(iMinFramerate);
+  checkBox_useAllMeans->setChecked(bUseAllMeans);
   horizontalSlider_LODDelay->setValue(iLODDelay);
   horizontalSlider_ActTS->setValue(iActiveTS);
   horizontalSlider_InactTS->setValue(iInactiveTS);

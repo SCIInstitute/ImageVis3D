@@ -92,6 +92,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bQuickopen = settings.value("Quickopen", m_bQuickopen).toBool();
     unsigned int iMinFramerate = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
     unsigned int iLODDelay = settings.value("LODDelay", m_iLODDelay).toUInt();
+    bool bUseAllMeans = settings.value("UseAllMeans", m_bUseAllMeans).toBool();
     unsigned int iActiveTS = settings.value("ActiveTS", m_iActiveTS).toUInt();
     unsigned int iInactiveTS = settings.value("InactiveTS", m_iInactiveTS).toUInt();
     bool bWriteLogFile = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
@@ -143,7 +144,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
 
     // hand data to form
     settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU, strTempDir,
-                          bQuickopen, iMinFramerate, iLODDelay, iActiveTS, iInactiveTS,
+                          bQuickopen, iMinFramerate, bUseAllMeans, iLODDelay, iActiveTS, iInactiveTS,
                           bWriteLogFile, bShowCrashDialog, string(strLogFileName.toAscii()), iLogLevel,
                           bShowVersionInTitle,
                           bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
@@ -165,6 +166,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.beginGroup("Performance");
       settings.setValue("Quickopen", settingsDlg.GetQuickopen());
       settings.setValue("MinFrameRate", settingsDlg.GetMinFramerate());
+      settings.setValue("UseAllMeans", settingsDlg.GetUseAllMeans());
       settings.setValue("LODDelay", settingsDlg.GetLODDelay());
       settings.setValue("ActiveTS", settingsDlg.GetActiveTS());
       settings.setValue("InactiveTS", settingsDlg.GetInactiveTS());
@@ -231,6 +233,7 @@ void MainWindow::ApplySettings() {
   m_bQuickopen     = settings.value("Quickopen", m_bQuickopen).toBool();
   m_iMinFramerate  = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
   m_iLODDelay      = settings.value("LODDelay", m_iLODDelay).toUInt();
+  m_bUseAllMeans   = settings.value("UseAllMeans", m_bUseAllMeans).toBool();
   m_iActiveTS      = settings.value("ActiveTS", m_iActiveTS).toUInt();
   m_iInactiveTS    = settings.value("InactiveTS", m_iInactiveTS).toUInt();
   m_bWriteLogFile  = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
@@ -306,7 +309,7 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
 
   renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
   renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
-  renderWin->SetPerfMeasures(m_iMinFramerate, m_iLODDelay/m_pRedrawTimer->interval(), m_iActiveTS, m_iInactiveTS);
+  renderWin->SetPerfMeasures(m_iMinFramerate, m_bUseAllMeans, 2.0f, 2.0f, m_iLODDelay/m_pRedrawTimer->interval(), m_iActiveTS, m_iInactiveTS);
   renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
   renderWin->SetAbsoluteViewLock(m_bAbsoluteViewLocks);
   renderWin->SetAvoidCompositing(m_bAvoidCompositing);

@@ -75,7 +75,7 @@ class RenderWindow
     }
     void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor);
     virtual void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
-    void SetPerfMeasures(unsigned int iMinFramerate, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
+    void SetPerfMeasures(unsigned int iMinFramerate, bool bUseAllMeans, float fScreenResDecFactor, float fSampleDecFactor, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
     bool CaptureFrame(const std::string& strFilename, bool bPreserveTransparency);
     bool CaptureSequenceFrame(const std::string& strFilename, bool bPreserveTransparency, std::string* strRealFilename=NULL);
     bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, bool bUseLOD, bool bPreserveTransparency, std::string* strRealFilename=NULL);

@@ -311,6 +311,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="checkBox_useAllMeans">
+            <property name="text">
+             <string>Also reduce screen resolution and sampling rate if needed</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QFrame" name="frame_5">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
