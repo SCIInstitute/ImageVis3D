@@ -46,8 +46,7 @@ void MainWindow::ToggleStereoRendering() {
         m_pActiveRenderWin->GetRenderer()->GetFullWindowmode() != AbstrRenderer::WM_3D) {
       QString strText = "Stereo rendering is only available in single view 3D mode. Do you want to change to that view now?";
       if (QMessageBox::Yes == QMessageBox::question(this, "3D Stereo", strText, QMessageBox::Yes, QMessageBox::No)) {
-        m_pActiveRenderWin->GetRenderer()->SetFullWindowmode(AbstrRenderer::WM_3D);
-        m_pActiveRenderWin->GetRenderer()->SetViewmode(AbstrRenderer::VM_SINGLE);
+        ToggleRenderWindowViewSingle();
       } else {
         checkBox_Stereo->setChecked(false);
         return;
