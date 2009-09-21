@@ -91,16 +91,16 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
 
   QIcon icon;
 
-  void* pData = NULL;
+  std::vector<char> vData;
   if (m_stackInfo.m_bIsJPEGEncoded) {
     tuvok::JPEG jpg(m_stackInfo.m_Elements[i]->m_strFileName,
                     dynamic_cast<SimpleDICOMFileInfo*>
                       (m_stackInfo.m_Elements[i])->GetOffsetToData());
     const char *jpg_data = jpg.data();
-    pData = new char[m_stackInfo.m_Elements[i]->GetDataSize()];
-    std::copy(jpg_data, jpg_data + jpg.size(), (char*)pData);
+    vData.resize(m_stackInfo.m_Elements[i]->GetDataSize());
+    std::copy(jpg_data, jpg_data + jpg.size(), &vData[0]);
   } else {
-    m_stackInfo.m_Elements[i]->GetData(&pData);
+    m_stackInfo.m_Elements[i]->GetData(vData);
   }
   QImage image(m_stackInfo.m_ivSize.x, m_stackInfo.m_ivSize.y, QImage::Format_RGB32);
 
@@ -108,7 +108,8 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
     switch (m_stackInfo.m_iAllocated) {
       case 8  :{
             unsigned int i = 0;
-            unsigned char* pCharData = (unsigned char*)pData;
+            unsigned char* pCharData = reinterpret_cast<unsigned char*>
+                                                       (&vData[0]);
             for (int y = 0;y<image.height();y++)
               for (int x = 0;x<image.width();x++) {
                 unsigned char value = (unsigned char)(std::min(255.0f,m_fScale*pCharData[i]));
@@ -118,7 +119,8 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
              } break;
       case 16 : {
             unsigned int i = 0;
-            unsigned short* pShortData = (unsigned short*)pData;
+            unsigned short* pShortData = reinterpret_cast<unsigned short*>
+                                                         (&vData[0]);
             for (int y = 0;y<image.height();y++)
               for (int x = 0;x<image.width();x++) {
                 unsigned char value = (unsigned char)(std::min(255.0f,255.0f*m_fScale*float(pShortData[i])/float((2<<m_stackInfo.m_iStored))));
@@ -133,7 +135,6 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
   }
   icon.addPixmap(QPixmap::fromImage(image), QIcon::Normal, QIcon::Off);
 
-  delete [] (char*)pData;
   setIcon(icon);
   update();
 }
