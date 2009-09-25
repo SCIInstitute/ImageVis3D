@@ -55,6 +55,8 @@ class TextfileOut;
 #include "DebugOut/QTOut.h"
 #include <UI/SettingsDlg.h>
 #include <UI/Welcome.h>
+#include <UI/MetadataDlg.h>
+
 
 #include <QtCore/QTimer>
 
@@ -91,7 +93,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     const std::string& GetTempDir() {return m_strTempDir;}
 
   public slots:
-    void SetRenderProgress(unsigned int iLODCount, unsigned int iCurrentCount, unsigned int iBrickCount, unsigned int iWorkingBrick);
+    void SetRenderProgressAnUpdateInfo(unsigned int iLODCount, 
+                                       unsigned int iCurrentCount, 
+                                       unsigned int iBrickCount, 
+                                       unsigned int iWorkingBrick,
+                                       unsigned int iMinLODIndex);
 
   protected slots:
     void TransferToI3M();
@@ -241,6 +247,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void PreserveTransparencyChanged();
 
     void ShowWelcomeScreen();
+    void DisplayMetadata();
     void SaveDefaultWorkspace();
     void SaveDefaultGeometry();
 
@@ -270,6 +277,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     unsigned int                              m_iLogLevel;
 
     WelcomeDialog*                            m_pWelcomeDialog;
+    MetadataDlg*                              m_pMetadataDialog;
 
     unsigned int                              m_iBlendPrecisionMode;
     bool                                      m_bPowerOfTwo;
@@ -330,6 +338,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     QString GetConvFilename();
 
+    void InitDockWidget(QDockWidget * v) const;
     void InitAllWorkspaces();
 
     void CheckSettings();
@@ -344,7 +353,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SetToggleClipEnabledLabel(bool);
     void SetToggleClipShownLabel(bool);
     void SetToggleClipLockedLabel(bool);
-    void ClearProgressView();
+    void ClearProgressViewAndInfo();
 
     void ToggleClearViewControls(int iRange);
     void SetFocusIsoValueSlider(int iValue, int iMaxValue);

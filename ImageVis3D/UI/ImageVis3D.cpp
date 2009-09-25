@@ -84,6 +84,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_strLogFileName("debugLog.txt"),
   m_iLogLevel(2),
   m_pWelcomeDialog(new WelcomeDialog(this, Qt::Tool)),
+  m_pMetadataDialog(new MetadataDlg(this, Qt::Tool)),
   m_iBlendPrecisionMode(0),
   m_bPowerOfTwo(true),
   m_bDownSampleTo8Bits(false),
@@ -153,7 +154,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_pRedrawTimer->start(20);
 
   CheckSettings();
-  ClearProgressView();
+  ClearProgressViewAndInfo();
 
   connect(m_pWelcomeDialog, SIGNAL(CheckUpdatesClicked()),   this, SLOT(CheckForUpdates()));
   connect(m_pWelcomeDialog, SIGNAL(OnlineVideoTutClicked()), this, SLOT(OnlineVideoTut()));
@@ -194,6 +195,9 @@ MainWindow::~MainWindow()
   delete m_pRedrawTimer;
 
   RemoveRunningFlag();
+
+  delete m_pMetadataDialog;
+  delete m_pWelcomeDialog;
 }
 
 void MainWindow::SetAndCheckRunningFlag() {

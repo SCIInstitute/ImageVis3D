@@ -310,7 +310,6 @@ void MainWindow::SetupWorkspaceMenu() {
 //  menu_Workspace->addAction(dockWidget_Filters->toggleViewAction());
 //  menu_Workspace->addSeparator();
 //  menu_Workspace->addAction(dockWidget_History->toggleViewAction());
-//  menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
 
   radioButton_ToolsLock->setVisible(false);
   radioButton_FiltersLock->setVisible(false);
@@ -333,6 +332,9 @@ void MainWindow::SetupWorkspaceMenu() {
   dockWidget_Recorder->toggleViewAction()->setShortcut(tr("Ctrl+Alt+7"));
   menu_Workspace->addAction(dockWidget_Stereo->toggleViewAction());
   dockWidget_Stereo->toggleViewAction()->setShortcut(tr("Ctrl+Alt+8"));
+  menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
+  dockWidget_Information->toggleViewAction()->setShortcut(tr("Ctrl+Alt+9"));
+
 
   menu_Help->addAction(dockWidget_Debug->toggleViewAction());
   dockWidget_Debug->toggleViewAction()->setShortcut(tr("Ctrl+Alt+D"));
@@ -387,34 +389,26 @@ void MainWindow::UpdateWSMRUActions()
 }
 
 
-void MainWindow::InitAllWorkspaces() {
-  dockWidget_Tools->setVisible(false);
-  dockWidget_Filters->setVisible(false);
-  dockWidget_History->setVisible(false);
-  dockWidget_Information->setVisible(false);
-  dockWidget_Recorder->setVisible(false);
-  dockWidget_LockOptions->setVisible(false);
-  dockWidget_RenderOptions->setVisible(false);
-  dockWidget_ProgressView->setVisible(false);
-  dockWidget_1DTrans->setVisible(false);
-  dockWidget_2DTrans->setVisible(false);
-  dockWidget_IsoSurface->setVisible(false);
-  dockWidget_Debug->setVisible(false);
-  dockWidget_Stereo->setVisible(false);
+void MainWindow::InitDockWidget(QDockWidget * v) const {
+  v->setVisible(false);
+  v->setFloating(true);
+  v->resize(v->minimumSize());
+}
 
-  dockWidget_Tools->setFloating(true);
-  dockWidget_Filters->setFloating(true);
-  dockWidget_History->setFloating(true);
-  dockWidget_Information->setFloating(true);
-  dockWidget_Recorder->setFloating(true);
-  dockWidget_LockOptions->setFloating(true);
-  dockWidget_RenderOptions->setFloating(true);
-  dockWidget_ProgressView->setFloating(true);
-  dockWidget_1DTrans->setFloating(true);
-  dockWidget_2DTrans->setFloating(true);
-  dockWidget_IsoSurface->setFloating(true);
-  dockWidget_Debug->setFloating(true);
-  dockWidget_Stereo->setFloating(true);
+void MainWindow::InitAllWorkspaces() {
+  InitDockWidget(dockWidget_Tools);
+  InitDockWidget(dockWidget_Filters);
+  InitDockWidget(dockWidget_History);
+  InitDockWidget(dockWidget_Information);
+  InitDockWidget(dockWidget_Recorder);
+  InitDockWidget(dockWidget_LockOptions);
+  InitDockWidget(dockWidget_RenderOptions);
+  InitDockWidget(dockWidget_ProgressView);
+  InitDockWidget(dockWidget_1DTrans);
+  InitDockWidget(dockWidget_2DTrans);
+  InitDockWidget(dockWidget_IsoSurface);
+  InitDockWidget(dockWidget_Debug);
+  InitDockWidget(dockWidget_Stereo);
 }
 
 
@@ -738,12 +732,21 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     SetToggleClipShownLabel(ren->ClipPlaneShown());
     SetToggleClipLockedLabel(ren->ClipPlaneLocked());
 
-    ClearProgressView();
+    ClearProgressViewAndInfo();
 
     ToggleClearViewControls(iRange);
     UpdateLockView();
 
     groupBox_ClipPlane->setVisible(m_pActiveRenderWin->GetRenderer()->CanDoClipPlane());
+
+    lineEdit_DatasetName->setText(QFileInfo(m_pActiveRenderWin->GetDatasetName()).fileName());
+    UINT64VECTOR3 vSize = m_pActiveRenderWin->GetRenderer()->GetDataset().GetDomainSize();
+    UINT64 iBitWidth = m_pActiveRenderWin->GetRenderer()->GetDataset().GetBitWidth();
+    QString strSize = tr("%1 x %2 x %3 (%4bit)").arg(vSize.x).arg(vSize.y).arg(vSize.z).arg(iBitWidth);
+    lineEdit_MaxSize->setText(strSize);
+    UINT64 iLevelCount = m_pActiveRenderWin->GetRenderer()->GetDataset().GetLODLevelCount();
+    QString strLevelCount = tr("%1").arg(iLevelCount);
+    lineEdit_MaxLODLevels->setText(strLevelCount);
   }
 }
 
@@ -816,7 +819,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
   DisableStereoWidgets();
 
-  ClearProgressView();
+  ClearProgressViewAndInfo();
 
   UpdateLockView();
 
@@ -1039,4 +1042,21 @@ void MainWindow::ShowWelcomeScreen() {
 
   m_pWelcomeDialog->setWindowIcon(windowIcon());
   m_pWelcomeDialog->show();
+}
+
+
+void MainWindow::DisplayMetadata() {
+
+  if (m_pActiveRenderWin)  {
+    const vector< pair <string, string > >& metadata = m_pActiveRenderWin->GetRenderer()->GetDataset().GetMetadata();
+
+    if (metadata.size() > 0) {
+      m_pMetadataDialog->setWindowIcon(windowIcon());
+      m_pMetadataDialog->SetMetadata(metadata);
+      m_pMetadataDialog->SetFilename(lineEdit_DatasetName->text());
+      m_pMetadataDialog->show();
+    } else {
+      QMessageBox::information(this, "Metadata viewer", "This file does not contain metadata!");     
+    }
+  }
 }

@@ -897,8 +897,10 @@ void RenderWindow::PaintRenderer()
       unsigned int iBrickCount        = m_Renderer->GetCurrentBrickCount();
       unsigned int iWorkingBrick      = m_Renderer->GetWorkingBrick();
 
-      m_MainWindow->SetRenderProgress(iLevelCount, iWorkingLevelCount,
-                                      iBrickCount, iWorkingBrick);
+      unsigned int iMinLODIndex       = m_Renderer->GetMinLODIndex();
+
+      m_MainWindow->SetRenderProgressAnUpdateInfo(iLevelCount, iWorkingLevelCount,
+                                      iBrickCount, iWorkingBrick, iMinLODIndex);
     }
   }
 }
