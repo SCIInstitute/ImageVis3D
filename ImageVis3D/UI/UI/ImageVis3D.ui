@@ -1931,6 +1931,12 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>20</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>1D Histogram.  The X axis represents your data; the Y axis details how many times that data value occurs in the dataset.</string>
        </property>
