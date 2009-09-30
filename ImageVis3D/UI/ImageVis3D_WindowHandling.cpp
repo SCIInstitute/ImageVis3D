@@ -747,7 +747,22 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     UINT64 iLevelCount = m_pActiveRenderWin->GetRenderer()->GetDataset().GetLODLevelCount();
     QString strLevelCount = tr("%1").arg(iLevelCount);
     lineEdit_MaxLODLevels->setText(strLevelCount);
+
+    horizontalSlider_maxLODLimit->setMaximum(iLevelCount-1);
+    horizontalSlider_minLODLimit->setMaximum(iLevelCount-1);
+
+    UINTVECTOR2 iLODLimits = m_pActiveRenderWin->GetRenderer()->GetLODLimits();
+
+    horizontalSlider_minLODLimit->setValue(iLODLimits.x);
+    horizontalSlider_maxLODLimit->setValue(iLODLimits.y);
+
+    UpdateMinMaxLODLimitLabel();
   }
+}
+
+void MainWindow::UpdateMinMaxLODLimitLabel() {
+  label_minLODLimit->setText(tr("Limit Minimum Quality by skipping the lowest %1 level(s)").arg(horizontalSlider_minLODLimit->value()));
+  label_maxLODLimit->setText(tr("Limit Maximum Quality by not rendering the highest %1 level(s)").arg(horizontalSlider_maxLODLimit->value()));
 }
 
 void MainWindow::ToggleClearViewControls(int iRange) {

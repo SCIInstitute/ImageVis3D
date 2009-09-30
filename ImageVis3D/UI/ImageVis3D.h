@@ -97,7 +97,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
                                        unsigned int iCurrentCount, 
                                        unsigned int iBrickCount, 
                                        unsigned int iWorkingBrick,
-                                       unsigned int iMinLODIndex);
+                                       unsigned int iMinLODIndex,
+                                       RenderWindow* pRenderWin);
 
   protected slots:
     void TransferToI3M();
@@ -252,6 +253,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SaveDefaultGeometry();
 
     void SaveAspectRatioToUVF();
+    void MinLODLimitChanged();
+    void MaxLODLimitChanged();
 
   private :
     QTimer*                                   m_pRedrawTimer;
@@ -389,6 +392,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ToggleLogFile();
 
     void UpdatePolyTypeLabel(int iCurrent);
+
+    void UpdateMinMaxLODLimitLabel();
 
     TextfileOut* m_pTextout;
 

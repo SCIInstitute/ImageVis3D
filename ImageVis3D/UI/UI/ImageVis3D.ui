@@ -4660,6 +4660,61 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QFrame" name="frame_14">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_21">
+           <item>
+            <widget class="QLabel" name="label_maxLODLimit">
+             <property name="text">
+              <string>Limit Maximum Quality by not rendering the highest 0 levels</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="horizontalSlider_maxLODLimit">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_25">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_28">
+           <item>
+            <widget class="QLabel" name="label_minLODLimit">
+             <property name="text">
+              <string>Limit Minimum Quality by skipping the lowest 0 levels</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="horizontalSlider_minLODLimit">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
@@ -5531,7 +5586,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1189</x>
-     <y>1297</y>
+     <y>1235</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5547,7 +5602,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1177</x>
-     <y>845</y>
+     <y>811</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5563,7 +5618,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1177</x>
-     <y>880</y>
+     <y>846</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5579,7 +5634,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1177</x>
-     <y>915</y>
+     <y>881</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5883,7 +5938,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1424</x>
-     <y>922</y>
+     <y>888</y>
     </hint>
     <hint type="destinationlabel">
      <x>687</x>
@@ -5899,7 +5954,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1424</x>
-     <y>854</y>
+     <y>820</y>
     </hint>
     <hint type="destinationlabel">
      <x>685</x>
@@ -5915,7 +5970,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1424</x>
-     <y>875</y>
+     <y>841</y>
     </hint>
     <hint type="destinationlabel">
      <x>683</x>
@@ -5931,7 +5986,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1424</x>
-     <y>896</y>
+     <y>862</y>
     </hint>
     <hint type="destinationlabel">
      <x>680</x>
@@ -6011,7 +6066,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1426</x>
-     <y>973</y>
+     <y>939</y>
     </hint>
     <hint type="destinationlabel">
      <x>390</x>
@@ -6043,7 +6098,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1417</x>
-     <y>1075</y>
+     <y>1041</y>
     </hint>
     <hint type="destinationlabel">
      <x>389</x>
@@ -6059,7 +6114,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1409</x>
-     <y>1329</y>
+     <y>1267</y>
     </hint>
     <hint type="destinationlabel">
      <x>390</x>
@@ -6075,11 +6130,11 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1189</x>
-     <y>1297</y>
+     <y>1235</y>
     </hint>
     <hint type="destinationlabel">
      <x>1443</x>
-     <y>1569</y>
+     <y>1526</y>
     </hint>
    </hints>
   </connection>
@@ -6091,7 +6146,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1426</x>
-     <y>997</y>
+     <y>963</y>
     </hint>
     <hint type="destinationlabel">
      <x>990</x>
@@ -6107,7 +6162,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1426</x>
-     <y>1021</y>
+     <y>987</y>
     </hint>
     <hint type="destinationlabel">
      <x>989</x>
@@ -6171,7 +6226,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1148</x>
-     <y>773</y>
+     <y>739</y>
     </hint>
     <hint type="destinationlabel">
      <x>1008</x>
@@ -6187,7 +6242,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1252</x>
-     <y>773</y>
+     <y>739</y>
     </hint>
     <hint type="destinationlabel">
      <x>1005</x>
@@ -6203,7 +6258,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1357</x>
-     <y>773</y>
+     <y>739</y>
     </hint>
     <hint type="destinationlabel">
      <x>1007</x>
@@ -6235,7 +6290,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1379</y>
+     <y>1317</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -6251,7 +6306,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1409</x>
-     <y>1424</y>
+     <y>1362</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -6267,7 +6322,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1495</y>
+     <y>1433</y>
     </hint>
     <hint type="destinationlabel">
      <x>1003</x>
@@ -6283,7 +6338,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1540</y>
+     <y>1478</y>
     </hint>
     <hint type="destinationlabel">
      <x>1004</x>
@@ -6299,7 +6354,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1585</y>
+     <y>1523</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -6491,7 +6546,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1205</x>
-     <y>846</y>
+     <y>812</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -6507,7 +6562,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1205</x>
-     <y>881</y>
+     <y>847</y>
     </hint>
     <hint type="destinationlabel">
      <x>957</x>
@@ -6523,7 +6578,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1205</x>
-     <y>916</y>
+     <y>882</y>
     </hint>
     <hint type="destinationlabel">
      <x>958</x>
@@ -6571,7 +6626,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1355</y>
+     <y>1293</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -6587,7 +6642,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1450</y>
+     <y>1388</y>
     </hint>
     <hint type="destinationlabel">
      <x>956</x>
@@ -6715,7 +6770,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1442</x>
-     <y>1300</y>
+     <y>1238</y>
     </hint>
     <hint type="destinationlabel">
      <x>955</x>
@@ -6763,7 +6818,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1175</x>
-     <y>1133</y>
+     <y>1099</y>
     </hint>
     <hint type="destinationlabel">
      <x>520</x>
@@ -6795,7 +6850,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1301</x>
-     <y>1133</y>
+     <y>1099</y>
     </hint>
     <hint type="destinationlabel">
      <x>717</x>
@@ -6811,7 +6866,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1426</x>
-     <y>1133</y>
+     <y>1099</y>
     </hint>
     <hint type="destinationlabel">
      <x>715</x>
@@ -7019,7 +7074,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1433</x>
-     <y>497</y>
+     <y>484</y>
     </hint>
     <hint type="destinationlabel">
      <x>1063</x>
@@ -7034,12 +7089,44 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SaveAspectRatioToUVF()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1400</x>
-     <y>765</y>
+     <x>1433</x>
+     <y>739</y>
     </hint>
     <hint type="destinationlabel">
      <x>1023</x>
      <y>756</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_minLODLimit</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>MinLODLimitChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1110</x>
+     <y>1861</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1027</x>
+     <y>1879</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_maxLODLimit</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>MaxLODLimitChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1164</x>
+     <y>1808</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1024</x>
+     <y>1831</y>
     </hint>
    </hints>
   </connection>
@@ -7133,5 +7220,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>TransferToI3M()</slot>
   <slot>DisplayMetadata()</slot>
   <slot>SaveAspectRatioToUVF()</slot>
+  <slot>MinLODLimitChanged()</slot>
+  <slot>MaxLODLimitChanged()</slot>
  </slots>
 </ui>

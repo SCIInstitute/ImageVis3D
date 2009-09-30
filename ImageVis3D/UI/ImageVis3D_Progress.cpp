@@ -55,7 +55,8 @@ void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
                                                unsigned int iCurrentCount, 
                                                unsigned int iBrickCount, 
                                                unsigned int iWorkingBrick,
-                                               unsigned int iMinLODIndex) {
+                                               unsigned int iMinLODIndex,
+                                               RenderWindow* pRenderWin) {
   if (dockWidget_ProgressView->isVisible()) {
     if (label_ProgressDesc->isVisible()) label_ProgressDesc->setVisible(false);
     if (!groupBox_RenderProgress->isVisible()) groupBox_RenderProgress->setVisible(true);
@@ -91,14 +92,26 @@ void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
 #endif
   }
 
-  if (m_pActiveRenderWin) {
-    UINT64VECTOR3 vSize = m_pActiveRenderWin->GetRenderer()->GetDataset().GetDomainSize(iMinLODIndex);
+  if (pRenderWin) {
+    UINT64VECTOR3 vSize = pRenderWin->GetRenderer()->GetDataset().GetDomainSize(iMinLODIndex);
     QString strSize = tr("%1 x %2 x %3").arg(vSize.x).arg(vSize.y).arg(vSize.z);
     if (strSize != lineEdit_SizeForView->text()) lineEdit_SizeForView->setText(strSize);
 
-    QString strLODLevel = tr("%1").arg(m_pActiveRenderWin->GetRenderer()->GetDataset().GetLODLevelCount()-iMinLODIndex);
+    QString strLODLevel = tr("%1").arg(pRenderWin->GetRenderer()->GetDataset().GetLODLevelCount()-iMinLODIndex);
     if (strLODLevel != lineEdit_LODLevelForCurrentView->text()) lineEdit_LODLevelForCurrentView->setText(strLODLevel);
   }
 
 
+}
+
+void MainWindow::MinLODLimitChanged() {
+  if (m_pActiveRenderWin) {
+    m_pActiveRenderWin->GetRenderer()->SetLODLimits(UINTVECTOR2(horizontalSlider_minLODLimit->value(),
+                                                                horizontalSlider_maxLODLimit->value()));
+    UpdateMinMaxLODLimitLabel();
+  }
+}
+
+void MainWindow::MaxLODLimitChanged() {
+  MinLODLimitChanged();   // that call updates both parameters
 }
