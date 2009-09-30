@@ -464,3 +464,25 @@ void MainWindow::MergeDatasets() {
     }
   }
 }
+
+void MainWindow::SaveAspectRatioToUVF() {
+  if (m_pActiveRenderWin) {
+
+    PleaseWaitDialog pleaseWait(this);
+    pleaseWait.SetText("Writing rescale factors to file...");
+    pleaseWait.AttachLabel(&m_MasterController);
+
+    if (!m_pActiveRenderWin->GetRenderer()->GetDataset().SaveRescaleFactors()) {
+      if (!m_bScriptMode) {
+        QMessageBox::warning(this, "File Error", "Unable to save rescale factors to file.", QMessageBox::Ok);
+      }
+    }
+
+    DOUBLEVECTOR3 vfRescaleFactors =  m_pActiveRenderWin->GetRenderer()->GetRescaleFactors();
+    doubleSpinBox_RescaleX->setValue(vfRescaleFactors.x);
+    doubleSpinBox_RescaleY->setValue(vfRescaleFactors.y);
+    doubleSpinBox_RescaleZ->setValue(vfRescaleFactors.z);
+
+    pleaseWait.close();
+  }
+}

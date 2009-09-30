@@ -251,6 +251,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SaveDefaultWorkspace();
     void SaveDefaultGeometry();
 
+    void SaveAspectRatioToUVF();
+
   private :
     QTimer*                                   m_pRedrawTimer;
     MasterController&                         m_MasterController;
