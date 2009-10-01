@@ -189,6 +189,11 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     new Q2DTransferFunction(m_MasterController, frame_2DTrans);
   verticalLayout_2DTrans->addWidget(m_2DTransferFunction);
 
+  m_pQLightPreview =
+    new QLightPreview(frame_lightPreview);
+  horizontalLayout_lightPreview->addWidget(m_pQLightPreview);
+
+
   connect(verticalSlider_2DTransHistScale, SIGNAL(valueChanged(int)),
     m_2DTransferFunction, SLOT(SetHistogramScale(int)));
   connect(verticalSlider_1DTransHistScale, SIGNAL(valueChanged(int)),
@@ -309,7 +314,6 @@ void MainWindow::SetupWorkspaceMenu() {
 //  menu_Workspace->addAction(dockWidget_Tools->toggleViewAction());
 //  menu_Workspace->addAction(dockWidget_Filters->toggleViewAction());
 //  menu_Workspace->addSeparator();
-//  menu_Workspace->addAction(dockWidget_History->toggleViewAction());
 
   radioButton_ToolsLock->setVisible(false);
   radioButton_FiltersLock->setVisible(false);
@@ -334,6 +338,8 @@ void MainWindow::SetupWorkspaceMenu() {
   dockWidget_Stereo->toggleViewAction()->setShortcut(tr("Ctrl+Alt+8"));
   menu_Workspace->addAction(dockWidget_Information->toggleViewAction());
   dockWidget_Information->toggleViewAction()->setShortcut(tr("Ctrl+Alt+9"));
+  menu_Workspace->addAction(dockWidget_Lighting->toggleViewAction());
+  dockWidget_Lighting->toggleViewAction()->setShortcut(tr("Ctrl+Alt+0"));
 
 
   menu_Help->addAction(dockWidget_Debug->toggleViewAction());
@@ -396,9 +402,9 @@ void MainWindow::InitDockWidget(QDockWidget * v) const {
 }
 
 void MainWindow::InitAllWorkspaces() {
-  InitDockWidget(dockWidget_Tools);
-  InitDockWidget(dockWidget_Filters);
-  InitDockWidget(dockWidget_History);
+  InitDockWidget(dockWidget_Tools); // no used at the moment
+  InitDockWidget(dockWidget_Filters); // no used at the moment
+  InitDockWidget(dockWidget_Lighting);
   InitDockWidget(dockWidget_Information);
   InitDockWidget(dockWidget_Recorder);
   InitDockWidget(dockWidget_LockOptions);
@@ -757,6 +763,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     horizontalSlider_maxLODLimit->setValue(iLODLimits.y);
 
     UpdateMinMaxLODLimitLabel();
+
+    UpdateColorWidget();
   }
 }
 
@@ -835,7 +843,8 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   DisableStereoWidgets();
 
   ClearProgressViewAndInfo();
-
+  
+  UpdateColorWidget();
   UpdateLockView();
 
   m_pActiveRenderWin = NULL;

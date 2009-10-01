@@ -1578,7 +1578,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_History">
+  <widget class="QDockWidget" name="dockWidget_Lighting">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
      <horstretch>0</horstretch>
@@ -1587,45 +1587,277 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>184</width>
-     <height>165</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle">
-    <string>History</string>
+    <string>Lighting</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0" colspan="2">
-      <widget class="QListWidget" name="listWidget"/>
-     </item>
      <item row="1" column="0">
-      <widget class="QPushButton" name="pushButton_Undo">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>23</height>
-        </size>
+      <widget class="QFrame" name="frame_27">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="text">
-        <string>Undo</string>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
        </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_32">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QFrame" name="frame_34">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_39">
+           <property name="margin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QFrame" name="frame_lightPreview">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>150</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>150</width>
+               <height>150</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_lightPreview">
+              <property name="margin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_19">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_30">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_38">
+           <item>
+            <widget class="QFrame" name="frame_31">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_33">
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_3">
+                <property name="text">
+                 <string>Intesity</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="horizontalSlider_ambientIntensity">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_ambientColor">
+             <property name="text">
+              <string>Ambient Color</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_32">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_34">
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>Intensity</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="horizontalSlider_diffuseIntensity">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_diffuseColor">
+             <property name="text">
+              <string>Diffuse Color</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_33">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_35">
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>Intesity</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="horizontalSlider_specularIntensity">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_specularColor">
+             <property name="text">
+              <string>Highlight Color</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_18">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="pushButton_Redo">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>23</height>
-        </size>
+     <item row="0" column="0">
+      <widget class="QFrame" name="frame_29">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="text">
-        <string>Redo</string>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_31">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QCheckBox" name="checkBox_Lighting">
+          <property name="toolTip">
+           <string>Compute per-voxel lighting</string>
+          </property>
+          <property name="text">
+           <string>Enable Lighting</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -3651,33 +3883,41 @@
             <number>6</number>
            </property>
            <item>
-            <widget class="QCheckBox" name="checkBox_Lighting">
-             <property name="toolTip">
-              <string>Compute per-voxel lighting</string>
+            <widget class="QFrame" name="frame_26">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
              </property>
-             <property name="text">
-              <string>Lighting</string>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBox_GBBox">
-             <property name="toolTip">
-              <string>Display the bounding box of the dataset</string>
+             <property name="lineWidth">
+              <number>0</number>
              </property>
-             <property name="text">
-              <string>Global Bounding Box</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBox_LBBox">
-             <property name="toolTip">
-              <string>Display per-brick bounding boxes.</string>
-             </property>
-             <property name="text">
-              <string>Local Bounding Box</string>
-             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_30">
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="checkBox_LBBox">
+                <property name="toolTip">
+                 <string>Display per-brick bounding boxes.</string>
+                </property>
+                <property name="text">
+                 <string>Local Bounding Box</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="checkBox_GBBox">
+                <property name="toolTip">
+                 <string>Display the bounding box of the dataset</string>
+                </property>
+                <property name="text">
+                 <string>Global Bounding Box</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
@@ -5178,9 +5418,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <tabstop>spinBox_FilterMedianRadius</tabstop>
   <tabstop>spinBox_FilterGaussianVariance</tabstop>
   <tabstop>spinBox_FilterGaussianKernel</tabstop>
-  <tabstop>listWidget</tabstop>
-  <tabstop>pushButton_Undo</tabstop>
-  <tabstop>pushButton_Redo</tabstop>
   <tabstop>checkBox_Red</tabstop>
   <tabstop>checkBox_Green</tabstop>
   <tabstop>checkBox_Blue</tabstop>
@@ -5586,7 +5823,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1189</x>
-     <y>1235</y>
+     <y>1216</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5602,7 +5839,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1177</x>
-     <y>811</y>
+     <y>801</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5618,7 +5855,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1177</x>
-     <y>846</y>
+     <y>836</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5634,7 +5871,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1177</x>
-     <y>881</y>
+     <y>871</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5938,7 +6175,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1424</x>
-     <y>888</y>
+     <y>878</y>
     </hint>
     <hint type="destinationlabel">
      <x>687</x>
@@ -5954,7 +6191,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1424</x>
-     <y>820</y>
+     <y>810</y>
     </hint>
     <hint type="destinationlabel">
      <x>685</x>
@@ -5970,7 +6207,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1424</x>
-     <y>841</y>
+     <y>831</y>
     </hint>
     <hint type="destinationlabel">
      <x>683</x>
@@ -5986,7 +6223,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1424</x>
-     <y>862</y>
+     <y>852</y>
     </hint>
     <hint type="destinationlabel">
      <x>680</x>
@@ -6018,7 +6255,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>182</x>
-     <y>695</y>
+     <y>548</y>
     </hint>
     <hint type="destinationlabel">
      <x>419</x>
@@ -6065,8 +6302,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetLighting(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1426</x>
-     <y>939</y>
+     <x>455</x>
+     <y>610</y>
     </hint>
     <hint type="destinationlabel">
      <x>390</x>
@@ -6098,7 +6335,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1417</x>
-     <y>1041</y>
+     <y>983</y>
     </hint>
     <hint type="destinationlabel">
      <x>389</x>
@@ -6114,7 +6351,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1409</x>
-     <y>1267</y>
+     <y>1248</y>
     </hint>
     <hint type="destinationlabel">
      <x>390</x>
@@ -6130,11 +6367,11 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1189</x>
-     <y>1235</y>
+     <y>1216</y>
     </hint>
     <hint type="destinationlabel">
      <x>1443</x>
-     <y>1526</y>
+     <y>1507</y>
     </hint>
    </hints>
   </connection>
@@ -6146,7 +6383,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1426</x>
-     <y>963</y>
+     <y>929</y>
     </hint>
     <hint type="destinationlabel">
      <x>990</x>
@@ -6161,8 +6398,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleLocalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1426</x>
-     <y>987</y>
+     <x>1238</x>
+     <y>929</y>
     </hint>
     <hint type="destinationlabel">
      <x>989</x>
@@ -6226,7 +6463,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1148</x>
-     <y>739</y>
+     <y>729</y>
     </hint>
     <hint type="destinationlabel">
      <x>1008</x>
@@ -6242,7 +6479,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1252</x>
-     <y>739</y>
+     <y>729</y>
     </hint>
     <hint type="destinationlabel">
      <x>1005</x>
@@ -6258,7 +6495,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1357</x>
-     <y>739</y>
+     <y>729</y>
     </hint>
     <hint type="destinationlabel">
      <x>1007</x>
@@ -6290,7 +6527,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1317</y>
+     <y>1298</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -6306,7 +6543,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1409</x>
-     <y>1362</y>
+     <y>1343</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -6322,7 +6559,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1433</y>
+     <y>1414</y>
     </hint>
     <hint type="destinationlabel">
      <x>1003</x>
@@ -6338,7 +6575,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1478</y>
+     <y>1459</y>
     </hint>
     <hint type="destinationlabel">
      <x>1004</x>
@@ -6354,7 +6591,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1523</y>
+     <y>1504</y>
     </hint>
     <hint type="destinationlabel">
      <x>1000</x>
@@ -6369,8 +6606,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>100</x>
-     <y>1083</y>
+     <x>110</x>
+     <y>906</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
@@ -6385,8 +6622,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>380</x>
-     <y>1107</y>
+     <x>390</x>
+     <y>930</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -6401,8 +6638,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>264</x>
-     <y>1155</y>
+     <x>274</x>
+     <y>978</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -6417,8 +6654,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>319</x>
-     <y>1131</y>
+     <x>329</x>
+     <y>954</y>
     </hint>
     <hint type="destinationlabel">
      <x>382</x>
@@ -6546,7 +6783,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1205</x>
-     <y>812</y>
+     <y>802</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -6562,7 +6799,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1205</x>
-     <y>847</y>
+     <y>837</y>
     </hint>
     <hint type="destinationlabel">
      <x>957</x>
@@ -6578,7 +6815,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1205</x>
-     <y>882</y>
+     <y>872</y>
     </hint>
     <hint type="destinationlabel">
      <x>958</x>
@@ -6626,7 +6863,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1293</y>
+     <y>1274</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -6642,7 +6879,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1443</x>
-     <y>1388</y>
+     <y>1369</y>
     </hint>
     <hint type="destinationlabel">
      <x>956</x>
@@ -6770,7 +7007,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1442</x>
-     <y>1238</y>
+     <y>1219</y>
     </hint>
     <hint type="destinationlabel">
      <x>955</x>
@@ -6818,7 +7055,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1175</x>
-     <y>1099</y>
+     <y>1041</y>
     </hint>
     <hint type="destinationlabel">
      <x>520</x>
@@ -6850,7 +7087,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1301</x>
-     <y>1099</y>
+     <y>1041</y>
     </hint>
     <hint type="destinationlabel">
      <x>717</x>
@@ -6866,7 +7103,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1426</x>
-     <y>1099</y>
+     <y>1041</y>
     </hint>
     <hint type="destinationlabel">
      <x>715</x>
@@ -7074,7 +7311,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1433</x>
-     <y>484</y>
+     <y>480</y>
     </hint>
     <hint type="destinationlabel">
      <x>1063</x>
@@ -7090,7 +7327,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1433</x>
-     <y>739</y>
+     <y>729</y>
     </hint>
     <hint type="destinationlabel">
      <x>1023</x>
@@ -7105,8 +7342,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>MinLODLimitChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1110</x>
-     <y>1861</y>
+     <x>1434</x>
+     <y>1849</y>
     </hint>
     <hint type="destinationlabel">
      <x>1027</x>
@@ -7121,12 +7358,108 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>MaxLODLimitChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1164</x>
-     <y>1808</y>
+     <x>1434</x>
+     <y>1786</y>
     </hint>
     <hint type="destinationlabel">
      <x>1024</x>
      <y>1831</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_ambientIntensity</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ChangeLightColors()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>244</x>
+     <y>638</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>650</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_diffuseIntensity</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ChangeLightColors()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>394</x>
+     <y>688</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>711</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_specularIntensity</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ChangeLightColors()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>361</x>
+     <y>748</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>468</x>
+     <y>769</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ambientColor</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>PickLightColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>668</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>468</x>
+     <y>681</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_diffuseColor</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>PickLightColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>325</x>
+     <y>719</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>468</x>
+     <y>742</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_specularColor</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>PickLightColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>313</x>
+     <y>774</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>468</x>
+     <y>797</y>
     </hint>
    </hints>
   </connection>
@@ -7222,5 +7555,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>SaveAspectRatioToUVF()</slot>
   <slot>MinLODLimitChanged()</slot>
   <slot>MaxLODLimitChanged()</slot>
+  <slot>ChangeLightColors()</slot>
+  <slot>PickLightColor()</slot>
  </slots>
 </ui>

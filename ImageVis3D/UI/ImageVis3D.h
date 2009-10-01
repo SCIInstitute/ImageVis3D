@@ -50,6 +50,7 @@ class TextfileOut;
 #include "RenderWindowDX.h"
 #endif
 
+#include "QLightPreview.h"
 #include "Q1DTransferFunction.h"
 #include "Q2DTransferFunction.h"
 #include "DebugOut/QTOut.h"
@@ -256,12 +257,16 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void MinLODLimitChanged();
     void MaxLODLimitChanged();
 
+    void PickLightColor();
+    void ChangeLightColors();
+
   private :
     QTimer*                                   m_pRedrawTimer;
     MasterController&                         m_MasterController;
     QString                                   m_strCurrentWorkspaceFilename;
     Q1DTransferFunction*                      m_1DTransferFunction;
     Q2DTransferFunction*                      m_2DTransferFunction;
+    QLightPreview*                            m_pQLightPreview;
     QGLWidget*                                m_glShareWidget;
     QTOut*                                    m_pDebugOut;
     static const unsigned int                 ms_iMaxRecentFiles = 5;
@@ -394,6 +399,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void UpdatePolyTypeLabel(int iCurrent);
 
     void UpdateMinMaxLODLimitLabel();
+    void UpdateColorWidget();
 
     TextfileOut* m_pTextout;
 

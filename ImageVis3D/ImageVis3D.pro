@@ -62,6 +62,7 @@ HEADERS += StdDefines.h \
            UI/Q1DTransferFunction.h \
            UI/Q2DTransferFunction.h \
            UI/QDataRadioButton.h \
+           UI/QLightPreview.h \
            UI/RenderWindow.h \
            UI/RenderWindowGL.h \
            UI/RAWDialog.h \
@@ -71,7 +72,7 @@ HEADERS += StdDefines.h \
            UI/I3MDialog.h \           
            UI/AboutDlg.h \
            UI/URLDlg.h \
-           UI/BugRepDlg.h \
+           UI/BugRepDlg.h \           
            UI/LODDlg.h \
            UI/MergeDlg.h \
            UI/CrashDetDlg.h \
@@ -124,6 +125,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/Q1DTransferFunction.cpp \
            UI/Q2DTransferFunction.cpp \
            UI/QDataRadioButton.cpp \
+           UI/QLightPreview.cpp \          
            UI/RenderWindowGL.cpp \
            UI/RenderWindow.cpp \
            UI/SettingsDlg.cpp \

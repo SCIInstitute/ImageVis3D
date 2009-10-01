@@ -155,6 +155,7 @@ MainWindow::MainWindow(MasterController& masterController,
 
   CheckSettings();
   ClearProgressViewAndInfo();
+  UpdateColorWidget();
 
   connect(m_pWelcomeDialog, SIGNAL(CheckUpdatesClicked()),   this, SLOT(CheckForUpdates()));
   connect(m_pWelcomeDialog, SIGNAL(OnlineVideoTutClicked()), this, SLOT(OnlineVideoTut()));
@@ -760,4 +761,79 @@ RenderWindow* MainWindow::WidgetToRenderWin(QWidget* w) {
   }
 #endif
   return NULL;
+}
+
+void MainWindow::PickLightColor() {
+  if (!m_pActiveRenderWin) return;
+
+  FLOATVECTOR4 cAmbient  = m_pQLightPreview->GetAmbient();
+  FLOATVECTOR4 cDiffuse  = m_pQLightPreview->GetDiffuse();
+  FLOATVECTOR4 cSpecular = m_pQLightPreview->GetSpecular();
+
+  QPushButton* source = qobject_cast<QPushButton*>(sender());
+
+  FLOATVECTOR4 prevColorVec;
+  if (source == pushButton_ambientColor)
+    prevColorVec = cAmbient;  
+  else if (source == pushButton_diffuseColor)
+    prevColorVec = cDiffuse;  
+  else if (source == pushButton_specularColor)
+    prevColorVec = cSpecular; 
+  else
+    return;
+
+  QColor prevColor(prevColorVec[0]*255, prevColorVec[1]*255, prevColorVec[2]*255);
+  QColor color = QColorDialog::getColor(prevColor, this);
+
+  if (color.isValid()) { 
+    prevColorVec[0] = color.red()/255.0f;
+    prevColorVec[1] = color.green()/255.0f;
+    prevColorVec[2] = color.blue()/255.0f;
+
+    if (source == pushButton_ambientColor)
+      cAmbient = prevColorVec;
+    else if (source == pushButton_diffuseColor)
+      cDiffuse = prevColorVec;
+    else if (source == pushButton_specularColor)
+      cSpecular = prevColorVec;
+    else
+      return;
+
+    m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular);
+    m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse, cSpecular);
+  }
+}
+
+void MainWindow::ChangeLightColors() {
+  if (!m_pActiveRenderWin) return;
+
+  FLOATVECTOR4 cAmbient  = m_pQLightPreview->GetAmbient();
+  FLOATVECTOR4 cDiffuse  = m_pQLightPreview->GetDiffuse();
+  FLOATVECTOR4 cSpecular = m_pQLightPreview->GetSpecular();
+
+  cAmbient[3] = horizontalSlider_ambientIntensity->value()/100.0f;
+  cDiffuse[3] = horizontalSlider_diffuseIntensity->value()/100.0f;
+  cSpecular[3] = horizontalSlider_specularIntensity->value()/100.0f;
+
+  m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular);
+  
+  m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse, cSpecular);
+}
+
+
+void MainWindow::UpdateColorWidget() {
+  FLOATVECTOR4 cAmbient(1,1,1,0.2f);
+  FLOATVECTOR4 cDiffuse(1,1,1,0.8f);
+  FLOATVECTOR4 cSpecular(1,1,1,1.0f);
+
+  if (m_pActiveRenderWin) {
+    cAmbient  = m_pActiveRenderWin->GetRenderer()->GetAmbient();
+    cDiffuse  = m_pActiveRenderWin->GetRenderer()->GetDiffuse();
+    cSpecular = m_pActiveRenderWin->GetRenderer()->GetSpecular();
+  }
+
+  m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular);
+  horizontalSlider_ambientIntensity->setValue(cAmbient[3]*100);
+  horizontalSlider_diffuseIntensity->setValue(cDiffuse[3]*100);
+  horizontalSlider_specularIntensity->setValue(cSpecular[3]*100);
 }
