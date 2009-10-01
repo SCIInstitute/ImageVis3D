@@ -41,7 +41,6 @@
 
 #include <QtGui/QPainter>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QPainter>
 
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/MathTools.h"
