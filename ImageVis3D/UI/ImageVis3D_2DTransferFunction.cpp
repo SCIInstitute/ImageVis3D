@@ -220,15 +220,19 @@ void MainWindow::Transfer2DChooseGradientColor() {
     m_2DTransferFunction->GetGradient(listWidget_Gradient->currentRow());
 
 
-  QColor color = QColorDialog::getColor(Qt::green, this);
-  s.second[0] = color.red()/255.0f;
-  s.second[1] = color.green()/255.0f;
-  s.second[2] = color.blue()/255.0f;
+  QColor prevColor(s.second[0]*255, s.second[1]*255, s.second[2]*255);
+  QColor color = QColorDialog::getColor(prevColor, this);
+
+  if (color.isValid()) { 
+    s.second[0] = color.red()/255.0f;
+    s.second[1] = color.green()/255.0f;
+    s.second[2] = color.blue()/255.0f;
 
 
-  m_2DTransferFunction->SetGradient(listWidget_Gradient->currentRow(),s);
+    m_2DTransferFunction->SetGradient(listWidget_Gradient->currentRow(),s);
 
-  Transfer2DUpdateGradientButtons();
+    Transfer2DUpdateGradientButtons();
+  }
 }
 
 void MainWindow::Transfer2DChooseGradientOpacity() {
@@ -248,16 +252,19 @@ void MainWindow::Transfer2DChooseGradientColorSimpleUI() {
 
   GradientStop s = m_2DTransferFunction->GetGradient(iIndex);
 
+  QColor prevColor(s.second[0]*255, s.second[1]*255, s.second[2]*255);
+  QColor color = QColorDialog::getColor(prevColor, this);
 
-  QColor color = QColorDialog::getColor(Qt::green, this);
-  s.second[0] = color.red()/255.0f;
-  s.second[1] = color.green()/255.0f;
-  s.second[2] = color.blue()/255.0f;
+  if (color.isValid()) { 
+    s.second[0] = color.red()/255.0f;
+    s.second[1] = color.green()/255.0f;
+    s.second[2] = color.blue()/255.0f;
 
 
-  m_2DTransferFunction->SetGradient(iIndex,s);
+    m_2DTransferFunction->SetGradient(iIndex,s);
 
-  Transfer2DUpdateGradientButtons();
+    Transfer2DUpdateGradientButtons();
+  }
 }
 
 void MainWindow::Transfer2DChooseGradientOpacitySimpleUI() {
