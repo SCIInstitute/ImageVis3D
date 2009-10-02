@@ -722,7 +722,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
     checkBox_Lighting->setChecked(m_pActiveRenderWin->GetRenderer()->GetUseLighting());
     SetSampleRateSlider(int(m_pActiveRenderWin->GetRenderer()->GetSampleRateModifier()*100));
-    int iRange = int(m_pActiveRenderWin->GetDynamicRange())-1;
+    int iRange = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
     SetIsoValueSlider(int(m_pActiveRenderWin->GetRenderer()->GetIsoValue()*iRange), iRange);
 
     DOUBLEVECTOR3 vfRescaleFactors =  m_pActiveRenderWin->GetRenderer()->GetRescaleFactors();
@@ -748,7 +748,14 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     lineEdit_DatasetName->setText(QFileInfo(m_pActiveRenderWin->GetDatasetName()).fileName());
     UINT64VECTOR3 vSize = m_pActiveRenderWin->GetRenderer()->GetDataset().GetDomainSize();
     UINT64 iBitWidth = m_pActiveRenderWin->GetRenderer()->GetDataset().GetBitWidth();
+
+    pair<double, double> pRange = m_pActiveRenderWin->GetRenderer()->GetDataset().GetRange();
+    
     QString strSize = tr("%1 x %2 x %3 (%4bit)").arg(vSize.x).arg(vSize.y).arg(vSize.z).arg(iBitWidth);
+    if (pRange.first<=pRange.second) {
+      strSize = strSize + tr(" Min=%1 Max=%2").arg(UINT64(pRange.first)).arg(UINT64(pRange.second));
+    }
+
     lineEdit_MaxSize->setText(strSize);
     UINT64 iLevelCount = m_pActiveRenderWin->GetRenderer()->GetDataset().GetLODLevelCount();
     QString strLevelCount = tr("%1").arg(iLevelCount);

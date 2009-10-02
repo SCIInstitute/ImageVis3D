@@ -484,15 +484,15 @@ void MainWindow::SetSampleRateSlider(int iValue) {
 
 void MainWindow::SetIsoValue(float fValue) {
   if (m_pActiveRenderWin != NULL) {
-    int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange())-1;
     m_pActiveRenderWin->SetIsoValue(fValue);
+    int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
     UpdateIsoValLabel(int(fValue*iMaxSize), iMaxSize);
   }
 }
 
 void MainWindow::SetIsoValue(int iValue) {
   if (m_pActiveRenderWin != NULL) {
-    int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange()-1);
+    int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second-1);
     m_pActiveRenderWin->SetIsoValue(float(iValue)/float(iMaxSize));
     UpdateIsoValLabel(iValue, iMaxSize);
   }
@@ -500,8 +500,8 @@ void MainWindow::SetIsoValue(int iValue) {
 
 void MainWindow::SetClearViewIsoValue(float fValue) {
   if (m_pActiveRenderWin != NULL) {
-    int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange())-1;
     m_pActiveRenderWin->SetCVIsoValue(fValue);
+    int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
     UpdateIsoValLabel(int(fValue*iMaxSize), iMaxSize);
   }
 }
@@ -519,7 +519,7 @@ void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {
 
 
 void MainWindow::SetFocusIsoValue(int iValue) {
-  int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange()-1);
+  int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second-1);
   if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetCVIsoValue(float(iValue)/float(iMaxSize));
   UpdateFocusIsoValLabel(iValue, iMaxSize);
 }

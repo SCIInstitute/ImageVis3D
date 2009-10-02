@@ -861,8 +861,13 @@ void RenderWindow::SetAbsoluteViewLock(bool bAbsoluteViewLock) {
   m_bAbsoluteViewLock = bAbsoluteViewLock;
 }
 
-size_t RenderWindow::GetDynamicRange() const {
-  return m_Renderer->Get1DTrans()->GetSize();
+pair<double,double> RenderWindow::GetDynamicRange() const {
+  pair<double,double> range = m_Renderer->GetDataset().GetRange();
+
+  if (range.first>range.second) 
+    return make_pair(0,double(m_Renderer->Get1DTrans()->GetSize()));
+  else
+    return range;
 }
 
 FLOATVECTOR3 RenderWindow::GetIsosufaceColor() const {
