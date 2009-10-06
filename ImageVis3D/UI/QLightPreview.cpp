@@ -48,12 +48,12 @@ using namespace std;
 
 QLightPreview::QLightPreview(QWidget *parent) :
   QWidget(parent),
-  m_iCachedHeight(0),
-  m_iCachedWidth(0),
-  m_pCachedImage(NULL),
   m_cAmbient(1.0f,1.0f,1.0f,0.4f),
   m_cDiffuse(1.0f,1.0f,1.0f,0.6f),
   m_cSpecular(1.0f,1.0f,1.0f,1.0f),
+  m_iCachedHeight(0),
+  m_iCachedWidth(0),
+  m_pCachedImage(NULL),
   m_bBackdropCacheUptodate(false)
 {
 }
