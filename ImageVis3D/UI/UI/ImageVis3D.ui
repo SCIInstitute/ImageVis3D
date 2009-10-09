@@ -1587,8 +1587,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>271</width>
+     <height>262</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -1684,10 +1684,13 @@
         <item>
          <widget class="QFrame" name="frame_30">
           <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
+           <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_38">
            <item>
@@ -1724,6 +1727,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_ambientColor">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
              <property name="text">
               <string>Ambient Color</string>
              </property>
@@ -1763,6 +1772,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_diffuseColor">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
              <property name="text">
               <string>Diffuse Color</string>
              </property>
@@ -1802,6 +1817,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_specularColor">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>23</height>
+              </size>
+             </property>
              <property name="text">
               <string>Highlight Color</string>
              </property>
