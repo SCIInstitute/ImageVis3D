@@ -725,8 +725,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   checkBox_Lighting->setChecked(ren->GetUseLighting());
   SetSampleRateSlider(int(ren->GetSampleRateModifier()*100));
   int iRange = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
-  SetIsoValueSlider(int(m_pActiveRenderWin->GetRenderer()->
-                                            GetIsoValue()*iRange), iRange);
+  SetIsoValueSlider(int(ren->GetIsoValue()), iRange);
 
   DOUBLEVECTOR3 vfRescaleFactors = ren->GetRescaleFactors();
   doubleSpinBox_RescaleX->setValue(vfRescaleFactors.x);

@@ -864,7 +864,8 @@ void RenderWindow::SetAbsoluteViewLock(bool bAbsoluteViewLock) {
 pair<double,double> RenderWindow::GetDynamicRange() const {
   pair<double,double> range = m_Renderer->GetDataset().GetRange();
 
-  if (range.first>range.second) 
+  // Old UVFs lack a maxmin data block, && will say the min > the max.
+  if (range.first > range.second)
     return make_pair(0,double(m_Renderer->Get1DTrans()->GetSize()));
   else
     return range;

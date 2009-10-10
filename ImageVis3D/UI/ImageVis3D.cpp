@@ -482,18 +482,26 @@ void MainWindow::SetSampleRateSlider(int iValue) {
   UpdateSampleRateLabel(iValue);
 }
 
+float clampf(float val, float a, float b)
+{
+  return std::max(a, std::min(b, val));
+}
+
+// Script command to update isovalue.
 void MainWindow::SetIsoValue(float fValue) {
   if (m_pActiveRenderWin != NULL) {
-    m_pActiveRenderWin->SetIsoValue(fValue);
     int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
-    UpdateIsoValLabel(int(fValue*iMaxSize), iMaxSize);
+    fValue = clampf(fValue, 0.0f, 1.0f);
+    m_pActiveRenderWin->SetIsoValue(fValue * iMaxSize);
+    UpdateIsoValLabel(int(fValue * iMaxSize), iMaxSize);
   }
 }
 
+// UI command to update isovalue.
 void MainWindow::SetIsoValue(int iValue) {
   if (m_pActiveRenderWin != NULL) {
+    m_pActiveRenderWin->SetIsoValue(float(iValue));
     int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second-1);
-    m_pActiveRenderWin->SetIsoValue(float(iValue)/float(iMaxSize));
     UpdateIsoValLabel(iValue, iMaxSize);
   }
 }
