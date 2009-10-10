@@ -603,8 +603,6 @@ void MainWindow::ToggleLocalBBox(bool bRenderBBox)
 
 void MainWindow::ToggleClipPlane(bool bClip)
 {
-  m_MasterController.DebugOut()->Message("MainWindow::ToggleClipPlane",
-                                         "clip %d", static_cast<int>(bClip));
   RenderWindow *rw = m_pActiveRenderWin;
   if(rw == NULL) { return; }
 
@@ -620,8 +618,6 @@ void MainWindow::ToggleClipPlane(bool bClip)
 
 void MainWindow::ClipToggleShow(bool bShow)
 {
-  m_MasterController.DebugOut()->Message(_func_, "shown: %d",
-                                         static_cast<int>(bShow));
   RenderWindow *rw = m_pActiveRenderWin;
   if(rw == NULL) { return; }
 
@@ -631,8 +627,6 @@ void MainWindow::ClipToggleShow(bool bShow)
 
 void MainWindow::ClipToggleLock(bool bLock)
 {
-  m_MasterController.DebugOut()->Message(_func_, "locked: %d",
-                                         static_cast<int>(bLock));
   RenderWindow *rw = m_pActiveRenderWin;
   if(rw == NULL) { return; }
 
