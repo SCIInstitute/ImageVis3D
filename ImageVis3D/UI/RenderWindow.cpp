@@ -716,7 +716,7 @@ void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
 
 void RenderWindow::SetCVIsoValue(float fIsoVal, bool bPropagate) {
   m_Renderer->SetCVIsoValue(fIsoVal);
-  if (bPropagate){
+  if (bPropagate) {
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVIsoValue(fIsoVal, false);
     }

@@ -677,102 +677,122 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   // to make sure we are only calling this code if the renderwindow changes,
   // and not just if the same window gets reactivated, keep track of the
   // last active window
-  if (m_pActiveRenderWin != sender) {
-    m_pActiveRenderWin = sender;
-    m_MasterController.DebugOut()->
-      Message("MainWindow::RenderWindowActive",
-        "ACK that %s is now active",
-        sender->GetDatasetName().toStdString().c_str());
-
-    if (!CheckRenderwindowFitness(m_pActiveRenderWin)) {
-      QMdiSubWindow* w = ActiveSubWindow();
-      if (w) w->close();
-      return;
-    }
-
-    MESSAGE("Getting 1D Transfer Function.");
-    m_1DTransferFunction->
-      SetData(&sender->GetRenderer()->GetDataset().Get1DHistogram(),
-              sender->GetRenderer()->Get1DTrans());
-    m_1DTransferFunction->update();
-    MESSAGE("Getting 2D Transfer Function.");
-    m_2DTransferFunction->
-      SetData(&sender->GetRenderer()->GetDataset().Get2DHistogram(),
-              sender->GetRenderer()->Get2DTrans());
-    m_2DTransferFunction->update();
-
-    MESSAGE("Getting other Renderwindow parameters.");
-    AbstrRenderer::ERenderMode e = m_pActiveRenderWin->GetRendermode();
-
-    switch (e) {
-      case AbstrRenderer::RM_1DTRANS    : Use1DTrans(); break;
-      case AbstrRenderer::RM_2DTRANS    : Use2DTrans(); break;
-      case AbstrRenderer::RM_ISOSURFACE : UseIso(); break;
-      default : m_MasterController.DebugOut()->
-                    Error("MainWindow::RenderWindowActive",
-                          "unknown rendermode from %s",
-                          sender->GetDatasetName().toStdString().c_str());
-                break;
-    }
-
-    EnableStereoWidgets();
-    checkBox_Stereo->setChecked(m_pActiveRenderWin->GetRenderer()->GetStereo());
-    horizontalSlider_EyeDistance->setValue(int(m_pActiveRenderWin->GetRenderer()->GetStereoEyeDist()*100));
-    horizontalSlider_FocalLength->setValue(int(m_pActiveRenderWin->GetRenderer()->GetStereoFocalLength()*10));
-
-    checkBox_Lighting->setChecked(m_pActiveRenderWin->GetRenderer()->GetUseLighting());
-    SetSampleRateSlider(int(m_pActiveRenderWin->GetRenderer()->GetSampleRateModifier()*100));
-    int iRange = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
-    SetIsoValueSlider(int(m_pActiveRenderWin->GetRenderer()->GetIsoValue()*iRange), iRange);
-
-    DOUBLEVECTOR3 vfRescaleFactors =  m_pActiveRenderWin->GetRenderer()->GetRescaleFactors();
-    doubleSpinBox_RescaleX->setValue(vfRescaleFactors.x);
-    doubleSpinBox_RescaleY->setValue(vfRescaleFactors.y);
-    doubleSpinBox_RescaleZ->setValue(vfRescaleFactors.z);
-
-    SetToggleGlobalBBoxLabel(m_pActiveRenderWin->GetRenderer()->GetGlobalBBox());
-    SetToggleLocalBBoxLabel(m_pActiveRenderWin->GetRenderer()->GetLocalBBox());
-
-    AbstrRenderer *const ren = m_pActiveRenderWin->GetRenderer();
-    SetToggleClipEnabledLabel(ren->ClipPlaneEnabled());
-    SetToggleClipShownLabel(ren->ClipPlaneShown());
-    SetToggleClipLockedLabel(ren->ClipPlaneLocked());
-
-    ClearProgressViewAndInfo();
-
-    ToggleClearViewControls(iRange);
-    UpdateLockView();
-
-    groupBox_ClipPlane->setVisible(m_pActiveRenderWin->GetRenderer()->CanDoClipPlane());
-
-    lineEdit_DatasetName->setText(QFileInfo(m_pActiveRenderWin->GetDatasetName()).fileName());
-    UINT64VECTOR3 vSize = m_pActiveRenderWin->GetRenderer()->GetDataset().GetDomainSize();
-    UINT64 iBitWidth = m_pActiveRenderWin->GetRenderer()->GetDataset().GetBitWidth();
-
-    pair<double, double> pRange = m_pActiveRenderWin->GetRenderer()->GetDataset().GetRange();
-    
-    QString strSize = tr("%1 x %2 x %3 (%4bit)").arg(vSize.x).arg(vSize.y).arg(vSize.z).arg(iBitWidth);
-    if (pRange.first<=pRange.second) {
-      strSize = strSize + tr(" Min=%1 Max=%2").arg(UINT64(pRange.first)).arg(UINT64(pRange.second));
-    }
-
-    lineEdit_MaxSize->setText(strSize);
-    UINT64 iLevelCount = m_pActiveRenderWin->GetRenderer()->GetDataset().GetLODLevelCount();
-    QString strLevelCount = tr("%1").arg(iLevelCount);
-    lineEdit_MaxLODLevels->setText(strLevelCount);
-
-    horizontalSlider_maxLODLimit->setMaximum(iLevelCount-1);
-    horizontalSlider_minLODLimit->setMaximum(iLevelCount-1);
-
-    UINTVECTOR2 iLODLimits = m_pActiveRenderWin->GetRenderer()->GetLODLimits();
-
-    horizontalSlider_minLODLimit->setValue(iLODLimits.x);
-    horizontalSlider_maxLODLimit->setValue(iLODLimits.y);
-
-    UpdateMinMaxLODLimitLabel();
-
-    UpdateColorWidget();
+  if(m_pActiveRenderWin == sender) {
+    return;
   }
+
+  m_pActiveRenderWin = sender;
+  m_MasterController.DebugOut()->
+    Message("MainWindow::RenderWindowActive",
+      "ACK that %s is now active",
+      sender->GetDatasetName().toStdString().c_str());
+
+  if (!CheckRenderwindowFitness(m_pActiveRenderWin)) {
+    QMdiSubWindow* w = ActiveSubWindow();
+    if (w) w->close();
+    return;
+  }
+
+  MESSAGE("Getting 1D Transfer Function.");
+  m_1DTransferFunction->
+    SetData(&sender->GetRenderer()->GetDataset().Get1DHistogram(),
+            sender->GetRenderer()->Get1DTrans());
+  m_1DTransferFunction->update();
+  MESSAGE("Getting 2D Transfer Function.");
+  m_2DTransferFunction->
+    SetData(&sender->GetRenderer()->GetDataset().Get2DHistogram(),
+            sender->GetRenderer()->Get2DTrans());
+  m_2DTransferFunction->update();
+
+  MESSAGE("Getting other Renderwindow parameters.");
+  AbstrRenderer::ERenderMode e = m_pActiveRenderWin->GetRendermode();
+
+  switch (e) {
+    case AbstrRenderer::RM_1DTRANS    : Use1DTrans(); break;
+    case AbstrRenderer::RM_2DTRANS    : Use2DTrans(); break;
+    case AbstrRenderer::RM_ISOSURFACE : UseIso(); break;
+    default : m_MasterController.DebugOut()->
+                  Error("MainWindow::RenderWindowActive",
+                        "unknown rendermode from %s",
+                        sender->GetDatasetName().toStdString().c_str());
+              break;
+  }
+
+  EnableStereoWidgets();
+  checkBox_Stereo->setChecked(m_pActiveRenderWin->GetRenderer()->GetStereo());
+  horizontalSlider_EyeDistance->setValue(int(m_pActiveRenderWin->
+                                             GetRenderer()->
+                                             GetStereoEyeDist()*100));
+  horizontalSlider_FocalLength->setValue(int(m_pActiveRenderWin->
+                                             GetRenderer()->
+                                             GetStereoFocalLength()*10));
+
+  checkBox_Lighting->setChecked(m_pActiveRenderWin->
+                                GetRenderer()->GetUseLighting());
+  SetSampleRateSlider(int(m_pActiveRenderWin->GetRenderer()->
+                                              GetSampleRateModifier()*100));
+  int iRange = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
+  SetIsoValueSlider(int(m_pActiveRenderWin->GetRenderer()->
+                                            GetIsoValue()*iRange), iRange);
+
+  DOUBLEVECTOR3 vfRescaleFactors =  m_pActiveRenderWin->GetRenderer()->
+                                                        GetRescaleFactors();
+  doubleSpinBox_RescaleX->setValue(vfRescaleFactors.x);
+  doubleSpinBox_RescaleY->setValue(vfRescaleFactors.y);
+  doubleSpinBox_RescaleZ->setValue(vfRescaleFactors.z);
+
+  SetToggleGlobalBBoxLabel(m_pActiveRenderWin->GetRenderer()->GetGlobalBBox());
+  SetToggleLocalBBoxLabel(m_pActiveRenderWin->GetRenderer()->GetLocalBBox());
+
+  AbstrRenderer *const ren = m_pActiveRenderWin->GetRenderer();
+  SetToggleClipEnabledLabel(ren->ClipPlaneEnabled());
+  SetToggleClipShownLabel(ren->ClipPlaneShown());
+  SetToggleClipLockedLabel(ren->ClipPlaneLocked());
+
+  ClearProgressViewAndInfo();
+
+  ToggleClearViewControls(iRange);
+  UpdateLockView();
+
+  groupBox_ClipPlane->setVisible(m_pActiveRenderWin->GetRenderer()->
+                                                     CanDoClipPlane());
+
+  lineEdit_DatasetName->setText(QFileInfo(m_pActiveRenderWin->
+                                          GetDatasetName()).fileName());
+  UINT64VECTOR3 vSize = m_pActiveRenderWin->GetRenderer()->GetDataset().
+                                                           GetDomainSize();
+  UINT64 iBitWidth = m_pActiveRenderWin->GetRenderer()->GetDataset().
+                                                        GetBitWidth();
+
+  pair<double, double> pRange = m_pActiveRenderWin->GetRenderer()->
+                                                    GetDataset().GetRange();
+    
+  QString strSize = tr("%1 x %2 x %3 (%4bit)").arg(vSize.x).
+                                               arg(vSize.y).
+                                               arg(vSize.z).
+                                               arg(iBitWidth);
+  if (pRange.first<=pRange.second) {
+    strSize = strSize + tr(" Min=%1 Max=%2").arg(UINT64(pRange.first)).
+                                             arg(UINT64(pRange.second));
+  }
+
+  lineEdit_MaxSize->setText(strSize);
+  UINT64 iLevelCount = m_pActiveRenderWin->GetRenderer()->GetDataset().
+                                                          GetLODLevelCount();
+  QString strLevelCount = tr("%1").arg(iLevelCount);
+  lineEdit_MaxLODLevels->setText(strLevelCount);
+
+  horizontalSlider_maxLODLimit->setMaximum(iLevelCount-1);
+  horizontalSlider_minLODLimit->setMaximum(iLevelCount-1);
+
+  UINTVECTOR2 iLODLimits = m_pActiveRenderWin->GetRenderer()->GetLODLimits();
+
+  horizontalSlider_minLODLimit->setValue(iLODLimits.x);
+  horizontalSlider_maxLODLimit->setValue(iLODLimits.y);
+
+  UpdateMinMaxLODLimitLabel();
+
+  UpdateColorWidget();
 }
 
 void MainWindow::UpdateMinMaxLODLimitLabel() {
