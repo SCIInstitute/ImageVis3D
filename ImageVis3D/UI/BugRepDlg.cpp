@@ -150,7 +150,7 @@ bool BugRepDlg::Validate(std::string &err) const
     err = "No description given.  Bug reports without descriptions are not "
           "useful for developers.  Please at least give a sentence mentioning "
           "what went wrong, and include what you were doing with the program "
-          "when you got this erroneous behavior.";
+          "when you discovered this erroneous behavior.";
     return false;
   }
   return true;
