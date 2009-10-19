@@ -91,10 +91,10 @@ function version
         grep "IV3D_MAJOR" ImageVis3D/StdDefines.h | \
         awk '{ print $3 }'`
     export IV3D_MINOR=` \
-        grep "IV3D_MAJOR" ImageVis3D/StdDefines.h | \
+        grep "IV3D_MINOR" ImageVis3D/StdDefines.h | \
         awk '{ print $3 }'`
     export IV3D_PATCH=` \
-        grep "IV3D_MAJOR" ImageVis3D/StdDefines.h | \
+        grep "IV3D_PATCH" ImageVis3D/StdDefines.h | \
         awk '{ print $3 }'`
 
     export TUVOK_MAJOR=` \
