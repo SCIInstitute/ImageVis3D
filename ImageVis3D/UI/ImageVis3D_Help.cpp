@@ -38,6 +38,7 @@
 #include "../Tuvok/Basics/StdDefines.h"
 #include <algorithm>
 #include <cstdio>
+#include <string>
 
 #ifdef DETECTED_OS_LINUX
 # include <libgen.h>
@@ -486,7 +487,15 @@ void MainWindow::ReportABug(const string& strFile) {
   b.SetUsername(string(settings.value("Username", "").toString().toAscii()));
   b.SetUserMail(string(settings.value("UserMail", "").toString().toAscii()));
 
-  if (b.exec() == QDialog::Accepted) {
+  while(b.exec() != QDialog::Rejected) {
+    {
+      std::string err;
+      if(!b.Validate(err)) {
+        err = "An error occurred while validating the bug report.\n\n" + err;
+        QMessageBox::critical(this, "Validation Error", err.c_str());
+        continue;
+      }
+    }
     settings.setValue("SubmitSysinfo", b.SubmitSysinfo());
     settings.setValue("SubmitLog", b.SubmitLog());
     settings.setValue("Username", b.GetUsername().c_str());
@@ -615,5 +624,6 @@ void MainWindow::ReportABug(const string& strFile) {
       ShowWarningDialog("Warning", "Another FTP transfer is still in progress, aborting.");
       return;
     }
+    return;
   }
 }

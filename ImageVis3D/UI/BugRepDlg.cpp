@@ -141,3 +141,17 @@ void BugRepDlg::SetUsername(string strName) {
 void BugRepDlg::SetUserMail(string strMail) {
   lineEdit_email->setText(strMail.c_str());
 }
+
+/// @return false if the data to submit are invalid.
+bool BugRepDlg::Validate(std::string &err) const
+{
+  // pretty simple for now: just don't allow empty descriptions.
+  if(this->GetDescription().empty()) {
+    err = "No description given.  Bug reports without descriptions are not "
+          "useful for developers.  Please at least give a sentence mentioning "
+          "what went wrong, and include what you were doing with the program "
+          "when you got this erroneous behavior.";
+    return false;
+  }
+  return true;
+}

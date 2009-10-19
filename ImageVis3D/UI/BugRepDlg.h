@@ -62,9 +62,13 @@ class BugRepDlg : public QDialog, protected Ui_BugRepDlg
     void SetUsername(std::string strName);
     void SetUserMail(std::string strMail);
 
+    /// @return false if the data to submit are invalid.
+    bool Validate(std::string &err) const;
+
   protected slots:
     void AddFiles();
     void RemoveFile();
+
 };
 
 #endif // BUGREPDLG_H
