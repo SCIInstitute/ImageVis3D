@@ -832,7 +832,7 @@ void MainWindow::UpdateColorWidget() {
   FLOATVECTOR4 cDiffuse(1,1,1,0.8f);
   FLOATVECTOR4 cSpecular(1,1,1,1.0f);
 
-  if (m_pActiveRenderWin) {
+  if (m_pActiveRenderWin && m_pActiveRenderWin->GetRenderer()) {
     cAmbient  = m_pActiveRenderWin->GetRenderer()->GetAmbient();
     cDiffuse  = m_pActiveRenderWin->GetRenderer()->GetDiffuse();
     cSpecular = m_pActiveRenderWin->GetRenderer()->GetSpecular();
