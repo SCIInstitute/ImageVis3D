@@ -53,6 +53,7 @@ BugRepDlg::BugRepDlg(QWidget* parent, Qt::WindowFlags flags, const string& strSu
   if (strSubmitFile != "") {
     listWidget_files->addItem(strSubmitFile.c_str());
   }
+  setSizeGripEnabled(true);
 }
 
 BugRepDlg::~BugRepDlg(void)
