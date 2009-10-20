@@ -9,12 +9,17 @@ rm -fr ${PREFIX}/bin/qmake ${PREFIX}/lib/libQt* ${PREFIX}/lib/Qt*
 rm -fr ${PREFIX}/include/Qt*
 
 tarball="${QTDIR}.tar"
+
 echo "Extracting..."
 # Do they have a bzip'd or a gzip'd tarball?
 if test -f ${tarball}.bz2 ; then
-    tar jxf ${tarball}.bz2
+  tar jxf ${tarball}.bz2
+elif test -f ${tarball}.gz ; then
+  tar zxf ${tarball}.gz
 else
-    tar zxf ${tarball}.gz
+  echo "${tarball}.gz not found; Downloading Qt..."
+  wget -q http://get.qt.nokia.com/qt/source/${tarball}.gz
+  tar zxf ${tarball}.gz
 fi
 pushd ${QTDIR} || exit 1
 echo "yes" | \
