@@ -37,12 +37,3 @@ pushd ${PREFIX}/Contents/Resources
   curl -kLO "${man}"
   mv $(basename "${man}") ImageVis3D.pdf
 popd
-
-echo "Fixing the errors that Qt's mac deployment tool doesn't."
-for pgn in libqgif.dylib libqjpeg.dylib libqtiff.dylib ; do
-    install_name_tool -change \
-        @executable_path/../Frameworks/${pgn} \
-        @executable_path/../PlugIns/imageformats/${pgn} \
-        ${PREFIX}/Contents/MacOS/ImageVis3D || \
-        echo "install_name_tool failed for ${pgn}; probably fine."
-done
