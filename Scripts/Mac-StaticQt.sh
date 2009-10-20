@@ -1,10 +1,10 @@
 #!/bin/sh
 
-VERSION=4.5.1
+VERSION=4.5.3
 echo "Removing old build..."
-rm -fr qt-mac-opensource-src-${VERSION}
+rm -fr qt-all-opensource-src-${VERSION}
 
-tarball="qt-mac-opensource-src-${VERSION}.tar"
+tarball="qt-all-opensource-src-${VERSION}.tar"
 echo "Extracting..."
 # Do they have a bzip'd or a gzip'd tarball?
 if test -f ${tarball}.bz2 ; then
@@ -12,7 +12,7 @@ if test -f ${tarball}.bz2 ; then
 else
     tar zxf ${tarball}.gz
 fi
-pushd qt-mac-opensource-src-${VERSION} || exit 1
+pushd qt-all-opensource-src-${VERSION} || exit 1
 echo "yes" | \
 ./configure \
         -prefix ${HOME}/sw \
@@ -28,8 +28,7 @@ echo "yes" | \
         -qt-gif \
         -no-framework \
         -make libs \
-        -make tools \
-        -sdk "/Developer/SDKs/MacOSX10.4u.sdk/"
+        -make tools
 
 if test $? -ne 0; then
         echo "configure failed"
