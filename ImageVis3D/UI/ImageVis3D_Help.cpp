@@ -116,6 +116,7 @@ void MainWindow::ShowAbout()
 
 void MainWindow::QuietCheckForUpdates() {
   m_bStartupCheck = true;
+  // This should really be done in a background thread...
   CheckForUpdatesInternal();
 }
 

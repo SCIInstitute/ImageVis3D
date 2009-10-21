@@ -97,8 +97,6 @@ int main(int argc, char* argv[])
 
   // create the QT window
   QApplication app( argc, argv );
-  MainWindow mainWindow(Controller::Instance(), strScriptFile!="", 0,
-                        Qt::Window);
   
   // if using a logfile inject that file-logger into the debug out chain
   if (bUseLogFile) {
@@ -124,9 +122,8 @@ int main(int argc, char* argv[])
 #ifdef DEBUG_PROVENANCE
   Controller::Instance().RegisterProvenanceCB(provenance);
 #endif
-
-  // open the QT window
-  mainWindow.show();
+  MainWindow mainWindow(Controller::Instance(), strScriptFile!="", 0,
+                        Qt::Window);
 
   if (strScriptFile != "") {
     bool bScriptResult =  mainWindow.RunScript(strScriptFile);

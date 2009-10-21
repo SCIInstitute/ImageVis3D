@@ -167,8 +167,9 @@ MainWindow::MainWindow(MasterController& masterController,
   connect(m_pWelcomeDialog, SIGNAL(OpenFromDirClicked()),    this, SLOT(LoadDirectory()));
   connect(m_pWelcomeDialog, SIGNAL(accepted()),              this, SLOT(CloseWelcome()));
 
+  this->show();
+  if (!m_bScriptMode && m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
   if (!m_bScriptMode && m_bShowWelcomeScreen) ShowWelcomeScreen();
-  if (m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
 
   checkBox_ClipShow->setEnabled(false);
   checkBox_ClipLockObject->setEnabled(false);
