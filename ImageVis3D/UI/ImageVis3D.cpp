@@ -131,9 +131,6 @@ MainWindow::MainWindow(MasterController& masterController,
   
   SysTools::GetTempDirectory(m_strTempDir);
 
-
-  SetAndCheckRunningFlag();
-
   SetupWorkspaceMenu();
 
   if (!LoadDefaultGeometry()) SaveDefaultGeometry();
@@ -142,6 +139,9 @@ MainWindow::MainWindow(MasterController& masterController,
     InitAllWorkspaces();
     SaveDefaultWorkspace();
   }
+
+  this->show();
+  SetAndCheckRunningFlag();
 
   masterController.IOMan()->RegisterFinalConverter(new DialogConverter(this));
 
@@ -167,7 +167,6 @@ MainWindow::MainWindow(MasterController& masterController,
   connect(m_pWelcomeDialog, SIGNAL(OpenFromDirClicked()),    this, SLOT(LoadDirectory()));
   connect(m_pWelcomeDialog, SIGNAL(accepted()),              this, SLOT(CloseWelcome()));
 
-  this->show();
   if (!m_bScriptMode && m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
   if (!m_bScriptMode && m_bShowWelcomeScreen) ShowWelcomeScreen();
 
