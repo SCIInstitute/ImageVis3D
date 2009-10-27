@@ -121,6 +121,12 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   horizontalSlider_GPUMem->setMinimum(32);
   horizontalSlider_CPUMem->setMinimum(512);
 
+#if defined(_WIN32) && defined(USE_DIRECTX)
+  // HACK for now always hide groupBox_7 until the directx implementation is complete
+  groupBox_7->setVisible(false);
+#else
+  groupBox_7->setVisible(false);
+#endif
 }
 
 
@@ -373,13 +379,18 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
 
   radioButton_APIDX->setEnabled(bIsDirectX10Capable);
 
-  // adjust rendermode to GL if no DX support is present
-  if (!bIsDirectX10Capable && iVolRenType > 2) {
-    iVolRenType -= 2;
+  // adjust rendermode to GL if no DX support is present but set
+  if (!bIsDirectX10Capable) {
+    if (iVolRenType == 2) iVolRenType = 0;
+    if (iVolRenType == 3) iVolRenType = 1;
+    if (iVolRenType == 5) iVolRenType = 4;
   }
 
 
   switch (iVolRenType) {
+    case 0   :  radioButton_APIGL->setChecked(true);
+                radioButton_SBVR->setChecked(true);
+                break;
     case 1    : radioButton_APIGL->setChecked(true);
                 radioButton_Raycast->setChecked(true);
                 break;
@@ -389,8 +400,11 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
     case 3    : radioButton_APIDX->setChecked(true);
                 radioButton_Raycast->setChecked(true);
                 break;
-    default   : radioButton_APIGL->setChecked(true);
-                radioButton_SBVR->setChecked(true);
+    case 4    : radioButton_APIGL->setChecked(true);
+                radioButton_SBVR2D->setChecked(true);
+                break;
+    default   : radioButton_APIDX->setChecked(true);
+                radioButton_SBVR2D->setChecked(true);
                 break;
   }
 
@@ -470,9 +484,13 @@ void SettingsDlg::WarnAPIMethodChange() {
 }
 
 unsigned int SettingsDlg::GetVolrenType() const {
-  unsigned int iResult = radioButton_APIGL->isChecked() ? 0 : 2;
-  iResult += radioButton_SBVR->isChecked() ? 0 : 1;
-  return iResult;
+  if (radioButton_APIGL->isChecked()) {
+    if (radioButton_SBVR->isChecked()) return 0;
+    if (radioButton_SBVR2D->isChecked()) return 4; else return 1;
+  } else {
+    if (radioButton_SBVR->isChecked()) return 2;
+    if (radioButton_SBVR2D->isChecked()) return 6; else return 3;
+  }
 }
 
 bool SettingsDlg::GetUseOnlyPowerOfTwo() const {
