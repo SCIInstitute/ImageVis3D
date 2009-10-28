@@ -886,7 +886,7 @@ void MainWindow::CheckForRedraw() {
     // we'll end up checking for redraw.
     // In short: this method can end up being called even if we don't have a
     // render window.
-    if(r) {
+    if(r && r->IsRenderSubsysOK()) {
       r->CheckForRedraw();
     }
   }
