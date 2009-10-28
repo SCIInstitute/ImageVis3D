@@ -40,7 +40,8 @@
 
 #include "AutoGen/ui_PleaseWait.h"
 #include "DebugOut/QTLabelOut.h"
-#include "../Tuvok/Controller/MasterController.h"
+
+class MasterController;
 
 class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
 {

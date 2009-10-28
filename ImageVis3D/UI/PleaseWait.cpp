@@ -36,6 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "PleaseWait.h"
+#include "../Tuvok/Controller/MasterController.h"
 
 PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags) :
   QDialog(parent, flags),
