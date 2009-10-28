@@ -71,10 +71,8 @@ void QTLabelOut::printf(enum DebugChannel, const char*,
   std::ostringstream text;
   text << buff;
   m_label->setText(text.str().c_str());
-  m_label->repaint();
-#ifdef DETECTED_OS_APPLE
+  m_label->update();
   QCoreApplication::processEvents();
-#endif
 }
 
 void QTLabelOut::printf(const char *s) const
@@ -82,8 +80,6 @@ void QTLabelOut::printf(const char *s) const
   if(!m_label) return;
 
   m_label->setText(s);
-  m_label->repaint();
-#ifdef DETECTED_OS_APPLE
+  m_label->update();
   QCoreApplication::processEvents();
-#endif
 }
