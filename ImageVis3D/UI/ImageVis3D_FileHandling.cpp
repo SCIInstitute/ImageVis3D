@@ -191,19 +191,18 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
 
 
 void MainWindow::LoadDirectory() {
-  PleaseWaitDialog pleaseWait(this);
-
   QSettings settings;
   QString strLastDir = settings.value("Folders/LoadDirectory", ".").toString();
 
   QString directoryName =
-    QFileDialog::getExistingDirectory(this, "Load Dataset from Directory",strLastDir);
+    QFileDialog::getExistingDirectory(this, "Load Dataset from Directory",
+                                      strLastDir);
 
   if (!directoryName.isEmpty()) {
     settings.setValue("Folders/LoadDirectory", directoryName);
 
+    PleaseWaitDialog pleaseWait(this);
     pleaseWait.SetText("Scanning directory for files, please wait  ...");
-
     pleaseWait.AttachLabel(&m_MasterController);
 
     BrowseData browseDataDialog(m_MasterController, (QDialog*)&pleaseWait, directoryName, this);
@@ -221,7 +220,7 @@ void MainWindow::LoadDirectory() {
         if (targetFilename.isEmpty()) return;
 
         pleaseWait.SetText("Converting, please wait  ...");
-        // label has been tetached when the dialog was closed by BrowseData
+        // label was detached when the dialog was closed by BrowseData
         pleaseWait.AttachLabel(&m_MasterController);
 
         if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFilename.toStdString(), m_strTempDir)) {
@@ -230,6 +229,7 @@ void MainWindow::LoadDirectory() {
           ShowCriticalDialog( "Conversion Error", strText);
           m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", strText.toStdString().c_str());
         }
+        pleaseWait.DetachLabel();
 
         RenderWindow *renderWin = CreateNewRenderWindow(targetFilename);
         renderWin->GetQtWidget()->show();
