@@ -56,7 +56,7 @@ void MainWindow::ShowVersions() {
 #ifdef IV3D_SVN_VERSION
            << "\nSVN Version: " << int(IV3D_SVN_VERSION) << "\n"
 #endif
-           << "Qt Version: " << QT_VERSION_STR;
+           << " Qt Version: " << QT_VERSION_STR;
   m_MasterController.DebugOut()->printf(versions.str().c_str());
 }
 

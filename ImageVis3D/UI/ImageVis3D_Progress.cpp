@@ -61,6 +61,10 @@ void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
     if (label_ProgressDesc->isVisible()) label_ProgressDesc->setVisible(false);
     if (!groupBox_RenderProgress->isVisible()) groupBox_RenderProgress->setVisible(true);
 
+    // iCurrentCount may be higher than LODCount due the forcing higher LODs with the slider
+    // to avoid strange reading such as "LOD 4/1" we increase iLODCount
+    iLODCount = max(iCurrentCount,iLODCount);
+    
     QString msg = tr("LOD %1/%2").arg(iCurrentCount).arg(iLODCount);
 #ifdef DETECTED_OS_APPLE
     /// todo: label update has been removed until the delay-LOD issue on the mac is resolved

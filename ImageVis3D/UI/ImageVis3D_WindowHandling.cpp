@@ -783,8 +783,16 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 }
 
 void MainWindow::UpdateMinMaxLODLimitLabel() {
-  label_minLODLimit->setText(tr("Limit Minimum Quality by skipping the lowest %1 level(s)").arg(horizontalSlider_minLODLimit->value()));
-  label_maxLODLimit->setText(tr("Limit Maximum Quality by not rendering the highest %1 level(s)").arg(horizontalSlider_maxLODLimit->value()));
+  if (horizontalSlider_minLODLimit->value() == 1) 
+    label_minLODLimit->setText(tr("Limit Minimum Quality by skipping the lowest level"));
+  else
+    label_minLODLimit->setText(tr("Limit Minimum Quality by skipping the lowest %1 levels").arg(horizontalSlider_minLODLimit->value()));
+
+  if (horizontalSlider_maxLODLimit->value() == 1) 
+    label_maxLODLimit->setText(tr("Limit Maximum Quality by not rendering the highest level"));
+  else
+    label_maxLODLimit->setText(tr("Limit Maximum Quality by not rendering the highest %1 levels").arg(horizontalSlider_maxLODLimit->value()));
+  
 }
 
 void MainWindow::ToggleClearViewControls(int iRange) {
