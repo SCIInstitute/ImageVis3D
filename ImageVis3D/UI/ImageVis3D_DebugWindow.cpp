@@ -50,13 +50,13 @@ void MainWindow::ShowVersions() {
   versions << "Tuvok Version: " << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE
            << " " << TUVOK_DETAILS << "\n"
 #ifdef TUVOK_SVN_VERSION
-           << "SVN Version: " << int(TUVOK_SVN_VERSION) << "\n"
+           << "SVN Version: " << int(TUVOK_SVN_VERSION) << "\n "
 #endif
-           << "ImageVis3D Version: " << IV3D_VERSION " " << IV3D_VERSION_TYPE
+           << "ImageVis3D Version: " << IV3D_VERSION " " << IV3D_VERSION_TYPE << " "
 #ifdef IV3D_SVN_VERSION
-           << "\nSVN Version: " << int(IV3D_SVN_VERSION) << "\n"
+           << "\nSVN Version: " << int(IV3D_SVN_VERSION) << "\n "
 #endif
-           << " Qt Version: " << QT_VERSION_STR;
+           << "Qt Version: " << QT_VERSION_STR;
   m_MasterController.DebugOut()->printf(versions.str().c_str());
 }
 
