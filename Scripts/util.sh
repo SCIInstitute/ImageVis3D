@@ -87,24 +87,37 @@ function revision
 # TUVOK_VERSION.
 function version
 {
+    # search for StdDefs: we might be in the Scripts/ dir.
+    if test -f "ImageVis3D/StdDefines.h" ; then
+      vheader="ImageVis3D/StdDefines.h"
+    else
+      vheader="../ImageVis3D/StdDefines.h"
+    fi
+
     export IV3D_MAJOR=` \
-        grep "IV3D_MAJOR" ImageVis3D/StdDefines.h | \
+        grep "IV3D_MAJOR" ${vheader} | \
         awk '{ print $3 }'`
     export IV3D_MINOR=` \
-        grep "IV3D_MINOR" ImageVis3D/StdDefines.h | \
+        grep "IV3D_MINOR" ${vheader} | \
         awk '{ print $3 }'`
     export IV3D_PATCH=` \
-        grep "IV3D_PATCH" ImageVis3D/StdDefines.h | \
+        grep "IV3D_PATCH" ${vheader} | \
         awk '{ print $3 }'`
 
+    if test -f "Tuvok/StdTuvokDefines.h" ; then
+      vheader="Tuvok/StdTuvokDefines.h"
+    else
+      vheader="../Tuvok/StdTuvokDefines.h"
+    fi
+
     export TUVOK_MAJOR=` \
-        grep "TUVOK_MAJOR" Tuvok/StdTuvokDefines.h | \
+        grep "TUVOK_MAJOR" ${vheader} | \
         awk '{ print $3 }'`
     export TUVOK_MINOR=` \
-        grep "TUVOK_MINOR" Tuvok/StdTuvokDefines.h | \
+        grep "TUVOK_MINOR" ${vheader} | \
         awk '{ print $3 }'`
     export TUVOK_PATCH=` \
-        grep "TUVOK_PATCH" Tuvok/StdTuvokDefines.h | \
+        grep "TUVOK_PATCH" ${vheader} | \
         awk '{ print $3 }'`
 
     export IV3D_VERSION="${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}"
