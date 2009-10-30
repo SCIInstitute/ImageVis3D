@@ -1,0 +1,8 @@
+imagevis3d for Debian
+---------------------
+
+The builtin autoupdate feature will at best not work, and at worst be
+unreliable, using the Debianized version of ImageVis3D.  Use your package
+manager to manage new versions.
+
+ -- Tom Fogal <tfogal@sci.utah.edu>  Tue, 19 May 2009 13:34:29 -0600

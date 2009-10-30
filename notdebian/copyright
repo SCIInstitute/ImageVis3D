@@ -1,0 +1,20 @@
+This package was debianized by Tom Fogal <tfogal@sci.utah.edu> on
+Tue, 19 May 2009 13:34:29 -0600.
+
+It was downloaded from https://gforge.sci.utah.edu/svn/imagevis3d
+
+Upstream Authors:
+
+    Tom Fogal <tfogal@sci.utah.edu>
+    Jens Krueger <jens at sci>
+
+Copyright:
+
+    Copyright (C) 2008-2009 SCI Institute
+
+License:
+
+    MIT
+
+The Debian packaging is (C) 2009, Tom Fogal <tfogal@sci.utah.edu> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.

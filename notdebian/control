@@ -1,0 +1,24 @@
+Source: imagevis3d
+Section: x11
+Priority: optional
+Maintainer: Thomas Fogal <tfogal@alumni.unh.edu>
+Build-Depends: debhelper (>= 7), libqt4-dev, qt4-dev-tools
+Standards-Version: 3.8.0
+Homepage: http://www.imagevis3d.org/
+
+Package: imagevis3d
+Architecture: any
+Depends: ${shlibs:Depends}, libqtcore4, libqtgui4, libqt4-opengl, libqt4-network
+Description: desktop volume rendering application for large data
+ ImageVis3D is a volume rendering application specifically designed to
+ render large data.  This is achieved by splitting the dataset into
+ multiple levels of detail (LoD), with each level itself decomposed
+ into multiple bricks (atomic rendering primitive).  Interaction occurs
+ at the coarsest LoD, which can be rendered instantaneously on almost
+ all modern systems.  After a configurable delay, ImageVis3D will
+ successively render finer levels of detail, until the data are visible
+ at their native resolution.
+ .
+ Development of ImageVis3D is sponsored by the NIH/NCRR Center for Integrative
+ Biomedical Computing (CIBC), and the DOE Visualization And Analytics Center
+ for Enabling Technologies (VACET).

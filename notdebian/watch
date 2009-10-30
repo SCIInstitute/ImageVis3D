@@ -1,0 +1,4 @@
+version=3
+
+# Site                Directory Pattern                 Version Script
+software.sci.utah.edu /         ImageVis3D-(.*)\.tar.gz debian  uupdate

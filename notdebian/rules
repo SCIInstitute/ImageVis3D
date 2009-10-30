@@ -1,0 +1,117 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+TARFILE=imagevis3d_1.2~svn$(shell date +%Y%m%d).orig.tar.gz
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	# Add here commands to configure the package.
+
+	qmake QMAKE_CONFIG="release" \
+        QMAKE_CFLAGS+="-fno-strict-aliasing -U_DEBUG -DNDEBUG -DQT_SHARED" \
+        -spec linux-g++ || (echo "qmake failed" && exit 1)
+	touch configure-stamp
+
+
+build: build-stamp
+
+build-stamp: configure-stamp  
+	dh_testdir
+
+	# Add here commands to compile the package.
+	$(MAKE)
+	#docbook-to-man debian/imagevis3d.sgml > imagevis3d.1
+
+	touch $@
+
+clean: 
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+
+	# Needs to work even with initial checkout, which might not have makefiles.
+	test -f Makefile || qmake
+
+	# Add here commands to clean up after the build process.
+	$(MAKE) clean
+
+	# qmake is pretty awesome; `clean' isn't really clean.
+	rm -f Build/ImageVis3D \
+	      Tuvok/Build/libTuvok.a \
+	      ExtractDebugInfo/Build/ExtractDebugInfo \
+	      CmdLineConverter/Build/UVFConverter
+
+	dh_clean 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
+
+	# should this be here?  Or automatically defined by the helper scripts?
+	DESTDIR=$(CURDIR)/debian/imagevis3d install
+
+	# Add here commands to install the package into debian/imagevis3d.
+	$(MAKE) DESTDIR=$(CURDIR)/debian/imagevis3d install
+
+	# qmake's default `make install' appears to do nothing.
+	install -s Build/ImageVis3D $(CURDIR)/debian/imagevis3d/usr/bin/imagevis3d
+	gzip -9c doc/imagevis3d.1 > doc/imagevis3d.1.gz
+	mkdir -p $(CURDIR)/debian/imagevis3d/usr/share/man/man1
+	install doc/imagevis3d.1.gz $(CURDIR)/debian/imagevis3d/usr/share/man/man1
+	mkdir -p $(DESTDIR)/usr/share/imagevis3d/shaders
+	install --mode 644 Shaders/* $(DESTDIR)/usr/share/imagevis3d/shaders
+
+get-orig-source:
+	svn export https://gforge.sci.utah.edu/svn/imagevis3d
+	(cd ../ && \
+		tar zcf $(TARFILE) imagevis3d)
+	rm -fr imagevis3d
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installexamples
+#	dh_install
+#	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_python
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

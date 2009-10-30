@@ -1,0 +1,2 @@
+?package(imagevis3d):needs="X11|vc|wm" section="Science/Data Analysis"\
+  title="ImageVis3D" command="/usr/bin/imagevis3d"
