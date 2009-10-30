@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExtractDebugInfo", "Extract
 		{85742DE8-68C9-4140-A6A7-412CF789DECA} = {85742DE8-68C9-4140-A6A7-412CF789DECA}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UVFReader", "UVFReader\UVFReader.vcproj", "{741CA829-A68D-4CAC-844A-E23FFDC94323}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug (with DirectX)|Win32 = Debug (with DirectX)|Win32
@@ -89,6 +91,22 @@ Global
 		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Release (with DirectX)|x64.ActiveCfg = Release (with DirectX)|x64
 		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Release|Win32.ActiveCfg = Release|Win32
 		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Release|x64.ActiveCfg = Release|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug (with DirectX)|Win32.ActiveCfg = Debug (with DirectX)|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug (with DirectX)|Win32.Build.0 = Debug (with DirectX)|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug (with DirectX)|x64.ActiveCfg = Debug (with DirectX)|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug (with DirectX)|x64.Build.0 = Debug (with DirectX)|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug|Win32.ActiveCfg = Debug|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug|Win32.Build.0 = Debug|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug|x64.ActiveCfg = Debug|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug|x64.Build.0 = Debug|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release (with DirectX)|Win32.ActiveCfg = Release (with DirectX)|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release (with DirectX)|Win32.Build.0 = Release (with DirectX)|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release (with DirectX)|x64.ActiveCfg = Release (with DirectX)|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release (with DirectX)|x64.Build.0 = Release (with DirectX)|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release|Win32.ActiveCfg = Release|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release|Win32.Build.0 = Release|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release|x64.ActiveCfg = Release|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
