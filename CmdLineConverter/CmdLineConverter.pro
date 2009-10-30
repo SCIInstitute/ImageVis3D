@@ -7,6 +7,7 @@ CONFIG           += exceptions largefile link_prl static stl warn_on
 CONFIG           -= app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=0
 TARGET            = Build/UVFConverter
+unix:TARGET       = Build/uvfconvert
 QT               += opengl
 DEPENDPATH       += .
 INCLUDEPATH      += . ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW
