@@ -17,8 +17,9 @@ function die {
   exit 1
 }
 
-rm -fr imagevis3d-${VER}
-rm -f ./*.changes ./*.deb ./*.tar.gz ./*.dsc
+rm -fr imagevis3d-${VER}*
+rm -f ./*.changes ./*.deb ./*.tar.gz ./*.dsc ./*.diff.gz ./*_source.upload \
+  ./*_source.changes
 
 revs=$(svn export --force ${SVN} | \
        grep "Exported" |           \
@@ -29,26 +30,26 @@ revs=$(svn export --force ${SVN} | \
 if test $? -ne 0; then die "svn export failed." ; fi
 echo "revs: ${revs}"
 
-mv imagevis3d imagevis3d-${VER}
-tar zcf imagevis3d_${VER}.orig.tar.gz imagevis3d-${VER}
-
 if test "${mode}" = "ubuntu-ppa" ; then
-  DEB_VER="${DEB_VER}~ppa~svn${revs}"
+  VER="${VER}~ppa${revs}"
 else
-  DEB_VER="${DEB_VER}~svn${revs}"
+  VER="${VER}~svn${revs}"
 fi
 
-pushd imagevis3d-${VER}
+mv imagevis3d "imagevis3d-${VER}"
+tar zcf imagevis3d_${VER}.orig.tar.gz imagevis3d-${VER}
+
+pushd imagevis3d-${VER} || die "imagevis3d-${VER} directory does not exist"
   if test -d ../../notdebian ; then
     echo "Running from Scripts/?  Using local debian dir."
-    cp -R ../../notdebian debian || exit 1
+    cp -R ../../notdebian debian || die "couldn't copy debian dir"
   else
     echo "Not running from scripts; using in-repo debian dir."
-    ln -s notdebian debian || exit 1
+    ln -s notdebian debian || die "couldn't symlink debian dir"
   fi
 
   # Generate a valid changelog.
-  pushd debian
+  pushd debian || die "no debian dir."
     if test "${mode}" = "ubuntu-ppa" ; then
       distroseries="karmic"
     else
@@ -67,9 +68,9 @@ pushd imagevis3d-${VER}
     head changelog
   popd
   if test "${mode}" = "ubuntu-ppa" ; then
-    dpkg-buildpackage -rfakeroot -sgpg -S -sa || exit 1
+    dpkg-buildpackage -rfakeroot -sgpg -S -sa || die "buildpackage failed."
   else
-    dpkg-buildpackage -rfakeroot -sgpg -sa -j4 || exit 1
+    dpkg-buildpackage -rfakeroot -sgpg -sa -j4 || die "buildpackage failed"
   fi
 popd
 
