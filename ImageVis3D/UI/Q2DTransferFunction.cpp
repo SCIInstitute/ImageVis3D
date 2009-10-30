@@ -362,6 +362,7 @@ void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
               currentSwatch.pGradientStops[1].first
             )
           );
+          break;
         case PT_OTHER:
           painter.setPen(circlePen);
           DrawPolyVertex(painter, pointList[0]);
