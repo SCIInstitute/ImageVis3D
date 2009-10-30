@@ -211,30 +211,38 @@ int main(int argc, char* argv[])
     testVolume.ulBrickOverlap.push_back(BRICKOVERLAP);
     testVolume.ulBrickOverlap.push_back(BRICKOVERLAP);
 
-		testVolume.SetIdentityTransformation();
+    vector<double> vScale;
+    vScale.push_back(double(iSize.maxVal())/double(iSize.x));
+    vScale.push_back(double(iSize.maxVal())/double(iSize.y));
+    vScale.push_back(double(iSize.maxVal())/double(iSize.z));
+    testVolume.SetScaleOnlyTransformation(vScale);
 
     MaxMinDataBlock MaxMinData(1);
 
 
     switch (iBitSize) {
       case 8 : {
-		              std::vector<unsigned char> source;
-		              unsigned char i = 0;
+		              std::vector<unsigned char> source(iSize.volume());
+		              size_t i = 0;
 		              for (UINT64 z = 0;z<iSize.z;z++) 
 			              for (UINT64 y = 0;y<iSize.y;y++) 
-				              for (UINT64 x = 0;x<iSize.x;x++) source.push_back(i++);
+                      for (UINT64 x = 0;x<iSize.x;x++) {
+                        source[i++] = static_cast<unsigned char>(std::max(0.0f,(0.5f-(0.5f-FLOATVECTOR3(float(x),float(y),float(z))/FLOATVECTOR3(iSize)).length())*512.0f));
+                      }
 
-                  testVolume.FlatDataToBrickedLOD(&source, "./tempFile.tmp", CombineAverage<unsigned char,1>, SimpleMaxMin<unsigned char,1>, &MaxMinData, &Controller::Debug::Out()); break;
+                  testVolume.FlatDataToBrickedLOD(&source[0], "./tempFile.tmp", CombineAverage<unsigned char,1>, SimpleMaxMin<unsigned char,1>, &MaxMinData, &Controller::Debug::Out()); break;
                   break;
                }
       case 16 :{
-		              std::vector<unsigned short> source;
-		              unsigned short i = 0;
+		              std::vector<unsigned short> source(iSize.volume());
+		              size_t i = 0;
 		              for (UINT64 z = 0;z<iSize.z;z++) 
 			              for (UINT64 y = 0;y<iSize.y;y++) 
-				              for (UINT64 x = 0;x<iSize.x;x++) source.push_back(i++);
+                      for (UINT64 x = 0;x<iSize.x;x++) {
+                        source[i++] = static_cast<unsigned short>(std::max(0.0f,(0.5f-(0.5f-FLOATVECTOR3(float(x),float(y),float(z))/FLOATVECTOR3(iSize)).length())*131072.0f));
+                      }
 
-                  testVolume.FlatDataToBrickedLOD(&source, "./tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short,1>, &MaxMinData, &Controller::Debug::Out()); break;
+                  testVolume.FlatDataToBrickedLOD(&source[0], "./tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short,1>, &MaxMinData, &Controller::Debug::Out()); break;
                   break;
                }
       default: assert(0); // should never happen as we test this during parameter check
