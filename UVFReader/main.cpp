@@ -74,12 +74,15 @@ void ShowUsage(string filename) {
 			"     Mandatory Arguments:" << endl <<
 			"         -f       the filename of one of the text" << endl <<
 			"     Optional Arguments:" << endl <<
-			"        -noverify  disables the checksum test" << endl <<
-			"        -create    if set create a new test UVF file with a filename set by -f" << endl <<
-			"        -sizeX     requires '-create' argument, specifies the width of the volume to be created (default = 100)" << endl <<
-			"        -sizeY     requires '-create' argument, specifies the height of the volume to be created (default = 200)" << endl <<
-			"        -sizeZ     requires '-create' argument, specifies the depth of the volume to be created (default = 300)" << endl <<
-			"        -sizeZ     requires '-create' argument, specifies the bit depth of the volume, may be 8, 16 (default = 8)" << endl;
+			"        -noverify    disables the checksum test" << endl <<
+			"        -show1dhist  also output 1D histogram to console" << endl <<
+			"        -show2dhist  also output 2D histogram to console" << endl <<
+			"        -create      if set create a new test UVF file with a filename set by -f" << endl <<
+			"        -create      if set create a new test UVF file with a filename set by -f" << endl <<
+			"        -sizeX       requires '-create' argument, specifies the width of the volume to be created (default = 100)" << endl <<
+			"        -sizeY       requires '-create' argument, specifies the height of the volume to be created (default = 200)" << endl <<
+			"        -sizeZ       requires '-create' argument, specifies the depth of the volume to be created (default = 300)" << endl <<
+			"        -sizeZ       requires '-create' argument, specifies the bit depth of the volume, may be 8, 16 (default = 8)" << endl;
 }
 
 int main(int argc, char* argv[])
@@ -117,7 +120,9 @@ int main(int argc, char* argv[])
   
   bool bCreateFile = comLine.SwitchSet("CREATE");
 	bool bVerify     = !comLine.SwitchSet("NOVERIFY");
-  
+  bool bShow1dhist = comLine.SwitchSet("SHOW1DHIST");  
+  bool bShow2dhist = comLine.SwitchSet("SHOW2DHIST");
+
   if (strUVFName == "") {
     cerr << endl << "Missing Argument -f or filename was empty" << endl;
     ShowUsage(strFilename);			
@@ -394,6 +399,30 @@ int main(int argc, char* argv[])
 												cout << "        " << b->GetKeyByIndex(i).c_str() << " -> " << b->GetValueByIndex(i).c_str() << endl;
 											}
 										 } break;
+				case UVFTables::BS_1D_Histogram : {
+                     if (bShow1dhist) {
+										   const Histogram1DDataBlock* b = (const Histogram1DDataBlock*)uvfFile.GetDataBlock(i);
+										   cout << "      Entries: " << endl;
+    									
+									      for (UINT64 i = 0;i<b->GetHistogram().size();i++) {
+                         cout << i << ":" << b->GetHistogram()[i] << " ";
+										    }
+                        cout <<  endl;
+										   }
+                     } break;
+				case UVFTables::BS_2D_Histogram : {
+                     if (bShow2dhist) {
+										   const Histogram2DDataBlock* b = (const Histogram2DDataBlock*)uvfFile.GetDataBlock(i);
+											 cout << "      Entries: " << endl;
+											
+                       for (UINT64 j = 0;j<b->GetHistogram().size();j++) {
+                         for (UINT64 i = 0;i<b->GetHistogram()[j].size();i++) {
+                           cout << i << "/" << j << ":" << b->GetHistogram()[j][i] << " ";
+										     }
+						           }
+                       cout << endl;
+										 }
+                   }break;
 				default: 	// TODO
 						break;
 			}
