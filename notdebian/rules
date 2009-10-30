@@ -59,7 +59,7 @@ install: build
 	dh_installdirs
 
 	# should this be here?  Or automatically defined by the helper scripts?
-	DESTDIR=$(CURDIR)/debian/imagevis3d install
+	DESTDIR=$(CURDIR)/debian/imagevis3d
 
 	# Add here commands to install the package into debian/imagevis3d.
 	$(MAKE) DESTDIR=$(CURDIR)/debian/imagevis3d install
