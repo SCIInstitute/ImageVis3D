@@ -10,6 +10,7 @@
 #export DH_VERBOSE=1
 
 TARFILE=imagevis3d_1.2~svn$(shell date +%Y%m%d).orig.tar.gz
+DESTDIR=$(CURDIR)/debian/imagevis3d
 
 configure: configure-stamp
 configure-stamp:
@@ -58,9 +59,6 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 
-	# should this be here?  Or automatically defined by the helper scripts?
-	DESTDIR=$(CURDIR)/debian/imagevis3d
-
 	# Add here commands to install the package into debian/imagevis3d.
 	$(MAKE) DESTDIR=$(CURDIR)/debian/imagevis3d install
 
@@ -69,8 +67,8 @@ install: build
 	gzip -9c doc/imagevis3d.1 > doc/imagevis3d.1.gz
 	mkdir -p $(CURDIR)/debian/imagevis3d/usr/share/man/man1
 	install doc/imagevis3d.1.gz $(CURDIR)/debian/imagevis3d/usr/share/man/man1
-	mkdir -p $(DESTDIR)/usr/share/imagevis3d/shaders
-	install --mode 644 Shaders/* $(DESTDIR)/usr/share/imagevis3d/shaders
+	mkdir -p $(CURDIR)/debian/imagevis3d/usr/share/imagevis3d/shaders
+	install --mode 644 Tuvok/Shaders/* $(DESTDIR)/usr/share/imagevis3d/shaders
 
 get-orig-source:
 	svn export https://gforge.sci.utah.edu/svn/imagevis3d

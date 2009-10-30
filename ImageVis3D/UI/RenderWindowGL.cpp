@@ -163,8 +163,12 @@ void RenderWindowGL::InitializeRenderer()
 
   if (m_Renderer == NULL)
     m_bRenderSubsysOK = false;
-  else
+  else {
+#ifdef DETECTED_OS_LINUX
+    m_Renderer->AddShaderPath("/usr/share/imagevis3d/shaders");
+#endif
     m_bRenderSubsysOK = m_Renderer->Initialize();
+  }
 
   if (!m_bRenderSubsysOK) {
     m_Renderer->Cleanup();
