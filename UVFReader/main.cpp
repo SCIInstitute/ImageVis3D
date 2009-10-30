@@ -343,8 +343,8 @@ int main(int argc, char* argv[])
 											const RasterDataBlock* b = (const RasterDataBlock*)uvfFile.GetDataBlock(i);
 
 											cout << "      Volume Information: " << endl;
-											
-											cout << "        Semantics:";
+											                     
+                      cout << "        Semantics:";
 											for (size_t j = 0;j<b->ulDomainSemantics.size();j++) cout << " " << DomainSemanticToCharString(b->ulDomainSemantics[j]).c_str();
 											cout << endl;
 
@@ -358,6 +358,24 @@ int main(int argc, char* argv[])
 													cout << " " << UVFTables::ElementSemanticTableToCharString(b->ulElementSemantic[j][k]).c_str();
 												}
 											cout << endl;
+
+											cout << "        Transformation:\n";
+                      size_t ulTransformDimension = b->ulDomainSemantics.size()+1;
+                      if (ulTransformDimension * ulTransformDimension != b->dDomainTransformation.size()) {
+                        cerr << "      error in domain transformation: " << endl;
+                        uvfFile.Close();
+                        return EXIT_FAILURE;
+                      }
+
+                      size_t j = 0;
+                      for (size_t y = 0;y<ulTransformDimension;y++) {
+                        cout << "        ";
+                        for (size_t x = 0;x<ulTransformDimension;x++) {
+                          cout << " " << b->dDomainTransformation[j++];
+                        }
+                        cout << endl;
+                      }
+
 										} break;
 				case UVFTables::BS_KEY_VALUE_PAIRS : {
 											const KeyValuePairDataBlock* b = (const KeyValuePairDataBlock*)uvfFile.GetDataBlock(i);
