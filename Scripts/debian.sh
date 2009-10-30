@@ -39,9 +39,15 @@ else
 fi
 
 pushd imagevis3d-${VER}
-  #ln -s notdebian debian || exit 1
-  cp -R ../../notdebian debian || exit 1
-  # Generate a good changelog.
+  if test -d ../../notdebian ; then
+    echo "Running from Scripts/?  Using local debian dir."
+    cp -R ../../notdebian debian || exit 1
+  else
+    echo "Not running from scripts; using in-repo debian dir."
+    ln -s notdebian debian || exit 1
+  fi
+
+  # Generate a valid changelog.
   pushd debian
     if test "${mode}" = "ubuntu-ppa" ; then
       distroseries="karmic"
