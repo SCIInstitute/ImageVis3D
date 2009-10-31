@@ -50,7 +50,7 @@ class RAWDialog : public QDialog, protected Ui_RAWDialog
     RAWDialog(const std::string& strFilename, UINT64 iFileSize, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~RAWDialog();
 
-    UINTVECTOR3 GetSize();
+    UINT64VECTOR3 GetSize();
     FLOATVECTOR3 GetAspectRatio();
     unsigned int GetQuantization();
     unsigned int GetEncoding();

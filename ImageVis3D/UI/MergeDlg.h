@@ -71,7 +71,7 @@ public:
   double              m_fScale;
   double              m_fBias;
 
-  UINTVECTOR3                 m_vDomainSize;
+  UINT64VECTOR3               m_vDomainSize;
   FLOATVECTOR3                m_vAspect;
   UINT64                      m_iComponentSize;
   int                         m_iValueType;

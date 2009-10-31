@@ -105,8 +105,8 @@ UINT64 RAWDialog::ComputeExpectedSize() {
 }
 
 
-UINTVECTOR3 RAWDialog::GetSize() {
-  return UINTVECTOR3(UINT64(spinBox_SizeX->value()) , UINT64(spinBox_SizeY->value()) , UINT64(spinBox_SizeZ->value()));
+UINT64VECTOR3 RAWDialog::GetSize() {
+  return UINT64VECTOR3(UINT64(spinBox_SizeX->value()) , UINT64(spinBox_SizeY->value()) , UINT64(spinBox_SizeZ->value()));
 }
 
 FLOATVECTOR3 RAWDialog::GetAspectRatio() {
