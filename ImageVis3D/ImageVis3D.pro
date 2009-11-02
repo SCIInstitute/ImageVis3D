@@ -3,6 +3,7 @@
 ######################################################################
 
 TEMPLATE          = app
+win32:TEMPLATE    = vcapp
 CONFIG           += exceptions largefile link_prl qt static stl warn_on
 macx:DEFINES     += QT_MAC_USE_COCOA=0
 TARGET            = ../Build/ImageVis3D
