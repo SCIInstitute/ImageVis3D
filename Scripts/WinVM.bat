@@ -118,6 +118,14 @@ IF EXIST "CmdLineConverter\Build\x64\%CONFIG%\UVFConverter64.exe" (
   echo UVFConverter64 failed >> result.txt
 )
 
+IF EXIST "UVFReader\Build\Win32\%CONFIG%\UVFReader64.exe" (
+  set BUILDUVRF64=TRUE
+  echo UVFReader64 completed >> result.txt
+) ELSE (
+  set BUILDUVFR64=FALSE
+  echo UVFReader64 failed >> result.txt
+)
+
 IF EXIST out32.txt del out32.txt
 rem devenv ImageVis3D.sln /rebuild "%CONFIG%|win32" /out out32.txt
 msbuild ImageVis3D.sln /nologo /p:Configuration="%CONFIG%",Platform=win32 /t:rebuild /fileLogger /fileLoggerParameters:LogFile=out32.txt 
@@ -143,6 +151,14 @@ IF EXIST "CmdLineConverter\Build\Win32\%CONFIG%\UVFConverter32.exe" (
 ) ELSE (
   set BUILDUVF32=FALSE
   echo UVFConverter32 failed >> result.txt
+)
+
+IF EXIST "UVFReader\Build\Win32\%CONFIG%\UVFReader32.exe" (
+  set BUILDUVRF32=TRUE
+  echo UVFReader32 completed >> result.txt
+) ELSE (
+  set BUILDUVFR32=FALSE
+  echo UVFReader32 failed >> result.txt
 )
 
 IF NOT EXIST \\geronimo\share\IV3D-WIN\nul mkdir \\geronimo\share\IV3D-WIN
@@ -192,6 +208,12 @@ if !BUILDUVF32!==TRUE xcopy "..\CmdLineConverter\Build\Win32\%CONFIG%\UVFConvert
 "C:\Program Files\7-Zip\7z" a -r ..\UVFConverter_Win_r%REVSTR%.zip
 del . /F /S /Q
 
+if !BUILDUVFR64!==TRUE xcopy "..\UVFReader\Build\x64\%CONFIG%\UVFReader64.exe" .
+if !BUILDUVFR32!==TRUE xcopy "..\UVFReader\Build\Win32\%CONFIG%\UVFReader32.exe" .
+
+"C:\Program Files\7-Zip\7z" a -r ..\UVFReader_Win_r%REVSTR%.zip
+del . /F /S /Q
+
 xcopy ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WIN /Y
 del ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip
 
@@ -218,6 +240,17 @@ IF EXIST ..\UVFConverter_Win_r%REVSTR%.zip (
 xcopy ..\UVFConverter_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WIN /Y
 del ..\UVFConverter_Win_r%REVSTR%.zip
 
+
+IF EXIST ..\UVFReader_Win_r%REVSTR%.zip (
+  time /t  >> ..\result.txt
+  echo UVFReader build successful >> ..\result.txt
+) else (
+  goto ZIPFAILUVFR
+)
+
+xcopy ..\UVFReader_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WIN /Y
+del ..\UVFReader_Win_r%REVSTR%.zip
+
 :UVFAILED
 
 cd ..
@@ -243,6 +276,11 @@ goto END
 :ZIPFAILUVF
 
 echo Packing the final UVFConverter ZIP file failed  >> result.txt
+goto END
+
+:ZIPFAILUVFR
+
+echo Packing the final UVFReader ZIP file failed  >> result.txt
 goto END
 
 :ALLFAILED
