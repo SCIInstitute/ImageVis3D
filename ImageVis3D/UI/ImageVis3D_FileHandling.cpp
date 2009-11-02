@@ -35,29 +35,25 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <fstream>
+#include <string>
+
 #include "ImageVis3D.h"
 #include "BrowseData.h"
 
-#include <QtCore/QTimer>
-#include <QtGui/QMdiSubWindow>
 #include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
-#include <QtGui/QInputDialog>
-#include <QtGui/QColorDialog>
 #include <QtGui/QMessageBox>
 
-#include "PleaseWait.h"
-
-#include <fstream>
-#include <iostream>
-#include <string>
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/IO/uvfDataset.h"
 
 #include "DebugOut/QTLabelOut.h"
 #include "LODDlg.h"
 #include "MergeDlg.h"
+#include "PleaseWait.h"
 
 using namespace std;
 using namespace tuvok;
@@ -246,7 +242,7 @@ void MainWindow::LoadDirectory() {
 
 bool MainWindow::ExportDataset(UINT32 iLODLevel, std::string targetFileName) {
   if (!m_pActiveRenderWin) {
-    m_MasterController.DebugOut()->Warning("MainWindow::ExportDataset", "No active renderwin");
+    WARNING("No active render window");
     return false;
   }
   PleaseWaitDialog pleaseWait(this);
@@ -278,22 +274,38 @@ void MainWindow::ExportDataset() {
 
   QString dialogString = m_MasterController.IOMan()->GetExportDialogString().c_str();
 
-  QString fileName =
-    QFileDialog::getSaveFileName(this, "Export Current Dataset",
-         strLastDir,
-         dialogString,&selectedFilter, options);
-
-  if (!fileName.isEmpty()) {
-    settings.setValue("Folders/ExportDataset", QFileInfo(fileName).absoluteDir().path());
-
-    string filter = std::string(selectedFilter.toAscii());
+  std::string ext;
+  QString fileName;
+  do {
+    fileName = QFileDialog::getSaveFileName(this, "Export Current Dataset",
+                                            strLastDir, dialogString,
+                                            &selectedFilter, options);
+    if(fileName.isEmpty()) {
+      // not an error -- the user might get here if they wanted to cancel the
+      // export.
+      break;
+    }
+    // get it out of a QString && figure out what file type we're dealing with.
+    std::string filter = std::string(selectedFilter.toAscii());
     size_t start = filter.find_last_of("*.")+1;
     size_t end = filter.find_last_of(")");
-    string ext = filter.substr(start, end-start);
+    ext = filter.substr(start, end-start);
     SysTools::RemoveTailingWhitespace(ext);
     SysTools::RemoveLeadingWhitespace(ext);
+    if(ext == "") {
+      QMessageBox noformat;
+      noformat.setText("No file extension: unknown export format");
+      noformat.setIcon(QMessageBox::Critical);
+      noformat.exec();
+    }
+  } while(ext == "");
 
-    string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()), ext);
+  if (!fileName.isEmpty()) {
+    settings.setValue("Folders/ExportDataset",
+                      QFileInfo(fileName).absoluteDir().path());
+
+    string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()),
+                                                    ext);
 
     int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataset().GetLODLevelCount())-1;
 
@@ -325,9 +337,7 @@ void MainWindow::ExportDataset() {
       QString msg = tr("The dataset has been exported as %1.").arg(strCompletefileName.c_str());
       ShowInformationDialog( tr("Export successful"), msg);
     }
-
   }
-
 }
 
 
