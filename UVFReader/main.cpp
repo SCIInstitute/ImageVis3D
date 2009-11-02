@@ -92,6 +92,8 @@ int main(int argc, char* argv[])
   debugOut->SetClearOldMessage(true);
 
   Controller::Instance().AddDebugOut(debugOut);
+  MESSAGE(" "); // get rid of "connected to this debug out" message
+  cout << endl;
 
 	#ifdef _WIN32
 		// Enable run-time memory check for debug builds.
@@ -163,6 +165,8 @@ int main(int argc, char* argv[])
 	UVF uvfFile(wstrUVFName);
 
 	if (bCreateFile) {
+    MESSAGE("Preparing creation of UVF file %s", strUVFName.c_str());
+
 		GlobalHeader uvfGlobalHeader;
 		uvfGlobalHeader.ulChecksumSemanticsEntry = UVFTables::CS_MD5;
 		uvfFile.SetGlobalHeader(uvfGlobalHeader);
@@ -224,10 +228,11 @@ int main(int argc, char* argv[])
 
     MaxMinDataBlock MaxMinData(1);
 
+    MESSAGE("Generating dummy data");
 
     switch (iBitSize) {
       case 8 : {
-		              std::vector<unsigned char> source(iSize.volume());
+		              std::vector<unsigned char> source(size_t(iSize.volume()));
 		              size_t i = 0;
 		              for (UINT64 z = 0;z<iSize.z;z++) 
 			              for (UINT64 y = 0;y<iSize.y;y++) 
@@ -239,7 +244,7 @@ int main(int argc, char* argv[])
                   break;
                }
       case 16 :{
-		              std::vector<unsigned short> source(iSize.volume());
+		              std::vector<unsigned short> source(size_t(iSize.volume()));
 		              size_t i = 0;
 		              for (UINT64 z = 0;z<iSize.z;z++) 
 			              for (UINT64 y = 0;y<iSize.y;y++) 
@@ -395,28 +400,51 @@ int main(int argc, char* argv[])
 
 											cout << "      Values: " << endl;
 											
-											for (UINT64 i = 0;i<b->GetKeyCount();i++) {
+											for (size_t i = 0;i<b->GetKeyCount();i++) {
 												cout << "        " << b->GetKeyByIndex(i).c_str() << " -> " << b->GetValueByIndex(i).c_str() << endl;
 											}
 										 } break;
 				case UVFTables::BS_1D_Histogram : {
+										 const Histogram1DDataBlock* b = (const Histogram1DDataBlock*)uvfFile.GetDataBlock(i);
+        
+                     size_t iFilledSize = 0;
+                     for (size_t i = 0;i<b->GetHistogram().size();i++) {
+                       if ( b->GetHistogram()[i] != 0) {
+                         iFilledSize = i+1;
+                       }          
+                     }
+										 cout << "      Filled size: " << iFilledSize << endl;
+
                      if (bShow1dhist) {
-										   const Histogram1DDataBlock* b = (const Histogram1DDataBlock*)uvfFile.GetDataBlock(i);
+
 										   cout << "      Entries: " << endl;
     									
-									      for (UINT64 i = 0;i<b->GetHistogram().size();i++) {
+									      for (size_t i = 0;i<iFilledSize;i++) {
                          cout << i << ":" << b->GetHistogram()[i] << " ";
 										    }
                         cout <<  endl;
 										   }
                      } break;
 				case UVFTables::BS_2D_Histogram : {
+	 				 			     const Histogram2DDataBlock* b = (const Histogram2DDataBlock*)uvfFile.GetDataBlock(i);
+
+                     VECTOR2<size_t> vSize(0,0);
+                     for (size_t j = 0;j<b->GetHistogram().size();j++) {
+                       for (size_t i = 0;i<b->GetHistogram()[j].size();i++) {
+                         if ( b->GetHistogram()[j][i] != 0) {
+                           if ((i+1) > vSize.y) vSize.y = i+1;
+                           vSize.x = j+1;
+                         }          
+                       }
+                     }
+
+										 cout << "      Filled size: " << vSize.x << " x " << vSize.y << endl;
+
                      if (bShow2dhist) {
-										   const Histogram2DDataBlock* b = (const Histogram2DDataBlock*)uvfFile.GetDataBlock(i);
 											 cout << "      Entries: " << endl;
 											
-                       for (UINT64 j = 0;j<b->GetHistogram().size();j++) {
-                         for (UINT64 i = 0;i<b->GetHistogram()[j].size();i++) {
+                       for (size_t j = 0;j<vSize.y;j++) {
+                         for (size_t i = 0;i<vSize.x;i++) {
                            cout << i << "/" << j << ":" << b->GetHistogram()[j][i] << " ";
 										     }
 						           }
