@@ -119,7 +119,7 @@ IF EXIST "CmdLineConverter\Build\x64\%CONFIG%\UVFConverter64.exe" (
 )
 
 IF EXIST "UVFReader\Build\x64\%CONFIG%\UVFReader64.exe" (
-  set BUILDUVRF64=TRUE
+  set BUILDUVFR64=TRUE
   echo UVFReader64 completed >> result.txt
 ) ELSE (
   set BUILDUVFR64=FALSE
@@ -154,7 +154,7 @@ IF EXIST "CmdLineConverter\Build\Win32\%CONFIG%\UVFConverter32.exe" (
 )
 
 IF EXIST "UVFReader\Build\Win32\%CONFIG%\UVFReader32.exe" (
-  set BUILDUVRF32=TRUE
+  set BUILDUVFR32=TRUE
   echo UVFReader32 completed >> result.txt
 ) ELSE (
   set BUILDUVFR32=FALSE
