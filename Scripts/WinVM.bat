@@ -118,7 +118,7 @@ IF EXIST "CmdLineConverter\Build\x64\%CONFIG%\UVFConverter64.exe" (
   echo UVFConverter64 failed >> result.txt
 )
 
-IF EXIST "UVFReader\Build\Win32\%CONFIG%\UVFReader64.exe" (
+IF EXIST "UVFReader\Build\x64\%CONFIG%\UVFReader64.exe" (
   set BUILDUVRF64=TRUE
   echo UVFReader64 completed >> result.txt
 ) ELSE (
