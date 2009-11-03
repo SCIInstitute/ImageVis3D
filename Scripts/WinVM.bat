@@ -172,8 +172,8 @@ echo Packing ZIP file >> result.txt
 
 mkdir Nightly
 cd Nightly
-if !BUILD64!==TRUE xcopy "..\Build\x64\%CONFIG%\ImageVis3D-64.exe" .
-if !BUILD32!==TRUE xcopy "..\Build\Win32\%CONFIG%\ImageVis3D-32.exe" .
+if !BUILD64!==TRUE xcopy /y "..\Build\x64\%CONFIG%\ImageVis3D-64.exe" .
+if !BUILD32!==TRUE xcopy /y "..\Build\Win32\%CONFIG%\ImageVis3D-32.exe" .
 mkdir Shaders
 xcopy ..\Tuvok\Shaders\*.glsl .\Shaders
 
@@ -202,14 +202,14 @@ if NOT !BUILDUVF64!==TRUE (
   if NOT !BUILDUVF32!==TRUE goto UVFAILED
 )
 
-if !BUILDUVF64!==TRUE xcopy "..\CmdLineConverter\Build\x64\%CONFIG%\UVFConverter64.exe" .
-if !BUILDUVF32!==TRUE xcopy "..\CmdLineConverter\Build\Win32\%CONFIG%\UVFConverter32.exe" .
+if !BUILDUVF64!==TRUE xcopy /y "..\CmdLineConverter\Build\x64\%CONFIG%\*.exe" .
+if !BUILDUVF32!==TRUE xcopy /y "..\CmdLineConverter\Build\Win32\%CONFIG%\*.exe" .
 
 "C:\Program Files\7-Zip\7z" a -r ..\UVFConverter_Win_r%REVSTR%.zip
 del . /F /S /Q
 
-if !BUILDUVFR64!==TRUE xcopy "..\UVFReader\Build\x64\%CONFIG%\UVFReader64.exe" .
-if !BUILDUVFR32!==TRUE xcopy "..\UVFReader\Build\Win32\%CONFIG%\UVFReader32.exe" .
+if !BUILDUVFR64!==TRUE xcopy /y "..\UVFReader\Build\x64\%CONFIG%\*.exe" .
+if !BUILDUVFR32!==TRUE xcopy /y "..\UVFReader\Build\Win32\%CONFIG%\*.exe" .
 
 "C:\Program Files\7-Zip\7z" a -r ..\UVFReader_Win_r%REVSTR%.zip
 del . /F /S /Q
