@@ -127,9 +127,6 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
 #else
   groupBox_7->setVisible(false);
 #endif
-
-  // give Tom a break for the 1.2 release by disabling/hiding experimental features
-  radioButton_SBVR2D->setVisible(false);
 }
 
 
