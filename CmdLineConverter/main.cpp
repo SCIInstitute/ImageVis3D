@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
 
   if (parameters.SwitchSet("?") || parameters.SwitchSet("HELP")) {
     ShowUsage(strFilename);
-    return 1;   
+    return EXIT_SUCCESS;   
   }
 
   string strInFile = "";
@@ -177,19 +177,19 @@ int main(int argc, char* argv[])
   if (strInFile == "" && strInDir == "") {
     cout << "Must specify parameter either 'f' or parameter 'd'." << endl;
     ShowUsage(strFilename);
-    return 1;
+    return EXIT_FAILURE;
   }
 
   if (strInFile != "" && strInDir != "") {
     cout << "Must specify parameter either 'f' or parameter 'd' but not both." << endl;
     ShowUsage(strFilename);
-    return 1;
+    return EXIT_FAILURE;
   }
 
   if (strOutfile == "") {
     cout << "Must specify output file." << endl;
     ShowUsage(strFilename);
-    return 1;
+    return EXIT_FAILURE;
   }
 
   HRConsoleOut* debugOut = new HRConsoleOut();
@@ -205,13 +205,50 @@ int main(int argc, char* argv[])
     string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
     if (strInFile2 == "") {
-      cout << "Running in file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;  
-      if (ioMan.ConvertDataset(strInFile, strOutfile, SysTools::GetPath(strOutfile))) { // HACK: use the output file's dir as temp dir
-        cout << "Success." << endl << endl;
-        return 0;
+
+      if (targetType == "uvf" && sourceType == "uvf") {
+        cout << endl << "Running in UVF to UVF mode, perserving only the raw data from " << strInFile.c_str() << " to " << strOutfile.c_str() << endl;
+
+
+        cout << "Step 1. Extracting raw data" << endl;
+        string tmpFile = SysTools::ChangeExt(strOutfile,"nrrd"); /// use some simple format as intermediate file
+
+        if (ioMan.ConvertDataset(strInFile, tmpFile, SysTools::GetPath(tmpFile))) { // HACK: use the output file's dir as temp dir
+          cout << endl << "Success." << endl << endl;
+        } else {
+          cout << endl << "Extraction failed!" << endl << endl;
+          return EXIT_FAILURE;
+        }
+
+        cout << "Step 2. Writing new UVF file" << endl;
+
+        if (ioMan.ConvertDataset(tmpFile, strOutfile, SysTools::GetPath(strOutfile))) { // HACK: use the output file's dir as temp dir
+          if(std::remove(tmpFile.c_str()) == -1) {
+           cout << endl << "Conversion succeeded but could not delete tmp file " << tmpFile.c_str() << endl << endl;
+          } else {
+           cout << endl << "Success." << endl << endl;
+          }
+          return EXIT_SUCCESS;
+        } else {
+          if(std::remove(tmpFile.c_str()) == -1) {
+           cout << endl << "UVF write failed and could not delete tmp file " << tmpFile.c_str() << endl << endl;
+          } else {
+           cout << endl << "UVF write failed." << endl << endl;
+          }
+          return EXIT_FAILURE;
+        }
+
+
+
       } else {
-        cout << "Conversion failed!" << endl << endl;
-        return 2;
+        cout << endl << "Running in file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;  
+        if (ioMan.ConvertDataset(strInFile, strOutfile, SysTools::GetPath(strOutfile))) { // HACK: use the output file's dir as temp dir
+          cout << endl << "Success." << endl << endl;
+          return EXIT_SUCCESS;
+        } else {
+          cout << endl << "Conversion failed!" << endl << endl;
+          return EXIT_FAILURE;
+        }
       }
     } else {
       vector<string> vDataSets;
@@ -224,18 +261,18 @@ int main(int argc, char* argv[])
       vScales.push_back(fScale);
       vBiases.push_back(fBias);
 
-      cout << "Running in merge mode." << endl << "Converting";
+      cout << endl << "Running in merge mode." << endl << "Converting";
       for (size_t i = 0;i<<vDataSets.size();i++) {
         cout << " " << vDataSets[i];
       }        
       cout << " to " << strOutfile<< endl << endl;  
 
       if (ioMan.MergeDatasets(vDataSets, vScales, vBiases, strOutfile, SysTools::GetPath(strOutfile))) {  // HACK: use the output file's dir as temp dir
-        cout << "Success." << endl << endl;
-        return 0;
+        cout << endl << "Success." << endl << endl;
+        return EXIT_SUCCESS;
       } else {
-        cout << "Merging datasets failed!" << endl << endl;
-        return 2;
+        cout << endl << "Merging datasets failed!" << endl << endl;
+        return EXIT_FAILURE;
       }
 
     }
@@ -243,17 +280,17 @@ int main(int argc, char* argv[])
   } else {
 
     if (strInFile2 != "") {
-      cout << "Error: Currently file merging is only supported in file mode (i.e. specify -f and not -d)." << endl << endl;
-      return 2;
+      cout << endl << "Error: Currently file merging is only supported in file mode (i.e. specify -f and not -d)." << endl << endl;
+      return EXIT_FAILURE;
     }
 
     /// \todo: remove this restricition (one solution would be to create a UVF first and then convert it to whatever is needed)
     if (targetType != "uvf") {
-      cout << "Error: Currently only uvf is only supported as target type for directory processing." << endl << endl;
-      return 2;
+      cout << endl << "Error: Currently only uvf is only supported as target type for directory processing." << endl << endl;
+      return EXIT_FAILURE;
     }
 
-    cout << "Running in directory mode." << endl << "Converting " << strInDir.c_str() << " to " << strOutfile.c_str() << endl << endl;
+    cout << endl << "Running in directory mode." << endl << "Converting " << strInDir.c_str() << " to " << strOutfile.c_str() << endl << endl;
 
     vector<FileStackInfo*> dirinfo = ioMan.ScanDirectory(strInDir);
 
@@ -272,20 +309,20 @@ int main(int argc, char* argv[])
     int iFailCount = 0;
     for (size_t i = 0;i<dirinfo.size();i++) {
       if (ioMan.ConvertDataset(dirinfo[i], vStrFilenames[i], SysTools::GetPath(vStrFilenames[i]))) {
-        cout << "Success." << endl << endl;
+        cout << endl << "Success." << endl << endl;
       } else {
-        cout << "Conversion failed!" << endl << endl;
+        cout << endl << "Conversion failed!" << endl << endl;
         iFailCount++;
         for (size_t i = 0;i<dirinfo.size();i++) delete dirinfo[i];
-        return 3;
+        return EXIT_FAILURE;
       }
     }
     
     if (iFailCount != 0)  {
-      cout << iFailCount << " out of " << dirinfo.size() << " stacks failed to convert properly."<< endl << endl;
+      cout << endl << iFailCount << " out of " << dirinfo.size() << " stacks failed to convert properly."<< endl << endl;
     }
 
     for (size_t i = 0;i<dirinfo.size();i++) delete dirinfo[i];
-    return 0;
+    return EXIT_SUCCESS;
   }
 }
