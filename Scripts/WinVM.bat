@@ -175,7 +175,7 @@ cd Nightly
 if !BUILD64!==TRUE xcopy /y "..\Build\x64\%CONFIG%\ImageVis3D-64.exe" .
 if !BUILD32!==TRUE xcopy /y "..\Build\Win32\%CONFIG%\ImageVis3D-32.exe" .
 mkdir Shaders
-xcopy ..\Tuvok\Shaders\*.glsl .\Shaders
+xcopy /Y ..\Tuvok\Shaders\*.glsl .\Shaders
 
 del ..\ImageVis3D*.zip
 "C:\Program Files\7-Zip\7z" a -r ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip
