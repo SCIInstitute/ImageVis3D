@@ -788,10 +788,17 @@ void MainWindow::PickLightColor() {
   else
     return;
 
-  QColor prevColor(prevColorVec[0]*255, prevColorVec[1]*255, prevColorVec[2]*255);
+  // these should probably be a size_t or even unsigned char, but Qt's APIs
+  // take an int.
+  const int rgb[3] = {
+    static_cast<int>(prevColorVec[0] * 255),
+    static_cast<int>(prevColorVec[1] * 255),
+    static_cast<int>(prevColorVec[2] * 255)
+  };
+  QColor prevColor(rgb[0], rgb[1], rgb[2]);
   QColor color = QColorDialog::getColor(prevColor, this);
 
-  if (color.isValid()) { 
+  if (color.isValid()) {
     prevColorVec[0] = color.red()/255.0f;
     prevColorVec[1] = color.green()/255.0f;
     prevColorVec[2] = color.blue()/255.0f;
