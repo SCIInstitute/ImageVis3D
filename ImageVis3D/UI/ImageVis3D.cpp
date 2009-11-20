@@ -846,7 +846,14 @@ void MainWindow::UpdateColorWidget() {
   }
 
   m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular);
-  horizontalSlider_ambientIntensity->setValue(cAmbient[3]*100);
-  horizontalSlider_diffuseIntensity->setValue(cDiffuse[3]*100);
-  horizontalSlider_specularIntensity->setValue(cSpecular[3]*100);
+  // these should probably be a size_t or even unsigned char, but Qt's APIs
+  // take an int.
+  const int intensity[3] = {
+    static_cast<int>(cAmbient[3] * 100),
+    static_cast<int>(cDiffuse[3] * 100),
+    static_cast<int>(cSpecular[3] * 100)
+  };
+  horizontalSlider_ambientIntensity->setValue(intensity[0]);
+  horizontalSlider_diffuseIntensity->setValue(intensity[1]);
+  horizontalSlider_specularIntensity->setValue(intensity[2]);
 }
