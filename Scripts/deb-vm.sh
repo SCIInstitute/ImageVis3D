@@ -3,24 +3,6 @@ cd ${HOME}/imagevis3d
 source Scripts/util.sh
 
 export PATH="${HOME}/sw/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin"
-# this affects what BSD mail uses for the Reply-To header:
-export REPLYTO="tfogal@sci.utah.edu"
-export MAILTO="tfogal@sci.utah.edu"
-
-em="tfogal@sci.utah.edu"
-full_em="tfogal@sci.utah.edu jens@sci.utah.edu"
-
-status="status-deb-vm"
-function mailtry
-{
-    $@
-    if test $? -ne 0 ; then
-        echo "'$@' failed, bailing .."
-        echo "Command: '$@' failed..." >> ${status}
-        cat ${status} | mail -s "deb-vm nightly FAILED" ${em}
-        exit 1
-    fi
-}
 
 rm -f ${status} warnings
 echo "Using compiler version:" > ${status}

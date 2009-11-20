@@ -3,31 +3,6 @@ cd ${HOME}/imagevis3d
 source Scripts/util.sh
 
 export PATH="${HOME}/sw/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin"
-# this affects what BSD mail uses for the Reply-To header:
-export REPLYTO="tfogal@sci.utah.edu"
-
-# if something should fail:
-em="tfogal@sci.utah.edu"
-# warnings and other information:
-full_em="tfogal@sci.utah.edu jens@sci.utah.edu"
-
-status="status-argon"
-# like 'try' but sends an email if it fails.
-function mailtry
-{
-    $@
-    if test $? -ne 0 ; then
-        echo "'$@' failed, bailing .."
-        echo "Command: '$@' failed..." >> ${status}
-        if test -f warnings ; then
-            echo "-------------------------------------" >> ${status}
-            echo "" >> ${status}
-            cat warnings >> ${status}
-        fi
-        cat ${status} | mail -s "Argon nightly FAILED" ${em}
-        exit 1
-    fi
-}
 
 echo "Using compiler version:" > ${status}
 g++ --version >> ${status}
@@ -39,7 +14,7 @@ echo "" >> ${status}
 
 echo "-------------------------------------" >> ${status}
 
-try cd ${HOME}/imagevis3d
+mailtry cd ${HOME}/imagevis3d
 rm -f *.tar.gz *.zip *.dmg warnings
 mailtry sh Scripts/nightly.sh
 cat warnings >> ${status}

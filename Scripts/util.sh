@@ -1,6 +1,15 @@
 #!/bin/sh
 # Various utility functions useful in nightly scripts.
 
+# this affects what BSD mail uses for the Reply-To header:
+export REPLYTO="tfogal@sci.utah.edu"
+# if something should fail:
+em="tfogal@sci.utah.edu"
+# warnings and other information:
+full_em="tfogal@sci.utah.edu jens@sci.utah.edu"
+
+export status="status-${hostname}"
+
 # Give an error message and exit uncleanly.
 function die
 {
@@ -17,6 +26,22 @@ function try
     fi
 }
 
+# like 'try' but sends an email if it fails.
+function mailtry
+{
+    $@
+    if test $? -ne 0 ; then
+        echo "'$@' failed, bailing .."
+        echo "Command: '$@' failed..." >> ${status}
+        if test -f warnings ; then
+            echo "-------------------------------------" >> ${status}
+            echo "" >> ${status}
+            cat warnings >> ${status}
+        fi
+        cat ${status} | mail -s "$(hostname) nightly FAILED" ${em}
+        exit 1
+    fi
+}
 
 # Determines the appropriate VCS system to use.  Mainly to handles/distinguish
 # between svn and git-svn repositories.  Sets variable `VCS' to the appropriate
