@@ -47,7 +47,7 @@ ${qmake} \
 if test $? -ne 0 ; then
     die "qmake failed."
 fi
-make -j5 2> warnings
+make -j3 2> warnings
 try make
 
 tarball=$(nm_tarball)
