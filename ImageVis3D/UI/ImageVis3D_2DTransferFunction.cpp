@@ -220,14 +220,18 @@ void MainWindow::Transfer2DChooseGradientColor() {
     m_2DTransferFunction->GetGradient(listWidget_Gradient->currentRow());
 
 
-  QColor prevColor(s.second[0]*255, s.second[1]*255, s.second[2]*255);
+  const int old_color[3] = {
+    static_cast<int>(s.second[0] * 255.f),
+    static_cast<int>(s.second[1] * 255.f),
+    static_cast<int>(s.second[2] * 255.f)
+  };
+  QColor prevColor(old_color[0], old_color[1], old_color[2]);
   QColor color = QColorDialog::getColor(prevColor, this);
 
   if (color.isValid()) { 
     s.second[0] = color.red()/255.0f;
     s.second[1] = color.green()/255.0f;
     s.second[2] = color.blue()/255.0f;
-
 
     m_2DTransferFunction->SetGradient(listWidget_Gradient->currentRow(),s);
 
@@ -236,7 +240,6 @@ void MainWindow::Transfer2DChooseGradientColor() {
 }
 
 void MainWindow::Transfer2DChooseGradientOpacity() {
-
   GradientStop s =
     m_2DTransferFunction->GetGradient(listWidget_Gradient->currentRow());
   s.second[3] = horizontalSlider_Opacity->value()/100.0f;
@@ -249,17 +252,20 @@ void MainWindow::Transfer2DChooseGradientColorSimpleUI() {
   int iIndex = min<int>(1,int(m_2DTransferFunction->GetGradientCount())-1);
   if (iIndex < 0) return;
 
-
   GradientStop s = m_2DTransferFunction->GetGradient(iIndex);
 
-  QColor prevColor(s.second[0]*255, s.second[1]*255, s.second[2]*255);
+  const int old_color[3] = {
+    static_cast<int>(s.second[0] * 255.f),
+    static_cast<int>(s.second[1] * 255.f),
+    static_cast<int>(s.second[2] * 255.f)
+  };
+  QColor prevColor(old_color[0], old_color[1], old_color[2]);
   QColor color = QColorDialog::getColor(prevColor, this);
 
   if (color.isValid()) { 
     s.second[0] = color.red()/255.0f;
     s.second[1] = color.green()/255.0f;
     s.second[2] = color.blue()/255.0f;
-
 
     m_2DTransferFunction->SetGradient(iIndex,s);
 
