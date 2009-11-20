@@ -19,6 +19,11 @@ function mailtry
     if test $? -ne 0 ; then
         echo "'$@' failed, bailing .."
         echo "Command: '$@' failed..." >> ${status}
+        if test -f warnings ; then
+            echo "-------------------------------------" >> ${status}
+            echo "" >> ${status}
+            cat warnings >> ${status}
+        fi
         cat ${status} | mail -s "Argon nightly FAILED" ${em}
         exit 1
     fi
