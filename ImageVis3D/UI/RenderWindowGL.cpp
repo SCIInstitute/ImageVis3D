@@ -95,6 +95,7 @@ RenderWindowGL::~RenderWindowGL()
 void RenderWindowGL::InitializeRenderer()
 {
   static bool bFirstTime = true;
+
   if (bFirstTime) {
     int err = glewInit();
     if (err != GLEW_OK) {
@@ -150,9 +151,10 @@ void RenderWindowGL::InitializeRenderer()
                  << "Would you like to continue anyway?  If you say, 'yes' "
                  << "and your video driver is accurate, ImageVis3D will "
                  << "crash.  No other programs will be effected.";
-            if(QMessageBox::No ==
+            if(QMessageBox::Yes !=
                QMessageBox::question(this, "Continue?", warn.str().c_str(),
-                                     QMessageBox::Yes & QMessageBox::No)) {
+                                     QMessageBox::Yes | QMessageBox::No,
+                                     QMessageBox::No)) {
               m_Renderer->Cleanup();
               m_MasterController.ReleaseVolumerenderer(m_Renderer);
               m_bRenderSubsysOK = false;
