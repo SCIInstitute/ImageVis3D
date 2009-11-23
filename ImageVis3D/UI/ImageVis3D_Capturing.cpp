@@ -128,7 +128,7 @@ void MainWindow::CaptureRotation() {
 
     m_pActiveRenderWin->ToggleHQCaptureMode();
 
-    PleaseWaitDialog pleaseWait(this);
+    PleaseWaitDialog pleaseWait(this, Qt::Tool, true);
     QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
 
     if (eWindowMode == AbstrRenderer::WM_3D)  {
@@ -136,7 +136,7 @@ void MainWindow::CaptureRotation() {
 
       int i = 0;
       float fAngle = 0.0f;
-      while (i < iNumImages) {
+      while (i < iNumImages && !pleaseWait.Canceled()) {
         labelOut->SetOutput(true, true, true, false);
         if (i==0)
           m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i%% completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
@@ -153,6 +153,8 @@ void MainWindow::CaptureRotation() {
           break;
         }
         i++;
+        m_pActiveRenderWin->UpdateWindow();
+        QCoreApplication::processEvents();
       }
     } else {
       if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
@@ -176,7 +178,7 @@ void MainWindow::CaptureRotation() {
 
         pleaseWait.SetText("Capturing a full 360° MIP rotation, please wait  ...");
         float fAngle = 0.0f;
-        for (int i = 0;i<iNumImages;i++) {
+        for (int i = 0;i<iNumImages && !pleaseWait.Canceled();i++) {
           labelOut->SetOutput(true, true, true, false);
           if (bStereo) {
             if (i==0)
@@ -219,7 +221,7 @@ void MainWindow::CaptureRotation() {
           }
         }
 
-        if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode) && bStereo) {
+        if (!pleaseWait.Canceled() && m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode) && bStereo) {
           labelOut->SetOutput(true, true, true, false);
 
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {

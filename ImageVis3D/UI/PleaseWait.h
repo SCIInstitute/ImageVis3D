@@ -40,6 +40,7 @@
 
 #include "AutoGen/ui_PleaseWait.h"
 #include "DebugOut/QTLabelOut.h"
+#include <QtGui/QPushButton>
 
 class MasterController;
 
@@ -48,7 +49,8 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
   Q_OBJECT
   public:
     PleaseWaitDialog(QWidget* parent,
-                     Qt::WindowFlags flags = Qt::Tool);
+                     Qt::WindowFlags flags = Qt::Tool,
+                     bool bHasCancelButton= false);
     virtual ~PleaseWaitDialog();
 
     QTLabelOut* AttachLabel(MasterController* pMasterController);
@@ -65,9 +67,18 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
 
     void closeEvent(QCloseEvent *event);
 
+    bool Canceled() {return m_bCanceled;}
+  private slots:
+    void CancelClicked();
+
+  signals:
+    void CancelSignal();
+
   protected:
     MasterController* m_pMasterController;
     QTLabelOut*       m_pLabelOut;
+    QPushButton*      m_ButtonCancel;
+    bool              m_bCanceled;
 };
 
 #endif // PLEASEWAIT_H

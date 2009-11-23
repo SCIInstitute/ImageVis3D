@@ -38,17 +38,38 @@
 #include "PleaseWait.h"
 #include "../Tuvok/Controller/MasterController.h"
 
-PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags) :
+PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags, bool bHasCancelButton) :
   QDialog(parent, flags),
   m_pMasterController(NULL),
-  m_pLabelOut(NULL)
+  m_pLabelOut(NULL),
+  m_ButtonCancel(NULL),
+  m_bCanceled(false)
 {
   setupUi(this);
+
+  if (bHasCancelButton) {
+    m_ButtonCancel = new QPushButton(this);
+    m_ButtonCancel->setText(QString::fromUtf8("Cancel"));
+    verticalLayout->addWidget(m_ButtonCancel);
+
+    QObject::connect(m_ButtonCancel, SIGNAL(clicked()), this, SLOT(CancelClicked()));
+  }
 }
 
 PleaseWaitDialog::~PleaseWaitDialog(void)
 {
   DetachLabel();
+  delete m_ButtonCancel;
+}
+
+void PleaseWaitDialog::CancelClicked()
+{
+  m_ButtonCancel->setText(QString::fromUtf8("Canceling ..."));
+  m_ButtonCancel->setEnabled(false);
+  m_ButtonCancel->update();
+  m_bCanceled = true;
+  QCoreApplication::processEvents();
+  emit Canceled();
 }
 
 QTLabelOut* PleaseWaitDialog::AttachLabel(MasterController* pMasterController) {

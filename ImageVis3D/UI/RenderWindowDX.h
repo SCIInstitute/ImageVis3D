@@ -70,7 +70,9 @@ class RenderWindowDX : public QWidget, public RenderWindow
 
     virtual ~RenderWindowDX();
 
-  protected:
+    virtual void UpdateWindow() {update();}
+
+protected:
     virtual void ToggleFullscreen();
 
   private:
@@ -82,7 +84,6 @@ class RenderWindowDX : public QWidget, public RenderWindow
 
   // **************** Qt widget connector calls
   protected:
-    virtual void UpdateWindow() {update();}
     virtual void ForceRepaint();
     virtual QWidget* GetQtWidget() {return this;}
 

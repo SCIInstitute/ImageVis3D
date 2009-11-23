@@ -134,6 +134,7 @@ class RenderWindow
     virtual QWidget* GetQtWidget() = 0;
 
     virtual void ToggleFullscreen() = 0;
+    virtual void UpdateWindow() = 0;
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
@@ -161,7 +162,6 @@ class RenderWindow
     virtual void InitializeRenderer() = 0;
 
     // Qt widget connector calls
-    virtual void UpdateWindow() = 0;
     virtual void ForceRepaint() = 0;
     virtual void EmitStereoDisabled() = 0;
     virtual void EmitRenderWindowViewChanged(int iViewID) = 0;
