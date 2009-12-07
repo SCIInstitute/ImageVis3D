@@ -136,7 +136,7 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
   }
   else if (eWinMode == AbstrRenderer::WM_DIVIDER_HORIZONTAL ||
            eWinMode == AbstrRenderer::WM_DIVIDER_VERTICAL ||
-           eWinMode == AbstrRenderer::WM_DIVIDER_BOTH) 
+           eWinMode == AbstrRenderer::WM_DIVIDER_BOTH)
     {
       m_draggedWindow = eWinMode;
       m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
@@ -269,7 +269,7 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
       SetTranslationDelta(FLOATVECTOR3(0,0,fZoom),true);
     }
   } else if (eWinMode == AbstrRenderer::WM_SAGITTAL ||
-             eWinMode == AbstrRenderer::WM_AXIAL || 
+             eWinMode == AbstrRenderer::WM_AXIAL ||
              eWinMode == AbstrRenderer::WM_CORONAL)   {
     // this returns 1 for "most" mice if the wheel is turned one "click"
     int iZoom = event->delta()/120;
@@ -286,7 +286,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
     m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
                                      FLOATVECTOR2(m_vWinDim));
   switch (event->key()) {
-    case Qt::Key_F : ToggleFullscreen(); 
+    case Qt::Key_F : ToggleFullscreen();
                      break;
     case Qt::Key_C : if (eWinMode == AbstrRenderer::WM_3D) {
                        m_Renderer->SetRenderCoordArrows(!m_Renderer->GetRenderCoordArrows());
