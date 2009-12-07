@@ -93,5 +93,7 @@ echo "${R_IMAGEVIS3D}" >> latest
 echo "${TUVOK_MAJOR}.${TUVOK_MINOR}.${TUVOK_PATCH}" >> latest
 echo "${R_TUVOK}" >> latest
 
-echo "Warnings:"
-cat warnings
+if test -f warnings ; then
+    echo "Warnings:"
+    cat warnings
+fi
