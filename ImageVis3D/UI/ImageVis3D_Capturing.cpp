@@ -152,7 +152,7 @@ void MainWindow::CaptureRotation() {
         string strSequenceName;
         if (!m_pActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
           QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
-          ShowWarningDialog( tr("Error"), msg);
+          ShowWarningDialog(tr("Error"), msg);
           T_ERROR("%s", msg.toAscii().data());
           break;
         }
