@@ -44,6 +44,7 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 #include <QtGui/QMessageBox>
 #include <QtGui/QMdiSubWindow>
 

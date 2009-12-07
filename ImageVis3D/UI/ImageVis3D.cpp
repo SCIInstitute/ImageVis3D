@@ -41,6 +41,7 @@
 
 #include <QtCore/QSettings>
 #include <QtCore/QFileInfo>
+#include <QtCore/QTimer>
 #include <QtGui/QMessageBox>
 
 #include <QtGui/QMdiSubWindow>

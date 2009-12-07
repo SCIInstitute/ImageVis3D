@@ -41,6 +41,9 @@
 #define IMAGEVIS3D_H
 
 #include <StdDefines.h>
+#include <string>
+#include <vector>
+
 class MasterController;
 class TextfileOut;
 
@@ -58,17 +61,12 @@ class TextfileOut;
 #include <UI/Welcome.h>
 #include <UI/MetadataDlg.h>
 
-
-#include <QtCore/QTimer>
-
-#include <string>
-#include <vector>
-
 class QHttp;
 class QHttpResponseHeader;
 class QAuthenticator;
 class QFile;
 class QSslError;
+class QTimer;
 class FTPDialog;
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptable
