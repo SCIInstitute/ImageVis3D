@@ -40,7 +40,7 @@ fi
 ${qmake} \
     QMAKE_CONFIG=${CFG} \
     QMAKE_CFLAGS="${CF}" \
-    QMAKE_CXXFLAGS+="${CF} -Werror" \
+    QMAKE_CXXFLAGS+="${CF}" \
     QMAKE_LFLAGS="${CF} ${LDF} ${LDFLAGS}" \
     -spec ${spec} \
     -recursive
