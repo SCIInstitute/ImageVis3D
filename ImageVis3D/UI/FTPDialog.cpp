@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -44,7 +44,7 @@
 
 using namespace std;
 
-FTPDialog::FTPDialog(const string& strSource, const string& strTargetServer, const string& strTargetPath, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) : 
+FTPDialog::FTPDialog(const string& strSource, const string& strTargetServer, const string& strTargetPath, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
   QDialog(parent, flags),
   m_strSource(strSource),
   m_strTargetServer(strTargetServer),
@@ -123,7 +123,7 @@ void FTPDialog::ftpCommandFinished(int, bool error) {
          close();
          return;
      }
-  } 
+  }
 }
 
 void FTPDialog::updateDataTransferProgress(qint64 readBytes, qint64 totalBytes) {
@@ -133,7 +133,7 @@ void FTPDialog::updateDataTransferProgress(qint64 readBytes, qint64 totalBytes) 
 
 void FTPDialog::Disconnect()
 {
-  if ( m_pFtp ) { 
+  if ( m_pFtp ) {
     m_pFtp->abort();
     m_pFtp->deleteLater();
     m_pFtp = NULL;

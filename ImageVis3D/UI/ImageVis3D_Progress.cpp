@@ -51,9 +51,9 @@ void MainWindow::ClearProgressViewAndInfo() {
   lineEdit_LODLevelForCurrentView->setText("");
 }
 
-void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount, 
-                                               unsigned int iCurrentCount, 
-                                               unsigned int iBrickCount, 
+void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
+                                               unsigned int iCurrentCount,
+                                               unsigned int iBrickCount,
                                                unsigned int iWorkingBrick,
                                                unsigned int iMinLODIndex,
                                                RenderWindow* pRenderWin) {
@@ -64,7 +64,7 @@ void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
     // iCurrentCount may be higher than LODCount due the forcing higher LODs with the slider
     // to avoid strange reading such as "LOD 4/1" we increase iLODCount
     iLODCount = max(iCurrentCount,iLODCount);
-    
+
     QString msg = tr("LOD %1/%2").arg(iCurrentCount).arg(iLODCount);
 #ifdef DETECTED_OS_APPLE
     /// todo: label update has been removed until the delay-LOD issue on the mac is resolved

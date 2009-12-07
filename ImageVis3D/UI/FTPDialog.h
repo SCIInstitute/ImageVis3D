@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -58,9 +58,9 @@ class FTPDialog : public QDialog, protected Ui_FTPDialog
 
   protected slots:
      void ftpCommandFinished(int commandId, bool error);
-     void updateDataTransferProgress(qint64 readBytes, qint64 totalBytes);  
+     void updateDataTransferProgress(qint64 readBytes, qint64 totalBytes);
      void AbortTransfer();
-  
+
   signals:
      void TransferFailure();
      void TransferSuccess();

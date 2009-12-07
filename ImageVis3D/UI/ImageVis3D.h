@@ -80,7 +80,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
                Qt::WindowFlags flags = 0);
 
     virtual ~MainWindow();
-    
+
     QTOut* GetDebugOut() {return m_pDebugOut;}
 
     // Scriptable implementation
@@ -92,16 +92,16 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     const std::string& GetTempDir() {return m_strTempDir;}
 
   public slots:
-    void SetRenderProgressAnUpdateInfo(unsigned int iLODCount, 
-                                       unsigned int iCurrentCount, 
-                                       unsigned int iBrickCount, 
+    void SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
+                                       unsigned int iCurrentCount,
+                                       unsigned int iBrickCount,
                                        unsigned int iWorkingBrick,
                                        unsigned int iMinLODIndex,
                                        RenderWindow* pRenderWin);
 
   protected slots:
     void TransferToI3M();
-    
+
     void FtpFail();
     void FtpSuccess();
 
@@ -332,7 +332,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SetTitle();
     void setupUi(QMainWindow *MainWindow);
 
-    
+
     void UpdateWSMRUActions();
     void AddFileToWSMRUList(const QString &fileName);
 

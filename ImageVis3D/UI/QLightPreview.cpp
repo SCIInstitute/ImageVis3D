@@ -69,27 +69,27 @@ void QLightPreview::DrawSphere(QImage* sphereImage) {
   FLOATVECTOR3 fLightDir(0.5,-0.5,1.0);
   fLightDir.normalize();
 
-  
+
   FLOATVECTOR3 fViewDir(0,0,1);
 
   int w = width();
   int h = height();
-  for (int y = 0;y<int(m_iCachedHeight);y++){  
+  for (int y = 0;y<int(m_iCachedHeight);y++){
     float normY = float(y*2) / float(h);
     float fDistToCenterY = (normY - 1.0f);
     float fDistToCenterYQ = fDistToCenterY*fDistToCenterY;
 
     for (int x = 0;x<int(m_iCachedWidth);x++){
-      
+
       float normX = float(x*2) / float(w);
       float fDistToCenterX = (normX - 1.0f);
       float fDistToCenterXQ = fDistToCenterX*fDistToCenterX;
-      
+
       if ( fDistToCenterXQ + fDistToCenterYQ > 1 ) {
         sphereImage->setPixel(int(x),int(y),qRgb(0,0,0));
       } else {
         FLOATVECTOR3 vNormal(fDistToCenterX, fDistToCenterY, sqrt((1-fDistToCenterYQ)-fDistToCenterXQ));
-         
+
         // compute diffuse and clamp to zero
         FLOATVECTOR3 diffuseColor = (fLightDir ^ vNormal) * m_cDiffuse.xyz() * m_cDiffuse.w;
         diffuseColor.x = (diffuseColor.x < 0) ? 0: diffuseColor.x;
@@ -152,7 +152,7 @@ void QLightPreview::paintEvent(QPaintEvent *event) {
 void QLightPreview::SetData(const FLOATVECTOR4& ambient,
                             const FLOATVECTOR4& diffuse,
                             const FLOATVECTOR4& specular) {
-  
+
   m_cAmbient = ambient;
   m_cDiffuse = diffuse;
   m_cSpecular = specular;

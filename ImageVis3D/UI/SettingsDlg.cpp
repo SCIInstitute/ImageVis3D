@@ -329,7 +329,7 @@ void SettingsDlg::SetLogoLabel() {
   }
 }
 
-void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU, const std::string& tempDir, 
+void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU, const std::string& tempDir,
                             bool bQuickopen, unsigned int iMinFramerate, bool bUseAllMeans, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, UINT32 iLogLevel,
                             bool bShowVersionInTitle,
@@ -352,7 +352,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   horizontalSlider_InactTS->setValue(iInactiveTS);
 
   checkBox_WriteLogfile->setChecked(bWriteLogFile);
-  checkBox_ShowCrashDialog->setChecked(bShowCrashDialog);  
+  checkBox_ShowCrashDialog->setChecked(bShowCrashDialog);
   lineEdit_filename->setText(strLogFileName.c_str());
   horizontalSlider_loglevel->setValue(iLogLevel);
 
@@ -545,7 +545,7 @@ void SettingsDlg::PickLogFile() {
     if (!strRelFilename.contains("..")) fileName = strRelFilename;
 
     settings.setValue("Folders/LogFile", QFileInfo(fileName).absoluteDir().path());
-    
+
     lineEdit_filename->setText(fileName);
   }
 

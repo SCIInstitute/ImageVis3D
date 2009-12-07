@@ -83,14 +83,14 @@ enum EQ2DSimpleEDragMode {
 
 class SimpleSwatchInfo {
 public:
-  SimpleSwatchInfo(const E2DSimpleModePolyType& eType=PT_OTHER, 
+  SimpleSwatchInfo(const E2DSimpleModePolyType& eType=PT_OTHER,
                    const FLOATVECTOR2& vHandlePos=FLOATVECTOR2(0,0),
-                   const std::string& desc="" ) : 
+                   const std::string& desc="" ) :
     m_eType(eType),
     m_vHandlePos(vHandlePos),
-    m_strDesc(desc) 
+    m_strDesc(desc)
   {}
-  
+
   E2DSimpleModePolyType m_eType;
   FLOATVECTOR2          m_vHandlePos;
   std::string           m_strDesc;
@@ -196,7 +196,7 @@ private:
   unsigned int m_iCachedWidth;
   QPixmap*   m_pBackdropCache;
   QPixmap*   m_pSwatchImage;
-  
+
   // cached image of the histogram
   QImage* m_pHistImage;
 
@@ -255,7 +255,7 @@ private:
 
   // For simple mode
   SimpleSwatchInfo ClassifySwatch(TFPolygon& polygon) const;
-  void ComputeGradientForPseudoTris(TFPolygon& swatch, const FLOATVECTOR4& color);  
+  void ComputeGradientForPseudoTris(TFPolygon& swatch, const FLOATVECTOR4& color);
   void RecomputeLowerPseudoTrisPoints(TFPolygon& currentSwatch, const FLOATVECTOR2& vHandePos);
   bool PointInPolygon(const FLOATVECTOR2& point, const TFPolygon& poly) const;
   std::vector<SimpleSwatchInfo> m_vSimpleSwatchInfo;

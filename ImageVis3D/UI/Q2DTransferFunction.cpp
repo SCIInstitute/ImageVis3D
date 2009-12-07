@@ -439,7 +439,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
     }
 
     INTVECTOR2 vPixelPos0 = Normalized2Offscreen(currentSwatch.pGradientCoords[0]),
-		           vPixelPos1 = Normalized2Offscreen(currentSwatch.pGradientCoords[1]);
+                   vPixelPos1 = Normalized2Offscreen(currentSwatch.pGradientCoords[1]);
 
     QGradient* pGradientBrush;
     if (currentSwatch.bRadial) {

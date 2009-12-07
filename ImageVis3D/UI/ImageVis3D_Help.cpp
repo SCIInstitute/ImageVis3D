@@ -64,8 +64,8 @@
 #include "ImageVis3D.h"
 
 #ifdef DETECTED_OS_WINDOWS
-#	include <ShellAPI.h>
-#	include <windows.h>
+#   include <ShellAPI.h>
+#   include <windows.h>
 #endif
 
 #include "URLDlg.h"

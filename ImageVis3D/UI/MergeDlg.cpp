@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -48,7 +48,7 @@
 
 using namespace std;
 
-MergeDlg::MergeDlg(MainWindow* parent, Qt::WindowFlags flags /* = 0 */) : 
+MergeDlg::MergeDlg(MainWindow* parent, Qt::WindowFlags flags /* = 0 */) :
   QDialog((QWidget*)parent, flags),
   m_pMainWindow(parent)
 {
@@ -109,7 +109,7 @@ void MergeDlg::ChangedActiveDataset() {
     IsDatasetSelected(false);
     return;
   }
-  IsDatasetSelected(true); 
+  IsDatasetSelected(true);
 }
 
 void MergeDlg::AddDataset() {

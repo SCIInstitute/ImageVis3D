@@ -320,7 +320,7 @@ void MainWindow::ExportDataset() {
       }
       LODDlg lodDlg("Which LOD Level do you want to export?", iMinLODLevel, iMaxLODLevel, vDesc, this);
 
-      if (lodDlg.exec() != QDialog::Accepted) 
+      if (lodDlg.exec() != QDialog::Accepted)
         return;
       else
         iLODLevel = lodDlg.GetLOD();
@@ -400,7 +400,7 @@ void MainWindow::ExportMesh() {
       }
       LODDlg lodDlg("For which LOD Level do you want to compute the mesh?", iMinLODLevel, iMaxLODLevel, vDesc, this);
 
-      if (lodDlg.exec() != QDialog::Accepted) 
+      if (lodDlg.exec() != QDialog::Accepted)
         return;
       else
         iLODLevel = lodDlg.GetLOD();
@@ -427,7 +427,7 @@ void MainWindow::MergeDatasets() {
     vector <string> strFilenames;
     vector <double> vScales;
     vector<double>  vBiases;
-    
+
     for (size_t i = 0;i<m.m_vDataSetList.size();i++) {
       strFilenames.push_back(m.m_vDataSetList[i]->m_strFilename);
       vScales.push_back(m.m_vDataSetList[i]->m_fScale);

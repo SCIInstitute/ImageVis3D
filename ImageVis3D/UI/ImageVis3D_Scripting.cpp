@@ -119,7 +119,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
 
 bool MainWindow::Pack(const std::vector< std::string >& strParams) {
   vector<string> vFiles(strParams.begin(), strParams.end()-1);
-  Appendix a(strParams[strParams.size()-1], vFiles); 
+  Appendix a(strParams[strParams.size()-1], vFiles);
   return a.IsOK();
 }
 

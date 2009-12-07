@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -55,7 +55,7 @@ LODDlg::~LODDlg(void)
 {
 }
 
-void LODDlg::ChangeLOD(int iLOD) 
+void LODDlg::ChangeLOD(int iLOD)
 {
   label_selectRes->setText(tr("Selected Resolution %1").arg(m_vvLODs[iLOD-verticalSlider_LOD->minimum()]));
 }

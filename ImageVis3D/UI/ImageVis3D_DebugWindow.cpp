@@ -181,9 +181,9 @@ void MainWindow::ParseAndExecuteDebugCommand() {
   GetDebugOut()->SetShowMessages(true);
 
   m_MasterController.ScriptEngine()->ParseLine(lineEdit_DebugCommand->text().toStdString());
-  
+
   GetDebugOut()->SetShowMessages(bTemp);
-  if (listWidget_DebugOut->count() > 0) 
+  if (listWidget_DebugOut->count() > 0)
     listWidget_DebugOut->setCurrentRow(listWidget_DebugOut->count()-1);
 
   lineEdit_DebugCommand->clear();

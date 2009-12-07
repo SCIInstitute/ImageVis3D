@@ -172,7 +172,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("ActiveTS", settingsDlg.GetActiveTS());
       settings.setValue("InactiveTS", settingsDlg.GetInactiveTS());
       settings.setValue("WriteLogFile", settingsDlg.GetWriteLogFile());
-      settings.setValue("ShowCrashDialog", settingsDlg.GetShowCrashDialog());      
+      settings.setValue("ShowCrashDialog", settingsDlg.GetShowCrashDialog());
       settings.setValue("LogFileName", settingsDlg.GetLogFileName().c_str());
       settings.setValue("LogLevel", settingsDlg.GetLogLevel());
       settings.endGroup();
@@ -183,7 +183,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("AutoSaveWSP", settingsDlg.GetAutoSaveWSP());
       settings.setValue("AutoLockClonedWindow", settingsDlg.GetAutoLockClonedWindow());
       settings.setValue("AbsoluteViewLocks", settingsDlg.GetAbsoluteViewLocks());
-     
+
       settings.setValue("CheckForUpdatesOnStartUp", settingsDlg.GetCheckForUpdatesOnStartUp());
       settings.setValue("CheckForDevBuilds", settingsDlg.GetCheckForDevBuilds());
       settings.setValue("ShowWelcomeScreen", settingsDlg.GetShowWelcomeScreen());
@@ -323,16 +323,16 @@ void MainWindow::ToggleLogFile() {
     Controller::Instance().RemoveDebugOut(m_pTextout);
     m_pTextout = NULL;
   }
-    
+
   if (m_bWriteLogFile) {
     bool bNewOut = !m_pTextout;
-    if (!m_pTextout) 
+    if (!m_pTextout)
       m_pTextout = new TextfileOut(string(m_strLogFileName.toAscii()));
-  
+
     m_pTextout->SetShowErrors(true);
     m_pTextout->SetShowWarnings(m_iLogLevel > 0);
     m_pTextout->SetShowMessages(m_iLogLevel > 1);
 
     if (bNewOut) Controller::Instance().AddDebugOut(m_pTextout);
-  } 
+  }
 }

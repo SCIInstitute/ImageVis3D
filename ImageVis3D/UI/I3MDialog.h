@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -51,14 +51,14 @@ class I3MDialog : public QDialog, protected Ui_I3MDialog
   public:
     I3MDialog(MasterController* pMasterController, const tuvok::UVFDataset* currentDataset, const std::string& strTmpDir, QWidget* parent, Qt::WindowFlags flags = Qt::Dialog);
     virtual ~I3MDialog();
- 
+
   protected slots:
     virtual void SendData();
     virtual void Start();
     virtual void SelectPort();
 
   protected:
-  	UINT32         m_iSendMessage;
+    UINT32         m_iSendMessage;
     QTcpServer*    m_tcpServer;
     UINT32         m_iPort;
     const tuvok::UVFDataset* m_currentDataset;

@@ -97,7 +97,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     void Data2Form(bool bIsDirectX10Capable,
                    UINT64 iMaxCPU, UINT64 iMaxGPU,
-                   const std::string& tempDir, 
+                   const std::string& tempDir,
                    bool bQuickopen,
                    unsigned int iMinFramerate,
                    bool bUseAllMeans,

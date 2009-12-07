@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -41,7 +41,7 @@
   #include <windows.h>
 #endif
 
-URLDlg::URLDlg(QString title, QString desc, QString url, QWidget* parent, Qt::WindowFlags flags) : 
+URLDlg::URLDlg(QString title, QString desc, QString url, QWidget* parent, Qt::WindowFlags flags) :
   QDialog(parent, flags),
   m_strURL(url)
 {
@@ -61,7 +61,7 @@ URLDlg::~URLDlg(void)
 void URLDlg::Download()
 {
   accept();
-  
+
 #ifdef DETECTED_OS_WINDOWS
   ShellExecuteA(NULL, "open", m_strURL.toAscii(), NULL,NULL, SW_SHOWDEFAULT);
 #endif
@@ -69,7 +69,7 @@ void URLDlg::Download()
   m_strURL = tr("open %1").arg(m_strURL);
   system(m_strURL.toAscii());
 #endif
-#ifdef DETECTED_OS_LINUX  
+#ifdef DETECTED_OS_LINUX
   m_strURL = tr("firefox %1").arg(m_strURL);
   system(m_strURL.toAscii()); /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
 #endif

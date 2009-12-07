@@ -110,7 +110,7 @@ void MainWindow::Transfer2DSwatcheTypeChanged(int iIndex) {
 
 void MainWindow::Transfer2DUpdateGradientType() {
   bool b = m_2DTransferFunction->GetActiveGradientType();
-  if (b) 
+  if (b)
     radioButton_radGrad->setChecked(true);
   else
     radioButton_linGrad->setChecked(true);
@@ -164,7 +164,7 @@ void MainWindow::Transfer2DUpdateGradientButtons() {
   int iCurrent;
   if ( m_2DTransferFunction->Get2DTFMode() == TFM_EXPERT)
     iCurrent = listWidget_Gradient->currentRow();
-  else 
+  else
     iCurrent = min<int>(1,int(m_2DTransferFunction->GetGradientCount())-1);
 
   pushButton_DelStop->setEnabled(iCurrent >= 0);
@@ -177,7 +177,7 @@ void MainWindow::Transfer2DUpdateGradientButtons() {
 
     QString strStyle =
       tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(int(s.second[0]*255)).arg(int(s.second[1]*255)).arg(int(s.second[2]*255)).arg(int((1-s.second[0])*255)).arg(int((1-s.second[1])*255)).arg(int((1-s.second[2])*255));
-    
+
     if ( m_2DTransferFunction->Get2DTFMode() == TFM_EXPERT) {
       pushButton_ColorChooser->setStyleSheet( strStyle );
       horizontalSlider_Opacity->setValue(int(s.second[3]*100));
@@ -228,7 +228,7 @@ void MainWindow::Transfer2DChooseGradientColor() {
   QColor prevColor(old_color[0], old_color[1], old_color[2]);
   QColor color = QColorDialog::getColor(prevColor, this);
 
-  if (color.isValid()) { 
+  if (color.isValid()) {
     s.second[0] = color.red()/255.0f;
     s.second[1] = color.green()/255.0f;
     s.second[2] = color.blue()/255.0f;
@@ -262,7 +262,7 @@ void MainWindow::Transfer2DChooseGradientColorSimpleUI() {
   QColor prevColor(old_color[0], old_color[1], old_color[2]);
   QColor color = QColorDialog::getColor(prevColor, this);
 
-  if (color.isValid()) { 
+  if (color.isValid()) {
     s.second[0] = color.red()/255.0f;
     s.second[1] = color.green()/255.0f;
     s.second[2] = color.blue()/255.0f;
@@ -361,8 +361,8 @@ void MainWindow::Transfer2DToggleTFMode() {
 }
 
 void MainWindow::UpdatePolyTypeLabel(int iCurrent) {
-  if (iCurrent >= 0) 
+  if (iCurrent >= 0)
     pushButton_DelPoly_SimpleUI->setText(tr("Delete current %1").arg(m_2DTransferFunction->GetSwatchDesciption().c_str()));
-  else 
+  else
     pushButton_DelPoly_SimpleUI->setText("Delete");
 }
