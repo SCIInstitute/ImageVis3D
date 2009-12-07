@@ -35,11 +35,13 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
-#include "ImageVis3D.h"
-#include "../Tuvok/Basics/SysTools.h"
+#include <sstream>
 #include <QtGui/QFileDialog>
 #include <QtGui/QInputDialog>
 #include <QtCore/QSettings>
+#include "ImageVis3D.h"
+#include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/Controller/Controller.h"
 
 #include "PleaseWait.h"
 #include "MIPRotDialog.h"
@@ -52,7 +54,7 @@ void MainWindow::CaptureFrame() {
     if (!CaptureFrame(lineEditCaptureFile->text().toStdString())) {
       QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
       ShowWarningDialog( tr("Error"), msg);
-      m_MasterController.DebugOut()->Error("MainWindow::CaptureFrame", msg.toAscii());
+      T_ERROR("%s", msg.toAscii().data());
     }
   }
 }
@@ -63,7 +65,7 @@ void MainWindow::CaptureSequence() {
     if (!CaptureSequence(lineEditCaptureFile->text().toStdString(), &strSequenceName)){
       QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
       ShowWarningDialog( tr("Error"), msg);
-      m_MasterController.DebugOut()->Error("MainWindow::CaptureSequence", msg.toAscii());
+      T_ERROR("%s", msg.toAscii().data());
     }
   }
 }
@@ -72,8 +74,7 @@ bool MainWindow::CaptureFrame(const std::string& strTargetName) {
   if (m_pActiveRenderWin)
     return m_pActiveRenderWin->CaptureFrame(strTargetName, checkBox_PreserveTransparency->isChecked());
   else {
-    m_MasterController.DebugOut()->Warning("MainWindow::CaptureFrame",
-                                           "No render window is open!");
+    WARNING("No render window is open!");
     return false;
   }
 }
@@ -82,8 +83,7 @@ bool MainWindow::CaptureSequence(const std::string& strTargetName, std::string* 
   if (m_pActiveRenderWin)
     return m_pActiveRenderWin->CaptureSequenceFrame(strTargetName, checkBox_PreserveTransparency->isChecked(), strRealFilename);
   else {
-    m_MasterController.DebugOut()->Warning("MainWindow::CaptureSequence",
-                                           "No render window is open!");
+    WARNING("No render window is open!");
     return false;
   }
 }
@@ -138,10 +138,14 @@ void MainWindow::CaptureRotation() {
       float fAngle = 0.0f;
       while (i < iNumImages && !pleaseWait.Canceled()) {
         labelOut->SetOutput(true, true, true, false);
-        if (i==0)
-          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i (the first image may be slower due to caching)\n%i%% completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
-        else
-          m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Processing Image %i of %i\n%i%% completed",i+1,iNumImages,int(100*float(i)/float(iNumImages)) );
+        std::ostringstream progress;
+        progress << "Processing Image " << i+1 << " of " << iNumImages;
+        if (i==0) {
+          progress << " (the first image may be slower due to caching)";
+        }
+        progress << "\n" << static_cast<int>(100.0f*i/iNumImages)
+                 << "% completed.";
+        MESSAGE("%s", progress.str().c_str());
         labelOut->SetOutput(false, false, false, false);
         fAngle = float(i)/float(iNumImages) * 360.0f;
         m_pActiveRenderWin->SetCaptureRotationAngle(fAngle);
@@ -149,7 +153,7 @@ void MainWindow::CaptureRotation() {
         if (!m_pActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
           QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
           ShowWarningDialog( tr("Error"), msg);
-          m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
+          T_ERROR("%s", msg.toAscii().data());
           break;
         }
         i++;
@@ -181,15 +185,22 @@ void MainWindow::CaptureRotation() {
         for (int i = 0;i<iNumImages && !pleaseWait.Canceled();i++) {
           labelOut->SetOutput(true, true, true, false);
           if (bStereo) {
-            if (i==0)
-              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 1 of 3: %i%% completed\nProcessing Image %i of %i (the first image may be slower due to caching)",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
-            else
-              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 1 of 3: %i%% completed\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages);
+            std::ostringstream progress;
+            progress << "Phase 1 of 3: "
+                     << static_cast<int>(100.0f*i/iNumImages) << "% completed."
+                     << "\nProcessing Image " << i+1 << " of " << iNumImages;
+            if(i==0) {
+              progress << " (the first image may be slower due to caching)";
+            }
+            MESSAGE("%s", progress.str().c_str());
           } else {
-            if (i==0)
-              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "%i%% completed\nProcessing Image %i of %i (the first image may be slower due to caching)",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
-            else
-              m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "%i%% completed\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages);
+            std::ostringstream progress;
+            progress << static_cast<int>(100.0f*i/iNumImages) << "% completed"
+                     << "\nProcessing Image " << i+1 << iNumImages;
+            if(i==0) {
+              progress << " (the first image may be slower due to caching)";
+            }
+            MESSAGE("%s", progress.str().c_str());
           }
           labelOut->SetOutput(false, false, false, false);
 
@@ -199,7 +210,7 @@ void MainWindow::CaptureRotation() {
           if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), bUseLOD, checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
             QString msg = tr("Error writing image file %1.").arg(strSequenceName.c_str());
             ShowWarningDialog( tr("Error"), msg);
-            m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
+            T_ERROR("%s", msg.toAscii().data());
             break;
           }
 
@@ -213,7 +224,7 @@ void MainWindow::CaptureRotation() {
               if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, bUseLOD, i==(iNumImages-1), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
                 QString msg = tr("Error writing image file %1.").arg(strImageFilenameRight.c_str());
                 ShowWarningDialog( tr("Error"), msg);
-                m_MasterController.DebugOut()->Error("MainWindow::CaptureRotation", msg.toAscii());
+                T_ERROR("%s", msg.toAscii().data());
                 break;
               }
               vstrRightEyeImageVector[i] = strSequenceName;
@@ -229,7 +240,13 @@ void MainWindow::CaptureRotation() {
             string strSourceR = vstrRightEyeImageVector[i];
             string strTarget  = SysTools::FindNextSequenceName(lineEditCaptureFile->text().toStdString());
 
-            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 2 of 3: %i%% completed\nCreating stereo image %s from %s and %s \nProcessing Image %i of %i", int(100*float(i)/float(iNumImages)), SysTools::GetFilename(strTarget).c_str(), SysTools::GetFilename(strSourceL).c_str(), SysTools::GetFilename(strSourceR).c_str(), i+1,iNumImages );
+            MESSAGE("Phase 2 of 3: %i%% completed\nCreating stereo image "
+                    "%s from %s and %s\nProcessing Image %i of %i",
+                    static_cast<int>(100.0f*i/iNumImages),
+                    SysTools::GetFilename(strTarget).c_str(),
+                    SysTools::GetFilename(strSourceL).c_str(),
+                    SysTools::GetFilename(strSourceR).c_str(),
+                    i+1, iNumImages);
 
             QImage imageLeft(strSourceL.c_str());
             QImage imageRight(strSourceR.c_str());
@@ -256,9 +273,13 @@ void MainWindow::CaptureRotation() {
             imageRight.save(strTarget.c_str());
           }
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
-            m_MasterController.DebugOut()->Message("MainWindow::CaptureRotation", "Phase 3 of 3: %i%% completed\nCleanup\nProcessing Image %i of %i",int(100*float(i)/float(iNumImages)),i+1,iNumImages );
+            MESSAGE("Phase 3 of 3: %i%% completed\nCleanup\nProcessing Image "
+                    "%i of %i", static_cast<int>(100.0f*i/iNumImages), i+1,
+                    iNumImages);
             remove(vstrRightEyeImageVector[i].c_str());
-            if (SysTools::FileExists(vstrLeftEyeImageVector[i])) remove(vstrLeftEyeImageVector[i].c_str());
+            if (SysTools::FileExists(vstrLeftEyeImageVector[i])) {
+              remove(vstrLeftEyeImageVector[i].c_str());
+            }
           }
         }
       } else {
