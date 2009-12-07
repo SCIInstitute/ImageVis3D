@@ -17,6 +17,9 @@ echo "-------------------------------------" >> ${status}
 mailtry cd ${HOME}/imagevis3d
 rm -f *.tar.gz *.zip *.dmg warnings
 mailtry sh Scripts/nightly.sh
+touch warnings # we assume the file exists.
+grep -v "IO/3rdParty" warnings > warn_no_3rd
+mv warn_no_3rd warnings
 cat warnings >> ${status}
 subj=""
 if test `file warnings | awk '{print $2}'` = "empty" ; then
