@@ -39,6 +39,7 @@
 #include <QtGui/QMouseEvent>
 #include "../Tuvok/IO/TuvokJPEG.h"
 #include "../Tuvok/IO/DICOM/DICOMParser.h"
+#include "../Tuvok/IO/3rdParty/jpeglib/jconfig.h"
 
 QDataRadioButton::QDataRadioButton(FileStackInfo* stack, QWidget *parent) :
   QRadioButton(parent),
@@ -97,7 +98,9 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
                     dynamic_cast<SimpleDICOMFileInfo*>
                       (m_stackInfo.m_Elements[i])->GetOffsetToData());
     const char *jpg_data = jpg.data();
-    vData.resize(m_stackInfo.m_Elements[i]->GetDataSize());
+    // JPEG library automagically downsamples the data.
+    m_stackInfo.m_iAllocated = BITS_IN_JSAMPLE;
+    vData.resize(jpg.size());
     std::copy(jpg_data, jpg_data + jpg.size(), &vData[0]);
   } else {
     m_stackInfo.m_Elements[i]->GetData(vData);
