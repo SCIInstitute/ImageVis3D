@@ -74,6 +74,8 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
 
   protected:
     virtual void ToggleFullscreen();
+    virtual void PaintOverlays();
+    virtual void RenderSeparatingLines();
 
   private:
     virtual void InitializeRenderer();

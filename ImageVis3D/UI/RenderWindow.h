@@ -80,8 +80,13 @@ class RenderWindow
     bool CaptureSequenceFrame(const std::string& strFilename, bool bPreserveTransparency, std::string* strRealFilename=NULL);
     bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, bool bUseLOD, bool bPreserveTransparency, std::string* strRealFilename=NULL);
     void ToggleHQCaptureMode();
-    void Translate(const FLOATMATRIX4& mTranslation) {SetTranslation(mTranslation*m_mAccumulatedTranslation);}
-    void Rotate(const FLOATMATRIX4& mRotation) {SetRotation(mRotation*m_mAccumulatedRotation,mRotation*m_mAccumulatedRotation);}
+    void Translate(const FLOATMATRIX4& mTranslation,
+                   AbstrRenderer::RenderRegion *region=NULL) {
+      SetTranslation(mTranslation*m_mAccumulatedTranslation, region);}
+    void Rotate(const FLOATMATRIX4& mRotation,
+                AbstrRenderer::RenderRegion *region=NULL) {
+      SetRotation(mRotation*m_mAccumulatedRotation,
+                  mRotation*m_mAccumulatedRotation, region);}
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() const {return m_bRenderSubsysOK;}
 
@@ -90,11 +95,16 @@ class RenderWindow
 
     void SetLogoParams(QString strLogoFilename, int iLogoPos);
 
-    void SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate);
-    void SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate);
-    void SetClipPlane(const ExtendedPlane &p);
-    void SetClipTranslationDelta(const FLOATVECTOR3& trans, bool);
-    void SetClipRotationDelta(const FLOATMATRIX4& rotDelta, bool);
+    void SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate,
+                             AbstrRenderer::RenderRegion *region=NULL);
+    void SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate,
+                          AbstrRenderer::RenderRegion *region=NULL);
+    void SetClipPlane(const ExtendedPlane &p,
+                      AbstrRenderer::RenderRegion *region=NULL);
+    void SetClipTranslationDelta(const FLOATVECTOR3& trans, bool,
+                                 AbstrRenderer::RenderRegion *region=NULL);
+    void SetClipRotationDelta(const FLOATMATRIX4& rotDelta, bool,
+                              AbstrRenderer::RenderRegion *region=NULL);
     void CloneViewState(RenderWindow* other);
     void FinalizeRotation(bool bPropagate);
     void CloneRendermode(RenderWindow* other);
@@ -105,7 +115,7 @@ class RenderWindow
 
     void SetInvMouseWheel(const bool bInvWheel) {m_bInvWheel = bInvWheel;}
     bool GetInvMouseWheel() const {return m_bInvWheel;}
-    
+
     void SetUseLighting(bool bLighting, bool bPropagate=true);
     void SetSampleRateModifier(float fSampleRateModifier, bool bPropagate=true);
     void SetIsoValue(float fIsoVal, bool bPropagate=true);
@@ -136,6 +146,27 @@ class RenderWindow
     virtual void ToggleFullscreen() = 0;
     virtual void UpdateWindow() = 0;
 
+    AbstrRenderer::RenderRegion* GetRegionUnderCursor(INTVECTOR2 vPos) const;
+
+    enum EViewMode {
+      VM_SINGLE = 0,  /**< a single large image */
+      VM_TWOBYTWO,    /**< four small images */
+      VM_INVALID
+    };
+    EViewMode GetViewMode() const {return m_eViewMode;}
+
+    enum RegionSplitter {
+      REGION_SPLITTER_HORIZONTAL_2x2,
+      REGION_SPLITTER_VERTICAL_2x2,
+      REGION_SPLITTER_BOTH_2x2,
+      REGION_SPLITTER_NONE
+    };
+
+    RegionSplitter GetRegionSplitter(INTVECTOR2 pos) const;
+
+    const std::vector<AbstrRenderer::RenderRegion*>& GetActiveRenderRegions() const {
+      return m_Renderer->renderRegions; }
+
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
     virtual void ToggleRenderWindowViewSingle();
@@ -147,10 +178,18 @@ class RenderWindow
     AbstrRenderer*    m_Renderer;
     MasterController& m_MasterController;
     bool              m_bRenderSubsysOK;
-    AbstrRenderer::EWindowMode m_draggedWindow;
+    RegionSplitter    selectedRegionSplitter;
     UINTVECTOR2       m_vWinDim;
     UINTVECTOR2       m_vMinSize;
     UINTVECTOR2       m_vDefaultSize;
+    EViewMode         m_eViewMode;
+    FLOATVECTOR2      m_vWinFraction;
+    static const int  regionSplitterWidth = 6;
+
+    // If later on more than 4 regions are desired this can either be
+    // increased or something fancier than an array can be used.
+    static const int MAX_RENDERREGIONS = 4;
+    AbstrRenderer::RenderRegion renderRegions[MAX_RENDERREGIONS];
 
     static std::string ms_gpuVendorString;
     static UINT32      ms_iMax3DTexDims;
@@ -159,6 +198,8 @@ class RenderWindow
 
     void ResizeRenderer(int width, int height);
     void PaintRenderer();
+    virtual void PaintOverlays() = 0;
+    virtual void RenderSeparatingLines() = 0;
     virtual void InitializeRenderer() = 0;
 
     // Qt widget connector calls
@@ -179,25 +220,44 @@ class RenderWindow
     void KeyPressEvent ( QKeyEvent * event );
     void Cleanup();
 
+    void UpdateCursor(const AbstrRenderer::RenderRegion *region, INTVECTOR2 pos,
+                      bool translate);
+
+    /// @param[in,out] newRenderRegions with coordinates updated to reflect the
+    /// new view mode.
+
+    ///@param[in] eViewMode The new ViewMode to use.
+    virtual void SetViewMode(const std::vector<AbstrRenderer::RenderRegion*> &newRenderRegions,
+                             EViewMode eViewMode);
+
+    void SetWindowFraction2x2(FLOATVECTOR2 f);
+    FLOATVECTOR2 WindowFraction2x2() const { return m_vWinFraction; }
+    void UpdateWindowFraction();
+
   private:
     /// Called when the mouse is moved, but in a mode where the clip plane
     /// should be manipulated instead of the dataset.
     /// @param pos       new position of the mouse cursor
     /// @param rotate    if this should rotate the clip plane
     /// @param translate if this should translate the clip plane
-    bool MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate);
+    /// @param region    The active RenderRegion the mouse/user is operating in.
+    bool MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate,
+                       AbstrRenderer::RenderRegion *region);
 
     /// Called for a mouse update when in the 3D view mode.
     /// @param pos new position of the mouse cursor
     /// @param clearview if this action should affect clearview
     /// @param rotate    should this action rotate the data
     /// @param translate should this action translate the data
-    bool MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
-                     bool translate);
+    /// @param region    The active RenderRegion the mouse/user is operating in.
+    bool MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate, bool translate,
+                     AbstrRenderer::RenderRegion *region);
 
     void SetRotation(const FLOATMATRIX4& mAccumulatedRotation,
-                     const FLOATMATRIX4& mCurrentRotation);
-    void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation);
+                     const FLOATMATRIX4& mCurrentRotation,
+                     AbstrRenderer::RenderRegion *region=NULL);
+    void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
+                        AbstrRenderer::RenderRegion *region=NULL);
 
     void ResetRenderingParameters();
 

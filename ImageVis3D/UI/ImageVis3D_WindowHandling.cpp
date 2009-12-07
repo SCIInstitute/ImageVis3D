@@ -107,7 +107,7 @@ bool MainWindow::LoadDefaultGeometry() {
   QSettings settings;
   if (settings.contains("Geometry/MainWinGeometry"))
     return restoreGeometry( settings.value("Geometry/MainWinGeometry").toByteArray() );
-  else 
+  else
     return false;
 }
 
@@ -296,8 +296,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     frame_23->setVisible(false);
 #endif
 
-	/// \todo remove this once we figured out how to do fullscreen 
-	actionGo_Fullscreen->setVisible(false);
+    /// \todo remove this once we figured out how to do fullscreen
+    actionGo_Fullscreen->setVisible(false);
 
   //pushButton_ToggleBasic->setVisible(false);
 // DIRTY HACKS END
@@ -463,7 +463,7 @@ bool MainWindow::LoadDefaultWorkspace() {
   QSettings settings;
   if (settings.contains("Geometry/DockGeometry"))
     return restoreState( settings.value("Geometry/DockGeometry").toByteArray() );
-  else 
+  else
     return false;
 }
 
@@ -538,18 +538,18 @@ bool MainWindow::ApplyWorkspace() {
 
 
 void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
-  if (ActiveSubWindow()) 
+  if (ActiveSubWindow())
     ActiveSubWindow()->resize(iSizeX, iSizeY);
   else
-    if (mdiArea->activeSubWindow()) 
+    if (mdiArea->activeSubWindow())
       mdiArea->activeSubWindow()->resize(iSizeX, iSizeY);
 }
 
 void MainWindow::CloseCurrentView() {
-  if (ActiveSubWindow()) 
+  if (ActiveSubWindow())
     ActiveSubWindow()->close();
   else
-    if (mdiArea->activeSubWindow()) 
+    if (mdiArea->activeSubWindow())
       mdiArea->activeSubWindow()->close();
 }
 
@@ -610,7 +610,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
       fmt.setRgba(true);
       fmt.setAlpha(true);
       renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset,
-                                     iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
+                                     iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
                                      m_bDisableBorder, m_bNoRCClipplanes,
                                      m_glShareWidget, fmt, this, 0);
     }
@@ -619,7 +619,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
       ShowInformationDialog( "No DirectX Support", "The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
       m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
 
-      if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR) m_eVolumeRendererType = MasterController::OPENGL_SBVR; else 
+      if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR) m_eVolumeRendererType = MasterController::OPENGL_SBVR; else
       if (m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER) m_eVolumeRendererType = MasterController::OPENGL_RAYCASTER; else
       m_eVolumeRendererType = MasterController::OPENGL_2DSBVR;
     }
@@ -627,7 +627,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
     fmt.setAlpha(true);
     fmt.setRgba(true);
     renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset,
-                                   iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits, 
+                                   iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
                                    m_bDisableBorder, m_bNoRCClipplanes,
                                    m_glShareWidget, fmt, this, 0);
   #endif
@@ -754,7 +754,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   UINT64 iBitWidth = ren->GetDataset().GetBitWidth();
 
   pair<double, double> pRange = ren->GetDataset().GetRange();
-    
+
   QString strSize = tr("%1 x %2 x %3 (%4bit)").arg(vSize.x).
                                                arg(vSize.y).
                                                arg(vSize.z).
@@ -783,16 +783,16 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 }
 
 void MainWindow::UpdateMinMaxLODLimitLabel() {
-  if (horizontalSlider_minLODLimit->value() == 1) 
+  if (horizontalSlider_minLODLimit->value() == 1)
     label_minLODLimit->setText(tr("Limit Minimum Quality by skipping the lowest level"));
   else
     label_minLODLimit->setText(tr("Limit Minimum Quality by skipping the lowest %1 levels").arg(horizontalSlider_minLODLimit->value()));
 
-  if (horizontalSlider_maxLODLimit->value() == 1) 
+  if (horizontalSlider_maxLODLimit->value() == 1)
     label_maxLODLimit->setText(tr("Limit Maximum Quality by not rendering the highest level"));
   else
     label_maxLODLimit->setText(tr("Limit Maximum Quality by not rendering the highest %1 levels").arg(horizontalSlider_maxLODLimit->value()));
-  
+
 }
 
 void MainWindow::ToggleClearViewControls(int iRange) {
@@ -866,7 +866,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   DisableStereoWidgets();
 
   ClearProgressViewAndInfo();
-  
+
   UpdateColorWidget();
   UpdateLockView();
 
@@ -941,7 +941,7 @@ void MainWindow::OpenRecentWSFile(){
 
   if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
     if (action) LoadWorkspace(action->data().toString());
-  } 
+  }
 }
 
 void MainWindow::UpdateMenus() {
@@ -1103,7 +1103,7 @@ void MainWindow::DisplayMetadata() {
       m_pMetadataDialog->SetFilename(lineEdit_DatasetName->text());
       m_pMetadataDialog->show();
     } else {
-      QMessageBox::information(this, "Metadata viewer", "This file does not contain metadata!");     
+      QMessageBox::information(this, "Metadata viewer", "This file does not contain metadata!");
     }
   }
 }

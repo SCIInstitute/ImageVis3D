@@ -77,6 +77,18 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   m_Renderer->LoadDataset(m_strDataset.toStdString());
   SetupArcBall();
 
+  // Now that the dataset is loaded we can setup an initial slice index.
+  for (int i=0; i < MAX_RENDERREGIONS; ++i) {
+    if (AbstrRenderer::Is2DWindowMode(renderRegions[i].windowMode)) {
+      int mode = static_cast<int>(renderRegions[i].windowMode);
+      renderRegions[i].iSlice = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
+    }
+  }
+  // initialize to full screen 3D.
+  m_Renderer->renderRegions.clear();
+  m_Renderer->renderRegions.push_back(&renderRegions[0]);
+
+
   setObjectName("RenderWindowGL");  // this is used by WidgetToRenderWin() to detect the type
   setWindowTitle(m_strID);
   setFocusPolicy(Qt::StrongFocus);
@@ -221,5 +233,44 @@ void RenderWindowGL::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrec
 }
 
 void RenderWindowGL::ToggleFullscreen() {
-	/// \todo find out how to do this in QT, if fixed remember to remove the setVisible(false) in ImageVis3D
+    /// \todo find out how to do this in QT, if fixed remember to remove the setVisible(false) in ImageVis3D
+}
+
+void RenderWindowGL::PaintOverlays() {
+  if (GetViewMode() != VM_SINGLE)
+    RenderSeparatingLines();
+}
+
+
+void RenderWindowGL::RenderSeparatingLines() {
+  glDisable(GL_BLEND);
+  glDisable(GL_DEPTH_TEST);
+
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  glOrtho(0, 1, 1, 0, 0, 1); // Note we reverse top and bottom to match the QT canvas
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
+
+  glLineWidth(regionSplitterWidth);
+
+  if (GetViewMode() == VM_TWOBYTWO) {
+    glBegin(GL_LINES);
+      glColor4f(1.0f,1.0f,1.0f,1.0f);
+      glVertex3f(m_vWinFraction.x,-1,0);
+      glVertex3f(m_vWinFraction.x,1,0);
+      glVertex3f(-1,m_vWinFraction.y,0);
+      glVertex3f(1,m_vWinFraction.y,0);
+    glEnd();
+  }
+
+  glLineWidth(1);
+
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+  glMatrixMode(GL_MODELVIEW);
+  glPopMatrix();
+
 }

@@ -58,9 +58,8 @@
 #include <string>
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/IO/IOManager.h"
-
+#include "../Tuvok/Basics/MathTools.h"
 #include "../IO/DialogConverter.h"
-
 
 using namespace std;
 
@@ -129,7 +128,7 @@ MainWindow::MainWindow(MasterController& masterController,
   QCoreApplication::setApplicationVersion(qstrVersion);
 
   setupUi(this);
-  
+
   SysTools::GetTempDirectory(m_strTempDir);
 
   SetupWorkspaceMenu();
@@ -147,7 +146,7 @@ MainWindow::MainWindow(MasterController& masterController,
   masterController.IOMan()->RegisterFinalConverter(new DialogConverter(this));
 
   UpdateMRUActions();
-  UpdateWSMRUActions();  
+  UpdateWSMRUActions();
   UpdateMenus();
 
   m_pRedrawTimer = new QTimer(this);
@@ -160,7 +159,7 @@ MainWindow::MainWindow(MasterController& masterController,
 
   connect(m_pWelcomeDialog, SIGNAL(CheckUpdatesClicked()),   this, SLOT(CheckForUpdates()));
   connect(m_pWelcomeDialog, SIGNAL(OnlineVideoTutClicked()), this, SLOT(OnlineVideoTut()));
-  connect(m_pWelcomeDialog, SIGNAL(GetExampleDataClicked()), this, SLOT(GetExampleData()));  
+  connect(m_pWelcomeDialog, SIGNAL(GetExampleDataClicked()), this, SLOT(GetExampleData()));
   connect(m_pWelcomeDialog, SIGNAL(OnlineHelpClicked()),     this, SLOT(OnlineHelp()));
   connect(m_pWelcomeDialog, SIGNAL(OpenManualClicked()),     this, SLOT(OpenManual()));
   connect(m_pWelcomeDialog, SIGNAL(OpenFromFileClicked()),   this, SLOT(LoadDataset()));
@@ -315,7 +314,7 @@ void MainWindow::Use2DTrans() {
   checkBox_UseIso->setChecked(false);
   checkBox_UseIso->setVisible(true);
   checkBox_Use2DTrans_SimpleUI->setChecked(true);
-  checkBox_Use2DTrans_SimpleUI->setVisible(false); 
+  checkBox_Use2DTrans_SimpleUI->setVisible(false);
   checkBox_Use2DTrans->setChecked(true);
   checkBox_Use2DTrans->setVisible(false);
   radioButton_2DTrans->setChecked(true);
@@ -483,16 +482,11 @@ void MainWindow::SetSampleRateSlider(int iValue) {
   UpdateSampleRateLabel(iValue);
 }
 
-float clampf(float val, float a, float b)
-{
-  return std::max(a, std::min(b, val));
-}
-
 // Script command to update isovalue.
 void MainWindow::SetIsoValue(float fValue) {
   if (m_pActiveRenderWin != NULL) {
     int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
-    fValue = clampf(fValue, 0.0f, 1.0f);
+    fValue = MathTools::Clamp(fValue, 0.0f, 1.0f);
     m_pActiveRenderWin->SetIsoValue(fValue * iMaxSize);
     UpdateIsoValLabel(int(fValue * iMaxSize), iMaxSize);
   }
@@ -511,7 +505,7 @@ void MainWindow::SetIsoValue(int iValue) {
 void MainWindow::SetClearViewIsoValue(float fValue) {
   if (m_pActiveRenderWin != NULL) {
     int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
-    fValue = clampf(fValue, 0.0f, 1.0f);
+    fValue = MathTools::Clamp(fValue, 0.0f, 1.0f);
     m_pActiveRenderWin->SetCVIsoValue(fValue * iMaxSize);
     UpdateIsoValLabel(int(fValue*iMaxSize), iMaxSize);
   }
@@ -640,7 +634,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
   if (m_bAutoSaveGEO) SaveDefaultGeometry();
   if (m_bAutoSaveWSP) SaveDefaultWorkspace();
   m_MasterController.RemoveDebugOut(m_pDebugOut);
-  event->accept(); 
+  event->accept();
 }
 
 void MainWindow::ChooseIsoColor()
@@ -781,11 +775,11 @@ void MainWindow::PickLightColor() {
 
   FLOATVECTOR4 prevColorVec;
   if (source == pushButton_ambientColor)
-    prevColorVec = cAmbient;  
+    prevColorVec = cAmbient;
   else if (source == pushButton_diffuseColor)
-    prevColorVec = cDiffuse;  
+    prevColorVec = cDiffuse;
   else if (source == pushButton_specularColor)
-    prevColorVec = cSpecular; 
+    prevColorVec = cSpecular;
   else
     return;
 
@@ -830,7 +824,7 @@ void MainWindow::ChangeLightColors() {
   cSpecular[3] = horizontalSlider_specularIntensity->value()/100.0f;
 
   m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular);
-  
+
   m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse, cSpecular);
 }
 

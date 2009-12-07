@@ -41,7 +41,6 @@
 #ifndef BROWSEDATA_H
 #define BROWSEDATA_H
 
-#include "RenderWindow.h"
 #include "AutoGen/ui_BrowseData.h"
 #include "../Tuvok/Controller/MasterController.h"
 #include "QDataRadioButton.h"

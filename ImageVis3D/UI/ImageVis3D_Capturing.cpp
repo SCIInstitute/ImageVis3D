@@ -91,7 +91,10 @@ bool MainWindow::CaptureSequence(const std::string& strTargetName, std::string* 
 void MainWindow::CaptureRotation() {
   if (m_pActiveRenderWin) {
 
-    AbstrRenderer::EWindowMode eWindowMode = m_pActiveRenderWin->GetRenderer()->GetFullWindowmode();
+    assert(m_pActiveRenderWin->GetRenderer()->renderRegions.size() == 1);
+
+    const AbstrRenderer::RenderRegion *renderRegion =
+      m_pActiveRenderWin->GetRenderer()->renderRegions[0];
 
     QSettings settings;
     int  iNumImages = settings.value("Renderer/ImagesPerRotation", 360).toInt();
@@ -101,7 +104,7 @@ void MainWindow::CaptureRotation() {
     int iEyeDist    = settings.value("Renderer/RotationEyeDist", 3).toInt();
 
     bool ok;
-    if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
+    if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion))  {
       MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD, iEyeDist, this);
       if (mipRotDialog.exec() == QDialog::Accepted) {
         ok = true;
@@ -131,7 +134,7 @@ void MainWindow::CaptureRotation() {
     PleaseWaitDialog pleaseWait(this, Qt::Tool, true);
     QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
 
-    if (eWindowMode == AbstrRenderer::WM_3D)  {
+    if (renderRegion->windowMode == AbstrRenderer::WM_3D)  {
       pleaseWait.SetText("Capturing a full 360° rotation, please wait  ...");
 
       int i = 0;
@@ -161,7 +164,7 @@ void MainWindow::CaptureRotation() {
         QCoreApplication::processEvents();
       }
     } else {
-      if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode))  {
+      if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion))  {
 
         bool bReUse = true;
         int iReUseOffset = 0;
@@ -232,7 +235,7 @@ void MainWindow::CaptureRotation() {
           }
         }
 
-        if (!pleaseWait.Canceled() && m_pActiveRenderWin->GetRenderer()->GetUseMIP(eWindowMode) && bStereo) {
+        if (!pleaseWait.Canceled() && m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion) && bStereo) {
           labelOut->SetOutput(true, true, true, false);
 
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
@@ -283,7 +286,7 @@ void MainWindow::CaptureRotation() {
           }
         }
       } else {
-        pleaseWait.SetText("Slicing trougth the dataset, please wait  ...");
+        pleaseWait.SetText("Slicing through the dataset, please wait  ...");
         /// \todo TODO slice capturing
         QString msg = tr("Slice Capturing is not implemented yet. Aborting.");
         ShowWarningDialog( tr("Error"), msg);

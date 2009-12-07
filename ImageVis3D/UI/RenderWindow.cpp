@@ -45,6 +45,7 @@
 #include "ImageVis3D.h"
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
+#include "../Tuvok/Basics/MathTools.h"
 
 using namespace std;
 
@@ -63,10 +64,13 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_Renderer(NULL),
   m_MasterController(masterController),
   m_bRenderSubsysOK(true),   // be optimistic :-)
-  m_draggedWindow(AbstrRenderer::WM_INVALID),
+  selectedRegionSplitter(REGION_SPLITTER_NONE),
   m_vWinDim(0,0),
   m_vMinSize(vMinSize),
   m_vDefaultSize(vDefaultSize),
+
+  m_eViewMode(VM_SINGLE),
+  m_vWinFraction(0.5, 0.5),
   m_eRendererType(eType),
   m_MainWindow((MainWindow*)parent),
   m_iTimeSliceMSecsActive(500),
@@ -80,6 +84,11 @@ RenderWindow::RenderWindow(MasterController& masterController,
 {
   m_strID = "[%1] %2";
   m_strID = m_strID.arg(iCounter).arg(dataset);
+
+  renderRegions[0].windowMode = AbstrRenderer::WM_3D;
+  renderRegions[1].windowMode = AbstrRenderer::WM_SAGITTAL;
+  renderRegions[2].windowMode = AbstrRenderer::WM_AXIAL;
+  renderRegions[3].windowMode = AbstrRenderer::WM_CORONAL;
 }
 
 RenderWindow::~RenderWindow()
@@ -114,38 +123,63 @@ void RenderWindow::SetCaptureRotationAngle(float fAngle) {
   PaintRenderer();
 }
 
+RenderWindow::RegionSplitter RenderWindow::GetRegionSplitter(INTVECTOR2 pos) const
+{
+  switch (m_eViewMode) {
+    case VM_SINGLE   : return REGION_SPLITTER_NONE;
+    case VM_TWOBYTWO :
+      {
+        const int halfWidth = regionSplitterWidth/2;
+        const INTVECTOR2 splitPoint(m_vWinFraction * FLOATVECTOR2(m_vWinDim));
+        const bool isVertical   = abs(pos.x - splitPoint.x) <= halfWidth;
+        const bool isHorizontal = abs(pos.y - splitPoint.y) <= halfWidth;
+
+        if (isVertical && isHorizontal) return REGION_SPLITTER_BOTH_2x2;
+        if (isVertical)                 return REGION_SPLITTER_VERTICAL_2x2;
+        if (isHorizontal)               return REGION_SPLITTER_HORIZONTAL_2x2;
+        return REGION_SPLITTER_NONE;
+      }
+      break;
+    default : return REGION_SPLITTER_NONE;
+  }
+}
+
 void RenderWindow::MousePressEvent(QMouseEvent *event)
 {
-  AbstrRenderer::EWindowMode eWinMode =
-    m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
-                                     FLOATVECTOR2(m_vWinDim));
-  // mouse is over the 3D window
-  if (eWinMode == AbstrRenderer::WM_3D ) {
-    m_PlaneAtClick = m_ClipPlane;
+  const AbstrRenderer::RenderRegion *region = GetRegionUnderCursor(m_viMousePos);
 
-    if (event->button() == Qt::RightButton)
+  if (region) {
+    // mouse is over the 3D window
+    if (region->windowMode == AbstrRenderer::WM_3D ) {
+      m_PlaneAtClick = m_ClipPlane;
+
+      if (event->button() == Qt::RightButton)
+        m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+
+      if (event->modifiers() & Qt::ControlModifier &&
+          event->button() == Qt::LeftButton) {
+        m_ClipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+      } else if (event->button() == Qt::LeftButton) {
+        m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+        m_ClipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+      }
+    }
+  } else { // Probably clicked on a region separator.
+    selectedRegionSplitter = GetRegionSplitter(m_viMousePos);
+    if (selectedRegionSplitter != REGION_SPLITTER_NONE) {
       m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
-
-    if (event->modifiers() & Qt::ControlModifier &&
-        event->button() == Qt::LeftButton) {
-      m_ClipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
-    } else if (event->button() == Qt::LeftButton) {
-      m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
-      m_ClipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
     }
   }
-  else if (eWinMode == AbstrRenderer::WM_DIVIDER_HORIZONTAL ||
-           eWinMode == AbstrRenderer::WM_DIVIDER_VERTICAL ||
-           eWinMode == AbstrRenderer::WM_DIVIDER_BOTH)
-    {
-      m_draggedWindow = eWinMode;
-      m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
-    }
 }
 
 void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton) FinalizeRotation(true);
-  m_draggedWindow = AbstrRenderer::WM_INVALID;
+  if (event->button() == Qt::LeftButton)
+    FinalizeRotation(true);
+
+  selectedRegionSplitter = REGION_SPLITTER_NONE;
+
+  AbstrRenderer::RenderRegion *region = GetRegionUnderCursor(m_viMousePos);
+  UpdateCursor(region, m_viMousePos, false);
 }
 
 // Qt callback; just interprets the event and passes it on to the appropriate
@@ -153,73 +187,68 @@ void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
 void RenderWindow::MouseMoveEvent(QMouseEvent *event)
 {
   m_viMousePos = INTVECTOR2(event->pos().x(), event->pos().y());
-  AbstrRenderer::EWindowMode eWinMode =
-    m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
-                                     FLOATVECTOR2(m_vWinDim));
+
+  AbstrRenderer::RenderRegion *region = GetRegionUnderCursor(m_viMousePos);
 
   bool clip = event->modifiers() & Qt::ControlModifier;
   bool clearview = event->modifiers() & Qt::ShiftModifier;
   bool rotate = event->buttons() & Qt::LeftButton;
   bool translate = event->buttons() & Qt::RightButton;
 
-  if (m_draggedWindow == AbstrRenderer::WM_DIVIDER_HORIZONTAL ||
-      m_draggedWindow == AbstrRenderer::WM_DIVIDER_VERTICAL ||
-      m_draggedWindow == AbstrRenderer::WM_DIVIDER_BOTH) {
-    eWinMode = m_draggedWindow;
+  if (selectedRegionSplitter != REGION_SPLITTER_NONE) {
+    region = NULL;
   }
 
+  UpdateCursor(region, m_viMousePos, translate);
+
   // mouse is over the 3D window
-  if (eWinMode == AbstrRenderer::WM_3D) {
+  if (region && region->windowMode == AbstrRenderer::WM_3D) {
     bool bPerformUpdate = false;
 
     if(clip) {
-      bPerformUpdate = MouseMoveClip(m_viMousePos, rotate, translate);
+      bPerformUpdate = MouseMoveClip(m_viMousePos, rotate, translate, region);
     } else {
-      bPerformUpdate = MouseMove3D(m_viMousePos, clearview, rotate, translate);
+      bPerformUpdate = MouseMove3D(m_viMousePos, clearview, rotate, translate,
+                                   region);
     }
 
     if (bPerformUpdate) UpdateWindow();
-  }
-  else if ( (m_draggedWindow == AbstrRenderer::WM_DIVIDER_HORIZONTAL ||
-             m_draggedWindow == AbstrRenderer::WM_DIVIDER_VERTICAL ||
-             m_draggedWindow == AbstrRenderer::WM_DIVIDER_BOTH) &&
+  } else if ( (selectedRegionSplitter != REGION_SPLITTER_NONE) &&
             (event->buttons() & (Qt::LeftButton|Qt::RightButton)) ) {
-    FLOATVECTOR2 viPosDelta (m_viMousePos - m_viRightClickPos);
-    m_viRightClickPos = m_viMousePos;
-    FLOATVECTOR2 delta = viPosDelta / FLOATVECTOR2(m_vWinDim);
-    FLOATVECTOR2 frac = m_Renderer->WindowFraction2x2();
-    if (eWinMode == AbstrRenderer::WM_DIVIDER_HORIZONTAL ||
-        eWinMode == AbstrRenderer::WM_DIVIDER_BOTH) {
-      frac.y -= delta.y;
-      if (frac.y < 0) frac.y = 0;
-      if (frac.y > 1) frac.y = 1;
+    FLOATVECTOR2 frac = FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim);
+    FLOATVECTOR2 winFraction = WindowFraction2x2();
+    if (selectedRegionSplitter == REGION_SPLITTER_HORIZONTAL_2x2 ||
+        selectedRegionSplitter == REGION_SPLITTER_BOTH_2x2) {
+      winFraction.y = frac.y;
     }
-    if (eWinMode == AbstrRenderer::WM_DIVIDER_VERTICAL ||
-        eWinMode == AbstrRenderer::WM_DIVIDER_BOTH) {
-      frac.x += delta.x;
-      if (frac.x < 0) frac.x = 0;
-      if (frac.x > 1) frac.x = 1;
+    if (selectedRegionSplitter == REGION_SPLITTER_VERTICAL_2x2 ||
+        selectedRegionSplitter == REGION_SPLITTER_BOTH_2x2) {
+      winFraction.x = frac.x;
     }
-    m_Renderer->SetWindowFraction2x2(frac);
+    SetWindowFraction2x2(winFraction);
     SetupArcBall();
   }
 }
 
 // A mouse movement which should only affect the clip plane.
-bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate)
+bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate,
+                                 AbstrRenderer::RenderRegion *region)
 {
   bool bUpdate = false;
   if (rotate) {
     UINTVECTOR2 upos(static_cast<UINT32>(pos.x),
                      static_cast<UINT32>(pos.y));
-    SetClipRotationDelta(m_ClipArcBall.Drag(upos).ComputeRotation(),true);
+    SetClipRotationDelta(m_ClipArcBall.Drag(upos).ComputeRotation(),
+                         true, region);
     bUpdate = true;
   }
   if (translate) {
     INTVECTOR2 viPosDelta = m_viMousePos - m_viRightClickPos;
     m_viRightClickPos = m_viMousePos;
     SetClipTranslationDelta(FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x,
-                            float(viPosDelta.y*2) / m_vWinDim.y,0),true);
+                                         float(viPosDelta.y*2) / m_vWinDim.y,
+                                         0),
+                            true, region);
     bUpdate = true;
   }
   return bUpdate;
@@ -228,7 +257,7 @@ bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate)
 // Move the mouse by the given amount.  Flags tell which rendering parameters
 // should be affected by the mouse movement.
 bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
-                               bool translate)
+                               bool translate, AbstrRenderer::RenderRegion *region)
 {
   bool bPerformUpdate = false;
 
@@ -239,7 +268,7 @@ bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
 
   if (rotate) {
     UINTVECTOR2 unsigned_pos(pos.x, pos.y);
-    SetRotationDelta(m_ArcBall.Drag(unsigned_pos).ComputeRotation(),true);
+    SetRotationDelta(m_ArcBall.Drag(unsigned_pos).ComputeRotation(), true, region);
     bPerformUpdate = true;
   }
   if (translate) {
@@ -247,106 +276,168 @@ bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
     m_viRightClickPos = m_viMousePos;
     SetTranslationDelta(FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x,
                                      float(viPosDelta.y*2) / m_vWinDim.y,0),
-                        true);
+                        true, region);
     bPerformUpdate = true;
   }
   return bPerformUpdate;
 }
 
 void RenderWindow::WheelEvent(QWheelEvent *event) {
-  AbstrRenderer::EWindowMode eWinMode = m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim));
+  AbstrRenderer::RenderRegion *renderRegion = GetRegionUnderCursor(m_viMousePos);
+  if (renderRegion == NULL)
+    return;
 
   // mouse is over the 3D window
-  if (eWinMode == AbstrRenderer::WM_3D ) {
+  if (renderRegion->windowMode == AbstrRenderer::WM_3D) {
     float fZoom = ((m_bInvWheel) ? -1 : 1) * event->delta()/1000.0f;
 
     // User can hold control to modify only the clip plane.  Note however that
     // if the plane is locked to the volume, we'll end up translating the plane
     // regardless of whether or not control is held.
     if(event->modifiers() & Qt::ControlModifier) {
-      SetClipTranslationDelta(FLOATVECTOR3(fZoom/10.f,fZoom/10.f,0.f),true);
+      SetClipTranslationDelta(FLOATVECTOR3(fZoom/10.f, fZoom/10.f, 0.f), true,
+                              renderRegion);
     } else {
-      SetTranslationDelta(FLOATVECTOR3(0,0,fZoom),true);
+      SetTranslationDelta(FLOATVECTOR3(0,0,fZoom), true, renderRegion);
     }
-  } else if (eWinMode == AbstrRenderer::WM_SAGITTAL ||
-             eWinMode == AbstrRenderer::WM_AXIAL ||
-             eWinMode == AbstrRenderer::WM_CORONAL)   {
+  } else if (renderRegion->windowMode == AbstrRenderer::WM_SAGITTAL ||
+             renderRegion->windowMode == AbstrRenderer::WM_AXIAL ||
+             renderRegion->windowMode == AbstrRenderer::WM_CORONAL)   {
     // this returns 1 for "most" mice if the wheel is turned one "click"
     int iZoom = event->delta()/120;
-    int iNewSliceDepth = std::max<int>(0,int(m_Renderer->GetSliceDepth(eWinMode))+iZoom);
-    iNewSliceDepth = std::min<int>(iNewSliceDepth, m_Renderer->GetDataset().GetDomainSize()[size_t(eWinMode)]-1);
-    m_Renderer->SetSliceDepth(eWinMode, UINT64(iNewSliceDepth));
+    int iNewSliceDepth =
+      std::max<int>(0,
+                    int(m_Renderer->GetSliceDepth(renderRegion))+iZoom);
+    size_t sliceDimension = size_t(renderRegion->windowMode);
+    iNewSliceDepth =
+      std::min<int>(iNewSliceDepth,
+                    m_Renderer->GetDataset().GetDomainSize()[sliceDimension]-1);
+    m_Renderer->SetSliceDepth(UINT64(iNewSliceDepth), renderRegion);
   }
   UpdateWindow();
 }
 
+AbstrRenderer::RenderRegion* RenderWindow::GetRegionUnderCursor(INTVECTOR2 vPos) const {
+  if (vPos.x < 0 || vPos.y < 0)
+      return NULL;
+  vPos.y = m_vWinDim.y - vPos.y;
+  for (size_t i=0; i < m_Renderer->renderRegions.size(); ++i) {
+    if (m_Renderer->renderRegions[i]->ContainsPoint(UINTVECTOR2(vPos)))
+      return m_Renderer->renderRegions[i];
+  }
+  return NULL;
+}
+
+void RenderWindow::UpdateCursor(const AbstrRenderer::RenderRegion *region,
+                                INTVECTOR2 pos, bool translate) {
+  if (region == NULL) { // We are likely dealing with a splitter
+    if (selectedRegionSplitter == REGION_SPLITTER_NONE) { // else cursor already set.
+      RegionSplitter hoveredRegionSplitter = GetRegionSplitter(pos);
+      switch (hoveredRegionSplitter) {
+        case REGION_SPLITTER_HORIZONTAL_2x2:
+          GetQtWidget()->setCursor(Qt::SplitVCursor);
+          break;
+        case REGION_SPLITTER_VERTICAL_2x2:
+          GetQtWidget()->setCursor(Qt::SplitHCursor);
+          break;
+        case REGION_SPLITTER_BOTH_2x2:
+          GetQtWidget()->setCursor(Qt::SizeAllCursor);
+          break;
+        default: ; //Do nothing.
+      };
+    }
+  } else {
+    if (translate && region->windowMode == AbstrRenderer::WM_3D)
+      GetQtWidget()->setCursor(Qt::ClosedHandCursor);
+    else
+      GetQtWidget()->unsetCursor();
+  }
+}
+
 void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
 
-  AbstrRenderer::EWindowMode eWinMode =
-    m_Renderer->GetWindowUnderCursor(FLOATVECTOR2(m_viMousePos) /
-                                     FLOATVECTOR2(m_vWinDim));
+  AbstrRenderer::RenderRegion *selectedRegion =
+    GetRegionUnderCursor(m_viMousePos);
+
   switch (event->key()) {
-    case Qt::Key_F : ToggleFullscreen();
-                     break;
-    case Qt::Key_C : if (eWinMode == AbstrRenderer::WM_3D) {
-                       m_Renderer->SetRenderCoordArrows(!m_Renderer->GetRenderCoordArrows());
-                     }
-                     break;
-    case Qt::Key_P : m_Renderer->Set2DPlanesIn3DView(!m_Renderer->Get2DPlanesIn3DView());
-                     break;
-
-    case Qt::Key_R : if (eWinMode == AbstrRenderer::WM_3D) {
-                        ResetRenderingParameters();
-                     }
-                     break;
+    case Qt::Key_F :
+      ToggleFullscreen();
+      break;
+    case Qt::Key_C :
+      m_Renderer->SetRenderCoordArrows(!m_Renderer->GetRenderCoordArrows());
+      break;
+    case Qt::Key_P :
+      m_Renderer->Set2DPlanesIn3DView(!m_Renderer->Get2DPlanesIn3DView());
+      break;
+    case Qt::Key_R :
+      ResetRenderingParameters();
+      break;
     case Qt::Key_Space : {
-                            AbstrRenderer::EViewMode eMode = AbstrRenderer::EViewMode(
-                                (int(m_Renderer->GetViewmode()) + 1) % int(AbstrRenderer::VM_INVALID));
-                            m_Renderer->SetViewmode(eMode);
+      if (selectedRegion == NULL)
+        break;
 
-                            if (eMode == AbstrRenderer::VM_SINGLE)
-                              m_Renderer->SetFullWindowmode(eWinMode);
-                            else
-                             if (m_Renderer->GetStereo()) {
-                               m_Renderer->SetStereo(false);
-                               EmitStereoDisabled();
-                             }
+      EViewMode newViewMode = EViewMode((int(GetViewMode()) + 1) % int(VM_INVALID));
+      vector<AbstrRenderer::RenderRegion*> newRenderRegions;
 
-                            SetupArcBall();
-                            EmitRenderWindowViewChanged(int(m_Renderer->GetViewmode()));
-                            UpdateWindow();
-                         }
-                         break;
+      if (newViewMode == VM_SINGLE) {
+        newRenderRegions.push_back(selectedRegion);
+      } else {
+        if (m_Renderer->GetStereo()) {
+          m_Renderer->SetStereo(false);
+          EmitStereoDisabled();
+        }
+        if (newViewMode == VM_TWOBYTWO) {
+          if (m_Renderer->renderRegions.size() == 4)
+            newRenderRegions = m_Renderer->renderRegions;
+          else {
+            // Just use the default 4 regions.
+            for (size_t i=0; i < 4; ++i)
+              newRenderRegions.push_back(&renderRegions[i]);
+          }
+        }
+      }
+
+      SetViewMode(newRenderRegions, newViewMode);
+      SetupArcBall();
+      EmitRenderWindowViewChanged(int(GetViewMode()));
+      UpdateWindow();
+    }
+      break;
     case Qt::Key_X : {
-                        bool bFlipX=false, bFlipY=false;
-                        m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
-                        bFlipX = !bFlipX;
-                        m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);
-                     }
-                     break;
+      if (selectedRegion == NULL) break;
+      bool bFlipX=false, bFlipY=false;
+      m_Renderer->Get2DFlipMode(bFlipX, bFlipY, selectedRegion);
+      bFlipX = !bFlipX;
+      m_Renderer->Set2DFlipMode(bFlipX, bFlipY, selectedRegion);
+    }
+      break;
 
     case Qt::Key_Y : {
-                        bool bFlipX=false, bFlipY=false;
-                        m_Renderer->Get2DFlipMode(eWinMode, bFlipX, bFlipY);
-                        bFlipY = !bFlipY;
-                        m_Renderer->Set2DFlipMode(eWinMode, bFlipX, bFlipY);
-                     }
-                     break;
+      if (selectedRegion == NULL) break;
+      bool bFlipX=false, bFlipY=false;
+      m_Renderer->Get2DFlipMode(bFlipX, bFlipY, selectedRegion);
+      bFlipY = !bFlipY;
+      m_Renderer->Set2DFlipMode(bFlipX, bFlipY, selectedRegion);
+    }
+      break;
     case Qt::Key_M : {
-                        bool bUseMIP=false;
-                        bUseMIP = !m_Renderer->GetUseMIP(eWinMode);
-                        m_Renderer->SetUseMIP(eWinMode, bUseMIP);
-                     }
-                     break;
+      if (selectedRegion == NULL) break;
+      bool bUseMIP=false;
+      bUseMIP = !m_Renderer->GetUseMIP(selectedRegion);
+      m_Renderer->SetUseMIP(bUseMIP, selectedRegion);
+    }
+      break;
     case Qt::Key_A : {
-                        m_ArcBall.SetUseTranslation(!m_ArcBall.GetUseTranslation());
-                     }
-                     break;
-    case Qt::Key_PageDown : SetTranslationDelta(FLOATVECTOR3(0,0,0.01f),true);
-                     break;
+      m_ArcBall.SetUseTranslation(!m_ArcBall.GetUseTranslation());
+    }
+      break;
+    case Qt::Key_PageDown : SetTranslationDelta(FLOATVECTOR3(0,0,0.01f), true,
+                                                selectedRegion);
+      break;
 
-    case Qt::Key_PageUp : SetTranslationDelta(FLOATVECTOR3(0,0,-0.01f),true);
-                     break;
+    case Qt::Key_PageUp : SetTranslationDelta(FLOATVECTOR3(0,0,-0.01f), true,
+                                              selectedRegion);
+      break;
   }
 }
 
@@ -367,69 +458,135 @@ void RenderWindow::FocusOutEvent ( QFocusEvent * event ) {
 }
 
 void RenderWindow::SetupArcBall() {
+  for (size_t i=0; i < m_Renderer->renderRegions.size(); ++i) {
+    const AbstrRenderer::RenderRegion *region = m_Renderer->renderRegions[i];
 
-  if (m_Renderer->GetViewmode() == AbstrRenderer::VM_TWOBYTWO) {
+    if (region->windowMode != AbstrRenderer::WM_3D)
+      continue;
 
-    FLOATVECTOR2 vWinFraction = m_Renderer->WindowFraction2x2();
+    /// @todo: Make this work for muliple 3D renderRegions.
 
-    // find the 3D window
-    int i3DWindowIndex = 0;
-    for (unsigned int i = 0;i<4;i++) {
-      if (m_Renderer->Get2x2Windowmode(AbstrRenderer::ERenderArea(i)) == AbstrRenderer::WM_3D) {
-        i3DWindowIndex = i;
-        break;
-      }
-    }
+    const UINTVECTOR2 offset(region->minCoord.x, m_vWinDim.y - region->maxCoord.y);
+    const UINTVECTOR2 size = region->maxCoord - region->minCoord;
 
-    switch (i3DWindowIndex) {
-      case 0 : m_ArcBall.SetWindowOffset(0,0);
-               m_ClipArcBall.SetWindowOffset(0,0);
-               m_ArcBall.SetWindowSize((vWinFraction.x)*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
-               m_ClipArcBall.SetWindowSize((vWinFraction.x)*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
-               break;
-      case 1 : m_ArcBall.SetWindowOffset(vWinFraction.x*m_vWinDim.x,0);
-               m_ClipArcBall.SetWindowOffset(vWinFraction.x*m_vWinDim.x,0);
-               m_ArcBall.SetWindowSize((1.0f-vWinFraction.x)*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
-               m_ClipArcBall.SetWindowSize((1.0f-vWinFraction.x)*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
-               break;
-      case 2 : m_ArcBall.SetWindowOffset(0,(1.0f-vWinFraction.y)*m_vWinDim.y);
-               m_ClipArcBall.SetWindowOffset(0,(1.0f-vWinFraction.y)*m_vWinDim.y);
-               m_ArcBall.SetWindowSize((vWinFraction.x)*m_vWinDim.x, (vWinFraction.y)*m_vWinDim.y);
-               m_ClipArcBall.SetWindowSize((vWinFraction.x)*m_vWinDim.x, (vWinFraction.y)*m_vWinDim.y);
-               break;
-      case 3 : m_ArcBall.SetWindowOffset(vWinFraction.x*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
-               m_ClipArcBall.SetWindowOffset(vWinFraction.x*m_vWinDim.x, (1.0f-vWinFraction.y)*m_vWinDim.y);
-               m_ArcBall.SetWindowSize((1.0f-vWinFraction.x)*m_vWinDim.x, (vWinFraction.y)*m_vWinDim.y);
-               m_ClipArcBall.SetWindowSize((1.0f-vWinFraction.x)*m_vWinDim.x, (vWinFraction.y)*m_vWinDim.y);
-               break;
-
-    }
-  } else {
-    m_ArcBall.SetWindowSize(m_vWinDim.x, m_vWinDim.y);
-    m_ArcBall.SetWindowOffset(0,0);
-
-    m_ClipArcBall.SetWindowSize(m_vWinDim.x, m_vWinDim.y);
-    m_ClipArcBall.SetWindowOffset(0,0);
+    m_ArcBall.SetWindowOffset(offset.x, offset.y);
+    m_ClipArcBall.SetWindowOffset(offset.x, offset.y);
+    m_ArcBall.SetWindowSize(size.x, size.y);
+    m_ClipArcBall.SetWindowSize(size.x, size.y);
   }
 }
 
+void RenderWindow::SetWindowFraction2x2(FLOATVECTOR2 f) {
+  f.x = MathTools::Clamp(f.x, 0, 1);
+  f.y = MathTools::Clamp(f.y, 0, 1);
+
+  m_vWinFraction = f;
+  m_Renderer->ScheduleCompleteRedraw();
+  UpdateWindowFraction();
+}
+
+
+void RenderWindow::UpdateWindowFraction() {
+  if (m_Renderer->renderRegions.size() != 4) {
+    return; // something is wrong, should be 4...
+  }
+
+  const int halfWidth = regionSplitterWidth/2;
+
+  int verticalSplit = static_cast<int>(m_vWinDim.x*m_vWinFraction.x);
+  int horizontalSplit = static_cast<int>(m_vWinDim.y*(1-m_vWinFraction.y));
+
+  // Make sure none of the regions are out of bounds.  This can happen
+  // since we add/subtract the divider width.
+  if (verticalSplit - halfWidth < 0)
+    verticalSplit = halfWidth;
+  if (verticalSplit + halfWidth > static_cast<int>(m_vWinDim.x))
+    verticalSplit = m_vWinDim.x - halfWidth;
+
+  if (horizontalSplit - halfWidth < 0)
+    horizontalSplit = halfWidth;
+  if (horizontalSplit + halfWidth > static_cast<int>(m_vWinDim.y))
+    horizontalSplit = m_vWinDim.y - halfWidth;
+
+  m_Renderer->renderRegions[0]->minCoord = UINTVECTOR2(0, horizontalSplit+halfWidth);
+  m_Renderer->renderRegions[0]->maxCoord = UINTVECTOR2(verticalSplit-halfWidth,
+                                                       m_vWinDim.y);
+
+  m_Renderer->renderRegions[1]->minCoord = UINTVECTOR2(verticalSplit+halfWidth,
+                                                       horizontalSplit+halfWidth);
+  m_Renderer->renderRegions[1]->maxCoord = UINTVECTOR2(m_vWinDim.x, m_vWinDim.y);
+
+  m_Renderer->renderRegions[2]->minCoord = UINTVECTOR2(0, 0);
+  m_Renderer->renderRegions[2]->maxCoord = UINTVECTOR2(verticalSplit-halfWidth,
+                                                       horizontalSplit-halfWidth);
+
+  m_Renderer->renderRegions[3]->minCoord = UINTVECTOR2(verticalSplit+halfWidth, 0);
+  m_Renderer->renderRegions[3]->maxCoord = UINTVECTOR2(m_vWinDim.x,
+                                                       horizontalSplit-halfWidth);
+}
+
+static std::string view_mode(RenderWindow::EViewMode mode) {
+  switch(mode) {
+    case RenderWindow::VM_SINGLE: return "single"; break;
+    case RenderWindow::VM_TWOBYTWO: return "two-by-two"; break;
+    case RenderWindow::VM_INVALID: /* fall-through */
+    default: return "invalid"; break;
+  }
+}
 
 void RenderWindow::ToggleRenderWindowView2x2() {
-  if (m_Renderer != NULL) {
-    m_Renderer->SetViewmode(AbstrRenderer::VM_TWOBYTWO);
-    SetupArcBall();
-    EmitRenderWindowViewChanged(int(m_Renderer->GetViewmode()));
-    UpdateWindow();
+  std::vector<AbstrRenderer::RenderRegion*> newRenderRegions;
+  if (m_Renderer->renderRegions.size() == 4)
+    newRenderRegions = m_Renderer->renderRegions;
+  else {
+    //Just use the default 4 regions.
+    for (size_t i=0; i < 4; ++i)
+      newRenderRegions.push_back(&renderRegions[i]);
   }
+  SetViewMode(newRenderRegions, VM_TWOBYTWO);
 }
 
 void RenderWindow::ToggleRenderWindowViewSingle() {
-  if (m_Renderer != NULL) {
-    m_Renderer->SetViewmode(AbstrRenderer::VM_SINGLE);
-    SetupArcBall();
-    EmitRenderWindowViewChanged(int(m_Renderer->GetViewmode()));
-    UpdateWindow();
+  std::vector<AbstrRenderer::RenderRegion*> newRenderRegions;
+  if (!m_Renderer->renderRegions.empty())
+    newRenderRegions.push_back(m_Renderer->renderRegions[0]);
+  else
+    newRenderRegions.push_back(&renderRegions[0]);
+  SetViewMode(newRenderRegions, VM_SINGLE);
+}
+
+void RenderWindow::SetViewMode(const std::vector<AbstrRenderer::RenderRegion*> &newRenderRegions,
+                               EViewMode eViewMode)
+{
+  m_eViewMode = eViewMode;
+
+  if (eViewMode == VM_SINGLE) {
+    if (newRenderRegions.size() != 1) {
+      T_ERROR("VM_SINGLE view mode expected only a single RenderRegion, not %d.",
+              newRenderRegions.size());
+    }
+    m_Renderer->renderRegions = newRenderRegions;
+
+    // Make the single active region full screen.
+    m_Renderer->renderRegions[0]->minCoord = UINTVECTOR2(0,0);
+    m_Renderer->renderRegions[0]->maxCoord = m_vWinDim;
+
+  } else if (eViewMode == VM_TWOBYTWO) {
+    if (newRenderRegions.size() != 4) {
+      T_ERROR("VM_TWOBYTWO view mode expected 4 RenderRegions, not %d.",
+              newRenderRegions.size());
+    }
+    m_Renderer->renderRegions = newRenderRegions;
+    UpdateWindowFraction();
   }
+
+  SetupArcBall();
+  m_Renderer->ScheduleCompleteRedraw();
+  UpdateWindow();
+  EmitRenderWindowViewChanged(int(GetViewMode()));
+
+  Controller::Instance().Provenance("vmode", "viewmode",
+                                    view_mode(eViewMode));
 }
 
 void RenderWindow::Cleanup() {
@@ -450,13 +607,18 @@ void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecis
   m_Renderer->SetBlendPrecision(eBlendPrecisionMode);
 }
 
-void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, bool bUseAllMeans, float fScreenResDecFactor, float fSampleDecFactor, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS) {
+void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, bool bUseAllMeans,
+                                   float fScreenResDecFactor, float fSampleDecFactor,
+                                   unsigned int iLODDelay, unsigned int iActiveTS,
+                                   unsigned int iInactiveTS) {
   m_iTimeSliceMSecsActive   = iActiveTS;
   m_iTimeSliceMSecsInActive = iInactiveTS;
-  m_Renderer->SetPerfMeasures(iMinFramerate, bUseAllMeans, fScreenResDecFactor, fSampleDecFactor, iLODDelay);
+  m_Renderer->SetPerfMeasures(iMinFramerate, bUseAllMeans, fScreenResDecFactor,
+                              fSampleDecFactor, iLODDelay);
 }
 
-bool RenderWindow::CaptureFrame(const std::string& strFilename, bool bPreserveTransparency)
+bool RenderWindow::CaptureFrame(const std::string& strFilename,
+                                bool bPreserveTransparency)
 {
   GLFrameCapture f;
   ForceRepaint();
@@ -465,8 +627,10 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename, bool bPreserveTr
 }
 
 
-bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, bool bUseLOD,
-                                   bool bPreserveTransparency, std::string* strRealFilename)
+bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
+                                   bool bOrtho, bool bFinalFrame, bool bUseLOD,
+                                   bool bPreserveTransparency,
+                                   std::string* strRealFilename)
 {
   GLFrameCapture f;
   m_Renderer->SetMIPRotationAngle(fAngle);
@@ -483,7 +647,8 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
 }
 
 bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
-                                        bool bPreserveTransparency, std::string* strRealFilename)
+                                        bool bPreserveTransparency,
+                                        std::string* strRealFilename)
 {
   GLFrameCapture f;
   ForceRepaint();
@@ -491,18 +656,20 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
   return f.CaptureSequenceFrame(strFilename, bPreserveTransparency, strRealFilename);
 }
 
-void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation) {
+void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
+                                  AbstrRenderer::RenderRegion *renderRegion) {
   m_mAccumulatedTranslation = mAccumulatedTranslation;
-  m_Renderer->SetTranslation(m_mAccumulatedTranslation);
+  m_Renderer->SetTranslation(m_mAccumulatedTranslation, renderRegion);
   m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
   Controller::Instance().Provenance("translation", "translate");
 }
 
-void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate) {
+ void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate,
+                                        AbstrRenderer::RenderRegion *renderRegion) {
   m_mAccumulatedTranslation.m41 += trans.x;
   m_mAccumulatedTranslation.m42 -= trans.y;
   m_mAccumulatedTranslation.m43 += trans.z;
-  m_Renderer->SetTranslation(m_mAccumulatedTranslation);
+  m_Renderer->SetTranslation(m_mAccumulatedTranslation, renderRegion);
   m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
 
   if(GetRenderer()->ClipPlaneLocked()) {
@@ -519,9 +686,9 @@ void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagat
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
       if (m_bAbsoluteViewLock)
-        m_vpLocks[0][i]->SetTranslation(m_mAccumulatedTranslation);
+        m_vpLocks[0][i]->SetTranslation(m_mAccumulatedTranslation, renderRegion);
       else
-        m_vpLocks[0][i]->SetTranslationDelta(trans, false);
+        m_vpLocks[0][i]->SetTranslationDelta(trans, false, renderRegion);
     }
   }
 }
@@ -541,35 +708,39 @@ void RenderWindow::FinalizeRotation(bool bPropagate) {
 }
 
 void RenderWindow::SetRotation(const FLOATMATRIX4& mAccumulatedRotation,
-                               const FLOATMATRIX4& mCurrentRotation) {
+                               const FLOATMATRIX4& mCurrentRotation,
+                               AbstrRenderer::RenderRegion *region) {
   m_mAccumulatedRotation = mAccumulatedRotation;
   m_mCurrentRotation = mCurrentRotation;
 
-  m_Renderer->SetRotation(m_mCurrentRotation);
+  m_Renderer->SetRotation(m_mCurrentRotation, region);
 }
 
 
-void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate) {
+void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate,
+                                    AbstrRenderer::RenderRegion *region) {
   m_mCurrentRotation = m_mAccumulatedRotation * rotDelta;
-  m_Renderer->SetRotation(m_mCurrentRotation);
+  m_Renderer->SetRotation(m_mCurrentRotation, region);
 
   if(m_Renderer->ClipPlaneLocked()) {
-    SetClipRotationDelta(rotDelta, bPropagate);
+    SetClipRotationDelta(rotDelta, bPropagate, region);
   }
 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
       if (m_bAbsoluteViewLock)
-        m_vpLocks[0][i]->SetRotation(m_mAccumulatedRotation, m_mCurrentRotation);
+        m_vpLocks[0][i]->SetRotation(m_mAccumulatedRotation, m_mCurrentRotation,
+                                     region);
       else
-        m_vpLocks[0][i]->SetRotationDelta(rotDelta, false);
+        m_vpLocks[0][i]->SetRotationDelta(rotDelta, false, region);
     }
   }
 }
 
-void RenderWindow::SetClipPlane(const ExtendedPlane &p) {
+void RenderWindow::SetClipPlane(const ExtendedPlane &p,
+                                AbstrRenderer::RenderRegion *renderRegion) {
   m_ClipPlane = p;
-  m_Renderer->SetClipPlane(m_ClipPlane);
+  m_Renderer->SetClipPlane(m_ClipPlane, renderRegion);
 }
 
 // Applies the given rotation matrix to the clip plane.
@@ -577,7 +748,8 @@ void RenderWindow::SetClipPlane(const ExtendedPlane &p) {
 // rotation, and then push the plane back out to where it should be.  This
 // avoids any sort of issues w.r.t. rotating about the wrong point.
 void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
-                                        bool bPropagate)
+                                        bool bPropagate,
+                                        AbstrRenderer::RenderRegion *renderRegion)
 {
   m_mCurrentClipRotation = m_mAccumulatedClipRotation * rotDelta;
   FLOATVECTOR3 pt = m_PlaneAtClick.Point();
@@ -598,15 +770,15 @@ void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
   ExtendedPlane rotated = m_PlaneAtClick;
   rotated.Transform(from_pt_to_0 * m_mCurrentClipRotation * from_0_to_pt);
 
-  SetClipPlane(rotated);
+  SetClipPlane(rotated, renderRegion);
 
   if (bPropagate) {
     for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
         iter != m_vpLocks[0].end(); ++iter) {
       if (m_bAbsoluteViewLock) {
-        (*iter)->SetClipPlane(m_ClipPlane);
+        (*iter)->SetClipPlane(m_ClipPlane, renderRegion);
       } else {
-        (*iter)->SetClipRotationDelta(rotDelta, false);
+        (*iter)->SetClipRotationDelta(rotDelta, false, renderRegion);
       }
     }
   }
@@ -615,7 +787,8 @@ void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
 // Translates the clip plane by the given vector, projected along the clip
 // plane's normal.
 void RenderWindow::SetClipTranslationDelta(const FLOATVECTOR3 &trans,
-                                           bool bPropagate)
+                                           bool bPropagate,
+                                           AbstrRenderer::RenderRegion *renderRegion)
 {
   FLOATMATRIX4 translation;
 
@@ -629,15 +802,15 @@ void RenderWindow::SetClipTranslationDelta(const FLOATVECTOR3 &trans,
 
   ExtendedPlane translated = m_ClipPlane;
   translated.Transform(translation);
-  SetClipPlane(translated);
+  SetClipPlane(translated, renderRegion);
 
   if (bPropagate) {
     for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
         iter != m_vpLocks[0].end(); ++iter) {
       if (m_bAbsoluteViewLock) {
-        (*iter)->SetClipPlane(m_ClipPlane);
+        (*iter)->SetClipPlane(m_ClipPlane, renderRegion);
       } else {
-        (*iter)->SetClipTranslationDelta(trans, false);
+        (*iter)->SetClipTranslationDelta(trans, false, renderRegion);
       }
     }
   }
@@ -884,6 +1057,17 @@ void RenderWindow::ResizeRenderer(int width, int height)
   m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
 
   if (m_Renderer != NULL) {
+
+    switch (GetViewMode()) {
+      case VM_SINGLE :
+        m_Renderer->renderRegions[0]->maxCoord = m_vWinDim;
+        break;
+      case VM_TWOBYTWO :
+        UpdateWindowFraction();
+        break;
+      default: break; //nothing to do...
+    };
+
     m_Renderer->Resize(UINTVECTOR2(width, height));
     SetupArcBall();
     std::ostringstream wsize;
@@ -909,6 +1093,8 @@ void RenderWindow::PaintRenderer()
                                       iBrickCount, iWorkingBrick, iMinLODIndex, this);
     }
   }
+
+ PaintOverlays();
 }
 
 void RenderWindow::ResetRenderingParameters()
