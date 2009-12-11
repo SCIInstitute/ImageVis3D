@@ -47,7 +47,7 @@
 #include "MIPRotDialog.h"
 
 using namespace std;
-
+using namespace tuvok;
 
 void MainWindow::CaptureFrame() {
   if (m_pActiveRenderWin) {
@@ -93,7 +93,7 @@ void MainWindow::CaptureRotation() {
 
     assert(m_pActiveRenderWin->GetRenderer()->renderRegions.size() == 1);
 
-    const AbstrRenderer::RenderRegion *renderRegion =
+    const RenderRegion *renderRegion =
       m_pActiveRenderWin->GetRenderer()->renderRegions[0];
 
     QSettings settings;
@@ -104,7 +104,7 @@ void MainWindow::CaptureRotation() {
     int iEyeDist    = settings.value("Renderer/RotationEyeDist", 3).toInt();
 
     bool ok;
-    if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion))  {
+    if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
       MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD, iEyeDist, this);
       if (mipRotDialog.exec() == QDialog::Accepted) {
         ok = true;
@@ -134,7 +134,7 @@ void MainWindow::CaptureRotation() {
     PleaseWaitDialog pleaseWait(this, Qt::Tool, true);
     QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
 
-    if (renderRegion->windowMode == AbstrRenderer::WM_3D)  {
+    if (renderRegion->windowMode == RenderRegion::WM_3D)  {
       pleaseWait.SetText("Capturing a full 360° rotation, please wait  ...");
 
       int i = 0;
@@ -164,7 +164,7 @@ void MainWindow::CaptureRotation() {
         QCoreApplication::processEvents();
       }
     } else {
-      if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion))  {
+      if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
 
         bool bReUse = true;
         int iReUseOffset = 0;
@@ -235,7 +235,9 @@ void MainWindow::CaptureRotation() {
           }
         }
 
-        if (!pleaseWait.Canceled() && m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion) && bStereo) {
+        if (!pleaseWait.Canceled() &&
+            m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion) &&
+            bStereo) {
           labelOut->SetOutput(true, true, true, false);
 
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {

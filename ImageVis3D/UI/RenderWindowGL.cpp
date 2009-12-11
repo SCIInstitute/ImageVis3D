@@ -78,13 +78,13 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   SetupArcBall();
 
   // Now that the dataset is loaded we can setup an initial slice index.
-  for (int i=0; i < MAX_RENDERREGIONS; ++i) {
+  for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
     if (AbstrRenderer::Is2DWindowMode(renderRegions[i].windowMode)) {
       int mode = static_cast<int>(renderRegions[i].windowMode);
-      renderRegions[i].iSlice = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
+      renderRegions[i].sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
     }
   }
-  // initialize to full screen 3D.
+  // initialize to a full 3D window.
   m_Renderer->renderRegions.clear();
   m_Renderer->renderRegions.push_back(&renderRegions[0]);
 
