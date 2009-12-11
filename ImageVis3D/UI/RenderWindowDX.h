@@ -78,6 +78,8 @@ protected:
     virtual void RenderSeparatingLines() { /* not implemented */ }
 
   private:
+    virtual void PaintOverlays();
+    virtual void RenderSeparatingLines();
     virtual void InitializeRenderer();
 
   protected slots:

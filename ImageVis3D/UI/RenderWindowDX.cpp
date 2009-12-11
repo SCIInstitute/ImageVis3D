@@ -90,6 +90,14 @@ RenderWindowDX::~RenderWindowDX()
   GetQtWidget()->setEnabled(false);
 }
 
+void RenderWindowDX::PaintOverlays() {
+
+}
+
+void RenderWindowDX::RenderSeparatingLines() {
+
+}
+
 void RenderWindowDX::InitializeRenderer()
 {
   if (m_Renderer == NULL)
