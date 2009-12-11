@@ -74,6 +74,8 @@ class RenderWindowDX : public QWidget, public RenderWindow
 
 protected:
     virtual void ToggleFullscreen();
+    virtual void PaintOverlays() { /* not implemented */ }
+    virtual void RenderSeparatingLines() { /* not implemented */ }
 
   private:
     virtual void InitializeRenderer();
