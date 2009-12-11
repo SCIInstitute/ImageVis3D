@@ -72,14 +72,12 @@ class RenderWindowDX : public QWidget, public RenderWindow
 
     virtual void UpdateWindow() {update();}
 
-protected:
+ protected:
     virtual void ToggleFullscreen();
-    virtual void PaintOverlays() { /* not implemented */ }
-    virtual void RenderSeparatingLines() { /* not implemented */ }
-
-  private:
     virtual void PaintOverlays();
     virtual void RenderSeparatingLines();
+
+  private:
     virtual void InitializeRenderer();
 
   protected slots:
