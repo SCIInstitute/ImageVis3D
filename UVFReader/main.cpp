@@ -395,6 +395,8 @@ int main(int argc, char* argv[])
             cout << " " << DomainSemanticToCharString(b->ulDomainSemantics[j]).c_str();
           }
           cout << endl
+               << "        Levels of detail: "
+               << b->ulLODDecFactor.size() << endl
                << "        Size:";
           for (size_t j = 0;j<b->ulDomainSemantics.size();j++) {
             cout << " " << b->ulDomainSize[j];
