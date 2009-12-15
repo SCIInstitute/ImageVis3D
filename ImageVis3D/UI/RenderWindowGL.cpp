@@ -49,6 +49,7 @@
 #include "../Tuvok/IO/IOManager.h"
 
 using namespace std;
+using namespace tuvok;
 
 std::string RenderWindowGL::ms_glExtString = "";
 
@@ -77,17 +78,35 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   m_Renderer->LoadDataset(m_strDataset.toStdString());
   SetupArcBall();
 
-  // Now that the dataset is loaded we can setup an initial slice index.
+  // Note that we create the RenderRegions here and not in the parent class
+  // because we first need the dataset to be loaded so that we can setup the
+  // initial slice index.
   for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
-    if (AbstrRenderer::Is2DWindowMode(renderRegions[i].windowMode)) {
-      int mode = static_cast<int>(renderRegions[i].windowMode);
-      renderRegions[i].sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
-    }
-  }
-  // initialize to a full 3D window.
-  m_Renderer->renderRegions.clear();
-  m_Renderer->renderRegions.push_back(&renderRegions[0]);
+    renderRegions[i][0] = new RenderRegion3D();
 
+    int mode = static_cast<int>(RenderRegion::WM_SAGITTAL);
+    UINT64 sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
+    renderRegions[i][1] = new RenderRegion2D(RenderRegion::WM_SAGITTAL,
+                                             sliceIndex);
+
+    mode = static_cast<int>(RenderRegion::WM_AXIAL);
+    sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
+    renderRegions[i][2] = new RenderRegion2D(RenderRegion::WM_AXIAL,
+                                             sliceIndex);
+
+    mode = static_cast<int>(RenderRegion::WM_CORONAL);
+    sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
+    renderRegions[i][3] = new RenderRegion2D(RenderRegion::WM_CORONAL,
+                                             sliceIndex);
+  }
+
+  for (int i=0; i < 4; ++i)
+    selected2x2Regions[i] = i;
+
+  // initialize to a full 3D window.
+  std::vector<RenderRegion*> initialRenderRegions;
+  initialRenderRegions.push_back(renderRegions[0][0]);
+  SetActiveRenderRegions(initialRenderRegions);
 
   setObjectName("RenderWindowGL");  // this is used by WidgetToRenderWin() to detect the type
   setWindowTitle(m_strID);

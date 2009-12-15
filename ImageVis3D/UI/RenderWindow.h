@@ -165,7 +165,9 @@ class RenderWindow
     RegionSplitter GetRegionSplitter(INTVECTOR2 pos) const;
 
     const std::vector<tuvok::RenderRegion*>& GetActiveRenderRegions() const {
-      return m_Renderer->renderRegions; }
+      return m_Renderer->GetRenderRegions(); }
+    void SetActiveRenderRegions(const std::vector<tuvok::RenderRegion*>& regions) const {
+      m_Renderer->SetRenderRegions(regions); }
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
@@ -189,7 +191,9 @@ class RenderWindow
     // If later on more than 4 regions are desired this can either be
     // increased or something fancier than an array can be used.
     static const int MAX_RENDER_REGIONS = 4;
-    tuvok::RenderRegion renderRegions[MAX_RENDER_REGIONS];
+    static const int NUM_WINDOW_MODES = 4;
+    tuvok::RenderRegion *renderRegions[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];
+    int selected2x2Regions[4]; //index into renderRegions
 
     static std::string ms_gpuVendorString;
     static UINT32      ms_iMax3DTexDims;

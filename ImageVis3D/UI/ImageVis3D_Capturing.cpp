@@ -91,10 +91,10 @@ bool MainWindow::CaptureSequence(const std::string& strTargetName, std::string* 
 void MainWindow::CaptureRotation() {
   if (m_pActiveRenderWin) {
 
-    assert(m_pActiveRenderWin->GetRenderer()->renderRegions.size() == 1);
+    assert(m_pActiveRenderWin->GetActiveRenderRegions().size() == 1);
 
     const RenderRegion *renderRegion =
-      m_pActiveRenderWin->GetRenderer()->renderRegions[0];
+      m_pActiveRenderWin->GetActiveRenderRegions()[0];
 
     QSettings settings;
     int  iNumImages = settings.value("Renderer/ImagesPerRotation", 360).toInt();

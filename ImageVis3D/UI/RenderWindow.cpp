@@ -86,10 +86,9 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_strID = "[%1] %2";
   m_strID = m_strID.arg(iCounter).arg(dataset);
 
-  renderRegions[0].windowMode = RenderRegion::WM_3D;
-  renderRegions[1].windowMode = RenderRegion::WM_SAGITTAL;
-  renderRegions[2].windowMode = RenderRegion::WM_AXIAL;
-  renderRegions[3].windowMode = RenderRegion::WM_CORONAL;
+  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
+    for (int j=0; j < NUM_WINDOW_MODES; ++j)
+      renderRegions[i][j] = NULL;
 }
 
 RenderWindow::~RenderWindow()
@@ -301,9 +300,7 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
     } else {
       SetTranslationDelta(FLOATVECTOR3(0,0,fZoom), true, renderRegion);
     }
-  } else if (renderRegion->windowMode == RenderRegion::WM_SAGITTAL ||
-             renderRegion->windowMode == RenderRegion::WM_AXIAL ||
-             renderRegion->windowMode == RenderRegion::WM_CORONAL)   {
+  } else if (renderRegion->is2D())   {
     // this returns 1 for "most" mice if the wheel is turned one "click"
     int iZoom = event->delta()/120;
     int iNewSliceDepth =
@@ -322,9 +319,9 @@ RenderRegion* RenderWindow::GetRegionUnderCursor(INTVECTOR2 vPos) const {
   if (vPos.x < 0 || vPos.y < 0)
       return NULL;
   vPos.y = m_vWinDim.y - vPos.y;
-  for (size_t i=0; i < m_Renderer->renderRegions.size(); ++i) {
-    if (m_Renderer->renderRegions[i]->ContainsPoint(UINTVECTOR2(vPos)))
-      return m_Renderer->renderRegions[i];
+  for (size_t i=0; i < GetActiveRenderRegions().size(); ++i) {
+    if (GetActiveRenderRegions()[i]->ContainsPoint(UINTVECTOR2(vPos)))
+      return GetActiveRenderRegions()[i];
   }
   return NULL;
 }
@@ -387,13 +384,8 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
           EmitStereoDisabled();
         }
         if (newViewMode == VM_TWOBYTWO) {
-          if (m_Renderer->renderRegions.size() == 4)
-            newRenderRegions = m_Renderer->renderRegions;
-          else {
-            // Just use the default 4 regions.
-            for (size_t i=0; i < 4; ++i)
-              newRenderRegions.push_back(&renderRegions[i]);
-          }
+          for (size_t i=0; i < 4; ++i)
+            newRenderRegions.push_back(renderRegions[i][selected2x2Regions[i]]);
         }
       }
 
@@ -403,29 +395,27 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       UpdateWindow();
     }
       break;
-    case Qt::Key_X : {
-      if (selectedRegion == NULL) break;
-      bool bFlipX=false, bFlipY=false;
-      m_Renderer->Get2DFlipMode(bFlipX, bFlipY, selectedRegion);
-      bFlipX = !bFlipX;
-      m_Renderer->Set2DFlipMode(bFlipX, bFlipY, selectedRegion);
-    }
+    case Qt::Key_X :
+      if(selectedRegion && selectedRegion->is2D()) {
+        bool flipX=false, flipY=false;
+        m_Renderer->Get2DFlipMode(flipX, flipY, selectedRegion);
+        flipX = !flipX;
+        m_Renderer->Set2DFlipMode(flipX, flipY, selectedRegion);
+      }
       break;
-
-    case Qt::Key_Y : {
-      if (selectedRegion == NULL) break;
-      bool bFlipX=false, bFlipY=false;
-      m_Renderer->Get2DFlipMode(bFlipX, bFlipY, selectedRegion);
-      bFlipY = !bFlipY;
-      m_Renderer->Set2DFlipMode(bFlipX, bFlipY, selectedRegion);
-    }
+    case Qt::Key_Y :
+      if(selectedRegion && selectedRegion->is2D()) {
+      bool flipX=false, flipY=false;
+      m_Renderer->Get2DFlipMode(flipX, flipY, selectedRegion);
+      flipY = !flipY;
+      m_Renderer->Set2DFlipMode(flipX, flipY, selectedRegion);
+      }
       break;
-    case Qt::Key_M : {
-      if (selectedRegion == NULL) break;
-      bool bUseMIP=false;
-      bUseMIP = !m_Renderer->GetUseMIP(selectedRegion);
-      m_Renderer->SetUseMIP(bUseMIP, selectedRegion);
-    }
+    case Qt::Key_M :
+      if(selectedRegion && selectedRegion->is2D()) {
+      bool useMIP = !m_Renderer->GetUseMIP(selectedRegion);
+      m_Renderer->SetUseMIP(useMIP, selectedRegion);
+      }
       break;
     case Qt::Key_A : {
       m_ArcBall.SetUseTranslation(!m_ArcBall.GetUseTranslation());
@@ -458,8 +448,8 @@ void RenderWindow::FocusOutEvent ( QFocusEvent * event ) {
 }
 
 void RenderWindow::SetupArcBall() {
-  for (size_t i=0; i < m_Renderer->renderRegions.size(); ++i) {
-    const RenderRegion *region = m_Renderer->renderRegions[i];
+  for (size_t i=0; i < GetActiveRenderRegions().size(); ++i) {
+    const RenderRegion *region = GetActiveRenderRegions()[i];
 
     if (region->windowMode != RenderRegion::WM_3D)
       continue;
@@ -487,7 +477,7 @@ void RenderWindow::SetWindowFraction2x2(FLOATVECTOR2 f) {
 
 
 void RenderWindow::UpdateWindowFraction() {
-  if (m_Renderer->renderRegions.size() != 4) {
+  if (GetActiveRenderRegions().size() != 4) {
     return; // something is wrong, should be 4...
   }
 
@@ -508,21 +498,23 @@ void RenderWindow::UpdateWindowFraction() {
   if (horizontalSplit + halfWidth > static_cast<int>(m_vWinDim.y))
     horizontalSplit = m_vWinDim.y - halfWidth;
 
-  m_Renderer->renderRegions[0]->minCoord = UINTVECTOR2(0, horizontalSplit+halfWidth);
-  m_Renderer->renderRegions[0]->maxCoord = UINTVECTOR2(verticalSplit-halfWidth,
-                                                       m_vWinDim.y);
+  const std::vector<RenderRegion*> activeRenderRegions = GetActiveRenderRegions();
 
-  m_Renderer->renderRegions[1]->minCoord = UINTVECTOR2(verticalSplit+halfWidth,
-                                                       horizontalSplit+halfWidth);
-  m_Renderer->renderRegions[1]->maxCoord = UINTVECTOR2(m_vWinDim.x, m_vWinDim.y);
+  activeRenderRegions[0]->minCoord = UINTVECTOR2(0, horizontalSplit+halfWidth);
+  activeRenderRegions[0]->maxCoord = UINTVECTOR2(verticalSplit-halfWidth,
+                                                 m_vWinDim.y);
 
-  m_Renderer->renderRegions[2]->minCoord = UINTVECTOR2(0, 0);
-  m_Renderer->renderRegions[2]->maxCoord = UINTVECTOR2(verticalSplit-halfWidth,
-                                                       horizontalSplit-halfWidth);
+  activeRenderRegions[1]->minCoord = UINTVECTOR2(verticalSplit+halfWidth,
+                                                 horizontalSplit+halfWidth);
+  activeRenderRegions[1]->maxCoord = UINTVECTOR2(m_vWinDim.x, m_vWinDim.y);
 
-  m_Renderer->renderRegions[3]->minCoord = UINTVECTOR2(verticalSplit+halfWidth, 0);
-  m_Renderer->renderRegions[3]->maxCoord = UINTVECTOR2(m_vWinDim.x,
-                                                       horizontalSplit-halfWidth);
+  activeRenderRegions[2]->minCoord = UINTVECTOR2(0, 0);
+  activeRenderRegions[2]->maxCoord = UINTVECTOR2(verticalSplit-halfWidth,
+                                                 horizontalSplit-halfWidth);
+
+  activeRenderRegions[3]->minCoord = UINTVECTOR2(verticalSplit+halfWidth, 0);
+  activeRenderRegions[3]->maxCoord = UINTVECTOR2(m_vWinDim.x,
+                                                 horizontalSplit-halfWidth);
 }
 
 static std::string view_mode(RenderWindow::EViewMode mode) {
@@ -536,22 +528,22 @@ static std::string view_mode(RenderWindow::EViewMode mode) {
 
 void RenderWindow::ToggleRenderWindowView2x2() {
   std::vector<RenderRegion*> newRenderRegions;
-  if (m_Renderer->renderRegions.size() == 4)
-    newRenderRegions = m_Renderer->renderRegions;
+  if (GetActiveRenderRegions().size() == 4)
+    newRenderRegions = GetActiveRenderRegions();
   else {
     //Just use the default 4 regions.
     for (size_t i=0; i < 4; ++i)
-      newRenderRegions.push_back(&renderRegions[i]);
+      newRenderRegions.push_back(renderRegions[i][selected2x2Regions[i]]);
   }
   SetViewMode(newRenderRegions, VM_TWOBYTWO);
 }
 
 void RenderWindow::ToggleRenderWindowViewSingle() {
   std::vector<RenderRegion*> newRenderRegions;
-  if (!m_Renderer->renderRegions.empty())
-    newRenderRegions.push_back(m_Renderer->renderRegions[0]);
+  if (!GetActiveRenderRegions().empty())
+    newRenderRegions.push_back(GetActiveRenderRegions()[0]);
   else
-    newRenderRegions.push_back(&renderRegions[0]);
+    newRenderRegions.push_back(renderRegions[0][selected2x2Regions[0]]);
   SetViewMode(newRenderRegions, VM_SINGLE);
 }
 
@@ -565,18 +557,18 @@ void RenderWindow::SetViewMode(const std::vector<RenderRegion*> &newRenderRegion
       T_ERROR("VM_SINGLE view mode expected only a single RenderRegion, not %d.",
               newRenderRegions.size());
     }
-    m_Renderer->renderRegions = newRenderRegions;
+    SetActiveRenderRegions(newRenderRegions);
 
     // Make the single active region full screen.
-    m_Renderer->renderRegions[0]->minCoord = UINTVECTOR2(0,0);
-    m_Renderer->renderRegions[0]->maxCoord = m_vWinDim;
+    GetActiveRenderRegions()[0]->minCoord = UINTVECTOR2(0,0);
+    GetActiveRenderRegions()[0]->maxCoord = m_vWinDim;
 
   } else if (eViewMode == VM_TWOBYTWO) {
     if (newRenderRegions.size() != 4) {
       T_ERROR("VM_TWOBYTWO view mode expected 4 RenderRegions, not %d.",
               newRenderRegions.size());
     }
-    m_Renderer->renderRegions = newRenderRegions;
+    SetActiveRenderRegions(newRenderRegions);
     UpdateWindowFraction();
   }
 
@@ -590,6 +582,10 @@ void RenderWindow::SetViewMode(const std::vector<RenderRegion*> &newRenderRegion
 }
 
 void RenderWindow::Cleanup() {
+  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
+    for (int j=0; j < NUM_WINDOW_MODES; ++j)
+      delete renderRegions[i][j];
+
   if (m_Renderer == NULL) return;
 
   m_Renderer->Cleanup();
@@ -1060,7 +1056,7 @@ void RenderWindow::ResizeRenderer(int width, int height)
 
     switch (GetViewMode()) {
       case VM_SINGLE :
-        m_Renderer->renderRegions[0]->maxCoord = m_vWinDim;
+        GetActiveRenderRegions()[0]->maxCoord = m_vWinDim;
         break;
       case VM_TWOBYTWO :
         UpdateWindowFraction();
