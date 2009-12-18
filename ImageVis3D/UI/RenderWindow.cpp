@@ -582,15 +582,15 @@ void RenderWindow::SetViewMode(const std::vector<RenderRegion*> &newRenderRegion
 }
 
 void RenderWindow::Cleanup() {
-  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
-    for (int j=0; j < NUM_WINDOW_MODES; ++j)
-      delete renderRegions[i][j];
-
   if (m_Renderer == NULL) return;
 
   m_Renderer->Cleanup();
   m_MasterController.ReleaseVolumerenderer(m_Renderer);
   m_Renderer = NULL;
+
+  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
+    for (int j=0; j < NUM_WINDOW_MODES; ++j)
+      delete renderRegions[i][j];
 }
 
 void RenderWindow::CheckForRedraw() {
