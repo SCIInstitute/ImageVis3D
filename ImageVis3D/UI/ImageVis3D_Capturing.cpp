@@ -134,7 +134,7 @@ void MainWindow::CaptureRotation() {
     PleaseWaitDialog pleaseWait(this, Qt::Tool, true);
     QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
 
-    if (renderRegion->windowMode == RenderRegion::WM_3D)  {
+    if (renderRegion->is3D())  {
       pleaseWait.SetText("Capturing a full 360° rotation, please wait  ...");
 
       int i = 0;

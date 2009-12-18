@@ -150,7 +150,7 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
 
   if (region) {
     // mouse is over the 3D window
-    if (region->windowMode == RenderRegion::WM_3D ) {
+    if (region->is3D() ) {
       m_PlaneAtClick = m_ClipPlane;
 
       if (event->button() == Qt::RightButton)
@@ -202,7 +202,7 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
   UpdateCursor(region, m_viMousePos, translate);
 
   // mouse is over the 3D window
-  if (region && region->windowMode == RenderRegion::WM_3D) {
+  if (region && region->is3D()) {
     bool bPerformUpdate = false;
 
     if(clip) {
@@ -288,7 +288,7 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
     return;
 
   // mouse is over the 3D window
-  if (renderRegion->windowMode == RenderRegion::WM_3D) {
+  if (renderRegion->is3D()) {
     float fZoom = ((m_bInvWheel) ? -1 : 1) * event->delta()/1000.0f;
 
     // User can hold control to modify only the clip plane.  Note however that
@@ -345,7 +345,7 @@ void RenderWindow::UpdateCursor(const RenderRegion *region,
       };
     }
   } else {
-    if (translate && region->windowMode == RenderRegion::WM_3D)
+    if (translate && region->is3D())
       GetQtWidget()->setCursor(Qt::ClosedHandCursor);
     else
       GetQtWidget()->unsetCursor();
@@ -451,7 +451,7 @@ void RenderWindow::SetupArcBall() {
   for (size_t i=0; i < GetActiveRenderRegions().size(); ++i) {
     const RenderRegion *region = GetActiveRenderRegions()[i];
 
-    if (region->windowMode != RenderRegion::WM_3D)
+    if (!region->is3D())
       continue;
 
     /// @todo: Make this work for muliple 3D renderRegions.

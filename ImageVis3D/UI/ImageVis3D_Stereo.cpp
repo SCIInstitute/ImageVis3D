@@ -44,7 +44,7 @@ using namespace tuvok;
 void MainWindow::ToggleStereoRendering() {
   if (m_pActiveRenderWin) {
     if (m_pActiveRenderWin->GetViewMode() != RenderWindow::VM_SINGLE ||
-        m_pActiveRenderWin->GetActiveRenderRegions()[0]->windowMode != RenderRegion::WM_3D) {
+        !m_pActiveRenderWin->GetActiveRenderRegions()[0]->is3D()) {
       QString strText = "Stereo rendering is only available in single view 3D mode. Do you want to change to that view now?";
       if (QMessageBox::Yes == QMessageBox::question(this, "3D Stereo", strText, QMessageBox::Yes, QMessageBox::No)) {
         ToggleRenderWindowViewSingle();
