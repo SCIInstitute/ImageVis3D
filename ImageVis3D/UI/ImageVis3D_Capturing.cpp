@@ -62,7 +62,8 @@ void MainWindow::CaptureFrame() {
 void MainWindow::CaptureSequence() {
   if (m_pActiveRenderWin) {
     string strSequenceName;
-    if (!CaptureSequence(lineEditCaptureFile->text().toStdString(), &strSequenceName)){
+    if (!CaptureSequence(lineEditCaptureFile->text().toStdString(),
+                         &strSequenceName)){
       QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
       ShowWarningDialog( tr("Error"), msg);
       T_ERROR("%s", msg.toAscii().data());
@@ -72,16 +73,20 @@ void MainWindow::CaptureSequence() {
 
 bool MainWindow::CaptureFrame(const std::string& strTargetName) {
   if (m_pActiveRenderWin)
-    return m_pActiveRenderWin->CaptureFrame(strTargetName, checkBox_PreserveTransparency->isChecked());
+    return m_pActiveRenderWin->CaptureFrame(strTargetName,
+                                            checkBox_PreserveTransparency->isChecked());
   else {
     WARNING("No render window is open!");
     return false;
   }
 }
 
-bool MainWindow::CaptureSequence(const std::string& strTargetName, std::string* strRealFilename) {
+bool MainWindow::CaptureSequence(const std::string& strTargetName,
+                                 std::string* strRealFilename) {
   if (m_pActiveRenderWin)
-    return m_pActiveRenderWin->CaptureSequenceFrame(strTargetName, checkBox_PreserveTransparency->isChecked(), strRealFilename);
+    return m_pActiveRenderWin->CaptureSequenceFrame(strTargetName,
+                                                    checkBox_PreserveTransparency->isChecked(),
+                                                    strRealFilename);
   else {
     WARNING("No render window is open!");
     return false;
@@ -123,7 +128,8 @@ void MainWindow::CaptureRotation() {
     } else {
       iNumImages = QInputDialog::getInteger(this,
                                             tr("How many images to you want to compute?"),
-                                            tr("How many images to you want to compute:"), iNumImages, 1, 3600, 1, &ok);
+                                            tr("How many images to you want to compute:"),
+                                            iNumImages, 1, 3600, 1, &ok);
     }
     if (!ok) return;
 
@@ -153,7 +159,9 @@ void MainWindow::CaptureRotation() {
         fAngle = float(i)/float(iNumImages) * 360.0f;
         m_pActiveRenderWin->SetCaptureRotationAngle(fAngle);
         string strSequenceName;
-        if (!m_pActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
+        if (!m_pActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(),
+                                                      checkBox_PreserveTransparency->isChecked(),
+                                                      &strSequenceName)) {
           QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
           ShowWarningDialog(tr("Error"), msg);
           T_ERROR("%s", msg.toAscii().data());
@@ -210,7 +218,11 @@ void MainWindow::CaptureRotation() {
           fAngle = float(i)/float(iNumImages) * 360.0f;
           string strSequenceName;
 
-          if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle, bOrthoView, i==(iNumImages-1), bUseLOD, checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
+          if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle,
+                                                   bOrthoView, i==(iNumImages-1),
+                                                   bUseLOD,
+                                                   checkBox_PreserveTransparency->isChecked(),
+                                                   &strSequenceName)) {
             QString msg = tr("Error writing image file %1.").arg(strSequenceName.c_str());
             ShowWarningDialog( tr("Error"), msg);
             T_ERROR("%s", msg.toAscii().data());
@@ -223,8 +235,13 @@ void MainWindow::CaptureRotation() {
               vstrRightEyeImageVector[(i+iReUseOffset)%iNumImages] = strSequenceName;
             } else {
               fAngle -= 3.0f;
-              string strImageFilenameRight = SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_R");
-              if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilenameRight, fAngle, bOrthoView, bUseLOD, i==(iNumImages-1), checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
+              string strImageFilenameRight =
+                SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_R");
+              if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilenameRight,
+                                                       fAngle, bOrthoView,
+                                                       bUseLOD, i==(iNumImages-1),
+                                                       checkBox_PreserveTransparency->isChecked(),
+                                                       &strSequenceName)) {
                 QString msg = tr("Error writing image file %1.").arg(strImageFilenameRight.c_str());
                 ShowWarningDialog( tr("Error"), msg);
                 T_ERROR("%s", msg.toAscii().data());
@@ -243,7 +260,8 @@ void MainWindow::CaptureRotation() {
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
             string strSourceL = vstrLeftEyeImageVector[i];
             string strSourceR = vstrRightEyeImageVector[i];
-            string strTarget  = SysTools::FindNextSequenceName(lineEditCaptureFile->text().toStdString());
+            string strTarget  =
+              SysTools::FindNextSequenceName(lineEditCaptureFile->text().toStdString());
 
             MESSAGE("Phase 2 of 3: %i%% completed\nCreating stereo image "
                     "%s from %s and %s\nProcessing Image %i of %i",
@@ -261,9 +279,12 @@ void MainWindow::CaptureRotation() {
                   QRgb pixelLeft  = imageLeft.pixel(x,y);
                   QRgb pixelRight = imageRight.pixel(x,y);
 
-                  int iGrayLeft  = int(qRed(pixelLeft)  * 0.3f + qGreen(pixelLeft)  * 0.59f + qBlue(pixelLeft)  * 0.11f);
-                  int iGrayRight = int(qRed(pixelRight) * 0.3f + qGreen(pixelRight) * 0.59f + qBlue(pixelRight) * 0.11f);
-
+                  int iGrayLeft  = static_cast<int>(qRed(pixelLeft)  * 0.3f +
+                                                    qGreen(pixelLeft)  * 0.59f +
+                                                    qBlue(pixelLeft)  * 0.11f);
+                  int iGrayRight = static_cast<int>(qRed(pixelRight) * 0.3f +
+                                                    qGreen(pixelRight) * 0.59f +
+                                                    qBlue(pixelRight) * 0.11f);
 
                   QRgb pixelStereo = qRgba(iGrayLeft,
                                           iGrayRight/2,
@@ -311,15 +332,16 @@ void MainWindow::SetCaptureFilename() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/CaptureFilename", ".").toString();
 
-  QString fileName = QFileDialog::getSaveFileName(this,"Select Image File", strLastDir,
-             "All Files (*.*)",&selectedFilter, options);
+  QString fileName = QFileDialog::getSaveFileName(this, "Select Image File",
+             strLastDir, "All Files (*.*)", &selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     // add png as the default filetype if the user forgot to enter one
     if (SysTools::GetExt(fileName.toStdString()) == "")
       fileName = fileName + ".png";
 
-    settings.setValue("Folders/CaptureFilename", QFileInfo(fileName).absoluteDir().path());
+    settings.setValue("Folders/CaptureFilename",
+                      QFileInfo(fileName).absoluteDir().path());
     settings.setValue("Files/CaptureFilename", fileName);
     lineEditCaptureFile->setText(fileName);
   }
