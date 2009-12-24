@@ -64,7 +64,8 @@
 */
 
 #ifdef DEBUG_PROVENANCE
-static void provenance(std::string s) {
+static void provenance(const std::string s, const std::string,
+                       const std::string) {
   std::cout << "provenance: " << s << std::endl;
 }
 #endif
