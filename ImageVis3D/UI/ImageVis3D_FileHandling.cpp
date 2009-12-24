@@ -123,7 +123,7 @@ bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
     convFile = SysTools::ChangeExt(inFile, "uvf");
   } else convFile = strParams[1];
 
-  return LoadDataset(inFile.c_str(), convFile.c_str(), true);
+  return LoadDataset(inFile.c_str(), convFile.c_str(), false);
 }
 
 bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoUserInteraction) {
