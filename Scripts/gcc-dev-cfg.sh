@@ -9,7 +9,7 @@ if test -n "${QT_BIN}" ; then
 else
     qm="qmake"
 fi
-for d in . tuvok/IO/test ; do
+for d in . ; do
   pushd ${d} &>/dev/null
     ${qm} \
         QMAKE_CONFIG="debug" \
