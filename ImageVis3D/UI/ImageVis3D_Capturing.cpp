@@ -95,7 +95,6 @@ bool MainWindow::CaptureSequence(const std::string& strTargetName,
 
 void MainWindow::CaptureRotation() {
   if (m_pActiveRenderWin) {
-
     assert(m_pActiveRenderWin->GetActiveRenderRegions().size() == 1);
 
     const RenderRegion *renderRegion =
@@ -109,7 +108,8 @@ void MainWindow::CaptureRotation() {
     int iEyeDist    = settings.value("Renderer/RotationEyeDist", 3).toInt();
 
     bool ok;
-    if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
+    if (renderRegion->is2D() &&
+        m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
       MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD, iEyeDist, this);
       if (mipRotDialog.exec() == QDialog::Accepted) {
         ok = true;
