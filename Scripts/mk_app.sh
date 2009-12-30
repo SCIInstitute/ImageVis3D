@@ -34,6 +34,6 @@ echo "Copying ImageVis3D Manual into app..."
 man=$(manual)
 pushd ${PREFIX}/Contents/Resources
   rm -f ImageVis3D.pdf
-  curl -kLO "${man}"
+  curl -skLO "${man}"
   mv $(basename "${man}") ImageVis3D.pdf
 popd
