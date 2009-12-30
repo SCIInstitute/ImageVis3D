@@ -1,12 +1,10 @@
 #!/bin/sh
 
-VERSION=4.5.3
+VERSION=4.6.0
 PREFIX="${HOME}/sw"
-QTDIR="qt-all-opensource-src-${VERSION}"
+QTDIR="qt-everywhere-opensource-src-${VERSION}"
 echo "Removing old build..."
 rm -fr ${QTDIR}
-rm -fr ${PREFIX}/bin/qmake ${PREFIX}/lib/libQt* ${PREFIX}/lib/Qt*
-rm -fr ${PREFIX}/include/Qt*
 
 tarball="${QTDIR}.tar"
 
@@ -61,6 +59,10 @@ if test $? -ne 0; then
 fi
 
 nice make -j6 || exit 1
+
+rm -fr ${PREFIX}/bin/qmake ${PREFIX}/lib/libQt* ${PREFIX}/lib/Qt*
+rm -fr ${PREFIX}/include/Qt*
+
 nice make install || exit 1
 
 popd
