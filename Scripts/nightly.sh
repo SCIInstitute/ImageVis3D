@@ -53,21 +53,6 @@ zipfile=$(nm_zipfile)
 if test `uname` = "Darwin" ; then
     echo "Building app file ..."
     try bash Scripts/mk_app.sh
-    pushd Build/ &>/dev/null
-        ver="${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}"
-        sed -i -e "s,VERSION,${ver}," \
-          ImageVis3D.app/Contents/Info.plist
-        tar zcf ${tarball} ImageVis3D.app
-        zip -9r ${zipfile} ImageVis3D.app
-    popd &>/dev/null
-    mv Build/${tarball} Build/${zipfile} .
-    hdiutil create                    \
-      -volname "ImageVis3D"           \
-      -srcfolder Build/ImageVis3D.app \
-      -format UDZO                    \
-      -imagekey zlib-level=9          \
-      ${zipfile%%zip}dmg
-    hdiutil internet-enable -yes ${zipfile%%zip}dmg
 elif test `uname` = "Linux" ; then
     mkdir staging
     man=$(manual)

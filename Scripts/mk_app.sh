@@ -30,6 +30,9 @@ fi
 echo "Running Qt's mac deployment tool."
 ${macdeployqt} ${PREFIX}
 
+version
+revision
+
 echo "Copying ImageVis3D Manual into app..."
 man=$(manual)
 pushd ${PREFIX}/Contents/Resources
@@ -37,3 +40,21 @@ pushd ${PREFIX}/Contents/Resources
   curl -skLO "${man}"
   mv $(basename "${man}") ImageVis3D.pdf
 popd
+
+tarball=$(nm_tarball)
+zipfile=$(nm_zipfile)
+pushd Build/ &>/dev/null
+    ver="${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}"
+    sed -i -e "s,VERSION,${ver}," \
+      ImageVis3D.app/Contents/Info.plist
+    tar zcf ${tarball} ImageVis3D.app
+    zip -9r ${zipfile} ImageVis3D.app
+popd &>/dev/null
+mv Build/${tarball} Build/${zipfile} .
+hdiutil create                    \
+  -volname "ImageVis3D"           \
+  -srcfolder Build/ImageVis3D.app \
+  -format UDZO                    \
+  -imagekey zlib-level=9          \
+  ${zipfile%%zip}dmg
+hdiutil internet-enable -yes ${zipfile%%zip}dmg
