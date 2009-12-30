@@ -12,12 +12,10 @@ revision
 
 if test "x$1" != "x--dirty" ; then
     make clean &>/dev/null
-    # manual clean, just in case Qt's clean isn't good enough.
-    find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) \
-        -exec rm {} +
+    # manual clean, just in case Qt's clean isn't good enough (it isn't.)
+    find . \( -iname \*.o -or -iname moc_\*.cpp -or -iname ui_\*.h \) -delete
     rm -fr Build/ImageVis3D.app
-    rm -f Build/ImageVis3D
-    rm -f warnings
+    rm -f Build/ImageVis3D warnings
 fi
 
 # Find qmake -- expect it in PATH, but the user can set QT_BIN to pick a
