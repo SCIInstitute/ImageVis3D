@@ -16,7 +16,7 @@ elif test -f ${tarball}.gz ; then
   tar zxf ${tarball}.gz
 else
   echo "${tarball}.gz not found; Downloading Qt..."
-  wget -q http://get.qt.nokia.com/qt/source/${tarball}.gz
+  curl -kLO http://get.qt.nokia.com/qt/source/${tarball}.gz
   tar zxf ${tarball}.gz
 fi
 pushd ${QTDIR} || exit 1
