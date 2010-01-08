@@ -273,7 +273,7 @@ class RenderWindow
     unsigned int      m_iTimeSliceMSecsInActive;
 
     ArcBall           m_ArcBall;
-    INTVECTOR2        m_viRightClickPos;
+    INTVECTOR2        initialClickPos;
     INTVECTOR2        m_viMousePos;
     FLOATMATRIX4      m_mCurrentRotation;
     FLOATMATRIX4      m_mAccumulatedRotation;

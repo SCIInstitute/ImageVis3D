@@ -76,7 +76,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_MainWindow((MainWindow*)parent),
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),
-  m_viRightClickPos(0,0),
+  initialClickPos(0,0),
   m_viMousePos(0,0),
   m_bAbsoluteViewLock(true),
   m_bCaptureMode(false),
@@ -154,7 +154,7 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
       m_PlaneAtClick = m_ClipPlane;
 
       if (event->button() == Qt::RightButton)
-        m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+        initialClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
 
       if (event->modifiers() & Qt::ControlModifier &&
           event->button() == Qt::LeftButton) {
@@ -167,7 +167,7 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
   } else { // Probably clicked on a region separator.
     selectedRegionSplitter = GetRegionSplitter(m_viMousePos);
     if (selectedRegionSplitter != REGION_SPLITTER_NONE) {
-      m_viRightClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+      initialClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
     }
   }
 }
@@ -243,8 +243,8 @@ bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate,
     bUpdate = true;
   }
   if (translate) {
-    INTVECTOR2 viPosDelta = m_viMousePos - m_viRightClickPos;
-    m_viRightClickPos = m_viMousePos;
+    INTVECTOR2 viPosDelta = m_viMousePos - initialClickPos;
+    initialClickPos = m_viMousePos;
     SetClipTranslationDelta(FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x,
                                          float(viPosDelta.y*2) / m_vWinDim.y,
                                          0),
@@ -272,8 +272,8 @@ bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
     bPerformUpdate = true;
   }
   if (translate) {
-    INTVECTOR2 viPosDelta = m_viMousePos - m_viRightClickPos;
-    m_viRightClickPos = m_viMousePos;
+    INTVECTOR2 viPosDelta = m_viMousePos - initialClickPos;
+    initialClickPos = m_viMousePos;
     SetTranslationDelta(FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x,
                                      float(viPosDelta.y*2) / m_vWinDim.y,0),
                         true, region);
