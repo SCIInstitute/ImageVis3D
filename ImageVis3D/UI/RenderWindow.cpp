@@ -582,7 +582,7 @@ void RenderWindow::SetViewMode(const std::vector<RenderRegion*> &newRenderRegion
 }
 
 void RenderWindow::Cleanup() {
-  if (m_Renderer == NULL) return;
+  if (m_Renderer == NULL || !m_bRenderSubsysOK) return;
 
   m_Renderer->Cleanup();
   m_MasterController.ReleaseVolumerenderer(m_Renderer);
@@ -1053,7 +1053,7 @@ void RenderWindow::ResizeRenderer(int width, int height)
 {
   m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
 
-  if (m_Renderer != NULL) {
+  if (m_Renderer != NULL && m_bRenderSubsysOK) {
 
     switch (GetViewMode()) {
       case VM_SINGLE :

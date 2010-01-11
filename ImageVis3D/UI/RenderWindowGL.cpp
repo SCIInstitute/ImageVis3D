@@ -175,7 +175,7 @@ void RenderWindowGL::InitializeRenderer()
                << "card is reporting that it cannot support typical sizes "
                << "that ImageVis3D will use. ImageVis3D can adjust to your "
                << "hardware and will format data to work with your system, "
-               << "however, it may be unable to load from other sources."
+               << "however, it may be unable to load from other sources. "
                << "Would you like to continue?";
           if(QMessageBox::Yes !=
             QMessageBox::question(this, "Continue?", warn.str().c_str(),
