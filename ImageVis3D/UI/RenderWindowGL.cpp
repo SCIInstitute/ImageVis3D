@@ -159,42 +159,46 @@ void RenderWindowGL::InitializeRenderer()
       if (extensions != NULL)  ms_glExtString = extensions;
 
       if (bOpenGLFBO && (bOpenGLSO20 || (bOpenGLSL && bOpenGL3DT))) {
-        if (ms_iMax3DTexDims < BRICKSIZE) {
+
+        // A small but still significant subset of cards report that they
+        // support 3D textures, as long as they are 0^3 or smaller.  Yeah.
+        // All such cards (that we've seen) work fine.  It's a common use
+        // case, so we'll skip the warning for now.  -- tjf, Nov 18 2009
+        if (ms_iMax3DTexDims > 0 && ms_iMax3DTexDims < m_MasterController.IOMan()->m_iMaxBrickSize) {
+
           std::ostringstream warn;
-          warn << "Maximum supported texture size (" << ms_iMax3DTexDims << ")"
-               << "is smaller than the size required by the IO subsystem ("
-               << BRICKSIZE << ")";
-          WARNING("%s", warn.str().c_str());
-          // A small but still significant subset of cards report that they
-          // support 3D textures, as long as they are 0^3 or smaller.  Yeah.
-          // All such cards (that we've seen) work fine.  It's a common use
-          // case, so we'll skip the warning for now.  -- tjf, Nov 18 2009
-          if(ms_iMax3DTexDims != 0) {
-            warn << "\n\n"
-                 << "ImageVis3D uses something called \"3D Textures\", which "
-                 << "are a method to push data down to your graphics card "
-                 << "for processing.\n\n"
-                 << "These textures can be of various sizes.  Your graphics "
-                 << "card is reporting that it cannot support typical sizes "
-                 << "that ImageVis3D will use.  However, in the developer's "
-                 << "experience, some video drivers simply report this number "
-                 << "incorrectly.\n\n"
-                 << "Would you like to continue anyway?  If you say, 'yes' "
-                 << "and your video driver is accurate, ImageVis3D will "
-                 << "crash.  No other programs will be effected.";
-            if(QMessageBox::Yes !=
-               QMessageBox::question(this, "Continue?", warn.str().c_str(),
-                                     QMessageBox::Yes | QMessageBox::No,
-                                     QMessageBox::No)) {
-              m_Renderer->Cleanup();
-              m_MasterController.ReleaseVolumerenderer(m_Renderer);
-              m_bRenderSubsysOK = false;
-              return;
-            }
+
+          warn << "ImageVis3D uses something called \"3D Textures\", which "
+               << "are a method to push data down to your graphics card "
+               << "for processing.\n\n"
+               << "These textures can be of various sizes.  Your graphics "
+               << "card is reporting that it cannot support typical sizes "
+               << "that ImageVis3D will use. ImageVis3D can adjust to your "
+               << "hardware and will format data to work with your system, "
+               << "however, it may be unable to load from other sources."
+               << "Would you like to continue?";
+          if(QMessageBox::Yes !=
+            QMessageBox::question(this, "Continue?", warn.str().c_str(),
+                                   QMessageBox::Yes | QMessageBox::No,
+                                   QMessageBox::No)) {
+            m_Renderer->Cleanup();
+            m_MasterController.ReleaseVolumerenderer(m_Renderer);
+            m_bRenderSubsysOK = false;
+            return;
+          } else {
+            std::ostringstream warn;
+            warn << "Maximum supported texture size (" << ms_iMax3DTexDims << ") "
+                 << "is smaller than the default size in the IO subsystem ("
+                 << m_MasterController.IOMan()->m_iMaxBrickSize << "). "
+                 << "Adjusting IO subsystem!";
+            WARNING("%s", warn.str().c_str());
           }
+
+
+          m_MasterController.IOMan()->m_iMaxBrickSize = ms_iMax3DTexDims; 
         } else {
           MESSAGE("Maximum supported texture size: %i (required by IO "
-                  "subsystem: %i)", ms_iMax3DTexDims, int(BRICKSIZE));
+                  "subsystem: %i)", ms_iMax3DTexDims, int(m_MasterController.IOMan()->m_iMaxBrickSize));
         }
 
         m_bRenderSubsysOK = true;

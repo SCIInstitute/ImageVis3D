@@ -55,7 +55,7 @@
 #include <iostream>
 using namespace std;
 
-#define READER_VERSION 1.0
+#define READER_VERSION 1.1
 
 #ifdef _WIN32
   // CRT's memory leak detection
@@ -81,7 +81,8 @@ void ShowUsage(string filename) {
       "        -sizeX       requires '-create' argument, specifies the width of the volume to be created (default = 100)" << endl <<
       "        -sizeY       requires '-create' argument, specifies the height of the volume to be created (default = 200)" << endl <<
       "        -sizeZ       requires '-create' argument, specifies the depth of the volume to be created (default = 300)" << endl <<
-      "        -sizeZ       requires '-create' argument, specifies the bit depth of the volume, may be 8, 16 (default = 8)" << endl;
+      "        -sizeZ       requires '-create' argument, specifies the bit depth of the volume, may be 8, 16 (default = 8)" << endl <<
+      "        -brickSize   requires '-create' argument, specifies the maximum bricksize (default = " << DEFAULT_BRICKSIZE <<")" << endl;
 }
 
 int main(int argc, char* argv[])
@@ -107,6 +108,7 @@ int main(int argc, char* argv[])
   int iSizeY = 200;
   int iSizeZ = 300;
   int iBitSize = 8;
+  unsigned int iBrickSize = DEFAULT_BRICKSIZE;
 
   SysTools::CmdLineParams comLine(argc,argv);
   string strFilename = SysTools::GetFilename(argv[0]);
@@ -116,6 +118,7 @@ int main(int argc, char* argv[])
   comLine.GetValue("SIZEY", iSizeY);
   comLine.GetValue("SIZEZ", iSizeZ);
   comLine.GetValue("BITS", iBitSize);
+  comLine.GetValue("BRICKSIZE", iBrickSize);
 
   VECTOR3<UINT64> iSize = VECTOR3<UINT64>(UINT64(iSizeX),UINT64(iSizeY),UINT64(iSizeZ));
 
@@ -202,7 +205,7 @@ int main(int argc, char* argv[])
     UINT64 iLodLevelCount = 1;
     UINT32 iMaxVal = UINT32(iSize.maxVal());
 
-    while (iMaxVal > BRICKSIZE) {
+    while (iMaxVal > iBrickSize) {
       iMaxVal /= 2;
       iLodLevelCount++;
     }
@@ -211,13 +214,13 @@ int main(int argc, char* argv[])
 
     testVolume.SetTypeToScalar(iBitSize,iBitSize,false,UVFTables::ES_CT);
 
-    testVolume.ulBrickSize.push_back(BRICKSIZE);
-    testVolume.ulBrickSize.push_back(BRICKSIZE);
-    testVolume.ulBrickSize.push_back(BRICKSIZE);
+    testVolume.ulBrickSize.push_back(iBrickSize);
+    testVolume.ulBrickSize.push_back(iBrickSize);
+    testVolume.ulBrickSize.push_back(iBrickSize);
 
-    testVolume.ulBrickOverlap.push_back(BRICKOVERLAP);
-    testVolume.ulBrickOverlap.push_back(BRICKOVERLAP);
-    testVolume.ulBrickOverlap.push_back(BRICKOVERLAP);
+    testVolume.ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
+    testVolume.ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
+    testVolume.ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
 
     vector<double> vScale;
     vScale.push_back(double(iSize.maxVal())/double(iSize.x));
