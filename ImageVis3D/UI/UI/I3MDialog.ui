@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>495</width>
-    <height>299</height>
+    <width>476</width>
+    <height>306</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -101,7 +101,14 @@
       <item>
        <widget class="QPushButton" name="pushButton_Network">
         <property name="text">
-         <string>Network Setup</string>
+         <string>Select Port</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxV">
+        <property name="text">
+         <string>Version 1.0 Data</string>
         </property>
        </widget>
       </item>
@@ -158,8 +165,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>386</x>
-     <y>172</y>
+     <x>466</x>
+     <y>282</y>
     </hint>
     <hint type="destinationlabel">
      <x>395</x>
@@ -171,11 +178,11 @@
    <sender>pushButton_Network</sender>
    <signal>clicked()</signal>
    <receiver>I3MDialog</receiver>
-   <slot>SelectPort()</slot>
+   <slot>SetPort()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>46</x>
-     <y>156</y>
+     <x>55</x>
+     <y>282</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -190,12 +197,28 @@
    <slot>Start()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>247</x>
-     <y>160</y>
+     <x>385</x>
+     <y>282</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>
      <y>137</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxV</sender>
+   <signal>clicked()</signal>
+   <receiver>I3MDialog</receiver>
+   <slot>SetVersion()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>122</x>
+     <y>279</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>214</x>
+     <y>291</y>
     </hint>
    </hints>
   </connection>
@@ -209,7 +232,8 @@
   <slot>OnlineHelp()</slot>
   <slot>OnlineVideoTut()</slot>
   <slot>ReportABug()</slot>
-  <slot>SelectPort()</slot>
   <slot>Start()</slot>
+  <slot>SetPort()</slot>
+  <slot>SetVersion()</slot>
  </slots>
 </ui>

@@ -47,18 +47,20 @@
 
 using namespace tuvok;
 
-I3MDialog::I3MDialog(MasterController* pMasterController, const UVFDataset* currentDataset, const std::string& strTmpDir, QWidget* parent, Qt::WindowFlags flags) :
+I3MDialog::I3MDialog(const UVFDataset* currentDataset, const std::string& strTmpDir, QWidget* parent, Qt::WindowFlags flags) :
   QDialog(parent, flags),
   m_iSendMessage(0),
   m_tcpServer(NULL),
   m_iPort(22),
+  m_iI3MVersion(1),
   m_currentDataset(currentDataset),
   m_bDataNotConverted(true),
-  m_strI3MFilename(""),
-  m_str1DTFilename(""),
+  m_bCreatedSharedData(false),
+  m_strSharedDataFilename(""),
+  m_bCreatedTF(false),
+  m_strSharedTFFilename(""),
   m_strSource1DTFilename(""),
-  m_strTempDir(strTmpDir),
-  m_pMasterController(pMasterController)
+  m_strTempDir(strTmpDir)
 {
   // the usual UI setup
   setupUi(this);
@@ -66,6 +68,9 @@ I3MDialog::I3MDialog(MasterController* pMasterController, const UVFDataset* curr
   // read port from settings
   QSettings settings;
   m_iPort = settings.value("Network/I3MPort", m_iPort).toUInt();
+  m_iI3MVersion = settings.value("I3MVersion", m_iI3MVersion).toUInt();
+
+  checkBoxV->setChecked(m_iI3MVersion == 1);
 
   // create port object and setup callback
   m_tcpServer = new QTcpServer(this);
@@ -75,18 +80,18 @@ I3MDialog::I3MDialog(MasterController* pMasterController, const UVFDataset* curr
   std::string filenameOnly = SysTools::GetFilename(m_currentDataset->Filename());
   std::string potentialTFFile = SysTools::ChangeExt(m_currentDataset->Filename(),"1dt");
 
-  m_strI3MFilename = m_strTempDir+SysTools::ChangeExt(filenameOnly,"i3m");
+  m_strSharedDataFilename = m_strTempDir+SysTools::ChangeExt(filenameOnly,"i3m");
 
 
   QString qs;
   if (SysTools::FileExists(potentialTFFile)) {
     qs = tr("Dataset: %1\nTransferFunction: %2").arg(filenameOnly.c_str()).arg(SysTools::ChangeExt(filenameOnly,"1dt").c_str());
     m_strSource1DTFilename = potentialTFFile;
-    m_str1DTFilename = SysTools::ChangeExt(m_strI3MFilename,"1dt");
+    m_strSharedTFFilename = SysTools::ChangeExt(m_strSharedDataFilename,"1dt");
   } else {
     qs = tr("Dataset: %1").arg(filenameOnly.c_str());
     m_strSource1DTFilename = "";
-    m_str1DTFilename = "";
+    m_strSharedTFFilename = "";
   }
 
   label_files->setText(qs);
@@ -123,7 +128,7 @@ void I3MDialog::Start()
                                    .arg(m_tcpServer->serverPort())  );
 }
 
-void I3MDialog::SelectPort()
+void I3MDialog::SetPort()
 {
   // open dialog and ask for a port
   bool bOk;
@@ -143,14 +148,22 @@ void I3MDialog::SelectPort()
   }
 }
 
+void I3MDialog::SetVersion()
+{
+  m_iI3MVersion = checkBoxV->isChecked() ? 1 : 2;
+
+  QSettings settings;
+  settings.setValue("I3MVersion", m_iI3MVersion);
+}
+
 void I3MDialog::SendData()
 {
   // open volume
-    std::ifstream in(m_strI3MFilename.c_str(), std::ios_base::binary);
+  std::ifstream in(m_strSharedDataFilename.c_str(), std::ios_base::binary);
   if (!in.is_open()) {
     QMessageBox::critical(this, this->windowTitle(),
                           tr("Unable to open converted volume: %1.")
-                          .arg(m_strI3MFilename.c_str()));
+                          .arg(m_strSharedDataFilename.c_str()));
     return;
   }
     in.seekg(0, std::ios::end);
@@ -163,8 +176,8 @@ void I3MDialog::SendData()
   // open transfer function
   unsigned int iTFSize = 0;
   char* tfFileData = NULL;
-  if (m_str1DTFilename != "") {
-    std::ifstream inTF(m_str1DTFilename.c_str(), std::ios_base::binary);
+  if (m_strSharedTFFilename != "") {
+    std::ifstream inTF(m_strSharedTFFilename.c_str(), std::ios_base::binary);
       if (inTF.is_open()) {
           inTF.seekg(0, std::ios::end);
           iTFSize = (unsigned int)inTF.tellg();
@@ -184,7 +197,7 @@ void I3MDialog::SendData()
   QTcpSocket *clientConnection = m_tcpServer->nextPendingConnection();
   connect(clientConnection, SIGNAL(disconnected()), clientConnection, SLOT(deleteLater()));
     // send filename length
-  std::string strFilenameOnly = SysTools::GetFilename(m_strI3MFilename);
+  std::string strFilenameOnly = SysTools::GetFilename(m_strSharedDataFilename);
     unsigned int iFilenameLength = int(strFilenameOnly.length());
   clientConnection->write((char*)&iFilenameLength,4);
     // send filename
@@ -216,10 +229,10 @@ void I3MDialog::SendData()
     delete [] tfFileData;
 }
 
+bool I3MDialog::ConvertDataV1() {
+  QString qstrSourceFileDesc = label_files->text();
+  label_files->setText("Converting\n"+qstrSourceFileDesc);
 
-bool I3MDialog::ConvertData() {
-  QString labelText = label_files->text();
-  label_files->setText("Converting\n"+labelText);
 
   // UVF to I3M
 
@@ -235,36 +248,103 @@ bool I3MDialog::ConvertData() {
   // now convert it
   QTLabelOut* pLabelOut = new QTLabelOut(label_Status, this);
   pLabelOut->SetOutput(true, true, true, false);
-  m_pMasterController->AddDebugOut(pLabelOut);
+  Controller::Instance().AddDebugOut(pLabelOut);
 
-  if (!m_pMasterController->IOMan()->ExportDataset(m_currentDataset, iLODLevel, m_strI3MFilename, m_strTempDir)) {
+  if (!Controller::Instance().IOMan()->ExportDataset(m_currentDataset, iLODLevel, m_strSharedDataFilename, m_strTempDir)) {
         label_Status->setText(tr("Failed to convert the current dataset into the i3m format for the mobile device."));
-    label_files->setText(labelText);
+    label_files->setText(qstrSourceFileDesc);
+    Controller::Instance().RemoveDebugOut(pLabelOut);
     return false;
   }
+  m_bCreatedSharedData = true;
   label_Status->setText(tr("Converting transfer function."));
   label_Status->update();
 
-  m_pMasterController->RemoveDebugOut(pLabelOut);
+  Controller::Instance().RemoveDebugOut(pLabelOut);
 
   // resample 1D tf to 8bit
   if (m_strSource1DTFilename != "") {
     TransferFunction1D tfIn(m_strSource1DTFilename);
     tfIn.Resample(256);
-    tfIn.Save(m_str1DTFilename);
+    tfIn.Save(m_strSharedTFFilename);
   }
+  m_bCreatedTF = true;
 
   label_Status->setText(tr("Conversion complete!"));
   label_Status->update();
 
-  label_files->setText("Sharing\n"+labelText);
+  label_files->setText("Sharing\n"+qstrSourceFileDesc);
 
   m_bDataNotConverted = false;
   return true;
 }
 
+bool I3MDialog::ConvertDataV2() {
+  QString qstrSourceFileDesc = label_files->text();
+
+  UINT64VECTOR3 vSize = m_currentDataset->GetMaxUsedBrickSizes();
+
+  // ImageVis3D Mobile 2.0 uses UVF but requires the 
+  // bricks to be no larger than 128 in any dimension.
+  // if the dataset meets this criterion we simply use
+  // it as is (else branch) otherwise we convert it
+  if (vSize.maxVal() > 128) {
+
+    // now convert it
+    QTLabelOut* pLabelOut = new QTLabelOut(label_Status, this);
+    pLabelOut->SetOutput(true, true, true, false);
+    Controller::Instance().AddDebugOut(pLabelOut);
+
+    label_files->setText("Converting(Phase 1/2)\n"+qstrSourceFileDesc);
+
+    std::string filenameOnly = SysTools::GetFilename(m_currentDataset->Filename());
+    m_strSharedDataFilename = m_strTempDir+filenameOnly;
+    std::string tmpFile = m_strTempDir+SysTools::ChangeExt(filenameOnly,"nrrd"); /// use some simple format as intermediate file
+
+    if (!Controller::Instance().IOMan()->ConvertDataset(m_currentDataset->Filename(), tmpFile, m_strTempDir)) {
+      T_ERROR("Unable to extract raw data from file %s to %s", m_currentDataset->Filename().c_str(),tmpFile.c_str());
+      Controller::Instance().RemoveDebugOut(pLabelOut);
+      return false;
+    }
+
+    label_files->setText("Converting (Phase 2/2)\n"+qstrSourceFileDesc);
+    
+    if (!Controller::Instance().IOMan()->ConvertDataset(tmpFile, m_strSharedDataFilename, m_strTempDir, false, 128, 4)) {
+      T_ERROR("Unable to convert raw data from file %s into new UVF file %s", tmpFile.c_str(),m_strSharedDataFilename.c_str());
+      if(std::remove(tmpFile.c_str()) == -1) WARNING("Unable to delete temp file %s", tmpFile.c_str());
+      Controller::Instance().RemoveDebugOut(pLabelOut);
+      return false;
+    } 
+    if(std::remove(tmpFile.c_str()) == -1) WARNING("Unable to delete temp file %s", tmpFile.c_str());
+
+    m_bCreatedSharedData = true;
+    Controller::Instance().RemoveDebugOut(pLabelOut);
+  } else {    
+    m_strSharedDataFilename = m_currentDataset->Filename();
+    m_bCreatedSharedData = false;
+  }
+  label_Status->setText(tr("Conversion complete!"));
+  label_Status->update();
+
+  label_files->setText("Sharing\n"+qstrSourceFileDesc);
+
+  m_bDataNotConverted = false;
+  return true;
+}
+
+bool I3MDialog::ConvertData() {
+  switch (m_iI3MVersion) {
+    case 1 : return ConvertDataV1();
+    case 2 : return ConvertDataV2();
+    default: return false;
+  }
+}
+
 void I3MDialog::CleanupTemp() {
-  if (SysTools::FileExists(m_strI3MFilename)) remove(m_strI3MFilename.c_str());
-  if (SysTools::FileExists(m_str1DTFilename)) remove(m_str1DTFilename.c_str());
+  if (m_bCreatedSharedData && SysTools::FileExists(m_strSharedDataFilename)) remove(m_strSharedDataFilename.c_str());
+  if (m_bCreatedTF && SysTools::FileExists(m_strSharedTFFilename)) remove(m_strSharedTFFilename.c_str());
+
+  m_bCreatedSharedData = false;
+  m_bCreatedTF = false;
 }
 

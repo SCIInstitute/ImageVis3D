@@ -45,7 +45,7 @@ void MainWindow::TransferToI3M() {
   const UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
 
   if (currentDataset) {
-    I3MDialog d(&m_MasterController, currentDataset, m_strTempDir, this);
+    I3MDialog d(currentDataset, m_strTempDir, this);
     d.exec();
   }
 }

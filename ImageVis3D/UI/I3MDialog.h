@@ -42,34 +42,40 @@
 #include <QtNetwork/QTcpServer>
 #include "../Tuvok/IO/uvfDataset.h"
 #include "../Tuvok/IO/uvfDataset.h"
-#include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/Controller/Controller.h"
 
 class I3MDialog : public QDialog, protected Ui_I3MDialog
 {
   Q_OBJECT
 
   public:
-    I3MDialog(MasterController* pMasterController, const tuvok::UVFDataset* currentDataset, const std::string& strTmpDir, QWidget* parent, Qt::WindowFlags flags = Qt::Dialog);
+    I3MDialog(const tuvok::UVFDataset* currentDataset, const std::string& strTmpDir, QWidget* parent, Qt::WindowFlags flags = Qt::Dialog);
     virtual ~I3MDialog();
 
   protected slots:
     virtual void SendData();
     virtual void Start();
-    virtual void SelectPort();
+    virtual void SetPort();
+    virtual void SetVersion();
 
   protected:
     UINT32         m_iSendMessage;
     QTcpServer*    m_tcpServer;
     UINT32         m_iPort;
+    UINT32         m_iI3MVersion;
     const tuvok::UVFDataset* m_currentDataset;
     bool           m_bDataNotConverted;
-    std::string    m_strI3MFilename;
-    std::string    m_str1DTFilename;
+    bool           m_bCreatedSharedData;
+    std::string    m_strSharedDataFilename;
+    bool           m_bCreatedTF;
+    std::string    m_strSharedTFFilename;
     std::string    m_strSource1DTFilename;
     std::string    m_strTempDir;
     MasterController* m_pMasterController;
 
     bool ConvertData();
+    bool ConvertDataV1();
+    bool ConvertDataV2();
     void CleanupTemp();
 };
 
