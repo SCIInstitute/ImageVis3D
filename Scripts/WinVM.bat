@@ -87,6 +87,15 @@ goto ENVFAIL
 :ENVSET
 
 time /t  >> result.txt
+
+echo Deleting previous binaries >> result.txt
+del "Build\Win32\%CONFIG%\ImageVis3D-32.exe"
+del "CmdLineConverter\Build\v\%CONFIG%\UVFConverter32.exe"
+del "UVFReader\Build\Win32\%CONFIG%\UVFReader32.exe"
+del "Build\x64\%CONFIG%\ImageVis3D-64.exe"
+del "CmdLineConverter\Build\x64\%CONFIG%\UVFConverter64.exe"
+del "UVFReader\Build\x64\%CONFIG%\UVFReader64.exe"
+
 echo Build Environment completed >> result.txt
 
 echo on
