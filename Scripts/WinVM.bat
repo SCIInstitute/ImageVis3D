@@ -56,8 +56,8 @@ echo #endif >> Tuvok\StdTuvokDefines.h
 
 set REVSTR=%IV3DVERSION%_%TUVOKVERSION%
 set CONFIG=Release (with DirectX)
-set QTDIR32=C:\QT\4.5.1-32bit-static\
-set QTDIR64=C:\QT\4.5.1-64bit-static\
+REM set QTDIR32=C:\QT\4.5.1-32bit-static\
+REM set QTDIR64=C:\QT\4.5.1-64bit-static\
 
 echo f | xcopy result.txt \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.log /Y
 
