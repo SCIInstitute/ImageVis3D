@@ -295,30 +295,26 @@ bool I3MDialog::ConvertDataV2() {
     pLabelOut->SetOutput(true, true, true, false);
     Controller::Instance().AddDebugOut(pLabelOut);
 
-    label_files->setText("Converting(Phase 1/2)\n"+qstrSourceFileDesc);
+    label_files->setText("Converting...\n"+qstrSourceFileDesc);
 
-    std::string filenameOnly = SysTools::GetFilename(m_currentDataset->Filename());
-    m_strSharedDataFilename = m_strTempDir+filenameOnly;
-    std::string tmpFile = m_strTempDir+SysTools::ChangeExt(filenameOnly,"nrrd"); /// use some simple format as intermediate file
+    std::string strCompleteSourceFile = m_currentDataset->Filename();
+    std::string strSourceFile = SysTools::GetFilename(strCompleteSourceFile);
+    std::string strTargetFile = m_strTempDir+strSourceFile;
 
-    if (!Controller::Instance().IOMan()->ConvertDataset(m_currentDataset->Filename(), tmpFile, m_strTempDir)) {
-      T_ERROR("Unable to extract raw data from file %s to %s", m_currentDataset->Filename().c_str(),tmpFile.c_str());
+    // in case the target file exists (e.g. the user converts from temp) make it unique
+    if (SysTools::FileExists(strTargetFile))
+      strTargetFile = SysTools::FindNextSequenceName(strTargetFile);
+
+    if (!Controller::Instance().IOMan()->ReBrickDataset(m_currentDataset->Filename(), strTargetFile, m_strTempDir, 128, 4)) {
+      T_ERROR("Unable to convert data from file %s to %s", m_currentDataset->Filename().c_str(),strTargetFile);
       Controller::Instance().RemoveDebugOut(pLabelOut);
+      label_files->setText(qstrSourceFileDesc);
       return false;
     }
 
-    label_files->setText("Converting (Phase 2/2)\n"+qstrSourceFileDesc);
-    
-    if (!Controller::Instance().IOMan()->ConvertDataset(tmpFile, m_strSharedDataFilename, m_strTempDir, false, 128, 4)) {
-      T_ERROR("Unable to convert raw data from file %s into new UVF file %s", tmpFile.c_str(),m_strSharedDataFilename.c_str());
-      if(std::remove(tmpFile.c_str()) == -1) WARNING("Unable to delete temp file %s", tmpFile.c_str());
-      Controller::Instance().RemoveDebugOut(pLabelOut);
-      return false;
-    } 
-    if(std::remove(tmpFile.c_str()) == -1) WARNING("Unable to delete temp file %s", tmpFile.c_str());
-
-    m_bCreatedSharedData = true;
+    m_strSharedDataFilename = strTargetFile;
     Controller::Instance().RemoveDebugOut(pLabelOut);
+    m_bCreatedSharedData = true;
   } else {    
     m_strSharedDataFilename = m_currentDataset->Filename();
     m_bCreatedSharedData = false;

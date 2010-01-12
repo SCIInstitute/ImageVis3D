@@ -73,7 +73,7 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
 
   if (m_Renderer) {
     ((DXRenderer*)m_Renderer)->SetWinID(parent->winId());  // hand over the handle of the window we are sitting in not the widget inside the window
-    m_Renderer->LoadDataset(m_strDataset.toStdString());
+    m_Renderer->LoadDataset(m_strDataset.toStdString(),m_bRebrickingRequired);
     InitializeRenderer();
     SetupArcBall();
   } else m_bRenderSubsysOK = false;

@@ -75,7 +75,12 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   // so far we are not rendering anything but the volume therefore
   // disable the depth-buffer to offscreen copy operations
   m_Renderer->SetConsiderPreviousDepthbuffer(false);
-  m_Renderer->LoadDataset(m_strDataset.toStdString());
+  
+  if (!m_Renderer->LoadDataset(m_strDataset.toStdString(), m_bRebrickingRequired)) {
+    m_bRenderSubsysOK = false;
+    return;
+  }
+
   SetupArcBall();
 
   // Note that we create the RenderRegions here and not in the parent class

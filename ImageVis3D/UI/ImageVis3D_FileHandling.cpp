@@ -191,7 +191,60 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
 
     RenderWindow *renderWin = CreateNewRenderWindow(filename);
     if(!renderWin->IsRenderSubsysOK()) {
-      delete renderWin;
+      if (renderWin->RebrickingRequired()) {
+          delete renderWin;
+          if (!bNoUserInteraction && QMessageBox::Yes == QMessageBox::question(NULL, "Rebricking required", "The bricking scheme in this dataset is not "
+                                                          "compatible your current brick size settings. Do you want to convert "
+                                                          "the dataset to be able to load it? Note that depending on the size "
+                                                          "of the dataset this operation may take a while!", QMessageBox::Yes, QMessageBox::No)) {
+  
+
+            QSettings settings;
+            QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
+
+            QFileDialog::Options options;
+          #ifdef DETECTED_OS_APPLE
+            options |= QFileDialog::DontUseNativeDialog;
+          #endif
+            QString selectedFilter;
+            QString rebrickedFilename;
+            do {
+              rebrickedFilename =
+                QFileDialog::getSaveFileName(this, "Select filename for converted data",
+                                             strLastDir, "Universal Volume Format (*.uvf)",
+                                             &selectedFilter, options);
+              if (!rebrickedFilename.isEmpty()) {
+                rebrickedFilename = SysTools::CheckExt(string(rebrickedFilename.toAscii()),
+                                                           "uvf").c_str();
+
+                if (rebrickedFilename == filename) {
+                  ShowCriticalDialog( "Input Error", "Rebricking can not be performed in place, please select another file.");
+                } else {
+                  settings.setValue("Folders/GetConvFilename",
+                                    QFileInfo(rebrickedFilename).absoluteDir().path());
+
+                  PleaseWaitDialog pleaseWait(this);
+                  pleaseWait.SetText("Rebricking, please wait  ...");
+                  pleaseWait.AttachLabel(&m_MasterController);
+
+                  if (!m_MasterController.IOMan()->ReBrickDataset(string(filename.toAscii()), string(rebrickedFilename.toAscii()), m_strTempDir)) {
+                    ShowCriticalDialog( "Error during rebricking.", "The system was unable to rebrick the data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+                  } else {
+                    pleaseWait.hide();
+                    QString msg = tr("The data set has been converted exported to %1.").arg(rebrickedFilename);
+                    ShowInformationDialog( tr("Rebricking successful"), msg);
+                  }
+                }
+              } else return false;
+
+            } while (rebrickedFilename == filename);
+            return LoadDataset(rebrickedFilename, targetFilename, bNoUserInteraction);
+          }
+     } else {
+        ShowCriticalDialog( "Load Error", "Unable to load the data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+        delete renderWin;
+      }
+
       return false;
     }
 

@@ -65,6 +65,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_Renderer(NULL),
   m_MasterController(masterController),
   m_bRenderSubsysOK(true),   // be optimistic :-)
+  m_bRebrickingRequired(false),
   selectedRegionSplitter(REGION_SPLITTER_NONE),
   m_vWinDim(0,0),
   m_vMinSize(vMinSize),
