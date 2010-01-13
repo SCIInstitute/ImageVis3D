@@ -54,7 +54,7 @@ I3MDialog::I3MDialog(const UVFDataset* currentDataset, const std::string& strTmp
   m_iPort(22),
   m_iI3MVersion(1),
   m_currentDataset(currentDataset),
-  m_bDataNotConverted(true),
+  m_iDataInMobileFormat(0),
   m_bCreatedSharedData(false),
   m_strSharedDataFilename(""),
   m_bCreatedTF(false),
@@ -80,21 +80,17 @@ I3MDialog::I3MDialog(const UVFDataset* currentDataset, const std::string& strTmp
   std::string filenameOnly = SysTools::GetFilename(m_currentDataset->Filename());
   std::string potentialTFFile = SysTools::ChangeExt(m_currentDataset->Filename(),"1dt");
 
-  m_strSharedDataFilename = m_strTempDir+SysTools::ChangeExt(filenameOnly,"i3m");
-
-
-  QString qs;
   if (SysTools::FileExists(potentialTFFile)) {
-    qs = tr("Dataset: %1\nTransferFunction: %2").arg(filenameOnly.c_str()).arg(SysTools::ChangeExt(filenameOnly,"1dt").c_str());
+    m_qstrMainLabelText = tr("Dataset: %1\nTransferFunction: %2").arg(filenameOnly.c_str()).arg(SysTools::ChangeExt(filenameOnly,"1dt").c_str());
     m_strSource1DTFilename = potentialTFFile;
     m_strSharedTFFilename = SysTools::ChangeExt(m_strSharedDataFilename,"1dt");
   } else {
-    qs = tr("Dataset: %1").arg(filenameOnly.c_str());
+    m_qstrMainLabelText = tr("Dataset: %1").arg(filenameOnly.c_str());
     m_strSource1DTFilename = "";
     m_strSharedTFFilename = "";
   }
 
-  label_files->setText(qs);
+  label_files->setText(m_qstrMainLabelText);
 }
 
 I3MDialog::~I3MDialog(void)
@@ -102,7 +98,7 @@ I3MDialog::~I3MDialog(void)
   // if port is open close it and then delete it
   if (m_tcpServer->isListening()) m_tcpServer->close();
   delete m_tcpServer;
-  if (!m_bDataNotConverted) CleanupTemp();
+  CleanupTemp();
 }
 
 void I3MDialog::Start()
@@ -110,9 +106,16 @@ void I3MDialog::Start()
   // if we are already listening close the port
   if (m_tcpServer->isListening()) m_tcpServer->close();
 
-  // convert UVF to i3m and prepare TF (rescaling if necessary)
-  if (m_bDataNotConverted)
-    if (!ConvertData()) return;
+  // convert UVF to i3m (version 1) or UVF with 128 bricks (version 2) 
+  // and prepare TF (rescaling if necessary)
+  if (m_iDataInMobileFormat != m_iI3MVersion)
+    if (!ConvertData()) {
+      QMessageBox::critical(this, this->windowTitle(),
+                            tr("Unable to prepare the data set for transfer, "
+                               "please check the error log for details "
+                               "(Menu -> \"Help\" -> \"Debug Window\")."));
+      return;
+    }
 
   // open port and check if everything is ok
   if (!m_tcpServer->listen(QHostAddress::Any, m_iPort)) {
@@ -124,8 +127,8 @@ void I3MDialog::Start()
 
   // update status
   label_Status->setText(tr("The server is running on port %1.\n"
-                          "Connect ImageVis3D Mobile to this system now.")
-                                   .arg(m_tcpServer->serverPort())  );
+                           "Connect ImageVis3D Mobile to this system now.")
+                           .arg(m_tcpServer->serverPort())  );
 }
 
 void I3MDialog::SetPort()
@@ -151,6 +154,10 @@ void I3MDialog::SetPort()
 void I3MDialog::SetVersion()
 {
   m_iI3MVersion = checkBoxV->isChecked() ? 1 : 2;
+
+  if (m_tcpServer->isListening() &&
+      m_iDataInMobileFormat != m_iI3MVersion)
+    Start();
 
   QSettings settings;
   settings.setValue("I3MVersion", m_iI3MVersion);
@@ -229,10 +236,27 @@ void I3MDialog::SendData()
     delete [] tfFileData;
 }
 
-bool I3MDialog::ConvertDataV1() {
-  QString qstrSourceFileDesc = label_files->text();
-  label_files->setText("Converting\n"+qstrSourceFileDesc);
 
+bool I3MDialog::ConvertTF() {
+  label_Status->setText(tr("Converting transfer function."));
+  label_Status->update();
+
+  // resample 1D tf to 8bit
+  if (m_strSource1DTFilename != "") {
+    TransferFunction1D tfIn(m_strSource1DTFilename);
+    tfIn.Resample(256);
+    if (!tfIn.Save(m_strSharedTFFilename)) return false;
+  }
+  m_bCreatedTF = true;
+
+  label_Status->setText(tr("Conversion complete!"));
+  label_Status->update();  
+
+  return true;
+}
+
+bool I3MDialog::ConvertDataV1() {
+  label_files->setText("Converting\n"+m_qstrMainLabelText);
 
   // UVF to I3M
 
@@ -245,57 +269,35 @@ bool I3MDialog::ConvertDataV1() {
         vLODSize.z >= 128) break;
   }
 
-  // now convert it
-  QTLabelOut* pLabelOut = new QTLabelOut(label_Status, this);
-  pLabelOut->SetOutput(true, true, true, false);
-  Controller::Instance().AddDebugOut(pLabelOut);
+  std::string filenameOnly = SysTools::GetFilename(m_currentDataset->Filename());
+  m_strSharedDataFilename = m_strTempDir+SysTools::ChangeExt(filenameOnly,"i3m");
+  if (SysTools::FileExists(m_strSharedDataFilename))
+    m_strSharedDataFilename = SysTools::FindNextSequenceName(m_strSharedDataFilename);
 
   if (!Controller::Instance().IOMan()->ExportDataset(m_currentDataset, iLODLevel, m_strSharedDataFilename, m_strTempDir)) {
         label_Status->setText(tr("Failed to convert the current dataset into the i3m format for the mobile device."));
-    label_files->setText(qstrSourceFileDesc);
-    Controller::Instance().RemoveDebugOut(pLabelOut);
+    label_files->setText(m_qstrMainLabelText);
     return false;
   }
   m_bCreatedSharedData = true;
-  label_Status->setText(tr("Converting transfer function."));
-  label_Status->update();
 
-  Controller::Instance().RemoveDebugOut(pLabelOut);
+  label_files->setText("Sharing\n"+m_qstrMainLabelText);
 
-  // resample 1D tf to 8bit
-  if (m_strSource1DTFilename != "") {
-    TransferFunction1D tfIn(m_strSource1DTFilename);
-    tfIn.Resample(256);
-    tfIn.Save(m_strSharedTFFilename);
-  }
-  m_bCreatedTF = true;
-
-  label_Status->setText(tr("Conversion complete!"));
-  label_Status->update();
-
-  label_files->setText("Sharing\n"+qstrSourceFileDesc);
-
-  m_bDataNotConverted = false;
   return true;
 }
 
 bool I3MDialog::ConvertDataV2() {
-  QString qstrSourceFileDesc = label_files->text();
-
   UINT64VECTOR3 vSize = m_currentDataset->GetMaxUsedBrickSizes();
 
   // ImageVis3D Mobile 2.0 uses UVF but requires the 
-  // bricks to be no larger than 128 in any dimension.
+  // bricks to be 8bit and 
+  // no larger than 128 in any dimension
   // if the dataset meets this criterion we simply use
   // it as is (else branch) otherwise we convert it
-  if (vSize.maxVal() > 128) {
+  if (vSize.maxVal() > 128 || m_currentDataset->GetBitWidth() > 8) {
 
     // now convert it
-    QTLabelOut* pLabelOut = new QTLabelOut(label_Status, this);
-    pLabelOut->SetOutput(true, true, true, false);
-    Controller::Instance().AddDebugOut(pLabelOut);
-
-    label_files->setText("Converting...\n"+qstrSourceFileDesc);
+    label_files->setText("Converting...\n"+m_qstrMainLabelText);
 
     std::string strCompleteSourceFile = m_currentDataset->Filename();
     std::string strSourceFile = SysTools::GetFilename(strCompleteSourceFile);
@@ -306,37 +308,55 @@ bool I3MDialog::ConvertDataV2() {
     if (SysTools::FileExists(strTargetFile))
       strTargetFile = SysTools::FindNextSequenceName(strTargetFile);
 
-    if (!Controller::Instance().IOMan()->ReBrickDataset(m_currentDataset->Filename(), strTargetFile, m_strTempDir, 128, 4)) {
+    if (!Controller::Instance().IOMan()->ReBrickDataset(m_currentDataset->Filename(), strTargetFile, m_strTempDir, 128, 4, 8)) {
       T_ERROR("Unable to convert data from file %s to %s",
               m_currentDataset->Filename().c_str(),
               strTargetFile.c_str());
-      Controller::Instance().RemoveDebugOut(pLabelOut);
-      label_files->setText(qstrSourceFileDesc);
+      label_files->setText(m_qstrMainLabelText);
       return false;
     }
 
     m_strSharedDataFilename = strTargetFile;
-    Controller::Instance().RemoveDebugOut(pLabelOut);
     m_bCreatedSharedData = true;
   } else {    
     m_strSharedDataFilename = m_currentDataset->Filename();
     m_bCreatedSharedData = false;
   }
+ 
   label_Status->setText(tr("Conversion complete!"));
   label_Status->update();
-
-  label_files->setText("Sharing\n"+qstrSourceFileDesc);
-
-  m_bDataNotConverted = false;
+  label_files->setText("Sharing\n"+m_qstrMainLabelText);
   return true;
 }
 
 bool I3MDialog::ConvertData() {
+  CleanupTemp();
+
+  QTLabelOut* pLabelOut = new QTLabelOut(label_Status, this);
+  pLabelOut->SetOutput(true, true, true, false);
+  Controller::Instance().AddDebugOut(pLabelOut);
+
+  bool bDataSetOK;
   switch (m_iI3MVersion) {
-    case 1 : return ConvertDataV1();
-    case 2 : return ConvertDataV2();
-    default: return false;
+    case 1 : bDataSetOK = ConvertDataV1();
+             m_iDataInMobileFormat = 1;
+             break;
+    case 2 : bDataSetOK = ConvertDataV2(); 
+             m_iDataInMobileFormat = 2;
+             break;
+    default: bDataSetOK = false; 
+             m_iDataInMobileFormat = 0;
+             break;
   }
+
+  bool bTFOK = false;
+  if (bDataSetOK) {
+    bTFOK = ConvertTF();
+  }
+
+  Controller::Instance().RemoveDebugOut(pLabelOut);
+
+  return bDataSetOK && bTFOK;
 }
 
 void I3MDialog::CleanupTemp() {
@@ -345,5 +365,6 @@ void I3MDialog::CleanupTemp() {
 
   m_bCreatedSharedData = false;
   m_bCreatedTF = false;
+  m_iDataInMobileFormat = 0;
 }
 

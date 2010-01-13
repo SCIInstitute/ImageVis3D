@@ -64,7 +64,7 @@ class I3MDialog : public QDialog, protected Ui_I3MDialog
     UINT32         m_iPort;
     UINT32         m_iI3MVersion;
     const tuvok::UVFDataset* m_currentDataset;
-    bool           m_bDataNotConverted;
+    UINT32         m_iDataInMobileFormat;
     bool           m_bCreatedSharedData;
     std::string    m_strSharedDataFilename;
     bool           m_bCreatedTF;
@@ -72,10 +72,12 @@ class I3MDialog : public QDialog, protected Ui_I3MDialog
     std::string    m_strSource1DTFilename;
     std::string    m_strTempDir;
     MasterController* m_pMasterController;
+    QString        m_qstrMainLabelText;
 
     bool ConvertData();
     bool ConvertDataV1();
     bool ConvertDataV2();
+    bool ConvertTF();
     void CleanupTemp();
 };
 
