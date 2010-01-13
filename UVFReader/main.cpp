@@ -242,7 +242,11 @@ int main(int argc, char* argv[])
                         source[i++] = static_cast<unsigned char>(std::max(0.0f,(0.5f-(0.5f-FLOATVECTOR3(float(x),float(y),float(z))/FLOATVECTOR3(iSize)).length())*512.0f));
                       }
 
-                  testVolume.FlatDataToBrickedLOD(&source[0], "./tempFile.tmp", CombineAverage<unsigned char,1>, SimpleMaxMin<unsigned char,1>, &MaxMinData, &Controller::Debug::Out()); break;
+                  if (!testVolume.FlatDataToBrickedLOD(&source[0], "./tempFile.tmp", CombineAverage<unsigned char,1>, SimpleMaxMin<unsigned char,1>, &MaxMinData, &Controller::Debug::Out())){
+                    T_ERROR("Failed to subdivide the volume into bricks");
+                    uvfFile.Close();
+                    return EXIT_FAILURE;
+                  }
                   break;
                }
       case 16 :{
@@ -254,7 +258,11 @@ int main(int argc, char* argv[])
                         source[i++] = static_cast<unsigned short>(std::max(0.0f,(0.5f-(0.5f-FLOATVECTOR3(float(x),float(y),float(z))/FLOATVECTOR3(iSize)).length())*131072.0f));
                       }
 
-                  testVolume.FlatDataToBrickedLOD(&source[0], "./tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short,1>, &MaxMinData, &Controller::Debug::Out()); break;
+                  if (!testVolume.FlatDataToBrickedLOD(&source[0], "./tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short,1>, &MaxMinData, &Controller::Debug::Out())){
+                    T_ERROR("Failed to subdivide the volume into bricks");
+                    uvfFile.Close();
+                    return EXIT_FAILURE;
+                  }
                   break;
                }
       default: assert(0); // should never happen as we test this during parameter check
