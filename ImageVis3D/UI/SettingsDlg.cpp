@@ -36,6 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "../Tuvok/StdTuvokDefines.h"
+#include "../Tuvok/Basics/MathTools.h"
 #include "SettingsDlg.h"
 #include <QtGui/QColorDialog>
 #include <QtGui/QMessageBox>
@@ -330,7 +331,8 @@ void SettingsDlg::SetLogoLabel() {
 }
 
 void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU, const std::string& tempDir,
-                            bool bQuickopen, unsigned int iMinFramerate, bool bUseAllMeans, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS,
+                            bool bQuickopen, unsigned int iMinFramerate, bool bUseAllMeans, unsigned int iLODDelay,
+                            unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, UINT32 iLogLevel,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
@@ -338,11 +340,15 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
                             bool bInvWheel, bool bI3MFeatures,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits,
                             bool bDisableBorder, bool bAvoidCompositing, bool bNoRCClipplanes,
-                            const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor, const QString& strLogo, int iLogoPos) {
+                            const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor,
+                            const QString& strLogo, int iLogoPos, unsigned int iMaxBrickSize, unsigned int iMaxMaxBrickSize) {
   m_bInit = true;
   horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
   horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
   lineEdit_TempDir->setText(tempDir.c_str());
+
+  horizontalSlider_BS->setValue(iMaxBrickSize);
+  horizontalSlider_BS->setMaximum(iMaxMaxBrickSize);
 
   checkBoxQuickload->setChecked(bQuickopen);
   horizontalSlider_MinFramerate->setValue(iMinFramerate);
@@ -522,6 +528,17 @@ int SettingsDlg::GetLogoPos() const {
   if (radioButton_logoTR->isChecked()) return 1;
   if (radioButton_logoBL->isChecked()) return 2;
   return 3;
+}
+
+
+void SettingsDlg::MaxBSChanged(int iValue) {
+  QString str = tr("%1^3").arg(MathTools::Pow2(UINT32(iValue)));
+
+  label_BS->setText(str);
+}
+
+unsigned int SettingsDlg::GetMaxBrickSize() const {
+  return horizontalSlider_BS->value();
 }
 
 void SettingsDlg::PickLogFile() {

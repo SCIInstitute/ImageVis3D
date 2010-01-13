@@ -41,7 +41,9 @@
 
 
 #include "ImageVis3D.h"
+#include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/Basics/MathTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
@@ -82,12 +84,21 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     QSettings settings;
     SettingsDlg settingsDlg(m_pActiveRenderWin != NULL, m_MasterController, this);
 
-    // load first setting to see if we allready saved something
-    UINT64 iMaxGPU = settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong();
+    settings.beginGroup("Memory");
+    UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
+    UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+    string strTempDir(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
+    unsigned int iMaxBrickSize = settings.value("MaxBricksize", MathTools::Log2(m_MasterController.IOMan()->m_iMaxBrickSize)).toUInt();
+    unsigned int iMaxMaxBrickSize = settings.value("MaxMaxBricksize", 14).toUInt();
+    
+    if (RenderWindow::GetMax3DTexDims()) { // as OpenGL specs are only available if we already opened a window this valu may be invalid (0)
+      iMaxMaxBrickSize = MathTools::Log2(RenderWindow::GetMax3DTexDims());
+      settings.setValue("MaxMaxBricksize", iMaxMaxBrickSize);
+    }
+  
 
-    // load other settings here
-    UINT64 iMaxCPU = std::min<UINT64>(settings.value("Memory/MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
-    string strTempDir(settings.value("Memory/TempDir", m_strTempDir.c_str()).toString().toAscii());
+    settings.endGroup();
+    
 
     settings.beginGroup("Performance");
     bool bQuickopen = settings.value("Quickopen", m_bQuickopen).toBool();
@@ -153,7 +164,8 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
                           bInvWheel, bI3MFeatures,
                           iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
                           bDisableBorder, bAvoidCompositing, bNoRCClipplanes,
-                          vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos);
+                          vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos,
+                          iMaxBrickSize, iMaxMaxBrickSize);
 
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
 
@@ -162,6 +174,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("MaxGPUMem", settingsDlg.GetGPUMem());
       settings.setValue("MaxCPUMem", settingsDlg.GetCPUMem());
       settings.setValue("TempDir", settingsDlg.GetTempDir().c_str());
+      settings.setValue("MaxBricksize", settingsDlg.GetMaxBrickSize());
       settings.endGroup();
 
       settings.beginGroup("Performance");
@@ -288,6 +301,7 @@ void MainWindow::ApplySettings() {
   UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
   UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
   m_strTempDir = string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
+  m_MasterController.IOMan()->m_iMaxBrickSize = MathTools::Pow2(settings.value("MaxBrickSize", m_MasterController.IOMan()->m_iMaxBrickSize).toUInt());
   settings.endGroup();
 
   // Apply window settings

@@ -114,6 +114,45 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBox_BS">
+         <property name="title">
+          <string>Bricking</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Maximum Bricksize</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="horizontalSlider_BS">
+            <property name="minimum">
+             <number>5</number>
+            </property>
+            <property name="maximum">
+             <number>14</number>
+            </property>
+            <property name="value">
+             <number>8</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_BS">
+            <property name="text">
+             <string>256^3</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_Warning32Bit">
          <property name="font">
           <font>
@@ -1100,8 +1139,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>293</x>
-     <y>493</y>
+     <x>302</x>
+     <y>517</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -1116,8 +1155,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>343</x>
-     <y>493</y>
+     <x>352</x>
+     <y>517</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -1148,8 +1187,8 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>197</x>
-     <y>107</y>
+     <x>285</x>
+     <y>106</y>
     </hint>
     <hint type="destinationlabel">
      <x>376</x>
@@ -1164,8 +1203,8 @@
    <slot>SelectBackColor1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>290</y>
+     <x>119</x>
+     <y>81</y>
     </hint>
     <hint type="destinationlabel">
      <x>319</x>
@@ -1180,8 +1219,8 @@
    <slot>SelectBackColor2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>279</x>
-     <y>290</y>
+     <x>119</x>
+     <y>81</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1196,8 +1235,8 @@
    <slot>SelectTextColor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>321</y>
+     <x>119</x>
+     <y>81</y>
     </hint>
     <hint type="destinationlabel">
      <x>278</x>
@@ -1212,8 +1251,8 @@
    <slot>SetTextOpacity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>279</x>
-     <y>324</y>
+     <x>119</x>
+     <y>81</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1228,8 +1267,8 @@
    <slot>SetMaxMemCheck()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>209</x>
-     <y>107</y>
+     <x>297</x>
+     <y>106</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1244,8 +1283,8 @@
    <slot>LODDelayChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>235</x>
-     <y>334</y>
+     <x>119</x>
+     <y>74</y>
     </hint>
     <hint type="destinationlabel">
      <x>119</x>
@@ -1260,8 +1299,8 @@
    <slot>MinFramerateChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>235</x>
-     <y>334</y>
+     <x>119</x>
+     <y>74</y>
     </hint>
     <hint type="destinationlabel">
      <x>209</x>
@@ -1276,8 +1315,8 @@
    <slot>ActTSChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>235</x>
-     <y>334</y>
+     <x>119</x>
+     <y>74</y>
     </hint>
     <hint type="destinationlabel">
      <x>160</x>
@@ -1292,8 +1331,8 @@
    <slot>InactTSChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>235</x>
-     <y>334</y>
+     <x>119</x>
+     <y>74</y>
     </hint>
     <hint type="destinationlabel">
      <x>11</x>
@@ -1308,8 +1347,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>167</x>
-     <y>66</y>
+     <x>119</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
      <x>35</x>
@@ -1340,8 +1379,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>268</x>
-     <y>66</y>
+     <x>119</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
      <x>92</x>
@@ -1356,8 +1395,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>353</x>
-     <y>66</y>
+     <x>119</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1372,8 +1411,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>30</x>
-     <y>184</y>
+     <x>41</x>
+     <y>77</y>
     </hint>
     <hint type="destinationlabel">
      <x>159</x>
@@ -1388,8 +1427,8 @@
    <slot>RemoveLogo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>31</x>
-     <y>438</y>
+     <x>42</x>
+     <y>85</y>
     </hint>
     <hint type="destinationlabel">
      <x>26</x>
@@ -1404,8 +1443,8 @@
    <slot>SelectLogo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>31</x>
-     <y>407</y>
+     <x>42</x>
+     <y>85</y>
     </hint>
     <hint type="destinationlabel">
      <x>351</x>
@@ -1420,8 +1459,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>30</x>
-     <y>208</y>
+     <x>41</x>
+     <y>77</y>
     </hint>
     <hint type="destinationlabel">
      <x>349</x>
@@ -1436,8 +1475,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>217</x>
-     <y>208</y>
+     <x>119</x>
+     <y>77</y>
     </hint>
     <hint type="destinationlabel">
      <x>354</x>
@@ -1452,8 +1491,8 @@
    <slot>PickLogFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>311</x>
-     <y>482</y>
+     <x>119</x>
+     <y>79</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
@@ -1468,8 +1507,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>30</x>
-     <y>232</y>
+     <x>41</x>
+     <y>77</y>
     </hint>
     <hint type="destinationlabel">
      <x>357</x>
@@ -1485,7 +1524,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>396</x>
-     <y>297</y>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
      <x>358</x>
@@ -1500,12 +1539,28 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>126</x>
-     <y>76</y>
+     <x>119</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>
      <y>98</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_BS</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>MaxBSChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>155</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>421</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -1525,5 +1580,6 @@
   <slot>SelectLogo()</slot>
   <slot>PickLogFile()</slot>
   <slot>SelectTempDir()</slot>
+  <slot>MaxBSChanged(int)</slot>
  </slots>
 </ui>

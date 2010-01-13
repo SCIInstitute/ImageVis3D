@@ -95,6 +95,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     QString       GetLogoFilename() const;
     int           GetLogoPos() const;
 
+    unsigned int  GetMaxBrickSize() const;
+
     void Data2Form(bool bIsDirectX10Capable,
                    UINT64 iMaxCPU, UINT64 iMaxGPU,
                    const std::string& tempDir,
@@ -129,7 +131,9 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    const FLOATVECTOR3& vBackColor2,
                    const FLOATVECTOR4& vTextColor,
                    const QString& strLogo,
-                   int iLogoPos);
+                   int iLogoPos,
+                   unsigned int iMaxBrickSize,
+                   unsigned int iMaxMaxBrickSize);
 
   protected slots:
     void SelectTextColor();
@@ -146,6 +150,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void RemoveLogo();
     void PickLogFile();
     void SelectTempDir();
+    void MaxBSChanged(int iValue);
 
   private:
     MasterController& m_MasterController;

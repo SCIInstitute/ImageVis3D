@@ -172,33 +172,11 @@ void RenderWindowGL::InitializeRenderer()
         if (ms_iMax3DTexDims > 0 && ms_iMax3DTexDims < m_MasterController.IOMan()->m_iMaxBrickSize) {
 
           std::ostringstream warn;
-
-          warn << "ImageVis3D uses something called \"3D Textures\", which "
-               << "are a method to push data down to your graphics card "
-               << "for processing.\n\n"
-               << "These textures can be of various sizes.  Your graphics "
-               << "card is reporting that it cannot support typical sizes "
-               << "that ImageVis3D will use. ImageVis3D can adjust to your "
-               << "hardware and will format data to work with your system, "
-               << "however, it may be unable to load from other sources. "
-               << "Would you like to continue?";
-          if(QMessageBox::Yes !=
-            QMessageBox::question(this, "Continue?", warn.str().c_str(),
-                                   QMessageBox::Yes | QMessageBox::No,
-                                   QMessageBox::No)) {
-            m_Renderer->Cleanup();
-            m_MasterController.ReleaseVolumerenderer(m_Renderer);
-            m_bRenderSubsysOK = false;
-            return;
-          } else {
-            std::ostringstream warn;
-            warn << "Maximum supported texture size (" << ms_iMax3DTexDims << ") "
-                 << "is smaller than the default size in the IO subsystem ("
-                 << m_MasterController.IOMan()->m_iMaxBrickSize << "). "
-                 << "Adjusting IO subsystem!";
-            WARNING("%s", warn.str().c_str());
-          }
-
+          warn << "Maximum supported texture size (" << ms_iMax3DTexDims << ") "
+               << "is smaller than the current setting ("
+               << m_MasterController.IOMan()->m_iMaxBrickSize << "). "
+               << "Adjusting settings!";
+          WARNING("%s", warn.str().c_str());
 
           m_MasterController.IOMan()->m_iMaxBrickSize = ms_iMax3DTexDims; 
         } else {
