@@ -124,6 +124,21 @@ void RenderWindow::SetCaptureRotationAngle(float fAngle) {
   PaintRenderer();
 }
 
+RenderWindow::RegionData* RenderWindow::GetRegionData(const RenderRegion* renderRegion) {
+#ifdef TR1_NOT_CONST_CORRECT
+  tuvok::RenderRegion *region = const_cast<tuvok::RenderRegion*>(renderRegion);
+  RegionDataMap::const_iterator iter = regionDataMap.find(region);
+#else
+  RegionDataMap::const_iterator iter = regionDataMap.find(renderRegion);
+#endif
+  if (iter == regionDataMap.end()) {
+    // This should never happen if the renderRegion belongs to *this.
+    assert(false);
+    return NULL;
+  }
+  return iter->second;
+}
+
 RenderWindow::RegionSplitter RenderWindow::GetRegionSplitter(INTVECTOR2 pos) const
 {
   switch (m_eViewMode) {
@@ -159,10 +174,12 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
 
       if (event->modifiers() & Qt::ControlModifier &&
           event->button() == Qt::LeftButton) {
-        m_ClipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+        RegionData *regionData = GetRegionData(region);
+        regionData->clipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
       } else if (event->button() == Qt::LeftButton) {
-        m_ArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
-        m_ClipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+        RegionData *regionData = GetRegionData(region);
+        regionData->arcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+        regionData->clipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
       }
     }
   } else { // Probably clicked on a region separator.
@@ -174,8 +191,10 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
 }
 
 void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton)
-    FinalizeRotation(true);
+  if (event->button() == Qt::LeftButton) {
+    RenderRegion *startRegion = GetRegionUnderCursor(initialClickPos);
+    FinalizeRotation(startRegion, true);
+  }
 
   selectedRegionSplitter = REGION_SPLITTER_NONE;
 
@@ -239,7 +258,8 @@ bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate,
   if (rotate) {
     UINTVECTOR2 upos(static_cast<UINT32>(pos.x),
                      static_cast<UINT32>(pos.y));
-    SetClipRotationDelta(m_ClipArcBall.Drag(upos).ComputeRotation(),
+    RegionData *regionData = GetRegionData(region);
+    SetClipRotationDelta(regionData->clipArcBall.Drag(upos).ComputeRotation(),
                          true, region);
     bUpdate = true;
   }
@@ -269,7 +289,9 @@ bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
 
   if (rotate) {
     UINTVECTOR2 unsigned_pos(pos.x, pos.y);
-    SetRotationDelta(m_ArcBall.Drag(unsigned_pos).ComputeRotation(), true, region);
+    RegionData *regionData = GetRegionData(region);
+    SetRotationDelta(regionData->arcBall.Drag(unsigned_pos).ComputeRotation(),
+                     true, region);
     bPerformUpdate = true;
   }
   if (translate) {
@@ -419,7 +441,9 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       }
       break;
     case Qt::Key_A : {
-      m_ArcBall.SetUseTranslation(!m_ArcBall.GetUseTranslation());
+      RegionData *regionData = GetRegionData(selectedRegion);
+      regionData->arcBall.SetUseTranslation(
+                                      !regionData->arcBall.GetUseTranslation());
     }
       break;
     case Qt::Key_PageDown : SetTranslationDelta(FLOATVECTOR3(0,0,0.01f), true,
@@ -450,20 +474,16 @@ void RenderWindow::FocusOutEvent ( QFocusEvent * event ) {
 
 void RenderWindow::SetupArcBall() {
   for (size_t i=0; i < GetActiveRenderRegions().size(); ++i) {
-    const RenderRegion *region = GetActiveRenderRegions()[i];
-
-    if (!region->is3D())
-      continue;
-
-    /// @todo: Make this work for muliple 3D renderRegions.
+    const RenderRegion* region = GetActiveRenderRegions()[i];
+    RegionData* regionData = GetRegionData(region);
 
     const UINTVECTOR2 offset(region->minCoord.x, m_vWinDim.y - region->maxCoord.y);
     const UINTVECTOR2 size = region->maxCoord - region->minCoord;
 
-    m_ArcBall.SetWindowOffset(offset.x, offset.y);
-    m_ClipArcBall.SetWindowOffset(offset.x, offset.y);
-    m_ArcBall.SetWindowSize(size.x, size.y);
-    m_ClipArcBall.SetWindowSize(size.x, size.y);
+    regionData->arcBall.SetWindowOffset(offset.x, offset.y);
+    regionData->clipArcBall.SetWindowOffset(offset.x, offset.y);
+    regionData->arcBall.SetWindowSize(size.x, size.y);
+    regionData->clipArcBall.SetWindowSize(size.x, size.y);
   }
 }
 
@@ -658,7 +678,8 @@ void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
                                   RenderRegion *renderRegion) {
   m_mAccumulatedTranslation = mAccumulatedTranslation;
   m_Renderer->SetTranslation(m_mAccumulatedTranslation, renderRegion);
-  m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+  RegionData *regionData = GetRegionData(renderRegion);
+  regionData->arcBall.SetTranslation(m_mAccumulatedTranslation);
   Controller::Instance().Provenance("translation", "translate");
 }
 
@@ -668,7 +689,8 @@ void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
   m_mAccumulatedTranslation.m42 -= trans.y;
   m_mAccumulatedTranslation.m43 += trans.z;
   m_Renderer->SetTranslation(m_mAccumulatedTranslation, renderRegion);
-  m_ArcBall.SetTranslation(m_mAccumulatedTranslation);
+  RegionData *regionData = GetRegionData(renderRegion);
+  regionData->arcBall.SetTranslation(m_mAccumulatedTranslation);
 
   if(GetRenderer()->ClipPlaneLocked()) {
     // We can't use SetClipTranslationDelta, because it forces the clip plane
@@ -693,15 +715,17 @@ void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
   }
 }
 
-void RenderWindow::FinalizeRotation(bool bPropagate) {
-  m_mAccumulatedRotation = m_mCurrentRotation;
+void RenderWindow::FinalizeRotation(const RenderRegion *region, bool bPropagate) {
+  m_mAccumulatedRotation = m_Renderer->GetRotation(region);
   // Reset the clip matrix we'll apply; the state is already stored/applied in
   // the ExtendedPlane instance.
   m_mCurrentClipRotation = FLOATMATRIX4();
   m_mAccumulatedClipRotation = m_mCurrentClipRotation;
   if (bPropagate) {
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
-      m_vpLocks[0][i]->FinalizeRotation(false);
+      RenderRegion *otherRegion = GetCorrespondingRenderRegion(m_vpLocks[0][i],
+                                                               region);
+      m_vpLocks[0][i]->FinalizeRotation(otherRegion, false);
     }
   }
   Controller::Instance().Provenance("rotation", "rotate?");
@@ -711,16 +735,14 @@ void RenderWindow::SetRotation(const FLOATMATRIX4& mAccumulatedRotation,
                                const FLOATMATRIX4& mCurrentRotation,
                                RenderRegion *region) {
   m_mAccumulatedRotation = mAccumulatedRotation;
-  m_mCurrentRotation = mCurrentRotation;
-
-  m_Renderer->SetRotation(m_mCurrentRotation, region);
+  m_Renderer->SetRotation(mCurrentRotation, region);
 }
 
 
 void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate,
                                     RenderRegion *region) {
-  m_mCurrentRotation = m_mAccumulatedRotation * rotDelta;
-  m_Renderer->SetRotation(m_mCurrentRotation, region);
+  const FLOATMATRIX4 newRotation = m_mAccumulatedRotation * rotDelta;
+  m_Renderer->SetRotation(newRotation, region);
 
   if(m_Renderer->ClipPlaneLocked()) {
     SetClipRotationDelta(rotDelta, bPropagate, region);
@@ -732,7 +754,7 @@ void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagat
                                                                region);
 
       if (m_bAbsoluteViewLock)
-        m_vpLocks[0][i]->SetRotation(m_mAccumulatedRotation, m_mCurrentRotation,
+        m_vpLocks[0][i]->SetRotation(m_mAccumulatedRotation, newRotation,
                                      otherRegion);
       else
         m_vpLocks[0][i]->SetRotationDelta(rotDelta, false, otherRegion);
@@ -825,8 +847,9 @@ void RenderWindow::SetClipTranslationDelta(const FLOATVECTOR3 &trans,
   }
 }
 
-RenderRegion* RenderWindow::GetCorrespondingRenderRegion(RenderWindow* otherRW,
-                                                         RenderRegion* myRR) {
+RenderRegion*
+RenderWindow::GetCorrespondingRenderRegion(const RenderWindow* otherRW,
+                                           const RenderRegion* myRR) const {
   for (int i=0; i < MAX_RENDER_REGIONS; ++i)
     for (int j=0; j < NUM_WINDOW_MODES; ++j)
       if (renderRegions[i][j] == myRR)
@@ -842,8 +865,13 @@ void RenderWindow::CloneViewState(RenderWindow* other) {
   m_mAccumulatedRotation    = other->m_mAccumulatedRotation;
   m_mAccumulatedClipRotation = other->m_mAccumulatedClipRotation;
   m_mAccumulatedClipTranslation = other->m_mAccumulatedClipTranslation;
-  m_ArcBall.SetTranslation(other->m_ArcBall.GetTranslation());
-  m_ClipArcBall.SetTranslation(other->m_ClipArcBall.GetTranslation());
+
+  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
+    for (int j=0; j < NUM_WINDOW_MODES; ++j) {
+      RegionData *otherData = other->GetRegionData(other->renderRegions[i][j]);
+      RegionData *data = GetRegionData(renderRegions[i][j]);
+      *data = *otherData;
+    }
 
   m_Renderer->SetRotation(m_mAccumulatedRotation);
   m_Renderer->SetTranslation(m_mAccumulatedTranslation);
@@ -1123,7 +1151,6 @@ void RenderWindow::ResetRenderingParameters()
   FLOATMATRIX4 mIdentity;
   m_Renderer->SetRotation(mIdentity);
   m_Renderer->SetTranslation(mIdentity);
-  m_mCurrentRotation = mIdentity;
   m_mAccumulatedRotation = mIdentity;
   m_mAccumulatedTranslation = mIdentity;
   m_mAccumulatedClipTranslation = mIdentity;

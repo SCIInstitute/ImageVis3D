@@ -48,6 +48,12 @@
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/Renderer/AbstrRenderer.h"
 
+#ifdef DETECTED_OS_WINDOWS
+# include <unordered_map>
+#else
+# include <tr1/unordered_map>
+#endif
+
 class MainWindow;
 
 class RenderWindow
@@ -107,7 +113,7 @@ class RenderWindow
     void SetClipRotationDelta(const FLOATMATRIX4& rotDelta, bool,
                               tuvok::RenderRegion *region=NULL);
     void CloneViewState(RenderWindow* other);
-    void FinalizeRotation(bool bPropagate);
+    void FinalizeRotation(const tuvok::RenderRegion *region, bool bPropagate);
     void CloneRendermode(RenderWindow* other);
     void SetAbsoluteViewLock(bool bAbsoluteViewLock);
 
@@ -200,6 +206,18 @@ class RenderWindow
     static std::string ms_gpuVendorString;
     static UINT32      ms_iMax3DTexDims;
 
+    struct RegionData {
+      ArcBall arcBall;
+      ArcBall clipArcBall;
+    };
+
+    RegionData regionDatas[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];
+
+    typedef std::tr1::unordered_map<tuvok::RenderRegion*, RegionData*> RegionDataMap;
+    RegionDataMap regionDataMap;
+
+    RegionData* GetRegionData(const tuvok::RenderRegion* renderRegion);
+
     void SetupArcBall();
 
     void ResizeRenderer(int width, int height);
@@ -240,8 +258,9 @@ class RenderWindow
     FLOATVECTOR2 WindowFraction2x2() const { return m_vWinFraction; }
     void UpdateWindowFraction();
 
-    tuvok::RenderRegion* GetCorrespondingRenderRegion(RenderWindow* otherRW,
-                                                      tuvok::RenderRegion* myRR);
+    tuvok::RenderRegion*
+    GetCorrespondingRenderRegion(const RenderWindow* otherRW,
+                                 const tuvok::RenderRegion* myRR) const;
 
   private:
     /// Called when the mouse is moved, but in a mode where the clip plane
@@ -277,10 +296,8 @@ class RenderWindow
     unsigned int      m_iTimeSliceMSecsActive;
     unsigned int      m_iTimeSliceMSecsInActive;
 
-    ArcBall           m_ArcBall;
     INTVECTOR2        initialClickPos;
     INTVECTOR2        m_viMousePos;
-    FLOATMATRIX4      m_mCurrentRotation;
     FLOATMATRIX4      m_mAccumulatedRotation;
     FLOATMATRIX4      m_mCaptureStartRotation;
     FLOATMATRIX4      m_mAccumulatedTranslation;
@@ -288,7 +305,6 @@ class RenderWindow
     bool              m_bCaptureMode;
     bool              m_bInvWheel;
 
-    ArcBall           m_ClipArcBall;
     FLOATMATRIX4      m_mCurrentClipRotation;
     FLOATMATRIX4      m_mAccumulatedClipRotation;
     FLOATMATRIX4      m_mAccumulatedClipTranslation;

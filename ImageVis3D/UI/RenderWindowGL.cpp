@@ -75,13 +75,12 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   // so far we are not rendering anything but the volume therefore
   // disable the depth-buffer to offscreen copy operations
   m_Renderer->SetConsiderPreviousDepthbuffer(false);
-  
+
   if (!m_Renderer->LoadDataset(m_strDataset.toStdString(), m_bRebrickingRequired)) {
     m_bRenderSubsysOK = false;
     return;
   }
 
-  SetupArcBall();
 
   // Note that we create the RenderRegions here and not in the parent class
   // because we first need the dataset to be loaded so that we can setup the
@@ -112,6 +111,13 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   std::vector<RenderRegion*> initialRenderRegions;
   initialRenderRegions.push_back(renderRegions[0][0]);
   SetActiveRenderRegions(initialRenderRegions);
+
+  // initialize region data map now that we have all the render regions
+  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
+    for (int j=0; j < NUM_WINDOW_MODES; ++j)
+      regionDataMap.insert(std::make_pair(renderRegions[i][j], &regionDatas[i][j]));
+
+  SetupArcBall();
 
   setObjectName("RenderWindowGL");  // this is used by WidgetToRenderWin() to detect the type
   setWindowTitle(m_strID);
@@ -178,7 +184,7 @@ void RenderWindowGL::InitializeRenderer()
                << "Adjusting settings!";
           WARNING("%s", warn.str().c_str());
 
-          m_MasterController.IOMan()->m_iMaxBrickSize = ms_iMax3DTexDims; 
+          m_MasterController.IOMan()->m_iMaxBrickSize = ms_iMax3DTexDims;
         } else {
           MESSAGE("Maximum supported texture size: %i (required by IO "
                   "subsystem: %i)", ms_iMax3DTexDims, int(m_MasterController.IOMan()->m_iMaxBrickSize));
