@@ -240,6 +240,9 @@ class RenderWindow
     FLOATVECTOR2 WindowFraction2x2() const { return m_vWinFraction; }
     void UpdateWindowFraction();
 
+    tuvok::RenderRegion* GetCorrespondingRenderRegion(RenderWindow* otherRW,
+                                                      tuvok::RenderRegion* myRR);
+
   private:
     /// Called when the mouse is moved, but in a mode where the clip plane
     /// should be manipulated instead of the dataset.

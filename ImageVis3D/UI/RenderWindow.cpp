@@ -683,10 +683,12 @@ void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
+      RenderRegion *otherRegion = GetCorrespondingRenderRegion(m_vpLocks[0][i],
+                                                               renderRegion);
       if (m_bAbsoluteViewLock)
-        m_vpLocks[0][i]->SetTranslation(m_mAccumulatedTranslation, renderRegion);
+        m_vpLocks[0][i]->SetTranslation(m_mAccumulatedTranslation, otherRegion);
       else
-        m_vpLocks[0][i]->SetTranslationDelta(trans, false, renderRegion);
+        m_vpLocks[0][i]->SetTranslationDelta(trans, false, otherRegion);
     }
   }
 }
@@ -726,11 +728,14 @@ void RenderWindow::SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagat
 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
+      RenderRegion *otherRegion = GetCorrespondingRenderRegion(m_vpLocks[0][i],
+                                                               region);
+
       if (m_bAbsoluteViewLock)
         m_vpLocks[0][i]->SetRotation(m_mAccumulatedRotation, m_mCurrentRotation,
-                                     region);
+                                     otherRegion);
       else
-        m_vpLocks[0][i]->SetRotationDelta(rotDelta, false, region);
+        m_vpLocks[0][i]->SetRotationDelta(rotDelta, false, otherRegion);
     }
   }
 }
@@ -773,10 +778,13 @@ void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
   if (bPropagate) {
     for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
         iter != m_vpLocks[0].end(); ++iter) {
+
+      RenderRegion *otherRegion = GetCorrespondingRenderRegion(*iter, renderRegion);
+
       if (m_bAbsoluteViewLock) {
-        (*iter)->SetClipPlane(m_ClipPlane, renderRegion);
+        (*iter)->SetClipPlane(m_ClipPlane, otherRegion);
       } else {
-        (*iter)->SetClipRotationDelta(rotDelta, false, renderRegion);
+        (*iter)->SetClipRotationDelta(rotDelta, false, otherRegion);
       }
     }
   }
@@ -805,13 +813,28 @@ void RenderWindow::SetClipTranslationDelta(const FLOATVECTOR3 &trans,
   if (bPropagate) {
     for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
         iter != m_vpLocks[0].end(); ++iter) {
+
+      RenderRegion *otherRegion = GetCorrespondingRenderRegion(*iter, renderRegion);
+
       if (m_bAbsoluteViewLock) {
-        (*iter)->SetClipPlane(m_ClipPlane, renderRegion);
+        (*iter)->SetClipPlane(m_ClipPlane, otherRegion);
       } else {
-        (*iter)->SetClipTranslationDelta(trans, false, renderRegion);
+        (*iter)->SetClipTranslationDelta(trans, false, otherRegion);
       }
     }
   }
+}
+
+RenderRegion* RenderWindow::GetCorrespondingRenderRegion(RenderWindow* otherRW,
+                                                         RenderRegion* myRR) {
+  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
+    for (int j=0; j < NUM_WINDOW_MODES; ++j)
+      if (renderRegions[i][j] == myRR)
+        return otherRW->renderRegions[i][j];
+
+  // This should always succeed since myRR must be in this->renderRegions.
+  assert(false);
+  return NULL;
 }
 
 void RenderWindow::CloneViewState(RenderWindow* other) {
