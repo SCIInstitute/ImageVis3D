@@ -75,7 +75,7 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
     ((DXRenderer*)m_Renderer)->SetWinID(parent->winId());  // hand over the handle of the window we are sitting in not the widget inside the window
     m_Renderer->LoadDataset(m_strDataset.toStdString(),m_bRebrickingRequired);
     InitializeRenderer();
-    SetupArcBall();
+    Initialize();
   } else m_bRenderSubsysOK = false;
 
   setObjectName("RenderWindowDX");  // this is used by WidgetToRenderWin() to detect the type

@@ -81,48 +81,12 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
     return;
   }
 
-
-  // Note that we create the RenderRegions here and not in the parent class
-  // because we first need the dataset to be loaded so that we can setup the
-  // initial slice index.
-  for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
-    renderRegions[i][0] = new RenderRegion3D();
-
-    int mode = static_cast<int>(RenderRegion::WM_SAGITTAL);
-    UINT64 sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
-    renderRegions[i][1] = new RenderRegion2D(RenderRegion::WM_SAGITTAL,
-                                             sliceIndex);
-
-    mode = static_cast<int>(RenderRegion::WM_AXIAL);
-    sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
-    renderRegions[i][2] = new RenderRegion2D(RenderRegion::WM_AXIAL,
-                                             sliceIndex);
-
-    mode = static_cast<int>(RenderRegion::WM_CORONAL);
-    sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
-    renderRegions[i][3] = new RenderRegion2D(RenderRegion::WM_CORONAL,
-                                             sliceIndex);
-  }
-
-  for (int i=0; i < 4; ++i)
-    selected2x2Regions[i] = i;
-
-  // initialize to a full 3D window.
-  std::vector<RenderRegion*> initialRenderRegions;
-  initialRenderRegions.push_back(renderRegions[0][0]);
-  SetActiveRenderRegions(initialRenderRegions);
-
-  // initialize region data map now that we have all the render regions
-  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
-    for (int j=0; j < NUM_WINDOW_MODES; ++j)
-      regionDataMap.insert(std::make_pair(renderRegions[i][j], &regionDatas[i][j]));
-
-  SetupArcBall();
-
   setObjectName("RenderWindowGL");  // this is used by WidgetToRenderWin() to detect the type
   setWindowTitle(m_strID);
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
+
+  Initialize(); //finish initializing.
 }
 
 RenderWindowGL::~RenderWindowGL()

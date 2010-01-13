@@ -243,6 +243,7 @@ class RenderWindow
     void FocusOutEvent ( QFocusEvent * event );
     void KeyPressEvent ( QKeyEvent * event );
     void Cleanup();
+    void Initialize();
 
     void UpdateCursor(const tuvok::RenderRegion *region, INTVECTOR2 pos,
                       bool translate);
