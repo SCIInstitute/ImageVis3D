@@ -301,12 +301,15 @@ bool I3MDialog::ConvertDataV2() {
     std::string strSourceFile = SysTools::GetFilename(strCompleteSourceFile);
     std::string strTargetFile = m_strTempDir+strSourceFile;
 
-    // in case the target file exists (e.g. the user converts from temp) make it unique
+    // in case the target file exists (e.g. the user converts from temp)
+    // make it unique
     if (SysTools::FileExists(strTargetFile))
       strTargetFile = SysTools::FindNextSequenceName(strTargetFile);
 
     if (!Controller::Instance().IOMan()->ReBrickDataset(m_currentDataset->Filename(), strTargetFile, m_strTempDir, 128, 4)) {
-      T_ERROR("Unable to convert data from file %s to %s", m_currentDataset->Filename().c_str(),strTargetFile);
+      T_ERROR("Unable to convert data from file %s to %s",
+              m_currentDataset->Filename().c_str(),
+              strTargetFile.c_str());
       Controller::Instance().RemoveDebugOut(pLabelOut);
       label_files->setText(qstrSourceFileDesc);
       return false;
