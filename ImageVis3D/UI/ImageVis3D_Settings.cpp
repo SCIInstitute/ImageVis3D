@@ -301,7 +301,7 @@ void MainWindow::ApplySettings() {
   UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
   UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
   m_strTempDir = string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
-  m_MasterController.IOMan()->m_iMaxBrickSize = MathTools::Pow2(settings.value("MaxBrickSize", m_MasterController.IOMan()->m_iMaxBrickSize).toUInt());
+  m_MasterController.IOMan()->m_iMaxBrickSize = MathTools::Pow2(settings.value("MaxBrickSize",  MathTools::Log2(m_MasterController.IOMan()->m_iMaxBrickSize)).toUInt());
   settings.endGroup();
 
   // Apply window settings
