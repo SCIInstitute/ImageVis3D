@@ -35,20 +35,20 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <QtCore/QSettings>
+#include <QtCore/QTimer>
+#include <QtGui/QMessageBox>
+#include <QtGui/QMdiSubWindow>
+
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include "../Tuvok/DebugOut/TextfileOut.h"
 #include "../Tuvok/Controller/Controller.h"
-
 
 #include "ImageVis3D.h"
 #include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/MathTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
-#include <QtCore/QSettings>
-#include <QtCore/QTimer>
-#include <QtGui/QMessageBox>
-#include <QtGui/QMdiSubWindow>
 
 using namespace std;
 
