@@ -130,9 +130,8 @@ RenderWindow::RegionData*
 RenderWindow::GetRegionData(const RenderRegion* const renderRegion) const
 {
 #ifdef TR1_NOT_CONST_CORRECT
-  tuvok::RenderRegion *region = const_cast<const tuvok::RenderRegion*>
-                                          (renderRegion);
-  RegionDataMap::const_iterator iter = regionDataMap.find(region);
+  RenderWindow *cthis = const_cast<RenderWindow*>(this);
+  RegionDataMap::const_iterator iter = cthis->regionDataMap.find(renderRegion);
 #else
   RegionDataMap::const_iterator iter = regionDataMap.find(renderRegion);
 #endif
