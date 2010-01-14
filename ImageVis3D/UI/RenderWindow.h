@@ -195,6 +195,7 @@ class RenderWindow
     EViewMode         m_eViewMode;
     FLOATVECTOR2      m_vWinFraction;
     static const int  regionSplitterWidth = 6;
+    tuvok::RenderRegion *activeRegion; // The region that should have focus
 
     // If later on more than 4 regions are desired this can either be
     // increased or something fancier than an array can be used.

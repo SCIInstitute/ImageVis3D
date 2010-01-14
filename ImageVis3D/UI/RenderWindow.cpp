@@ -73,6 +73,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
 
   m_eViewMode(VM_SINGLE),
   m_vWinFraction(0.5, 0.5),
+  activeRegion(NULL),
   m_eRendererType(eType),
   m_MainWindow((MainWindow*)parent),
   m_iTimeSliceMSecsActive(500),
@@ -162,11 +163,11 @@ RenderWindow::RegionSplitter RenderWindow::GetRegionSplitter(INTVECTOR2 pos) con
 
 void RenderWindow::MousePressEvent(QMouseEvent *event)
 {
-  const RenderRegion *region = GetRegionUnderCursor(m_viMousePos);
+  activeRegion = GetRegionUnderCursor(m_viMousePos);
 
-  if (region) {
+  if (activeRegion) {
     // mouse is over the 3D window
-    if (region->is3D() ) {
+    if (activeRegion->is3D() ) {
       m_PlaneAtClick = m_ClipPlane;
 
       if (event->button() == Qt::RightButton)
@@ -174,10 +175,10 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
 
       if (event->modifiers() & Qt::ControlModifier &&
           event->button() == Qt::LeftButton) {
-        RegionData *regionData = GetRegionData(region);
+        RegionData *regionData = GetRegionData(activeRegion);
         regionData->clipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
       } else if (event->button() == Qt::LeftButton) {
-        RegionData *regionData = GetRegionData(region);
+        RegionData *regionData = GetRegionData(activeRegion);
         regionData->arcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
         regionData->clipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
       }
@@ -192,8 +193,8 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
 
 void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
-    RenderRegion *startRegion = GetRegionUnderCursor(initialClickPos);
-    FinalizeRotation(startRegion, true);
+    if (activeRegion)
+      FinalizeRotation(activeRegion, true);
   }
 
   selectedRegionSplitter = REGION_SPLITTER_NONE;
