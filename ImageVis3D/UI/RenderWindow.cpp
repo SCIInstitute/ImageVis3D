@@ -46,6 +46,7 @@
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 #include "../Tuvok/Basics/MathTools.h"
+#include "Basics/tr1.h"
 
 using namespace std;
 using namespace tuvok;
@@ -125,9 +126,12 @@ void RenderWindow::SetCaptureRotationAngle(float fAngle) {
   PaintRenderer();
 }
 
-RenderWindow::RegionData* RenderWindow::GetRegionData(const RenderRegion* renderRegion) {
+RenderWindow::RegionData*
+RenderWindow::GetRegionData(const RenderRegion* const renderRegion) const
+{
 #ifdef TR1_NOT_CONST_CORRECT
-  tuvok::RenderRegion *region = const_cast<tuvok::RenderRegion*>(renderRegion);
+  tuvok::RenderRegion *region = const_cast<const tuvok::RenderRegion*>
+                                          (renderRegion);
   RegionDataMap::const_iterator iter = regionDataMap.find(region);
 #else
   RegionDataMap::const_iterator iter = regionDataMap.find(renderRegion);

@@ -214,10 +214,11 @@ class RenderWindow
 
     RegionData regionDatas[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];
 
-    typedef std::tr1::unordered_map<tuvok::RenderRegion*, RegionData*> RegionDataMap;
+    typedef std::tr1::unordered_map<const tuvok::RenderRegion*, RegionData*>
+            RegionDataMap;
     RegionDataMap regionDataMap;
 
-    RegionData* GetRegionData(const tuvok::RenderRegion* renderRegion);
+    RegionData* GetRegionData(const tuvok::RenderRegion* const) const;
 
     void SetupArcBall();
 
