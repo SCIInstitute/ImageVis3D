@@ -88,7 +88,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
     UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
     string strTempDir(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
-    unsigned int iMaxBrickSize = settings.value("MaxBricksize", MathTools::Log2(m_MasterController.IOMan()->m_iMaxBrickSize)).toUInt();
+    unsigned int iMaxBrickSize = settings.value("MaxBricksize", MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize())).toUInt();
     unsigned int iMaxMaxBrickSize = settings.value("MaxMaxBricksize", 14).toUInt();
     
     if (RenderWindow::GetMax3DTexDims()) { // as OpenGL specs are only available if we already opened a window this valu may be invalid (0)
@@ -301,7 +301,10 @@ void MainWindow::ApplySettings() {
   UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
   UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
   m_strTempDir = string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
-  m_MasterController.IOMan()->m_iMaxBrickSize = MathTools::Pow2(settings.value("MaxBrickSize",  MathTools::Log2(m_MasterController.IOMan()->m_iMaxBrickSize)).toUInt());
+
+  if (!m_MasterController.IOMan()->SetMaxBrickSize(MathTools::Pow2(settings.value("MaxBrickSize",  MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize())).toUInt()))) {
+    WARNING("Invalid MaxBrickSize read from configuration, ignoring value. Please check the configuration in the settings dialog.");
+  }
   settings.endGroup();
 
   // Apply window settings

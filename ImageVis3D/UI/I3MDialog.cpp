@@ -308,7 +308,7 @@ bool I3MDialog::ConvertDataV2() {
     if (SysTools::FileExists(strTargetFile))
       strTargetFile = SysTools::FindNextSequenceName(strTargetFile);
 
-    if (!Controller::Instance().IOMan()->ReBrickDataset(m_currentDataset->Filename(), strTargetFile, m_strTempDir, 128, 4, 8)) {
+    if (!Controller::Instance().IOMan()->ReBrickDataset(m_currentDataset->Filename(), strTargetFile, m_strTempDir, 128, 4, true)) {
       T_ERROR("Unable to convert data from file %s to %s",
               m_currentDataset->Filename().c_str(),
               strTargetFile.c_str());

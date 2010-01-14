@@ -139,19 +139,19 @@ void RenderWindowGL::InitializeRenderer()
         // support 3D textures, as long as they are 0^3 or smaller.  Yeah.
         // All such cards (that we've seen) work fine.  It's a common use
         // case, so we'll skip the warning for now.  -- tjf, Nov 18 2009
-        if (ms_iMax3DTexDims > 0 && ms_iMax3DTexDims < m_MasterController.IOMan()->m_iMaxBrickSize) {
+        if (ms_iMax3DTexDims > 0 && ms_iMax3DTexDims < m_MasterController.IOMan()->GetMaxBrickSize()) {
 
           std::ostringstream warn;
           warn << "Maximum supported texture size (" << ms_iMax3DTexDims << ") "
                << "is smaller than the current setting ("
-               << m_MasterController.IOMan()->m_iMaxBrickSize << "). "
+               << m_MasterController.IOMan()->GetMaxBrickSize() << "). "
                << "Adjusting settings!";
           WARNING("%s", warn.str().c_str());
 
-          m_MasterController.IOMan()->m_iMaxBrickSize = ms_iMax3DTexDims;
+          m_MasterController.IOMan()->SetMaxBrickSize(ms_iMax3DTexDims);
         } else {
           MESSAGE("Maximum supported texture size: %i (required by IO "
-                  "subsystem: %i)", ms_iMax3DTexDims, int(m_MasterController.IOMan()->m_iMaxBrickSize));
+                  "subsystem: %i)", ms_iMax3DTexDims, int(m_MasterController.IOMan()->GetMaxBrickSize()));
         }
 
         m_bRenderSubsysOK = true;

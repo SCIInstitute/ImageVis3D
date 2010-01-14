@@ -229,10 +229,9 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
 
                   if (!m_MasterController.IOMan()->ReBrickDataset(string(filename.toAscii()), string(rebrickedFilename.toAscii()), m_strTempDir)) {
                     ShowCriticalDialog( "Error during rebricking.", "The system was unable to rebrick the data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+                    return false;
                   } else {
                     pleaseWait.hide();
-                    QString msg = tr("The data set has been converted exported to %1.").arg(rebrickedFilename);
-                    ShowInformationDialog( tr("Rebricking successful"), msg);
                   }
                 }
               } else return false;
