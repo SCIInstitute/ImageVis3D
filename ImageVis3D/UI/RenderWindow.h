@@ -300,7 +300,6 @@ class RenderWindow
     INTVECTOR2        initialClickPos;
     INTVECTOR2        m_viMousePos;
     FLOATMATRIX4      m_mCaptureStartRotation;
-    FLOATMATRIX4      m_mAccumulatedTranslation;
     bool              m_bAbsoluteViewLock;
     bool              m_bCaptureMode;
     bool              m_bInvWheel;

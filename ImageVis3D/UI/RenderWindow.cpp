@@ -121,12 +121,12 @@ void RenderWindow::ToggleHQCaptureMode() {
 void RenderWindow::Translate(const FLOATMATRIX4& mTranslation,
                              RenderRegion *region) {
   if (region) {
-    SetTranslation(mTranslation*m_mAccumulatedTranslation, region);
+    SetTranslation(mTranslation*m_Renderer->GetTranslation(region), region);
   } else {
     for (size_t i=0; i < GetActiveRenderRegions().size(); ++i) {
       region = GetActiveRenderRegions()[i];
       if (region->is3D()) {
-        SetTranslation(mTranslation*m_mAccumulatedTranslation, region);
+        SetTranslation(mTranslation*m_Renderer->GetTranslation(region), region);
       }
     }
   }
@@ -747,21 +747,21 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
 
 void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
                                   RenderRegion *renderRegion) {
-  m_mAccumulatedTranslation = mAccumulatedTranslation;
-  m_Renderer->SetTranslation(m_mAccumulatedTranslation, renderRegion);
+  m_Renderer->SetTranslation(mAccumulatedTranslation, renderRegion);
   RegionData *regionData = GetRegionData(renderRegion);
-  regionData->arcBall.SetTranslation(m_mAccumulatedTranslation);
+  regionData->arcBall.SetTranslation(mAccumulatedTranslation);
   Controller::Instance().Provenance("translation", "translate");
 }
 
- void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate,
-                                        RenderRegion *renderRegion) {
-  m_mAccumulatedTranslation.m41 += trans.x;
-  m_mAccumulatedTranslation.m42 -= trans.y;
-  m_mAccumulatedTranslation.m43 += trans.z;
-  m_Renderer->SetTranslation(m_mAccumulatedTranslation, renderRegion);
+void RenderWindow::SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate,
+                                       RenderRegion *renderRegion) {
+  FLOATMATRIX4 newTranslation = m_Renderer->GetTranslation(renderRegion);
+  newTranslation.m41 += trans.x;
+  newTranslation.m42 -= trans.y;
+  newTranslation.m43 += trans.z;
+  m_Renderer->SetTranslation(newTranslation, renderRegion);
   RegionData *regionData = GetRegionData(renderRegion);
-  regionData->arcBall.SetTranslation(m_mAccumulatedTranslation);
+  regionData->arcBall.SetTranslation(newTranslation);
 
   if(GetRenderer()->ClipPlaneLocked()) {
     // We can't use SetClipTranslationDelta, because it forces the clip plane
@@ -779,7 +779,7 @@ void RenderWindow::SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
       RenderRegion *otherRegion = GetCorrespondingRenderRegion(m_vpLocks[0][i],
                                                                renderRegion);
       if (m_bAbsoluteViewLock)
-        m_vpLocks[0][i]->SetTranslation(m_mAccumulatedTranslation, otherRegion);
+        m_vpLocks[0][i]->SetTranslation(newTranslation, otherRegion);
       else
         m_vpLocks[0][i]->SetTranslationDelta(trans, false, otherRegion);
     }
@@ -864,12 +864,12 @@ void RenderWindow::SetClipRotationDelta(const FLOATMATRIX4& rotDelta,
   // relevant when the clip plane is outside the dataset's domain: the `center'
   // of the plane (*cough*) should rotate about the dataset, not about the
   // plane itself.
-  from_pt_to_0.Translation(-m_mAccumulatedTranslation.m41,
-                           -m_mAccumulatedTranslation.m42,
-                           -m_mAccumulatedTranslation.m43);
-  from_0_to_pt.Translation(m_mAccumulatedTranslation.m41,
-                           m_mAccumulatedTranslation.m42,
-                           m_mAccumulatedTranslation.m43);
+  from_pt_to_0.Translation(-m_Renderer->GetTranslation(renderRegion).m41,
+                           -m_Renderer->GetTranslation(renderRegion).m42,
+                           -m_Renderer->GetTranslation(renderRegion).m43);
+  from_0_to_pt.Translation(m_Renderer->GetTranslation(renderRegion).m41,
+                           m_Renderer->GetTranslation(renderRegion).m42,
+                           m_Renderer->GetTranslation(renderRegion).m43);
 
   ExtendedPlane rotated = m_PlaneAtClick;
   rotated.Transform(from_pt_to_0 * regionData->clipRotation * from_0_to_pt);
@@ -940,17 +940,21 @@ RenderWindow::GetCorrespondingRenderRegion(const RenderWindow* otherRW,
 }
 
 void RenderWindow::CloneViewState(RenderWindow* other) {
-  m_mAccumulatedTranslation = other->m_mAccumulatedTranslation;
   m_mAccumulatedClipTranslation = other->m_mAccumulatedClipTranslation;
 
   for (int i=0; i < MAX_RENDER_REGIONS; ++i)
     for (int j=0; j < NUM_WINDOW_MODES; ++j) {
-      RegionData *otherData = other->GetRegionData(other->renderRegions[i][j]);
+      const RenderRegion* otherRegion = other->renderRegions[i][j];
+      const RegionData *otherData = other->GetRegionData(otherRegion);
       RegionData *data = GetRegionData(renderRegions[i][j]);
       *data = *otherData;
-    }
 
-  m_Renderer->SetTranslation(m_mAccumulatedTranslation);
+      m_Renderer->SetRotation(other->m_Renderer->GetRotation(otherRegion),
+                              renderRegions[i][j]);
+      m_Renderer->SetTranslation(other->m_Renderer->GetTranslation(otherRegion),
+                                 renderRegions[i][j]);
+
+    }
 }
 
 void RenderWindow::CloneRendermode(RenderWindow* other) {
@@ -1225,14 +1229,14 @@ void RenderWindow::PaintRenderer()
 void RenderWindow::ResetRenderingParameters()
 {
   FLOATMATRIX4 mIdentity;
-  m_Renderer->SetRotation(mIdentity);
-  m_Renderer->SetTranslation(mIdentity);
-  m_mAccumulatedTranslation = mIdentity;
   m_mAccumulatedClipTranslation = mIdentity;
   SetClipPlane(PLANE<float>(0,0,1,0));
 
   for (int i=0; i < MAX_RENDER_REGIONS; ++i)
     for (int j=0; j < NUM_WINDOW_MODES; ++j) {
       regionDatas[i][j].clipRotation = mIdentity;
+      m_Renderer->SetRotation(mIdentity, renderRegions[i][j]);
+      m_Renderer->SetTranslation(mIdentity, renderRegions[i][j]);
+
     }
 }
