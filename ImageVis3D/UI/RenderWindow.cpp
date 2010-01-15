@@ -118,6 +118,35 @@ void RenderWindow::ToggleHQCaptureMode() {
   m_Renderer->SetCaptureMode(m_bCaptureMode);
 }
 
+void RenderWindow::Translate(const FLOATMATRIX4& mTranslation,
+                             RenderRegion *region) {
+  if (region) {
+    SetTranslation(mTranslation*m_mAccumulatedTranslation, region);
+  } else {
+    for (size_t i=0; i < GetActiveRenderRegions().size(); ++i) {
+      region = GetActiveRenderRegions()[i];
+      if (region->is3D()) {
+        SetTranslation(mTranslation*m_mAccumulatedTranslation, region);
+      }
+    }
+  }
+}
+
+void RenderWindow::Rotate(const FLOATMATRIX4& mRotation, RenderRegion *region) {
+  if (region) {
+    SetRotation(mRotation*m_mAccumulatedRotation,
+                mRotation*m_mAccumulatedRotation, region);
+  } else {
+    for (size_t i=0; i < GetActiveRenderRegions().size(); ++i) {
+      region = GetActiveRenderRegions()[i];
+      if (region->is3D()) {
+        SetRotation(mRotation*m_mAccumulatedRotation,
+                    mRotation*m_mAccumulatedRotation, region);
+      }
+    }
+  }
+}
+
 void RenderWindow::SetCaptureRotationAngle(float fAngle) {
   FLOATMATRIX4 matRot;
   matRot.RotationY(3.141592653589793238462643383*double(fAngle)/180.0);

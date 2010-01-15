@@ -87,12 +87,9 @@ class RenderWindow
     bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, bool bUseLOD, bool bPreserveTransparency, std::string* strRealFilename=NULL);
     void ToggleHQCaptureMode();
     void Translate(const FLOATMATRIX4& mTranslation,
-                   tuvok::RenderRegion *region=NULL) {
-      SetTranslation(mTranslation*m_mAccumulatedTranslation, region);}
+                   tuvok::RenderRegion *region=NULL);
     void Rotate(const FLOATMATRIX4& mRotation,
-                tuvok::RenderRegion *region=NULL) {
-      SetRotation(mRotation*m_mAccumulatedRotation,
-                  mRotation*m_mAccumulatedRotation, region);}
+                tuvok::RenderRegion *region=NULL);
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() const {return m_bRenderSubsysOK;}
     bool RebrickingRequired() const {return m_bRebrickingRequired;}
