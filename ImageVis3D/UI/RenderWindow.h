@@ -109,6 +109,7 @@ class RenderWindow
                                  tuvok::RenderRegion *region=NULL);
     void SetClipRotationDelta(const FLOATMATRIX4& rotDelta, bool,
                               tuvok::RenderRegion *region=NULL);
+    void SetPlaneAtClick(const ExtendedPlane& plane, bool propagate=true);
     void CloneViewState(RenderWindow* other);
     void FinalizeRotation(const tuvok::RenderRegion *region, bool bPropagate);
     void CloneRendermode(RenderWindow* other);
@@ -207,6 +208,8 @@ class RenderWindow
     struct RegionData {
       ArcBall arcBall;
       ArcBall clipArcBall;
+
+      FLOATMATRIX4 clipRotation;
     };
 
     RegionData regionDatas[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];
@@ -281,9 +284,7 @@ class RenderWindow
     bool MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate, bool translate,
                      tuvok::RenderRegion *region);
 
-    void SetRotation(const FLOATMATRIX4& mAccumulatedRotation,
-                     const FLOATMATRIX4& mCurrentRotation,
-                     tuvok::RenderRegion *region=NULL);
+    void SetRotation(const FLOATMATRIX4& newRotation, tuvok::RenderRegion *region);
     void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
                         tuvok::RenderRegion *region=NULL);
 
@@ -298,15 +299,12 @@ class RenderWindow
 
     INTVECTOR2        initialClickPos;
     INTVECTOR2        m_viMousePos;
-    FLOATMATRIX4      m_mAccumulatedRotation;
     FLOATMATRIX4      m_mCaptureStartRotation;
     FLOATMATRIX4      m_mAccumulatedTranslation;
     bool              m_bAbsoluteViewLock;
     bool              m_bCaptureMode;
     bool              m_bInvWheel;
 
-    FLOATMATRIX4      m_mCurrentClipRotation;
-    FLOATMATRIX4      m_mAccumulatedClipRotation;
     FLOATMATRIX4      m_mAccumulatedClipTranslation;
     ExtendedPlane     m_ClipPlane;
     ExtendedPlane     m_PlaneAtClick; ///< temp storage to maintain the clip
