@@ -263,13 +263,13 @@ void MainWindow::CaptureRotation() {
             string strTarget  =
               SysTools::FindNextSequenceName(lineEditCaptureFile->text().toStdString());
 
-            MESSAGE("Phase 2 of 3: %i%% completed\nCreating stereo image "
-                    "%s from %s and %s\nProcessing Image %i of %i",
-                    static_cast<int>(100.0f*i/iNumImages),
+            MESSAGE("Phase 2 of 3: %u%% completed\nCreating stereo image "
+                    "%s from %s and %s\nProcessing Image %u of %i",
+                    static_cast<unsigned>(100.0f*i/iNumImages),
                     SysTools::GetFilename(strTarget).c_str(),
                     SysTools::GetFilename(strSourceL).c_str(),
                     SysTools::GetFilename(strSourceR).c_str(),
-                    i+1, iNumImages);
+                    static_cast<unsigned>(i+1), iNumImages);
 
             QImage imageLeft(strSourceL.c_str());
             QImage imageRight(strSourceR.c_str());
@@ -299,9 +299,9 @@ void MainWindow::CaptureRotation() {
             imageRight.save(strTarget.c_str());
           }
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
-            MESSAGE("Phase 3 of 3: %i%% completed\nCleanup\nProcessing Image "
-                    "%i of %i", static_cast<int>(100.0f*i/iNumImages), i+1,
-                    iNumImages);
+            MESSAGE("Phase 3 of 3: %u%% completed\nCleanup\nProcessing Image "
+                    "%u of %i", static_cast<unsigned>(100.0f*i/iNumImages),
+                    static_cast<unsigned>(i+1), iNumImages);
             remove(vstrRightEyeImageVector[i].c_str());
             if (SysTools::FileExists(vstrLeftEyeImageVector[i])) {
               remove(vstrLeftEyeImageVector[i].c_str());

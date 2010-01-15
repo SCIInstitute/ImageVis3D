@@ -150,8 +150,9 @@ void RenderWindowGL::InitializeRenderer()
 
           m_MasterController.IOMan()->SetMaxBrickSize(ms_iMax3DTexDims);
         } else {
-          MESSAGE("Maximum supported texture size: %i (required by IO "
-                  "subsystem: %i)", ms_iMax3DTexDims, int(m_MasterController.IOMan()->GetMaxBrickSize()));
+          MESSAGE("Maximum supported texture size: %u "
+                  "(required by IO subsystem: %llu)", ms_iMax3DTexDims,
+                  m_MasterController.IOMan()->GetMaxBrickSize());
         }
 
         m_bRenderSubsysOK = true;
