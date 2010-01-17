@@ -40,8 +40,6 @@
 #ifndef QLIGHTPREVIEW_H
 #define QLIGHTPREVIEW_H
 
-class MasterController;
-
 #include <QtGui/QWidget>
 #include "../Tuvok/Basics/Vectors.h"
 

@@ -44,6 +44,8 @@
 #include "../Tuvok/IO/uvfDataset.h"
 #include "../Tuvok/Controller/Controller.h"
 
+using namespace tuvok;
+
 class I3MDialog : public QDialog, protected Ui_I3MDialog
 {
   Q_OBJECT
@@ -63,7 +65,7 @@ class I3MDialog : public QDialog, protected Ui_I3MDialog
     QTcpServer*    m_tcpServer;
     UINT32         m_iPort;
     UINT32         m_iI3MVersion;
-    const tuvok::UVFDataset* m_currentDataset;
+    const UVFDataset* m_currentDataset;
     UINT32         m_iDataInMobileFormat;
     bool           m_bCreatedSharedData;
     std::string    m_strSharedDataFilename;

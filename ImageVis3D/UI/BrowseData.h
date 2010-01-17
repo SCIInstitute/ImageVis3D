@@ -45,6 +45,8 @@
 #include "../Tuvok/Controller/MasterController.h"
 #include "QDataRadioButton.h"
 
+using namespace tuvok;
+
 class BrowseData : public QDialog, protected Ui_BrowseData
 {
   Q_OBJECT

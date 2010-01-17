@@ -41,8 +41,9 @@
 #define QTRANSFERFUNCTION_H
 
 #include <QtGui/QWidget>
+#include "../Tuvok/Controller/MasterController.h"
 
-class MasterController;
+using namespace tuvok;
 
 class QTransferFunction : public QWidget
 {

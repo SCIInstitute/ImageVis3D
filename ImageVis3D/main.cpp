@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -63,6 +63,8 @@
 #endif
 */
 
+using namespace tuvok;
+
 #ifdef DEBUG_PROVENANCE
 static void provenance(const std::string s, const std::string,
                        const std::string) {
@@ -85,7 +87,7 @@ int main(int argc, char* argv[])
   #endif
   */
 
-  // get command line paramers 
+  // get command line paramers
   SysTools::CmdLineParams parameters(argc, argv);
 
   // start a logfile debug out if requested
@@ -98,7 +100,7 @@ int main(int argc, char* argv[])
 
   // create the QT window
   QApplication app( argc, argv );
-  
+
   // if using a logfile inject that file-logger into the debug out chain
   if (bUseLogFile) {
     AbstrDebugOut *dbgOut;
@@ -107,7 +109,7 @@ int main(int argc, char* argv[])
     } else {
       dbgOut = new TextfileOut(strLogFileName);
     }
-  
+
     dbgOut->SetShowErrors(true);
     dbgOut->SetShowWarnings(iLogLevel > 0);
     dbgOut->SetShowMessages(iLogLevel > 1);

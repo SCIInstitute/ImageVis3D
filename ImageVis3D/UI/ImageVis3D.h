@@ -44,7 +44,6 @@
 #include <string>
 #include <vector>
 
-class MasterController;
 class TextfileOut;
 
 #include "AutoGen/ui_ImageVis3D.h"

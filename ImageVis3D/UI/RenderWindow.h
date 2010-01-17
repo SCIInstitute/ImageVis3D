@@ -54,6 +54,8 @@
 # include <tr1/unordered_map>
 #endif
 
+using namespace tuvok;
+
 class MainWindow;
 
 class RenderWindow

@@ -6,7 +6,7 @@
    Copyright (c) 2008 Scientific Computing and Imaging Institute,
    University of Utah.
 
-   
+
    Permission is hereby granted, free of charge, to any person obtaining a
    copy of this software and associated documentation files (the "Software"),
    to deal in the Software without restriction, including without limitation
@@ -49,6 +49,7 @@
 #include <sstream>
 #include <iostream>
 using namespace std;
+using namespace tuvok;
 
 #define CONV_VERSION 1.1
 
@@ -71,20 +72,20 @@ void ShowUsage(string filename) {
   std::vector< std::pair <std::string, std::string > > importList = ioMan.GetImportFormatList();
   std::vector< std::pair <std::string, std::string > > exportList = ioMan.GetExportFormatList();
 
-	cout << endl <<
-			filename << " V" << CONV_VERSION << " (using Tuvok V" << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE << ")" << endl << endl <<
+    cout << endl <<
+            filename << " V" << CONV_VERSION << " (using Tuvok V" << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE << ")" << endl << endl <<
       " Converts different types of volumetric data." << endl << endl <<
       " Usage:" << endl <<
-			"    " << filename << " -f InFile ^ -d InDir [-f2 InFile2] -out OutFile " << endl << endl <<		
-			"     Mandatory Arguments:" << endl <<
-			"        -f    the input filename" << endl << 
+            "    " << filename << " -f InFile ^ -d InDir [-f2 InFile2] -out OutFile " << endl << endl <<
+            "     Mandatory Arguments:" << endl <<
+            "        -f    the input filename" << endl <<
       "          Supported formats: " << endl;
       for (size_t i = 0;i<importList.size();i++) {
         cout << "             " << importList[i].first.c_str() << " (" << importList[i].second.c_str() << ")" << endl;
       }
       cout <<
-      "        XOR" << endl << 
-			"        -d    the input directory" << endl << 
+      "        XOR" << endl <<
+            "        -d    the input directory" << endl <<
       "          Supported file formats in that directory: " << endl <<
       "             DICOM" << endl;
 #ifndef TUVOK_NO_QT
@@ -96,28 +97,28 @@ void ShowUsage(string filename) {
         cout << "             " << strImageFormat.c_str() << endl;
       }
 #endif
-      cout << endl << 
-			"        -out  the target filename (the extension is used to detect the format)" << endl <<
+      cout << endl <<
+            "        -out  the target filename (the extension is used to detect the format)" << endl <<
       "          Supported formats: " << endl;
       for (size_t i = 0;i<exportList.size();i++) {
         cout << "             " << exportList[i].first.c_str() << " (" << exportList[i].second.c_str() << ")" << endl;
       }
       cout <<
-			"     Optional Arguments:" << endl <<
-			"        -f2   second input file to be merged with the first" << endl <<
-			"        -b2   bias factor for values in the second input file" << endl <<
-      "              (use 'm' instead of a minus sign e.g. -b2 m3 will bias by -3)" << endl <<
-			"        -s2   scaling factor for values in the second input file" << endl <<
+            "     Optional Arguments:" << endl <<
+            "        -f2   second input file to be merged with the first" << endl <<
+            "        -b2   bias factor for values in the second input file" << endl <<
+            "              (use 'm' instead of a minus sign e.g. -b2 m3 will bias by -3)" << endl <<
+            "        -s2   scaling factor for values in the second input file" << endl <<
       "              (use 'm' instead of a minus sign e.g. -s2 m5 will scale by -5)" << endl <<
       " Examples:" << endl <<
       "  " << filename << " -f head.vff -out head.uvf   // converts head.vff" << endl <<
-      "                                                    into a uvf file" << endl << 
-      "  " << filename << " -f head.uvf -out head.nhdr  // converts head.uvf" << endl << 
-      "                                                    into head.nhdr and" << endl << 
-      "                                                    head.nhdr.raw" << endl << 
+      "                                                    into a uvf file" << endl <<
+      "  " << filename << " -f head.uvf -out head.nhdr  // converts head.uvf" << endl <<
+      "                                                    into head.nhdr and" << endl <<
+      "                                                    head.nhdr.raw" << endl <<
       "  " << filename << " -d .. -out data.uvf         // scanns the parent directory" << endl <<
-      "                                                    for DICOM- and image-stacks" << endl << 
-      "                                                    outputs data0.uvf to" << endl << 
+      "                                                    for DICOM- and image-stacks" << endl <<
+      "                                                    outputs data0.uvf to" << endl <<
       "                                                    dataN.uvf" << endl << endl;
 }
 
@@ -132,13 +133,13 @@ int main(int argc, char* argv[])
   #endif
 */
 
-  // get command line paramers 
+  // get command line paramers
   SysTools::CmdLineParams parameters(argc, argv);
   string strFilename = SysTools::GetFilename(argv[0]);
 
   if (parameters.SwitchSet("?") || parameters.SwitchSet("HELP")) {
     ShowUsage(strFilename);
-    return EXIT_SUCCESS;   
+    return EXIT_SUCCESS;
   }
 
   string strInFile = "";
@@ -241,7 +242,7 @@ int main(int argc, char* argv[])
 
 
       } else {
-        cout << endl << "Running in file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;  
+        cout << endl << "Running in file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;
         if (ioMan.ConvertDataset(strInFile, strOutfile, SysTools::GetPath(strOutfile))) { // HACK: use the output file's dir as temp dir
           cout << endl << "Success." << endl << endl;
           return EXIT_SUCCESS;
@@ -264,8 +265,8 @@ int main(int argc, char* argv[])
       cout << endl << "Running in merge mode." << endl << "Converting";
       for (size_t i = 0;i<<vDataSets.size();i++) {
         cout << " " << vDataSets[i];
-      }        
-      cout << " to " << strOutfile<< endl << endl;  
+      }
+      cout << " to " << strOutfile<< endl << endl;
 
       if (ioMan.MergeDatasets(vDataSets, vScales, vBiases, strOutfile, SysTools::GetPath(strOutfile))) {  // HACK: use the output file's dir as temp dir
         cout << endl << "Success." << endl << endl;
@@ -317,7 +318,7 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
       }
     }
-    
+
     if (iFailCount != 0)  {
       cout << endl << iFailCount << " out of " << dirinfo.size() << " stacks failed to convert properly."<< endl << endl;
     }

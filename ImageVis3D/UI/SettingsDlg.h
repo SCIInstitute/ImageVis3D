@@ -42,6 +42,8 @@
 #include "../Tuvok/Controller/MasterController.h"
 #include "UI/AutoGen/ui_SettingsDlg.h"
 
+using namespace tuvok;
+
 class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 {
   Q_OBJECT

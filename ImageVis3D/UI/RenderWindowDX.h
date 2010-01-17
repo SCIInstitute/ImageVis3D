@@ -50,7 +50,7 @@
 #include <StdDefines.h>
 #include "RenderWindow.h"
 
-
+using namespace tuvok;
 
 class MainWindow;
 

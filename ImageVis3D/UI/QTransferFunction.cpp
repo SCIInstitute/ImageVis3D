@@ -37,11 +37,11 @@
 
 #include "../Tuvok/StdTuvokDefines.h"
 #include "QTransferFunction.h"
-#include "../Tuvok/Controller/MasterController.h"
 
 using namespace std;
 
-QTransferFunction::QTransferFunction(MasterController& masterController, QWidget *parent) :
+QTransferFunction::QTransferFunction(MasterController& masterController,
+                                     QWidget *parent) :
   QWidget(parent),
   m_MasterController(masterController),
   m_eExecutionMode(CONTINUOUS),

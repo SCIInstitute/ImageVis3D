@@ -54,6 +54,7 @@
 #include <sstream>
 #include <iostream>
 using namespace std;
+using namespace tuvok;
 
 #define READER_VERSION 1.1
 

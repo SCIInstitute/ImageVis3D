@@ -51,8 +51,6 @@
 #define Q2DT_PAINT_ALPHA 8
 #define Q2DT_PAINT_UNDEF 16
 
-class MasterController;
-
 enum EDragMode {
   DRM_MOVE,
   DRM_ROTATE,

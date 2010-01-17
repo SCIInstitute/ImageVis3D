@@ -43,8 +43,6 @@
 #include "QTransferFunction.h"
 #include "../Tuvok/IO/TransferFunction1D.h"
 
-class MasterController;
-
 class Q1DTransferFunction : public QTransferFunction
 {
   Q_OBJECT
