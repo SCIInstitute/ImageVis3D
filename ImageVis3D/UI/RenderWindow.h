@@ -88,10 +88,8 @@ class RenderWindow
     bool CaptureSequenceFrame(const std::string& strFilename, bool bPreserveTransparency, std::string* strRealFilename=NULL);
     bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, bool bUseLOD, bool bPreserveTransparency, std::string* strRealFilename=NULL);
     void ToggleHQCaptureMode();
-    void Translate(const FLOATMATRIX4& mTranslation,
-                   tuvok::RenderRegion *region=NULL);
-    void Rotate(const FLOATMATRIX4& mRotation,
-                tuvok::RenderRegion *region=NULL);
+    void Translate(const FLOATMATRIX4& mTranslation, RenderRegion *region=NULL);
+    void Rotate(const FLOATMATRIX4& mRotation, RenderRegion *region=NULL);
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() const {return m_bRenderSubsysOK;}
     bool RebrickingRequired() const {return m_bRebrickingRequired;}
@@ -102,18 +100,17 @@ class RenderWindow
     void SetLogoParams(QString strLogoFilename, int iLogoPos);
 
     void SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate,
-                             tuvok::RenderRegion *region=NULL);
+                             RenderRegion *region=NULL);
     void SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate,
-                          tuvok::RenderRegion *region=NULL);
-    void SetClipPlane(const ExtendedPlane &p,
-                      tuvok::RenderRegion *region=NULL);
+                          RenderRegion *region=NULL);
+    void SetClipPlane(const ExtendedPlane &p, RenderRegion *region=NULL);
     void SetClipTranslationDelta(const FLOATVECTOR3& trans, bool,
-                                 tuvok::RenderRegion *region=NULL);
+                                 RenderRegion *region=NULL);
     void SetClipRotationDelta(const FLOATMATRIX4& rotDelta, bool,
-                              tuvok::RenderRegion *region=NULL);
+                              RenderRegion *region=NULL);
     void SetPlaneAtClick(const ExtendedPlane& plane, bool propagate=true);
     void CloneViewState(RenderWindow* other);
-    void FinalizeRotation(const tuvok::RenderRegion *region, bool bPropagate);
+    void FinalizeRotation(const RenderRegion *region, bool bPropagate);
     void CloneRendermode(RenderWindow* other);
     void SetAbsoluteViewLock(bool bAbsoluteViewLock);
 
@@ -153,7 +150,7 @@ class RenderWindow
     virtual void ToggleFullscreen() = 0;
     virtual void UpdateWindow() = 0;
 
-    tuvok::RenderRegion* GetRegionUnderCursor(INTVECTOR2 vPos) const;
+    RenderRegion* GetRegionUnderCursor(INTVECTOR2 vPos) const;
 
     enum EViewMode {
       VM_SINGLE = 0,  /**< a single large image */
@@ -171,9 +168,9 @@ class RenderWindow
 
     RegionSplitter GetRegionSplitter(INTVECTOR2 pos) const;
 
-    const std::vector<tuvok::RenderRegion*>& GetActiveRenderRegions() const {
+    const std::vector<RenderRegion*>& GetActiveRenderRegions() const {
       return m_Renderer->GetRenderRegions(); }
-    void SetActiveRenderRegions(const std::vector<tuvok::RenderRegion*>& regions) const {
+    void SetActiveRenderRegions(const std::vector<RenderRegion*>& regions) const {
       m_Renderer->SetRenderRegions(regions); }
 
   public: // public slots:
@@ -195,13 +192,13 @@ class RenderWindow
     EViewMode         m_eViewMode;
     FLOATVECTOR2      m_vWinFraction;
     static const int  regionSplitterWidth = 6;
-    tuvok::RenderRegion *activeRegion; // The region that should have focus
+    RenderRegion *activeRegion; // The region that should have focus
 
     // If later on more than 4 regions are desired this can either be
     // increased or something fancier than an array can be used.
     static const int MAX_RENDER_REGIONS = 4;
     static const int NUM_WINDOW_MODES = 4;
-    tuvok::RenderRegion *renderRegions[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];
+    RenderRegion *renderRegions[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];
     int selected2x2Regions[4]; //index into renderRegions
 
     static std::string ms_gpuVendorString;
@@ -216,11 +213,10 @@ class RenderWindow
 
     RegionData regionDatas[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];
 
-    typedef std::tr1::unordered_map<const tuvok::RenderRegion*, RegionData*>
-            RegionDataMap;
+    typedef std::tr1::unordered_map<const RenderRegion*, RegionData*> RegionDataMap;
     RegionDataMap regionDataMap;
 
-    RegionData* GetRegionData(const tuvok::RenderRegion* const) const;
+    RegionData* GetRegionData(const RenderRegion* const) const;
 
     void SetupArcBall();
 
@@ -249,23 +245,21 @@ class RenderWindow
     void Cleanup();
     void Initialize();
 
-    void UpdateCursor(const tuvok::RenderRegion *region, INTVECTOR2 pos,
-                      bool translate);
+    void UpdateCursor(const RenderRegion *region, INTVECTOR2 pos, bool translate);
 
     /// @param[in,out] newRenderRegions with coordinates updated to reflect the
     /// new view mode.
 
     ///@param[in] eViewMode The new ViewMode to use.
-    virtual void SetViewMode(const std::vector<tuvok::RenderRegion*> &newRenderRegions,
+    virtual void SetViewMode(const std::vector<RenderRegion*> &newRenderRegions,
                              EViewMode eViewMode);
 
     void SetWindowFraction2x2(FLOATVECTOR2 f);
     FLOATVECTOR2 WindowFraction2x2() const { return m_vWinFraction; }
     void UpdateWindowFraction();
 
-    tuvok::RenderRegion*
-    GetCorrespondingRenderRegion(const RenderWindow* otherRW,
-                                 const tuvok::RenderRegion* myRR) const;
+    RenderRegion* GetCorrespondingRenderRegion(const RenderWindow* otherRW,
+                                               const RenderRegion* myRR) const;
 
   private:
     /// Called when the mouse is moved, but in a mode where the clip plane
@@ -275,7 +269,7 @@ class RenderWindow
     /// @param translate if this should translate the clip plane
     /// @param region    The active RenderRegion the mouse/user is operating in.
     bool MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate,
-                       tuvok::RenderRegion *region);
+                       RenderRegion *region);
 
     /// Called for a mouse update when in the 3D view mode.
     /// @param pos new position of the mouse cursor
@@ -284,11 +278,11 @@ class RenderWindow
     /// @param translate should this action translate the data
     /// @param region    The active RenderRegion the mouse/user is operating in.
     bool MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate, bool translate,
-                     tuvok::RenderRegion *region);
+                     RenderRegion *region);
 
-    void SetRotation(const FLOATMATRIX4& newRotation, tuvok::RenderRegion *region);
+    void SetRotation(const FLOATMATRIX4& newRotation, RenderRegion *region);
     void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
-                        tuvok::RenderRegion *region=NULL);
+                        RenderRegion *region=NULL);
 
     void ResetRenderingParameters();
 
