@@ -54,21 +54,8 @@ if test `uname` = "Darwin" ; then
     echo "Building app file ..."
     try bash Scripts/mk_app.sh
 elif test `uname` = "Linux" ; then
-    mkdir staging
-    man=$(manual)
-    pushd staging
-        ver="${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}"
-        dir="ImageVis3D_${ver}"
-        mkdir "${dir}"
-        cp ../Build/ImageVis3D ./${dir}
-        cp -R ../Tuvok/Shaders ./${dir}
-        wget -q --no-check-certificate "${man}"
-        mv $(basename "${man}") ImageVis3D.pdf # uppercase it.
-        mv ImageVis3D.pdf ${dir}
-        GZIP="--best" tar zcf "${tarball}" ${dir}
-        mv "${tarball}" ../
-    popd
-    rm -r staging
+    echo "Packaging ..."
+    try bash Scripts/mk_tarball.sh
 fi
 rm -f latest
 echo "${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}" > latest
