@@ -5,7 +5,7 @@ source Scripts/util.sh
 tarball=$(nm_tarball)
 mkdir staging
 man=$(manual)
-pushd staging
+pushd staging >/dev/null
   ver="${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}"
   dir="ImageVis3D-${ver}"
   mkdir "${dir}"
@@ -16,5 +16,5 @@ pushd staging
   mv ImageVis3D.pdf ${dir}
   GZIP="--best" tar zcf "${tarball}" ${dir}
   mv "${tarball}" ../
-popd
+popd >/dev/null
 rm -r staging
