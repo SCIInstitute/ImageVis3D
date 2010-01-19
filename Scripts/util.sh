@@ -180,7 +180,7 @@ function nm_tarball
     local arch=$(sci_arch)
     local revs=$(revision)
     version
-    echo "ImageVis3D_${IV3D_VERSION}_${arch}_r${revs}.tar.gz"
+    echo "ImageVis3D-${arch}-${IV3D_VERSION}-r${revs}.tar.gz"
 }
 
 # Gives the name of the appropriate zip file.
