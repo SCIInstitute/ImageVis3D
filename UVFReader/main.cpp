@@ -443,7 +443,8 @@ int main(int argc, char* argv[])
         case UVFTables::BS_KEY_VALUE_PAIRS : {
           const KeyValuePairDataBlock* b =
             (const KeyValuePairDataBlock*)uvfFile.GetDataBlock(i);
-          cout << "      Values: " << endl;
+          cout << "      Data size: " << b->ComputeDataSize() << "\n"
+               << "      Values (" << b->GetKeyCount() << "): " << endl;
 
           for (size_t i = 0;i<b->GetKeyCount();i++) {
             cout << "        " << b->GetKeyByIndex(i).c_str() << " -> "
