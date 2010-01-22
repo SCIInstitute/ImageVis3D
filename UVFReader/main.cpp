@@ -495,6 +495,10 @@ int main(int argc, char* argv[])
           }
         }
         break;
+        case UVFTables::BS_MAXMIN_VALUES:
+          /// @todo FIXME: implement :)
+          cout << "      Query of MaxMin data block info is unimplemented.\n";
+          break;
         default:
           /// \todo handle other block types
           T_ERROR("Unknown block type %d",
