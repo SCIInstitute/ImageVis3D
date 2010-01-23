@@ -99,15 +99,15 @@ class RenderWindow
 
     void SetLogoParams(QString strLogoFilename, int iLogoPos);
 
-    void SetTranslationDelta(const FLOATVECTOR3& trans, bool bPropagate,
-                             RenderRegion *region=NULL);
-    void SetRotationDelta(const FLOATMATRIX4& rotDelta, bool bPropagate,
-                          RenderRegion *region=NULL);
-    void SetClipPlane(const ExtendedPlane &p, RenderRegion *region=NULL);
-    void SetClipTranslationDelta(const FLOATVECTOR3& trans, bool,
-                                 RenderRegion *region=NULL);
-    void SetClipRotationDelta(const FLOATMATRIX4& rotDelta, bool,
-                              RenderRegion *region=NULL);
+    void SetTranslationDelta(RenderRegion *region, const FLOATVECTOR3& trans,
+                             bool bPropagate);
+    void SetRotationDelta(RenderRegion *region, const FLOATMATRIX4& rotDelta,
+                          bool bPropagate);
+    void SetClipPlane(RenderRegion *region, const ExtendedPlane &p);
+    void SetClipTranslationDelta(RenderRegion *region, const FLOATVECTOR3& trans,
+                                 bool);
+    void SetClipRotationDelta(RenderRegion *region, const FLOATMATRIX4& rotDelta,
+                              bool);
     void SetPlaneAtClick(const ExtendedPlane& plane, bool propagate=true);
     void CloneViewState(RenderWindow* other);
     void FinalizeRotation(const RenderRegion *region, bool bPropagate);
@@ -280,9 +280,9 @@ class RenderWindow
     bool MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate, bool translate,
                      RenderRegion *region);
 
-    void SetRotation(const FLOATMATRIX4& newRotation, RenderRegion *region);
-    void SetTranslation(const FLOATMATRIX4& mAccumulatedTranslation,
-                        RenderRegion *region=NULL);
+    void SetRotation(RenderRegion *region, const FLOATMATRIX4& newRotation);
+    void SetTranslation(RenderRegion *region,
+                        const FLOATMATRIX4& mAccumulatedTranslation);
 
     void ResetRenderingParameters();
 
