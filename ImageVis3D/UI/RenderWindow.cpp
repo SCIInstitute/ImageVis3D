@@ -729,7 +729,6 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   bool bSystemOrtho = m_Renderer->GetOrthoView();
   if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bOrtho);
   m_Renderer->SetMIPLOD(bUseLOD);
-  m_Renderer->ScheduleCompleteRedraw(); // things changed, so need to redraw.
   ForceRepaint();
   ForceRepaint(); // make sure we have the same results in the front and in the backbuffer
   if (bFinalFrame) { // restore state
