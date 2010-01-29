@@ -135,7 +135,8 @@ class RenderWindow
     void SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCV(bool bDoClearView, bool bPropagate=true);
-    void SetCVFocusPos(const INTVECTOR2& vMousePos, bool bPropagate=true);
+    void SetCVFocusPos(RenderRegion *region, const INTVECTOR2& vMousePos,
+                       bool bPropagate=true);
 
     // @return the range of the currently loaded dataset
     std::pair<double,double> GetDynamicRange() const;

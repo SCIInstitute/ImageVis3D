@@ -316,7 +316,7 @@ bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
 
   if (m_Renderer->GetRendermode() == AbstrRenderer::RM_ISOSURFACE &&
       m_Renderer->GetCV() && clearview) {
-    SetCVFocusPos(m_viMousePos);
+    SetCVFocusPos(region, m_viMousePos);
   }
 
   if (rotate) {
@@ -974,7 +974,10 @@ void RenderWindow::CloneRendermode(RenderWindow* other) {
   m_Renderer->SetCVBorderScale(other->m_Renderer->GetCVBorderScale());
   m_Renderer->SetCVColor(other->m_Renderer->GetCVColor());
   m_Renderer->SetCV(other->m_Renderer->GetCV());
-  m_Renderer->SetCVFocusPos(other->m_Renderer->GetCVFocusPos());
+
+  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
+    for (int j=0; j < NUM_WINDOW_MODES; ++j)
+      m_Renderer->SetCVFocusPos(*renderRegions[i][j], other->m_Renderer->GetCVFocusPos());
 }
 
 void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate) {
@@ -1148,11 +1151,12 @@ void RenderWindow::SetCV(bool bDoClearView, bool bPropagate) {
   }
 }
 
-void RenderWindow::SetCVFocusPos(const INTVECTOR2& viMousePos, bool bPropagate) {
-  m_Renderer->SetCVFocusPos(viMousePos);
+void RenderWindow::SetCVFocusPos(RenderRegion *region, const INTVECTOR2& viMousePos,
+                                 bool bPropagate) {
+  m_Renderer->SetCVFocusPos(*region, viMousePos);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
-      m_vpLocks[1][i]->SetCVFocusPos(viMousePos, false);
+      m_vpLocks[1][i]->SetCVFocusPos(region, viMousePos, false);
     }
   }
 }
