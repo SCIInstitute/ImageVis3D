@@ -58,54 +58,67 @@ void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
                                                unsigned int iMinLODIndex,
                                                RenderWindow* pRenderWin) {
   if (dockWidget_ProgressView->isVisible()) {
-    if (label_ProgressDesc->isVisible()) label_ProgressDesc->setVisible(false);
-    if (!groupBox_RenderProgress->isVisible()) groupBox_RenderProgress->setVisible(true);
+    if (label_ProgressDesc->isVisible()) {
+      label_ProgressDesc->setVisible(false);
+    }
+    if (!groupBox_RenderProgress->isVisible()) {
+      groupBox_RenderProgress->setVisible(true);
+    }
 
-    // iCurrentCount may be higher than LODCount due the forcing higher LODs with the slider
-    // to avoid strange reading such as "LOD 4/1" we increase iLODCount
+    // iCurrentCount may be higher than LODCount due the forcing higher LODs
+    // with the slider.  To avoid strange reading such as "LOD 4/1" we increase
+    // iLODCount
     iLODCount = max(iCurrentCount,iLODCount);
 
     QString msg = tr("LOD %1/%2").arg(iCurrentCount).arg(iLODCount);
+    /// @todo ? why is this platform dependent code.
 #ifdef DETECTED_OS_APPLE
-    /// todo: label update has been removed until the delay-LOD issue on the mac is resolved
-    //label_LODProgress->setText(msg);
-    //label_LODProgress->repaint();
+    label_LODProgress->setText(msg);
+    label_LODProgress->update();
 #else
     msg = msg + " (%p%)";
     progressBar_Frame->setFormat(msg);
 #endif
     progressBar_Frame->setValue((unsigned int)((float(iCurrentCount) - 1.0f + float(iWorkingBrick)/float(iBrickCount)) * 100.0f / float(iLODCount)));
-    progressBar_Frame->repaint();
+    progressBar_Frame->update();
 
-    msg = tr("Brick %1/%2 of LOD %3").arg(iWorkingBrick).arg(iBrickCount).arg(iCurrentCount);
+    msg = tr("Brick %1/%2 of LOD %3").arg(iWorkingBrick).arg(iBrickCount).
+                                                         arg(iCurrentCount);
+    /// @todo ? why is this platform dependent code.
 #ifdef DETECTED_OS_APPLE
-    /// todo: label update has been removed until the delay-LOD issue on the mac is resolved
-    //label_BrickProgress->setText(msg);
-    //label_BrickProgress->repaint();
+    label_BrickProgress->setText(msg);
+    label_BrickProgress->update();
 #else
     msg = msg + " (%p%)";
     progressBar_Level->setFormat(msg);
 #endif
+    progressBar_Level->setValue(static_cast<unsigned>(iWorkingBrick * 100.0f /
+                                                      iBrickCount));
+    progressBar_Level->update();
 
-    progressBar_Level->setValue((unsigned int)(iWorkingBrick * 100.0f / iBrickCount));
-    progressBar_Level->repaint();
-
-
-#ifdef DETECTED_OS_APPLE
-  QCoreApplication::processEvents();
-#endif
   }
 
   if (pRenderWin && pRenderWin->IsRenderSubsysOK()) {
-    UINT64VECTOR3 vSize = pRenderWin->GetRenderer()->GetDataset().GetDomainSize(iMinLODIndex);
+    UINT64VECTOR3 vSize = pRenderWin->GetRenderer()->
+                                      GetDataset().
+                                      GetDomainSize(iMinLODIndex);
     QString strSize = tr("%1 x %2 x %3").arg(vSize.x).arg(vSize.y).arg(vSize.z);
-    if (strSize != lineEdit_SizeForView->text()) lineEdit_SizeForView->setText(strSize);
+    if (strSize != lineEdit_SizeForView->text()) {
+      lineEdit_SizeForView->setText(strSize);
+      lineEdit_SizeForView->update();
+    }
 
-    QString strLODLevel = tr("%1").arg(pRenderWin->GetRenderer()->GetDataset().GetLODLevelCount()-iMinLODIndex);
-    if (strLODLevel != lineEdit_LODLevelForCurrentView->text()) lineEdit_LODLevelForCurrentView->setText(strLODLevel);
+    QString strLODLevel = tr("%1").arg(pRenderWin->GetRenderer()->
+                                                   GetDataset().
+                                                   GetLODLevelCount() -
+                                                    iMinLODIndex);
+    if (strLODLevel != lineEdit_LODLevelForCurrentView->text()) {
+      lineEdit_LODLevelForCurrentView->setText(strLODLevel);
+      lineEdit_LODLevelForCurrentView->update();
+    }
   }
 
-
+  QCoreApplication::processEvents();
 }
 
 void MainWindow::MinLODLimitChanged() {

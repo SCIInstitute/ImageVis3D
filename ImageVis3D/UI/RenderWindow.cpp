@@ -493,6 +493,8 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
 }
 
 void RenderWindow::CloseEvent(QCloseEvent*) {
+  this->GetQtWidget()->setEnabled(false);
+  this->GetQtWidget()->hide();
   EmitWindowClosing();
   Cleanup();
 }
@@ -1224,8 +1226,8 @@ void RenderWindow::PaintRenderer()
 
       unsigned int iMinLODIndex       = m_Renderer->GetMinLODIndex();
 
-      m_MainWindow->SetRenderProgressAnUpdateInfo(iLevelCount, iWorkingLevelCount,
-                                      iBrickCount, iWorkingBrick, iMinLODIndex, this);
+      m_MainWindow->SetRenderProgressAnUpdateInfo(iLevelCount,
+        iWorkingLevelCount, iBrickCount, iWorkingBrick, iMinLODIndex, this);
     }
   }
 
