@@ -482,12 +482,21 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
                                       !regionData->arcBall.GetUseTranslation());
     }
       break;
-    case Qt::Key_PageDown : SetTranslationDelta(selectedRegion,
-                                                FLOATVECTOR3(0,0,0.01f), true);
-      break;
-
-    case Qt::Key_PageUp : SetTranslationDelta(selectedRegion,
-                                              FLOATVECTOR3(0,0,-0.01f), true);
+    case Qt::Key_PageDown : case Qt::Key_PageUp :
+      if (selectedRegion && selectedRegion->is2D()) {
+        const size_t sliceDimension = static_cast<size_t>(selectedRegion->windowMode);
+        const int currSlice = static_cast<int>(m_Renderer->GetSliceDepth(selectedRegion));
+        const int numSlices = m_Renderer->GetDataset().GetDomainSize()[sliceDimension]-1;
+        int sliceChange = numSlices / 10;
+        if (event->key() == Qt::Key_PageDown)
+          sliceChange = -sliceChange;
+        int newSliceDepth = MathTools::Clamp(currSlice + sliceChange, 0, numSlices);
+        m_Renderer->SetSliceDepth(selectedRegion, UINT64(newSliceDepth));
+      }
+      else if (selectedRegion && selectedRegion->is3D()) {
+        const float zoom = (event->key() == Qt::Key_PageDown) ? 0.01f : -0.01f;
+        SetTranslationDelta(selectedRegion, FLOATVECTOR3(0, 0, zoom), true);
+      }
       break;
   }
 }
@@ -526,8 +535,8 @@ void RenderWindow::SetupArcBall() {
 }
 
 void RenderWindow::SetWindowFraction2x2(FLOATVECTOR2 f) {
-  f.x = MathTools::Clamp(f.x, 0, 1);
-  f.y = MathTools::Clamp(f.y, 0, 1);
+  f.x = MathTools::Clamp(f.x, 0.0, 1.0);
+  f.y = MathTools::Clamp(f.y, 0.0, 1.0);
 
   m_vWinFraction = f;
   m_Renderer->ScheduleCompleteRedraw();
