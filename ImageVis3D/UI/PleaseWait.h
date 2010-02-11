@@ -62,7 +62,6 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
       if(this->isHidden()) {
         this->show();
       }
-      QCoreApplication::processEvents();
     }
     QLabel* GetStatusLabel() {return label_Status;}
 

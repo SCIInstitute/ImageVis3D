@@ -67,7 +67,6 @@ void PleaseWaitDialog::CancelClicked()
   m_ButtonCancel->setEnabled(false);
   m_ButtonCancel->update();
   m_bCanceled = true;
-  QCoreApplication::processEvents();
   emit Canceled();
 }
 

@@ -722,9 +722,6 @@ void MainWindow::ToggleFullscreen() {
 
 
 QMdiSubWindow* MainWindow::ActiveSubWindow() {
-#ifdef DETECTED_OS_LINUX
-  QCoreApplication::processEvents();
-#endif
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {
     QWidget* w = mdiArea->subWindowList().at(i)->widget();
     RenderWindow* subwindow = WidgetToRenderWin(w);
@@ -734,9 +731,6 @@ QMdiSubWindow* MainWindow::ActiveSubWindow() {
 }
 
 RenderWindow* MainWindow::ActiveRenderWin() {
-#ifdef DETECTED_OS_LINUX
-  QCoreApplication::processEvents();
-#endif
   if (mdiArea->activeSubWindow())
     return WidgetToRenderWin(mdiArea->activeSubWindow()->widget());
   else

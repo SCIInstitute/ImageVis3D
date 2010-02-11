@@ -114,9 +114,6 @@ void RenderWindowDX::InitializeRenderer()
 
 void RenderWindowDX::ForceRepaint() {
   repaint();
-#ifdef DETECTED_OS_APPLE
-  QCoreApplication::processEvents();
-#endif
 }
 
 void RenderWindowDX::ToggleFullscreen() {

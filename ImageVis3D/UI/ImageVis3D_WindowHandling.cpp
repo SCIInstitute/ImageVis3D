@@ -644,7 +644,6 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
 
   if(m_pActiveRenderWin != renderWin) {
     m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","Calling RenderWindowActive");
-    QCoreApplication::processEvents();
 #ifdef DETECTED_OS_APPLE
     // HACK: For some reason on the Mac we need to set the active sub window,
     // re-process events, and then call our activation function ... doesn't
@@ -657,7 +656,6 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
         break;
       }
     }
-    QCoreApplication::processEvents();
 #endif
     if(!renderWin->IsRenderSubsysOK()) {
       T_ERROR("Could not initialize render window!");

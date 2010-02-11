@@ -170,7 +170,6 @@ void MainWindow::CaptureRotation() {
         }
         i++;
         m_pActiveRenderWin->UpdateWindow();
-        QCoreApplication::processEvents();
       }
     } else {
       if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {

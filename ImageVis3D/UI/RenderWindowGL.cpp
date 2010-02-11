@@ -199,9 +199,6 @@ void RenderWindowGL::InitializeRenderer()
 
 void RenderWindowGL::ForceRepaint() {
   repaint();
-#ifdef DETECTED_OS_APPLE
-  QCoreApplication::processEvents();
-#endif
 }
 
 void RenderWindowGL::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {

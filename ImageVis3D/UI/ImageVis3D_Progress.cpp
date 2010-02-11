@@ -117,8 +117,6 @@ void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
       lineEdit_LODLevelForCurrentView->update();
     }
   }
-
-  QCoreApplication::processEvents();
 }
 
 void MainWindow::MinLODLimitChanged() {
