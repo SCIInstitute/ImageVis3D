@@ -724,9 +724,13 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
                                 bool bPreserveTransparency)
 {
   GLFrameCapture f;
+  m_Renderer->SetCaptureMode(true);
   ForceRepaint();
-  ForceRepaint(); // make sure we have the same results in the front and in the backbuffer
-  return f.CaptureSingleFrame(strFilename, bPreserveTransparency);
+  // make sure we have the same results in the front and in the backbuffer:
+  ForceRepaint();
+  bool rv = f.CaptureSingleFrame(strFilename, bPreserveTransparency);
+  m_Renderer->SetCaptureMode(false);
+  return rv;
 }
 
 
@@ -754,9 +758,14 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
                                         std::string* strRealFilename)
 {
   GLFrameCapture f;
+  m_Renderer->SetCaptureMode(true);
   ForceRepaint();
-  ForceRepaint(); // make sure we have the same results in the front and in the backbuffer
-  return f.CaptureSequenceFrame(strFilename, bPreserveTransparency, strRealFilename);
+  // make sure we have the same results in the front and in the backbuffer
+  ForceRepaint();
+  bool rv = f.CaptureSequenceFrame(strFilename, bPreserveTransparency,
+                                   strRealFilename);
+  m_Renderer->SetCaptureMode(false);
+  return rv;
 }
 
 void RenderWindow::SetTranslation(RenderRegion *renderRegion,
