@@ -72,7 +72,7 @@ Source: C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\amd64\Micro
 ; ImageVis3D
 Source: build\x64\Release (with DirectX)\ImageVis3D-64.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: Tuvok\Shaders\*; DestDir: {app}\Shaders; Excludes: .svn; Flags: ignoreversion replacesameversion
-Source: Scripts\installer\imagevis3D.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
+Source: Scripts\installer\imagevis3d.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
 
 [Icons]
 Name: {group}\ImageVis3D; Filename: {app}\ImageVis3D-64.exe; WorkingDir: {app}
