@@ -361,7 +361,7 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
     }
   } else if (renderRegion->is2D())   {
     // this returns 1 for "most" mice if the wheel is turned one "click"
-    int iZoom = event->delta()/120;
+    int iZoom = event->delta() > 0 ? 1 : event->delta() < 0 ? -1 : 0;
     int iNewSliceDepth =
       std::max<int>(0,
                     static_cast<int>(m_Renderer->GetSliceDepth(renderRegion))+iZoom);
