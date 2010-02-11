@@ -360,7 +360,6 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
       SetTranslationDelta(renderRegion, FLOATVECTOR3(0,0,fZoom), true);
     }
   } else if (renderRegion->is2D())   {
-    // this returns 1 for "most" mice if the wheel is turned one "click"
     int iZoom = event->delta() > 0 ? 1 : event->delta() < 0 ? -1 : 0;
     int iNewSliceDepth =
       std::max<int>(0,
