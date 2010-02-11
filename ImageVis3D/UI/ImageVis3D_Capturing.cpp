@@ -72,10 +72,10 @@ void MainWindow::CaptureSequence() {
 }
 
 bool MainWindow::CaptureFrame(const std::string& strTargetName) {
-  if (m_pActiveRenderWin)
-    return m_pActiveRenderWin->CaptureFrame(strTargetName,
-                                            checkBox_PreserveTransparency->isChecked());
-  else {
+  if (m_pActiveRenderWin) {
+    const bool checked = checkBox_PreserveTransparency->isChecked();
+    return m_pActiveRenderWin->CaptureFrame(strTargetName, checked);
+  } else {
     WARNING("No render window is open!");
     return false;
   }
@@ -83,11 +83,12 @@ bool MainWindow::CaptureFrame(const std::string& strTargetName) {
 
 bool MainWindow::CaptureSequence(const std::string& strTargetName,
                                  std::string* strRealFilename) {
-  if (m_pActiveRenderWin)
+  if (m_pActiveRenderWin) {
+    const bool checked = checkBox_PreserveTransparency->isChecked();
     return m_pActiveRenderWin->CaptureSequenceFrame(strTargetName,
-                                                    checkBox_PreserveTransparency->isChecked(),
+                                                    checked,
                                                     strRealFilename);
-  else {
+  } else {
     WARNING("No render window is open!");
     return false;
   }

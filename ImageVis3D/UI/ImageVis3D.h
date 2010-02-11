@@ -310,7 +310,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     RenderWindow* WidgetToRenderWin(QWidget* w);
     RenderWindow* CreateNewRenderWindow(QString dataset);
-    bool CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow=true);
+    bool CheckRenderwindowFitness(RenderWindow *renderWin,
+                                  bool bIfNotOkShowMessageAndCloseWindow=true);
 
     void SetupWorkspaceMenu();
     bool LoadWorkspace(QString strFilename,
