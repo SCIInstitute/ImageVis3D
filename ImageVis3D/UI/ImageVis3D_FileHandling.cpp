@@ -190,6 +190,9 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
     }
 
     RenderWindow *renderWin = CreateNewRenderWindow(filename);
+    if(NULL == renderWin) {
+      return false;
+    }
     if(!renderWin->IsRenderSubsysOK()) {
       if (renderWin->RebrickingRequired()) {
           delete renderWin;
