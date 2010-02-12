@@ -196,12 +196,13 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
     if(!renderWin->IsRenderSubsysOK()) {
       if (renderWin->RebrickingRequired()) {
           delete renderWin;
-          if (!bNoUserInteraction && QMessageBox::Yes == QMessageBox::question(NULL, "Rebricking required", "The bricking scheme in this dataset is not "
-                                                          "compatible your current brick size settings. Do you want to convert "
-                                                          "the dataset to be able to load it? Note that depending on the size "
-                                                          "of the dataset this operation may take a while!", QMessageBox::Yes, QMessageBox::No)) {
-  
-
+          if (!bNoUserInteraction &&
+              QMessageBox::Yes == QMessageBox::question(NULL, "Rebricking required", "The bricking scheme in this dataset is not "
+                                                        "compatible your current brick size settings. Do you want to convert "
+                                                        "the dataset to be able to load it? Note that depending on the size "
+                                                        "of the dataset this operation may take a while!",
+                                                        QMessageBox::Yes, QMessageBox::No))
+          {
             QSettings settings;
             QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
 
@@ -217,11 +218,14 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
                                              strLastDir, "Universal Volume Format (*.uvf)",
                                              &selectedFilter, options);
               if (!rebrickedFilename.isEmpty()) {
-                rebrickedFilename = SysTools::CheckExt(string(rebrickedFilename.toAscii()),
-                                                           "uvf").c_str();
+                rebrickedFilename = SysTools::CheckExt(
+                  std::string(rebrickedFilename.toAscii()), "uvf"
+                ).c_str();
 
                 if (rebrickedFilename == filename) {
-                  ShowCriticalDialog( "Input Error", "Rebricking can not be performed in place, please select another file.");
+                  ShowCriticalDialog("Input Error",
+                                     "Rebricking can not be performed in place"
+                                     ", please select another file.");
                 } else {
                   settings.setValue("Folders/GetConvFilename",
                                     QFileInfo(rebrickedFilename).absoluteDir().path());
@@ -231,14 +235,16 @@ bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoU
                   pleaseWait.AttachLabel(&m_MasterController);
 
                   if (!m_MasterController.IOMan()->ReBrickDataset(string(filename.toAscii()), string(rebrickedFilename.toAscii()), m_strTempDir)) {
-                    ShowCriticalDialog( "Error during rebricking.", "The system was unable to rebrick the data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+                    ShowCriticalDialog("Error during rebricking.",
+                                       "The system was unable to rebrick the data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
                     return false;
                   } else {
                     pleaseWait.hide();
                   }
                 }
-              } else return false;
-
+              } else {
+                return false;
+              }
             } while (rebrickedFilename == filename);
             return LoadDataset(rebrickedFilename, targetFilename, bNoUserInteraction);
           }
