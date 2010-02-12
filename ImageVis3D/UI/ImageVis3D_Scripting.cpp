@@ -79,6 +79,7 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
 
 bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::string >& strParams, std::string& strMessage) {
   bool bResult = true;
+  QCoreApplication::processEvents();
   strMessage = "";
   if (strCommand == "clear")           { ClearDebugWin(); } else
   if (strCommand == "versions")        { ShowVersions(); } else
@@ -111,6 +112,8 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "delete")          { bResult = remove(strParams[0].c_str()) == 0;} else
   if (strCommand == "quit")            { bResult = close();} else
     return false;
+
+  QCoreApplication::processEvents();
 
   return true;
 }
