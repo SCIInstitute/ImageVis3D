@@ -632,44 +632,21 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
                                    m_glShareWidget, fmt, this, 0);
   #endif
 
-  mdiArea->addSubWindow(renderWin->GetQtWidget());
   connect(renderWin->GetQtWidget(), SIGNAL(WindowActive(RenderWindow*)), this, SLOT(RenderWindowActive(RenderWindow*)));
   connect(renderWin->GetQtWidget(), SIGNAL(WindowClosing(RenderWindow*)), this, SLOT(RenderWindowClosing(RenderWindow*)));
   connect(renderWin->GetQtWidget(), SIGNAL(RenderWindowViewChanged(int)), this, SLOT(RenderWindowViewChanged(int)));
   connect(renderWin->GetQtWidget(), SIGNAL(StereoDisabled()), this, SLOT(StereoDisabled()));
-
-  if(m_pActiveRenderWin != renderWin) {
-    MESSAGE("Calling RenderWindowActive");
-#ifdef DETECTED_OS_APPLE
-    // HACK: For some reason on the Mac we need to set the active sub window,
-    // re-process events, and then call our activation function ... doesn't
-    // seem to happen automagically.
-    QList<QMdiSubWindow *>::iterator iter;
-    for(iter = mdiArea->subWindowList().begin();
-        iter != mdiArea->subWindowList().end(); ++iter) {
-      if(renderWin->GetQtWidget() == (*iter)->widget()) {
-        mdiArea->setActiveSubWindow(*iter);
-        break;
-      }
-    }
-#endif
-    if(!renderWin->IsRenderSubsysOK()) {
-      T_ERROR("Could not initialize render window!");
-    } else {
-      // Despite us registering it as the appropriate callback, Qt doesn't like
-      // to call this for us w/in a timeframe which is useful.  Awesome.  So we
-      // do it manually, to make sure the window is initialized before we
-      // start using it.
-      MESSAGE("Attempting to force QGL initialization");
-      renderWin->GetQtWidget()->repaint();
-    }
-  }
-
+  mdiArea->addSubWindow(renderWin->GetQtWidget());
   renderWin->InitializeContext();
-  if (renderWin && renderWin->GetRenderer() && renderWin->IsRenderSubsysOK()) {
+
+  if(m_pActiveRenderWin != renderWin && !renderWin->IsRenderSubsysOK()) {
+    T_ERROR("Could not initialize render window!");
+    return NULL;
+  } else {
     ApplySettings(renderWin);
   }
 
+  QCoreApplication::processEvents();
   return renderWin;
 }
 

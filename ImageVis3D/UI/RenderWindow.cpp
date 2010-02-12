@@ -65,7 +65,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_strID(""),
   m_Renderer(NULL),
   m_MasterController(masterController),
-  m_bRenderSubsysOK(false),   // be pessimistic :-)
+  m_bRenderSubsysOK(true),   // be optimistic :-)
   m_bRebrickingRequired(false),
   selectedRegionSplitter(REGION_SPLITTER_NONE),
   m_vWinDim(0,0),
@@ -1211,7 +1211,6 @@ void RenderWindow::ResizeRenderer(int width, int height)
   m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
 
   if (m_Renderer != NULL && m_bRenderSubsysOK) {
-
     switch (GetViewMode()) {
       case VM_SINGLE :
         GetActiveRenderRegions()[0]->maxCoord = m_vWinDim;
