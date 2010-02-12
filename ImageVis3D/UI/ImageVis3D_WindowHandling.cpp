@@ -632,10 +632,6 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
                                    m_glShareWidget, fmt, this, 0);
   #endif
 
-  if (renderWin && renderWin->GetRenderer()) {
-    ApplySettings(renderWin);
-  }
-
   mdiArea->addSubWindow(renderWin->GetQtWidget());
   connect(renderWin->GetQtWidget(), SIGNAL(WindowActive(RenderWindow*)), this, SLOT(RenderWindowActive(RenderWindow*)));
   connect(renderWin->GetQtWidget(), SIGNAL(WindowClosing(RenderWindow*)), this, SLOT(RenderWindowClosing(RenderWindow*)));
@@ -667,6 +663,11 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
       MESSAGE("Attempting to force QGL initialization");
       renderWin->GetQtWidget()->repaint();
     }
+  }
+
+  renderWin->InitializeContext();
+  if (renderWin && renderWin->GetRenderer() && renderWin->IsRenderSubsysOK()) {
+    ApplySettings(renderWin);
   }
 
   return renderWin;
