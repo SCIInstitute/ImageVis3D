@@ -78,8 +78,6 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
 }
 
 bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::string >& strParams, std::string& strMessage) {
-  QCoreApplication::processEvents();
-
   bool bResult = true;
   strMessage = "";
   if (strCommand == "clear")           { ClearDebugWin(); } else

@@ -136,6 +136,7 @@ int main(int argc, char* argv[])
     }
   }
 
+  mainWindow.StartTimer();
   int iResult = app.exec();
 
   #if defined(_WIN32) && defined(USE_DIRECTX)

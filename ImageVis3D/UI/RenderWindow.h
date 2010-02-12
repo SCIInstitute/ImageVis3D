@@ -150,6 +150,8 @@ class RenderWindow
 
     virtual void ToggleFullscreen() = 0;
     virtual void UpdateWindow() = 0;
+    /// Ensures context has been created, without performing a render.
+    virtual void InitializeContext() = 0;
 
     RenderRegion* GetRegionUnderCursor(INTVECTOR2 vPos) const;
 

@@ -88,6 +88,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
 
     bool RunScript(const std::string& strFilename);
     bool StayOpen() const {return m_bStayOpenAfterScriptEnd;}
+    /// Starts the internal timer, used for checking if we should continue
+    /// rendering.
+    void StartTimer();
     const std::string& GetTempDir() {return m_strTempDir;}
 
   public slots:

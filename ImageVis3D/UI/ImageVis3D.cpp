@@ -63,6 +63,7 @@
 
 using namespace std;
 
+static const int IV3D_TIMER_INTERVAL = 20; // in milliseconds
 
 MainWindow::MainWindow(MasterController& masterController,
            bool bScriptMode, /* = false */
@@ -149,10 +150,6 @@ MainWindow::MainWindow(MasterController& masterController,
   UpdateWSMRUActions();
   UpdateMenus();
 
-  m_pRedrawTimer = new QTimer(this);
-  connect(m_pRedrawTimer, SIGNAL(timeout()), this, SLOT(CheckForRedraw()));
-  m_pRedrawTimer->start(20);
-
   CheckSettings();
   ClearProgressViewAndInfo();
   UpdateColorWidget();
@@ -173,6 +170,9 @@ MainWindow::MainWindow(MasterController& masterController,
   checkBox_ClipShow->setEnabled(false);
   checkBox_ClipLockObject->setEnabled(false);
   DisableStereoWidgets();
+
+  m_pRedrawTimer = new QTimer(this);
+  m_pRedrawTimer->setInterval(IV3D_TIMER_INTERVAL);
 }
 
 MainWindow::~MainWindow()
@@ -199,6 +199,12 @@ MainWindow::~MainWindow()
 
   delete m_pMetadataDialog;
   delete m_pWelcomeDialog;
+}
+
+/// initializes the timer.
+void MainWindow::StartTimer() {
+  connect(m_pRedrawTimer, SIGNAL(timeout()), this, SLOT(CheckForRedraw()));
+  m_pRedrawTimer->start(IV3D_TIMER_INTERVAL);
 }
 
 void MainWindow::SetAndCheckRunningFlag() {

@@ -71,6 +71,8 @@ class RenderWindowDX : public QWidget, public RenderWindow
     virtual ~RenderWindowDX();
 
     virtual void UpdateWindow() {update();}
+    /// Should initialize w/o render; hard to implement here?
+    virtual void InitializeContext() { update(); }
 
  protected:
     virtual void ToggleFullscreen();

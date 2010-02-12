@@ -639,7 +639,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   connect(renderWin->GetQtWidget(), SIGNAL(StereoDisabled()), this, SLOT(StereoDisabled()));
 
   if(m_pActiveRenderWin != renderWin) {
-    m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","Calling RenderWindowActive");
+    MESSAGE("Calling RenderWindowActive");
 #ifdef DETECTED_OS_APPLE
     // HACK: For some reason on the Mac we need to set the active sub window,
     // re-process events, and then call our activation function ... doesn't
