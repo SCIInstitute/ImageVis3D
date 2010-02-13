@@ -601,7 +601,9 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   RenderWindow *renderWin;
 
   #if defined(_WIN32) && defined(USE_DIRECTX)
-    if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR || m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER || m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR) {
+    if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR ||
+        m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER ||
+        m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR) {
       renderWin = new RenderWindowDX(m_MasterController, m_eVolumeRendererType, dataset,
                                        iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
                                        m_bDisableBorder, this, 0);
@@ -615,13 +617,18 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
                                      m_glShareWidget, fmt, this, 0);
     }
   #else
-    if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR || m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER || m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR) {
+    if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR ||
+        m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER ||
+        m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR) {
       ShowInformationDialog( "No DirectX Support", "The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
       m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
 
-      if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR) m_eVolumeRendererType = MasterController::OPENGL_SBVR; else
-      if (m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER) m_eVolumeRendererType = MasterController::OPENGL_RAYCASTER; else
-      m_eVolumeRendererType = MasterController::OPENGL_2DSBVR;
+      if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR)
+        m_eVolumeRendererType = MasterController::OPENGL_SBVR;
+      else if (m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER)
+        m_eVolumeRendererType = MasterController::OPENGL_RAYCASTER;
+      else
+        m_eVolumeRendererType = MasterController::OPENGL_2DSBVR;
     }
     QGLFormat fmt;
     fmt.setAlpha(true);
@@ -632,10 +639,14 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
                                    m_glShareWidget, fmt, this, 0);
   #endif
 
-  connect(renderWin->GetQtWidget(), SIGNAL(WindowActive(RenderWindow*)), this, SLOT(RenderWindowActive(RenderWindow*)));
-  connect(renderWin->GetQtWidget(), SIGNAL(WindowClosing(RenderWindow*)), this, SLOT(RenderWindowClosing(RenderWindow*)));
-  connect(renderWin->GetQtWidget(), SIGNAL(RenderWindowViewChanged(int)), this, SLOT(RenderWindowViewChanged(int)));
-  connect(renderWin->GetQtWidget(), SIGNAL(StereoDisabled()), this, SLOT(StereoDisabled()));
+  connect(renderWin->GetQtWidget(), SIGNAL(WindowActive(RenderWindow*)),
+          this, SLOT(RenderWindowActive(RenderWindow*)));
+  connect(renderWin->GetQtWidget(), SIGNAL(WindowClosing(RenderWindow*)),
+          this, SLOT(RenderWindowClosing(RenderWindow*)));
+  connect(renderWin->GetQtWidget(), SIGNAL(RenderWindowViewChanged(int)),
+          this, SLOT(RenderWindowViewChanged(int)));
+  connect(renderWin->GetQtWidget(), SIGNAL(StereoDisabled()),
+          this, SLOT(StereoDisabled()));
   mdiArea->addSubWindow(renderWin->GetQtWidget());
   renderWin->InitializeContext();
 
