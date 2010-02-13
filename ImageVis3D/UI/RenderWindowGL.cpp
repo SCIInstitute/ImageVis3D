@@ -188,10 +188,6 @@ void RenderWindowGL::InitializeRenderer()
     m_Renderer->AddShaderPath("/usr/share/imagevis3d/shaders");
 #endif
     m_bRenderSubsysOK = m_Renderer->Initialize();
-    // Set the initial size.
-    m_vWinDim[0] = static_cast<unsigned>(this->size().width());
-    m_vWinDim[1] = static_cast<unsigned>(this->size().height());
-    m_Renderer->Resize(m_vWinDim);
   }
 
   if (!m_bRenderSubsysOK) {
