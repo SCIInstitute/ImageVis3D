@@ -31,19 +31,19 @@ if test "$1" != "-q" ; then
     cat ${status} | mail -s "${subj}" ${full_em}
 fi
 devb="/usr/sci/projects/sciweb/devbuilds/imagevis3d/"
-mailtry scp *.zip tfogal@shell2.sci.utah.edu:${devb}
-mailtry scp *.dmg tfogal@shell2.sci.utah.edu:${devb}
+mailtry scp *.zip tfogal@shell.sci.utah.edu:${devb}
+mailtry scp *.dmg tfogal@shell.sci.utah.edu:${devb}
 
 # Now update the `latest version' symlink.
 fn_zip=$(nm_zipfile)
 fn_zip="${devb}/${fn_zip}"
 fn_latest="${devb}/ImageVis3D-OSX-10.4-Latest.zip"
-mailtry ssh tfogal@shell2.sci.utah.edu rm -f ${fn_latest}
-mailtry ssh tfogal@shell2.sci.utah.edu rm -f ${fn_latest%%zip}dmg
-mailtry ssh tfogal@shell2.sci.utah.edu ln -s ${fn_zip} ${fn_latest}
-mailtry ssh tfogal@shell2.sci.utah.edu ln -s ${fn_zip%%zip}dmg \
+mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_latest}
+mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_latest%%zip}dmg
+mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_zip} ${fn_latest}
+mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_zip%%zip}dmg \
                                             ${fn_latest%%zip}dmg
 
 # Update the text file for determining the latest version.
 mailtry mv latest OSX_Latest_Version.txt
-mailtry scp OSX_Latest_Version.txt tfogal@shell2.sci.utah.edu:${devb}
+mailtry scp OSX_Latest_Version.txt tfogal@shell.sci.utah.edu:${devb}
