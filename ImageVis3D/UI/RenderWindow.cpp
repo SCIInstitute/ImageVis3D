@@ -448,9 +448,6 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       }
 
       SetViewMode(newRenderRegions, newViewMode);
-      SetupArcBall();
-      EmitRenderWindowViewChanged(int(GetViewMode()));
-      UpdateWindow();
     }
       break;
     case Qt::Key_X :
