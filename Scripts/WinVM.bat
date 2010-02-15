@@ -227,15 +227,15 @@ xcopy ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WI
 del ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip
 
 if !BUILD32!==TRUE (
-  echo f | xcopy ..\Scripts\installer\ImageVis3D-1.2-32bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%-32bit-installer.exe /Y
-  echo f | xcopy ..\Scripts\installer\ImageVis3D-1.2-32bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D-Latest-32bit-installer.exe /Y
-  del ..\Scripts\installer\ImageVis3D-1.2-32bit.exe
+  echo f | xcopy ..\Scripts\installer\ImageVis3D-32bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%-32bit-installer.exe /Y
+  echo f | xcopy ..\Scripts\installer\ImageVis3D-32bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D-Latest-32bit-installer.exe /Y
+  del ..\Scripts\installer\ImageVis3D-32bit.exe
 )
 
 if !BUILD64!==TRUE (
-  echo f | xcopy ..\Scripts\installer\ImageVis3D-1.2-64bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%-64bit-installer.exe /Y
-  echo f | xcopy ..\Scripts\installer\ImageVis3D-1.2-64bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D-Latest-64bit-installer.exe /Y
-  del ..\Scripts\installer\ImageVis3D-1.2-64bit.exe
+  echo f | xcopy ..\Scripts\installer\ImageVis3D-64bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%-64bit-installer.exe /Y
+  echo f | xcopy ..\Scripts\installer\ImageVis3D-64bit.exe \\geronimo\share\IV3D-WIN\ImageVis3D-Latest-64bit-installer.exe /Y
+  del ..\Scripts\installer\ImageVis3D-64bit.exe
 )
 
 
