@@ -128,6 +128,9 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
 #else
   groupBox_7->setVisible(false);
 #endif
+
+  // 2D slices are still experimental -> hide for release
+  radioButton_SBVR2D->setVisible(false);
 }
 
 
