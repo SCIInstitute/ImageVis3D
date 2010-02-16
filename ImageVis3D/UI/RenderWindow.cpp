@@ -1268,7 +1268,7 @@ void RenderWindow::ResetRenderingParameters()
   FLOATMATRIX4 mIdentity;
   m_mAccumulatedClipTranslation = mIdentity;
 
-  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
+  for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
     for (int j=0; j < NUM_WINDOW_MODES; ++j) {
       regionDatas[i][j].clipRotation = mIdentity;
 
@@ -1277,4 +1277,6 @@ void RenderWindow::ResetRenderingParameters()
       m_Renderer->SetTranslation(region, mIdentity);
       SetClipPlane(region, PLANE<float>(0,0,1,0));
     }
+  }
+  SetWindowFraction2x2(FLOATVECTOR2(0.5f, 0.5f));
 }
