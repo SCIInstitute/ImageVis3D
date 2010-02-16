@@ -192,7 +192,7 @@ class RenderWindow
     EViewMode         m_eViewMode;
     FLOATVECTOR2      m_vWinFraction;
     static const int  regionSplitterWidth = 6;
-    RenderRegion *activeRegion; // The region that should have focus
+    RenderRegion*     activeRegion; // The region that should have focus
 
     // If later on more than 4 regions are desired this can either be
     // increased or something fancier than an array can be used.
@@ -249,8 +249,7 @@ class RenderWindow
 
     /// @param[in,out] newRenderRegions with coordinates updated to reflect the
     /// new view mode.
-
-    ///@param[in] eViewMode The new ViewMode to use.
+    /// @param[in] eViewMode The new ViewMode to use.
     virtual void SetViewMode(const std::vector<RenderRegion*> &newRenderRegions,
                              EViewMode eViewMode);
 
