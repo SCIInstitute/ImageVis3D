@@ -31,6 +31,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
 			/>
 			<Tool
 				Name="UI"
@@ -113,6 +114,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
 			/>
 			<Tool
 				Name="UI"
@@ -197,6 +199,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
 			/>
 			<Tool
 				Name="UI"
@@ -283,6 +286,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
 			/>
 			<Tool
 				Name="UI"
@@ -375,6 +379,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
 			/>
 			<Tool
 				Name="UI"
@@ -458,6 +463,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
 			/>
 			<Tool
 				Name="UI"
@@ -531,6 +537,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -543,6 +550,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
 			/>
 			<Tool
 				Name="UI"
@@ -630,6 +638,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
 			/>
 			<Tool
 				Name="UI"
