@@ -693,7 +693,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   m_2DTransferFunction->update();
 
   MESSAGE("Getting other Renderwindow parameters.");
-  AbstrRenderer::ERenderMode e = m_pActiveRenderWin->GetRendermode();
+  AbstrRenderer::ERenderMode e = m_pActiveRenderWin->GetRenderMode();
 
   switch (e) {
     case AbstrRenderer::RM_1DTRANS    : Use1DTrans(); break;

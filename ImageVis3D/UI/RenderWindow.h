@@ -78,7 +78,7 @@ class RenderWindow
     AbstrRenderer* GetRenderer() {return m_Renderer;}
     void CheckForRedraw();
     void SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate=true);
-    AbstrRenderer::ERenderMode GetRendermode() const;
+    AbstrRenderer::ERenderMode GetRenderMode() const;
 
     void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor);
     virtual void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);

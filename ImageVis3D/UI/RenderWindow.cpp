@@ -714,7 +714,7 @@ void RenderWindow::CheckForRedraw() {
   }
 }
 
-AbstrRenderer::ERenderMode RenderWindow::GetRendermode() const {
+AbstrRenderer::ERenderMode RenderWindow::GetRenderMode() const {
   return m_Renderer->GetRendermode();
 }
 
@@ -992,7 +992,7 @@ void RenderWindow::CloneViewState(RenderWindow* other) {
 }
 
 void RenderWindow::CloneRendermode(RenderWindow* other) {
-  SetRendermode(other->GetRendermode());
+  SetRendermode(other->GetRenderMode());
 
   m_Renderer->SetUseLighting(other->m_Renderer->GetUseLighting());
   m_Renderer->SetSampleRateModifier(other->m_Renderer->GetSampleRateModifier());
