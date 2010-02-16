@@ -31,7 +31,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot; /r /y /q"
 			/>
 			<Tool
 				Name="UI"
@@ -114,7 +114,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot; /r /y /q"
 			/>
 			<Tool
 				Name="UI"
@@ -199,7 +199,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot; /r /y /q"
 			/>
 			<Tool
 				Name="UI"
@@ -286,7 +286,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot; /r /y /q"
 			/>
 			<Tool
 				Name="UI"
@@ -379,7 +379,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot; /r /y /q"
 			/>
 			<Tool
 				Name="UI"
@@ -463,7 +463,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot; /r /y /q"
 			/>
 			<Tool
 				Name="UI"
@@ -550,7 +550,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot; /r /y /q"
 			/>
 			<Tool
 				Name="UI"
@@ -638,7 +638,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot;"
+				CommandLine="xcopy &quot;$(InputDir)..\Tuvok\Shaders\*.glsl&quot; &quot;$(TargetDir)Shaders\*.*&quot; /r /y /q"
 			/>
 			<Tool
 				Name="UI"
