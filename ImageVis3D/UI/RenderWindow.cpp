@@ -714,6 +714,10 @@ void RenderWindow::CheckForRedraw() {
   }
 }
 
+AbstrRenderer::ERenderMode RenderWindow::GetRendermode() const {
+  return m_Renderer->GetRendermode();
+}
+
 void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {
   m_Renderer->SetBlendPrecision(eBlendPrecisionMode);
 }

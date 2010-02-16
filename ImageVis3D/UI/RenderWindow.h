@@ -78,9 +78,8 @@ class RenderWindow
     AbstrRenderer* GetRenderer() {return m_Renderer;}
     void CheckForRedraw();
     void SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate=true);
-    AbstrRenderer::ERenderMode GetRendermode() const {
-        return m_Renderer->GetRendermode();
-    }
+    AbstrRenderer::ERenderMode GetRendermode() const;
+
     void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor);
     virtual void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
     void SetPerfMeasures(unsigned int iMinFramerate, bool bUseAllMeans, float fScreenResDecFactor, float fSampleDecFactor, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
