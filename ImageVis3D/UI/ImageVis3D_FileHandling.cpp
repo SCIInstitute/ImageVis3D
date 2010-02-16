@@ -309,6 +309,14 @@ void MainWindow::LoadDirectory() {
         pleaseWait.DetachLabel();
 
         RenderWindow *renderWin = CreateNewRenderWindow(targetFilename);
+
+        if(NULL == renderWin || !renderWin->IsRenderSubsysOK()) {
+          ShowCriticalDialog( "Renderer Error", "Unable to open the converted data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+          m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", "Unable to open dataset, please check previous error messages.");
+          delete renderWin;
+          return;
+        }
+
         renderWin->GetQtWidget()->show();
         RenderWindowActive(renderWin);
         AddFileToMRUList(targetFilename);

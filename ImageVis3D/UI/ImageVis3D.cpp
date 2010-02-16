@@ -56,6 +56,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/Basics/MathTools.h"
@@ -127,6 +128,9 @@ MainWindow::MainWindow(MasterController& masterController,
   QCoreApplication::setApplicationName("ImageVis3D");
   QString qstrVersion = tr("%1").arg(IV3D_VERSION);
   QCoreApplication::setApplicationVersion(qstrVersion);
+
+  QString path = QApplication::applicationDirPath();
+  masterController.SysInfo()->SetProgramPath(string(path.toAscii()));
 
   setupUi(this);
 
