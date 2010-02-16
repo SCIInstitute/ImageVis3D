@@ -365,7 +365,7 @@ void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
           break;
         case PT_OTHER:
           painter.setPen(circlePen);
-          for(size_t i=0; i < 3 && i < pointList.size(); ++i) {
+          for(size_t i=0; i < pointList.size(); ++i) {
             DrawPolyVertex(painter, pointList[i]);
           }
           break;
