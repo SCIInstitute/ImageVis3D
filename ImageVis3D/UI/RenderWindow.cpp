@@ -590,6 +590,18 @@ static std::string view_mode(RenderWindow::EViewMode mode) {
   }
 }
 
+const std::vector<RenderRegion*>&
+RenderWindow::GetActiveRenderRegions() const {
+  return m_Renderer->GetRenderRegions();
+}
+
+void
+RenderWindow::SetActiveRenderRegions(
+  const std::vector<RenderRegion*>& regions) const
+{
+  m_Renderer->SetRenderRegions(regions);
+}
+
 void RenderWindow::ToggleRenderWindowView2x2() {
   std::vector<RenderRegion*> newRenderRegions;
   if (GetActiveRenderRegions().size() == 4)

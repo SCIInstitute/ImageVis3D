@@ -171,10 +171,8 @@ class RenderWindow
 
     RegionSplitter GetRegionSplitter(INTVECTOR2 pos) const;
 
-    const std::vector<RenderRegion*>& GetActiveRenderRegions() const {
-      return m_Renderer->GetRenderRegions(); }
-    void SetActiveRenderRegions(const std::vector<RenderRegion*>& regions) const {
-      m_Renderer->SetRenderRegions(regions); }
+    const std::vector<RenderRegion*>& GetActiveRenderRegions() const;
+    void SetActiveRenderRegions(const std::vector<RenderRegion*>&) const;
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
