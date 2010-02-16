@@ -536,7 +536,6 @@ void RenderWindow::SetWindowFraction2x2(FLOATVECTOR2 f) {
 
   m_vWinFraction = f;
   m_Renderer->ScheduleCompleteRedraw();
-  m_Renderer->ScheduleDisplayClearing();
   UpdateWindowFraction();
 }
 
@@ -639,7 +638,6 @@ void RenderWindow::SetViewMode(const std::vector<RenderRegion*> &newRenderRegion
 
   SetupArcBall();
   m_Renderer->ScheduleCompleteRedraw();
-  m_Renderer->ScheduleDisplayClearing();
   UpdateWindow();
   EmitRenderWindowViewChanged(int(GetViewMode()));
 
