@@ -38,7 +38,8 @@
 #include "PleaseWait.h"
 #include <QtGui/QPushButton>
 
-PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags, bool bHasCancelButton) :
+PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags,
+                                   bool bHasCancelButton) :
   QDialog(parent, flags),
   m_pMasterController(NULL),
   m_pLabelOut(NULL),
@@ -52,7 +53,8 @@ PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags, bool 
     m_ButtonCancel->setText(QString::fromUtf8("Cancel"));
     verticalLayout->addWidget(m_ButtonCancel);
 
-    QObject::connect(m_ButtonCancel, SIGNAL(clicked()), this, SLOT(CancelClicked()));
+    QObject::connect(m_ButtonCancel, SIGNAL(clicked()), this,
+                     SLOT(CancelClicked()));
   }
 }
 
@@ -64,7 +66,7 @@ PleaseWaitDialog::~PleaseWaitDialog(void)
 
 void PleaseWaitDialog::CancelClicked()
 {
-  m_ButtonCancel->setText(QString::fromUtf8("Canceling ..."));
+  m_ButtonCancel->setText(QString::fromUtf8("Cancelling ..."));
   m_ButtonCancel->setEnabled(false);
   m_ButtonCancel->update();
   m_bCanceled = true;

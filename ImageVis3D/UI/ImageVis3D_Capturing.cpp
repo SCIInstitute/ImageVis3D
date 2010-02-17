@@ -112,7 +112,8 @@ void MainWindow::CaptureRotation() {
     bool ok;
     if (renderRegion->is2D() &&
         m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
-      MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD, iEyeDist, this);
+      MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD,
+                                iEyeDist, this);
       if (mipRotDialog.exec() == QDialog::Accepted) {
         ok = true;
         iNumImages = mipRotDialog.GetNumImages();
@@ -126,12 +127,15 @@ void MainWindow::CaptureRotation() {
         settings.setValue("Renderer/RotationUseLOD", bUseLOD);
         settings.setValue("Renderer/RotationEyeDist", iEyeDist);
 
-      } else ok = false;
+      } else {
+        ok = false;
+      }
     } else {
       iNumImages = QInputDialog::getInteger(this,
-                                            tr("How many images to you want to compute?"),
-                                            tr("How many images to you want to compute:"),
-                                            iNumImages, 1, 3600, 1, &ok);
+                     tr("How many images to you want to compute?"),
+                     tr("How many images to you want to compute:"),
+                     iNumImages, 1, 3600, 1, &ok
+                   );
     }
     if (!ok) return;
 
@@ -201,14 +205,12 @@ void MainWindow::CaptureRotation() {
       m_pRedrawTimer->start(20);
     } else {
       if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
-
         bool bReUse = true;
         int iReUseOffset = 0;
         string strImageFilename = lineEditCaptureFile->text().toStdString();
         vector<string> vstrLeftEyeImageVector(iNumImages);
         vector<string> vstrRightEyeImageVector(iNumImages);
         if (bStereo) {
-
           double fDegreePerImage = 360.0/iNumImages;
           iReUseOffset = int(iEyeDist/fDegreePerImage);
           bReUse = (iReUseOffset == iEyeDist/fDegreePerImage);
@@ -219,7 +221,8 @@ void MainWindow::CaptureRotation() {
             strImageFilename = SysTools::AppendFilename(strImageFilename,"_L");
         }
 
-        pleaseWait.SetText("Capturing a full 360° MIP rotation, please wait  ...");
+        pleaseWait.SetText("Capturing a full 360° MIP rotation,"
+                           "please wait  ...");
         float fAngle = 0.0f;
         for (int i = 0;i<iNumImages && !pleaseWait.Canceled();i++) {
           labelOut->SetOutput(true, true, true, false);
@@ -246,12 +249,12 @@ void MainWindow::CaptureRotation() {
           fAngle = float(i)/float(iNumImages) * 360.0f;
           string strSequenceName;
 
-          if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilename, fAngle,
-                                                   bOrthoView, i==(iNumImages-1),
-                                                   bUseLOD,
-                                                   checkBox_PreserveTransparency->isChecked(),
-                                                   &strSequenceName)) {
-            QString msg = tr("Error writing image file %1.").arg(strSequenceName.c_str());
+          if (!m_pActiveRenderWin->CaptureMIPFrame(
+                  strImageFilename, fAngle, bOrthoView, i==(iNumImages-1),
+                  bUseLOD, checkBox_PreserveTransparency->isChecked(),
+                  &strSequenceName)) {
+            QString msg = tr("Error writing image file %1.").
+                          arg(strSequenceName.c_str());
             ShowWarningDialog( tr("Error"), msg);
             T_ERROR("%s", msg.toAscii().data());
             break;
@@ -260,17 +263,20 @@ void MainWindow::CaptureRotation() {
           if (bStereo) {
             vstrLeftEyeImageVector[i] = strSequenceName;
             if (bReUse) {
-              vstrRightEyeImageVector[(i+iReUseOffset)%iNumImages] = strSequenceName;
+              vstrRightEyeImageVector[(i+iReUseOffset)%iNumImages] =
+                strSequenceName;
             } else {
               fAngle -= 3.0f;
               string strImageFilenameRight =
-                SysTools::AppendFilename(lineEditCaptureFile->text().toStdString(),"_R");
-              if (!m_pActiveRenderWin->CaptureMIPFrame(strImageFilenameRight,
-                                                       fAngle, bOrthoView,
-                                                       bUseLOD, i==(iNumImages-1),
-                                                       checkBox_PreserveTransparency->isChecked(),
-                                                       &strSequenceName)) {
-                QString msg = tr("Error writing image file %1.").arg(strImageFilenameRight.c_str());
+                SysTools::AppendFilename(lineEditCaptureFile->text().
+                                                            toStdString(),"_R");
+              if (!m_pActiveRenderWin->CaptureMIPFrame(
+                    strImageFilenameRight, fAngle, bOrthoView, bUseLOD,
+                    i==(iNumImages-1),
+                    checkBox_PreserveTransparency->isChecked(),
+                    &strSequenceName)) {
+                QString msg = tr("Error writing image file %1.").
+                              arg(strImageFilenameRight.c_str());
                 ShowWarningDialog( tr("Error"), msg);
                 T_ERROR("%s", msg.toAscii().data());
                 break;
@@ -288,8 +294,9 @@ void MainWindow::CaptureRotation() {
           for (size_t i = 0;i<vstrRightEyeImageVector.size();i++) {
             string strSourceL = vstrLeftEyeImageVector[i];
             string strSourceR = vstrRightEyeImageVector[i];
-            string strTarget  =
-              SysTools::FindNextSequenceName(lineEditCaptureFile->text().toStdString());
+            string strTarget  = SysTools::FindNextSequenceName(
+              lineEditCaptureFile->text().toStdString()
+            );
 
             MESSAGE("Phase 2 of 3: %u%% completed\nCreating stereo image "
                     "%s from %s and %s\nProcessing Image %u of %i",
