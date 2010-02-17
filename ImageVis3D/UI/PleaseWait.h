@@ -67,7 +67,7 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
 
     void closeEvent(QCloseEvent *event);
 
-    bool Canceled() {return m_bCanceled;}
+    bool Canceled() const { return m_bCanceled; }
   private slots:
     void CancelClicked();
 
