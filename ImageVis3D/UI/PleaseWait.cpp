@@ -36,6 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "PleaseWait.h"
+#include <QtGui/QPushButton>
 
 PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags, bool bHasCancelButton) :
   QDialog(parent, flags),

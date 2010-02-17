@@ -41,9 +41,9 @@
 #include "AutoGen/ui_PleaseWait.h"
 #include "DebugOut/QTLabelOut.h"
 #include "../Tuvok/Controller/MasterController.h"
-#include <QtGui/QPushButton>
 
 using namespace tuvok;
+class QPushButton;
 
 class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
 {
