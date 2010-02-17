@@ -174,11 +174,11 @@ void MainWindow::CaptureRotation() {
         while(m_pActiveRenderWin->GetRenderer()->CheckForRedraw() &&
               !pleaseWait.Canceled()) {
           const AbstrRenderer *ren = m_pActiveRenderWin->GetRenderer();
-          size_t sframes = ren->GetCurrentSubFrameCount();
-          size_t sframe = ren->GetWorkingSubFrame();
-          size_t bricks =  ren->GetCurrentBrickCount();
-          size_t brick =  ren->GetWorkingBrick();
-          size_t lod = ren->GetMinLODIndex();
+          unsigned sframes = ren->GetCurrentSubFrameCount();
+          unsigned sframe = ren->GetWorkingSubFrame();
+          unsigned bricks =  ren->GetCurrentBrickCount();
+          unsigned brick =  ren->GetWorkingBrick();
+          unsigned lod = ren->GetMinLODIndex();
           SetRenderProgressAnUpdateInfo(sframes, sframe, bricks, brick, lod,
                                         m_pActiveRenderWin);
           QCoreApplication::processEvents();
