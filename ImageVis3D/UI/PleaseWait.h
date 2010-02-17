@@ -63,7 +63,7 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
         this->show();
       }
     }
-    QLabel* GetStatusLabel() {return label_Status;}
+    QLabel* GetStatusLabel() const {return label_Status;}
 
     void closeEvent(QCloseEvent *event);
 
