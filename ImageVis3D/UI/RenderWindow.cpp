@@ -771,7 +771,10 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
 {
   GLFrameCapture f;
   m_Renderer->SetCaptureMode(true);
-  ForceRepaint();
+  while(m_Renderer->CheckForRedraw()) {
+    QCoreApplication::processEvents();
+    PaintRenderer();
+  }
   // make sure we have the same results in the front and in the backbuffer
   ForceRepaint();
   bool rv = f.CaptureSequenceFrame(strFilename, bPreserveTransparency,

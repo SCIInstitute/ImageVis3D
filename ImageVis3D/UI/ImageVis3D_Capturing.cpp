@@ -39,6 +39,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QInputDialog>
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Controller/Controller.h"
@@ -141,11 +142,16 @@ void MainWindow::CaptureRotation() {
     PleaseWaitDialog pleaseWait(this, Qt::Tool, true);
     QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
 
-    if (renderRegion->is3D())  {
+    if (renderRegion->is3D()) {
       pleaseWait.SetText("Capturing a full 360° rotation, please wait  ...");
 
       int i = 0;
       float fAngle = 0.0f;
+      // Kill the timer, and flush the existing event queue.  This ensures any
+      // timers that have fired get processed, and we've got nothing scheduled
+      // other than the capture.
+      m_pRedrawTimer->stop();
+      QCoreApplication::processEvents();
       while (i < iNumImages && !pleaseWait.Canceled()) {
         labelOut->SetOutput(true, true, true, false);
         std::ostringstream progress;
@@ -159,18 +165,40 @@ void MainWindow::CaptureRotation() {
         labelOut->SetOutput(false, false, false, false);
         fAngle = float(i)/float(iNumImages) * 360.0f;
         m_pActiveRenderWin->SetCaptureRotationAngle(fAngle);
-        string strSequenceName;
-        if (!m_pActiveRenderWin->CaptureSequenceFrame(lineEditCaptureFile->text().toStdString(),
-                                                      checkBox_PreserveTransparency->isChecked(),
-                                                      &strSequenceName)) {
-          QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
-          ShowWarningDialog(tr("Error"), msg);
-          T_ERROR("%s", msg.toAscii().data());
-          break;
+
+        m_pActiveRenderWin->GetRenderer()->SetCaptureMode(true);
+        while(m_pActiveRenderWin->GetRenderer()->CheckForRedraw() &&
+              !pleaseWait.Canceled()) {
+          const AbstrRenderer *ren = m_pActiveRenderWin->GetRenderer();
+          size_t sframes = ren->GetCurrentSubFrameCount();
+          size_t sframe = ren->GetWorkingSubFrame();
+          size_t bricks =  ren->GetCurrentBrickCount();
+          size_t brick =  ren->GetWorkingBrick();
+          size_t lod = ren->GetMinLODIndex();
+          SetRenderProgressAnUpdateInfo(sframes, sframe, bricks, brick, lod,
+                                        m_pActiveRenderWin);
+          QCoreApplication::processEvents();
+          m_pActiveRenderWin->UpdateWindow();
         }
-        i++;
-        m_pActiveRenderWin->UpdateWindow();
+        if(!pleaseWait.Canceled()) {
+          string strSequenceName;
+          if (!m_pActiveRenderWin->CaptureSequenceFrame(
+              lineEditCaptureFile->text().toStdString(),
+              checkBox_PreserveTransparency->isChecked(), &strSequenceName)) {
+            QString msg = tr("Error writing image file %1").
+                             arg(strSequenceName.c_str());
+            ShowWarningDialog(tr("Error"), msg);
+            T_ERROR("%s", msg.toAscii().data());
+            break;
+          }
+          i++;
+          // Make sure what we've just rendered gets blitted to the RW; user
+          // should visually see the progress of the rotation.
+          m_pActiveRenderWin->UpdateWindow();
+        }
       }
+      m_pActiveRenderWin->GetRenderer()->SetCaptureMode(false);
+      m_pRedrawTimer->start(20);
     } else {
       if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
 
