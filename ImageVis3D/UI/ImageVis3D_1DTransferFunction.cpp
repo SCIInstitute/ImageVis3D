@@ -184,3 +184,87 @@ void MainWindow::Transfer1DSave() {
 void MainWindow::Transfer1DCopyTo2DTrans() {
   m_2DTransferFunction->Set1DTrans(m_1DTransferFunction->GetTrans());
 }
+
+
+void MainWindow::Populate1DTFLibList() {
+  comboBox_1DTFLib->clear();
+
+  string strHomeDir = ".";
+  if (!SysTools::GetHomeDirectory(strHomeDir)) {
+    m_MasterController.DebugOut()->Warning("MainWindow::Populate1DTFLibList", "Unable to determine user's home directory!");
+  }
+
+  QSettings settings;
+  QString strLibDir = settings.value("Folders/Transfer1DLib", strHomeDir.c_str()).toString();
+  settings.setValue("Folders/Transfer1DLib", strLibDir);
+
+
+  vector<string> files = SysTools::GetDirContents(string(strLibDir.toAscii()), "*", "1DT");
+  for (size_t i = 0;i<files.size();i++)       
+    comboBox_1DTFLib->insertItem(0,SysTools::RemoveExt(SysTools::GetFilename(files[i])).c_str(),files[i].c_str());
+}
+
+void MainWindow::Transfer1DAddToLib() {
+  QSettings settings;
+  QString strLibDir = settings.value("Folders/Transfer1DLib", ".").toString();
+
+  QString selectedFilter;
+  QFileDialog::Options options;
+#ifdef DETECTED_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+
+  QString fileName =
+    QFileDialog::getSaveFileName(this,
+         "Save 1D Transferfunction", strLibDir,
+         "1D Transferfunction File (*.1dt)",&selectedFilter, options);
+
+  if (!fileName.isEmpty()) {
+    fileName = SysTools::CheckExt(string(fileName.toAscii()), "1dt").c_str();
+    settings.setValue("Folders/Transfer1DSave", QFileInfo(fileName).absoluteDir().path());
+    m_1DTransferFunction->SaveToFile(fileName);
+    Populate1DTFLibList();
+  }
+}
+
+void MainWindow::Transfer1DSetFromLib() {
+  if (comboBox_1DTFLib->currentIndex() >= 0 && comboBox_1DTFLib->currentIndex() < comboBox_1DTFLib->count()) {
+    QFile file(comboBox_1DTFLib->itemData(comboBox_1DTFLib->currentIndex()).toString());
+    if (file.exists())
+      m_1DTransferFunction->LoadFromFile(file.fileName());
+  }
+}
+
+void MainWindow::Transfer1DAddFromLib() {
+  if (comboBox_1DTFLib->currentIndex() >= 0 && comboBox_1DTFLib->currentIndex() < comboBox_1DTFLib->count()) {
+    QFile file(comboBox_1DTFLib->itemData(comboBox_1DTFLib->currentIndex()).toString());
+    if (file.exists())
+      m_1DTransferFunction->AddFromFile(file.fileName());
+  }
+}
+
+void MainWindow::Transfer1DSubFromLib() {
+  if (comboBox_1DTFLib->currentIndex() >= 0 && comboBox_1DTFLib->currentIndex() < comboBox_1DTFLib->count()) {
+    QFile file(comboBox_1DTFLib->itemData(comboBox_1DTFLib->currentIndex()).toString());
+    if (file.exists())
+      m_1DTransferFunction->SubtractFromFile(file.fileName());
+  }
+}
+
+void MainWindow::Transfer1DConfigureLib() {
+  QSettings settings;
+  QString strLibDir = settings.value("Folders/Transfer1DLib", ".").toString();
+
+  QString strNewLibDir =
+    QFileDialog::getExistingDirectory(this, "Select transfer function library",strLibDir);
+
+  if (!strNewLibDir.isEmpty()) {
+    if (strNewLibDir[strNewLibDir.size()-1] != '/' &&
+        strNewLibDir[strNewLibDir.size()-1] != '\\') strNewLibDir = strNewLibDir+'/';
+  
+    if (strNewLibDir != strLibDir) {
+      settings.setValue("Folders/Transfer1DLib", strNewLibDir);
+      Populate1DTFLibList();
+    }
+  }
+}

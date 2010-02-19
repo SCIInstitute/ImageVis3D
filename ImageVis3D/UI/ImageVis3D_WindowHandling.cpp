@@ -185,6 +185,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     new Q1DTransferFunction(m_MasterController, frame_1DTrans);
   verticalLayout_1DTrans->addWidget(m_1DTransferFunction);
 
+  Populate1DTFLibList();
+
   m_2DTransferFunction =
     new Q2DTransferFunction(m_MasterController, frame_2DTrans);
   verticalLayout_2DTrans->addWidget(m_2DTransferFunction);

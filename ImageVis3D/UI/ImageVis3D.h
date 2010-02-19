@@ -139,6 +139,12 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool Transfer1DLoad(std::string strFilename);
     void Transfer1DSave();
     void Transfer1DCopyTo2DTrans();
+    void Populate1DTFLibList();
+    void Transfer1DAddToLib();
+    void Transfer1DSetFromLib();
+    void Transfer1DAddFromLib();
+    void Transfer1DSubFromLib();
+    void Transfer1DConfigureLib();
 
     void Transfer2DAddGradient();
     void Transfer2DDeleteGradient();

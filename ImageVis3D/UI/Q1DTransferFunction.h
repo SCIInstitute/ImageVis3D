@@ -67,6 +67,8 @@ public:
 public slots:
   bool LoadFromFile(const QString& strFilename);
   bool SaveToFile(const QString& strFilename);
+  bool AddFromFile(const QString& strFilename);
+  bool SubtractFromFile(const QString& strFilename);
 
 protected:
   virtual void paintEvent(QPaintEvent *event);

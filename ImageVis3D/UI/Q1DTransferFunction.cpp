@@ -226,7 +226,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
     for (size_t i=0; i < pointList.size(); i++) {
       pointList[i] = QPointF(
           m_iLeftBorder + 1 + float(iGridWidth) * i / (pointList.size() - 1),
-          m_iTopBorder + iGridHeight - m_pTrans->vColorData[i][j] * iGridHeight
+          m_iTopBorder + iGridHeight - std::max(0.0f,std::min(m_pTrans->vColorData[i][j],1.0f)) * iGridHeight
       );
     }
 
@@ -238,10 +238,13 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 
   // draw preview bar
   for (unsigned int x = 0;x<m_vHistogram.GetSize();x++) {
-    m_pPreviewColor->setPixel(x,0,qRgba(int(m_pTrans->vColorData[x][0]*255),
-          int(m_pTrans->vColorData[x][1]*255),
-          int(m_pTrans->vColorData[x][2]*255),
-          int(m_pTrans->vColorData[x][3]*255)));
+
+    float r = std::max(0.0f,std::min(m_pTrans->vColorData[x][0],1.0f));
+    float g = std::max(0.0f,std::min(m_pTrans->vColorData[x][1],1.0f));
+    float b = std::max(0.0f,std::min(m_pTrans->vColorData[x][2],1.0f));
+    float a = std::max(0.0f,std::min(m_pTrans->vColorData[x][3],1.0f));
+
+    m_pPreviewColor->setPixel(x,0,qRgba(int(r*255),int(g*255),int(b*255),int(a*255)));
   }
 
   QRect prevRect(m_iLeftBorder+1,
@@ -502,6 +505,48 @@ bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
     ApplyFunction();
     return true;
   } else return false;
+}
+
+bool Q1DTransferFunction::AddFromFile(const QString& strFilename) {
+  size_t iSize = 0;
+  if(m_pTrans) {
+    iSize = m_pTrans->GetSize();
+  } else return false;
+
+  TransferFunction1D other(iSize);
+  if( other.Load(strFilename.toStdString(), iSize) ) {
+
+    for (size_t i = 0;i<iSize;i++)
+      m_pTrans->vColorData[i] += other.vColorData[i];
+
+    PreparePreviewData();
+    update();
+    ApplyFunction();
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool Q1DTransferFunction::SubtractFromFile(const QString& strFilename) {
+  size_t iSize = 0;
+  if(m_pTrans) {
+    iSize = m_pTrans->GetSize();
+  } else return false;
+
+  TransferFunction1D other(iSize);
+  if( other.Load(strFilename.toStdString(), iSize) ) {
+
+    for (size_t i = 0;i<iSize;i++)
+      m_pTrans->vColorData[i] -= other.vColorData[i];
+
+    PreparePreviewData();
+    update();
+    ApplyFunction();
+    return true;
+  } else {
+    return false;
+  }
 }
 
 bool Q1DTransferFunction::SaveToFile(const QString& strFilename) {
