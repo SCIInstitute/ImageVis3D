@@ -122,10 +122,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
       std::string arg;
       std::transform(strParams[0].begin(), strParams[0].end(),
                      std::back_inserter(arg), (int(*)(int))std::tolower);
-      if(strParams[0] == "on" ||
-         strParams[0] == "yes" ||
-         strParams[0] == "true" ||
-         strParams[0] == "1") {
+      if(arg == "on" || arg == "yes" || arg == "true" || arg == "1") {
         SetLighting(true);
       } else {
         SetLighting(false);
