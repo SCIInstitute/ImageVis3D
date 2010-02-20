@@ -79,6 +79,7 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "delete", "file", "delete the file 'file'");
   pScriptEngine->RegisterCommand(this, "quit", "", "quit ImageVis3D");
   pScriptEngine->RegisterCommand(this, "lighting", "[true/false]", "Enable, disable, or toggle (no args) lighting");
+  pScriptEngine->RegisterCommand(this, "samplingrate", "percent", "Sets the sampling rate; default is 100");
 }
 
 bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::string >& strParams, std::string& strMessage) {
@@ -115,6 +116,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "upload")          { bResult = FtpTransfer(strParams[0], (strParams.size()>1) ? strParams[1].c_str() : GenUniqueName("Script", "data"), false );} else
   if (strCommand == "delete")          { bResult = remove(strParams[0].c_str()) == 0;} else
   if (strCommand == "quit")            { bResult = close();} else
+  if (strCommand == "samplingrate")    { assert(!strParams.empty()); SetSampleRate(atoi(strParams[0].c_str())); } else
   if (strCommand == "lighting")        {
     if(!strParams.empty()) {
       std::string arg;
