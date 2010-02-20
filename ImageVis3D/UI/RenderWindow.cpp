@@ -1041,6 +1041,10 @@ void RenderWindow::SetUseLighting(bool bLighting, bool bPropagate) {
   }
 }
 
+bool RenderWindow::GetUseLighting() const {
+  return m_Renderer->GetUseLighting();
+}
+
 void RenderWindow::SetSampleRateModifier(float fSampleRateModifier, bool bPropagate) {
   m_Renderer->SetSampleRateModifier(fSampleRateModifier);
   if (bPropagate){

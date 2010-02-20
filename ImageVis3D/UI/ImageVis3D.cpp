@@ -476,6 +476,12 @@ void MainWindow::SetLighting(bool bLighting) {
   if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetUseLighting(bLighting);
 }
 
+void MainWindow::ToggleLighting() {
+  if (m_pActiveRenderWin != NULL) {
+    m_pActiveRenderWin->SetUseLighting(!m_pActiveRenderWin->GetUseLighting());
+  }
+}
+
 void MainWindow::SetSampleRate(int iValue) {
   if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetSampleRateModifier(iValue/100.0f);
   UpdateSampleRateLabel(iValue);

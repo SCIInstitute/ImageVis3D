@@ -35,6 +35,9 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <algorithm>
+#include <cctype>
+#include <iterator>
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/Appendix.h"
@@ -75,6 +78,7 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "upload", "source [target]", "upload the file 'source' to the debug server with the name 'target' (by default a unique filename is generated automatically)");
   pScriptEngine->RegisterCommand(this, "delete", "file", "delete the file 'file'");
   pScriptEngine->RegisterCommand(this, "quit", "", "quit ImageVis3D");
+  pScriptEngine->RegisterCommand(this, "lighting", "[true/false]", "Enable, disable, or toggle (no args) lighting");
 }
 
 bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::string >& strParams, std::string& strMessage) {
@@ -111,7 +115,25 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "upload")          { bResult = FtpTransfer(strParams[0], (strParams.size()>1) ? strParams[1].c_str() : GenUniqueName("Script", "data"), false );} else
   if (strCommand == "delete")          { bResult = remove(strParams[0].c_str()) == 0;} else
   if (strCommand == "quit")            { bResult = close();} else
+  if (strCommand == "lighting")        {
+    if(!strParams.empty()) {
+      std::string arg;
+      std::transform(strParams[0].begin(), strParams[0].end(),
+                     std::back_inserter(arg), (int(*)(int))std::tolower);
+      if(strParams[0] == "on" ||
+         strParams[0] == "yes" ||
+         strParams[0] == "true" ||
+         strParams[0] == "1") {
+        SetLighting(true);
+      } else {
+        SetLighting(false);
+      }
+    } else {
+      ToggleLighting();
+    }
+  } else {
     return false;
+  }
 
   QCoreApplication::processEvents();
 

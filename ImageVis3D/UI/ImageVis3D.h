@@ -208,6 +208,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     bool ShowSettings() {return ShowSettings(false);}
     bool ShowSettings(bool bInitializeOnly);
     void SetLighting(bool bLighting);
+    void ToggleLighting();
 
     void Collapse2DWidgets();
     void Expand2DWidgets();
