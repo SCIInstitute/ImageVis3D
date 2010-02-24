@@ -81,6 +81,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetShowWelcomeScreen() const;
     bool          GetInvertWheel() const;
     bool          GetI3MFeatures() const;
+    bool          GetExperimentalFeatures() const;
 
     unsigned int  GetVolrenType() const;
     FLOATVECTOR3  GetBackgroundColor1() const;
@@ -135,7 +136,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    const QString& strLogo,
                    int iLogoPos,
                    unsigned int iMaxBrickSize,
-                   unsigned int iMaxMaxBrickSize);
+                   unsigned int iMaxMaxBrickSize,
+                   bool expFeatures);
 
   protected slots:
     void SelectTextColor();

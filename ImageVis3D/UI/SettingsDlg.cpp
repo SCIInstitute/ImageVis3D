@@ -209,6 +209,9 @@ bool SettingsDlg::GetInvertWheel() const {
 bool SettingsDlg::GetI3MFeatures() const {
   return checkBox_I3MFeatures->isChecked();
 }
+bool SettingsDlg::GetExperimentalFeatures() const {
+  return checkBox_ExperimentalFeatures->isChecked();
+}
 
 FLOATVECTOR3  SettingsDlg::GetBackgroundColor1() const {
   return FLOATVECTOR3(m_cBackColor1.red()/255.0f,
@@ -344,7 +347,10 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits,
                             bool bDisableBorder, bool bAvoidCompositing, bool bNoRCClipplanes,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor,
-                            const QString& strLogo, int iLogoPos, unsigned int iMaxBrickSize, unsigned int iMaxMaxBrickSize) {
+                            const QString& strLogo, int iLogoPos,
+                            unsigned int iMaxBrickSize,
+                            unsigned int iMaxMaxBrickSize,
+                            bool expFeatures) {
   m_bInit = true;
   horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
   horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
@@ -375,6 +381,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   checkBox_ShowWelcomeScreen->setChecked(bShowWelcomeScreen);
   checkBox_InvWheel->setChecked(bInvWheel);
   checkBox_I3MFeatures->setChecked(bI3MFeatures);
+  checkBox_ExperimentalFeatures->setChecked(expFeatures);
 
   m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
   m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));

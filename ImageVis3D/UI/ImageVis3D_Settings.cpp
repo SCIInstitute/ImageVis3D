@@ -124,6 +124,10 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bShowWelcomeScreen = settings.value("ShowWelcomeScreen", m_bShowWelcomeScreen).toBool();
     bool bInvWheel = settings.value("InvertMouseWheel", m_bInvWheel).toBool();
     bool bI3MFeatures = settings.value("I3MFeatures", m_bI3MFeatures).toBool();
+    bool expFeatures = settings.value(
+                        "ExperimentalFeatures",
+                        m_MasterController.ExperimentalFeatures()
+                       ).toBool();
     settings.endGroup();
 
     settings.beginGroup("Renderer");
@@ -165,10 +169,9 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
                           iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
                           bDisableBorder, bAvoidCompositing, bNoRCClipplanes,
                           vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos,
-                          iMaxBrickSize, iMaxMaxBrickSize);
+                          iMaxBrickSize, iMaxMaxBrickSize, expFeatures);
 
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
-
       // save settings
       settings.beginGroup("Memory");
       settings.setValue("MaxGPUMem", settingsDlg.GetGPUMem());
@@ -202,7 +205,8 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("ShowWelcomeScreen", settingsDlg.GetShowWelcomeScreen());
       settings.setValue("InvertMouseWheel", settingsDlg.GetInvertWheel());
       settings.setValue("I3MFeatures", settingsDlg.GetI3MFeatures());
-
+      settings.setValue("ExperimentalFeatures",
+                        settingsDlg.GetExperimentalFeatures());
       settings.endGroup();
 
       settings.beginGroup("Renderer");
@@ -267,6 +271,9 @@ void MainWindow::ApplySettings() {
   m_bShowWelcomeScreen = settings.value("ShowWelcomeScreen", m_bShowWelcomeScreen).toBool();
   m_bInvWheel = settings.value("InvertMouseWheel", m_bInvWheel).toBool();
   m_bI3MFeatures = settings.value("I3MFeatures", m_bI3MFeatures).toBool();
+  bool experimental = settings.value("ExperimentalFeatures",
+                                     m_MasterController.ExperimentalFeatures()).toBool();
+  m_MasterController.ExperimentalFeatures(experimental);
   settings.endGroup();
 
   actionTransfer_to_ImageVis3D_Mobile_Device->setVisible(m_bI3MFeatures);
@@ -300,7 +307,7 @@ void MainWindow::ApplySettings() {
   settings.beginGroup("Memory");
   UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
   UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
-  m_strTempDir = string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
+  m_strTempDir = std::string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
 
   if (!m_MasterController.IOMan()->SetMaxBrickSize(MathTools::Pow2(settings.value("MaxBrickSize",  MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize())).toUInt()))) {
     WARNING("Invalid MaxBrickSize read from configuration, ignoring value. Please check the configuration in the settings dialog.");
