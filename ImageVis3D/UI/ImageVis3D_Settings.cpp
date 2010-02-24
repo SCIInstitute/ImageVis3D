@@ -57,7 +57,8 @@ void MainWindow::CheckSettings() {
 
   // if memory isn't set this must be the first time we run this app
 
-  if (UINT64_INVALID == settings.value("Memory/MaxGPUMem", UINT64_INVALID).toULongLong()) {
+  if (UINT64_INVALID == settings.value("Memory/MaxGPUMem",
+                                       static_cast<qulonglong>(UINT64_INVALID)).toULongLong()) {
       ShowSettings(!m_bScriptMode &&
                     QMessageBox::No == QMessageBox::question(this, "Initial Setup",
                              "As this is the first "
@@ -85,10 +86,10 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     SettingsDlg settingsDlg(m_pActiveRenderWin != NULL, m_MasterController, this);
 
     settings.beginGroup("Memory");
-    UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
-    UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+    UINT64 iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
+    UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
     string strTempDir(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
-    unsigned int iMaxBrickSize = settings.value("MaxBricksize", MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize())).toUInt();
+    unsigned int iMaxBrickSize = settings.value("MaxBricksize", static_cast<qulonglong>(MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize()))).toUInt();
     unsigned int iMaxMaxBrickSize = settings.value("MaxMaxBricksize", 14).toUInt();
     
     if (RenderWindow::GetMax3DTexDims()) { // as OpenGL specs are only available if we already opened a window this valu may be invalid (0)
@@ -174,10 +175,10 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
       // save settings
       settings.beginGroup("Memory");
-      settings.setValue("MaxGPUMem", settingsDlg.GetGPUMem());
-      settings.setValue("MaxCPUMem", settingsDlg.GetCPUMem());
+      settings.setValue("MaxGPUMem", static_cast<qulonglong>(settingsDlg.GetGPUMem()));
+      settings.setValue("MaxCPUMem", static_cast<qulonglong>(settingsDlg.GetCPUMem()));
       settings.setValue("TempDir", settingsDlg.GetTempDir().c_str());
-      settings.setValue("MaxBricksize", settingsDlg.GetMaxBrickSize());
+      settings.setValue("MaxBricksize", static_cast<qulonglong>(settingsDlg.GetMaxBrickSize()));
       settings.endGroup();
 
       settings.beginGroup("Performance");
@@ -305,11 +306,11 @@ void MainWindow::ApplySettings() {
   settings.endGroup();
 
   settings.beginGroup("Memory");
-  UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", UINT64_INVALID).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
-  UINT64 iMaxGPU = settings.value("MaxGPUMem", UINT64_INVALID).toULongLong();
+  UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+  UINT64 iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
   m_strTempDir = std::string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
 
-  if (!m_MasterController.IOMan()->SetMaxBrickSize(MathTools::Pow2(settings.value("MaxBrickSize",  MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize())).toUInt()))) {
+  if (!m_MasterController.IOMan()->SetMaxBrickSize(MathTools::Pow2(settings.value("MaxBrickSize",  static_cast<qulonglong>(MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize()))).toUInt()))) {
     WARNING("Invalid MaxBrickSize read from configuration, ignoring value. Please check the configuration in the settings dialog.");
   }
   settings.endGroup();
