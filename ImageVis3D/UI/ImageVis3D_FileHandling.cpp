@@ -95,15 +95,14 @@ void MainWindow::LoadDataset() {
   if (!files.isEmpty()) {
     settings.setValue("Folders/LoadDataset",
                       QFileInfo(files[0]).absoluteDir().path());
-  }
-
-  if(!LoadDataset(files)) {
-    ShowCriticalDialog("Render window initialization failed.",
-                       "Could not open a render window!  This normally "
-                       "means ImageVis3D does not support your GPU.  Please"
-                       " check the debug log ('Help | Debug Window') for "
-                       "errors, and/or use 'Help | Report an Issue' to "
-                       "notify the ImageVis3D developers.");
+    if(!LoadDataset(files)) {
+      ShowCriticalDialog("Render window initialization failed.",
+                         "Could not open a render window!  This normally "
+                         "means ImageVis3D does not support your GPU.  Please"
+                         " check the debug log ('Help | Debug Window') for "
+                         "errors, and/or use 'Help | Report an Issue' to "
+                         "notify the ImageVis3D developers.");
+    }
   }
 }
 
@@ -149,6 +148,12 @@ bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
 }
 
 bool MainWindow::LoadDataset(QStringList files, QString targetFilename, bool bNoUserInteraction) {
+
+  if(files.empty()) {
+    T_ERROR("No files!");
+    return false;
+  }
+
   // First check to make sure the list of files we've been given makes sense.
   for(QStringList::const_iterator fn = files.begin();
       fn != files.end(); ++fn) {
