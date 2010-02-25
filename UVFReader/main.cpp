@@ -487,9 +487,9 @@ int main(int argc, char* argv[])
           cout << "      Filled size: " << vSize.x << " x " << vSize.y << endl;
           if (bShow2dhist) {
             cout << "      Entries: " << endl;
-            for (size_t j = 0;j<vSize.y;j++) {
-              for (size_t i = 0;i<vSize.x;i++) {
-                cout << i << "/" << j << ":" << b->GetHistogram()[j][i] << " ";
+            for (size_t j = 0; j < vSize.y; j++) {
+              for (size_t i = 0; i < vSize.x; i++) {
+                cout << i << "/" << j << ":" << b->GetHistogram()[i][j] << "\n";
               }
             }
             cout << endl;
