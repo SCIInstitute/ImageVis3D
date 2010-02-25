@@ -33,15 +33,16 @@ if test "$1" != "-q" ; then
 fi
 
 devbuilds="/usr/sci/projects/sciweb/devbuilds/imagevis3d"
-mailtry scp *.tar.gz tfogal@shell.sci.utah.edu:${devbuilds}
+devb_host="shell.sci.utah.edu"
+mailtry scp *.tar.gz tfogal@${devb_host}:${devbuilds}
 
 # Update `latest version' symlink.
 fn_tarball=$(nm_tarball)
 fn_tarball="${devbuilds}/${fn_tarball}"
 fn_latest="${devbuilds}/ImageVis3D-Linux-Latest.tar.gz"
-mailtry ssh tfogal@shell.sci.utah.edu rm -f ${fn_latest}
-mailtry ssh tfogal@shell.sci.utah.edu ln -s ${fn_tarball} ${fn_latest}
+mailtry ssh tfogal@${devb_host} rm -f ${fn_latest}
+mailtry ssh tfogal@${devb_host} ln -s ${fn_tarball} ${fn_latest}
 
 # Update the text file for automagic version checks.
 mailtry mv latest Linux_Latest_Version.txt
-mailtry scp Linux_Latest_Version.txt tfogal@shell.sci.utah.edu:${devbuilds}
+mailtry scp Linux_Latest_Version.txt tfogal@${devb_host}:${devbuilds}
