@@ -36,7 +36,9 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include <fstream>
+#include <iterator>
 #include <string>
+#include <sstream>
 
 #include "ImageVis3D.h"
 #include "BrowseData.h"
@@ -75,22 +77,34 @@ void MainWindow::LoadDataset() {
   QString dialogString = m_MasterController.IOMan()->
                                             GetLoadDialogString().c_str();
 
-  QString fileName = QFileDialog::getOpenFileName(this,
-               "Load Dataset", strLastDir,
-               dialogString,&selectedFilter, options);
-
-  if (!fileName.isEmpty()) {
-    settings.setValue("Folders/LoadDataset",
-                      QFileInfo(fileName).absoluteDir().path());
-    if(!LoadDataset(fileName)) {
-      ShowCriticalDialog("Render window initialization failed.",
-                         "Could not open a render window!  This normally "
-                         "means ImageVis3D does not support your GPU.  Please"
-                         " check the debug log ('Help | Debug Window') for "
-                         "errors, and/or use 'Help | Report an Issue' to "
-                         "notify the ImageVis3D developers.");
+  QStringList files;
+  if(m_MasterController.ExperimentalFeatures()) {
+    files = QFileDialog::getOpenFileNames(
+              this, "Load Datasets", strLastDir, dialogString,
+              &selectedFilter, options
+            );
+  } else {
+    QString fileName = QFileDialog::getOpenFileName(this,
+                 "Load Dataset", strLastDir,
+                 dialogString, &selectedFilter, options);
+    if (!fileName.isEmpty()) {
+      files.append(fileName);
     }
-  };
+  }
+
+  if (!files.isEmpty()) {
+    settings.setValue("Folders/LoadDataset",
+                      QFileInfo(files[0]).absoluteDir().path());
+  }
+
+  if(!LoadDataset(files)) {
+    ShowCriticalDialog("Render window initialization failed.",
+                       "Could not open a render window!  This normally "
+                       "means ImageVis3D does not support your GPU.  Please"
+                       " check the debug log ('Help | Debug Window') for "
+                       "errors, and/or use 'Help | Report an Issue' to "
+                       "notify the ImageVis3D developers.");
+  }
 }
 
 
@@ -131,139 +145,179 @@ bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
     convFile = strParams[1];
   }
 
-  return LoadDataset(inFile.c_str(), convFile.c_str(), false);
+  return LoadDataset(QStringList(inFile.c_str()), convFile.c_str(), false);
 }
 
-bool MainWindow::LoadDataset(QString filename, QString targetFilename, bool bNoUserInteraction) {
-  PleaseWaitDialog pleaseWait(this);
-
-  if (!filename.isEmpty()) {
-    if (!SysTools::FileExists(string(filename.toAscii()))) {
-        QString strText = tr("File %1 not found.").arg(filename);
-        T_ERROR("%s", strText.toStdString().c_str());
-        if (!bNoUserInteraction) {
-          ShowCriticalDialog( "Load Error", strText);
-        }
-        return false;
+bool MainWindow::LoadDataset(QStringList files, QString targetFilename, bool bNoUserInteraction) {
+  // First check to make sure the list of files we've been given makes sense.
+  for(QStringList::const_iterator fn = files.begin();
+      fn != files.end(); ++fn) {
+    if(fn->isEmpty()) {
+      return false;
     }
+    if(!SysTools::FileExists(std::string(fn->toAscii()))) {
+      QString strText = tr("File %1 not found.").arg(*fn);
+      T_ERROR("%s", strText.toStdString().c_str());
+      if(!bNoUserInteraction) {
+        ShowCriticalDialog( "Load Error", strText);
+      }
+      return false;
+    }
+  }
 
+  // now determine if we've been given a UVF, and can just open it and be done,
+  // or if we need to convert the files.
+  bool needs_conversion = true;
+  if(files.size() == 1) {
     bool bChecksumFail=false;
+    // check to see if we need to convert this file to uvf.  It can also happen
+    // that it *is* a UVF but the checksum is bad, so we need to report an
+    // error.
     if ((m_bQuickopen &&
-        !m_MasterController.IOMan()->NeedsConversion(filename.toStdString())) ||
-        !m_MasterController.IOMan()->NeedsConversion(filename.toStdString(),
+        !m_MasterController.IOMan()->NeedsConversion(files[0].toStdString())) ||
+        !m_MasterController.IOMan()->NeedsConversion(files[0].toStdString(),
                                                      bChecksumFail)) {
       if (bChecksumFail) {
         QString strText = tr("File %1 appears to be a broken UVF file: "
                              "the header looks ok, "
-                             "but the checksum does not match.").arg(filename);
+                             "but the checksum does not match.").arg(files[0]);
         T_ERROR("%s", strText.toStdString().c_str());
         if (!bNoUserInteraction) {
-          ShowCriticalDialog( "Load Error", strText);
+          ShowCriticalDialog("Load Error", strText);
         }
         return false;
       }
+      needs_conversion = false;
+    }
+  }
 
-    } else {
-      if (!bNoUserInteraction && targetFilename.isEmpty())
-        targetFilename = GetConvFilename();
+  QString filename = files[0];
+  if(needs_conversion) {
+    if (!bNoUserInteraction && targetFilename.isEmpty()) {
+      targetFilename = GetConvFilename();
+    }
+    if (targetFilename.isEmpty()) return false;
 
-      if (targetFilename.isEmpty()) return false;
-      pleaseWait.SetText("Converting, please wait  ...");
-      pleaseWait.AttachLabel(&m_MasterController);
+    std::list<std::string> stdfiles;
+    for(QStringList::const_iterator fn = files.begin();
+        fn != files.end(); ++fn) {
+      stdfiles.push_back(std::string(fn->toAscii()));
+    }
 
-      if (!m_MasterController.IOMan()->ConvertDataset(filename.toStdString(),
-                                                      targetFilename.toStdString(),
-                                                      m_strTempDir,
-                                                      bNoUserInteraction)) {
-        QString strText = tr("Unable to convert file %1 into %2.")
-                            .arg(filename).arg(targetFilename);
-        T_ERROR("%s", strText.toStdString().c_str());
-        if (!bNoUserInteraction) {
-          ShowCriticalDialog( "Conversion Error", strText);
-        }
+    PleaseWaitDialog pleaseWait(this);
 
-        pleaseWait.close();
-        return false;
+    pleaseWait.SetText("Converting, please wait  ...");
+    pleaseWait.AttachLabel(&m_MasterController);
+
+    if (!m_MasterController.IOMan()->ConvertDataset(
+          stdfiles, std::string(targetFilename.toAscii()),
+          m_strTempDir, bNoUserInteraction))
+    {
+      std::ostringstream error;
+      error << "Unable to convert ";
+      std::copy(stdfiles.begin(), stdfiles.end(),
+                std::ostream_iterator<std::string>(error, ", "));
+      error << " into " << std::string(targetFilename.toAscii());
+      T_ERROR("%s", error.str().c_str());
+      if (!bNoUserInteraction) {
+        ShowCriticalDialog("Conversion Error", QString(error.str().c_str()));
       }
-      filename = targetFilename;
+
       pleaseWait.close();
-    }
-
-    RenderWindow *renderWin = CreateNewRenderWindow(filename);
-    if(NULL == renderWin) {
       return false;
+    } else {
+      filename = targetFilename;
     }
-    if(!renderWin->IsRenderSubsysOK()) {
-      if (renderWin->RebrickingRequired()) {
-          delete renderWin;
-          if (!bNoUserInteraction &&
-              QMessageBox::Yes == QMessageBox::question(NULL, "Rebricking required", "The bricking scheme in this dataset is not "
-                                                        "compatible your current brick size settings. Do you want to convert "
-                                                        "the dataset to be able to load it? Note that depending on the size "
-                                                        "of the dataset this operation may take a while!",
-                                                        QMessageBox::Yes, QMessageBox::No))
-          {
-            QSettings settings;
-            QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
+    pleaseWait.close();
+  }
 
-            QFileDialog::Options options;
-          #ifdef DETECTED_OS_APPLE
-            options |= QFileDialog::DontUseNativeDialog;
-          #endif
-            QString selectedFilter;
-            QString rebrickedFilename;
-            do {
-              rebrickedFilename =
-                QFileDialog::getSaveFileName(this, "Select filename for converted data",
-                                             strLastDir, "Universal Volume Format (*.uvf)",
-                                             &selectedFilter, options);
-              if (!rebrickedFilename.isEmpty()) {
-                rebrickedFilename = SysTools::CheckExt(
-                  std::string(rebrickedFilename.toAscii()), "uvf"
-                ).c_str();
-
-                if (rebrickedFilename == filename) {
-                  ShowCriticalDialog("Input Error",
-                                     "Rebricking can not be performed in place"
-                                     ", please select another file.");
-                } else {
-                  settings.setValue("Folders/GetConvFilename",
-                                    QFileInfo(rebrickedFilename).absoluteDir().path());
-
-                  PleaseWaitDialog pleaseWait(this);
-                  pleaseWait.SetText("Rebricking, please wait  ...");
-                  pleaseWait.AttachLabel(&m_MasterController);
-
-                  if (!m_MasterController.IOMan()->ReBrickDataset(string(filename.toAscii()), string(rebrickedFilename.toAscii()), m_strTempDir)) {
-                    ShowCriticalDialog("Error during rebricking.",
-                                       "The system was unable to rebrick the data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
-                    return false;
-                  } else {
-                    pleaseWait.hide();
-                  }
-                }
-              } else {
-                return false;
-              }
-            } while (rebrickedFilename == filename);
-            return LoadDataset(rebrickedFilename, targetFilename, bNoUserInteraction);
-          }
-     } else {
-        ShowCriticalDialog( "Load Error", "Unable to load the data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
-        delete renderWin;
-      }
-
-      return false;
-    }
-
-    renderWin->GetQtWidget()->show();  // calls RenderWindowActive automatically
-    UpdateMenus();
-    AddFileToMRUList(filename);
-
-    return true;
-  } else {
+  RenderWindow *renderWin = CreateNewRenderWindow(filename);
+  if(NULL == renderWin) {
     return false;
   }
+
+  renderWin->GetQtWidget()->show();  // calls RenderWindowActive automatically
+  UpdateMenus();
+  AddFileToMRUList(filename);
+
+  if(!CheckForRebricking(renderWin, filename, targetFilename, bNoUserInteraction)) {
+    return false;
+  }
+
+  return true;
+}
+
+bool MainWindow::CheckForRebricking(RenderWindow* renderWin,
+                                    QString filename, QString targetFilename,
+                                    bool bNoUserInteraction)
+{
+  if(!renderWin->IsRenderSubsysOK()) {
+    return false;
+  }
+  if (renderWin->RebrickingRequired()) {
+    delete renderWin;
+    if (!bNoUserInteraction &&
+        QMessageBox::Yes == QMessageBox::question(NULL, "Rebricking required",
+           "The bricking scheme in this dataset is not "
+           "compatible your current brick size settings. "
+           "Do you want to convert the dataset"
+           "to be able to load it? Note that depending on the size "
+           "of the dataset this operation may take a while!",
+           QMessageBox::Yes, QMessageBox::No))
+    {
+      QSettings settings;
+      QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
+
+      QFileDialog::Options options;
+          #ifdef DETECTED_OS_APPLE
+      options |= QFileDialog::DontUseNativeDialog;
+          #endif
+      QString selectedFilter;
+      QString rebrickedFilename;
+      do {
+        rebrickedFilename =
+          QFileDialog::getSaveFileName(this, "Select filename for converted data",
+                                       strLastDir, "Universal Volume Format (*.uvf)",
+                                       &selectedFilter, options);
+        if (!rebrickedFilename.isEmpty()) {
+          rebrickedFilename = SysTools::CheckExt(
+            std::string(rebrickedFilename.toAscii()), "uvf"
+          ).c_str();
+
+          if (rebrickedFilename == filename) {
+            ShowCriticalDialog("Input Error",
+                               "Rebricking can not be performed in place"
+                               ", please select another file.");
+          } else {
+            settings.setValue("Folders/GetConvFilename",
+                              QFileInfo(rebrickedFilename).absoluteDir().path());
+
+            PleaseWaitDialog pleaseWait(this);
+            pleaseWait.SetText("Rebricking, please wait  ...");
+            pleaseWait.AttachLabel(&m_MasterController);
+
+            if (!m_MasterController.IOMan()->ReBrickDataset(string(filename.toAscii()), string(rebrickedFilename.toAscii()), m_strTempDir)) {
+              ShowCriticalDialog("Error during rebricking.",
+                                 "The system was unable to rebrick the data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+              return false;
+            } else {
+              pleaseWait.hide();
+            }
+          }
+        } else {
+          return false;
+          }
+        } while (rebrickedFilename == filename);
+        return LoadDataset(QStringList(rebrickedFilename), targetFilename,
+                           bNoUserInteraction);
+      } else {
+        ShowCriticalDialog("Load Error", "Unable to load the data set, "
+                           "please check the error log for details "
+                           "(Menu -> \"Help\" -> \"Debug Window\").");
+        delete renderWin;
+      }
+  }
+  return true;
 }
 
 
@@ -563,7 +617,7 @@ void MainWindow::MergeDatasets() {
       }
 
       QString targetFilename = tr("%1%2").arg(fileName).arg(".uvf");
-      LoadDataset(fileName, targetFilename);
+      LoadDataset(QStringList(fileName), targetFilename);
     }
   }
 }

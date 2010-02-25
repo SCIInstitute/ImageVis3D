@@ -898,7 +898,7 @@ void MainWindow::OpenRecentFile(){
   QAction *action = qobject_cast<QAction *>(sender());
 
   if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
-    if (action) LoadDataset(action->data().toString());
+    if (action) LoadDataset(QStringList(action->data().toString()));
   } else {
     QString strText = tr("File %1 not found.").arg(action->data().toString());
     m_MasterController.DebugOut()->Error("MainWindow::OpenRecentFile", strText.toStdString().c_str());

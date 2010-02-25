@@ -112,7 +112,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void CaptureSequence();
     void CaptureRotation();
     void LoadDataset();
-    void LoadDataset(std::string strFilename) {LoadDataset(QString(strFilename.c_str()));}
+    void LoadDataset(std::string strFilename) {LoadDataset(QStringList(strFilename.c_str()));}
     void LoadDirectory();
     void CloseCurrentView();
     void ResizeCurrentView(int iSizeX, int iSizeY);
@@ -352,7 +352,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void GetDebugViewMask();
 
     bool LoadDataset(const std::vector< std::string >& strParams);
-    bool LoadDataset(QString fileName, QString targetFileName="", bool bNoUserInteraction=false);
+    bool LoadDataset(QStringList fileName, QString targetFileName="",
+                     bool bNoUserInteraction=false);
+    bool CheckForRebricking(RenderWindow *, QString filename,
+                            QString targetFileName,
+                            bool bNoUserInteraction);
 
     QString GetConvFilename();
 
