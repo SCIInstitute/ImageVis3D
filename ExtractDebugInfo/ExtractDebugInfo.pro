@@ -9,7 +9,7 @@ CONFIG           -= app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=0
 TARGET            = Build/ExtractDebugInfo
 DEPENDPATH       += .
-INCLUDEPATH      += .
+INCLUDEPATH      += . ../ ../Tuvok/Basics/3rdParty
 LIBS              = -L../Tuvok/Build -lTuvok
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing

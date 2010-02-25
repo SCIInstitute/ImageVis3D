@@ -36,6 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 
+#include "Tuvok/Basics/StdDefines.h"
 #include "../Tuvok/StdTuvokDefines.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/Appendix.h"
