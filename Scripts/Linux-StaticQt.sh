@@ -1,36 +1,75 @@
 #!/bin/sh
 
+VERSION=4.6.0
 PREFIX="${HOME}/sw"
+QTDIR="qt-everywhere-opensource-src-${VERSION}"
+echo "Removing old build..."
+rm -fr ${QTDIR}
 
-# The important settings are a static build and ensuring we link in all of the
-# sub-libraries (zlib, png, jpeg, etc.) internally, instead of relying on
-# system versions.
-# We also disable some features to make the build a bit quicker.
-./configure            \
-    -prefix ${PREFIX}  \
-    -release           \
-    -static            \
-    -stl               \
-    -no-sql-sqlite     \
-    -no-sql-sqlite2    \
-    -no-qt3support     \
-    -no-phonon         \
-    -no-webkit         \
-    -qt-zlib           \
-    -qt-gif            \
-    -qt-libtiff        \
-    -qt-libpng         \
-    -qt-libmng         \
-    -qt-libjpeg        \
-    -openssl-linked    \
-    -no-dbus           \
-    -opengl
+tarball="${QTDIR}.tar"
 
-if test $? -ne 0 ; then
-    echo "configure error"
-    exit 1
+echo "Extracting..."
+# Do they have a bzip'd or a gzip'd tarball?
+if test -f ${tarball}.bz2 ; then
+  tar jxf ${tarball}.bz2
+elif test -f ${tarball}.gz ; then
+  tar zxf ${tarball}.gz
+else
+  echo "${tarball}.gz not found; Downloading Qt..."
+  wget -q http://get.qt.nokia.com/qt/source/${tarball}.gz
+  tar zxf ${tarball}.gz
+fi
+pushd ${QTDIR} || exit 1
+echo "yes" | \
+./configure \
+        -prefix ${HOME}/sw \
+        -buildkey "imagevis3d" \
+        -release \
+        -opensource \
+        -fast \
+        -stl \
+        -opengl \
+        -qt-libjpeg \
+        -qt-libtiff \
+        -qt-libpng \
+        -qt-libmng \
+        -qt-gif \
+        -no-sql-sqlite \
+        -no-sql-sqlite2 \
+        -no-xmlpatterns \
+        -no-multimedia \
+        -no-phonon \
+        -no-phonon-backend \
+        -no-webkit \
+        -no-javascript-jit \
+        -no-script \
+        -no-svg \
+        -no-scripttools \
+        -no-nis \
+        -no-gtkstyle \
+        -no-nas-sound \
+        -no-dbus \
+        -no-cups \
+        -no-openssl \
+        -no-qt3support \
+        -make libs \
+        -make tools \
+        -nomake examples \
+        -nomake demos \
+        -nomake docs \
+        -nomake translations \
+        -no-sm
+
+if test $? -ne 0; then
+        echo "configure failed"
+        exit 1
 fi
 
-nice -n 19 make -j6 || exit 1
+nice make -j2 || exit 1
 
-make install || exit 1
+rm -fr ${PREFIX}/bin/qmake ${PREFIX}/lib/libQt* ${PREFIX}/lib/Qt*
+rm -fr ${PREFIX}/include/Qt*
+
+nice make install || exit 1
+
+popd
