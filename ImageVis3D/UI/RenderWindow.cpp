@@ -1196,9 +1196,19 @@ void RenderWindow::SetCV(bool bDoClearView, bool bPropagate) {
 void RenderWindow::SetCVFocusPos(RenderRegion *region, const INTVECTOR2& viMousePos,
                                  bool bPropagate) {
   m_Renderer->SetCVFocusPos(*region, viMousePos);
-  if (bPropagate){
+  if (bPropagate) {
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVFocusPos(region, viMousePos, false);
+    }
+  }
+}
+
+void RenderWindow::SetTimestep(size_t t, bool propagate)
+{
+  m_Renderer->Timestep(t);
+  if(propagate) {
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetTimestep(t, false);
     }
   }
 }

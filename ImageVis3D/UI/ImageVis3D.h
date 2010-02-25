@@ -221,6 +221,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ToggleClipPlane(bool);
     void ClipToggleLock(bool);
     void ClipToggleShow(bool);
+    void SetTimestep(int);
+    void SetTimestepSlider(int iValue, int iMaxValue);
+    void UpdateTimestepLabel(int iValue, int iMaxValue);
 
     void SetRescaleFactors();
     virtual void closeEvent(QCloseEvent *event);

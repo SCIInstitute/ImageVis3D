@@ -331,6 +331,11 @@ void MainWindow::SetupWorkspaceMenu() {
   dockWidget_2DTrans->toggleViewAction()->setShortcut(tr("Ctrl+Alt+4"));
   menu_Workspace->addAction(dockWidget_IsoSurface->toggleViewAction());
   dockWidget_IsoSurface->toggleViewAction()->setShortcut(tr("Ctrl+Alt+5"));
+
+  menu_Workspace->addAction(dockWidget_Time->toggleViewAction());
+  /// @todo FIXME need a shortcut for timestep dockWidget
+  //dockWidget_IsoSurface->toggleViewAction()->setShortcut(tr("Ctrl+Alt+5"));
+
   menu_Workspace->addSeparator();
   menu_Workspace->addAction(dockWidget_LockOptions->toggleViewAction());
   dockWidget_LockOptions->toggleViewAction()->setShortcut(tr("Ctrl+Alt+6"));
@@ -717,6 +722,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   SetSampleRateSlider(int(ren->GetSampleRateModifier()*100));
   int iRange = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
   SetIsoValueSlider(int(ren->GetIsoValue()), iRange);
+
+  SetTimestepSlider(ren->Timestep(), ren->GetDataset().GetNumberOfTimesteps()-1);
 
   DOUBLEVECTOR3 vfRescaleFactors = ren->GetRescaleFactors();
   doubleSpinBox_RescaleX->setValue(vfRescaleFactors.x);

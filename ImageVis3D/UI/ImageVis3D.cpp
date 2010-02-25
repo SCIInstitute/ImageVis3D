@@ -645,6 +645,30 @@ void MainWindow::ClipToggleLock(bool bLock)
   m_bClipLocked = bLock;
 }
 
+void MainWindow::SetTimestep(int t)
+{
+  RenderWindow *rw = m_pActiveRenderWin;
+  if(rw == NULL) { return; }
+
+  rw->SetTimestep(static_cast<size_t>(t));
+  int iMaxVal = static_cast<int>(
+    m_pActiveRenderWin->GetRenderer()->GetDataset().GetNumberOfTimesteps()-1
+  );
+  UpdateTimestepLabel(int(t), iMaxVal);
+}
+
+void MainWindow::SetTimestepSlider(int iValue, int iMaxValue)
+{
+  hSlider_Timestep->setMaximum(iMaxValue);
+  hSlider_Timestep->setValue(iValue);
+}
+
+void MainWindow::UpdateTimestepLabel(int iValue, int iMaxValue) {
+  QString desc;
+  desc = tr("%1/%2").arg(iValue).arg(iMaxValue);
+  label_Timestep->setText(desc);
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
   if (m_bAutoSaveGEO) SaveDefaultGeometry();
