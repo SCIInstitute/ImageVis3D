@@ -452,7 +452,7 @@ int main(int argc, char* argv[])
           }
         }
         break;
-        case UVFTables::BS_1D_Histogram : {
+        case UVFTables::BS_1D_HISTOGRAM: {
           const Histogram1DDataBlock* b = (const Histogram1DDataBlock*)uvfFile.GetDataBlock(i);
           size_t iFilledSize = 0;
           for (size_t i = 0;i<b->GetHistogram().size();i++) {
@@ -470,7 +470,7 @@ int main(int argc, char* argv[])
           }
         }
         break;
-        case UVFTables::BS_2D_Histogram : {
+        case UVFTables::BS_2D_HISTOGRAM: {
           const Histogram2DDataBlock* b =
             (const Histogram2DDataBlock*)uvfFile.GetDataBlock(i);
           VECTOR2<size_t> vSize(0,0);
