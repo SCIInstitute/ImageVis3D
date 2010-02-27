@@ -723,8 +723,6 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   int iRange = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
   SetIsoValueSlider(int(ren->GetIsoValue()), iRange);
 
-  SetTimestepSlider(ren->Timestep(), ren->GetDataset().GetNumberOfTimesteps()-1);
-
   DOUBLEVECTOR3 vfRescaleFactors = ren->GetRescaleFactors();
   doubleSpinBox_RescaleX->setValue(vfRescaleFactors.x);
   doubleSpinBox_RescaleY->setValue(vfRescaleFactors.y);
@@ -759,6 +757,11 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     strSize = strSize + tr(" Min=%1 Max=%2").arg(UINT64(pRange.first)).
                                              arg(UINT64(pRange.second));
   }
+  // -1: slider is 0 based, but label is not.
+  SetTimestepSlider(ren->Timestep(),
+                    ren->GetDataset().GetNumberOfTimesteps()-1);
+  UpdateTimestepLabel(ren->Timestep(),
+                      ren->GetDataset().GetNumberOfTimesteps());
 
   lineEdit_MaxSize->setText(strSize);
   UINT64 iLevelCount = ren->GetDataset().GetLODLevelCount();

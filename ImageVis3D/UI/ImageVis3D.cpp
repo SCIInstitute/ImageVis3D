@@ -652,7 +652,7 @@ void MainWindow::SetTimestep(int t)
 
   rw->SetTimestep(static_cast<size_t>(t));
   int iMaxVal = static_cast<int>(
-    m_pActiveRenderWin->GetRenderer()->GetDataset().GetNumberOfTimesteps()-1
+    m_pActiveRenderWin->GetRenderer()->GetDataset().GetNumberOfTimesteps()
   );
   UpdateTimestepLabel(int(t), iMaxVal);
 }
@@ -665,7 +665,7 @@ void MainWindow::SetTimestepSlider(int iValue, int iMaxValue)
 
 void MainWindow::UpdateTimestepLabel(int iValue, int iMaxValue) {
   QString desc;
-  desc = tr("%1/%2").arg(iValue).arg(iMaxValue);
+  desc = tr("%1/%2").arg(iValue+1).arg(iMaxValue);
   label_Timestep->setText(desc);
 }
 
