@@ -661,13 +661,25 @@ void MainWindow::SetTimestepSlider(int iValue, int iMaxValue)
 {
   hSlider_Timestep->setMaximum(iMaxValue);
   hSlider_Timestep->setValue(iValue);
+  hSlider_Timestep->setEnabled(iMaxValue != 1);
 }
 
 void MainWindow::UpdateTimestepLabel(int iValue, int iMaxValue) {
-  QString desc;
-  desc = tr("%1/%2").arg(iValue+1).arg(iMaxValue);
-  label_Timestep->setText(desc);
+  if(iMaxValue == 1) {
+    QString desc;
+    desc = tr("One");
+    label_Timestep->setText(desc);
+  } else {
+    QString desc;
+    desc = tr("%1/%2").arg(iValue+1).arg(iMaxValue);
+    label_Timestep->setText(desc);
+  }
 }
+void MainWindow::ResetTimestepUI() {
+  SetTimestepSlider(0,1);
+  UpdateTimestepLabel(0,1);
+}
+
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {

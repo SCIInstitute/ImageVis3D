@@ -224,6 +224,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void SetTimestep(int);
     void SetTimestepSlider(int iValue, int iMaxValue);
     void UpdateTimestepLabel(int iValue, int iMaxValue);
+    void ResetTimestepUI();
 
     void SetRescaleFactors();
     virtual void closeEvent(QCloseEvent *event);

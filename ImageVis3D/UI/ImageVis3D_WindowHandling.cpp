@@ -176,7 +176,6 @@ void MainWindow::SetTitle() {
 
 
 void MainWindow::setupUi(QMainWindow *MainWindow) {
-
   Ui_MainWindow::setupUi(MainWindow);
 
   SetTitle();
@@ -285,8 +284,6 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   pushButton_NewRectangle->setStyleSheet( "QPushButton { background: rgb(0, 150, 0); color: rgb(255, 255, 255) }" );
   pushButton_DelPoly_SimpleUI->setStyleSheet( "QPushButton { background: rgb(150, 0, 0); color: rgb(255, 255, 255) }" );
 
-// DIRTY HACKS BEGIN
-
 #ifdef DETECTED_OS_APPLE
     // hide edit menu as the preference item (the only item in edit right now) is magically moved on OS X to the program menu
     menu_File->addAction(actionSettings);
@@ -298,11 +295,11 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     frame_23->setVisible(false);
 #endif
 
-    /// \todo remove this once we figured out how to do fullscreen
-    actionGo_Fullscreen->setVisible(false);
-
-  //pushButton_ToggleBasic->setVisible(false);
+// DIRTY HACKS BEGIN
+  /// \todo remove this once we figured out how to do fullscreen
+  actionGo_Fullscreen->setVisible(false);
 // DIRTY HACKS END
+  ResetTimestepUI();
 }
 
 // ******************************************
@@ -868,6 +865,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
   UpdateColorWidget();
   UpdateLockView();
+  ResetTimestepUI();
 
   m_pActiveRenderWin = NULL;
 }
