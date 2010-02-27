@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1497</width>
+    <width>1621</width>
     <height>2592</height>
    </rect>
   </property>
@@ -33,53 +33,6 @@
   <widget class="QWidget" name="centralwidget" >
    <layout class="QHBoxLayout" name="horizontalLayout_7" >
     <item>
-     <widget class="QDockWidget" name="dockWidget_Time" >
-      <property name="minimumSize" >
-       <size>
-        <width>325</width>
-        <height>100</height>
-       </size>
-      </property>
-      <property name="maximumSize" >
-       <size>
-        <width>524287</width>
-        <height>524287</height>
-       </size>
-      </property>
-      <property name="windowTitle" >
-       <string>Timestep Selector</string>
-      </property>
-      <widget class="QWidget" name="dockWidgetContents_14" >
-       <widget class="QSlider" name="hSlider_Timestep" >
-        <property name="geometry" >
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>211</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_Timestep" >
-        <property name="geometry" >
-         <rect>
-          <x>240</x>
-          <y>10</y>
-          <width>71</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="text" >
-         <string>0/0</string>
-        </property>
-       </widget>
-      </widget>
-     </widget>
-    </item>
-    <item>
      <widget class="QMdiArea" name="mdiArea" />
     </item>
    </layout>
@@ -89,8 +42,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1497</width>
-     <height>32</height>
+     <width>1621</width>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File" >
@@ -1432,7 +1385,7 @@
   <widget class="QDockWidget" name="dockWidget_Information" >
    <property name="minimumSize" >
     <size>
-     <width>350</width>
+     <width>373</width>
      <height>331</height>
     </size>
    </property>
@@ -1633,7 +1586,7 @@
    </property>
    <property name="minimumSize" >
     <size>
-     <width>299</width>
+     <width>305</width>
      <height>281</height>
     </size>
    </property>
@@ -1932,7 +1885,7 @@
   </widget>
   <widget class="QDockWidget" name="dockWidget_1DTrans" >
    <property name="windowTitle" >
-    <string>1D Transferfunction Editor</string>
+    <string>1D Transfer Function Editor</string>
    </property>
    <attribute name="dockWidgetArea" >
     <number>8</number>
@@ -2404,7 +2357,7 @@
    </property>
    <property name="minimumSize" >
     <size>
-     <width>1030</width>
+     <width>1135</width>
      <height>517</height>
     </size>
    </property>
@@ -2412,7 +2365,7 @@
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="windowTitle" >
-    <string>2D Transferfunction Editor</string>
+    <string>2D Transfer Function Editor</string>
    </property>
    <attribute name="dockWidgetArea" >
     <number>8</number>
@@ -3828,7 +3781,7 @@
                  <string>Use 1D transfer functions [1]</string>
                 </property>
                 <property name="text" >
-                 <string>1D Transfer function</string>
+                 <string>1D Transfer Function</string>
                 </property>
                 <property name="shortcut" >
                  <string>1</string>
@@ -5238,6 +5191,54 @@ smaller values while make it apear behind. While the first effect usualy looks m
       </spacer>
      </item>
     </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_Time" >
+   <property name="minimumSize" >
+    <size>
+     <width>325</width>
+     <height>80</height>
+    </size>
+   </property>
+   <property name="maximumSize" >
+    <size>
+     <width>524287</width>
+     <height>524287</height>
+    </size>
+   </property>
+   <property name="windowTitle" >
+    <string>Timestep Selector</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_14" >
+    <widget class="QSlider" name="hSlider_Timestep" >
+     <property name="geometry" >
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>211</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_Timestep" >
+     <property name="geometry" >
+      <rect>
+       <x>240</x>
+       <y>10</y>
+       <width>71</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text" >
+      <string>0/0</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <action name="actionLoadDataset" >
