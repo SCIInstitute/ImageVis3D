@@ -755,9 +755,9 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
                                              arg(UINT64(pRange.second));
   }
   // -1: slider is 0 based, but label is not.
-  SetTimestepSlider(ren->Timestep(),
+  SetTimestepSlider(static_cast<int>(ren->Timestep()),
                     ren->GetDataset().GetNumberOfTimesteps()-1);
-  UpdateTimestepLabel(ren->Timestep(),
+  UpdateTimestepLabel(static_cast<int>(ren->Timestep()),
                       ren->GetDataset().GetNumberOfTimesteps());
 
   lineEdit_MaxSize->setText(strSize);
