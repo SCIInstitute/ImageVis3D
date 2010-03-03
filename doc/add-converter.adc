@@ -223,7 +223,8 @@ to take an input data file, fill in the appropriate metadata as given
 by the arguments, and create a `strIntermediateFile` raw file with
 implicit structure.  Let's start with the arguments to the method:
 
-  - `strSourceFilename` - The filename where your data lives.
+  - `strSourceFilename` - The filename where your data lives.  This the file
+    that the user selected via the ImageVis3D UI.
 
   - `strTempDir` - if you need to create any temporary files, you should
     prepend this directory string to each of the filenames.
@@ -231,6 +232,12 @@ implicit structure.  Let's start with the arguments to the method:
   - `bNoUserInteraction` - if `true`, any ambiguities should be treated as
     fatal errors.  Otherwise, you may query the user for more information (say,
     via a `QMessageBox`).
+
+NOTE: Qt UI elements may not be used in the Tuvok IO subsystem.  If
+you want to perform a graphical query when `bNoUserInteraction` is
+`false`, you must put the code into the "imagevis3d" repository.  Since
+converters are registered dynamically, this will work fine; see the
+`DialogConverter` code.
 
   - `iHeaderSkip` - Many formats are "sectioned", in that an initial header is
     given which describes the data, and a raw chunk of data follows the header.
@@ -311,8 +318,13 @@ that your `ConvertToRAW` method will succeed for the given file, and
 `false` otherwise.
 
 The method takes two arguments.  The first is the name of the file that
-the IO subsystem is trying to find a converter for.  The second is an
-array which contains a few bytes from the beginning of the file.
+the IO subsystem is trying to find a converter for; for ImageVis3D,
+this will be the file selected by the user in the GUI.  If the user has
+selected multiple files (for example, while attempting to convert a
+time-dependent dataset), this will be the first file in the sequence.
+The second argument is an array which contains a few bytes from the
+beginning of the file (again, the first file if multiple files have
+been selected).
 
 IMPORTANT: Although the method is given the full file name and could
 easily open and scan the file to see if it is valid, please do *not* do
