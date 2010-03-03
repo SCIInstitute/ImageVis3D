@@ -187,11 +187,14 @@ Register Your File Extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The constructor for your new reader should modify two internal class
-variables: `m_vConverterDesc` should be set to a short human-readable
-string that describes the file format.  This must be a single line and
-should generally be a short phrase of a few words or less.  Secondly,
-you should add any extensions your file format supports to the
-`m_vSupportedExt' vector.
+variables: `m_vConverterDesc` and `m_vSupportedExt`.  The former should
+be set to a short human-readable string that describes the file format.
+This must be a single line and should generally be a short phrase of a
+few words or less.  The second, `m_vSupportedExt`, should be populated
+with any extensions which are common for your file format.
+
+NOTE: You may leave `m_vSupportedExt` empty if you reimplement the
+`CanRead` method, described later in this document.
 
 See `BOVConverter.cpp` for an example.
 
@@ -280,6 +283,63 @@ varies slowly in X and quickly in Z.  These data should be written in
 generate these data.
 
 If all goes well, you should return `true` from this method.
+
+OPTIONAL: Reimplement the `CanRead` Predicate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Since there are many converters available, at various times the IO
+subsystem needs to know *which* format within the candidate set is
+the appropriate one to use.  It does this via the `virtual` `CanRead`
+method.
+
+.....................................................................
+virtual bool CanRead(const std::string& filename,
+                     const std::tr1::array<int8_t, 512> bytes) const;
+.....................................................................
+
+The default implementation of this method is based purely on file
+extensions.  The extension[s] used for your format are the ones you
+added to the `m_vSupportedExt` vector in your constructor.  For most
+formats, this implementation will be perfectly fine.
+
+However, some readers need to know a bit more.  You might, for example,
+be working with a file format that relies on *prefixes* for file names
+instead of *postfixes* (i.e. "extensions").  You can override the
+`CanRead` method to implement a predicate more specific to your file
+format.  This method should return `true` if you are reasonably sure
+that your `ConvertToRAW` method will succeed for the given file, and
+`false` otherwise.
+
+The method takes two arguments.  The first is the name of the file that
+the IO subsystem is trying to find a converter for.  The second is an
+array which contains a few bytes from the beginning of the file.
+
+IMPORTANT: Although the method is given the full file name and could
+easily open and scan the file to see if it is valid, please do *not* do
+this in your converter.  If every converter operated in this fashion,
+identifying the appropriate converter would be extremely slow.  The
+`bytes` array argument should be sufficient to identify the file; if
+you need more data to do so definitively, please contact the lead IO
+developers and ask them to increase the number of bytes given to the
+method.
+
+You can use the `filename` parameter to key into any sort of custom
+file naming procedure that your file format has.  Many formats also
+implement some concept of `magic` bytes: the first few bytes of the
+files given in this format might always be statically set to a specific
+value.  As examples, the first 4 bytes of every NRRD file spell out
+"NRRD"; the QVis file format is based on a series of key-value pairs,
+and it is common for the first key to be "ObjectFileName".  `CanRead`
+implementations for these formats could key into such conventions to
+verify that the file is what it says it is.
+
+NOTE: You do not need to go all-out to detect errors at this stage.
+For example, you should not attempt to identify if the file is
+corrupted in the `CanRead` method.  This method is meant to quickly
+whittle down the list of available converters, and as such should do
+relatively little work, and certainly no dataset-sized work.  The
+correct place to detect file corruption would be in the `ConvertToRAW`
+method.
 
 OPTIONAL: Implement Native Conversion
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
