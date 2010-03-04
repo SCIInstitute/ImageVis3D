@@ -301,7 +301,7 @@ method.
 
 .....................................................................
 virtual bool CanRead(const std::string& filename,
-                     const std::tr1::array<int8_t, 512> bytes) const;
+                     const std::vector<int8_t> bytes) const;
 .....................................................................
 
 The default implementation of this method is based purely on file
