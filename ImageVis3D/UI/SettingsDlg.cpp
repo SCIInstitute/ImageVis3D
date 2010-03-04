@@ -68,9 +68,9 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   UINT64 iMaxCPUMemSize   = m_MasterController.SysInfo()->GetCPUMemSize();
   UINT64 iMaxGPUMemSize   = m_MasterController.SysInfo()->GetGPUMemSize();
   unsigned int iProcCount = m_MasterController.SysInfo()->GetNumberOfCPUs();
-  unsigned int iBitWith   = m_MasterController.SysInfo()->GetProgrammBitWith();
+  unsigned int iBitWidth  = m_MasterController.SysInfo()->GetProgramBitWidth();
 
-  label_Warning32Bit->setVisible(iBitWith == 32);
+  label_Warning32Bit->setVisible(iBitWidth == 32);
 
   // init stats labels
   QString desc;
@@ -93,7 +93,7 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
     desc = tr("Processors: unchecked");
   label_NumProc->setText(desc);
 
-  desc = tr("Running in %1 bit mode").arg(iBitWith);
+  desc = tr("Running in %1 bit mode").arg(iBitWidth);
   label_NumBits->setText(desc);
 
   iMaxCPUMemSize /= 1024*1024;
@@ -105,7 +105,7 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   }
 
   // on a 32bit system allow only a maximum of 2 gig to be adressed
-  if (iBitWith == 32)
+  if (iBitWidth == 32)
     horizontalSlider_CPUMem->setMaximum(min(horizontalSlider_CPUMem->maximum(), 2048));
 
   iMaxGPUMemSize /= 1024*1024;

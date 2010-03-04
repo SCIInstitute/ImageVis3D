@@ -524,7 +524,7 @@ void MainWindow::ReportABug(const string& strFile) {
     reportFile << " SVN Version:" << int(IV3D_SVN_VERSION);
 #endif
     reportFile << endl << "QT Version:" << QT_VERSION_STR << endl;
-    reportFile << "This is a "<< m_MasterController.MemMan()->GetBitWithMem() << "bit build." << endl;
+    reportFile << "This is a "<< m_MasterController.MemMan()->GetBitWidthMem() << "bit build." << endl;
 
     if (b.GetUsername() != "") reportFile << "User:" << b.GetUsername() << endl;
     if (b.GetUserMail() != "") reportFile << "Email:" << b.GetUserMail() << endl;

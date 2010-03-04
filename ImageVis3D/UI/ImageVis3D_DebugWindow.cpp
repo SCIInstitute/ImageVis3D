@@ -119,7 +119,7 @@ void MainWindow::ShowSysInfo() {
   UINT64 cpu_mem = mm->GetCPUMem();
   UINT64 max_cpu_mem = m_MasterController.SysInfo()->GetMaxUsableCPUMem();
 
-  sysinfo << "This is a " << m_MasterController.MemMan()->GetBitWithMem() << "bit build\n"
+  sysinfo << "This is a " << m_MasterController.MemMan()->GetBitWidthMem() << "bit build\n"
           << "CPU Memory: Total " << cpu_mem / one_megabyte << " MB, "
           << "Usable " << max_cpu_mem << "MB\n"
           << "    Used: " << mm->GetAllocatedCPUMem()/one_megabyte << " MB "
