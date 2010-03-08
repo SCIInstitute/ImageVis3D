@@ -84,7 +84,7 @@ spacing information can vary per-dimension, but not within a dimension.
 .Unstructured Data (`.`: grid location, `\-/x`: edge)
 ........................................
   .----.--.---.---.
-   \   |   \ /    . 
+   \   |   \ /    .
     \  .    x     |\
      ./    / \    | \
       \   .---.---.--.
@@ -300,15 +300,287 @@ include::add-converter.adoc[]
 
 :leveloffset: 0
 
+Implementing a Reader Parallel to UVF
+-------------------------------------
+
+If your data format meets certain criteria, it is possible for you to
+write a reader which sits parallel to UVF.  This will allow ImageVis3D
+to read your data natively, without any conversion process.  For
+extremely large data, a conversion process is infeasible.
+
+The criteria your format must meet are:
+
+- You must meet the 'standard' requirements for ImageVis3D data: namely, your
+data must be defined on a regular, though potentially anisotropic, grid.
+- Your data must be 'bricked'; a large volume is composed of a set of small
+volumes.
+- You have at least two levels of resolution for your data; in general, more
+levels will be better, within reason.
+- The coarsest resolution of your data consists of a single 'brick'.
+- You can load the coarsest resolution of your data in 3- or 4-hundred
+milliseconds.
+
+Further, this is the most complicated of methods to get your data into
+ImageVis3D.  Someone in your lab must be capable of writing C++ code.
+
+Writing Your Reader
+~~~~~~~~~~~~~~~~~~~
+
+The basic steps involved in writing your own reader are:
+
+1. Create a new class derived from `FileBackedDataset`.
+2. Register your format with the IO subsystem.
+3. Implement `CanRead` and `Create` methods, to allow the IO system to identify
+your dataset type.
+4. Implement methods to query data and metadata from your dataset.
+
+Reader Skeleton
+^^^^^^^^^^^^^^^
+
+You'll need to create a header file (`.h`) and an implementation file
+(`.cpp`) for your new format.  They should define a new class which
+includes a large set of methods.
+
+1. Copy `Dataset.h` to `<YourFormat>.h`
+2. Modify `YourFormat.h`:
+* Add the header `FileBackedDataset.h`, remove other headers.
+* Derive the class from `FileBackedDataset`.
+* Make all of the pure virtual methods simply virtual.
+* Add `CanRead` and `Create` methods with the same signatures as from
+`FileBackedDataset`.
+
+Next, stub out an implementation file.  At this stage, we highly
+recommend you do not attempt to implement your reader, but instead
+just add the minimal return statements required for compilation.  For
+instance, implement the `GetLODLevelCount` method like so:
+
+[c++]
+source~~~~
+virtual UINT64 GetLODLevelCount() const { return 0; }
+source~~~~
+
+etc.
+
+Building Your Reader
+^^^^^^^^^^^^^^^^^^^^
+
+You will need to add your new reader to the build.  The files which are
+part of the IO subsystem are currently listed in the 'Tuvok/Tuvok.pro'.
+You'll find `HEADERS` and `SOURCES` variables in that file, which list
+all of the files involved in the build.  You must add you reader to
+both variables.
+
+............................................................................
+  HEADERS += \
+           ...
+           IO/AbstrConverter.h \
+           IO/BOVConverter.h \
+           IO/*YourReaderHere.h* \
+           IO/BrickedDataset.h \
+           ...
+  SOURCES += \
+           ...
+           IO/AbstrConverter.cpp \
+           IO/BOVConverter.cpp \
+           IO/*YourReaderHere.cpp* \
+           IO/BrickedDataset.cpp \
+           ...
+............................................................................
+
+IMPORTANT: On Windows, `qmake` is unfortunately no longer used.  You
+must add your files to the Visual Studio project file in the normal
+way on this platform.  Make sure to add your files to the `.pro` file
+anyway, though -- it will be required for the Linux and Mac builds.
+
+You can now compile ImageVis3D and test that your new class includes
+all the right methods.
+
+Register Your Data Format
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For ImageVis3D to attempt using your format, it must know how to
+identify your files.  Two steps are required here: you must implement
+the `CanRead` and `Create` methods, and you must register your format
+with the `IOManager`.
+
+`CanRead` and `Create`
+++++++++++++++++++++++
+
+`CanRead` is straightforward; it must return `true` when the file is in
+your format.  Normally you would do this by verifying the magic bytes
+at the beginning of the file.
+
+`Create` is a simple "virtual constructor"; you just need to
+instantiate an object of your class.  The constructor of your class, or
+the `Create` method itself, is allowed to throw any exception derived
+from `DSOpenFailed` (see `TuvokIOError.h`) to indicate any errors
+encountered while actually opening the file.
+
+IMPORTANT: Do *not* report errors in the `CanRead` method!  Save error
+detection for `Create`.
+
+`uvfDataset.cpp` provides a good example of how these methods might
+be implemented.  Note that `UVFDataset` does its error detection in
+`Open`, which is automatically called from the constructor.
+
+Registration with the IO Subsystem
+++++++++++++++++++++++++++++++++++
+
+This just requires a small addition to the `IOManager`.  Open up
+`IOManager.cpp` and find the constructor.  There is already a line to
+register UVF with the IO manager:
+
+[c++]
+source~~~~
+m_dsFactory->AddReader(std::tr1::shared_ptr<UVFDataset>(new UVFDataset()));
+source~~~~
+
+Add a similar line for your reader.  You will also need to add a
+`#include` line slightly above the constructor.
+
+Test!
++++++
+
+At this point, ImageVis3D should be able to both identify and at
+least attempt to read your data.  It will return garbage values for
+just about every inquiry, but now would be a good time to test the
+registration.  Selecting one of your files from the ImageVis3D UI
+should attempt to open it, and promptly report some sort of error --
+probably complaining about the lack of data in the file.
+
+The exact error is unimportant.  The important thing is that ImageVis3D
+does not prompt you for a UVF file name after selecting your file.
+This indicates that ImageVis3D knows about your format and recognizes
+that it does not require conversion.
+
+Implement `Dataset` Methods
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There are too many dataset methods to exhaustively outline
+implementations for each one of them.  We outline them by categories
+here.  For specific details, see the doxygen comments, and/or follow
+the implementation in `uvfDataset.cpp`.
+
+NOTE: Never cache any *data* in your reader implementation.  Tuvok,
+ImageVis3D's renderer, implements caching of bricks at a level slightly
+higher than your dataset.  You will defeat its memory management
+routines by wasting memory in your dataset, which may lead to excessive
+swapping.  Caching metadata, or other small information about data, is
+fine.  If you feel you must store a large amount of information, you
+should tie into the memory management system to "register" your memory.
+
+Histograms
+++++++++++
+
+ImageVis3D requires 1D and 2D histograms to use as the backdrop of the
+transfer function editors.
+
+UVF stores these histograms in the file.  The `GetHistograms` method
+initializes the `m_pHistXD` variables.  This occurs when the UVF is
+first opened.  The alternative would be to generate these on the fly
+and cache the results.  We highly discourage such an ad hoc histogram
+calculation: for one, users will have to pay for it every time they
+open your file.  Secondly, the calculations can take significant time,
+and that time is taken between when the user selects the file and when
+they see a window opening on their screen.  Your format will look very
+slow if it does a long calculation at this point.
+
+Do note that the calculation of a 2D histogram is an *extremely*
+expensive operation.  ImageVis3D only calculates the 2D histogram for
+the coarsest level of detail, _even though we have a preprocess to
+generate these data_!  You are welcome to implement an exact solution,
+but be careful about how much work you do at open time.
+
+Brick Inquiries
++++++++++++++++
+
+`GetBrick...` functions query data and metadata about a brick.  Of
+course, the most important of these is the `GetBrick` method itself,
+which loads the data for a brick.  This method takes a `BrickKey`
+and is expected to fill the `std::vector` argument with the data for
+that brick.  The `BrickKey` is under your control: when you open your
+file, you should make a series of `AddBrick` calls, each with a unique
+`BrickKey`.  ImageVis3D will then use those `BrickKey` s to request
+data from your Dataset implementation.  You can "encode" whatever
+information you need into that key; as an example, `UVFDataset` encodes
+the spatial position of a brick in the "brick index" portion of the
+key.  The `IndexToVector` method then decodes the "brick index" back
+into the 3D index.
+
+Data Type and Size
+++++++++++++++++++
+
+There are a variety of methods, such as `GetBitWidth` and
+`GetIsSigned`, which are used to identify features of the dataset.
+These provide important information on how the data received out of
+`GetBrick` is interpreted.
+
+*Optional*: Rescale Factors
++++++++++++++++++++++++++++
+
+These are normally handled by your parent classes.  However, there is
+one method, `SaveRescaleFactors` that you may reimplement.  If the user
+changes the rescale factors in the UI and then selects "Save To File",
+ImageVis3D will call this method.  You should re-open your file in
+read-write, and add some metadata about the spacings in the X, Y, and Z
+axes.
+
+*Optional*: First/Last Bricks
++++++++++++++++++++++++++++++
+
+`Dataset` contains two methods, `BrickIsFirstInDimension` and
+`BrickIsLastInDimension`, which inform the renderer whether or not
+they are the "leftmost" or "rightmost" brick.  `BrickedDataset` does
+provide a default implementation for these methods, so ImageVis3D will
+work even if you do not override them.  However, `BrickedDataset` has
+very limited knowledge of your dataset; it requires `O(n)` time in
+the number of bricks to answer this.  Some formats can answer this
+in constant time.  If you can do so, it is highly recommended you
+implement these methods; it will significantly speed up ImageVis3D's
+"frame planning" algorithms.
+
+*Optional*: Acceleration Queries
+++++++++++++++++++++++++++++++++
+
+These consist of the `ContainsData` methods.  These are meant to
+key into any acceleration structures you might store in a file, and
+allow ImageVis3D to reject bricks without rendering them.  This can
+significantly increase performance when available.
+
+They are given a brick key and some kind of information on what
+ImageVis3D is looking for.  There are three methods, one for each of
+the primary render modes.  As an example, the two-argument version of
+`ContainsData` is used when rendering isosurfaces.  If the user selects
+an isosurface of 42, and you know that a given brick only has values
+from 96 to 428, then there is no reason to render that brick, and so
+`ContainsData` would return false.
+
+Do not scan your data to identify the results of these methods.  The
+GPU will do that much quicker than you could ever dream of doing here.
+However, if you have precomputed this information, implement these
+methods to significantly increase performance.
+
+*Optional*: Export
+++++++++++++++++++
+
+ImageVis3D can also be used as a converter from one file format to
+another.  The `Export` method helps in doing this.  If you implement
+this method, you should serialize your data to the file name given in
+the argument, in a completely "raw" (unbricked) form.
+
+If you do not care about this functionality, just ignore this method.
+The default implementation already indicates that the export operation
+has failed.
+
 Converting Your Output Format to ImageVis3D's UVF
 -------------------------------------------------
 
 UVF is more of a container format than a full file format.  The primary
 author of this document considers it more of a filesystem than a
 file format.  This is because UVF is very general, relying on the
-applications which implement it for some of the semantic value of the
-data.  As an example, with existing code it would be incredibly easy
-to write a 9-dimensional, 7-channel tensor dataset into a UVF file.
+applications which implement it for some of the semantic value of
+the data.  As an example, with existing code it would be easy to
+write a 9-dimensional, 7-channel tensor dataset into a UVF file.
 ImageVis3D will have absolutely no idea how to render that data, but it
 is perfectly valid as a UVF file.
 
@@ -333,7 +605,7 @@ published]
 while the format was still in its infancy.  The format has changed
 slightly since then, but not in concept, and the changes have actually
 been surprisingly minor.  As such, it still provides a relevant overview of
-UVFs format, features, and design goals.
+UVF's format, features, and design goals.
 
 Unified Volume Format Reference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -360,7 +632,7 @@ order, these components are:
   endian data.  This effects all subsequent data in the file, from the next
   values in this header, to data stored within UVF's blocks.
 - An unsigned, 64-bit integer which gives the version of the UVF file.
-  ImageVis3D has been writing out version 2 UVF files since 1.0 was release in
+  ImageVis3D has been writing out version 2 UVF files since 1.0 was released in
   May 2009.  ImageVis3D does not support version 0 or 1 UVF files, and any
   differences between those and version 2 will not be documented here.
 - An unsigned, 64-bit integer which details how the file checksum was
@@ -374,7 +646,7 @@ order, these components are:
 | 1    | The checksum was calculated via a simple crc32 algorithm
 | 2    | The popular MD5 algorithm was used to calculate the checksum
 | 3    | An unknown method was used to calculate the checksum
-| N    | Reserved; no meaning.
+| *    | Undefined.  Reserved.
 |====================================================================
 
 - An unsigned, 64-bit integer containing `n_checksum_bytes`, the number
@@ -434,7 +706,7 @@ in order, is:
 | 5    | 1D Histogram
 | 6    | 2D Histogram
 | 7    | Maximum and minimum data values (acceleration structure)
-| \*   | Undefined.
+| *    | Undefined.  Reserved.
 |====================================================================
 
 - The type of compression used for the block.
@@ -444,7 +716,7 @@ in order, is:
 |====================================================================
 |Value | Meaning of the 64-bit value
 | 0    | None; the block is not compressed
-| *    | Undefined.
+| *    | Undefined.  Reserved.
 |====================================================================
 
 - An unsigned, 64-bit integer offset to the next block.  This is
@@ -454,11 +726,194 @@ in order, is:
 1D Histogram Data Block
 +++++++++++++++++++++++
 
-lorem ipsum
+This data block essentially contains just an array of values which form
+a histogram for a scalar dataset.
 
-Implementing a Reader Parallel to UVF
--------------------------------------
+- First 8 bytes: unsigned integer which gives the `histogram_size`
+- `histogram_size` 8-byte elements following that: the histogram.
+  Indices into the array detail the data value; values in the array give
+  the number of times that data value occurs.  Thus, if `arr[8] == 19`,
+  then the value `8` occurs in the dataset `19` times.
 
+The association between histograms and datasets is purely implicit.  If
+a UVF contains two dataset blocks and one 1D histogram block, it is
+technically ambiguous as to which dataset the histogram was computed
+from.  In ImageVis3D's UVF, mappings are 1:1; the situation listed here
+would be an error.
 
+2D Histogram Data Block
++++++++++++++++++++++++
 
-lorem ipsum
+Stores a 2D histogram for a given dataset.  Essentially, this stores
+a contiguous array of 1D histograms.  The histogram is assumed to be
+"square": the second dimension does not vary from its initial value.
+It is implied that the second dimension is gradient magnitude.
+
+- First 32-bits: IEEE-754 representation of the max gradient magnitude.
+- Following 8 bytes: unsigned integer count, `elems_X`.
+- Following 8 bytes: unsigned integer count, `elems_Y`.
+- Final `elems_X` x `elems_Y` x 8 bytes: the histogram, with X as the slowest
+  moving dimension.
+
+Key Value Pairs Block
++++++++++++++++++++++
+
+Stores a set of simple string-based key-value pairs. This is typically
+used to store metadata about the dataset which are not relevant to
+visualization.
+
+- First 64-bits: unsigned integer `n_elements`.
+- `n_elements` of:
+* 64-bit unsigned integer giving a `key_length`
+* `key_length` bytes storing an ASCII "key" string.
+* 64-bit unsigned integer giving a `value_length`
+* `value_length` bytes storing an ASCII "value" string.
+
+Raster Data Block
++++++++++++++++++
+
+This is where ImageVis3D stores the data it renders. It is intended to
+store N-dimensions, regularly gridded data.
+
+- First 64-bits: unsigned integer `n_dimensions`
+- Only if `n_dimensions` is non-zero:
+* `n_dimensions` 64-bit semantic block identifiers
+* `n_dimensions+1` x `n_dimensions+1` IEEE-854 64-bit FP values storing a
+  default transformation.
+* `n_dimensions` 64-bit unsigned integers giving the size of the domain,
+slowest dimension first.
+* `n_dimensions` 64-bit unsigned integers giving the size used for bricks,
+slowest dimension first.
+* `n_dimensions` 64-bit unsigned integers giving the overlap among bricks
+* `n_dimensions` 64-bit unsigned integers giving the factor by which
+successive domains are downsampled.
+* `n_dimensions` 64-bit unsigned integers ???
+- `n_dimensions` 64-bit unsigned integers giving the number of LODs for each
+dimension of the data.
+- a 64-bit unsigned integer, `n_elements`
+
+- `n_elements` 64-bit unsigned integers giving the element size (number
+of bytes element) per dimension.
+...
+(unfinished)
+
+Contribute Back
+---------------
+
+While not strictly related to the main purpose of this document, we
+would like to take this opportunity to encourage you to make any
+changes you make to ImageVis3D's source code available.
+
+ImageVis3D is an open source project.  You can download the source,
+modify it to your heart's content, and redistribute it however you
+would like.  The licensing is incredibly liberal; you could even
+recompile it as-is and sell it as a commercial product.  It is not
+*required* that you make your source available.  It is not *required*
+that you participate in future development.  However, it is in
+everyone's best interest that you do so.
+
+Benefits of Contribution
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The benefits to the ImageVis3D project are somewhat obvious.  If you
+write some code to allow ImageVis3D to read a new type of data, anyone
+else can then pick up the program and use it to visualize that kind of
+data.  This enables ImageVis3D to be used in more domains, increasing
+the project's user base, which significantly helps us pursue funding
+for development of ImageVis3D features and maintenance.
+
+However, contributing your code actually helps *you* as well:
+
+- The lead developers will verify that your format is still readable
+with each new release of ImageVis3D
+- Internal APIs within ImageVis3D change from time to time; if your
+source is part of ImageVis3D, we will update your code to adhere to the
+new interface.
+* It is safe to assume that, if your code is not part of the ImageVis3D
+tree, it will eventually stop compiling and require manual edits.
+* New features added to ImageVis3D will automatically apply to your
+format/code.
+- Your code will receive more testing than you could perform on your
+own.
+
+What We Ask From Contributors
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We ask that you don't just throw a bunch of files at us and expect we
+do the work of merging in changes or fixing blatant issues.  We ask
+that you submit:
+
+- Well-formatted, complete patches
+* `svn diff` (or even `git diff`) formats are preferred, as opposed to files
+* Patches should be against the current source in version control, not against
+the previous release.
+* If plausible, split multiple changes into multiple patches
+* Each change should compile and work if applied in order (i.e. do not have one
+patch break the build and the next one fix it -- just use one patch).
+* Should compile using MSVC and recent gcc's.
+** We understand that you might not have both these compilers available.
+Please just do the best you can.
+* Use MESSAGE, WARNING, and T_ERROR to give information on what the code is
+doing.
+* Try to break lines at 80 characters
+* Remove whitespace at the end of each line
+- Rights to distribute your code under the MIT license
+* Do note that permission to do this might have to come not just from yourself,
+but from your organization and/or funding organization as well.  Do *not*
+_assume_ you have the right to distribute code you have written!
+* More general rights are fine too; you might release the code into the public
+domain, for example.
+- For support of new file formats:
+* At least one dataset which can be read by the new code
+* An image of the dataset, preferably rendered in some other software,
+though an ImageVis3D image is acceptable.  We will use this to verify that
+the code actually works.
+
+The dataset request is a *requirement*, not an option.  No exceptions!
+If we cannot test your code, it *will* break at some point.  Even if
+your file format is common, do not assume we will go scouring the web
+for sample data -- that is your responsibility.
+
+Logistics
+~~~~~~~~~
+
+You should send your patches to the
+link:https://lists.sci.utah.edu/sympa/subscribe/tuvok-developers[tuvok-developers]
+mailing list.  If you have very small sample data (i.e. measured in kilobytes),
+you can send that along through the list as well.  If your sample data are
+large, you may:
+
+- Upload them via FTP to `ftp.sci.utah.edu`; anonymous uploads are
+allowed in the `upload` directory.
+- Use the `Report an Issue` dialog and attach the dataset and sample
+image to the bug report.  Be sure to include your email and at least a
+brief message mentioning the thread you've started on tuvok-developers.
+
+In both cases, please send a ping to
+link:https://lists.sci.utah.edu/sympa/subscribe/tuvok-developers[tuvok-developers]
+and let us know you've uploaded data.  You'll need to send a mail there
+anyway, to include the patches.
+
+Privacy
++++++++
+
+Please note any restrictions on the data at submission time.  We
+are used to receiving data which we are not allowed to use in our
+publications, or that we are not allowed to demo, etc.  If this
+restriction is time-limited (i.e. "do not demo this until I've
+published a paper about <X>!"), please note that as well.
+
+Do note that any data which is uploaded to SCI via FTP, or uploaded via
+ImageVis3D's "Report an Issue" feature, is readable by any member of
+the SCI Institute.  The ImageVis3D developers will gladly copy it to
+our workstations and then delete it from the public FTP as quickly as
+possible, but there will always be a window where data are available to
+the internal network.
+
+Furthermore, the SCI Institute is an Institute within a University.
+Security policies are somewhat liberal; there is not a notion of
+a "secure network" versus an "open network", as is common at some
+national labs.  We will make reasonable efforts to ensure your data
+remain as private as you would like, but do recognize that no computer
+network is ever completely secure, and SCI is no different.  As such,
+please do not send us extremely sensitive data.
