@@ -1,0 +1,464 @@
+Getting Data into ImageVis3D
+============================
+The ImageVis3D Team <iv3d-users@sci.utah.edu>
+
+Introduction
+------------
+
+One of the most common inquiries we get is, "What is the best way
+to get my data into ImageVis3D?"  The answer is invariably specific
+to your particular case.  There are a number of ways you can get
+ImageVis3D to render your data, with a varying range of associated
+complexities.  This document attempts to answer some of the most common
+questions.
+
+Briefly, there a couple ways ImageVis3D can load data out of the box:
+by loading up a UVF, ImageVis' native image format, or by converting
+data into UVF.  However, ImageVis3D is meant to visualize massive
+datasets; theoretically up to exabytes of data.  In practice, even for
+data as small as a terabyte, the conversion process is going to be too
+time consuming for reasonable day-to-day use.
+
+For data at this scale, there are two options: write out your data as
+UVF in the first place, or implement a reader which sits parallel to
+UVF within ImageVis3D's IO subsystem.  Both impose restrictions on the
+structure of your data, and will require someone with C++ programming
+experience to make it happen.  However, the payoff is large: ImageVis3D
+will be able to open your formats `natively', without the costly
+conversion step, and you will no longer have to deal with the same data
+replicated across multiple files.
+
+.Use our code!
+[NOTE]
+====================================================================
+ImageVis3D's design is component-based.  In this document, we
+will use "the IO subsystem" and "ImageVis3D" interchangeably, but
+we are usually referring to the IO library which we have written
+specifically for use with ImageVis3D.  Despite the name, the library
+is independent of ImageVis3D, and we explicitly encourage those who
+are capable to use it separately, in their own applications!  More
+information is available by asking on the mailing lists.
+====================================================================
+
+Broadly, both schemes accept data on regular (though potentially
+anisotropic) grids.  The converted formats are what we will refer
+to as 'single-block', meaning that the entire dataset lives in one
+large array, regardless of how large the dataset is.  By comparison,
+ImageVis3D's variant of UVF is inherently 'multi-block', meaning that
+large data are "chunked", such that multiple "chunks" are required to
+recreate the entire volume.  Single-block data is inherently simpler
+and has more support from existing tools.  Multi-block data is more
+complex, but -- even ignoring ImageVis3D for a moment and speaking
+from a purely algorithmic standpoint -- there is simply no way to
+scale single-block data access to provide efficient visualization and
+analysis for large data.
+
+Grid Types
+----------
+
+Data can be defined on a wide variety of grid types.  ImageVis3D can
+only handle what is called "regular" gridded data.  Think of an image
+file: it is defined as a series of pixels, with an implicit ordering
+and distance between each pixel.  That is, if we call a pixel `x` and
+define a pixel `x+1` to be the pixel to the right of `x`, then we
+know that the distance between `x` and `x+1` is equal to the distance
+between `x+1` and `x+2`.  Regular data is an extension of this property
+to 3D: all data are layed out on an even grid.
+
+.Example Regular Gridded Data (`.` represents a grid location)
+........................................
+  .  .  .  .  .  .  .  .  .  .  .  .
+  .  .  .  .  .  .  .  .  .  .  .  .
+  .  .  .  .  .  .  .  .  .  .  .  .
+  .  .  .  .  .  .  .  .  .  .  .  .
+  .  .  .  .  .  .  .  .  .  .  .  .
+  .  .  .  .  .  .  .  .  .  .  .  .
+  .  .  .  .  .  .  .  .  .  .  .  .
+........................................
+
+However, do note that ImageVis3D supports so-called *anisotropic* data.
+That is, the difference in space between `x` and `x+1` need not be
+equal to the difference between `y` and `y+1`.  More succinctly, the
+spacing information can vary per-dimension, but not within a dimension.
+
+.Unstructured Data (`.`: grid location, `\-/x`: edge)
+........................................
+  .----.--.---.---.
+   \   |   \ /    . 
+    \  .    x     |\
+     ./    / \    | \
+      \   .---.---.--.
+       \ /   /
+        .---.
+........................................
+
+If your data do not exemplify regular grid data, ImageVis3D will not be
+able to handle it natively.  For now, your best bet is to import such data
+into ImageVis3D is to resample it onto a regular grid.
+
+Existing File Formats
+---------------------
+
+ImageVis3D might already support converting the formats you care
+about into its native UVF container format.  You might also consider
+rewriting data in one of these formats to better support ImageVis3D.
+If your data are inherently single-block, this will be your quickest
+path to loading and visualizing your data.
+
+- *DICOM stacks* (`.dcm` extension, normally): A set of DICOM files which form a
+  volume.  Use the "Load Dataset from Directory" feature to load these
+  datasets.
+- *Image stacks* (`.png`, `.tif`, `.bmp`, `.jpeg`/`.jpg`, `.qif` extensions):
+  sets of 2D images which form a volume when rendered together.  As with DICOM
+  stacks, use the "Load Dataset from Directory" feature to load these datasets.
+- *QVis* (`.dat` extension): QVis header and accompanying raw data
+- *NRRD* (`.nrrd` and `.nhdr` extensions): NRRD files, as output by the
+  link:http://teem.sf.net/[Teem] library and associated tools.
+- *Stack* (`.stk` extension): Metamorph "stack" files; a special case of TIFFs,
+  output by the Metamorph software package.
+- *TIFF* (`.tiff`, `.tif` extensions): A TIFF stack; these differ from an image
+  stack in that the entire volume is stored in a single file.
+- *VFF* (`.vff` extension): Visualization File Format
+- *Brick of Values* (`.bov` extension): A raw 3D array and associated header; a
+  common method to export data from the link:http://www.visitusers.org/[VisIt]
+  software package.
+- *EZRT* (`.rek` extension): Fraunhofer EZRT format.
+
+DICOM Stacks
+~~~~~~~~~~~~
+
+DICOMs are notoriously difficult to parse, work with, and have
+poor access times.  Do not use DICOM if you are not already.  We will not
+document the format here, but if you are dead-set on this format, you can find
+the entire ~3000 page specification on link:http://medical.nema.org/[the
+official DICOM web site].
+
+Image Stacks
+~~~~~~~~~~~~
+
+ImageVis3D supports loading sets of images in the common formats.
+Specifications for each image type are beyond the scope of this
+document.  If you are designing a new visualization pipeline, we would
+discourage reliance on image stacks due to slow access times.
+
+For many if not all image types, image data is downsampled to 8bits
+before it is handed to ImageVis3D's IO subsystem.  This is fixable, but
+at present has yet to be a pressing concern.
+
+QVis
+~~~~
+
+QVis is a simple 'header + data' file format.  The file which the user
+selects via the ImageVis3D UI, which must have the extension `.dat`, is
+comprised of a series of ASCII key-value pairs.  One of these pairs,
+with the `ObjectFileName` key, gives the name of a file which contains
+raw data.
+
+QVis is currently the only mechanism by which one can load color data
+into ImageVis3D.  Other file formats are capable of storing color data,
+but code must be added to the converter to inform higher levels of
+ImageVis3D to handle the data correctly.  QVis would be a good format
+to standardize around if you were designing a pipeline to work with
+single-block, raw data.
+
+An example `.dat` file is:
+
+.......................................
+  ObjectFileName: body.raw16
+  TaggedFileName: ---
+  Resolution:     512 512 1884
+  SliceThickness: 1 1 1
+  Format:         USHORT
+  NbrTags:        0
+  ObjectType:     TEXTURE_VOLUME_OBJECT
+  ObjectModel:    RGBA
+  GridType:       EQUIDISTANT
+.......................................
+
+This describes a `512x512x1884` dataset, stored as 16-bit unsigned
+integers (`USHORT` s).  As such, one would expect the data file,
+`body.raw16`, to be 987,758,592 bytes (`512 x 512 x 1884`, times
+2 bytes per element because the data are 16-bit).  Despite the
+`ObjectModel`, this is not color data, because the `Format` implies
+there is only a single element per grid location.  The user might
+have specified color data by dictating the format was `USHORT4` data,
+indicating there are 4 unsigned short values per grid location.  This
+volume is isotropic ("1 1 1" `SliceThickness`, `EQUIDISTANT` grid
+type).
+
+If you would like to write your own QVis data exporters, we recommend:
+
+- Always put the `ObjectFileName` as the first key available in the header.
+- Include the `TaggedFileName`, `NbrTags`, `ObjectType`, `ObjectModel`, and
+  `GridType` keys, even though ImageVis3D will ignore them (just copy the
+  values used above, if nothing else).  You never know when some other piece
+  of software will require those fields.
+- Stick to `CHAR`/`BYTE`, `UCHAR`, `SHORT`, `USHORT`, `UCHAR4` (color data),
+  and `FLOAT` for your `Format` s.  Other types are not currently implemented!
+  Patches are welcome.
+
+Nearly Raw Raster Data (NRRD)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+NRRD is a very simple format comprised of a header with
+accompanying data.  The NRRD file format is described extensively
+link:http://teem.sourceforge.net/nrrd/format.html[on its web site].
+
+ImageVis3D's implementation suffers from some quirks because it
+eschews the use of the more general Teem library.  We would welcome
+contributions which would allow ImageVis3D to understand more of NRRD's
+fields.  At the very least, please provide bug reports if you find
+fields which are not understood by ImageVis3D.
+
+NRRDs can be "attached" or "detached", the former meaning that metadata
+and data appear concatenated in a single file, and the latter meaning
+that the metadata information contains a specific tag which details
+a second file comprising the data.  In the "detached" form, the file
+extension is normally ".nhdr" instead of ".nrrd".
+
+Metamorph "Stack" Files
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Metamorph "Stack" files are a special case of TIFF.  ImageVis3D can
+read them by forcing the underlying `libtiff` library to read TIFF
+headers which it does not natively understand.
+
+This is a compatibility format; it exists solely to ease migration from
+past and present Metamorph users.  If you have a choice, do not use
+this format.
+
+TIFF Volumes
+~~~~~~~~~~~~
+
+While the majority of TIFFs contain just a single image inside them,
+a little known feature of the format is that it stores each image in
+what it calls a `Directory'.  Most TIFFs you would find on the web or
+in similar places consist of a single Directory, but some scientific
+software can generate these multi-directory TIFFs.
+
+TIFF volumes suffer from poor access time, because each image
+slice is stored separately instead of as a continuous volume.
+Further, the bundled converter for TIFF volumes is among the worst in
+ImageVis3D: ImageVis3D assumes that an input volume is a contiguous
+chunk of data.  As such, the converter must read each slice and append
+it into a single volume, requiring significantly increased temporary
+disk storage, as well as a costly additional conversion step.
+
+It is not recommended you utilize TIFF volumes if given the choice, but
+the format may be convenient for interoperation with other software.
+If you do go this route, we recommend utilizing the `libtiff`
+library, which has link:http://www.libtiff.org/libtiff.html[excellent
+documentation].
+
+VFF
+~~~
+
+This format was written for a specific collaborator.  It is a `header
++ data' format, very similar to an attached NRRD.  Little other
+information is available at this time.
+
+Brick of Values
+~~~~~~~~~~~~~~~
+
+This is a compatibility format, meant to allow importing data from the
+VisIt software package.  It is a header + data format, very similar in
+concept to a detached NRRD.
+
+In some cases, a BOV may be split into multiple files, using a special
+`%` notation for the filenames within the header.  This variation is
+not supported by ImageVis3D.  To ensure you will only have a single
+data file, make sure you have a "single block" dataset in VisIt.  You
+can obtain one by applying a non-distributed `Resample' operation on
+the data.
+
+Here is a VisIt-python script which converts a dataset in the
+`/path/to/dataset.silo` file into a 512^3 volume which ImageVis3D could
+import:
+
+[python]
+source~~~~
+include::helium.py[]
+source~~~~
+
+After modifying the `db = ...` line, invoke the script with:
+`/path/to/visit -cli -nowin -s script.py`.
+
+Fraunhofer EZRT
+~~~~~~~~~~~~~~~
+
+This is a simple binary format which directly supports a collaborator's
+work.  Not much else is known at this time, but you could ask for more
+information on the
+link:https://lists.sci.utah.edu/sympa/subscribe/tuvok-developers[tuvok-developers]
+mailing list.
+
+Adding a Converter
+------------------
+
+:leveloffset: 1
+include::add-converter.adc[]
+
+:leveloffset: 0
+
+Converting Your Output Format to ImageVis3D's UVF
+-------------------------------------------------
+
+UVF is more of a container format than a full file format.  The primary
+author of this document considers it more of a filesystem than a
+file format.  This is because UVF is very general, relying on the
+applications which implement it for some of the semantic value of the
+data.  As an example, with existing code it would be incredibly easy
+to write a 9-dimensional, 7-channel tensor dataset into a UVF file.
+ImageVis3D will have absolutely no idea how to render that data, but it
+is perfectly valid as a UVF file.
+
+UVF does, however, provide a means to query the kind of data stored in
+the file.  If ImageVis3D encountered such a dataset, it would simply
+ignore that data.  This is the recommended way to handle UVF files:
+pull out the portions your application understands, and ignore the
+rest.
+
+This naturally only works if the format itself supports multiple
+'portions'.  UVF supports this natively, and in fact ImageVis3D itself
+makes use of a few different 'portions', or, in UVF parlance, 'blocks'.
+Each block is almost like a file in-and-of itself; it contains a small
+header detailing specifics of that block, followed by whatever payload
+is relevant.  A global header presides over the entire UVF file, giving
+very general information and helping to index the various blocks which
+exist in the file.
+
+An academic paper about UVF
+link:http://www.sci.utah.edu/scipubs/search.html?schTerm=Unified+Volume+Format&year=2010&schGroup=&entrytype=[was
+published]
+while the format was still in its infancy.  The format has changed
+slightly since then, but not in concept, and the changes have actually
+been surprisingly minor.  As such, it still provides a relevant overview of
+UVFs format, features, and design goals.
+
+Unified Volume Format Reference
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In brief, UVF files start with a common header.  After the header
+follows a series of blocks, each with specialized data contained within
+them.  All blocks contain a block header, and share a common subset
+of header information, which appears before block-specific header
+information.
+
+Master Header
+^^^^^^^^^^^^^
+
+The first bytes within a UVF comprise the 'Master Header': a global
+header for the file which describes globally relevant parameters.  In
+order, these components are:
+
+- The raw, constant bytes: `0x55 0x56 0x46 0x2d 0x44 0x41 0x54 0x41`.  These
+  are UVF's "magic" bytes; many files may begin with these bytes, but a UVF
+  file will never begin with anything different.  Note that these bytes, if
+  interpreted as ASCII characters, spell out the string "UVF-DATA".
+- A single byte which details whether the file stores data in little or big
+  endian.  Zero values imply little endianness; non-zero values imply big
+  endian data.  This effects all subsequent data in the file, from the next
+  values in this header, to data stored within UVF's blocks.
+- An unsigned, 64-bit integer which gives the version of the UVF file.
+  ImageVis3D has been writing out version 2 UVF files since 1.0 was release in
+  May 2009.  ImageVis3D does not support version 0 or 1 UVF files, and any
+  differences between those and version 2 will not be documented here.
+- An unsigned, 64-bit integer which details how the file checksum was
+  calculated, according to the following table.
+
+.Integer Representation of Checksum Calculation Method
+[width="70%", frame="all", cols="1,10", option="header"]
+|====================================================================
+|Value | Meaning of the 64-bit value
+| 0    | No checksum exists
+| 1    | The checksum was calculated via a simple crc32 algorithm
+| 2    | The popular MD5 algorithm was used to calculate the checksum
+| 3    | An unknown method was used to calculate the checksum
+| N    | Reserved; no meaning.
+|====================================================================
+
+- An unsigned, 64-bit integer containing `n_checksum_bytes`, the number
+  of bytes in the checksum.
+
+IMPORTANT: The number of bytes in the checksum *always* appears, even
+if the type of checksum is 'none' (i.e. `0`, as per above)!  Of course,
+this field will be set to 0 if that is the case.
+
+- `n_checksum_bytes` of data which comprise the file's checksum.
+- An unsigned, 64-bit integer giving the number of bytes to seek _from
+  the position after reading this element_ (i.e., use `SEEK_CUR`).  For
+  example, if you are using the C streams interface, code to read this
+  element and seek to the first block might look like this:
+
+[c++]
+source~~~~
+  uint64_t seek;
+  fread(&seek, sizeof(uint64_t), 1, fp);
+  if(needed) { /* as per the endianness byte, above */
+    seek = bswap_64(seek);
+  }
+  fseek(fp, seek, SEEK_CUR);
+  /* fread now will read the first byte of the first real block */
+source~~~~
+
+- Any number (including 0) of undefined bytes.  Future UVF versions may
+  add meaning to the bytes starting here and up to the first data block, so
+  _portable UVF readers must seek over these bytes_!
+
+Data Blocks
+^^^^^^^^^^^
+
+There are relatively few data blocks currently defined.  They are: 1D
+histograms, 2D histograms, Key-value pairs, maximum and minimum data
+values, and raster data.
+
+All data blocks start with a common header.  The data in this header,
+in order, is:
+
+- An unsigned, 64-bit integer detailing the size of ...
+- ... a series of bytes forming an ASCII string which describes the
+  block's type.  This element is intended for display in, for example, a
+  UI that lets one view and manipulate UVF blocks, *not* for doing string
+  comparisons to figure out what kind of data are in the block.
+- The semantic type of a block, which details the specific data block present.
+
+.Semantic Block Types
+[width="50%", frame="all", cols="1,10", option="header"]
+|====================================================================
+|Value | Meaning of the 64-bit value
+| 0    | Empty.  This should not occur in production.
+| 1    | Regular, N-dimensional gridded data ("Raster data").
+| 2    | An N-dimensional representation for a transfer function
+| 3    | Preview image, meant to give an idea what is in the file
+| 4    | Key value pairs: strings used to provide extraneous metadata
+| 5    | 1D Histogram
+| 6    | 2D Histogram
+| 7    | Maximum and minimum data values (acceleration structure)
+| \*   | Undefined.
+|====================================================================
+
+- The type of compression used for the block.
+
+.Block Compression Type
+[width="50%", frame="all", cols="1,10", option="header"]
+|====================================================================
+|Value | Meaning of the 64-bit value
+| 0    | None; the block is not compressed
+| *    | Undefined.
+|====================================================================
+
+- An unsigned, 64-bit integer offset to the next block.  This is
+  relative to the position of the file pointer _after_ reading the
+  offset.
+
+1D Histogram Data Block
++++++++++++++++++++++++
+
+lorem ipsum
+
+Implementing a Reader Parallel to UVF
+-------------------------------------
+
+
+
+lorem ipsum

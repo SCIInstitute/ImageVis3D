@@ -1,69 +1,15 @@
-Adding a New File Format to ImageVis3D
-======================================
-The ImageVis3D Team <iv3d-users@sci.utah.edu>
-
 Introduction
 ------------
 
 ImageVis3D supports some file formats "out of the box".  In many cases,
 the easiest route to getting your data into ImageVis3D is to write it
 out in a format the program can read natively.  However, this might not
-always be a viable option.  This document describes the work involved
-in enabling ImageVis3D to read a new file format.
+always be a viable option.  This section describes the work involved
+in enabling ImageVis3D to convert a new file format into UVF.
 
-Grid Types
-----------
-
-Data can be defined on a wide variety of grid types.  ImageVis3D can
-only handle what is called "regular" gridded data.  Think of an image
-file: it is defined as a series of pixels, with an implicit ordering
-and distance between each pixel.  That is, if we call a pixel `x` and
-define a pixel `x+1` to be the pixel to the right of `x`, then we
-know that the distance between `x` and `x+1` is equal to the distance
-between `x+1` and `x+2`.  Regular data is an extension of this property
-to 3D: all data are layed out on an even grid.
-
-.Example Regular Gridded Data (`.` represents a grid location)
-........................................
-  .  .  .  .  .  .  .  .  .  .  .  .
-  .  .  .  .  .  .  .  .  .  .  .  .
-  .  .  .  .  .  .  .  .  .  .  .  .
-  .  .  .  .  .  .  .  .  .  .  .  .
-  .  .  .  .  .  .  .  .  .  .  .  .
-  .  .  .  .  .  .  .  .  .  .  .  .
-  .  .  .  .  .  .  .  .  .  .  .  .
-........................................
-
-.Unstructured Data (`.`: grid location, `\-/x`: edge)
-........................................
-  .----.--.---.---.
-   \   |   \ /    . 
-    \  .    x     |\
-     ./    / \    | \
-      \   .---.---.--.
-       \ /   /
-        .---.
-........................................
-
-If your data do not exemplify regular grid data, ImageVis3D will not be
-able to handle it natively.  For now, your best bet is to import such data
-into ImageVis3D is to resample it onto a regular grid.
-
-Fork in the Road
-----------------
-
-There are two ways by which you can enable ImageVis3D to read your file
-format.  The first, simpler way is to write a converter class which can
-help ImageVis3D's IO routines convert your data into a special type of
-the UVF file format.  The second, more complicated route is to inform
-ImageVis3D of a new dataset type, and write an implementation which
-will expose your data to ImageVis3D directly.
-
-The advantage of the latter approach is that no conversion will be
-necessary before you can visualize your data in ImageVis3D.  However,
-this method is only viable for multiresolution, bricked file formats.
-
-This document currently only describes the conversion path.
+Writing a converter is a good choice if you have pre-existing,
+single-block data which is not readable by any of the converters which
+ship with ImageVis3D.
 
 ImageVis3D Conversion Steps
 ---------------------------
@@ -93,7 +39,8 @@ class, derived from `RAWConverter`, which implements the methods
 `ConvertToRAW`, `ConvertToNative`, and `CanExportData`.  Here is an
 example header file:
 
-............................................................................
+[c++]
+source~~~~
 class YourConverter : public RAWConverter {
 public:
   YourConverter();
@@ -121,12 +68,13 @@ public:
                                const bool bQuantizeTo8Bit);
   virtual bool CanExportData() const { return false; }
 };
-............................................................................
+source~~~~
 
 Now define a skeleton of an implementation in a corresponding `.cpp`
 file:
 
-............................................................................
+[c++]
+source~~~~
 YourConverter::YourConverter() {}
 
 bool YourConverter::ConvertToRAW(...)
@@ -137,7 +85,7 @@ bool YourConverter::ConvertToRAW(...)
 bool YourConverter::ConvertToNative(...)
 {
 }
-............................................................................
+source~~~~
 
 (I've omitted the arguments here; they should be identical to those in
 the aforementioned header file.)
@@ -200,20 +148,25 @@ See `BOVConverter.cpp` for an example.
 
 A good test at this point would be to add:
 
-............................................................................
-  std::cerr << "constructor!" << std::endl;
-............................................................................
+[c++]
+source~~~~
+  MESSAGE("constructor!");
+source~~~~
 
 to your constructor, and:
 
-............................................................................
-  std::cerr << "convert!" << std::endl;
-............................................................................
+[c++]
+source~~~~
+  MESSAGE("convert!");
+source~~~~
 
-to your `ConvertToRAW` function.  Run ImageVis3D from the command line
-and tell it to load your data file.  The conversion will fail, but in
-the terminal you started ImageVis3D from you should see both of those
-messages.
+to your `ConvertToRAW` function.  Run ImageVis3D and enable the
+"Message" channel in the Debug Window (under "Help") tell it to load
+your data file.  The conversion will fail, but in the debug log you
+should see both of those messages (among many others).
+
+TIP: You can use the `WARNING` and `T_ERROR` macros to report warnings
+and errors, respectively, in your converter.
 
 Modify Raw Conversion Routine
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,7 +176,7 @@ to take an input data file, fill in the appropriate metadata as given
 by the arguments, and create a `strIntermediateFile` raw file with
 implicit structure.  Let's start with the arguments to the method:
 
-  - `strSourceFilename` - The filename where your data lives.  This the file
+  - `strSourceFilename` - The filename where your data lives.  This is the file
     that the user selected via the ImageVis3D UI.
 
   - `strTempDir` - if you need to create any temporary files, you should
@@ -265,7 +218,7 @@ converters are registered dynamically, this will work fine; see the
     sense in combination with certain values for `iComponentSize`.
 
   - `vVolumeSize` - the dimensions of the dataset, in X (index 0), Y (1), and
-    Z (1)
+    Z (2)
 
   - `vVolumeAspect` - default aspect ratio of these data, indexed just like
     `vVolumeSize`.  Normally, set this to `(1,1,1)`.
@@ -299,10 +252,11 @@ subsystem needs to know *which* format within the candidate set is
 the appropriate one to use.  It does this via the `virtual` `CanRead`
 method.
 
-.....................................................................
+[c++]
+source~~~~
 virtual bool CanRead(const std::string& filename,
                      const std::vector<int8_t> bytes) const;
-.....................................................................
+source~~~~
 
 The default implementation of this method is based purely on file
 extensions.  The extension[s] used for your format are the ones you
@@ -331,9 +285,9 @@ easily open and scan the file to see if it is valid, please do *not* do
 this in your converter.  If every converter operated in this fashion,
 identifying the appropriate converter would be extremely slow.  The
 `bytes` array argument should be sufficient to identify the file; if
-you need more data to do so definitively, please contact the lead IO
-developers and ask them to increase the number of bytes given to the
-method.
+you need more data to do so definitively, please contact the lead
+developers via the mailing lists and ask them to increase the number of
+bytes given to the method.
 
 You can use the `filename` parameter to key into any sort of custom
 file naming procedure that your file format has.  Many formats also
