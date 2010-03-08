@@ -795,7 +795,10 @@ dimension of the data.
 - `n_elements` 64-bit unsigned integers giving the element size (number
 of bytes element) per dimension.
 ...
-(unfinished)
+
+
+_(Sadly, this part of the documentation is not complete.  In the meantime, see
+the source for more information.)_
 
 Contribute Back
 ---------------
