@@ -356,11 +356,11 @@ method.
 OPTIONAL: Implement Native Conversion
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Many readers in ImageVis3D implement the `ConvertToNative` method.
-This allows one to use ImageVis3D to convert data from one file format
-to another.  To do this, implement the method and modify it to return
-`true`.  Make sure to also modify the `CanExportData` method to return
-`true`.
+Many converters in the IO subsystem implement the `ConvertToNative`
+method.  This allows one to use ImageVis3D to convert data from one
+file format to another.  To do this, implement the method and modify it
+to return `true`.  Make sure to also modify the `CanExportData` method
+to return `true`.
 
 Examples
 --------
