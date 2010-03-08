@@ -20,18 +20,18 @@ data into a raw input stream.  Subsequent stages perform tasks such as
 endian conversion, compute derived metadata, and generate the hierarchy
 of bricks needed for interactive rendering.
 
-Writing Your Reader
--------------------
+Writing Your Converter
+----------------------
 
-The basic steps involved in writing your own reader are:
+The basic steps involved in writing your own converter are:
 
 1. Create a new class derived from `RAWConverter`
 2. Register your format's file extension with the IO subsystem.
 3. Modify a conversion routine to create metadata and (potentially) rewrite it
 as a raw data stream.
 
-Reader Skeleton
-~~~~~~~~~~~~~~~
+Converter Skeleton
+~~~~~~~~~~~~~~~~~~
 
 You'll need to create both a header file (`.h`) and an implementation
 file (`.cpp`) for your new format.  They should define a new
@@ -90,7 +90,7 @@ source~~~~
 (I've omitted the arguments here; they should be identical to those in
 the aforementioned header file.)
 
-Congratulations!  You've got a minimal reader which can be plugged in
+Congratulations!  You've got a minimal converter which can be plugged in
 to ImageVis3D.  Let's get it part of ImageVis3D before we start trying
 to read any data.
 
@@ -101,7 +101,7 @@ ImageVis3D stores the list of files that are part of the program in a
 few places.  The files which are part of the IO subsystem are currently
 listed in `Tuvok/Tuvok.pro`.  In that file, you'll find two variables,
 `HEADERS' and `SOURCES', which identify which files to build.  You'll
-need to add your reader to the list specified in both variables.
+need to add your converter to the list specified in both variables.
 
 ............................................................................
   HEADERS += \
@@ -121,20 +121,21 @@ need to add your reader to the list specified in both variables.
 ............................................................................
 
 Once you've done that, rerun `qmake' from the root directory, and
-`make' to rebuild -- your reader should now be part of ImageVis3D!
+`make' to rebuild -- your converter should now be part of ImageVis3D!
 
 IMPORTANT: On Windows, the solution/project files do *not* respect the
 settings given in the `Tuvok.pro` file.  You must manually add your new
 files to the Visual Studio project in the normal way.
 
-CAUTION: On Windows, the solution/project files have diverged from
-the settings given in the qmake project file.  Do *not* run qmake on
-Windows, or you will not be able to compile ImageVis3D!
+CAUTION: On Windows, the solution/project files have diverged from the
+settings given in the qmake project file.  You will need to add your
+files to the Visual Studio project file in the normal way.  Do *not*
+run qmake on Windows, or you will not be able to compile ImageVis3D!
 
 Register Your File Extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The constructor for your new reader should modify two internal class
+The constructor for your new converter should modify two internal class
 variables: `m_vConverterDesc` and `m_vSupportedExt`.  The former should
 be set to a short human-readable string that describes the file format.
 This must be a single line and should generally be a short phrase of a
@@ -244,8 +245,8 @@ generate these data.
 
 If all goes well, you should return `true` from this method.
 
-OPTIONAL: Reimplement the `CanRead` Predicate
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*Optional*: Reimplement the `CanRead` Predicate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Since there are many converters available, at various times the IO
 subsystem needs to know *which* format within the candidate set is
@@ -263,7 +264,7 @@ extensions.  The extension[s] used for your format are the ones you
 added to the `m_vSupportedExt` vector in your constructor.  For most
 formats, this implementation will be perfectly fine.
 
-However, some readers need to know a bit more.  You might, for example,
+However, some converters need to know a bit more.  You might, for example,
 be working with a file format that relies on *prefixes* for file names
 instead of *postfixes* (i.e. "extensions").  You can override the
 `CanRead` method to implement a predicate more specific to your file
@@ -307,8 +308,8 @@ relatively little work, and certainly no dataset-sized work.  The
 correct place to detect file corruption would be in the `ConvertToRAW`
 method.
 
-OPTIONAL: Implement Native Conversion
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*Optional*: Implement Native Conversion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Many converters in the IO subsystem implement the `ConvertToNative`
 method.  This allows one to use ImageVis3D to convert data from one
@@ -320,7 +321,7 @@ Examples
 --------
 
 You can read ImageVis3D's existing code for converting data to get
-hints about how your reader should work.
+hints about how your converter should work.
 
   - `REKConverter.cpp` - This is the smallest of ImageVis3D's
     converters.  The EZRT file format that it reads is an example of a "header
@@ -340,6 +341,6 @@ hints about how your reader should work.
     it supports so-called "directories", which provide a mechanism to
     store multiple images in a single file.  If these images align, then
     a single TIFF file forms a volume instead of just an image.  This
-    reader provides an example of using an external library to read the
+    converter provides an example of using an external library to read the
     data, and then rewriting that data as a raw binary file that the rest
     of ImageVis3D's IO routines can handle.
