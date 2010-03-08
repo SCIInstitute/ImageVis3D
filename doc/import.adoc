@@ -296,7 +296,7 @@ Adding a Converter
 ------------------
 
 :leveloffset: 1
-include::add-converter.adc[]
+include::add-converter.adoc[]
 
 :leveloffset: 0
 
