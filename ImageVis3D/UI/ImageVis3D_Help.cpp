@@ -46,10 +46,6 @@
 #endif
 #include <fstream>
 
-#include <QtGui/QMessageBox>
-#include <QtNetwork/QHttp>
-#include <QtNetwork/QHttpResponseHeader>
-#include <QtNetwork/QAuthenticator>
 #include <QtCore/QUrl>
 #include <QtCore/QTime>
 #include <QtCore/QDate>
@@ -59,6 +55,11 @@
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QSettings>
+#include <QtGui/QMessageBox>
+#include <QtGui/QDesktopServices>
+#include <QtNetwork/QHttp>
+#include <QtNetwork/QHttpResponseHeader>
+#include <QtNetwork/QAuthenticator>
 
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include "ImageVis3D.h"
@@ -389,14 +390,7 @@ void MainWindow::FtpSuccess() {
 }
 
 void MainWindow::OnlineHelp() {
-#ifdef DETECTED_OS_WINDOWS
-  ShellExecuteA(NULL, "open", HELP_URL , NULL,NULL,SW_SHOWDEFAULT);
-#elif defined(DETECTED_OS_APPLE)
-    system("open "HELP_URL);
-#elif defined(DETECTED_OS_LINUX)
-  /// @todo don't assume firefox is installed.
-  system("firefox " HELP_URL);
-#endif
+  QDesktopServices::openUrl(QString(HELP_URL));
 }
 
 #ifdef DETECTED_OS_LINUX
@@ -442,29 +436,11 @@ void MainWindow::OpenManual() {
 }
 
 void MainWindow::OnlineVideoTut() {
-#ifdef DETECTED_OS_WINDOWS
-  ShellExecuteA(NULL, "open", TUTORIAL_URL, NULL,NULL,SW_SHOWDEFAULT);
-#endif
-#ifdef DETECTED_OS_APPLE
-  system("open "TUTORIAL_URL);
-#endif
-#ifdef DETECTED_OS_LINUX
-  /// @todo don't assume firefox is installed.
-  system("firefox " TUTORIAL_URL);
-#endif
+  QDesktopServices::openUrl(QString(TUTORIAL_URL));
 }
 
 void MainWindow::GetExampleData() {
-#ifdef DETECTED_OS_WINDOWS
-  ShellExecuteA(NULL, "open", DEMO_DATA_URL, NULL,NULL,SW_SHOWDEFAULT);
-#endif
-#ifdef DETECTED_OS_APPLE
-  system("open "DEMO_DATA_URL);
-#endif
-#ifdef DETECTED_OS_LINUX
-  /// @todo don't assume firefox is installed.
-  system("firefox " DEMO_DATA_URL);
-#endif
+  QDesktopServices::openUrl(QString(DEMO_DATA_URL));
 }
 
 void MainWindow::CloseWelcome() {
