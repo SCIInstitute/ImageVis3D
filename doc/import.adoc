@@ -122,7 +122,8 @@ path to loading and visualizing your data.
 - *Brick of Values* (`.bov` extension): A raw 3D array and associated header; a
   common method to export data from the link:http://www.visitusers.org/[VisIt]
   software package.
-- *EZRT* (`.rek` extension): Fraunhofer EZRT format.
+- *REK* (`.rek` extension): Fraunhofer Raw format.
+- *Raw* data, optionally compressed
 
 DICOM Stacks
 ~~~~~~~~~~~~
@@ -283,14 +284,34 @@ source~~~~
 After modifying the `db = ...` line, invoke the script with:
 `/path/to/visit -cli -nowin -s script.py`.
 
-Fraunhofer EZRT
-~~~~~~~~~~~~~~~
+Fraunhofer Raw Volumes
+~~~~~~~~~~~~~~~~~~~~~~
 
 This is a simple binary format which directly supports a collaborator's
 work.  Not much else is known at this time, but you could ask for more
 information on the
 link:https://lists.sci.utah.edu/sympa/subscribe/tuvok-developers[tuvok-developers]
 mailing list.
+
+Raw Data
+~~~~~~~~
+
+If ImageVis3D cannot identify your data type, it will assume the data
+are raw and open up a conversion dialog to specify the data parameters.
+
+This converter expects that data will be 3 dimensional.  Data must be
+layed out, as the name implies, in a 'raw' manner; if there is metadata
+stored between data values, this converter will not function correctly.
+It can, however, skip over some bytes at the beginning of a data file,
+to accomodate typical "header + value" formats.
+
+The data must vary in X slowest, and Z quickest.  If this is not the
+case for your data, you should swap X and Z dimensions that you input.
+
+The raw conversion dialog is not available when ImageVis3D is run in
+batch mode, as is the case when scripting commands are being executed.
+The source repository includes a command line tool to batch convert a
+set of datasets.
 
 Adding a Converter
 ------------------
