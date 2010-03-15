@@ -417,6 +417,7 @@ void MainWindow::InitAllWorkspaces() {
   InitDockWidget(dockWidget_1DTrans);
   InitDockWidget(dockWidget_2DTrans);
   InitDockWidget(dockWidget_IsoSurface);
+  InitDockWidget(dockWidget_Time);
   InitDockWidget(dockWidget_Debug);
   InitDockWidget(dockWidget_Stereo);
 }
