@@ -715,6 +715,12 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   checkBox_Stereo->setChecked(ren->GetStereo());
   horizontalSlider_EyeDistance->setValue(int(ren->GetStereoEyeDist()*100));
   horizontalSlider_FocalLength->setValue(int(ren->GetStereoFocalLength()*10));
+  checkBox_EyeSwap->setChecked(ren->GetStereoEyeSwap());
+
+  switch (ren->GetStereoMode()) {
+    case AbstrRenderer::SM_RB : radioButton_RBStereo->setChecked(true); break;
+    default                   : radioButton_ScanlineStereo->setChecked(true); break;
+  }
 
   checkBox_Lighting->setChecked(ren->GetUseLighting());
   SetSampleRateSlider(int(ren->GetSampleRateModifier()*100));
@@ -829,14 +835,16 @@ void MainWindow::RenderWindowViewChanged(int iMode) {
 }
 
 void MainWindow::EnableStereoWidgets() {
-  checkBox_Stereo->setEnabled(true);
+  frame_Stereo->setEnabled(true);
   horizontalSlider_EyeDistance->setEnabled(true);
   horizontalSlider_FocalLength->setEnabled(true);
+  frame_StereoMode->setEnabled(true);
 }
 void MainWindow::DisableStereoWidgets() {
-  checkBox_Stereo->setEnabled(false);
+  frame_Stereo->setEnabled(false);
   horizontalSlider_EyeDistance->setEnabled(false);
   horizontalSlider_FocalLength->setEnabled(false);
+  frame_StereoMode->setEnabled(false);
 }
 
 void MainWindow::RenderWindowClosing(RenderWindow* sender) {

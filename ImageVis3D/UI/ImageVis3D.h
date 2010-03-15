@@ -251,6 +251,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptabl
     void ChangeLocks();
 
     void ToggleStereoRendering();
+    void ToggleStereoMode();
+    void ToggleStereoEyeSwap();
     void SetStereoEyeDistance();
     void SetStereoFocalLength();
 
