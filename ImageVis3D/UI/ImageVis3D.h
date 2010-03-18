@@ -68,7 +68,8 @@ class QSslError;
 class QTimer;
 class FTPDialog;
 
-class MainWindow : public QMainWindow, protected Ui_MainWindow, public Scriptable
+class MainWindow : public QMainWindow, protected Ui_MainWindow,
+                   public Scriptable
 {
   Q_OBJECT
 

@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <algorithm>
 #include "ImageVis3D.h"
 #include "BrowseData.h"
 #include "FTPDialog.h"
@@ -179,6 +180,10 @@ MainWindow::MainWindow(MasterController& masterController,
   m_pRedrawTimer->setInterval(IV3D_TIMER_INTERVAL);
 }
 
+namespace {
+  template <typename T> void Delete(T *t) { delete t; }
+}
+
 MainWindow::~MainWindow()
 {
   if (m_pDebugOut == m_MasterController.DebugOut()) {
@@ -203,6 +208,15 @@ MainWindow::~MainWindow()
 
   delete m_pMetadataDialog;
   delete m_pWelcomeDialog;
+  delete m_pFTPDialog;
+
+  delete m_1DTransferFunction;
+  delete m_2DTransferFunction;
+  delete m_pQLightPreview;
+  std::for_each(m_recentFileActs, m_recentFileActs+ms_iMaxRecentFiles,
+                Delete<QAction>);
+  std::for_each(m_recentWSFileActs, m_recentWSFileActs+ms_iMaxRecentFiles,
+                Delete<QAction>);
 }
 
 /// initializes the timer.
