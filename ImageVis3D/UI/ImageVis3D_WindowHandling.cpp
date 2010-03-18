@@ -403,11 +403,35 @@ void MainWindow::InitDockWidget(QDockWidget * v) const {
   v->setVisible(false);
   v->setFloating(true);
   v->resize(v->minimumSize());
+#ifdef DETECTED_OS_APPLE
+  // Ahh, Qt, how I love thee; let me count the ways...
+  //
+  // Dock widgets have no frames.  Yet Qt 4.6.0 does position based on
+  // the window size with a frame.  Further, Qt 4.6.0 defaults to (0,0)
+  // for window positions which aren't otherwise set.
+  //
+  // In effect, this means that the default position for our dock
+  // widgets is so high up in the screen that the top few pixels of the
+  // widget are actually *under* the Mac default menubar.  This means
+  // the dock widgets are immobile, because you can't click anywhere to
+  // drag them.  Maybe Apple will someday make a mighty mighty Mouse,
+  // whose special power is to click under menubars...
+  //
+  // To make things extra-special, this only seems to happen when
+  // Qt is compiled against Carbon.  Moving windows a tad inward
+  // isn't necessarily bad, though, so we don't bother checking for
+  // Cocoa.  Eventually, we'll be doing Cocoa-only binaries, and should
+  // probably remove this code so that it doesn't make anybody else
+  // vomit.
+  if(v->pos() == QPoint(0,0)) {
+    v->move(25, 25);
+  }
+#endif
 }
 
 void MainWindow::InitAllWorkspaces() {
-  InitDockWidget(dockWidget_Tools); // no used at the moment
-  InitDockWidget(dockWidget_Filters); // no used at the moment
+  InitDockWidget(dockWidget_Tools); // not used at the moment
+  InitDockWidget(dockWidget_Filters); // not used at the moment
   InitDockWidget(dockWidget_Lighting);
   InitDockWidget(dockWidget_Information);
   InitDockWidget(dockWidget_Recorder);
