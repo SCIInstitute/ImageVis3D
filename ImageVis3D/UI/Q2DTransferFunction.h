@@ -193,7 +193,6 @@ private:
   unsigned int m_iCachedHeight;
   unsigned int m_iCachedWidth;
   QPixmap*   m_pBackdropCache;
-  QPixmap*   m_pSwatchImage;
 
   // cached image of the histogram
   QImage* m_pHistImage;
