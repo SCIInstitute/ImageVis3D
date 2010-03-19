@@ -6,7 +6,7 @@ TEMPLATE          = app
 win32:TEMPLATE    = vcapp
 CONFIG           += exceptions largefile link_prl static stl warn_on
 CONFIG           -= app_bundle
-macx:DEFINES     += QT_MAC_USE_COCOA=0
+macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/UVFReader
 unix:TARGET       = Build/uvf
 QT               += opengl

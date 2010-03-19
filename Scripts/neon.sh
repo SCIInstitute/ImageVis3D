@@ -37,10 +37,6 @@ echo "-------------------------------------" >> ${status}
 try cd ${HOME}/imagevis3d
 rm -f *.tar.gz *.zip *.dmg warnings
 
-# force cocoa
-#find . -iname \*.pro -exec \
-#    sed -i bak s,QT_MAC_USE_COCOA=0,QT_MAC_USE_COCOA=1,g {} + || exit 1
-
 mailtry sh Scripts/nightly.sh
 grep -v "IO/3rdParty" warnings > warn_no_3rd
 mv warn_no_3rd warnings

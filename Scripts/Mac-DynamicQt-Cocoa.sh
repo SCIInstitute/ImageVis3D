@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=4.6.0
+VERSION=4.6.2
 PREFIX="${HOME}/sw"
 QTDIR="qt-everywhere-opensource-src-${VERSION}"
 echo "Removing old build..."
@@ -23,7 +23,7 @@ pushd ${QTDIR} || exit 1
 echo "yes" | \
 ./configure \
         -prefix ${HOME}/sw \
-        -arch x86_64 \
+        -arch x86 \
         -buildkey "imagevis3d" \
         -fast \
         -stl \
