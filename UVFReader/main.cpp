@@ -78,7 +78,6 @@ void ShowUsage(string filename) {
       "        -show1dhist  also output 1D histogram to console" << endl <<
       "        -show2dhist  also output 2D histogram to console" << endl <<
       "        -create      if set create a new test UVF file with a filename set by -f" << endl <<
-      "        -create      if set create a new test UVF file with a filename set by -f" << endl <<
       "        -sizeX       requires '-create' argument, specifies the width of the volume to be created (default = 100)" << endl <<
       "        -sizeY       requires '-create' argument, specifies the height of the volume to be created (default = 200)" << endl <<
       "        -sizeZ       requires '-create' argument, specifies the depth of the volume to be created (default = 300)" << endl <<
