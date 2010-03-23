@@ -104,6 +104,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
   protected slots:
     void TransferToI3M();
+    void StartDatasetServer();
 
     void FtpFail();
     void FtpSuccess();
@@ -405,6 +406,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void RotateCurrentViewY(double angle);
     void RotateCurrentViewZ(double angle);
     void TranslateCurrentView(double x, double y, double z);
+    void ResetRenderingParameters();
 
     void ShowInformationDialog(QString strTitle, QString strMessage);
     void ShowWarningDialog(QString strTitle, QString strMessage);

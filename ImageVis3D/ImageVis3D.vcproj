@@ -810,6 +810,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UI\AutoGen\moc_DatasetServerDialog.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\UI\AutoGen\moc_FTPDialog.cpp"
 					>
 				</File>
@@ -3022,6 +3026,98 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="DatasetServer"
+					>
+					<File
+						RelativePath=".\UI\DatasetServerDialog.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\UI\DatasetServerDialog.h"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug (with DirectX)|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug (with DirectX)|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (with DirectX)|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release (with DirectX)|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Performing moc on $(InputName).h"
+								CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+								Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+							/>
+						</FileConfiguration>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -3055,6 +3151,106 @@
 				RelativePath=".\IO\DialogConverter.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="DatasetServer"
+			>
+			<File
+				RelativePath=".\DatasetServer\DatasetServer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DatasetServer\DatasetServer.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Performing moc on $(InputName).h"
+						CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+						Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Performing moc on $(InputName).h"
+						CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+						Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Performing moc on $(InputName).h"
+						CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+						Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Performing moc on $(InputName).h"
+						CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+						Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (with DirectX)|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Performing moc on $(InputName).h"
+						CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+						Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug (with DirectX)|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Performing moc on $(InputName).h"
+						CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+						Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release (with DirectX)|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Performing moc on $(InputName).h"
+						CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+						Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release (with DirectX)|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Performing moc on $(InputName).h"
+						CommandLine="$(QTDIR32)\bin\moc.exe &quot;$(InputPath)&quot; -o &quot;$(InputDir)AutoGen\moc_$(InputName).cpp&quot;"
+						Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<Filter
+				Name="AutoGen"
+				>
+				<File
+					RelativePath=".\DatasetServer\AutoGen\moc_DatasetServer.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath=".\main.cpp"

@@ -37,15 +37,31 @@
 
 #include "ImageVis3D.h"
 #include "I3MDialog.h"
+#include "DatasetServerDialog.h"
+#include <QtGui/QMessageBox>
 
 using namespace tuvok;
 using namespace std;
 
 void MainWindow::TransferToI3M() {
+  if (!m_pActiveRenderWin) return;
+
   const UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
 
   if (currentDataset) {
     I3MDialog d(currentDataset, m_strTempDir, this);
     d.exec();
+  } else {
+    QMessageBox errorMessage;
+    errorMessage.setText("ImageVis3D Mobile Device Transfer only supported for UVF datasets.");
+    errorMessage.setIcon(QMessageBox::Critical);
+    errorMessage.exec();  
+    T_ERROR("ImageVis3D Mobile Device Transfer only supported for UVF datasets.");
   }
+}
+
+
+void MainWindow::StartDatasetServer() {
+  DatasetServerDialog d(m_strTempDir, this);
+  d.exec();
 }

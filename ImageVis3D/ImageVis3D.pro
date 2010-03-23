@@ -75,6 +75,8 @@ HEADERS += StdDefines.h \
            UI/LODDlg.h \
            UI/MergeDlg.h \
            UI/CrashDetDlg.h \
+           UI/DatasetServerDialog.h \
+           DatasetServer/DatasetServer.h \          
            DebugOut/QTOut.h \
            DebugOut/QTLabelOut.h \
            IO/DialogConverter.h
@@ -132,6 +134,8 @@ SOURCES += UI/BrowseData.cpp \
            UI/MIPRotDialog.cpp \           
            UI/MergeDlg.cpp \
            UI/CrashDetDlg.cpp \
+           UI/DatasetServerDialog.cpp \
+           DatasetServer/DatasetServer.cpp \           
            DebugOut/QTOut.cpp \
            DebugOut/QTLabelOut.cpp \
            IO/DialogConverter.cpp \

@@ -912,3 +912,9 @@ void MainWindow::UpdateColorWidget() {
   horizontalSlider_diffuseIntensity->setValue(intensity[1]);
   horizontalSlider_specularIntensity->setValue(intensity[2]);
 }
+
+
+void MainWindow::ResetRenderingParameters() {
+  if (!m_pActiveRenderWin) return;
+  m_pActiveRenderWin->ResetRenderingParameters();
+}

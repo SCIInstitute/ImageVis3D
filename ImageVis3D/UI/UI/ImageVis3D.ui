@@ -66,6 +66,7 @@
     <addaction name="actionMerge_Data_Sets"/>
     <addaction name="actionTransfer_to_ImageVis3D_Mobile_Device"/>
     <addaction name="actionExport_Dataset"/>
+    <addaction name="actionStart_Dataset_Server"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -5588,6 +5589,11 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <bool>true</bool>
    </property>
   </action>
+  <action name="actionStart_Dataset_Server">
+   <property name="text">
+    <string>Start Dataset Server</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="0"/>
  <tabstops>
@@ -7801,6 +7807,22 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionStart_Dataset_Server</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>StartDatasetServer()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>810</x>
+     <y>1295</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -7903,5 +7925,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>SetTimestep(int)</slot>
   <slot>ToggleStereoEyeSwap()</slot>
   <slot>ToggleStereoMode()</slot>
+  <slot>StartDatasetServer()</slot>
  </slots>
 </ui>

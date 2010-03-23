@@ -174,6 +174,7 @@ class RenderWindow
 
     const std::vector<RenderRegion*>& GetActiveRenderRegions() const;
     void SetActiveRenderRegions(const std::vector<RenderRegion*>&) const;
+    void ResetRenderingParameters();
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
@@ -284,8 +285,6 @@ class RenderWindow
     void SetRotation(RenderRegion *region, const FLOATMATRIX4& newRotation);
     void SetTranslation(RenderRegion *region,
                         const FLOATMATRIX4& mAccumulatedTranslation);
-
-    void ResetRenderingParameters();
 
 
   private:

@@ -71,6 +71,7 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "rotateY", "angle","rotate the data by \"angle\" degree around the x axis");
   pScriptEngine->RegisterCommand(this, "rotateZ", "angle","rotate the data by \"angle\" degree around the x axis");
   pScriptEngine->RegisterCommand(this, "translate", "x y z","translate the data by [x,y,z]");
+  pScriptEngine->RegisterCommand(this, "reset", "","reset all rendering parameters to their inital state");
   pScriptEngine->RegisterCommand(this, "capturesingle", "targetfile", "capture a single image into targetfile");
   pScriptEngine->RegisterCommand(this, "capturesequence", "targetfile", "capture a single image into targetfile_counter");
   pScriptEngine->RegisterCommand(this, "stayopen", "", "do not close the application at the end of the script");
@@ -109,6 +110,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "rotateY")         { RotateCurrentViewY(atof(strParams[0].c_str()));} else
   if (strCommand == "rotateZ")         { RotateCurrentViewZ(atof(strParams[0].c_str()));} else
   if (strCommand == "translate")       { TranslateCurrentView(atof(strParams[0].c_str()), atof(strParams[1].c_str()), atof(strParams[2].c_str()));} else
+  if (strCommand == "reset")           { ResetRenderingParameters();} else
   if (strCommand == "capturesingle")   { bResult = CaptureFrame(strParams[0]); if (!bResult) {strMessage = "Unable to save file "+strParams[0];}} else
   if (strCommand == "capturesequence") { bResult = CaptureSequence(strParams[0]); if (!bResult) {strMessage = "Unable to save file "+strParams[0];}} else
   if (strCommand == "stayopen")        { m_bStayOpenAfterScriptEnd = true;} else
@@ -138,6 +140,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
 
   return true;
 }
+
 
 bool MainWindow::Pack(const std::vector< std::string >& strParams) {
   vector<string> vFiles(strParams.begin(), strParams.end()-1);
