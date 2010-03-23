@@ -131,8 +131,6 @@ void DatasetServer::sendData()
 		inTF.close();
 	}
 
-  static unsigned int iSendMessage = 0;
- 
   QTcpSocket *clientConnection = tcpServer->nextPendingConnection();
   connect(clientConnection, SIGNAL(disconnected()),
                                    clientConnection, 

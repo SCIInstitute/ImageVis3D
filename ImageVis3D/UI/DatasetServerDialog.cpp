@@ -157,7 +157,7 @@ DatasetServerDialog::~DatasetServerDialog() {
   QSettings settings;
   settings.beginGroup("DatasetServer");
   settings.setValue("StartPort", editPort->text().toInt());
-  settings.setValue("DatasetCount", aDatasets.size());
+  settings.setValue("DatasetCount", static_cast<unsigned>(aDatasets.size()));
 
   for (size_t b = 0;b< aDatasets.size();b++) {
     QString volume = tr("Volume%1").arg(b);
