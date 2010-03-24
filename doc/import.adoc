@@ -593,6 +593,15 @@ If you do not care about this functionality, just ignore this method.
 The default implementation already indicates that the export operation
 has failed.
 
+*Optional*: `Name`
+++++++++++++++++++
+
+While not strictly required, you should implement a `Name` method. This
+simply returns a user-centric name which describes your data format.
+The string should be short; you just want to differentiate this from
+other formats.  As an example, ImageVis3D's native format returns the
+3-character string, "UVF."
+
 Converting Your Output Format to ImageVis3D's UVF
 -------------------------------------------------
 
