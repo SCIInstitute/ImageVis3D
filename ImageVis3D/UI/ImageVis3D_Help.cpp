@@ -405,33 +405,62 @@ void MainWindow::OpenManual() {
 #elif defined(DETECTED_OS_APPLE)
   string manualOpenCall = "open " + SysTools::GetFromResourceOnMac(MANUAL_NAME);
   system(manualOpenCall.c_str());
-#elif defined(DETECTED_OS_LINUX)
+#else
+  // This path assumes at least "POSIX", and the /proc FS is linux-specific.
+  // Technically things should still work even if /proc doesn't exist.
+
   /// Find out where our binary lives.  The manual is placed in the same
   /// directory in the case of the binary tarballs we provide.
-  std::vector<std::string> paths;
+  std::vector<std::string> paths(4);
   char linkbuf[1024];
   memset(linkbuf, 0, 1024);
   if(readlink("/proc/self/exe", linkbuf, 1024) == -1) {
     T_ERROR("Error reading /proc/self/exe; ignoring binary directory while "
             "searching for manual.");
   } else {
-    paths.push_back(std::string(dirname(linkbuf)));
+    paths.push_back(std::string(dirname(linkbuf)) + MANUAL_NAME);
   }
-  paths.push_back("/usr/share/doc/imagevis3d/");
-  paths.push_back("/usr/local/share/doc/imagevis3d/");
-  paths.push_back(".");
+  paths.push_back(std::string("/usr/share/doc/imagevis3d/") + MANUAL_NAME);
+  paths.push_back(std::string("/usr/local/share/doc/imagevis3d/") +
+                  MANUAL_NAME);
+  paths.push_back(std::string("./") + MANUAL_NAME);
   std::vector<std::string>::const_iterator found = find_if(paths.begin(),
                                                            paths.end(),
                                                            readable);
   if(found == paths.end()) {
     T_ERROR("Could not find manual...");
+    QMessageBox::critical(this, "Manual Not Found",
+                          "Could not find the local manual.  This is probably "
+                          "a packaging/distribution error -- please use the "
+                          "'Report an Issue' feature and mention how you "
+                          "obtained this ImageVis3D binary.  Thanks!\n\n"
+                          "As a workaround, use the 'Open Online Help' "
+                          "option to download the latest version of the "
+                          "manual.");
     return;
   }
-  /// @todo don't assume xpdf is installed.
-  char manual[2048];
-  snprintf(manual, 2048, "xpdf %s/%s", (*found).c_str(), MANUAL_NAME);
-  /// @todo for that matter, don't use system either, it freezes our process.
-  system(manual);
+  MESSAGE("Manual found at: %s", found->c_str());
+
+  // Now, figure out how to load the PDF.  Ideally, we'd use FD.o's
+  // shared-mime-info to lookup which program the user wants to use for
+  // this.  Qt is probably linking to this in some way, so it's likely
+  // we can use it directly, but I'm having trouble verifying that.
+  /// @todo FIXME use shared-mime-info to figure out PDF-reading program
+  // So, for now, just iterate through a hardcoded list and use the first that
+  // works.
+
+  typedef std::tr1::array<std::string, 3> progvec;
+  progvec viewers = {{ "evince", "xpdf", "acroread" }};
+  // Now iterate through each of those programs until one of them
+  // successfully launches.
+  for(progvec::const_iterator prog = viewers.begin(); prog != viewers.end();
+      ++prog) {
+    char manual[1024];
+    snprintf(manual, 1024, "%s %s", prog->c_str(), found->c_str());
+    if(system(manual) != -1) {
+      break;
+    }
+  }
 #endif
 }
 
