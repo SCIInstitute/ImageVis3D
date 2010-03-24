@@ -35,6 +35,9 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <QtCore/QUrl>
+#include <QtGui/QDesktopServices>
+
 #include "URLDlg.h"
 
 #ifdef DETECTED_OS_WINDOWS
@@ -61,16 +64,5 @@ URLDlg::~URLDlg(void)
 void URLDlg::Download()
 {
   accept();
-
-#ifdef DETECTED_OS_WINDOWS
-  ShellExecuteA(NULL, "open", m_strURL.toAscii(), NULL,NULL, SW_SHOWDEFAULT);
-#endif
-#ifdef DETECTED_OS_APPLE
-  m_strURL = tr("open %1").arg(m_strURL);
-  system(m_strURL.toAscii());
-#endif
-#ifdef DETECTED_OS_LINUX
-  m_strURL = tr("firefox %1").arg(m_strURL);
-  system(m_strURL.toAscii()); /// \todo: Tom: instead of hoping for firefox to be installed integrate this into the UI
-#endif
+  QDesktopServices::openUrl(m_strURL);
 }
