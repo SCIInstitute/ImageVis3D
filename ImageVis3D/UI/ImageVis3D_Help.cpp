@@ -39,6 +39,11 @@
 #include <algorithm>
 #include <cstdio>
 #include <string>
+#ifdef _MSC_VER
+# include <array>
+#else
+# include <tr1/array>
+#endif
 
 #ifdef DETECTED_OS_LINUX
 # include <libgen.h>
