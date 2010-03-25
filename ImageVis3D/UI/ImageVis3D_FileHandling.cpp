@@ -147,7 +147,8 @@ bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
   return LoadDataset(QStringList(inFile.c_str()), convFile.c_str(), false);
 }
 
-bool MainWindow::LoadDataset(QStringList files, QString targetFilename, bool bNoUserInteraction) {
+bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
+                             bool bNoUserInteraction) {
   if(files.empty()) {
     T_ERROR("No files!");
     return false;
@@ -171,6 +172,8 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename, bool bNo
 
   // now determine if we've been given a UVF, and can just open it and be done,
   // or if we need to convert the files.
+  // If we were given multiple files, we don't need to do any work; we *know*
+  // that needs to be converted.
   bool needs_conversion = true;
   if(files.size() == 1) {
     // check to see if we need to convert this file to a supported format.
@@ -237,16 +240,18 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename, bool bNo
 
   RenderWindow *renderWin = CreateNewRenderWindow(filename);
   if(NULL == renderWin) {
+    WARNING("RW creation failed.  Bailing...");
+    return false;
+  }
+
+  if(!CheckForRebricking(renderWin, filename, targetFilename,
+                         bNoUserInteraction)) {
     return false;
   }
 
   renderWin->GetQtWidget()->show();  // calls RenderWindowActive automatically
   UpdateMenus();
   AddFileToMRUList(filename);
-
-  if(!CheckForRebricking(renderWin, filename, targetFilename, bNoUserInteraction)) {
-    return false;
-  }
 
   return true;
 }
