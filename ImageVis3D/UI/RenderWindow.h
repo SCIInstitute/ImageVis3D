@@ -91,7 +91,6 @@ class RenderWindow
     void Rotate(const FLOATMATRIX4& mRotation, RenderRegion *region=NULL);
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() const {return m_bRenderSubsysOK;}
-    bool RebrickingRequired() const {return m_bRebrickingRequired;}
 
     static const size_t               ms_iLockCount = 4;
     std::vector<RenderWindow*>        m_vpLocks[ms_iLockCount];
@@ -187,7 +186,6 @@ class RenderWindow
     AbstrRenderer*    m_Renderer;
     MasterController& m_MasterController;
     bool              m_bRenderSubsysOK;
-    bool              m_bRebrickingRequired;
     RegionSplitter    selectedRegionSplitter;
     UINTVECTOR2       m_vWinDim;
     UINTVECTOR2       m_vMinSize;

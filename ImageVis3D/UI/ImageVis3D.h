@@ -362,9 +362,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool LoadDataset(const std::vector< std::string >& strParams);
     bool LoadDataset(QStringList fileName, QString targetFileName="",
                      bool bNoUserInteraction=false);
-    bool CheckForRebricking(RenderWindow *, QString filename,
-                            QString targetFileName,
-                            bool bNoUserInteraction);
+    bool RebrickDataset(QString filename, QString targetFilename,
+                        bool bNoUserInteraction);
 
     QString GetConvFilename();
 

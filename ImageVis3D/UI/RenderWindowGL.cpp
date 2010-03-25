@@ -76,7 +76,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   // disable the depth-buffer to offscreen copy operations
   m_Renderer->SetConsiderPreviousDepthbuffer(false);
 
-  if (!m_Renderer->LoadDataset(m_strDataset.toStdString(), m_bRebrickingRequired)) {
+  if (!m_Renderer->LoadDataset(m_strDataset.toStdString())) {
     m_bRenderSubsysOK = false;
     return;
   }
