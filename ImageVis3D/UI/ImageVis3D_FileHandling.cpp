@@ -148,7 +148,6 @@ bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
 }
 
 bool MainWindow::LoadDataset(QStringList files, QString targetFilename, bool bNoUserInteraction) {
-
   if(files.empty()) {
     T_ERROR("No files!");
     return false;
@@ -174,15 +173,16 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename, bool bNo
   // or if we need to convert the files.
   bool needs_conversion = true;
   if(files.size() == 1) {
-    bool bChecksumFail=false;
-    // check to see if we need to convert this file to uvf.  It can also happen
-    // that it *is* a UVF but the checksum is bad, so we need to report an
-    // error.
-    if ((m_bQuickopen &&
-        !m_MasterController.IOMan()->NeedsConversion(files[0].toStdString())) ||
-        !m_MasterController.IOMan()->NeedsConversion(files[0].toStdString(),
-                                                     bChecksumFail)) {
-      if (bChecksumFail) {
+    // check to see if we need to convert this file to a supported format.
+
+    const IOManager& mgr = *(m_MasterController.IOMan());
+    if(!mgr.NeedsConversion(files[0].toStdString())) {
+      needs_conversion = false;
+
+      // It might also be the case that the checksum is bad && we need to
+      // report an error, but we don't bother with the checksum if they've
+      // asked us not to in the preferences.
+      if(!m_bQuickopen && false == mgr.Verify(files[0].toStdString())) {
         QString strText = tr("File %1 appears to be a broken UVF file: "
                              "the header looks ok, "
                              "but the checksum does not match.").arg(files[0]);
@@ -192,7 +192,6 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename, bool bNo
         }
         return false;
       }
-      needs_conversion = false;
     }
   }
 
