@@ -536,6 +536,16 @@ There are a variety of methods, such as `GetBitWidth` and
 These provide important information on how the data received out of
 `GetBrick` is interpreted.
 
+*Optional*: Verify
+++++++++++++++++++
+
+`Verify` is how you would implement an "expensive" check for your file
+format.  UVF calculates a checksum by reading the entire file, and
+compares it to a precalculated checksum in the file.
+
+Keep in mind that the user can disable this check through the
+ImageVis3D UI.
+
 *Optional*: Rescale Factors
 +++++++++++++++++++++++++++
 
