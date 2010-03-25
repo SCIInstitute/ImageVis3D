@@ -251,7 +251,7 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
     renderWin->GetQtWidget()->show();  // calls RenderWindowActive automatically
     UpdateMenus();
     AddFileToMRUList(filename);
-  } catch(tuvok::io::DSBricksOversized& ioe) {
+  } catch(tuvok::io::DSBricksOversized&) {
     WARNING("Bricks are too large.  Querying the user to see if we should "
             "rebrick the dataset.");
     if(renderWin) { delete renderWin; renderWin = NULL; }
