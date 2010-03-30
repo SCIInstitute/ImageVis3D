@@ -46,8 +46,10 @@
 #include "DebugOut/QTLabelOut.h"
 
 using namespace tuvok;
+using namespace std;
 
-I3MDialog::I3MDialog(const UVFDataset* currentDataset, const std::string& strTmpDir, QWidget* parent, Qt::WindowFlags flags) :
+I3MDialog::I3MDialog(const UVFDataset* currentDataset, const string& strTmpDir,
+                     QWidget* parent, Qt::WindowFlags flags) :
   QDialog(parent, flags),
   m_iSendMessage(0),
   m_tcpServer(NULL),
@@ -77,13 +79,17 @@ I3MDialog::I3MDialog(const UVFDataset* currentDataset, const std::string& strTmp
   connect(m_tcpServer, SIGNAL(newConnection()), this, SLOT(SendData()));
 
   // find transferfunction and update big label
-  std::string filenameOnly = SysTools::GetFilename(m_currentDataset->Filename());
-  std::string potentialTFFile = SysTools::ChangeExt(m_currentDataset->Filename(),"1dt");
+  string filenameOnly = SysTools::GetFilename(m_currentDataset->Filename());
+  string potentialTFFile = SysTools::ChangeExt(m_currentDataset->Filename(),
+                                               "1dt");
 
   if (SysTools::FileExists(potentialTFFile)) {
-    m_qstrMainLabelText = tr("Dataset: %1\nTransferFunction: %2").arg(filenameOnly.c_str()).arg(SysTools::ChangeExt(filenameOnly,"1dt").c_str());
+    m_qstrMainLabelText = tr("Dataset: %1\nTransferFunction: %2")
+                          .arg(filenameOnly.c_str())
+                          .arg(SysTools::ChangeExt(filenameOnly,"1dt").c_str());
     m_strSource1DTFilename = potentialTFFile;
-    m_strSharedTFFilename = SysTools::ChangeExt(m_strSharedDataFilename,"1dt");
+    m_strSharedTFFilename = m_strTempDir+SysTools::ChangeExt(filenameOnly,
+                                                             "1dt");
   } else {
     m_qstrMainLabelText = tr("Dataset: %1").arg(filenameOnly.c_str());
     m_strSource1DTFilename = "";
@@ -137,7 +143,9 @@ void I3MDialog::SetPort()
   bool bOk;
   int iNewPort = QInputDialog::getInteger(this,
                                       tr("TCP Port"),
-                                      tr("Select the TCP Port for this server to run on:"), m_iPort, 1, 65535, 1, &bOk);
+                                      tr("Select the TCP Port for this "
+                                         "server to run on:"), 
+                                      m_iPort, 1, 65535, 1, &bOk);
 
   // if the user hit the OK button ...
   if (bOk) {
@@ -166,14 +174,14 @@ void I3MDialog::SetVersion()
 void I3MDialog::SendData()
 {
   // open volume
-  std::ifstream in(m_strSharedDataFilename.c_str(), std::ios_base::binary);
+  ifstream in(m_strSharedDataFilename.c_str(), ios_base::binary);
   if (!in.is_open()) {
     QMessageBox::critical(this, this->windowTitle(),
                           tr("Unable to open converted volume: %1.")
                           .arg(m_strSharedDataFilename.c_str()));
     return;
   }
-    in.seekg(0, std::ios::end);
+    in.seekg(0, ios::end);
     unsigned int iFileSize = (unsigned int)in.tellg();
     in.seekg(0);
     char* fileData = new char[iFileSize];
@@ -184,9 +192,9 @@ void I3MDialog::SendData()
   unsigned int iTFSize = 0;
   char* tfFileData = NULL;
   if (m_strSharedTFFilename != "") {
-    std::ifstream inTF(m_strSharedTFFilename.c_str(), std::ios_base::binary);
+    ifstream inTF(m_strSharedTFFilename.c_str(), ios_base::binary);
       if (inTF.is_open()) {
-          inTF.seekg(0, std::ios::end);
+          inTF.seekg(0, ios::end);
           iTFSize = (unsigned int)inTF.tellg();
           inTF.seekg(0);
           tfFileData = new char[iFileSize];
@@ -198,27 +206,28 @@ void I3MDialog::SendData()
   // update label to notify the user about the upcomming send operation
   label_Status->setText(tr("The server is running on port %1.\n"
                           "Connected! Sending dataset to device %2.")
-                      .arg(m_tcpServer->serverPort()).arg(++m_iSendMessage)  );
+                      .arg(m_tcpServer->serverPort()).arg(++m_iSendMessage));
 
   // open socket
   QTcpSocket *clientConnection = m_tcpServer->nextPendingConnection();
-  connect(clientConnection, SIGNAL(disconnected()), clientConnection, SLOT(deleteLater()));
-    // send filename length
-  std::string strFilenameOnly = SysTools::GetFilename(m_strSharedDataFilename);
-    unsigned int iFilenameLength = int(strFilenameOnly.length());
+  connect(clientConnection, SIGNAL(disconnected()), 
+          clientConnection, SLOT(deleteLater()));
+  // send filename length
+  string strFilenameOnly = SysTools::GetFilename(m_strSharedDataFilename);
+  unsigned int iFilenameLength = int(strFilenameOnly.length());
   clientConnection->write((char*)&iFilenameLength,4);
-    // send filename
+  // send filename
   clientConnection->write((char*)strFilenameOnly.c_str(),iFilenameLength);
-    // send filesize
-    clientConnection->write((char*)&iFileSize,4);
-    // send actual file
-    clientConnection->write(fileData,iFileSize);
-    // send transfer function filesize
-    clientConnection->write((char*)&iTFSize,4);
-    // send transfer function file
-    if (iTFSize > 0) clientConnection->write(tfFileData,iTFSize);
+  // send filesize
+  clientConnection->write((char*)&iFileSize,4);
+  // send actual file
+  clientConnection->write(fileData,iFileSize);
+  // send transfer function filesize
+  clientConnection->write((char*)&iTFSize,4);
+  // send transfer function file
+  if (iTFSize > 0) clientConnection->write(tfFileData,iTFSize);
   // disconnect
-    clientConnection->disconnectFromHost();
+  clientConnection->disconnectFromHost();
 
   // update label
     if (m_iSendMessage == 1) {
@@ -228,7 +237,8 @@ void I3MDialog::SendData()
     } else {
         label_Status->setText(tr("The server is running on port %1.\n"
                                 "Dataset send to %2 mobile devices.")
-                                .arg(m_tcpServer->serverPort()).arg(m_iSendMessage)  );
+                                .arg(m_tcpServer->serverPort())
+                                .arg(m_iSendMessage)  );
     }
 
   // delete arrays
@@ -260,22 +270,32 @@ bool I3MDialog::ConvertDataV1() {
 
   // UVF to I3M
 
-  // first, find the smalest LOD with every dimension larger or equal to 128 (if possible)
+  // first, find the smalest LOD with every dimension
+  // larger or equal to 128 (if possible)
   int iLODLevel = int(m_currentDataset->GetLODLevelCount())-1;
   for (;iLODLevel>0;iLODLevel--) {
-    UINTVECTOR3 vLODSize = UINTVECTOR3(m_currentDataset->GetDomainSize(iLODLevel));
+    UINTVECTOR3 vLODSize = UINTVECTOR3(
+                                m_currentDataset->GetDomainSize(iLODLevel)
+                           );
     if (vLODSize.x >= 128 &&
         vLODSize.y >= 128 &&
         vLODSize.z >= 128) break;
   }
 
-  std::string filenameOnly = SysTools::GetFilename(m_currentDataset->Filename());
-  m_strSharedDataFilename = m_strTempDir+SysTools::ChangeExt(filenameOnly,"i3m");
-  if (SysTools::FileExists(m_strSharedDataFilename))
-    m_strSharedDataFilename = SysTools::FindNextSequenceName(m_strSharedDataFilename);
+  string filenameOnly = SysTools::GetFilename(m_currentDataset->Filename());
+  m_strSharedDataFilename =m_strTempDir+SysTools::ChangeExt(filenameOnly,"i3m");
+  if (SysTools::FileExists(m_strSharedDataFilename)) {
+    m_strSharedDataFilename = SysTools::FindNextSequenceName(
+                                                    m_strSharedDataFilename
+                                                    );
+  }
 
-  if (!Controller::Instance().IOMan()->ExportDataset(m_currentDataset, iLODLevel, m_strSharedDataFilename, m_strTempDir)) {
-        label_Status->setText(tr("Failed to convert the current dataset into the i3m format for the mobile device."));
+  if (!Controller::Instance().IOMan()->ExportDataset(m_currentDataset, 
+                                                     iLODLevel, 
+                                                     m_strSharedDataFilename, 
+                                                     m_strTempDir)) {
+        label_Status->setText(tr("Failed to convert the current dataset into "
+                                  "the i3m format for the mobile device."));
     label_files->setText(m_qstrMainLabelText);
     return false;
   }
@@ -299,16 +319,20 @@ bool I3MDialog::ConvertDataV2() {
     // now convert it
     label_files->setText("Converting...\n"+m_qstrMainLabelText);
 
-    std::string strCompleteSourceFile = m_currentDataset->Filename();
-    std::string strSourceFile = SysTools::GetFilename(strCompleteSourceFile);
-    std::string strTargetFile = m_strTempDir+strSourceFile;
+    string strCompleteSourceFile = m_currentDataset->Filename();
+    string strSourceFile = SysTools::GetFilename(strCompleteSourceFile);
+    string strTargetFile = m_strTempDir+strSourceFile;
 
     // in case the target file exists (e.g. the user converts from temp)
     // make it unique
-    if (SysTools::FileExists(strTargetFile))
+    if (SysTools::FileExists(strTargetFile)) {
       strTargetFile = SysTools::FindNextSequenceName(strTargetFile);
+    }
 
-    if (!Controller::Instance().IOMan()->ReBrickDataset(m_currentDataset->Filename(), strTargetFile, m_strTempDir, 128, 4, true)) {
+    if (!Controller::Instance().IOMan()->ReBrickDataset(
+                                              m_currentDataset->Filename(),
+                                              strTargetFile, 
+                                              m_strTempDir, 128, 4, true)) {
       T_ERROR("Unable to convert data from file %s to %s",
               m_currentDataset->Filename().c_str(),
               strTargetFile.c_str());
@@ -360,11 +384,12 @@ bool I3MDialog::ConvertData() {
 }
 
 void I3MDialog::CleanupTemp() {
-  if (m_bCreatedSharedData && SysTools::FileExists(m_strSharedDataFilename)) remove(m_strSharedDataFilename.c_str());
-  if (m_bCreatedTF && SysTools::FileExists(m_strSharedTFFilename)) remove(m_strSharedTFFilename.c_str());
+  if (m_bCreatedSharedData && SysTools::FileExists(m_strSharedDataFilename))
+    remove(m_strSharedDataFilename.c_str());
+  if (m_bCreatedTF && SysTools::FileExists(m_strSharedTFFilename)) 
+    remove(m_strSharedTFFilename.c_str());
 
   m_bCreatedSharedData = false;
   m_bCreatedTF = false;
   m_iDataInMobileFormat = 0;
 }
-
