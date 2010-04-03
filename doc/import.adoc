@@ -732,6 +732,7 @@ in order, is:
   block's type.  This element is intended for display in, for example, a
   UI that lets one view and manipulate UVF blocks, *not* for doing string
   comparisons to figure out what kind of data are in the block.
+* Do note that the "size" integer does *not* include the terminating null byte!
 - The semantic type of a block, which details the specific data block present.
 
 .Semantic Block Types
@@ -831,9 +832,11 @@ successive domains are downsampled.
 - `n_dimensions` 64-bit unsigned integers giving the number of LODs for each
 dimension of the data.
 - a 64-bit unsigned integer, `n_elements`
-
-- `n_elements` 64-bit unsigned integers giving the element size (number
-of bytes element) per dimension.
+- `n_elements` 64-bit unsigned integers giving the element size, `el_size`.
+- This repeats `n_elements` times; let `i` equal the iteration number:
+* `el_size[i]` 64-bit unsigned semantic identifiers
+* `el_size[i]` 64-bit unsigned bit sizes: number of bits per element.
+* `el_size[i]` 64-bit unsigned mantissas
 ...
 
 
