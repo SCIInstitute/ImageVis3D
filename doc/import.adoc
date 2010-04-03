@@ -760,7 +760,8 @@ in order, is:
 |====================================================================
 
 - An unsigned, 64-bit integer offset to the next block.  This is
-  relative to the _beginning_ of the current block.
+  relative to the _beginning_ of the current block.  A value of `0`
+  indicates that this is the final data block in the UVF.
 
 1D Histogram Data Block
 +++++++++++++++++++++++
