@@ -760,8 +760,7 @@ in order, is:
 |====================================================================
 
 - An unsigned, 64-bit integer offset to the next block.  This is
-  relative to the position of the file pointer _after_ reading the
-  offset.
+  relative to the _beginning_ of the current block.
 
 1D Histogram Data Block
 +++++++++++++++++++++++
