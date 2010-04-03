@@ -6,7 +6,7 @@ export REPLYTO="tfogal@sci.utah.edu"
 # if something should fail:
 em="tfogal@sci.utah.edu"
 # warnings and other information:
-full_em="tfogal@sci.utah.edu jens@sci.utah.edu thiago@sci.utah.edu"
+full_em="tfogal@sci.utah.edu jens@sci.utah.edu"
 
 export status="status-${hostname}"
 
