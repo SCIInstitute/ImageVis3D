@@ -536,8 +536,8 @@ There are a variety of methods, such as `GetBitWidth` and
 These provide important information on how the data received out of
 `GetBrick` is interpreted.
 
-*Optional*: Verify
-++++++++++++++++++
+*Optional*: `Verify`
+++++++++++++++++++++
 
 `Verify` is how you would implement an "expensive" check for your file
 format.  UVF calculates a checksum by reading the entire file, and
@@ -591,8 +591,8 @@ GPU will do that much quicker than you could ever dream of doing here.
 However, if you have precomputed this information, implement these
 methods to significantly increase performance.
 
-*Optional*: Export
-++++++++++++++++++
+*Optional*: `Export`
+++++++++++++++++++++
 
 ImageVis3D can also be used as a converter from one file format to
 another.  The `Export` method helps in doing this.  If you implement
@@ -610,7 +610,7 @@ While not strictly required, you should implement a `Name` method. This
 simply returns a user-centric name which describes your data format.
 The string should be short; you just want to differentiate this from
 other formats.  As an example, ImageVis3D's native format returns the
-3-character string, "UVF."
+string, "Universal Volume Format".
 
 Converting Your Output Format to ImageVis3D's UVF
 -------------------------------------------------
