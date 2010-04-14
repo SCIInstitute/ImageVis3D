@@ -36,7 +36,16 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "../Tuvok/StdTuvokDefines.h"
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <vector>
 #include <QtGui/QApplication>
+#ifndef TUVOK_NO_QT
+  #include <QtGui/QImageReader>
+#endif
+#include <tclap/CmdLine.h>
 
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/SysTools.h"
@@ -44,10 +53,6 @@
 #include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/IO/DirectoryParser.h"
 
-#include <string>
-#include <vector>
-#include <sstream>
-#include <iostream>
 using namespace std;
 using namespace tuvok;
 
@@ -61,10 +66,6 @@ using namespace tuvok;
   #endif
 #endif
   */
-
-#ifndef TUVOK_NO_QT
-  #include <QtGui/QImageReader>
-#endif
 
 void ShowUsage(string filename) {
   IOManager ioMan;
@@ -122,7 +123,7 @@ void ShowUsage(string filename) {
       "                                                    dataN.uvf" << endl << endl;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
 /*
 // Enable run-time memory check for debug builds on windows
@@ -132,64 +133,54 @@ int main(int argc, char* argv[])
     #endif
   #endif
 */
+  std::list<std::string> input;
+  std::string output, directory;
 
-  // get command line paramers
-  SysTools::CmdLineParams parameters(argc, argv);
-  string strFilename = SysTools::GetFilename(argv[0]);
-
-  if (parameters.SwitchSet("?") || parameters.SwitchSet("HELP")) {
-    ShowUsage(strFilename);
-    return EXIT_SUCCESS;
-  }
-
+  // temp
   string strInFile = "";
   string strInFile2 = "";
   string strInDir = "";
   string strOutfile = "";
-  string strScale;
-  double fScale = 1.0;
-  string strBias = "";
+  double fScale = 0.0;
   double fBias = 0.0;
-  parameters.GetValue("D",strInDir);
-  parameters.GetValue("F",strInFile);
-  parameters.GetValue("F2",strInFile2);
-  parameters.GetValue("B2",strBias);
-  parameters.GetValue("S2",strScale);
-  parameters.GetValue("OUT",strOutfile);
 
-  // replace "m" by "-"
-  string::size_type pos = 0;
-  if (strScale != "") {
-    while ( (pos = strScale.find("m", pos)) != string::npos ) {
-      strScale.replace( pos, string("m").size(), "-" );
-      pos++;
+  try {
+    TCLAP::CmdLine cmd("test msg", ' ', "1.2.0");
+    TCLAP::MultiArg<std::string> inputs("i", "input", "input file.  "
+                                        "Repeat to merge volumes", true,
+                                        "filename");
+    TCLAP::ValueArg<std::string> directory("d", "directory",
+                                           "input directory", true, "",
+                                           "path");
+    TCLAP::ValueArg<std::string> output("o", "output", "output file (uvf)",
+                                        true, "", "filename");
+    TCLAP::ValueArg<double> bias("b", "bias",
+                                 "(merging) bias value for second file",
+                                 false, 0.0, "floating point number");
+    TCLAP::ValueArg<double> scale("s", "scale",
+                                  "(merging) scaling value for second file",
+                                  false, 0.0, "floating point number");
+    cmd.xorAdd(inputs, directory);
+    cmd.add(output);
+    cmd.add(bias);
+    cmd.add(scale);
+    cmd.parse(argc, argv);
+
+    // which of "-i" or "-d" did they give?
+    if(inputs.isSet()) {
+      strInFile = inputs.getValue()[0];
+      if(inputs.getValue().size() > 1) {
+        strInFile2 = inputs.getValue()[1];
+      }
     }
-    fScale = atof(strScale.c_str());
-  }
-  if (strBias != "") {
-    pos = 0;
-    while ( (pos = strBias.find("m", pos)) != string::npos ) {
-      strBias.replace( pos, string("m").size(), "-" );
-      pos++;
+    if(directory.isSet()) {
+      strInDir = directory.getValue();
     }
-    fBias = atof(strBias.c_str());
-  }
-
-  if (strInFile == "" && strInDir == "") {
-    cout << "Must specify parameter either 'f' or parameter 'd'." << endl;
-    ShowUsage(strFilename);
-    return EXIT_FAILURE;
-  }
-
-  if (strInFile != "" && strInDir != "") {
-    cout << "Must specify parameter either 'f' or parameter 'd' but not both." << endl;
-    ShowUsage(strFilename);
-    return EXIT_FAILURE;
-  }
-
-  if (strOutfile == "") {
-    cout << "Must specify output file." << endl;
-    ShowUsage(strFilename);
+    strOutfile = output.getValue();
+    fBias = bias.getValue();
+    fScale = scale.getValue();
+  } catch(const TCLAP::ArgException& e) {
+    std::cerr << "error: " << e.error() << " for arg " << e.argId() << "\n";
     return EXIT_FAILURE;
   }
 
