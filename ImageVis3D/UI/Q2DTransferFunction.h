@@ -137,7 +137,7 @@ public:
     if(!m_pTrans || static_cast<size_t>(m_iActiveSwatchIndex) >=
        m_pTrans->m_Swatches.size()) {
       // need to return something invalid.
-      return GradientStop(0.0, FLOATVECTOR4(0,0,0,0));
+      return GradientStop(0.0f, FLOATVECTOR4(0,0,0,0));
     }
     return m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops[i];
   }
