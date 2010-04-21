@@ -557,6 +557,14 @@ There are a variety of methods, such as `GetBitWidth` and
 These provide important information on how the data received out of
 `GetBrick` is interpreted.
 
+`Extensions`
+++++++++++++
+
+You must implement a method named `Extensions` which takes no
+arguments and returns a list of strings.  ImageVis3D will use this
+information to generate the formats utilized in the "Open" window.  See
+`uvfDataset.cpp` for an example implementation.
+
 *Optional*: `Verify`
 ++++++++++++++++++++
 
