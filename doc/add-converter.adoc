@@ -16,9 +16,9 @@ ImageVis3D Conversion Steps
 
 ImageVis3D's IO scheme is based around a multi-stage paradigm.  In
 the first stage, converters identify relevant metadata and modify the
-data into a raw input stream.  Subsequent stages perform tasks such as
-endian conversion, compute derived metadata, and generate the hierarchy
-of bricks needed for interactive rendering.
+data into a raw input stream.  Subsequent stages perform tasks such
+as endian conversion, computing derived metadata, and generating the
+hierarchy of bricks needed for interactive rendering.
 
 Writing Your Converter
 ----------------------
