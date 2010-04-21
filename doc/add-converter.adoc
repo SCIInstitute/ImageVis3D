@@ -84,6 +84,7 @@ bool YourConverter::ConvertToRAW(...)
 
 bool YourConverter::ConvertToNative(...)
 {
+  return false;
 }
 source~~~~
 
