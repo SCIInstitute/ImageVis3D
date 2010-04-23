@@ -586,6 +586,10 @@ void MainWindow::CloneCurrentView() {
   if (!m_pActiveRenderWin) return;
   RenderWindow *renderWin = CreateNewRenderWindow(m_pActiveRenderWin->GetDatasetName());
 
+  if(renderWin == NULL) {
+    return;
+  }
+
   renderWin->CloneViewState(m_pActiveRenderWin);
   renderWin->CloneRendermode(m_pActiveRenderWin);
 
