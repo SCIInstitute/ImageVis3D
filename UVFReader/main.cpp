@@ -67,22 +67,31 @@ using namespace tuvok;
 
 void ShowUsage(string filename) {
   cout << endl <<
-      filename << " V" << READER_VERSION << " (using Tuvok V" << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE << ")" << endl << endl <<
-      " Reads, verifies, and creates UVF Files" << endl << endl <<
-      " Usage:" << endl <<
-      "  " << filename << " -f File.uvf [-noverify -create [-lod UINT] [-sizeX UINT] [-sizeY UINT] [-sizeZ UINT]] " << endl << endl <<
-      "     Mandatory Arguments:" << endl <<
-      "         -f       the filename of one of the text" << endl <<
-      "     Optional Arguments:" << endl <<
-      "        -noverify    disables the checksum test" << endl <<
-      "        -show1dhist  also output 1D histogram to console" << endl <<
-      "        -show2dhist  also output 2D histogram to console" << endl <<
-      "        -create      if set create a new test UVF file with a filename set by -f" << endl <<
-      "        -sizeX       requires '-create' argument, specifies the width of the volume to be created (default = 100)" << endl <<
-      "        -sizeY       requires '-create' argument, specifies the height of the volume to be created (default = 200)" << endl <<
-      "        -sizeZ       requires '-create' argument, specifies the depth of the volume to be created (default = 300)" << endl <<
-      "        -sizeZ       requires '-create' argument, specifies the bit depth of the volume, may be 8, 16 (default = 8)" << endl <<
-      "        -brickSize   requires '-create' argument, specifies the maximum bricksize (default = " << DEFAULT_BRICKSIZE <<")" << endl;
+   filename << " V" << READER_VERSION << " (using Tuvok V" << TUVOK_VERSION <<
+   " " << TUVOK_VERSION_TYPE << ")" << endl << endl <<
+   " Reads, verifies, and creates UVF Files" << endl << endl <<
+   " Usage:" << endl <<
+   "  " << filename << " -f File.uvf [-noverify -create [-lod UINT]\n"
+   "            [-sizeX UINT] [-sizeY UINT] [-sizeZ UINT]] " << endl << endl <<
+   "     Mandatory Arguments:" << endl <<
+   "         -f       the filename of one of the text" << endl <<
+   "     Optional Arguments:" << endl <<
+   "        -noverify    disables the checksum test" << endl <<
+   "        -show1dhist  also output 1D histogram to console" << endl <<
+   "        -show2dhist  also output 2D histogram to console" << endl <<
+   "        -create      if set create a new test UVF file with a\n"
+   "                     filename set by -f" << endl <<
+   "        -sizeX       requires '-create' argument, specifies the width\n"
+   "                     of the volume to be created (default = 100)"<< endl <<
+   "        -sizeY       requires '-create' argument, specifies the height\n"
+   "                     of the volume to be created (default = 200)"<< endl <<
+   "        -sizeZ       requires '-create' argument, specifies the depth\n"
+   "                     of the volume to be created (default = 300)"<< endl <<
+   "        -bits        requires '-create' argument, specifies the bit depth\n"
+   "                     of the volume, may be 8, 16 (default = 8)" << endl <<
+   "        -brickSize   requires '-create' argument, specifies the maximum\n"
+   "                     bricksize (default = " << DEFAULT_BRICKSIZE <<")"
+   << endl;
 }
 
 int main(int argc, char* argv[])
