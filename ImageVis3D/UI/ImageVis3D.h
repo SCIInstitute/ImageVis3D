@@ -114,7 +114,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void CaptureSequence();
     void CaptureRotation();
     void LoadDataset();
-    void LoadDataset(std::string strFilename) {LoadDataset(QStringList(strFilename.c_str()));}
+    void LoadDataset(std::string strFilename) ;
     void LoadDirectory();
     void CloseCurrentView();
     void ResizeCurrentView(int iSizeX, int iSizeY);

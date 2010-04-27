@@ -101,6 +101,8 @@ RenderWindowGL::~RenderWindowGL()
 void RenderWindowGL::InitializeRenderer()
 {
   static bool bFirstTime = true;
+  static bool bRenderSubSysOKFirstTime = true;
+  m_bRenderSubsysOK = bRenderSubSysOKFirstTime;
 
   if (bFirstTime) {
     int err = glewInit();
@@ -177,23 +179,28 @@ void RenderWindowGL::InitializeRenderer()
         m_bRenderSubsysOK = false;
       }
     }
-
-    bFirstTime = false;
   }
 
-  if (m_Renderer == NULL)
-    m_bRenderSubsysOK = false;
-  else {
-#ifdef DETECTED_OS_LINUX
-    m_Renderer->AddShaderPath("/usr/share/imagevis3d/shaders");
-#endif
-    m_bRenderSubsysOK = m_Renderer->Initialize();
+  if (m_bRenderSubsysOK) { 
+    if (m_Renderer == NULL)
+      m_bRenderSubsysOK = false;
+    else {
+  #ifdef DETECTED_OS_LINUX
+      m_Renderer->AddShaderPath("/usr/share/imagevis3d/shaders");
+  #endif
+      m_bRenderSubsysOK = m_Renderer->Initialize();
+    }
   }
 
   if (!m_bRenderSubsysOK) {
-    m_Renderer->Cleanup();
+    if (m_Renderer) m_Renderer->Cleanup();
     m_MasterController.ReleaseVolumerenderer(m_Renderer);
     m_Renderer = NULL;
+  }
+
+  if (bFirstTime) { 
+    bRenderSubSysOKFirstTime = m_bRenderSubsysOK;
+    bFirstTime = false;
   }
 }
 

@@ -943,7 +943,16 @@ void MainWindow::OpenRecentFile(){
   QAction *action = qobject_cast<QAction *>(sender());
 
   if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
-    if (action) LoadDataset(QStringList(action->data().toString()));
+    if (action) {
+      if (!LoadDataset(QStringList(action->data().toString()))) {
+        ShowCriticalDialog("Render window initialization failed.",
+                     "Could not open a render window!  This normally "
+                     "means ImageVis3D does not support your GPU.  Please"
+                     " check the debug log ('Help | Debug Window') for "
+                     "errors, and/or use 'Help | Report an Issue' to "
+                     "notify the ImageVis3D developers.");
+      }
+    }
   } else {
     QString strText = tr("File %1 not found.").arg(action->data().toString());
     m_MasterController.DebugOut()->Error("MainWindow::OpenRecentFile", strText.toStdString().c_str());

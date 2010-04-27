@@ -97,16 +97,25 @@ void MainWindow::LoadDataset() {
     settings.setValue("Folders/LoadDataset",
                       QFileInfo(files[0]).absoluteDir().path());
     if(!LoadDataset(files)) {
-      ShowCriticalDialog("Render window initialization failed.",
-                         "Could not open a render window!  This normally "
-                         "means ImageVis3D does not support your GPU.  Please"
-                         " check the debug log ('Help | Debug Window') for "
-                         "errors, and/or use 'Help | Report an Issue' to "
-                         "notify the ImageVis3D developers.");
+        ShowCriticalDialog("Render window initialization failed.",
+                     "Could not open a render window!  This normally "
+                     "means ImageVis3D does not support your GPU.  Please"
+                     " check the debug log ('Help | Debug Window') for "
+                     "errors, and/or use 'Help | Report an Issue' to "
+                     "notify the ImageVis3D developers.");
     }
   }
 }
-
+void MainWindow::LoadDataset(std::string strFilename) {
+  if (!LoadDataset(QStringList(strFilename.c_str()))) {
+        ShowCriticalDialog("Render window initialization failed.",
+                     "Could not open a render window!  This normally "
+                     "means ImageVis3D does not support your GPU.  Please"
+                     " check the debug log ('Help | Debug Window') for "
+                     "errors, and/or use 'Help | Report an Issue' to "
+                     "notify the ImageVis3D developers.");
+  }
+}
 
 QString MainWindow::GetConvFilename() {
   QFileDialog::Options options;
