@@ -51,10 +51,14 @@ pushd Build/ &>/dev/null
     zip -9r ${zipfile} ImageVis3D.app
 popd &>/dev/null
 mv Build/${tarball} Build/${zipfile} .
+mkdir -p staging
+cp CmdLineConverter/Build/uvfconvert staging/
+cp -R Build/ImageVis3D.app staging/
 hdiutil create                    \
   -volname "ImageVis3D"           \
-  -srcfolder Build/ImageVis3D.app \
+  -srcfolder staging/             \
   -format UDZO                    \
   -imagekey zlib-level=9          \
   ${zipfile%%zip}dmg
+rm -fr staging/
 hdiutil internet-enable -yes ${zipfile%%zip}dmg

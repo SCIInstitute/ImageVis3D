@@ -10,6 +10,7 @@ pushd staging >/dev/null
   dir="ImageVis3D-${ver}"
   mkdir "${dir}"
   cp ../Build/ImageVis3D ./${dir}
+  cp ../CmdLineConverter/Build/uvfconvert ${dir}
   cp -R ../Tuvok/Shaders ./${dir}
   wget -q --no-check-certificate "${man}"
   mv $(basename "${man}") ImageVis3D.pdf # uppercase it.
