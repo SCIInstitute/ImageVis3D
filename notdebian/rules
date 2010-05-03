@@ -71,6 +71,10 @@ install: build
 	install doc/imagevis3d.1.gz $(CURDIR)/debian/imagevis3d/usr/share/man/man1
 	mkdir -p $(CURDIR)/debian/imagevis3d/usr/share/imagevis3d/shaders
 	install --mode 644 Tuvok/Shaders/* $(DESTDIR)/usr/share/imagevis3d/shaders
+	install -s CmdLineConverter/Build/uvfconvert \
+	           $(CURDIR)/debian/imagevis3d/usr/bin/uvfconvert
+	gzip -9c doc/uvfconvert.1 > doc/uvfconvert.1.gz
+	install doc/uvfconvert.1.gz $(CURDIR)/debian/imagevis3d/usr/share/man/man1
 
 get-orig-source:
 	svn export https://gforge.sci.utah.edu/svn/imagevis3d
