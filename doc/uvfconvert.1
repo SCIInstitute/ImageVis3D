@@ -15,9 +15,9 @@
 uvfconvert \- convert files to UVF.
 .SH SYNOPSIS
 .B uvfconvert
--i
+.RI \-i
 .RI \fIfile\fP
-[ options ] -o \fIoutput\fP
+[ options ] \-o \fIoutput\fP
 .SH DESCRIPTION
 \fBuvfconvert\fP
 is a command line tool to convert data into UVF, the native format for the
@@ -29,26 +29,26 @@ data.
 .SH OPTIONS
 The command line options of \fBuvfconvert\fP are:
 .TP
-.B \-i \fIfilename\fP, --input \fIfilename\fP
+.B \-i \fIfilename\fP, \-\-input \fIfilename\fP
 The input data set to convert.  Must be in one of ImageVis3D's supported file
 formats (see the "Getting Data Into ImageVis3D" manual).  For merging multiple
 data sets, this option is accepted multiple times.
 .TP
-.B \-d \fIpath\fP, --directory \fIpath\fP
+.B \-d \fIpath\fP, \-\-directory \fIpath\fP
 Input data to convert, if stored as a stack in a directory.  Sets of images or
 DICOMs commonly come in this format.
 
 One of \-i or \-d is required.
 .TP
-.B \-s \fIfloating point number\fP, --scale \fIfloating point number\fP
+.B \-s \fIfloating point number\fP, \-\-scale \fIfloating point number\fP
 Optional.  When merging multiple data sets, this scaling factor will be
 applied to all values in the second file.  Defaults to 0.0.
 .TP
-.B \-b \fIfloating point number\fP, --bias \fIfloating point number\fP
+.B \-b \fIfloating point number\fP, \-\-bias \fIfloating point number\fP
 Optional.  When merging multiple data sets, this bias factor will be
 applied to all values in the second file.  Defaults to 0.0.
 .TP
-.B \-o \fIfilename\fP, --output \fIfilename\fP
+.B \-o \fIfilename\fP, \-\-output \fIfilename\fP
 Required.  The filename which will be generated.
 .TP
 .B \-\-version
@@ -57,8 +57,6 @@ Optional.  Display a version number and then exit.
 .B \-\-, \-\-ignore-rest
 Optional.  Any arguments following these flags will be ignored by the program.
 .TP
-.B \-loglevel [\fI0\fP, \fI1\fP, \fI2\fP]
-Changes the verbosity of the log.
 .SH AUTHOR
 ImageVis3D and all associated software was written at the SCI Institute, with
 support from the NIH NCRR and DoE VACET programs.
