@@ -51,7 +51,7 @@ clean:
 	rm -f Build/ImageVis3D \
 	      Tuvok/Build/libTuvok.a \
 	      ExtractDebugInfo/Build/ExtractDebugInfo \
-	      CmdLineConverter/Build/UVFConverter
+	      CmdLineConverter/Build/uvfconvert
 
 	dh_clean 
 
