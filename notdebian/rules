@@ -9,7 +9,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-TARFILE=imagevis3d_1.2~svn$(shell date +%Y%m%d).orig.tar.gz
+TARFILE=imagevis3d_1.3~svn$(shell date +%Y%m%d).orig.tar.gz
 DESTDIR=$(CURDIR)/debian/imagevis3d
 
 configure: configure-stamp
