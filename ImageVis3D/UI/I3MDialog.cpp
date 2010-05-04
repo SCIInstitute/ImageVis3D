@@ -43,6 +43,7 @@
 #include <fstream>
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/IO/IOManager.h"
+#include "../Tuvok/IO/TransferFunction1D.h"
 #include "DebugOut/QTLabelOut.h"
 
 using namespace tuvok;
