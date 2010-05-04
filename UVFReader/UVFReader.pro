@@ -12,6 +12,7 @@ unix:TARGET       = Build/uvf
 QT               += opengl
 DEPENDPATH       += .
 INCLUDEPATH      += . ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW
+INCLUDEPATH      += ../Tuvok
 LIBS              = -L../Tuvok/Build -lTuvok
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
