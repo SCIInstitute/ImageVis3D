@@ -260,6 +260,7 @@ class RenderWindow
 
     RenderRegion* GetCorrespondingRenderRegion(const RenderWindow* otherRW,
                                                const RenderRegion* myRR) const;
+    MasterController::EVolumeRendererType m_eRendererType;
 
   private:
     /// Called when the mouse is moved, but in a mode where the clip plane
@@ -286,7 +287,6 @@ class RenderWindow
 
 
   private:
-    MasterController::EVolumeRendererType m_eRendererType;
     MainWindow*       m_MainWindow;
     unsigned int      m_iTimeSliceMSecsActive;
     unsigned int      m_iTimeSliceMSecsInActive;

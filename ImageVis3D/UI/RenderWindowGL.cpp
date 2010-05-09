@@ -66,20 +66,12 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
                                QWidget* parent,
                                Qt::WindowFlags flags) :
   QGLWidget(fmt, parent, glShareWidget, flags),
-  RenderWindow(masterController, eType, dataset, iCounter, parent)
+  RenderWindow(masterController, eType, dataset, iCounter, parent),
+  m_bNoRCClipplanes(bNoRCClipplanes)
 {
-  m_Renderer = masterController.RequestNewVolumeRenderer(
-                  eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
-                  bDisableBorder, bNoRCClipplanes, false
-               );
-  // so far we are not rendering anything but the volume therefore
-  // disable the depth-buffer to offscreen copy operations
-  m_Renderer->SetConsiderPreviousDepthbuffer(false);
-
-  if (!m_Renderer->LoadDataset(m_strDataset.toStdString())) {
-    m_bRenderSubsysOK = false;
+  if(!SetNewRenderer( bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder))
     return;
-  }
+
 
   setObjectName("RenderWindowGL");  // this is used by WidgetToRenderWin() to detect the type
   setWindowTitle(m_strID);
@@ -87,6 +79,25 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   setMouseTracking(true);
 
   Initialize(); //finish initializing.
+}
+
+bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo, 
+                                    bool bDownSampleTo8Bits,
+                                    bool bDisableBorder) {
+  m_Renderer = m_MasterController.RequestNewVolumeRenderer(
+                  m_eRendererType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
+                  bDisableBorder, m_bNoRCClipplanes, false
+               );
+  // so far we are not rendering anything but the volume therefore
+  // disable the depth-buffer to offscreen copy operations
+  m_Renderer->SetConsiderPreviousDepthbuffer(false);
+
+  if (!m_Renderer->LoadDataset(m_strDataset.toStdString())) {
+    m_bRenderSubsysOK = false;
+    return false;
+  }
+
+  return true;
 }
 
 RenderWindowGL::~RenderWindowGL()
@@ -135,7 +146,38 @@ void RenderWindowGL::InitializeRenderer()
       extensions = (char*)glGetString(GL_EXTENSIONS);
       if (extensions != NULL)  ms_glExtString = extensions;
 
-      if (bOpenGLFBO && (bOpenGLSO20 || (bOpenGLSL && bOpenGL3DT))) {
+      if (!bOpenGL3DT) {
+
+        if (m_eRendererType == MasterController::OPENGL_2DSBVR) {
+          // hardware does not support 3D textures but the user already
+          // selected the 2D stack based volume renderer
+          MESSAGE("OpenGL 3D textures not supported (GL_EXT_texture3D). "
+                  "This is not an issue as the rendertype is set to "
+                  "a 2D stack based renderer.");
+        } else {
+          // hardware does not support 3D textures but the user 
+          // selected a renderer that requires 3D textures
+          // so we write out a warning and switch to the 2D texture
+          // stack based renderer
+
+          WARNING("OpenGL 3D textures not supported, switching to "
+                  "2D texture stack based renderer. To avoid this "
+                  "warning and to improve startup times please "
+                  "switch to 2D slicing mode in the preferences.");
+          bool bUseOnlyPowerOfTwo = m_Renderer->GetUseOnlyPowerOfTwo();
+          bool bDownSampleTo8Bits = m_Renderer->GetDownSampleTo8Bits();
+          bool bDisableBorder = m_Renderer->GetDisableBorder();
+          
+          // delete old renderer
+          Cleanup();
+          // create new renderer that uses only 2D slices
+          m_eRendererType = MasterController::OPENGL_2DSBVR;
+          SetNewRenderer(bUseOnlyPowerOfTwo,bDownSampleTo8Bits,bDisableBorder);
+          Initialize();
+        }
+      }
+
+      if (bOpenGLFBO && (bOpenGLSO20 || bOpenGLSL)) {
 
         // A small but still significant subset of cards report that they
         // support 3D textures, as long as they are 0^3 or smaller.  Yeah.
@@ -168,9 +210,6 @@ void RenderWindowGL::InitializeRenderer()
         if (!bOpenGLSL) {
           T_ERROR("OpenGL shading language version 1.0 not supported"
                   " (GL_ARB_shading_language_100)");
-        }
-        if (!bOpenGL3DT) {
-          T_ERROR("OpenGL 3D textures not supported (GL_EXT_texture3D)");
         }
         if (!bOpenGLFBO) {
           T_ERROR("OpenGL framebuffer objects not supported "

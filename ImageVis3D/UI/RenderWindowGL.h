@@ -80,7 +80,11 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
 
   private:
     virtual void InitializeRenderer();
+    bool SetNewRenderer(bool bUseOnlyPowerOfTwo, 
+                        bool bDownSampleTo8Bits,
+                        bool bDisableBorder);
     static std::string ms_glExtString;
+    bool m_bNoRCClipplanes;
 
 
   // **************** Qt widget connector calls
