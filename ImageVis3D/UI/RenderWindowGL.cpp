@@ -146,7 +146,7 @@ void RenderWindowGL::InitializeRenderer()
       extensions = (char*)glGetString(GL_EXTENSIONS);
       if (extensions != NULL)  ms_glExtString = extensions;
 
-      if (!bOpenGL3DT) {
+      if (!bOpenGLSO20 && !bOpenGL3DT) {
 
         if (m_eRendererType == MasterController::OPENGL_2DSBVR) {
           // hardware does not support 3D textures but the user already
