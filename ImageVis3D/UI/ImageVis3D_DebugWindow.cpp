@@ -78,8 +78,11 @@ void MainWindow::ShowGPUInfo(bool bWithExtensions) {
     dbg->printf(RenderWindow::GetVendorString().c_str());
     {
       std::ostringstream tex_size;
-      tex_size << "Maximum 3D texture size "
-               << int(RenderWindow::GetMax3DTexDims());
+      tex_size << "Maximum Volume size "
+               << int(RenderWindow::GetMax3DTexDims())
+               << ((RenderWindow::Get3DTexInDriver()) ?
+                   " via 3D textures" :
+                   " via 2D texture stacks");
       dbg->printf(tex_size.str().c_str());
     }
 

@@ -39,6 +39,7 @@
 #include <cassert>
 #include <sstream>
 #include <QtGui/QtGui>
+#include <QtGui/QMessageBox>
 
 #include "RenderWindow.h"
 
@@ -52,7 +53,8 @@ using namespace std;
 using namespace tuvok;
 
 std::string RenderWindow::ms_gpuVendorString = "";
-UINT32 RenderWindow::ms_iMax3DTexDims = 0;
+UINT32 RenderWindow::ms_iMaxVolumeDims = 0;
+bool RenderWindow::ms_b3DTexInDriver = false;
 
 RenderWindow::RenderWindow(MasterController& masterController,
                            MasterController::EVolumeRendererType eType,
@@ -1264,7 +1266,31 @@ void RenderWindow::ResizeRenderer(int width, int height)
 void RenderWindow::PaintRenderer()
 {
   if (m_Renderer != NULL && m_bRenderSubsysOK) {
-    m_Renderer->Paint();
+    if (!m_Renderer->Paint()) {
+      static bool bBugUseronlyOnce = true;
+      if (bBugUseronlyOnce) {
+
+        if (m_eRendererType == MasterController::OPENGL_2DSBVR) {
+          QMessageBox::critical(NULL, "Render error",
+                             "The render subsystem is unable to draw the volume"
+                             "This normally means ImageVis3D does not support "
+                             "your GPU. Please check the debug log "
+                             "('Help | Debug Window') for "
+                             "errors, and/or use 'Help | Report an Issue' to "
+                             "notify the ImageVis3D developers.");      
+        } else {
+          QMessageBox::critical(NULL, "Render error",
+                             "The render subsystem is unable to draw the volume"
+                             "This normally means that your driver is "
+                             "reporting invalid information about your GPU."
+                             "Try switching the renderer into 2D slicing "
+                             "mode in the Preferences/Settings.");
+        }
+        bBugUseronlyOnce = false;
+      }
+      T_ERROR("m_Renderer->Paint() call failed.");
+    }
+
     if (GetQtWidget()->isActiveWindow()) {
       unsigned int iLevelCount        = m_Renderer->GetCurrentSubFrameCount();
       unsigned int iWorkingLevelCount = m_Renderer->GetWorkingSubFrame();

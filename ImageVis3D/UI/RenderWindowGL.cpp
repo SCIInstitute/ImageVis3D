@@ -130,23 +130,34 @@ void RenderWindowGL::InitializeRenderer()
       ms_gpuVendorString = s.str();
       MESSAGE("Starting up GL!  Running on a %s", ms_gpuVendorString.c_str());
 
+      bool bOpenGLSO12 = atof((const char*)version) >= 1.2;
       bool bOpenGLSO20 = atof((const char*)version) >= 2.0;
       bool bOpenGLSO   = glewGetExtension("GL_ARB_shader_objects");
       bool bOpenGLSL   = glewGetExtension("GL_ARB_shading_language_100");
       bool bOpenGL3DT  = glewGetExtension("GL_EXT_texture3D");
       bool bOpenGLFBO  = glewGetExtension("GL_EXT_framebuffer_object");
 
-      if (bOpenGL3DT) {
-        GLint iMax3DTexDims;
-        glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE_EXT, &iMax3DTexDims);
-        ms_iMax3DTexDims = iMax3DTexDims;
+      GLint iMaxVolumeDims;
+      if (bOpenGLSO12 || bOpenGL3DT ) {
+        glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE_EXT, &iMaxVolumeDims);
+        ms_b3DTexInDriver = true;
+      } else {
+        glGetIntegerv(GL_MAX_TEXTURE_SIZE, &iMaxVolumeDims);
+        ms_b3DTexInDriver = false;
       }
+      ms_iMaxVolumeDims = iMaxVolumeDims;        
 
       char *extensions = NULL;
       extensions = (char*)glGetString(GL_EXTENSIONS);
       if (extensions != NULL)  ms_glExtString = extensions;
 
-      if (!bOpenGLSO20 && !bOpenGL3DT) {
+      if (!bOpenGLSO12 && !bOpenGL3DT) { // according to spec 3D textures
+                                         // are part of the OpenGl 1.2 core 
+                                         // we may have to change this if we
+                                         // realize that too many drivers
+                                         // are reporting a GL version greater
+                                         // equal to 1.2 but do not support
+                                         // 3D textures
 
         if (m_eRendererType == MasterController::OPENGL_2DSBVR) {
           // hardware does not support 3D textures but the user already
@@ -183,19 +194,19 @@ void RenderWindowGL::InitializeRenderer()
         // support 3D textures, as long as they are 0^3 or smaller.  Yeah.
         // All such cards (that we've seen) work fine.  It's a common use
         // case, so we'll skip the warning for now.  -- tjf, Nov 18 2009
-        if (ms_iMax3DTexDims > 0 && ms_iMax3DTexDims < m_MasterController.IOMan()->GetMaxBrickSize()) {
+        if (ms_iMaxVolumeDims > 0 && ms_iMaxVolumeDims < m_MasterController.IOMan()->GetMaxBrickSize()) {
 
           std::ostringstream warn;
-          warn << "Maximum supported texture size (" << ms_iMax3DTexDims << ") "
+          warn << "Maximum supported texture size (" << ms_iMaxVolumeDims << ") "
                << "is smaller than the current setting ("
                << m_MasterController.IOMan()->GetMaxBrickSize() << "). "
                << "Adjusting settings!";
           WARNING("%s", warn.str().c_str());
 
-          m_MasterController.IOMan()->SetMaxBrickSize(ms_iMax3DTexDims);
+          m_MasterController.IOMan()->SetMaxBrickSize(ms_iMaxVolumeDims);
         } else {
           MESSAGE("Maximum supported texture size: %u "
-                  "(required by IO subsystem: %llu)", ms_iMax3DTexDims,
+                  "(required by IO subsystem: %llu)", ms_iMaxVolumeDims,
                   m_MasterController.IOMan()->GetMaxBrickSize());
         }
 

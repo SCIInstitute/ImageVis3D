@@ -144,7 +144,8 @@ class RenderWindow
     FLOATVECTOR3 GetCVColor() const;
 
     static const std::string& GetVendorString() {return ms_gpuVendorString;}
-    static UINT32 GetMax3DTexDims() {return ms_iMax3DTexDims;}
+    static UINT32 GetMax3DTexDims() {return ms_iMaxVolumeDims;}
+    static bool Get3DTexInDriver() {return ms_b3DTexInDriver;}
 
     virtual QWidget* GetQtWidget() = 0;
 
@@ -203,7 +204,8 @@ class RenderWindow
     int selected2x2Regions[4]; //index into renderRegions
 
     static std::string ms_gpuVendorString;
-    static UINT32      ms_iMax3DTexDims;
+    static UINT32      ms_iMaxVolumeDims;
+    static bool        ms_b3DTexInDriver;
 
     struct RegionData {
       ArcBall arcBall;
