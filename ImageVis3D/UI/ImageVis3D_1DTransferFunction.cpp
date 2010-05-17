@@ -51,6 +51,7 @@
 #include <iostream>
 #include <string>
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/IO/FileBackedDataset.h"
 
 using namespace std;
 
@@ -139,7 +140,20 @@ bool MainWindow::Transfer1DLoad(string strFilename) {
 
 void MainWindow::Transfer1DLoad() {
   QSettings settings;
-  QString strLastDir = settings.value("Folders/Transfer1DLoad", ".").toString();
+  QString strLastDir="";
+
+  // First try to grab the directory from the currently-opened file.
+  if(m_pActiveRenderWin) {
+    const FileBackedDataset& ds = dynamic_cast<const FileBackedDataset&>(
+      m_pActiveRenderWin->GetRenderer()->GetDataset()
+    );
+    strLastDir = QString(SysTools::GetPath(ds.Filename()).c_str());
+  }
+
+  // if that didn't work, fall back on our previously saved path.
+  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdString())) {
+    strLastDir = settings.value("Folders/Transfer1DLoad", ".").toString();
+  }
 
   QString selectedFilter;
   QFileDialog::Options options;
@@ -161,7 +175,20 @@ void MainWindow::Transfer1DLoad() {
 
 void MainWindow::Transfer1DSave() {
   QSettings settings;
-  QString strLastDir = settings.value("Folders/Transfer1DSave", ".").toString();
+  QString strLastDir="";
+
+  // First try to grab the directory from the currently-opened file.
+  if(m_pActiveRenderWin) {
+    const FileBackedDataset& ds = dynamic_cast<const FileBackedDataset&>(
+      m_pActiveRenderWin->GetRenderer()->GetDataset()
+    );
+    strLastDir = QString(SysTools::GetPath(ds.Filename()).c_str());
+  }
+
+  // if that didn't work, fall back on our previously saved path.
+  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdString())) {
+    strLastDir = settings.value("Folders/Transfer1DSave", ".").toString();
+  }
 
   QString selectedFilter;
   QFileDialog::Options options;
