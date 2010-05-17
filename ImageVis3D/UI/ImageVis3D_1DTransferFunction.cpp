@@ -163,8 +163,8 @@ void MainWindow::Transfer1DLoad() {
 
   QString fileName =
     QFileDialog::getOpenFileName(this,
-         "Load 1D Transferfunction", strLastDir,
-         "1D Transferfunction File (*.1dt)",&selectedFilter, options);
+         "Load 1D Transfer function", strLastDir,
+         "1D Transfer function File (*.1dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/Transfer1DLoad", QFileInfo(fileName).absoluteDir().path());
@@ -198,8 +198,8 @@ void MainWindow::Transfer1DSave() {
 
   QString fileName =
     QFileDialog::getSaveFileName(this,
-         "Save 1D Transferfunction", strLastDir,
-         "1D Transferfunction File (*.1dt)",&selectedFilter, options);
+         "Save 1D Transfer function", strLastDir,
+         "1D Transfer function File (*.1dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     fileName = SysTools::CheckExt(string(fileName.toAscii()), "1dt").c_str();
@@ -243,8 +243,8 @@ void MainWindow::Transfer1DAddToLib() {
 
   QString fileName =
     QFileDialog::getSaveFileName(this,
-         "Save 1D Transferfunction", strLibDir,
-         "1D Transferfunction File (*.1dt)",&selectedFilter, options);
+         "Save 1D Transfer function", strLibDir,
+         "1D Transfer function File (*.1dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     fileName = SysTools::CheckExt(string(fileName.toAscii()), "1dt").c_str();

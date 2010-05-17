@@ -320,8 +320,8 @@ void MainWindow::Transfer2DLoad() {
 #endif
 
   QString fileName =
-    QFileDialog::getOpenFileName(this, "Load 2D Transferfunction", strLastDir,
-         "2D Transferfunction File (*.2dt)",&selectedFilter, options);
+    QFileDialog::getOpenFileName(this, "Load 2D Transfer function", strLastDir,
+         "2D Transfer function File (*.2dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/Transfer2DLoad", QFileInfo(fileName).absoluteDir().path());
@@ -354,8 +354,8 @@ void MainWindow::Transfer2DSave() {
 #endif
 
   QString fileName =
-    QFileDialog::getSaveFileName(this, "Save 2D Transferfunction", strLastDir,
-         "2D Transferfunction File (*.2dt)",&selectedFilter, options);
+    QFileDialog::getSaveFileName(this, "Save 2D Transfer function", strLastDir,
+         "2D Transfer function File (*.2dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     fileName = SysTools::CheckExt(string(fileName.toAscii()), "2dt").c_str();

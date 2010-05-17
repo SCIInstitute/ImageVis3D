@@ -268,7 +268,7 @@ void DatasetServerDialog::select1DTFile() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/Server1DTFilename", ".").toString();
 
-  QString fileName = QFileDialog::getOpenFileName(this, "Select 1D Transferfunction",
+  QString fileName = QFileDialog::getOpenFileName(this, "Select 1D Transfer function",
              strLastDir, "1D Transfer Functions (*.1dt)", &selectedFilter, options);
 
   if (!fileName.isEmpty()) {
