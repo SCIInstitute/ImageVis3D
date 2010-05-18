@@ -56,8 +56,6 @@
 using namespace std;
 using namespace tuvok;
 
-#define CONV_VERSION 1.1
-
 /*
 #ifdef _WIN32
   // CRT's memory leak detection on windows
@@ -66,62 +64,6 @@ using namespace tuvok;
   #endif
 #endif
   */
-
-void ShowUsage(string filename) {
-  IOManager ioMan;
-
-  std::vector< std::pair <std::string, std::string > > importList = ioMan.GetImportFormatList();
-  std::vector< std::pair <std::string, std::string > > exportList = ioMan.GetExportFormatList();
-
-    cout << endl <<
-            filename << " V" << CONV_VERSION << " (using Tuvok V" << TUVOK_VERSION << " " << TUVOK_VERSION_TYPE << ")" << endl << endl <<
-      " Converts different types of volumetric data." << endl << endl <<
-      " Usage:" << endl <<
-            "    " << filename << " -f InFile ^ -d InDir [-f2 InFile2] -out OutFile " << endl << endl <<
-            "     Mandatory Arguments:" << endl <<
-            "        -f    the input filename" << endl <<
-      "          Supported formats: " << endl;
-      for (size_t i = 0;i<importList.size();i++) {
-        cout << "             " << importList[i].first.c_str() << " (" << importList[i].second.c_str() << ")" << endl;
-      }
-      cout <<
-      "        XOR" << endl <<
-            "        -d    the input directory" << endl <<
-      "          Supported file formats in that directory: " << endl <<
-      "             DICOM" << endl;
-#ifndef TUVOK_NO_QT
-      QList<QByteArray> listImageFormats = QImageReader::supportedImageFormats();
-      for (size_t i = 0;i<exportList.size();i++) {
-        QByteArray imageFormat = listImageFormats[int(i)];
-        QString qStrImageFormat(imageFormat);
-        string strImageFormat = qStrImageFormat.toStdString();
-        cout << "             " << strImageFormat.c_str() << endl;
-      }
-#endif
-      cout << endl <<
-            "        -out  the target filename (the extension is used to detect the format)" << endl <<
-      "          Supported formats: " << endl;
-      for (size_t i = 0;i<exportList.size();i++) {
-        cout << "             " << exportList[i].first.c_str() << " (" << exportList[i].second.c_str() << ")" << endl;
-      }
-      cout <<
-            "     Optional Arguments:" << endl <<
-            "        -f2   second input file to be merged with the first" << endl <<
-            "        -b2   bias factor for values in the second input file" << endl <<
-            "              (use 'm' instead of a minus sign e.g. -b2 m3 will bias by -3)" << endl <<
-            "        -s2   scaling factor for values in the second input file" << endl <<
-      "              (use 'm' instead of a minus sign e.g. -s2 m5 will scale by -5)" << endl <<
-      " Examples:" << endl <<
-      "  " << filename << " -f head.vff -out head.uvf   // converts head.vff" << endl <<
-      "                                                    into a uvf file" << endl <<
-      "  " << filename << " -f head.uvf -out head.nhdr  // converts head.uvf" << endl <<
-      "                                                    into head.nhdr and" << endl <<
-      "                                                    head.nhdr.raw" << endl <<
-      "  " << filename << " -d .. -out data.uvf         // scanns the parent directory" << endl <<
-      "                                                    for DICOM- and image-stacks" << endl <<
-      "                                                    outputs data0.uvf to" << endl <<
-      "                                                    dataN.uvf" << endl << endl;
-}
 
 int main(int argc, const char* argv[])
 {
@@ -145,7 +87,7 @@ int main(int argc, const char* argv[])
   double fBias = 0.0;
 
   try {
-    TCLAP::CmdLine cmd("test msg", ' ', "1.2.0");
+    TCLAP::CmdLine cmd("uvf converter");
     TCLAP::MultiArg<std::string> inputs("i", "input", "input file.  "
                                         "Repeat to merge volumes", true,
                                         "filename");
