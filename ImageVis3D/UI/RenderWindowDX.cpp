@@ -107,7 +107,7 @@ void RenderWindowDX::InitializeRenderer()
 
   if (!m_bRenderSubsysOK) {
     m_Renderer->Cleanup();
-    m_MasterController.ReleaseVolumerenderer(m_Renderer);
+    m_MasterController.ReleaseVolumeRenderer(m_Renderer);
     m_Renderer = NULL;
   }
 }

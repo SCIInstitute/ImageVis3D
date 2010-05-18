@@ -701,7 +701,7 @@ void RenderWindow::Cleanup() {
   if (m_Renderer == NULL || !m_bRenderSubsysOK) return;
 
   m_Renderer->Cleanup();
-  m_MasterController.ReleaseVolumerenderer(m_Renderer);
+  m_MasterController.ReleaseVolumeRenderer(m_Renderer);
   m_Renderer = NULL;
 
   for (int i=0; i < MAX_RENDER_REGIONS; ++i)

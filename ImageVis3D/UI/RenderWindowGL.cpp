@@ -244,7 +244,7 @@ void RenderWindowGL::InitializeRenderer()
 
   if (!m_bRenderSubsysOK) {
     if (m_Renderer) m_Renderer->Cleanup();
-    m_MasterController.ReleaseVolumerenderer(m_Renderer);
+    m_MasterController.ReleaseVolumeRenderer(m_Renderer);
     m_Renderer = NULL;
   }
 
