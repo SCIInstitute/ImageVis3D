@@ -54,6 +54,10 @@ mv Build/${tarball} Build/${zipfile} .
 mkdir -p staging
 cp -R CmdLineConverter/Build/uvfconvert.app staging/
 cp -R Build/ImageVis3D.app staging/
+echo "Running Qt's mac deployment tool on uvfconvert..."
+pushd staging/
+  ${macdeployqt} uvfconvert.app
+popd
 hdiutil create                    \
   -volname "ImageVis3D"           \
   -srcfolder staging/             \
