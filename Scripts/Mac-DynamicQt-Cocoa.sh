@@ -32,10 +32,12 @@ echo "yes" | \
         -opengl \
         -qt-libjpeg \
         -qt-libtiff \
+        -qt-libpng \
         -qt-gif \
         -no-sql-sqlite \
         -no-sql-sqlite2 \
         -no-xmlpatterns \
+        -no-multimedia \
         -no-phonon \
         -no-phonon-backend \
         -no-webkit \
