@@ -52,7 +52,7 @@ pushd Build/ &>/dev/null
 popd &>/dev/null
 mv Build/${tarball} Build/${zipfile} .
 mkdir -p staging
-cp CmdLineConverter/Build/uvfconvert staging/
+cp -R CmdLineConverter/Build/uvfconvert.app staging/
 cp -R Build/ImageVis3D.app staging/
 hdiutil create                    \
   -volname "ImageVis3D"           \
