@@ -35,13 +35,14 @@
 //
 //!    Copyright (C) 2010 DFKI, MMCI, SCI Institute
 
-#include "DatasetServerDialog.h"
-
+#include <cstdlib>
+#include <fstream>
+#pragma GCC visibility push(default)
 #include <QtGui/QtGui>
 #include <QtNetwork/QtNetwork>
-#include <stdlib.h>
+#pragma GCC visibility pop
 
-#include <fstream>
+#include "DatasetServerDialog.h"
 #include "../Tuvok/Basics/SysTools.h"
 
 

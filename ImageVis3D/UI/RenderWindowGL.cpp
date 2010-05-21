@@ -38,12 +38,14 @@
 #include "../Tuvok/StdTuvokDefines.h"
 #include <sstream>
 #include "GL/glew.h"
-#include "RenderWindowGL.h"
-#include "ImageVis3D.h"
-
+#pragma GCC visibility push(default)
 #include <QtGui/QtGui>
 #include <QtGui/QMessageBox>
 #include <QtOpenGL/QtOpenGL>
+#pragma GCC visibility pop
+
+#include "RenderWindowGL.h"
+#include "ImageVis3D.h"
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 #include "../Tuvok/IO/IOManager.h"

@@ -38,8 +38,10 @@
 #include "../Tuvok/StdTuvokDefines.h"
 #include <cassert>
 #include <sstream>
+#pragma GCC visibility push(default)
 #include <QtGui/QtGui>
 #include <QtGui/QMessageBox>
+#pragma GCC visibility pop
 
 #include "RenderWindow.h"
 
