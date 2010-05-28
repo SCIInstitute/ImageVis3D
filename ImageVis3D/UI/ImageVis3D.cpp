@@ -214,7 +214,7 @@ MainWindow::~MainWindow()
   delete m_2DTransferFunction;
 
   disconnect(m_pQLightPreview, SIGNAL(lightMoved()), 
-             this, SLOT(PickLightColor()));
+             this, SLOT(LightMoved()));
 
   delete m_pQLightPreview;
   std::for_each(m_recentFileActs, m_recentFileActs+ms_iMaxRecentFiles,
