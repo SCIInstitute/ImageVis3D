@@ -212,6 +212,10 @@ MainWindow::~MainWindow()
 
   delete m_1DTransferFunction;
   delete m_2DTransferFunction;
+
+  disconnect(m_pQLightPreview, SIGNAL(lightMoved()), 
+             this, SLOT(PickLightColor()));
+
   delete m_pQLightPreview;
   std::for_each(m_recentFileActs, m_recentFileActs+ms_iMaxRecentFiles,
                 Delete<QAction>);
@@ -830,6 +834,7 @@ void MainWindow::PickLightColor() {
   FLOATVECTOR4 cAmbient  = m_pQLightPreview->GetAmbient();
   FLOATVECTOR4 cDiffuse  = m_pQLightPreview->GetDiffuse();
   FLOATVECTOR4 cSpecular = m_pQLightPreview->GetSpecular();
+  FLOATVECTOR3 vLightDir = m_pQLightPreview->GetLightDir();
 
   QPushButton* source = qobject_cast<QPushButton*>(sender());
 
@@ -867,9 +872,22 @@ void MainWindow::PickLightColor() {
     else
       return;
 
-    m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular);
-    m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse, cSpecular);
+    m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular,vLightDir);
+    m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse, cSpecular, vLightDir);
   }
+}
+
+
+void MainWindow::LightMoved() {
+  if (!m_pActiveRenderWin) return;
+
+  FLOATVECTOR4 cAmbient  = m_pQLightPreview->GetAmbient();
+  FLOATVECTOR4 cDiffuse  = m_pQLightPreview->GetDiffuse();
+  FLOATVECTOR4 cSpecular = m_pQLightPreview->GetSpecular();
+  FLOATVECTOR3 vLightDir = m_pQLightPreview->GetLightDir();
+
+  m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse,
+                                               cSpecular, vLightDir);
 }
 
 void MainWindow::ChangeLightColors() {
@@ -878,29 +896,32 @@ void MainWindow::ChangeLightColors() {
   FLOATVECTOR4 cAmbient  = m_pQLightPreview->GetAmbient();
   FLOATVECTOR4 cDiffuse  = m_pQLightPreview->GetDiffuse();
   FLOATVECTOR4 cSpecular = m_pQLightPreview->GetSpecular();
+  FLOATVECTOR3 vLightDir = m_pQLightPreview->GetLightDir();
 
   cAmbient[3] = horizontalSlider_ambientIntensity->value()/100.0f;
   cDiffuse[3] = horizontalSlider_diffuseIntensity->value()/100.0f;
   cSpecular[3] = horizontalSlider_specularIntensity->value()/100.0f;
 
-  m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular);
-
-  m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse, cSpecular);
+  m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular,vLightDir);
+  m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse,
+                                               cSpecular, vLightDir);
 }
 
 
 void MainWindow::UpdateColorWidget() {
   FLOATVECTOR4 cAmbient(1,1,1,0.2f);
   FLOATVECTOR4 cDiffuse(1,1,1,0.8f);
-  FLOATVECTOR4 cSpecular(1,1,1,1.0f);
+  FLOATVECTOR4 cSpecular(1,1,1,1);
+  FLOATVECTOR3 vLightDir(0,0,-1);
 
   if (m_pActiveRenderWin && m_pActiveRenderWin->GetRenderer()) {
     cAmbient  = m_pActiveRenderWin->GetRenderer()->GetAmbient();
     cDiffuse  = m_pActiveRenderWin->GetRenderer()->GetDiffuse();
     cSpecular = m_pActiveRenderWin->GetRenderer()->GetSpecular();
+    vLightDir = m_pActiveRenderWin->GetRenderer()->GetLightDir();
   }
 
-  m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular);
+  m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular,vLightDir);
   // these should probably be a size_t or even unsigned char, but Qt's APIs
   // take an int.
   const int intensity[3] = {

@@ -42,9 +42,13 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/Appendix.h"
 #include "../Tuvok/Scripting/Scripting.h"
+#ifndef DETECTED_OS_WINDOWS
 #pragma GCC visibility push(default)
+#endif
 #include <QtOpenGL/QtOpenGL>
+#ifndef DETECTED_OS_WINDOWS
 #pragma GCC visibility pop
+#endif
 
 using namespace std;
 

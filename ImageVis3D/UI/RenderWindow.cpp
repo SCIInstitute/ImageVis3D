@@ -38,10 +38,14 @@
 #include "../Tuvok/StdTuvokDefines.h"
 #include <cassert>
 #include <sstream>
+#ifndef DETECTED_OS_WINDOWS
 #pragma GCC visibility push(default)
+#endif
 #include <QtGui/QtGui>
 #include <QtGui/QMessageBox>
+#ifndef DETECTED_OS_WINDOWS
 #pragma GCC visibility pop
+#endif
 
 #include "RenderWindow.h"
 

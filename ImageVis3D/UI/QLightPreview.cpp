@@ -40,6 +40,7 @@
 #include "QLightPreview.h"
 
 #include <QtGui/QPainter>
+#include <QtGui/QMouseEvent>
 
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/MathTools.h"
@@ -51,10 +52,12 @@ QLightPreview::QLightPreview(QWidget *parent) :
   m_cAmbient(1.0f,1.0f,1.0f,0.4f),
   m_cDiffuse(1.0f,1.0f,1.0f,0.6f),
   m_cSpecular(1.0f,1.0f,1.0f,1.0f),
+  m_vLightDir(0.0f,0.0f,-1.0f),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
   m_pCachedImage(NULL),
-  m_bBackdropCacheUptodate(false)
+  m_bBackdropCacheUptodate(false),
+  m_bMousePressed(false)
 {
 }
 
@@ -66,16 +69,15 @@ QLightPreview::~QLightPreview(void)
 
 void QLightPreview::DrawSphere(QImage* sphereImage) {
   // can be choosen arbitrarily
-  FLOATVECTOR3 fLightDir(0.5,-0.5,1.0);
+  FLOATVECTOR3 fLightDir = m_vLightDir;
   fLightDir.normalize();
 
-
-  FLOATVECTOR3 fViewDir(0,0,1);
+  FLOATVECTOR3 fViewDir(0,0,-1);
 
   int w = width();
   int h = height();
   for (int y = 0;y<int(m_iCachedHeight);y++){
-    float normY = float(y*2) / float(h);
+    float normY = float((h-y)*2) / float(h);
     float fDistToCenterY = (normY - 1.0f);
     float fDistToCenterYQ = fDistToCenterY*fDistToCenterY;
 
@@ -92,12 +94,14 @@ void QLightPreview::DrawSphere(QImage* sphereImage) {
 
         // compute diffuse and clamp to zero
         FLOATVECTOR3 diffuseColor = (fLightDir ^ vNormal) * m_cDiffuse.xyz() * m_cDiffuse.w;
-        diffuseColor.x = (diffuseColor.x < 0) ? 0: diffuseColor.x;
-        diffuseColor.y = (diffuseColor.y < 0) ? 0: diffuseColor.y;
-        diffuseColor.z = (diffuseColor.z < 0) ? 0: diffuseColor.z;
+        diffuseColor.x = fabs(diffuseColor.x);
+        diffuseColor.y = fabs(diffuseColor.y);
+        diffuseColor.z = fabs(diffuseColor.z);
 
-        // compute specular and clamp to zero (reflection vector = light vector on a sphere)
-        FLOATVECTOR3 specularColor = pow((fLightDir ^ vNormal),32) * m_cSpecular.xyz() * m_cSpecular.w;
+        FLOATVECTOR3 reflection = fViewDir-(2.0f*vNormal*(vNormal^fViewDir));
+
+        // compute specular and clamp to zero 
+        FLOATVECTOR3 specularColor = pow((reflection ^ -fLightDir),9) * m_cSpecular.xyz() * m_cSpecular.w;
         specularColor.x = (specularColor.x < 0) ? 0: specularColor.x;
         specularColor.y = (specularColor.y < 0) ? 0: specularColor.y;
         specularColor.z = (specularColor.z < 0) ? 0: specularColor.z;
@@ -151,11 +155,13 @@ void QLightPreview::paintEvent(QPaintEvent *event) {
 
 void QLightPreview::SetData(const FLOATVECTOR4& ambient,
                             const FLOATVECTOR4& diffuse,
-                            const FLOATVECTOR4& specular) {
+                            const FLOATVECTOR4& specular,
+                            const FLOATVECTOR3& lightDir) {
 
   m_cAmbient = ambient;
   m_cDiffuse = diffuse;
   m_cSpecular = specular;
+  m_vLightDir = lightDir;
 
   m_bBackdropCacheUptodate = false;
   update();
@@ -173,3 +179,52 @@ FLOATVECTOR4 QLightPreview::GetSpecular()const {
   return m_cSpecular;
 }
 
+FLOATVECTOR3 QLightPreview::GetLightDir()const {
+  return m_vLightDir;
+}
+
+
+void QLightPreview::mouseMoveEvent(QMouseEvent *event) {
+  // call superclass method
+  QWidget::mouseMoveEvent(event);
+
+  if (!m_bMousePressed) return;
+
+  int x = event->x();
+  int y = event->y();
+  int w = width();
+  int h = height();
+
+  float normX = float((w-x)*2) / float(w);
+  float fDistToCenterX = (normX - 1.0f);
+  float fDistToCenterXQ = fDistToCenterX*fDistToCenterX;
+
+  float normY = float(y*2) / float(h);
+  float fDistToCenterY = (normY - 1.0f);
+  float fDistToCenterYQ = fDistToCenterY*fDistToCenterY;
+
+  if ( fDistToCenterXQ + fDistToCenterYQ > 1 ) return;
+
+
+  m_vLightDir = FLOATVECTOR3(fDistToCenterX, fDistToCenterY, -sqrt((1-fDistToCenterYQ)-fDistToCenterXQ));
+  m_vLightDir.normalize();
+
+  // redraw this widget
+  m_bBackdropCacheUptodate = false;
+  update();
+  emit lightMoved();
+}
+
+void QLightPreview::mousePressEvent(QMouseEvent *event) {
+  // call superclass method
+  QWidget::mousePressEvent(event);
+
+  if (event->button() == Qt::LeftButton)  m_bMousePressed = true;
+}
+
+void QLightPreview::mouseReleaseEvent(QMouseEvent *event) {
+  // call superclass method
+  QWidget::mouseReleaseEvent(event);
+
+  if (event->button() == Qt::LeftButton)  m_bMousePressed = false;
+}

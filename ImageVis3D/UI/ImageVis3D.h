@@ -274,6 +274,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
     void PickLightColor();
     void ChangeLightColors();
+    void LightMoved();
 
   private :
     QTimer*                                   m_pRedrawTimer;

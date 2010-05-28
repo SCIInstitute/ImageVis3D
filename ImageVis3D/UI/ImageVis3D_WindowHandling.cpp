@@ -194,6 +194,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
     new QLightPreview(frame_lightPreview);
   horizontalLayout_lightPreview->addWidget(m_pQLightPreview);
 
+  connect(m_pQLightPreview, SIGNAL(lightMoved()), this, SLOT(LightMoved()));
 
   connect(verticalSlider_2DTransHistScale, SIGNAL(valueChanged(int)),
     m_2DTransferFunction, SLOT(SetHistogramScale(int)));

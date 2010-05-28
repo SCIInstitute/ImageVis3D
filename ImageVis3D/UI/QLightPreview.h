@@ -53,24 +53,34 @@ public:
 
   void SetData(const FLOATVECTOR4& ambient,
                const FLOATVECTOR4& diffuse,
-               const FLOATVECTOR4& specular);
+               const FLOATVECTOR4& specular,
+               const FLOATVECTOR3& lightDir);
 
   FLOATVECTOR4 GetAmbient() const;
   FLOATVECTOR4 GetDiffuse() const;
   FLOATVECTOR4 GetSpecular()const;
+  FLOATVECTOR3 GetLightDir()const;
+
+signals:
+  void lightMoved();
 
 protected:
   virtual void paintEvent(QPaintEvent *event);
+  virtual void mouseMoveEvent(QMouseEvent *event);
+  virtual void mousePressEvent(QMouseEvent *event);
+  virtual void mouseReleaseEvent(QMouseEvent *event);
 
 private:
   FLOATVECTOR4 m_cAmbient;
   FLOATVECTOR4 m_cDiffuse;
   FLOATVECTOR4 m_cSpecular;
+  FLOATVECTOR3 m_vLightDir;
 
   unsigned int m_iCachedHeight;
   unsigned int m_iCachedWidth;
   QImage*      m_pCachedImage;
   bool         m_bBackdropCacheUptodate;
+  bool         m_bMousePressed;
 
   void DrawSphere(QImage* sphereImage);
 };
