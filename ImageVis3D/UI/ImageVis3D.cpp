@@ -873,7 +873,8 @@ void MainWindow::PickLightColor() {
       return;
 
     m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular,vLightDir);
-    m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse, cSpecular, vLightDir);
+    m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse,
+                                                 cSpecular, vLightDir);
   }
 }
 
