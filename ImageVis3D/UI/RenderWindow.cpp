@@ -38,6 +38,7 @@
 #include "../Tuvok/StdTuvokDefines.h"
 #include <cassert>
 #include <sstream>
+#include <stdexcept>
 #ifndef DETECTED_OS_WINDOWS
 #pragma GCC visibility push(default)
 #endif
@@ -433,6 +434,14 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       break;
     case Qt::Key_R :
       ResetRenderingParameters();
+      break;
+    case Qt::Key_S:
+      try {
+        FLOATVECTOR3 loc = m_Renderer->Pick(UINTVECTOR2(m_viMousePos));
+        OTHER("pick location: %g %g %g", loc[0], loc[1], loc[2]);
+      } catch(const std::runtime_error& err) {
+        T_ERROR("Pick failed: %s", err.what());
+      }
       break;
     case Qt::Key_Space : {
       if (selectedRegion == NULL)
