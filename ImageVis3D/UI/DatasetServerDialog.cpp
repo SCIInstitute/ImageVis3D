@@ -37,10 +37,14 @@
 
 #include <cstdlib>
 #include <fstream>
-#pragma GCC visibility push(default)
+#ifdef __GNUC__
+# pragma GCC visibility push(default)
+#endif
 #include <QtGui/QtGui>
 #include <QtNetwork/QtNetwork>
-#pragma GCC visibility pop
+#ifdef __GNUC__
+# pragma GCC visibility pop
+#endif
 
 #include "DatasetServerDialog.h"
 #include "../Tuvok/Basics/SysTools.h"
