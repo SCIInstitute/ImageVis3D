@@ -60,16 +60,19 @@ string MainWindow::ConvertTF(const string& strSource1DTFilename,
   pleaseWait.SetText("Converting transfer function, please wait  ...");
 
   string filenameOnly = SysTools::ChangeExt(
-      SysTools::GetFilename(currentDataset->Filename()),"i3m"
+      SysTools::GetFilename(currentDataset->Filename()),"1dt"
       );
 
   string strTarget1DTFilename = strTargetDir+"/"+filenameOnly;
+  MESSAGE("Converting transferfunction to %s",strTarget1DTFilename.c_str());
 
   // resample 1D tf to 8bit
   TransferFunction1D tfIn(strSource1DTFilename);
   tfIn.Resample(256);
   if (!tfIn.Save(strTarget1DTFilename)) return "";
 
+
+  MESSAGE("Saved 8bit transferfunction to %s",strTarget1DTFilename.c_str());
   return strTarget1DTFilename;
 }
 
