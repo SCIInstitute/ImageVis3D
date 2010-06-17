@@ -133,7 +133,7 @@ void MainWindow::TransferToI3M() {
 
     if (directoryName.isEmpty()) return;
 
-    string strTargetDir = string(directoryName.toAscii()); 
+    string strTargetDir = string(directoryName.toAscii().data()); 
     
     settings.setValue("Folders/I3MServer", directoryName);
 
