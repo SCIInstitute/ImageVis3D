@@ -60,7 +60,7 @@ string MainWindow::ConvertTF(const string& strSource1DTFilename,
   pleaseWait.SetText("Converting transfer function, please wait  ...");
 
   string filenameOnly = SysTools::GetFilename(currentDataset->Filename());
-  string strTarget1DTFilename = strTargetDir+filenameOnly;
+  string strTarget1DTFilename = strTargetDir+"/"+filenameOnly;
 
   // resample 1D tf to 8bit
   TransferFunction1D tfIn(strSource1DTFilename);
@@ -93,7 +93,7 @@ string MainWindow::ConvertDataToI3M(const UVFDataset* currentDataset,
   }
 
   string filenameOnly = SysTools::GetFilename(currentDataset->Filename());
-  string strTargetFilename = strTargetDir+
+  string strTargetFilename = strTargetDir+"/"+
                              SysTools::ChangeExt(filenameOnly,"i3m");
 /*
   // include the following code to rename the target 
@@ -133,7 +133,7 @@ void MainWindow::TransferToI3M() {
 
     if (directoryName.isEmpty()) return;
 
-    string strTargetDir = string(directoryName.toAscii().data()); 
+    string strTargetDir = string(directoryName.toAscii().data());
     
     settings.setValue("Folders/I3MServer", directoryName);
 
