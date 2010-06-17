@@ -27,7 +27,7 @@
 */
 
 
-//!    File   : ImageVis3D_FileHandling.cpp
+//!    File   : ImageVis3D_FileHandling.fcpp
 //!    Author : Jens Krueger
 //!             SCI Institute
 //!             University of Utah

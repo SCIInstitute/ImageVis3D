@@ -59,6 +59,7 @@ class TextfileOut;
 #include <UI/SettingsDlg.h>
 #include <UI/Welcome.h>
 #include <UI/MetadataDlg.h>
+#include "../Tuvok/IO/uvfDataset.h"
 
 class QHttp;
 class QHttpResponseHeader;
@@ -67,6 +68,7 @@ class QFile;
 class QSslError;
 class QTimer;
 class FTPDialog;
+class PleaseWaitDialog;
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow,
                    public Scriptable
@@ -104,7 +106,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
   protected slots:
     void TransferToI3M();
-    void StartDatasetServer();
 
     void FtpFail();
     void FtpSuccess();
@@ -421,7 +422,15 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
     void UpdateMinMaxLODLimitLabel();
     void UpdateColorWidget();
+    
+    std::string ConvertTF(const std::string& strSource1DTFilename,
+                          const std::string& strTargetDir,
+                          const UVFDataset* currentDataset,
+                          PleaseWaitDialog& pleaseWait);
 
+    std::string ConvertDataToI3M(const UVFDataset* currentDataset,
+                                 const std::string& strTargetDir,
+                                 PleaseWaitDialog& pleaseWait);
     TextfileOut* m_pTextout;
 
     RenderWindow* ActiveRenderWin();

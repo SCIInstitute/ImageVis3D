@@ -36,12 +36,86 @@
 //!    Copyright (C) 2009 DFKI, MMCI, SCI Institute
 
 #include "ImageVis3D.h"
-#include "I3MDialog.h"
-#include "DatasetServerDialog.h"
+
+#include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/Controller/Controller.h"
+#include "../Tuvok/IO/IOManager.h"
+#include "../Tuvok/IO/uvfDataset.h"
+
+
+#include <QtGui/QFileDialog>
+#include <QtCore/QSettings>
 #include <QtGui/QMessageBox>
+
+#include "PleaseWait.h"
 
 using namespace tuvok;
 using namespace std;
+
+string MainWindow::ConvertTF(const string& strSource1DTFilename,
+                             const string& strTargetDir, 
+                             const UVFDataset* currentDataset,
+                             PleaseWaitDialog& pleaseWait) {
+
+  pleaseWait.SetText("Converting transfer function, please wait  ...");
+
+  string filenameOnly = SysTools::GetFilename(currentDataset->Filename());
+  string strTarget1DTFilename = strTargetDir+filenameOnly;
+
+  // resample 1D tf to 8bit
+  TransferFunction1D tfIn(strSource1DTFilename);
+  tfIn.Resample(256);
+  if (!tfIn.Save(strTarget1DTFilename)) return "";
+
+  return strTarget1DTFilename;
+}
+
+string MainWindow::ConvertDataToI3M(const UVFDataset* currentDataset,
+                                    const string& strTargetDir,
+                                    PleaseWaitDialog& pleaseWait) {
+
+
+  pleaseWait.SetText("Converting:"+
+                     QString(currentDataset->Filename().c_str()));
+
+  // UVF to I3M
+
+  // first, find the smalest LOD with every dimension
+  // larger or equal to 128 (if possible)
+  int iLODLevel = int(currentDataset->GetLODLevelCount())-1;
+  for (;iLODLevel>0;iLODLevel--) {
+    UINTVECTOR3 vLODSize = UINTVECTOR3(
+                                currentDataset->GetDomainSize(iLODLevel)
+                           );
+    if (vLODSize.x >= 128 &&
+        vLODSize.y >= 128 &&
+        vLODSize.z >= 128) break;
+  }
+
+  string filenameOnly = SysTools::GetFilename(currentDataset->Filename());
+  string strTargetFilename = strTargetDir+
+                             SysTools::ChangeExt(filenameOnly,"i3m");
+/*
+  // include the following code to rename the target 
+  // file instead of overriding existing data if a
+  // file with the selected name already exists
+  if (SysTools::FileExists(strTargetFilename)) {
+    strTargetFilename = SysTools::FindNextSequenceName(
+                                                    strTargetFilename
+                                                    );
+  }
+*/
+
+  if (!Controller::Instance().IOMan()->ExportDataset(currentDataset, 
+                                                     iLODLevel, 
+                                                     strTargetFilename, 
+                                                     m_strTempDir)) {
+    return "";
+  }
+
+  return strTargetFilename;
+}
+
 
 void MainWindow::TransferToI3M() {
   if (!m_pActiveRenderWin) return;
@@ -49,8 +123,53 @@ void MainWindow::TransferToI3M() {
   const UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
 
   if (currentDataset) {
-    I3MDialog d(currentDataset, m_strTempDir, this);
-    d.exec();
+    QSettings settings;
+    QString strLastDir = settings.value("Folders/I3DMServer",
+                                        ".").toString();
+
+    QString directoryName =
+      QFileDialog::getExistingDirectory(this, "Select Dataset Server folder.",
+                                        strLastDir);
+
+    if (directoryName.isEmpty()) return;
+
+    string strTargetDir = directoryName.toAscii(); 
+    
+    settings.setValue("Folders/I3MServer", directoryName);
+
+
+    PleaseWaitDialog pleaseWait(this);
+    pleaseWait.SetText("Preparing data  ...");
+    pleaseWait.AttachLabel(&m_MasterController);
+
+    string targetFile = ConvertDataToI3M(currentDataset,strTargetDir,
+                                         pleaseWait);
+
+    if (targetFile == "") {
+      QMessageBox errorMessage;
+      errorMessage.setText("Unable to convert the dataset "
+                           "into the given directory.");
+      errorMessage.setIcon(QMessageBox::Critical);
+      errorMessage.exec();  
+      T_ERROR("Unable to convert the dataset "
+               "into the given directory.");
+    }
+
+    string strTemp1DTFilename = m_strTempDir + "i3mexport.1dt";
+    m_1DTransferFunction->SaveToFile(QString(strTemp1DTFilename.c_str()));
+    targetFile = ConvertTF(strTemp1DTFilename, strTargetDir, currentDataset,
+                           pleaseWait);
+    remove(strTemp1DTFilename.c_str());
+
+    if (targetFile == "") {
+      QMessageBox errorMessage;
+      errorMessage.setText("Unable to convert the transferfunction "
+                           "into the given directory.");
+      errorMessage.setIcon(QMessageBox::Critical);
+      errorMessage.exec();  
+      T_ERROR("Unable to convert the transferfunction "
+               "into the given directory.");
+    }
   } else {
     QMessageBox errorMessage;
     errorMessage.setText("ImageVis3D Mobile Device Transfer only supported for UVF datasets.");
@@ -58,10 +177,4 @@ void MainWindow::TransferToI3M() {
     errorMessage.exec();  
     T_ERROR("ImageVis3D Mobile Device Transfer only supported for UVF datasets.");
   }
-}
-
-
-void MainWindow::StartDatasetServer() {
-  DatasetServerDialog d(m_strTempDir, this);
-  d.exec();
 }
