@@ -59,7 +59,10 @@ string MainWindow::ConvertTF(const string& strSource1DTFilename,
 
   pleaseWait.SetText("Converting transfer function, please wait  ...");
 
-  string filenameOnly = SysTools::GetFilename(currentDataset->Filename());
+  string filenameOnly = SysTools::ChangeExt(
+      SysTools::GetFilename(currentDataset->Filename()),"i3m"
+      );
+
   string strTarget1DTFilename = strTargetDir+"/"+filenameOnly;
 
   // resample 1D tf to 8bit
