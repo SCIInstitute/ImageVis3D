@@ -5588,11 +5588,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <bool>true</bool>
    </property>
   </action>
-  <action name="actionStart_Dataset_Server">
-   <property name="text">
-    <string>Start Dataset Server</string>
-   </property>
-  </action>
  </widget>
  <layoutdefault spacing="6" margin="0"/>
  <tabstops>
@@ -7803,22 +7798,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <hint type="destinationlabel">
      <x>384</x>
      <y>1898</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionStart_Dataset_Server</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>StartDatasetServer()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>810</x>
-     <y>1295</y>
     </hint>
    </hints>
   </connection>
