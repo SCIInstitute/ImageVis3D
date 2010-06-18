@@ -78,7 +78,8 @@ string MainWindow::ConvertTF(const string& strSource1DTFilename,
 
 string MainWindow::ConvertDataToI3M(const UVFDataset* currentDataset,
                                     const string& strTargetDir,
-                                    PleaseWaitDialog& pleaseWait) {
+                                    PleaseWaitDialog& pleaseWait,
+                                    bool bOverrideExisting) {
 
 
   pleaseWait.SetText("Converting:"+
@@ -101,16 +102,12 @@ string MainWindow::ConvertDataToI3M(const UVFDataset* currentDataset,
   string filenameOnly = SysTools::GetFilename(currentDataset->Filename());
   string strTargetFilename = strTargetDir+"/"+
                              SysTools::ChangeExt(filenameOnly,"i3m");
-/*
-  // include the following code to rename the target 
-  // file instead of overriding existing data if a
-  // file with the selected name already exists
-  if (SysTools::FileExists(strTargetFilename)) {
+
+  if (!bOverrideExisting && SysTools::FileExists(strTargetFilename)) {
     strTargetFilename = SysTools::FindNextSequenceName(
                                                     strTargetFilename
                                                     );
   }
-*/
 
   if (!Controller::Instance().IOMan()->ExportDataset(currentDataset, 
                                                      iLODLevel, 
@@ -149,7 +146,7 @@ void MainWindow::TransferToI3M() {
     pleaseWait.AttachLabel(&m_MasterController);
 
     string targetFile = ConvertDataToI3M(currentDataset,strTargetDir,
-                                         pleaseWait);
+                                         pleaseWait, true);
 
     if (targetFile == "") {
       QMessageBox errorMessage;

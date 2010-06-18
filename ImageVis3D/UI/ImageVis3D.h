@@ -430,7 +430,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
     std::string ConvertDataToI3M(const UVFDataset* currentDataset,
                                  const std::string& strTargetDir,
-                                 PleaseWaitDialog& pleaseWait);
+                                 PleaseWaitDialog& pleaseWait,
+                                 bool bOverrideExisting);
     TextfileOut* m_pTextout;
 
     RenderWindow* ActiveRenderWin();
