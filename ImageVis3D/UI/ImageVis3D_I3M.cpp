@@ -60,7 +60,7 @@ string MainWindow::ConvertTF(const string& strSource1DTFilename,
   pleaseWait.SetText("Converting transfer function, please wait  ...");
 
   string filenameOnly = SysTools::ChangeExt(
-      SysTools::GetFilename(currentDataset->Filename()),"1dt"
+      SysTools::GetFilename(currentDataset->Filename()),"i3m.1dt"
       );
 
   string strTarget1DTFilename = strTargetDir+"/"+filenameOnly;
