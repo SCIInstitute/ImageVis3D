@@ -424,8 +424,8 @@ void MainWindow::InitDockWidget(QDockWidget * v) const {
   // Cocoa.  Eventually, we'll be doing Cocoa-only binaries, and should
   // probably remove this code so that it doesn't make anybody else
   // vomit.
-  if(v->pos() == QPoint(0,0)) {
-    v->move(25, 25);
+  if(v->pos().y() < 25) {
+    v->move(std::max(v->pos().x(), 5), 25);
   }
 #endif
 }
