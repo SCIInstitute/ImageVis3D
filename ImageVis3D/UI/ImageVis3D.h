@@ -203,6 +203,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void ShowGPUInfo(bool bWithExtensions);
     void ShowSysInfo();
     void ListSupportedImages();
+    void ListSupportedVolumes();
     void ClearDebugWin();
     void ParseAndExecuteDebugCommand();
     void SetDebugViewMask();

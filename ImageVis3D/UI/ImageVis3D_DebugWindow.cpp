@@ -39,6 +39,7 @@
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
+#include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/Scripting/Scripting.h"
 #include "ImageVis3D.h"
 #include <QtGui/QImageReader>
@@ -113,6 +114,24 @@ void MainWindow::ListSupportedImages() {
     m_MasterController.DebugOut()->printf(strImageFormat.c_str());
   }
 }
+
+void MainWindow::ListSupportedVolumes() {
+  m_MasterController.DebugOut()->printf("Supported image formats are:");
+
+  string strVolumeFormats;
+  std::vector<tVolumeFormat> conv = m_MasterController.IOMan()->GetFormatList();
+
+  for (size_t i=0; i < conv.size(); i++) {
+    strVolumeFormats += tr1::get<0>(conv[i]) + " " + tr1::get<1>(conv[i]);
+      if (!tr1::get<2>(conv[i])) 
+        strVolumeFormats += " (Readonly)\n";
+      else
+        strVolumeFormats += "\n";
+  }
+
+  m_MasterController.DebugOut()->printf(strVolumeFormats.c_str());
+}
+
 
 void MainWindow::ShowSysInfo() {
   std::ostringstream sysinfo;
