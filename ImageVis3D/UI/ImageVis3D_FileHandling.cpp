@@ -448,8 +448,7 @@ void MainWindow::ExportDataset() {
     size_t start = filter.find_last_of("*.")+1;
     size_t end = filter.find_last_of(")");
     ext = filter.substr(start, end-start);
-    SysTools::RemoveTailingWhitespace(ext);
-    SysTools::RemoveLeadingWhitespace(ext);
+    SysTools::TrimStr(ext);
     if(ext == "") {
       QMessageBox noformat;
       noformat.setText("No file extension: unknown export format");
