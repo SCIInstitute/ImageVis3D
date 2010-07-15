@@ -614,11 +614,20 @@ void MainWindow::MergeDatasets() {
 
     if (!fileName.isEmpty()) {
       settings.setValue("Folders/MergedOutput", QFileInfo(fileName).absoluteDir().path());
+      std::string stdFile = std::string(fileName.toAscii());
+      if(SysTools::GetExt(stdFile) == "") {
+        WARNING("no extension; assuming UVF.");
+        stdFile = stdFile + ".uvf";
+        // fix fileName too: used later if the user tries to load the data.
+        fileName = QString(stdFile.c_str());
+      }
 
       PleaseWaitDialog pleaseWait(this);
       pleaseWait.SetText("Merging ...");
       pleaseWait.AttachLabel(&m_MasterController);
-      if (!m_MasterController.IOMan()->MergeDatasets(strFilenames, vScales, vBiases, string(fileName.toAscii()), m_strTempDir, m.UseMax())) {
+      const IOManager& iom = *(m_MasterController.IOMan());
+      if(!iom.MergeDatasets(strFilenames, vScales, vBiases, stdFile,
+                            m_strTempDir, m.UseMax())) {
         ShowCriticalDialog("Data set Merge Error", "Unable to merge the selected data sets, make sure that the size and type of the data sets are the same.");
         return;
       }
