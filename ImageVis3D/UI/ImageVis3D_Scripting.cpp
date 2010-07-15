@@ -75,8 +75,8 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "close", "","close the current datawindow");
   pScriptEngine->RegisterCommand(this, "resize", "sizeX sizeY","resize the current data window");
   pScriptEngine->RegisterCommand(this, "rotateX", "angle","rotate the data by \"angle\" degree around the x axis");
-  pScriptEngine->RegisterCommand(this, "rotateY", "angle","rotate the data by \"angle\" degree around the x axis");
-  pScriptEngine->RegisterCommand(this, "rotateZ", "angle","rotate the data by \"angle\" degree around the x axis");
+  pScriptEngine->RegisterCommand(this, "rotateY", "angle","rotate the data by \"angle\" degree around the y axis");
+  pScriptEngine->RegisterCommand(this, "rotateZ", "angle","rotate the data by \"angle\" degree around the z axis");
   pScriptEngine->RegisterCommand(this, "translate", "x y z","translate the data by [x,y,z]");
   pScriptEngine->RegisterCommand(this, "reset", "","reset all rendering parameters to their inital state");
   pScriptEngine->RegisterCommand(this, "capturesingle", "targetfile", "capture a single image into targetfile");
