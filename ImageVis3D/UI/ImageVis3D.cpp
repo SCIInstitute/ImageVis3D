@@ -178,6 +178,8 @@ MainWindow::MainWindow(MasterController& masterController,
 
   m_pRedrawTimer = new QTimer(this);
   m_pRedrawTimer->setInterval(IV3D_TIMER_INTERVAL);
+
+  setAcceptDrops(true);
 }
 
 namespace {

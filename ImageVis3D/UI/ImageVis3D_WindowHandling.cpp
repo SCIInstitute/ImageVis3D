@@ -35,28 +35,63 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <fstream>
+#include <iostream>
+#include <string>
+
+#include <QtCore/QSettings>
+#include <QtCore/QMimeData>
+#include <QtCore/QTimer>
+#include <QtCore/QUrl>
+#include <QtGui/QColorDialog>
+#include <QtGui/QDropEvent>
+#include <QtGui/QFileDialog>
+#include <QtGui/QInputDialog>
+#include <QtGui/QMdiSubWindow>
+#include <QtGui/QMessageBox>
+#include <QtNetwork/QHttp>
+
+#include "../Tuvok/Controller/Controller.h"
+#include "../Tuvok/Basics/SysTools.h"
+
 #include "ImageVis3D.h"
 #include "BrowseData.h"
 #include "RenderWindowGL.h"
 #include "RenderWindowDX.h"
 
-#include <QtCore/QTimer>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QFileDialog>
-#include <QtCore/QSettings>
-#include <QtGui/QMessageBox>
-#include <QtGui/QInputDialog>
-#include <QtGui/QColorDialog>
-#include <QtNetwork/QHttp>
-
-#include <fstream>
-#include <iostream>
-#include <string>
-#include "../Tuvok/Controller/Controller.h"
-#include "../Tuvok/Basics/SysTools.h"
-
 using namespace std;
 
+void MainWindow::dragEnterEvent(QDragEnterEvent* ev)
+{
+  ev->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent* ev)
+{
+  const QMimeData* md = ev->mimeData();
+  QStringList lst = md->formats();
+  std::string filename = "";
+  for(int i=0; i < lst.size(); ++i) {
+    if(lst[i] == "text/uri-list") {
+      QList<QUrl> urllist = md->urls();
+      for(int i=0; i < urllist.size(); ++i) {
+        std::string fn = urllist[i].path().toStdString();
+        if(SysTools::FileExists(fn)) {
+          filename = fn;
+        }
+      }
+    }
+  }
+  if(filename == "") {
+    // we didn't find a valid filename
+    ev->ignore();
+    return;
+  }
+
+  MESSAGE("Got file '%s' from drop event.", filename.c_str());
+  this->LoadDataset(filename);
+  ev->accept();
+}
 
 // ******************************************
 // Geometry

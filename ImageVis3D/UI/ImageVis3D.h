@@ -61,6 +61,10 @@ class TextfileOut;
 #include <UI/MetadataDlg.h>
 #include "../Tuvok/IO/uvfDataset.h"
 
+class QDragEnterEvent;
+class QDragLeaveEvent;
+class QMimeData;
+class QDropEvent;
 class QHttp;
 class QHttpResponseHeader;
 class QAuthenticator;
@@ -105,6 +109,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
                                        RenderWindow* pRenderWin);
 
   protected slots:
+    void dragEnterEvent(QDragEnterEvent*);
+    void dropEvent(QDropEvent*);
+
     void TransferToI3M();
 
     void FtpFail();
