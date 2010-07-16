@@ -776,6 +776,7 @@ in order, is:
 | 5    | 1D Histogram
 | 6    | 2D Histogram
 | 7    | Maximum and minimum data values (acceleration structure)
+| 8    | Triangle soup
 | *    | Undefined.  Reserved.
 |====================================================================
 
@@ -871,6 +872,23 @@ dimension of the data.
 
 _(Sadly, this part of the documentation is not complete.  In the meantime, see
 the source for more information.)_
+
+Triangle Soup Block
++++++++++++++++++++
+
+As one might guess, this block stores a collection of triangles, in
+"soup" form (that is, there is no guaranteed ordering, vertices/edges
+are duplicated instead of indexed intelligently).
+
+''This block is experimental and its format will likely change!''
+
+Triangle soup is 3-dimensional.  The format for triangle soup is quite
+simple:
+
+- First 64-bits: unsigned integer `n_triangles`
+- `n_triangles`*3 32-bit IEEE-754 floating point values.
+
+Each group of 3 values represents a single triangle.
 
 Contribute Back
 ---------------
