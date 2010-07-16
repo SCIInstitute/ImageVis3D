@@ -278,6 +278,7 @@ void MainWindow::ApplySettings() {
   settings.endGroup();
 
   actionTransfer_to_ImageVis3D_Mobile_Device->setVisible(m_bI3MFeatures);
+  actionAdd_TriSurf_to_Data_Set->setVisible(experimental);
 
   settings.beginGroup("Renderer");
   m_eVolumeRendererType = (MasterController::EVolumeRendererType)settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();
