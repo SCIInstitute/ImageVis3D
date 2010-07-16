@@ -41,6 +41,8 @@ example header file:
 
 [c++]
 source~~~~
+#include "RAWConverter.h"
+
 class YourConverter : public RAWConverter {
 public:
   YourConverter();
@@ -50,10 +52,11 @@ public:
                             const std::string& strTempDir,
                             bool bNoUserInteraction,
                             UINT64& iHeaderSkip, UINT64& iComponentSize,
-                            UINT64& iComponentCount, bool& bConvertEndianess,
+                            UINT64& iComponentCount, bool& bConvertEndianness,
                             bool& bSigned, bool& bIsFloat,
                             UINT64VECTOR3& vVolumeSize,
-                            FLOATVECTOR3& vVolumeAspect, std::string& strTitle,
+                            FLOATVECTOR3& vVolumeAspect,
+                            std::string& strTitle,
                             UVFTables::ElementSemanticTable& eType,
                             std::string& strIntermediateFile,
                             bool& bDeleteIntermediateFile);
@@ -75,6 +78,8 @@ file:
 
 [c++]
 source~~~~
+#include "YourConverter.h"
+
 YourConverter::YourConverter() {}
 
 bool YourConverter::ConvertToRAW(...)
@@ -132,6 +137,19 @@ CAUTION: On Windows, the solution/project files have diverged from the
 settings given in the qmake project file.  You will need to add your
 files to the Visual Studio project file in the normal way.  Do *not*
 run qmake on Windows, or you will not be able to compile ImageVis3D!
+
+Register Your Converter with the IO Subsystem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To inform ImageVis3D that your converter exists, you need to register
+it with the IO subsystem.  Open up `IOManager.cpp` and add a
+`#include` for your converter's header file.  Then, in the `IOManager`
+constructor, add a line which creates an instance of your converter:
+
+[c++]
+source~~~~
+m_vpConverters.push_back(new YourConverter());
+source~~~~
 
 Register Your File Extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -209,7 +227,7 @@ converters are registered dynamically, this will work fine; see the
     "color data", or RGBA data, in which case you would write `4` into this
     variable.  Any other setting is likely to fail later on in processing.
 
-  - `bConvertEndianess` - set this to true if the endianness of the data
+  - `bConvertEndianness` - set this to true if the endianness of the data
     differs from the endianness of the current platform.  You can use the
     static `EndianConvert::IsBigEndian()` method to determine the endianness of
     the currently-running ImageVis3D.

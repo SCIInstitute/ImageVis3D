@@ -123,7 +123,9 @@ path to loading and visualizing your data.
   common method to export data from the link:http://www.visitusers.org/[VisIt]
   software package.
 - *REK* (`.rek` extension): Fraunhofer Raw format.
-- *Analyze* (`.hdr` extension, with accompanying `.img`): "Analyze" files
+- *Inveon* (`.hdr` extension, with accompanying `.img`): files from Inveon
+  scanner.
+- *Analyze* (`.hdr` extension, with accompanying `.img`): Analyze 7.5 files.
 - *Raw* data, optionally compressed
 
 DICOM Stacks
@@ -294,13 +296,10 @@ information on the
 link:https://lists.sci.utah.edu/sympa/subscribe/tuvok-developers[tuvok-developers]
 mailing list.
 
-Analyze
-~~~~~~~
+Inveon
+~~~~~~
 
-This format might be misnamed; finding documentation on it has proved
-difficult.
-
-The analyze format is a header + data format, similar in concept to a
+The Inveon format is a header + data format, similar in concept to a
 detached NRRD.  In ImageVis3D, users select a `.hdr` file, which is
 assumed to correspond to a `.img` file: the "header" file must be named
 exactly the same as the `.img` file, except with the `.hdr` *appended*
@@ -313,6 +312,16 @@ other data to test with.  The format is simple and efficient, but
 verbose and ill-documented, with unknown support in other tools;
 therefore it is recommended that other formats be used in your
 visualization solutions, if you have the choice.
+
+Analyze
+~~~~~~~
+
+The Analyze file format was developed at the Mayo Clinic as part of a
+software package of the same name.  Do note that there are multiple
+versions of this format; ImageVis3D supports the 7.5 variant.
+
+Data sets in this format consist of small `.hdr` files which describe
+the data, and then put raw data in `.img` files.
 
 Raw Data
 ~~~~~~~~
