@@ -649,7 +649,7 @@ author of this document considers it more of a filesystem than a
 file format.  This is because UVF is very general, relying on the
 applications which implement it for some of the semantic value of
 the data.  As an example, with existing code it would be easy to
-write a 9-dimensional, 7-channel tensor dataset into a UVF file.
+write a 9-dimensional, 6-channel tensor dataset into a UVF file.
 ImageVis3D will have absolutely no idea how to render that data, but it
 is perfectly valid as a UVF file.
 
@@ -660,13 +660,13 @@ pull out the portions your application understands, and ignore the
 rest.
 
 This naturally only works if the format itself supports multiple
-'portions'.  UVF supports this natively, and in fact ImageVis3D itself
-makes use of a few different 'portions', or, in UVF parlance, 'blocks'.
-Each block is almost like a file in-and-of itself; it contains a small
-header detailing specifics of that block, followed by whatever payload
-is relevant.  A global header presides over the entire UVF file, giving
-very general information and helping to index the various blocks which
-exist in the file.
+independent 'portions'.  UVF supports this natively, and in fact
+ImageVis3D itself makes use of a few different 'portions', or, in UVF
+parlance, 'blocks'.  Each block is almost like a file in-and-of itself;
+it contains a small header detailing specifics of that block, followed
+by whatever payload is relevant.  A global header presides over the
+entire UVF file, giving very general information and helping to index
+the various blocks which exist in the file.
 
 An academic paper about UVF
 link:http://www.sci.utah.edu/scipubs/search.html?schTerm=Unified+Volume+Format&year=2010&schGroup=&entrytype=[was

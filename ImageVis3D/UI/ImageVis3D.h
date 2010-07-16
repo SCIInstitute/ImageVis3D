@@ -62,14 +62,10 @@ class TextfileOut;
 #include "../Tuvok/IO/uvfDataset.h"
 
 class QDragEnterEvent;
-class QDragLeaveEvent;
-class QMimeData;
 class QDropEvent;
 class QHttp;
 class QHttpResponseHeader;
-class QAuthenticator;
 class QFile;
-class QSslError;
 class QTimer;
 class FTPDialog;
 class PleaseWaitDialog;
