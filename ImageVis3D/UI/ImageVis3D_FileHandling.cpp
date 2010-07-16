@@ -106,6 +106,43 @@ void MainWindow::LoadDataset() {
     }
   }
 }
+
+void MainWindow::AddTriSurf() {
+  MESSAGE("adding tri surf...");
+  QFileDialog::Options options;
+#ifdef DETECTED_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+
+  QMessageBox::information(this, "Select UVF and Surface",
+                           "Please select both a triangle surface and the UVF "
+                           "you want to embed the surface in.  It is highly "
+                           "recommended that the UVF be closed while you do "
+                           "this.");
+
+  QString selFilter;
+  QStringList files =
+    QFileDialog::getOpenFileNames(this, "Select Triangle Surface", "",
+                                  "Triangles and UVFs(*.tri *.uvf)",
+                                  &selFilter, options);
+  if(files.isEmpty()) {
+    WARNING("No file.  Dialog was probably cancelled.");
+    return;
+  }
+  std::string trisurf, uvf;
+  for(int i=0; i < files.size(); ++i) {
+    std::string s = std::string(files[i].toAscii());
+    if(SysTools::GetExt(s) == "uvf") {
+      uvf = s;
+    }
+    if(SysTools::GetExt(s) == "tri") {
+      trisurf = s;
+    }
+  }
+
+  m_MasterController.IOMan()->AddTriSurf(trisurf, uvf);
+}
+
 void MainWindow::LoadDataset(std::string strFilename) {
   if (!LoadDataset(QStringList(strFilename.c_str()))) {
         ShowCriticalDialog("Render window initialization failed.",
