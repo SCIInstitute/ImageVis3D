@@ -47,6 +47,7 @@
 #include "../Tuvok/IO/UVF/MaxMinDataBlock.h"
 #include "../Tuvok/IO/UVF/RasterDataBlock.h"
 #include "../Tuvok/IO/UVF/KeyValuePairDataBlock.h"
+#include "../Tuvok/IO/UVF/TriangleSoupBlock.h"
 
 
 #include <string>
@@ -74,7 +75,7 @@ void ShowUsage(string filename) {
    "  " << filename << " -f File.uvf [-noverify -create [-lod UINT]\n"
    "            [-sizeX UINT] [-sizeY UINT] [-sizeZ UINT]] " << endl << endl <<
    "     Mandatory Arguments:" << endl <<
-   "         -f       the filename of one of the text" << endl <<
+   "         -f       the filename of the UVF file to process" << endl <<
    "     Optional Arguments:" << endl <<
    "        -noverify    disables the checksum test" << endl <<
    "        -show1dhist  also output 1D histogram to console" << endl <<
@@ -508,6 +509,30 @@ int main(int argc, char* argv[])
           /// @todo FIXME: implement :)
           cout << "      Query of MaxMin data block info is unimplemented.\n";
           break;
+        case UVFTables::BS_TRIANGLE_SOUP: {
+            const TriangleSoupBlock* b = (const TriangleSoupBlock*)uvfFile.GetDataBlock(i);
+            size_t vI = b->GetVertexIndices().size()/3;
+            size_t vN = b->GetNormalIndices().size()/3;
+            size_t vT = b->GetTexCoordIndices().size()/2;
+            size_t vC = b->GetColorIndices().size()/4;
+            size_t v = b->GetVertices().size()/3;
+            size_t n = b->GetNormals().size()/3;
+            size_t t = b->GetTexCoords().size()/3;
+            size_t c = b->GetColors().size()/3;
+
+            cout << "      Triangle count: " << vI << ".\n";
+            if (vI == vN) cout << "      Valid Normals found.\n";
+            if (vI == vT) cout << "      Valid Texture Coordinates found.\n";
+            if (vI == vC) cout << "      Valid Colors found.\n";
+
+            cout << "      Vertex count: " << v << ".\n";
+            if (n > 0) cout << "      Normal count: " << n << ".\n";
+            if (t > 0) cout << "      Texture Coordinate count: " << t << ".\n";
+            if (c > 0) cout << "      Color count: " << c << ".\n";
+
+
+          }
+        break;
         default:
           /// \todo handle other block types
           T_ERROR("Unknown block type %d",
