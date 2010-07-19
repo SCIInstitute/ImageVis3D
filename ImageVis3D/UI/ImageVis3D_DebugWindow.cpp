@@ -110,28 +110,38 @@ void MainWindow::ListSupportedImages() {
   for (int i = 0;i<listImageFormats.size();i++) {
     QByteArray imageFormat = listImageFormats[i];
     QString qStrImageFormat(imageFormat);
-    string strImageFormat = qStrImageFormat.toStdString();
+    string strImageFormat = "  " + qStrImageFormat.toStdString();
     m_MasterController.DebugOut()->printf(strImageFormat.c_str());
   }
 }
 
 void MainWindow::ListSupportedVolumes() {
-  m_MasterController.DebugOut()->printf("Supported image formats are:");
+  m_MasterController.DebugOut()->printf("Supported Volume formats are:");
 
-  string strVolumeFormats;
-  std::vector<tVolumeFormat> conv = m_MasterController.IOMan()->GetFormatList();
+  std::vector<tConverterFormat> conv = m_MasterController.IOMan()->GetFormatList();
 
   for (size_t i=0; i < conv.size(); i++) {
-    strVolumeFormats += tr1::get<0>(conv[i]) + " " + tr1::get<1>(conv[i]);
-      if (!tr1::get<2>(conv[i])) 
-        strVolumeFormats += " (Readonly)\n";
-      else
-        strVolumeFormats += "\n";
+    string strVolumeFormats = "  " + tr1::get<0>(conv[i]) + " " + tr1::get<1>(conv[i]);
+    if (!tr1::get<2>(conv[i])) 
+      strVolumeFormats += " (Readonly)";
+    m_MasterController.DebugOut()->printf(strVolumeFormats.c_str());
   }
 
-  m_MasterController.DebugOut()->printf(strVolumeFormats.c_str());
 }
 
+
+void MainWindow::ListSupportedGeometry() {
+  m_MasterController.DebugOut()->printf("Supported Geometry formats are:");
+
+  std::vector<tConverterFormat> conv = m_MasterController.IOMan()->GetGeoFormatList();
+
+  for (size_t i=0; i < conv.size(); i++) {
+    string strGeoFormats = "  " + tr1::get<0>(conv[i]) + " " + tr1::get<1>(conv[i]);
+      if (!tr1::get<2>(conv[i])) 
+        strGeoFormats += " (Readonly)";
+    m_MasterController.DebugOut()->printf(strGeoFormats.c_str());
+  }
+}
 
 void MainWindow::ShowSysInfo() {
   std::ostringstream sysinfo;

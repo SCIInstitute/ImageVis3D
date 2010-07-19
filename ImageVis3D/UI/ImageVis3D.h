@@ -208,6 +208,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void ShowSysInfo();
     void ListSupportedImages();
     void ListSupportedVolumes();
+    void ListSupportedGeometry();
     void ClearDebugWin();
     void ParseAndExecuteDebugCommand();
     void SetDebugViewMask();
