@@ -94,8 +94,8 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
                   m_eRendererType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
                   bDisableBorder, m_bNoRCClipplanes, false
                );
-  // so far we are not rendering anything but the volume therefore
-  // disable the depth-buffer to offscreen copy operations
+  // so far we are not rendering anything previous to this renderer 
+  // so we can disable the depth-buffer to offscreen copy operations
   m_Renderer->SetConsiderPreviousDepthbuffer(false);
 
   if (!m_Renderer->LoadDataset(m_strDataset.toStdString())) {
