@@ -175,8 +175,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void Transfer2DUpdateGradientBox();
     void Transfer2DUpdateGradientButtons();
 
-    void FilterImage();
-
     bool LoadWorkspace();
     bool SaveWorkspace();
     bool ApplyWorkspace();

@@ -295,7 +295,7 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   fmt.setAlpha(true);
   fmt.setRgba(true);
   m_glShareWidget = new QGLWidget(fmt,this);
-  this->horizontalLayout->addWidget(m_glShareWidget);
+  this->horizontalLayout_10->addWidget(m_glShareWidget);
 
   DisableAllTrans();
 
@@ -466,8 +466,6 @@ void MainWindow::InitDockWidget(QDockWidget * v) const {
 }
 
 void MainWindow::InitAllWorkspaces() {
-  InitDockWidget(dockWidget_Tools); // not used at the moment
-  InitDockWidget(dockWidget_Filters); // not used at the moment
   InitDockWidget(dockWidget_Lighting);
   InitDockWidget(dockWidget_Information);
   InitDockWidget(dockWidget_Recorder);

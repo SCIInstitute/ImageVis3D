@@ -431,67 +431,6 @@ void MainWindow::DisableAllTrans() {
   listWidget_Swatches->clear();
 }
 
-
-// ******************************************
-// Filtering
-// ******************************************
-
-void MainWindow::FilterImage() {
-
-  if (!m_pActiveRenderWin) return;
-
-  // Get theactive tab
-  int tab = tabWidget_Filter->currentIndex();
-
-  int var0 = 0;
-  int var1 = 0;
-
-  switch( tab ) {
-
-  case 0: // Histogram
-    var0 = spinBox_FilterHistoBins->value();
-    var1 = spinBox_FilterHistoAlpha->value();
-    break;
-
-  case 1: // Median
-    var0 = spinBox_FilterMedianRadius->value();
-    break;
-
-  case 2: // Gaussian
-    var0 = spinBox_FilterGaussianVariance->value();
-    var1 = spinBox_FilterGaussianKernel->value();
-    break;
-
-  case -1:
-  default:
-    return;
-  }
-
-  m_MasterController.DebugOut()->
-    Message("MainWindow::FilterImage",
-      "Performing filter %d on %s.", tab,
-      m_pActiveRenderWin->GetDatasetName().toStdString().c_str() );
-
-  QString fileName = m_pActiveRenderWin->GetDatasetName();
-
-  /// \todo ARS -- this should return a pointer to memory.
-  m_MasterController.Filter( m_pActiveRenderWin->GetDatasetName().toStdString(),
-           tab,
-           &var0, &var1 );
-
-  RenderWindow *renderWin;
-  if( radioButton_FilterUpdate->isChecked() ) {
-    renderWin = CreateNewRenderWindow(fileName);
-  } else { // if( radioButton_FilterCreate->isChecked() )
-    m_pActiveRenderWin->GetQtWidget()->close();
-    renderWin = CreateNewRenderWindow(fileName);
-  }
-
-  renderWin->GetQtWidget()->show();
-  RenderWindowActive(renderWin);
-}
-
-
 void MainWindow::SetLighting(bool bLighting) {
   if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetUseLighting(bLighting);
 }
