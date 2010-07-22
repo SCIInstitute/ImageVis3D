@@ -301,7 +301,7 @@ int main(int argc, char* argv[])
 
     MESSAGE("Computing 2D Histogram...");
     Histogram2DDataBlock Histogram2D;
-    if (!Histogram2D.Compute(&testVolume, Histogram1D.GetHistogram().size())) {
+    if (!Histogram2D.Compute(&testVolume, Histogram1D.GetHistogram().size(), MaxMinData.m_GlobalMaxMin.maxScalar)) {
       T_ERROR("Computation of 2D Histogram failed!");
       uvfFile.Close();
       return EXIT_FAILURE;
