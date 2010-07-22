@@ -58,6 +58,7 @@
 #include "BrowseData.h"
 #include "RenderWindowGL.h"
 #include "RenderWindowDX.h"
+#include "../Tuvok/Renderer/RenderMesh.h"
 
 using namespace std;
 
@@ -806,6 +807,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   ToggleClearViewControls(iRange);
   UpdateLockView();
 
+
+  UpdateExplorerView(true);
   groupBox_ClipPlane->setVisible(ren->CanDoClipPlane());
 
   lineEdit_DatasetName->setText(QFileInfo(m_pActiveRenderWin->
@@ -845,6 +848,74 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   UpdateMinMaxLODLimitLabel();
 
   UpdateColorWidget();
+}
+
+void MainWindow::ToggleMesh() {
+  if (!m_pActiveRenderWin) return;
+
+  int iCurrent = listWidget_DatasetComponents->currentRow();
+  if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) return;
+
+  RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+  mesh->SetActive(checkBox_ComponenEnable->isChecked());
+  m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+}
+
+void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
+  if (!m_pActiveRenderWin) return;
+
+  if (bRepopulateListBox) {
+    listWidget_DatasetComponents->clear();
+    listWidget_DatasetComponents->addItem("Volume");
+
+    for (int i = 0;
+         i<m_pActiveRenderWin->GetRenderer()->GetMeshes().size();
+         i++) {
+           listWidget_DatasetComponents->addItem("Mesh");
+    }
+    listWidget_DatasetComponents->setCurrentRow(0);
+  }
+
+  int iCurrent = listWidget_DatasetComponents->currentRow();
+
+  if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) {
+    stackedWidget_componentInfo->setVisible(false);
+    checkBox_ComponenEnable->setVisible(false);
+    return;
+  }
+
+  stackedWidget_componentInfo->setVisible(true);
+  checkBox_ComponenEnable->setVisible(true);
+
+  if (iCurrent == 0) {
+    page_Volume->setVisible(true);
+    page_Geometry->setVisible(false);
+    stackedWidget_componentInfo->setCurrentIndex(0);
+  } else {
+    page_Volume->setVisible(false);
+    page_Geometry->setVisible(true);
+    stackedWidget_componentInfo->setCurrentIndex(1);
+
+    const RenderMesh* mesh = (const RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+
+    checkBox_ComponenEnable->setChecked(mesh->GetActive());
+    size_t tricount = mesh->GetVertexIndices().size();
+    size_t vertexcount = mesh->GetVertices().size();
+    size_t normalcount = mesh->GetNormals().size();
+    size_t texccordcount = mesh->GetTexCoords().size();
+    size_t colorcount = mesh->GetColors().size();
+
+    QString strTricount = tr("%1").arg(tricount);
+    lineEdit_MeshTriCount->setText(strTricount);
+    QString strVertexcount = tr("%1").arg(vertexcount);
+    lineEdit_VertexCount->setText(strVertexcount);
+    QString strNormalcount = tr("%1").arg(normalcount);
+    lineEdit_NormalCount->setText(strNormalcount);
+    QString strTexccordcount = tr("%1").arg(texccordcount);
+    lineEdit_TexCoordCount->setText(strTexccordcount);
+    QString strColorcount = tr("%1").arg(colorcount);
+    lineEdit_ColorCount->setText(strColorcount);
+  }
 }
 
 void MainWindow::UpdateMinMaxLODLimitLabel() {

@@ -280,6 +280,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void PickLightColor();
     void ChangeLightColors();
     void LightMoved();
+    void UpdateExplorerView() {UpdateExplorerView(false);}
+    void ToggleMesh();
 
   private :
     QTimer*                                   m_pRedrawTimer;
@@ -425,6 +427,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void UpdatePolyTypeLabel(int iCurrent);
 
     void UpdateMinMaxLODLimitLabel();
+    void UpdateExplorerView(bool bRepopulateListBox);
     void UpdateColorWidget();
     
     std::string ConvertTF(const std::string& strSource1DTFilename,

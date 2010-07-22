@@ -45,10 +45,9 @@ void MainWindow::ClearProgressViewAndInfo() {
   groupBox_RenderProgress->setVisible(false);
 
   lineEdit_DatasetName->setText("");
-  lineEdit_MaxSize->setText("");
-  lineEdit_MaxLODLevels->setText("");
-  lineEdit_SizeForView->setText("");
-  lineEdit_LODLevelForCurrentView->setText("");
+  listWidget_DatasetComponents->clear();
+  stackedWidget_componentInfo->setVisible(false);
+  checkBox_ComponenEnable->setVisible(false);
 }
 
 void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
