@@ -157,7 +157,7 @@
    <property name="minimumSize">
     <size>
      <width>0</width>
-     <height>0</height>
+     <height>198</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -394,8 +394,8 @@
   <widget class="QDockWidget" name="dockWidget_Information">
    <property name="minimumSize">
     <size>
-     <width>420</width>
-     <height>360</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -4231,8 +4231,8 @@
   <widget class="QDockWidget" name="dockWidget_Stereo">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>281</width>
+     <height>164</height>
     </size>
    </property>
    <property name="floating">
@@ -4387,6 +4387,13 @@ smaller values while make it apear behind. While the first effect usualy looks m
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_SideBySide">
+          <property name="text">
+           <string>Side by Side</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
@@ -4409,8 +4416,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <widget class="QDockWidget" name="dockWidget_Time">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>80</width>
+     <height>59</height>
     </size>
    </property>
    <property name="maximumSize">
