@@ -868,7 +868,7 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     listWidget_DatasetComponents->clear();
     listWidget_DatasetComponents->addItem("Volume");
 
-    for (int i = 0;
+    for (size_t i = 0;
          i<m_pActiveRenderWin->GetRenderer()->GetMeshes().size();
          i++) {
            listWidget_DatasetComponents->addItem("Mesh");
