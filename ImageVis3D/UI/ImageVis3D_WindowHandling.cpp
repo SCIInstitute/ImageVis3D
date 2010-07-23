@@ -914,12 +914,15 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
 
   if (bRepopulateListBox) {
     listWidget_DatasetComponents->clear();
-    listWidget_DatasetComponents->addItem("Volume");
+    
+    QString voldesc = tr("Volume (%1)").arg(m_pActiveRenderWin->GetRenderer()->GetDataset().Name());
+    listWidget_DatasetComponents->addItem(voldesc);
 
     for (size_t i = 0;
          i<m_pActiveRenderWin->GetRenderer()->GetMeshes().size();
          i++) {
-           listWidget_DatasetComponents->addItem("Mesh");
+           QString meshdesc = tr("Mesh (%1)").arg(m_pActiveRenderWin->GetRenderer()->GetMeshes()[i]->Name().c_str());
+           listWidget_DatasetComponents->addItem(meshdesc);
     }
     listWidget_DatasetComponents->setCurrentRow(0);
   }
