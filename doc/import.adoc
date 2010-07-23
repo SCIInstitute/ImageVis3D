@@ -717,7 +717,7 @@ order, these components are:
   calculated, according to the following table.
 
 .Integer Representation of Checksum Calculation Method
-[width="70%", frame="all", cols="1,10", option="header"]
+[width="70%", frame="all", cols="1,10", options="header"]
 |====================================================================
 |Value | Meaning of the 64-bit value
 | 0    | No checksum exists
@@ -774,7 +774,7 @@ in order, is:
 - The semantic type of a block, which details the specific data block present.
 
 .Semantic Block Types
-[width="50%", frame="all", cols="1,10", option="header"]
+[width="50%", frame="all", cols="1,10", options="header"]
 |====================================================================
 |Value | Meaning of the 64-bit value
 | 0    | Empty.  This should not occur in production.
@@ -792,7 +792,7 @@ in order, is:
 - The type of compression used for the block.
 
 .Block Compression Type
-[width="50%", frame="all", cols="1,10", option="header"]
+[width="50%", frame="all", cols="1,10", options="header"]
 |====================================================================
 |Value | Meaning of the 64-bit value
 | 0    | None; the block is not compressed
