@@ -282,6 +282,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void LightMoved();
     void UpdateExplorerView() {UpdateExplorerView(false);}
     void ToggleMesh();
+    void SetMeshDefColor();
+    void SetMeshDefOpacity();
 
   private :
     QTimer*                                   m_pRedrawTimer;

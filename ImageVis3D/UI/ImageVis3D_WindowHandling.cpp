@@ -861,6 +861,54 @@ void MainWindow::ToggleMesh() {
   m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
 }
 
+
+void MainWindow::SetMeshDefOpacity() {
+  if (!m_pActiveRenderWin) return;
+
+  int iCurrent = listWidget_DatasetComponents->currentRow();
+  if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) return;
+
+  RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+  
+  FLOATVECTOR4 meshcolor = mesh->GetDefaultColor();
+
+  float fSlideVal = horizontalSlider_MeshDefOpacity->value()/100.0f;
+
+  if (fSlideVal != meshcolor.w) {
+    meshcolor.w = fSlideVal;
+    mesh->SetDefaultColor(meshcolor);
+    m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+  }
+}
+
+void MainWindow::SetMeshDefColor() {
+  if (!m_pActiveRenderWin) return;
+
+  int iCurrent = listWidget_DatasetComponents->currentRow();
+  if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) return;
+
+  RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+  
+  FLOATVECTOR4 meshcolor = mesh->GetDefaultColor();
+
+  const int old_color[3] = {
+    static_cast<int>(meshcolor.x * 255.f),
+    static_cast<int>(meshcolor.y * 255.f),
+    static_cast<int>(meshcolor.z * 255.f)
+  };
+  QColor prevColor(old_color[0], old_color[1], old_color[2]);
+  QColor color = QColorDialog::getColor(prevColor, this);
+
+  if (color.isValid()) {
+    meshcolor.x = color.red()/255.0f;
+    meshcolor.y = color.green()/255.0f;
+    meshcolor.z = color.blue()/255.0f;
+    mesh->SetDefaultColor(meshcolor);
+    m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+  }
+ 
+}
+
 void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
   if (!m_pActiveRenderWin) return;
 
@@ -913,8 +961,12 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     lineEdit_NormalCount->setText(strNormalcount);
     QString strTexccordcount = tr("%1").arg(texccordcount);
     lineEdit_TexCoordCount->setText(strTexccordcount);
-    QString strColorcount = tr("%1").arg(colorcount);
+    QString strColorcount = (colorcount != 0)
+          ? tr("%1").arg(colorcount)
+          : "using default color";
     lineEdit_ColorCount->setText(strColorcount);
+
+    frame_meshDefColor->setVisible(colorcount == 0);
   }
 }
 

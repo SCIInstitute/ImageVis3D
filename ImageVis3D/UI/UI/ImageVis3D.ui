@@ -157,7 +157,7 @@
    <property name="minimumSize">
     <size>
      <width>0</width>
-     <height>198</height>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -394,8 +394,8 @@
   <widget class="QDockWidget" name="dockWidget_Information">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>420</width>
+     <height>360</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -508,7 +508,7 @@
           <number>9</number>
          </property>
          <item row="11" column="0">
-          <widget class="QLabel" name="label_5">
+          <widget class="QLabel" name="label_LODForCurrentView">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -691,6 +691,48 @@
            <property name="checked">
             <bool>true</bool>
            </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QFrame" name="frame_meshDefColor">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QToolButton" name="toolButton_MeshDefColor">
+              <property name="text">
+               <string>Set Default Color</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_MeshOpacity">
+              <property name="text">
+               <string>Opacity:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="horizontalSlider_MeshDefOpacity">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
         </layout>
@@ -2750,8 +2792,8 @@
   <widget class="QDockWidget" name="dockWidget_RenderOptions">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>294</width>
+     <height>408</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -5325,7 +5367,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>357</x>
-     <y>866</y>
+     <y>851</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5341,7 +5383,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>69</x>
-     <y>866</y>
+     <y>851</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5357,7 +5399,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>219</x>
-     <y>866</y>
+     <y>851</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5373,7 +5415,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>143</x>
-     <y>866</y>
+     <y>851</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5389,7 +5431,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>276</x>
-     <y>866</y>
+     <y>851</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5597,7 +5639,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>366</x>
-     <y>1002</y>
+     <y>1035</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5629,7 +5671,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>366</x>
-     <y>290</y>
+     <y>270</y>
     </hint>
     <hint type="destinationlabel">
      <x>390</x>
@@ -5661,7 +5703,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1585</x>
-     <y>704</y>
+     <y>702</y>
     </hint>
     <hint type="destinationlabel">
      <x>389</x>
@@ -5709,7 +5751,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1594</x>
-     <y>651</y>
+     <y>649</y>
     </hint>
     <hint type="destinationlabel">
      <x>990</x>
@@ -5725,7 +5767,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1407</x>
-     <y>651</y>
+     <y>649</y>
     </hint>
     <hint type="destinationlabel">
      <x>989</x>
@@ -5932,8 +5974,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>161</x>
-     <y>606</y>
+     <x>171</x>
+     <y>561</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
@@ -5949,7 +5991,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>356</x>
-     <y>629</y>
+     <y>584</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -5964,8 +6006,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>LockModalityChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>325</x>
-     <y>675</y>
+     <x>335</x>
+     <y>630</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -5981,7 +6023,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>356</x>
-     <y>652</y>
+     <y>607</y>
     </hint>
     <hint type="destinationlabel">
      <x>382</x>
@@ -6012,8 +6054,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleStereoRendering()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1303</x>
-     <y>1254</y>
+     <x>1407</x>
+     <y>1191</y>
     </hint>
     <hint type="destinationlabel">
      <x>388</x>
@@ -6028,8 +6070,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetStereoEyeDistance()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1403</x>
-     <y>1299</y>
+     <x>1618</x>
+     <y>1236</y>
     </hint>
     <hint type="destinationlabel">
      <x>386</x>
@@ -6044,8 +6086,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetStereoFocalLength()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1545</x>
-     <y>1343</y>
+     <x>1618</x>
+     <y>1280</y>
     </hint>
     <hint type="destinationlabel">
      <x>383</x>
@@ -6061,7 +6103,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>285</x>
-     <y>1000</y>
+     <y>1033</y>
     </hint>
     <hint type="destinationlabel">
      <x>122</x>
@@ -6109,7 +6151,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1373</x>
-     <y>529</y>
+     <y>528</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -6125,7 +6167,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1373</x>
-     <y>563</y>
+     <y>561</y>
     </hint>
     <hint type="destinationlabel">
      <x>957</x>
@@ -6141,7 +6183,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1373</x>
-     <y>597</y>
+     <y>594</y>
     </hint>
     <hint type="destinationlabel">
      <x>958</x>
@@ -6365,7 +6407,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1345</x>
-     <y>760</y>
+     <y>758</y>
     </hint>
     <hint type="destinationlabel">
      <x>520</x>
@@ -6397,7 +6439,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1469</x>
-     <y>760</y>
+     <y>758</y>
     </hint>
     <hint type="destinationlabel">
      <x>717</x>
@@ -6413,7 +6455,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1594</x>
-     <y>760</y>
+     <y>758</y>
     </hint>
     <hint type="destinationlabel">
      <x>715</x>
@@ -6653,7 +6695,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>357</x>
-     <y>1293</y>
+     <y>1326</y>
     </hint>
     <hint type="destinationlabel">
      <x>1027</x>
@@ -6669,7 +6711,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>357</x>
-     <y>1231</y>
+     <y>1264</y>
     </hint>
     <hint type="destinationlabel">
      <x>1024</x>
@@ -6685,7 +6727,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>356</x>
-     <y>325</y>
+     <y>305</y>
     </hint>
     <hint type="destinationlabel">
      <x>470</x>
@@ -6701,7 +6743,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>356</x>
-     <y>379</y>
+     <y>359</y>
     </hint>
     <hint type="destinationlabel">
      <x>470</x>
@@ -6717,7 +6759,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>356</x>
-     <y>433</y>
+     <y>413</y>
     </hint>
     <hint type="destinationlabel">
      <x>468</x>
@@ -6876,8 +6918,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetTimestep(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1545</x>
-     <y>1199</y>
+     <x>1589</x>
+     <y>1367</y>
     </hint>
     <hint type="destinationlabel">
      <x>774</x>
@@ -6893,7 +6935,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1617</x>
-     <y>1254</y>
+     <y>1191</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
@@ -6908,8 +6950,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleStereoMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1276</x>
-     <y>1367</y>
+     <x>1337</x>
+     <y>1304</y>
     </hint>
     <hint type="destinationlabel">
      <x>383</x>
@@ -6924,8 +6966,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleStereoMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1617</x>
-     <y>1367</y>
+     <x>1477</x>
+     <y>1304</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
@@ -6978,6 +7020,38 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <hint type="destinationlabel">
      <x>1197</x>
      <y>65</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton_MeshDefColor</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetMeshDefColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1345</x>
+     <y>227</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1198</x>
+     <y>278</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_MeshDefOpacity</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetMeshDefOpacity()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1488</x>
+     <y>223</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1200</x>
+     <y>248</y>
     </hint>
    </hints>
   </connection>
@@ -7086,5 +7160,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>AddTriSurf()</slot>
   <slot>UpdateExplorerView()</slot>
   <slot>ToggleMesh()</slot>
+  <slot>SetMeshDefColor()</slot>
+  <slot>SetMeshDefOpacity()</slot>
  </slots>
 </ui>
