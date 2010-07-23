@@ -92,8 +92,8 @@ FORMS += UI/UI/BrowseData.ui \
          UI/UI/URLDlg.ui \
          UI/UI/LODDlg.ui \
          UI/UI/BugRepDlg.ui \
-         UI/UI/MIPRotDialog.ui 
-         UI/UI/ScaleAndBiasDlg.ui\
+         UI/UI/MIPRotDialog.ui \
+         UI/UI/ScaleAndBiasDlg.ui \
          UI/UI/MergeDlg.ui
 
 SOURCES += UI/BrowseData.cpp \
