@@ -940,7 +940,8 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     for (size_t i = 0;
          i<m_pActiveRenderWin->GetRenderer()->GetMeshes().size();
          i++) {
-           QString meshdesc = tr("Mesh (%1)").arg(m_pActiveRenderWin->GetRenderer()->GetMeshes()[i]->Name().c_str());
+           const RenderMesh* mesh = (const RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[i];
+           QString meshdesc = tr("%1 (%2)").arg(mesh->GetMeshType() == Mesh::MT_TRIANGLES ? "Triangle Mesh" : "Lines").arg(mesh->Name().c_str());
            listWidget_DatasetComponents->addItem(meshdesc);
     }
     listWidget_DatasetComponents->setCurrentRow(0);
@@ -967,16 +968,17 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     stackedWidget_componentInfo->setCurrentIndex(1);
 
     const RenderMesh* mesh = (const RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+    size_t iVerticesPerPoly = (mesh->GetMeshType() == Mesh::MT_TRIANGLES) ? 3 : 2;
 
     checkBox_ComponenEnable->setChecked(mesh->GetActive());
-    size_t tricount = mesh->GetVertexIndices().size();
+    size_t polycount = mesh->GetVertexIndices().size()/iVerticesPerPoly;
     size_t vertexcount = mesh->GetVertices().size();
     size_t normalcount = mesh->GetNormals().size();
     size_t texccordcount = mesh->GetTexCoords().size();
     size_t colorcount = mesh->GetColors().size();
 
-    QString strTricount = tr("%1").arg(tricount);
-    lineEdit_MeshTriCount->setText(strTricount);
+    QString strTricount = tr("%1").arg(polycount);
+    lineEdit_MeshPolyCount->setText(strTricount);
     QString strVertexcount = tr("%1").arg(vertexcount);
     lineEdit_VertexCount->setText(strVertexcount);
     QString strNormalcount = tr("%1").arg(normalcount);
