@@ -886,18 +886,37 @@ Triangle Soup Block
 +++++++++++++++++++
 
 As one might guess, this block stores a collection of triangles, in
-"soup" form (that is, there is no guaranteed ordering, vertices/edges
-are duplicated instead of indexed intelligently).
-
-''This block is experimental and its format will likely change!''
+"soup" form (that is, there is guarantee that the triangles form a
+surface, nor are they written out with any defined order).
 
 Triangle soup is 3-dimensional.  The format for triangle soup is quite
-simple:
+simple.  First, a header gives size information for arrays:
 
-- First 64-bits: unsigned integer `n_triangles`
-- `n_triangles`*3 32-bit IEEE-754 floating point values.
+- First 64-bits: unsigned integer `n_vertices`
+- Next 64-bits: unsigned integer `n_normals`
+- Next 64-bits: unsigned integer `n_texcoords`
+- Next 64-bits: unsigned integer `n_colors`
+- Next 64-bits: unsigned integer `n_vertex_indices`
+- Next 64-bits: unsigned integer `n_normal_indices`
+- Next 64-bits: unsigned integer `n_texcoord_indices`
+- Next 64-bits: unsigned integer `n_color_indices`
 
-Each group of 3 values represents a single triangle.
+Then we find the data:
+
+- `n_vertices` 32-bit IEEE-754 FP values representing the triangle vertices.
+- `n_normals` 32-bit IEEE-754 FP values representing the triangle normals.
+- `n_texcoords` 32-bit IEEE-754 FP values representing texture coordinates
+- `n_colors` 32-bit IEEE-754 FP values representing color information
+
+and finally indices into that data:
+
+- `n_vertex_indices` 32-bit unsigned integers indexing into the triangle
+vertices.
+- `n_normal_indices` 32-bit unsigned integers indexing into the normals.
+- `n_texcoord_indices` 32-bit unsigned integers indexing into the texture
+coordinates.
+- `n_color_indices` 32-bit unsigned integers indexing into the array of
+colors.
 
 Contribute Back
 ---------------
