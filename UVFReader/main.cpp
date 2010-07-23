@@ -47,7 +47,7 @@
 #include "../Tuvok/IO/UVF/MaxMinDataBlock.h"
 #include "../Tuvok/IO/UVF/RasterDataBlock.h"
 #include "../Tuvok/IO/UVF/KeyValuePairDataBlock.h"
-#include "../Tuvok/IO/UVF/TriangleSoupBlock.h"
+#include "../Tuvok/IO/UVF/GeometryDataBlock.h"
 
 
 #include <string>
@@ -509,8 +509,8 @@ int main(int argc, char* argv[])
           /// @todo FIXME: implement :)
           cout << "      Query of MaxMin data block info is unimplemented.\n";
           break;
-        case UVFTables::BS_TRIANGLE_SOUP: {
-            const TriangleSoupBlock* b = (const TriangleSoupBlock*)uvfFile.GetDataBlock(i);
+        case UVFTables::BS_GEOMETRY: {
+            const GeometryDataBlock* b = (const GeometryDataBlock*)uvfFile.GetDataBlock(i);
 
             cout << "      Descripton: " << b->m_Desc.c_str() << ".\n";
 
