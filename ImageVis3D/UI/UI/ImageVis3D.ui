@@ -614,9 +614,9 @@
           <number>9</number>
          </property>
          <item row="1" column="0">
-          <widget class="QLabel" name="label_MeshTriCount">
+          <widget class="QLabel" name="label_MeshPolyCount">
            <property name="text">
-            <string>Triangles</string>
+            <string>Polygons</string>
            </property>
           </widget>
          </item>
@@ -4828,7 +4828,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
   </action>
   <action name="actionAdd_TriSurf_to_Data_Set">
    <property name="text">
-    <string>Add Triangle Mesh to this Data Set</string>
+    <string>Add Geometry to this Data Set</string>
    </property>
   </action>
  </widget>
