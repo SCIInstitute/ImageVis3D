@@ -511,6 +511,9 @@ int main(int argc, char* argv[])
           break;
         case UVFTables::BS_TRIANGLE_SOUP: {
             const TriangleSoupBlock* b = (const TriangleSoupBlock*)uvfFile.GetDataBlock(i);
+
+            cout << "      Descripton: " << b->m_Desc.c_str() << ".\n";
+
             size_t vI = b->GetVertexIndices().size()/3;
             size_t vN = b->GetNormalIndices().size()/3;
             size_t vT = b->GetTexCoordIndices().size()/2;
@@ -530,6 +533,13 @@ int main(int argc, char* argv[])
             if (t > 0) cout << "      Texture Coordinate count: " << t << ".\n";
             if (c > 0) cout << "      Color count: " << c << ".\n";
 
+            const std::vector< float >&  col = b->GetDefaultColor();
+            cout << "      Default Color: " << col[0] << " "
+                 << col[1] << " " << col[2] << " " << col[3];
+            if (c > 0) 
+              cout << " (no used since vertex colors are specified)\n";
+            else 
+              cout << "\n";
 
           }
         break;
