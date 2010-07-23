@@ -1,10 +1,11 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>RAWDialog</class>
- <widget class="QDialog" name="RAWDialog" >
-  <property name="windowModality" >
+ <widget class="QDialog" name="RAWDialog">
+  <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
-  <property name="geometry" >
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -12,118 +13,118 @@
     <height>394</height>
    </rect>
   </property>
-  <property name="contextMenuPolicy" >
+  <property name="contextMenuPolicy">
    <enum>Qt::DefaultContextMenu</enum>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Load Unknown Dataset</string>
   </property>
-  <property name="sizeGripEnabled" >
+  <property name="sizeGripEnabled">
    <bool>true</bool>
   </property>
-  <property name="modal" >
+  <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label_srcFilename" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+    <widget class="QLabel" name="label_srcFilename">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Filename: xxxxx.raw</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_VolSize" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox_VolSize">
+     <property name="title">
       <string>Domain Size</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout" >
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QSpinBox" name="spinBox_SizeX" >
-        <property name="suffix" >
+       <widget class="QSpinBox" name="spinBox_SizeX">
+        <property name="suffix">
          <string/>
         </property>
-        <property name="prefix" >
+        <property name="prefix">
          <string/>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>1000000000</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>256</number>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+       <widget class="QLabel" name="label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>x</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="spinBox_SizeY" >
-        <property name="suffix" >
+       <widget class="QSpinBox" name="spinBox_SizeY">
+        <property name="suffix">
          <string/>
         </property>
-        <property name="prefix" >
+        <property name="prefix">
          <string/>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>1000000000</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>256</number>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_2" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+       <widget class="QLabel" name="label_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>x</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="spinBox_SizeZ" >
-        <property name="suffix" >
+       <widget class="QSpinBox" name="spinBox_SizeZ">
+        <property name="suffix">
          <string/>
         </property>
-        <property name="prefix" >
+        <property name="prefix">
          <string/>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>1000000000</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>256</number>
         </property>
        </widget>
@@ -132,72 +133,72 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string>Aspect Ratio</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" >
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_AspX" >
-        <property name="decimals" >
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_AspX">
+        <property name="decimals">
          <number>8</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <double>999999999.000000000000000</double>
         </property>
-        <property name="value" >
+        <property name="value">
          <double>1.000000000000000</double>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_4" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+       <widget class="QLabel" name="label_4">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>x</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_AspY" >
-        <property name="decimals" >
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_AspY">
+        <property name="decimals">
          <number>8</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <double>999999999.000000000000000</double>
         </property>
-        <property name="value" >
+        <property name="value">
          <double>1.000000000000000</double>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_5" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+       <widget class="QLabel" name="label_5">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>x</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_AspZ" >
-        <property name="decimals" >
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_AspZ">
+        <property name="decimals">
          <number>8</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <double>999999999.000000000000000</double>
         </property>
-        <property name="value" >
+        <property name="value">
          <double>1.000000000000000</double>
         </property>
        </widget>
@@ -206,53 +207,53 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame_2" >
-     <property name="frameShape" >
+    <widget class="QFrame" name="frame_2">
+     <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
-     <property name="frameShadow" >
+     <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_8" >
-      <property name="spacing" >
+     <layout class="QHBoxLayout" name="horizontalLayout_8">
+      <property name="spacing">
        <number>2</number>
       </property>
-      <property name="margin" >
+      <property name="margin">
        <number>0</number>
       </property>
       <item>
-       <widget class="QGroupBox" name="groupBox_2" >
-        <property name="title" >
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="title">
          <string>Quantization</string>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_3" >
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QRadioButton" name="radioButton_8bit" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_8bit">
+           <property name="text">
             <string>8bit (char)</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButton_16bit" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_16bit">
+           <property name="text">
             <string>16bit (short)</string>
            </property>
-           <property name="checked" >
+           <property name="checked">
             <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButton_32BitInt" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_32BitInt">
+           <property name="text">
             <string>32bit (int)</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButton_32BitFloat" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_32BitFloat">
+           <property name="text">
             <string>32 bit (float)</string>
            </property>
           </widget>
@@ -261,24 +262,24 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_Sign" >
-        <property name="title" >
+       <widget class="QGroupBox" name="groupBox_Sign">
+        <property name="title">
          <string>Sign</string>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_9" >
+        <layout class="QHBoxLayout" name="horizontalLayout_9">
          <item>
-          <widget class="QRadioButton" name="radioButton_Unsigned" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_Unsigned">
+           <property name="text">
             <string>Unsigned</string>
            </property>
-           <property name="checked" >
+           <property name="checked">
             <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButton_Signed" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_Signed">
+           <property name="text">
             <string>Signed</string>
            </property>
           </widget>
@@ -290,56 +291,56 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame" >
-     <property name="frameShape" >
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
-     <property name="frameShadow" >
+     <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_6" >
-      <property name="spacing" >
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <property name="spacing">
        <number>2</number>
       </property>
-      <property name="margin" >
+      <property name="margin">
        <number>0</number>
       </property>
       <item>
-       <widget class="QGroupBox" name="groupBox_4" >
-        <property name="title" >
+       <widget class="QGroupBox" name="groupBox_4">
+        <property name="title">
          <string>Encoding</string>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_5" >
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
-          <widget class="QRadioButton" name="radioButton_RAW" >
-           <property name="toolTip" >
+          <widget class="QRadioButton" name="radioButton_RAW">
+           <property name="toolTip">
             <string/>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>RAW</string>
            </property>
-           <property name="checked" >
+           <property name="checked">
             <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButton_Text" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_Text">
+           <property name="text">
             <string>Text</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButton_GZIP" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_GZIP">
+           <property name="text">
             <string>GZIP</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButton_BZIP2" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_BZIP2">
+           <property name="text">
             <string>BZIP2</string>
            </property>
           </widget>
@@ -348,24 +349,24 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_Endianess" >
-        <property name="title" >
+       <widget class="QGroupBox" name="groupBox_Endianess">
+        <property name="title">
          <string>Endianess</string>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_7" >
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item>
-          <widget class="QRadioButton" name="radioButton_LittleEnd" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_LittleEnd">
+           <property name="text">
             <string>Little</string>
            </property>
-           <property name="checked" >
+           <property name="checked">
             <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButton_BigEnd" >
-           <property name="text" >
+          <widget class="QRadioButton" name="radioButton_BigEnd">
+           <property name="text">
             <string>Big</string>
            </property>
           </widget>
@@ -377,54 +378,54 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_3" >
-     <property name="title" >
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
       <string>Header Skip</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_4" >
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
-       <widget class="QLabel" name="label_3" >
-        <property name="text" >
+       <widget class="QLabel" name="label_3">
+        <property name="text">
          <string>Skip</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="spinBox_HeaderSkip" >
-        <property name="minimumSize" >
+       <widget class="QSpinBox" name="spinBox_HeaderSkip">
+        <property name="minimumSize">
          <size>
           <width>100</width>
           <height>0</height>
          </size>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>1000000000</number>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_6" >
-        <property name="text" >
+       <widget class="QLabel" name="label_6">
+        <property name="text">
          <string>Bytes</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_GuessHeader" >
-        <property name="toolTip" >
+       <widget class="QPushButton" name="pushButton_GuessHeader">
+        <property name="toolTip">
          <string>The guessed size of the header is the size of the file minus the size of the data as specified above. This feature only works if the encoding is raw and if the filesize is larger than the size of the data specified.</string>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Guess Header Size</string>
         </property>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer" >
-        <property name="orientation" >
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
           <height>20</height>
@@ -436,31 +437,31 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_Information" >
-     <property name="font" >
+    <widget class="QLabel" name="label_Information">
+     <property name="font">
       <font>
        <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Value Validation</string>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="locale" >
-      <locale country="UnitedStates" language="English" />
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="locale">
+      <locale language="English" country="UnitedStates"/>
      </property>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
+     <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
@@ -475,11 +476,11 @@
    <receiver>RAWDialog</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>293</x>
      <y>384</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>157</x>
      <y>274</y>
     </hint>
@@ -491,11 +492,11 @@
    <receiver>RAWDialog</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>346</x>
      <y>384</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
     </hint>
@@ -507,11 +508,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>71</x>
      <y>66</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>148</x>
      <y>323</y>
     </hint>
@@ -523,11 +524,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>339</x>
-     <y>75</y>
+     <y>73</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>75</x>
      <y>349</y>
     </hint>
@@ -539,11 +540,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>509</x>
-     <y>75</y>
+     <y>73</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>396</x>
      <y>27</y>
     </hint>
@@ -555,11 +556,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>43</x>
-     <y>194</y>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>189</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>8</x>
      <y>148</y>
     </hint>
@@ -571,11 +572,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>131</x>
-     <y>194</y>
+    <hint type="sourcelabel">
+     <x>181</x>
+     <y>189</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>3</x>
      <y>189</y>
     </hint>
@@ -587,11 +588,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>353</x>
-     <y>194</y>
+    <hint type="sourcelabel">
+     <x>346</x>
+     <y>189</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>435</x>
      <y>201</y>
     </hint>
@@ -603,11 +604,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>51</x>
-     <y>254</y>
+    <hint type="sourcelabel">
+     <x>71</x>
+     <y>247</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>435</x>
      <y>235</y>
     </hint>
@@ -619,11 +620,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>125</x>
-     <y>254</y>
+    <hint type="sourcelabel">
+     <x>133</x>
+     <y>247</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>434</x>
      <y>277</y>
     </hint>
@@ -635,11 +636,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>183</x>
-     <y>254</y>
+    <hint type="sourcelabel">
+     <x>193</x>
+     <y>247</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>439</x>
      <y>308</y>
     </hint>
@@ -651,11 +652,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>248</x>
-     <y>254</y>
+    <hint type="sourcelabel">
+     <x>253</x>
+     <y>247</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>435</x>
      <y>264</y>
     </hint>
@@ -667,11 +668,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>62</x>
-     <y>317</y>
+    <hint type="sourcelabel">
+     <x>106</x>
+     <y>308</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>237</x>
      <y>325</y>
     </hint>
@@ -683,11 +684,11 @@
    <receiver>RAWDialog</receiver>
    <slot>ToggleEndianessDialog()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>26</x>
-     <y>254</y>
+    <hint type="sourcelabel">
+     <x>46</x>
+     <y>247</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>201</x>
      <y>353</y>
     </hint>
@@ -699,11 +700,11 @@
    <receiver>RAWDialog</receiver>
    <slot>GuessHeaderSize()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>224</x>
-     <y>320</y>
+    <hint type="sourcelabel">
+     <x>279</x>
+     <y>310</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>440</x>
      <y>358</y>
     </hint>
@@ -715,11 +716,11 @@
    <receiver>RAWDialog</receiver>
    <slot>CheckValues()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>238</x>
-     <y>194</y>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>189</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>521</x>
      <y>150</y>
     </hint>
@@ -731,11 +732,11 @@
    <receiver>groupBox_Sign</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>315</x>
-     <y>194</y>
+    <hint type="sourcelabel">
+     <x>346</x>
+     <y>189</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>417</x>
      <y>189</y>
     </hint>
@@ -747,11 +748,11 @@
    <receiver>groupBox_Sign</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>214</x>
-     <y>194</y>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>189</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>371</x>
      <y>189</y>
     </hint>
@@ -763,11 +764,11 @@
    <receiver>groupBox_Sign</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>165</x>
-     <y>194</y>
+    <hint type="sourcelabel">
+     <x>181</x>
+     <y>189</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>442</x>
      <y>178</y>
     </hint>
@@ -779,11 +780,11 @@
    <receiver>radioButton_Signed</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>283</x>
      <y>179</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>471</x>
      <y>188</y>
     </hint>
@@ -795,11 +796,11 @@
    <receiver>groupBox_Sign</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>63</x>
      <y>180</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>412</x>
      <y>155</y>
     </hint>
@@ -807,18 +808,6 @@
   </connection>
  </connections>
  <slots>
-  <slot>SelectBackColor1()</slot>
-  <slot>SelectBackColor2()</slot>
-  <slot>SelectTextColor()</slot>
-  <slot>SetTextOpacity(int)</slot>
-  <slot>SetMaxMemCheck()</slot>
-  <slot>LODDelayChanged()</slot>
-  <slot>MinFramerateChanged()</slot>
-  <slot>ActTSChanged()</slot>
-  <slot>InactTSChanged()</slot>
-  <slot>WarnAPIMethodChange()</slot>
-  <slot>RemoveLogo()</slot>
-  <slot>SelectLogo()</slot>
   <slot>CheckValues()</slot>
   <slot>ToggleEndianessDialog()</slot>
   <slot>GuessHeaderSize()</slot>

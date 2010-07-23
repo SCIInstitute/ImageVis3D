@@ -59,6 +59,7 @@
 #include "RenderWindowGL.h"
 #include "RenderWindowDX.h"
 #include "../Tuvok/Renderer/RenderMesh.h"
+#include "ScaleAndBiasDlg.h"
 
 using namespace std;
 
@@ -889,7 +890,13 @@ void MainWindow::SetMeshScaleAndBias() {
 
   RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
   
-  mesh->ScaleToUnitCube();
+  ScaleAndBiasDlg sbd(mesh->Name(),mesh->GetMin(),mesh->GetMax(), this);
+  if (sbd.exec() == QDialog::Accepted) {
+    mesh->ScaleAndBias(sbd.scaleVec, sbd.biasVec);
+  }
+
+
+
   m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
 }
 
