@@ -518,12 +518,12 @@ int main(int argc, char* argv[])
             size_t vN = b->GetNormalIndices().size()/3;
             size_t vT = b->GetTexCoordIndices().size()/2;
             size_t vC = b->GetColorIndices().size()/4;
-            size_t v = b->GetVertices().size()/3;
-            size_t n = b->GetNormals().size()/3;
-            size_t t = b->GetTexCoords().size()/3;
-            size_t c = b->GetColors().size()/3;
+            size_t v = b->GetVertices().size()/b->GetPolySize();
+            size_t n = b->GetNormals().size()/b->GetPolySize();
+            size_t t = b->GetTexCoords().size()/b->GetPolySize();
+            size_t c = b->GetColors().size()/b->GetPolySize();
 
-            cout << "      Triangle count: " << vI << ".\n";
+            cout << "      Polygon count: " << vI << ".\n";
             if (vI == vN) cout << "      Valid Normals found.\n";
             if (vI == vT) cout << "      Valid Texture Coordinates found.\n";
             if (vI == vC) cout << "      Valid Colors found.\n";
