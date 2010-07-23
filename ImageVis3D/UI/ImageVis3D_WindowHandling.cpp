@@ -881,6 +881,18 @@ void MainWindow::SetMeshDefOpacity() {
   }
 }
 
+void MainWindow::SetMeshScaleAndBias() {
+  if (!m_pActiveRenderWin) return;
+
+  int iCurrent = listWidget_DatasetComponents->currentRow();
+  if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) return;
+
+  RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+  
+  mesh->ScaleToUnitCube();
+  m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+}
+
 void MainWindow::SetMeshDefColor() {
   if (!m_pActiveRenderWin) return;
 

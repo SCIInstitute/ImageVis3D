@@ -394,8 +394,8 @@
   <widget class="QDockWidget" name="dockWidget_Information">
    <property name="minimumSize">
     <size>
-     <width>420</width>
-     <height>360</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -693,7 +693,14 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
+         <item row="6" column="0">
+          <widget class="QToolButton" name="toolButton_ScaleAndBias">
+           <property name="text">
+            <string>Scale and Bias</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2">
           <widget class="QFrame" name="frame_meshDefColor">
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
@@ -2792,8 +2799,8 @@
   <widget class="QDockWidget" name="dockWidget_RenderOptions">
    <property name="minimumSize">
     <size>
-     <width>294</width>
-     <height>408</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -4273,8 +4280,8 @@
   <widget class="QDockWidget" name="dockWidget_Stereo">
    <property name="minimumSize">
     <size>
-     <width>281</width>
-     <height>164</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="floating">
@@ -4458,8 +4465,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <widget class="QDockWidget" name="dockWidget_Time">
    <property name="minimumSize">
     <size>
-     <width>80</width>
-     <height>59</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -7031,7 +7038,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1345</x>
-     <y>227</y>
+     <y>359</y>
     </hint>
     <hint type="destinationlabel">
      <x>1198</x>
@@ -7047,11 +7054,27 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>1488</x>
-     <y>223</y>
+     <y>355</y>
     </hint>
     <hint type="destinationlabel">
      <x>1200</x>
      <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton_ScaleAndBias</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetMeshScaleAndBias()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1266</x>
+     <y>351</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1193</x>
+     <y>338</y>
     </hint>
    </hints>
   </connection>
@@ -7162,5 +7185,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>ToggleMesh()</slot>
   <slot>SetMeshDefColor()</slot>
   <slot>SetMeshDefOpacity()</slot>
+  <slot>SetMeshScaleAndBias()</slot>
  </slots>
 </ui>
