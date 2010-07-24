@@ -174,9 +174,12 @@ void MainWindow::AddTriSurf() {
     T_ERROR(err.what());
     return;
   }
-  QMessageBox::information(this, "Mesh Import",
-                           "Sucesfully integrated mesh data into UVF file.");
-
+  if(QMessageBox::Yes ==
+     QMessageBox::question(NULL, "Geometry Import Completed",
+      "Sucesfully integrated mesh data into UVF file. Do you want to load the new dataset now?",
+      QMessageBox::Yes, QMessageBox::No)) {
+    LoadDataset(string(uvfFile.toAscii()));
+  }
 }
 
 void MainWindow::LoadDataset(std::string strFilename) {
