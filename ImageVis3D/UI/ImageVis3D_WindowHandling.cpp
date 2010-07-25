@@ -987,7 +987,7 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
           ? tr("%1").arg(colorcount)
           : "using default color";
     lineEdit_ColorCount->setText(strColorcount);
-    horizontalSlider_MeshDefOpacity->setValue(mesh->GetDefaultColor().w*100);
+    horizontalSlider_MeshDefOpacity->setValue(int(mesh->GetDefaultColor().w*100));
 
     frame_meshDefColor->setVisible(colorcount == 0);
   }
