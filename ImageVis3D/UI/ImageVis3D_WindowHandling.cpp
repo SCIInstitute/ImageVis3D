@@ -895,8 +895,6 @@ void MainWindow::SetMeshScaleAndBias() {
     mesh->ScaleAndBias(sbd.scaleVec, sbd.biasVec);
   }
 
-
-
   m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
 }
 
@@ -968,7 +966,7 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     stackedWidget_componentInfo->setCurrentIndex(1);
 
     const RenderMesh* mesh = (const RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
-    size_t iVerticesPerPoly = (mesh->GetMeshType() == Mesh::MT_TRIANGLES) ? 3 : 2;
+    size_t iVerticesPerPoly = mesh->GetVerticesPerPoly();
 
     checkBox_ComponenEnable->setChecked(mesh->GetActive());
     size_t polycount = mesh->GetVertexIndices().size()/iVerticesPerPoly;
@@ -977,8 +975,8 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     size_t texccordcount = mesh->GetTexCoords().size();
     size_t colorcount = mesh->GetColors().size();
 
-    QString strTricount = tr("%1").arg(polycount);
-    lineEdit_MeshPolyCount->setText(strTricount);
+    QString strPolycount = tr("%1").arg(polycount);
+    lineEdit_MeshPolyCount->setText(strPolycount);
     QString strVertexcount = tr("%1").arg(vertexcount);
     lineEdit_VertexCount->setText(strVertexcount);
     QString strNormalcount = tr("%1").arg(normalcount);
@@ -989,6 +987,7 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
           ? tr("%1").arg(colorcount)
           : "using default color";
     lineEdit_ColorCount->setText(strColorcount);
+    horizontalSlider_MeshDefOpacity->setValue(mesh->GetDefaultColor().w*100);
 
     frame_meshDefColor->setVisible(colorcount == 0);
   }
