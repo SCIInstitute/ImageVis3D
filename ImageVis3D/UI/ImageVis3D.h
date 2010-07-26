@@ -285,6 +285,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void SetMeshDefColor();
     void SetMeshDefOpacity();
     void SetMeshScaleAndBias();
+    void CheckForMeshCapabilities(bool bNoUserInteraction, QStringList files=QStringList(""));
 
   private :
     QTimer*                                   m_pRedrawTimer;

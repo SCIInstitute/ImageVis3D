@@ -233,6 +233,42 @@ bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
   return LoadDataset(QStringList(inFile.c_str()), convFile.c_str(), false);
 }
 
+void MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList files) {
+  if (bNoUserInteraction) {
+    WARNING("This dataset conatins mesh data but the current "
+            "renderer does not supports rendering meshes. Mesh "
+            "rendering is disabled until you switch to a renderer "
+            "that supports this feature e.g. the 3D slice "
+            "based volume renderer.");
+    m_pActiveRenderWin->GetRenderer()->GetMeshes().clear();
+    UpdateExplorerView(true);
+  } else {
+    if (m_pActiveRenderWin && 
+      !m_pActiveRenderWin->GetRenderer()->SupportsMeshes() &&
+      m_pActiveRenderWin->GetRenderer()->GetMeshes().size() > 0) {
+      if(QMessageBox::Yes == 
+        QMessageBox::question(NULL, 
+                         "Mesh feature not supported in this renderer",
+                         "This dataset conatins mesh data but the current "
+                         "renderer does not supports rendering meshes. Mesh "
+                         "rendering is disabled until you switch to a renderer "
+                         "that supports this feature e.g. the 3D slice "
+                         "based volume renderer. Do you want to switch to "
+                         "the 3D slice based volume renderer now?",
+          QMessageBox::Yes, QMessageBox::No)) {
+        CloseCurrentView();
+        MasterController::EVolumeRendererType currentType = m_eVolumeRendererType;
+        m_eVolumeRendererType = MasterController::OPENGL_SBVR;
+        LoadDataset(files);
+        m_eVolumeRendererType = currentType;
+      } else {
+        m_pActiveRenderWin->GetRenderer()->GetMeshes().clear();
+        UpdateExplorerView(true);
+      }
+    }
+  }
+}
+
 bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
                              bool bNoUserInteraction) {
   if(files.empty()) {
@@ -329,7 +365,7 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
     renderWin = CreateNewRenderWindow(filename);
 
     if(renderWin == NULL) {
-      WARNING("RW creation failed.  Bailing...");
+      T_ERROR("Renderwindow creation failed.  Bailing...");
       return false;
     }
 
@@ -341,9 +377,7 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
             "rebrick the dataset.");
     if(renderWin) { delete renderWin; renderWin = NULL; }
     if(bNoUserInteraction) {
-      ShowCriticalDialog("Load Error",
-        "Dataset needs rebricking but we are not running interactively."
-      );
+      T_ERROR("Dataset needs rebricking but ImageVis3D is not running interactively.");
       return false;
     }
     if(QMessageBox::Yes ==
@@ -356,6 +390,8 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
       return RebrickDataset(filename, targetFilename, bNoUserInteraction);
     }
   }
+
+  CheckForMeshCapabilities(bNoUserInteraction, files);
 
   return true;
 }

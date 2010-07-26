@@ -636,6 +636,8 @@ void MainWindow::CloneCurrentView() {
   renderWin->GetQtWidget()->show();
   RenderWindowActive(renderWin);
   mdiArea->activeSubWindow()->resize(pActiveWin->size().width(), pActiveWin->size().height());
+
+  CheckForMeshCapabilities(true);
 }
 
 bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOkShowMessageAndCloseWindow) {
@@ -727,6 +729,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   }
 
   QCoreApplication::processEvents();
+
   return renderWin;
 }
 
@@ -923,7 +926,6 @@ void MainWindow::SetMeshDefColor() {
     mesh->SetDefaultColor(meshcolor);
     m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
   }
- 
 }
 
 void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
@@ -938,9 +940,9 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     for (size_t i = 0;
          i<m_pActiveRenderWin->GetRenderer()->GetMeshes().size();
          i++) {
-           const RenderMesh* mesh = (const RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[i];
-           QString meshdesc = tr("%1 (%2)").arg(mesh->GetMeshType() == Mesh::MT_TRIANGLES ? "Triangle Mesh" : "Lines").arg(mesh->Name().c_str());
-           listWidget_DatasetComponents->addItem(meshdesc);
+      const RenderMesh* mesh = (const RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[i];
+      QString meshdesc = tr("%1 (%2)").arg(mesh->GetMeshType() == Mesh::MT_TRIANGLES ? "Triangle Mesh" : "Lines").arg(mesh->Name().c_str());
+      listWidget_DatasetComponents->addItem(meshdesc);
     }
     listWidget_DatasetComponents->setCurrentRow(0);
   }
@@ -962,10 +964,11 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     stackedWidget_componentInfo->setCurrentIndex(0);
   } else {
     page_Volume->setVisible(false);
-    page_Geometry->setVisible(true);
+    page_Geometry->setVisible(true);   
     stackedWidget_componentInfo->setCurrentIndex(1);
 
     const RenderMesh* mesh = (const RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+
     size_t iVerticesPerPoly = mesh->GetVerticesPerPoly();
 
     checkBox_ComponenEnable->setChecked(mesh->GetActive());
@@ -987,8 +990,8 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
           ? tr("%1").arg(colorcount)
           : "using default color";
     lineEdit_ColorCount->setText(strColorcount);
+    horizontalSlider_MeshDefOpacity->setVisible(mesh->GetMeshType() == Mesh::MT_TRIANGLES);
     horizontalSlider_MeshDefOpacity->setValue(int(mesh->GetDefaultColor().w*100));
-
     frame_meshDefColor->setVisible(colorcount == 0);
   }
 }
