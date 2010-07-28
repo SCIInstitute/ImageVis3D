@@ -654,11 +654,18 @@ void MainWindow::ExportMesh() {
   QString fileName =
     QFileDialog::getSaveFileName(this, "Export Current Isosurface to Mesh",
          strLastDir,
-         "Wavefront OBJ file (*.obj)",&selectedFilter, options);
+         m_MasterController.IOMan()->GetGeoExportDialogString().c_str(),
+         &selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/ExportMesh", QFileInfo(fileName).absoluteDir().path());
-    string targetFileName = SysTools::CheckExt(string(fileName.toAscii()), "obj");
+    string targetFileName = string(fileName.toAscii());
+
+    // still a valid filename ext ?
+    if (!m_MasterController.IOMan()->GetGeoConverterForExt(SysTools::ToLowerCase(SysTools::GetExt(string(fileName.toAscii()))),true)) {
+      ShowCriticalDialog("Extension Error", "Unable to determine the file type from the file extension.");
+      return;
+    }
 
     int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataset().GetLODLevelCount())-1;
 
