@@ -518,10 +518,10 @@ int main(int argc, char* argv[])
             size_t vN = b->GetNormalIndices().size()/3;
             size_t vT = b->GetTexCoordIndices().size()/2;
             size_t vC = b->GetColorIndices().size()/4;
-            size_t v = b->GetVertices().size()/b->GetPolySize();
-            size_t n = b->GetNormals().size()/b->GetPolySize();
-            size_t t = b->GetTexCoords().size()/b->GetPolySize();
-            size_t c = b->GetColors().size()/b->GetPolySize();
+            size_t v = b->GetVertices().size()/size_t(b->GetPolySize());
+            size_t n = b->GetNormals().size()/size_t(b->GetPolySize());
+            size_t t = b->GetTexCoords().size()/size_t(b->GetPolySize());
+            size_t c = b->GetColors().size()/size_t(b->GetPolySize());
 
             cout << "      Polygon count: " << vI << ".\n";
             if (vI == vN) cout << "      Valid Normals found.\n";
