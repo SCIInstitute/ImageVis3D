@@ -173,6 +173,19 @@ void MainWindow::TransferToI3M() {
       T_ERROR("Unable to convert the transferfunction "
                "into the given directory.");
     }
+
+    const std::vector<Mesh*>& meshes = currentDataset->GetMeshes();
+    string filenameOnly = SysTools::RemoveExt(SysTools::GetFilename(currentDataset->Filename()));
+    for (size_t i = 0;i<meshes.size();i++) {
+      pleaseWait.SetText("Exporting Meshes ...");
+      stringstream sstream;
+      if (meshes.size() > 1)
+        sstream << strTargetDir << "/" << filenameOnly << "_" << i+1 << ".g3d";
+      else
+        sstream << strTargetDir << "/" << filenameOnly << ".g3d";
+
+      m_MasterController.IOMan()->ExportMesh(meshes[i], sstream.str());
+    }
   } else {
     QMessageBox errorMessage;
     errorMessage.setText("ImageVis3D Mobile Device Transfer only supported for UVF datasets.");
