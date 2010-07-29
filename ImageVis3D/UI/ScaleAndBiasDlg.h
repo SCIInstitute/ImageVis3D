@@ -55,10 +55,18 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
     FLOATVECTOR3 scaleVec;
     FLOATVECTOR3 biasVec;
 
+    FLOATMATRIX4 GetExpertTransform();
+    void SetExpertTransform(const FLOATMATRIX4& m);
+
   protected slots:
     void ScaleIsotropic();
     void ScaleUnisotropic();
     void ValuesChanged();
+    void ApplyExpertMatrix();
+    void CopyScaleAndBias();
+    void ToggleExpertView();
+    void InvertMatrix();
+    void RestoreLast();
 
   private:
     FLOATVECTOR3 m_min;

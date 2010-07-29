@@ -894,8 +894,12 @@ void MainWindow::SetMeshScaleAndBias() {
   RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
   
   ScaleAndBiasDlg sbd(mesh->Name(),mesh->GetMin(),mesh->GetMax(), this);
-  if (sbd.exec() == QDialog::Accepted) {
+  int iReturnCode = sbd.exec();
+  if (iReturnCode == QDialog::Accepted) {
     mesh->ScaleAndBias(sbd.scaleVec, sbd.biasVec);
+  } else 
+  if (iReturnCode == 2) {
+    mesh->Transform(sbd.GetExpertTransform());
   }
 
   m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();

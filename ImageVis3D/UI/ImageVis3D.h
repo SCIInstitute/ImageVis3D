@@ -120,7 +120,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void LoadDataset();
     void LoadDataset(std::string strFilename) ;
     void LoadDirectory();
-    void AddTriSurf();
+    void AddGeometry();
+    void RemoveGeometry();
     void CloseCurrentView();
     void ResizeCurrentView(int iSizeX, int iSizeY);
     void CloneCurrentView();

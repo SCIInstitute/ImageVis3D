@@ -34,6 +34,7 @@
 //!    Copyright (C) 2010 DFKI, MMCI, SCI Institute
 
 #include "ScaleAndBiasDlg.h"
+#include <QtCore/QSettings>
 
 using namespace std;
 
@@ -118,6 +119,7 @@ void ScaleAndBiasDlg::UpdatePostSize() {
 
 void ScaleAndBiasDlg::setupUi(QDialog *ScaleAndBiasDlg, const std::string& strDesc) {
   Ui_ScaleAndBiasDlg::setupUi(ScaleAndBiasDlg);
+  ToggleExpertView();
 
   FLOATVECTOR3 c = (m_max+m_min)/2.0f;
   FLOATVECTOR3 s = m_max-m_min;
@@ -131,4 +133,129 @@ void ScaleAndBiasDlg::setupUi(QDialog *ScaleAndBiasDlg, const std::string& strDe
 
   label_meshDesc->setText(strDesc.c_str());
   ValuesChanged();
+}
+
+
+void ScaleAndBiasDlg::ApplyExpertMatrix() {
+  QStringList list;
+  list.append(lineEdit_m11->text());
+  list.append(lineEdit_m21->text());
+  list.append(lineEdit_m31->text());
+  list.append(lineEdit_m41->text());
+
+  list.append(lineEdit_m12->text());
+  list.append(lineEdit_m22->text());
+  list.append(lineEdit_m32->text());
+  list.append(lineEdit_m42->text());
+
+  list.append(lineEdit_m13->text());
+  list.append(lineEdit_m23->text());
+  list.append(lineEdit_m33->text());
+  list.append(lineEdit_m43->text());
+
+  list.append(lineEdit_m14->text());
+  list.append(lineEdit_m24->text());
+  list.append(lineEdit_m34->text());
+  list.append(lineEdit_m44->text());
+
+  QSettings settings;
+  settings.setValue("Transformation/MeshExpertMatrix", list);
+
+  this->done(2);
+}
+
+void ScaleAndBiasDlg::CopyScaleAndBias() {
+  FLOATMATRIX4 bias;
+  FLOATMATRIX4 scale;
+
+  bias.Translation(biasVec);
+  scale.Scaling(scaleVec);
+
+  SetExpertTransform(scale*bias);
+}
+
+void ScaleAndBiasDlg::ToggleExpertView() {
+  groupBox_Expert->setVisible(checkBoxShowExpert->isChecked());
+  retranslateUi(this);
+  repaint();
+  resize(QSize(0,0));
+}
+
+FLOATMATRIX4 ScaleAndBiasDlg::GetExpertTransform() {
+  FLOATMATRIX4 m;
+  m.m11 =float(atof(lineEdit_m11->text().toAscii()));
+  m.m21 =float(atof(lineEdit_m21->text().toAscii()));
+  m.m31 =float(atof(lineEdit_m31->text().toAscii()));
+  m.m41 =float(atof(lineEdit_m41->text().toAscii()));
+
+  m.m12 =float(atof(lineEdit_m12->text().toAscii()));
+  m.m22 =float(atof(lineEdit_m22->text().toAscii()));
+  m.m32 =float(atof(lineEdit_m32->text().toAscii()));
+  m.m42 =float(atof(lineEdit_m42->text().toAscii()));
+
+  m.m13 =float(atof(lineEdit_m13->text().toAscii()));
+  m.m23 =float(atof(lineEdit_m23->text().toAscii()));
+  m.m33 =float(atof(lineEdit_m33->text().toAscii()));
+  m.m43 =float(atof(lineEdit_m43->text().toAscii()));
+
+  m.m14 =float(atof(lineEdit_m14->text().toAscii()));
+  m.m24 =float(atof(lineEdit_m24->text().toAscii()));
+  m.m34 =float(atof(lineEdit_m34->text().toAscii()));
+  m.m44 =float(atof(lineEdit_m44->text().toAscii()));
+
+  return m;
+}
+
+void ScaleAndBiasDlg::RestoreLast() {
+  QSettings settings;
+  QStringList entries = settings.value("Transformation/MeshExpertMatrix").toStringList();
+  if (entries.count() == 16) {
+    lineEdit_m11->setText(tr("%1").arg(entries[0],0,'f'));
+    lineEdit_m21->setText(tr("%1").arg(entries[1],0,'f'));
+    lineEdit_m31->setText(tr("%1").arg(entries[2],0,'f'));
+    lineEdit_m41->setText(tr("%1").arg(entries[3],0,'f'));
+
+    lineEdit_m12->setText(tr("%1").arg(entries[4],0,'f'));
+    lineEdit_m22->setText(tr("%1").arg(entries[5],0,'f'));
+    lineEdit_m32->setText(tr("%1").arg(entries[6],0,'f'));
+    lineEdit_m42->setText(tr("%1").arg(entries[7],0,'f'));
+
+    lineEdit_m13->setText(tr("%1").arg(entries[8],0,'f'));
+    lineEdit_m23->setText(tr("%1").arg(entries[9],0,'f'));
+    lineEdit_m33->setText(tr("%1").arg(entries[10],0,'f'));
+    lineEdit_m43->setText(tr("%1").arg(entries[11],0,'f'));
+
+    lineEdit_m14->setText(tr("%1").arg(entries[12],0,'f'));
+    lineEdit_m24->setText(tr("%1").arg(entries[13],0,'f'));
+    lineEdit_m34->setText(tr("%1").arg(entries[14],0,'f'));
+    lineEdit_m44->setText(tr("%1").arg(entries[15],0,'f'));
+  }
+}
+
+
+void ScaleAndBiasDlg::InvertMatrix() {
+  FLOATMATRIX4 m = GetExpertTransform();
+  SetExpertTransform(m.inverse());
+}
+
+void ScaleAndBiasDlg::SetExpertTransform(const FLOATMATRIX4& m) {
+  lineEdit_m11->setText(tr("%1").arg(m.m11,0,'f'));
+  lineEdit_m21->setText(tr("%1").arg(m.m21,0,'f'));
+  lineEdit_m31->setText(tr("%1").arg(m.m31,0,'f'));
+  lineEdit_m41->setText(tr("%1").arg(m.m41,0,'f'));
+
+  lineEdit_m12->setText(tr("%1").arg(m.m12,0,'f'));
+  lineEdit_m22->setText(tr("%1").arg(m.m22,0,'f'));
+  lineEdit_m32->setText(tr("%1").arg(m.m32,0,'f'));
+  lineEdit_m42->setText(tr("%1").arg(m.m42,0,'f'));
+
+  lineEdit_m13->setText(tr("%1").arg(m.m13,0,'f'));
+  lineEdit_m23->setText(tr("%1").arg(m.m23,0,'f'));
+  lineEdit_m33->setText(tr("%1").arg(m.m33,0,'f'));
+  lineEdit_m43->setText(tr("%1").arg(m.m43,0,'f'));
+
+  lineEdit_m14->setText(tr("%1").arg(m.m14,0,'f'));
+  lineEdit_m24->setText(tr("%1").arg(m.m24,0,'f'));
+  lineEdit_m34->setText(tr("%1").arg(m.m34,0,'f'));
+  lineEdit_m44->setText(tr("%1").arg(m.m44,0,'f'));
 }

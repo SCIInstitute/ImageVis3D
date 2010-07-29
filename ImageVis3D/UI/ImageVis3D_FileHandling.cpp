@@ -107,7 +107,11 @@ void MainWindow::LoadDataset() {
   }
 }
 
-void MainWindow::AddTriSurf() {
+void MainWindow::RemoveGeometry() {
+  // TODO
+}
+
+void MainWindow::AddGeometry() {
   if (!m_pActiveRenderWin) return;
 
   const UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
