@@ -717,7 +717,7 @@ void MainWindow::ExportDataset() {
 }
 
 
-bool MainWindow::ExportIso(UINT32 iLODLevel, string targetFileName) {
+bool MainWindow::ExportIsosurface(UINT32 iLODLevel, string targetFileName) {
     if (!m_pActiveRenderWin) {
       m_MasterController.DebugOut()->Warning("MainWindow::ExportIso", "No active renderwin");
       return false;
@@ -744,7 +744,7 @@ bool MainWindow::ExportIso(UINT32 iLODLevel, string targetFileName) {
     return bResult;
 }
 
-void MainWindow::ExportIso() {
+void MainWindow::ExportIsosurface() {
   QFileDialog::Options options;
 #ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
@@ -789,7 +789,7 @@ void MainWindow::ExportIso() {
         iLODLevel = lodDlg.GetLOD();
     }
 
-    if(!ExportIso(UINT32(iLODLevel), targetFileName))
+    if(!ExportIsosurface(UINT32(iLODLevel), targetFileName))
       ShowCriticalDialog( "Error during mesh export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
   }
 }
