@@ -1284,15 +1284,30 @@ void MainWindow::ShowIsoEdit() {
 }
 
 void MainWindow::ShowCriticalDialog(QString strTitle, QString strMessage) {
-  if (!m_bScriptMode) QMessageBox::critical(this, strTitle, strMessage);
+  if (!m_bScriptMode) 
+    QMessageBox::critical(this, strTitle, strMessage);
+  else {
+    string s = string(strTitle.toAscii()) + ": " + string(strMessage.toAscii());
+    T_ERROR(s.c_str());
+  }
 }
 
 void MainWindow::ShowInformationDialog(QString strTitle, QString strMessage) {
-  if (!m_bScriptMode) QMessageBox::information(this, strTitle, strMessage);
+  if (!m_bScriptMode) 
+    QMessageBox::information(this, strTitle, strMessage);
+  else {
+    string s = string(strTitle.toAscii()) + ": " + string(strMessage.toAscii());
+    MESSAGE(s.c_str());
+  }
 }
 
 void MainWindow::ShowWarningDialog(QString strTitle, QString strMessage) {
-  if (!m_bScriptMode) QMessageBox::warning(this, strTitle, strMessage);
+  if (!m_bScriptMode) 
+    QMessageBox::warning(this, strTitle, strMessage);
+  else {
+    string s = string(strTitle.toAscii()) + ": " + string(strMessage.toAscii());
+    WARNING(s.c_str());
+  }
 }
 
 void MainWindow::ShowWelcomeScreen() {

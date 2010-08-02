@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1621</width>
-    <height>1858</height>
+    <height>1864</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -499,13 +499,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QToolButton" name="toolButton_RemoveMesh">
-          <property name="text">
-           <string>Remove Mesh</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
      </item>
@@ -808,6 +801,50 @@
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QFrame" name="frame_2">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QToolButton" name="toolButton_ExportMesh">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>23</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Export Mesh</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="toolButton_RemoveMesh">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>23</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Remove Mesh</string>
               </property>
              </widget>
             </item>
@@ -2871,8 +2908,8 @@
   <widget class="QDockWidget" name="dockWidget_RenderOptions">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>294</width>
+     <height>408</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -3507,8 +3544,8 @@
   <widget class="QDockWidget" name="dockWidget_IsoSurface">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>379</width>
+     <height>351</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -3574,10 +3611,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QToolButton" name="toolButton_ExpMesh">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
+         <widget class="QToolButton" name="toolButton_ExpIsoToMesh">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -3585,7 +3619,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Export As Mesh</string>
+           <string>Export as Mesh</string>
           </property>
          </widget>
         </item>
@@ -5298,8 +5332,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1357</x>
-     <y>846</y>
+     <x>1304</x>
+     <y>852</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5314,8 +5348,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Use1DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1345</x>
-     <y>528</y>
+     <x>1292</x>
+     <y>529</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5330,8 +5364,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Use2DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1345</x>
-     <y>562</y>
+     <x>1292</x>
+     <y>564</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5346,8 +5380,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>UseIso()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1345</x>
-     <y>596</y>
+     <x>1292</x>
+     <y>599</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5826,8 +5860,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1357</x>
-     <y>846</y>
+     <x>1304</x>
+     <y>852</y>
     </hint>
     <hint type="destinationlabel">
      <x>1611</x>
@@ -5858,8 +5892,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleLocalBBox(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1407</x>
-     <y>649</y>
+     <x>1354</x>
+     <y>655</y>
     </hint>
     <hint type="destinationlabel">
      <x>989</x>
@@ -5922,7 +5956,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1317</x>
+     <x>1264</x>
      <y>458</y>
     </hint>
     <hint type="destinationlabel">
@@ -5938,7 +5972,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetRescaleFactors()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1421</x>
+     <x>1386</x>
      <y>458</y>
     </hint>
     <hint type="destinationlabel">
@@ -6146,8 +6180,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleStereoRendering()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1407</x>
-     <y>1191</y>
+     <x>1354</x>
+     <y>1197</y>
     </hint>
     <hint type="destinationlabel">
      <x>388</x>
@@ -6242,8 +6276,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Show1DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1373</x>
-     <y>528</y>
+     <x>1320</x>
+     <y>530</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -6258,8 +6292,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Show2DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1373</x>
-     <y>561</y>
+     <x>1320</x>
+     <y>565</y>
     </hint>
     <hint type="destinationlabel">
      <x>957</x>
@@ -6274,8 +6308,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ShowIsoEdit()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1373</x>
-     <y>594</y>
+     <x>1320</x>
+     <y>600</y>
     </hint>
     <hint type="destinationlabel">
      <x>958</x>
@@ -6444,22 +6478,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
    </hints>
   </connection>
   <connection>
-   <sender>toolButton_ExpMesh</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>ExportMesh()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1610</x>
-     <y>849</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>955</x>
-     <y>875</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionSave_DefaultWorkspace</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
@@ -6498,8 +6516,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleClipPlane(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1345</x>
-     <y>758</y>
+     <x>1292</x>
+     <y>764</y>
     </hint>
     <hint type="destinationlabel">
      <x>520</x>
@@ -6530,8 +6548,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ClipToggleShow(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1469</x>
-     <y>758</y>
+     <x>1433</x>
+     <y>764</y>
     </hint>
     <hint type="destinationlabel">
      <x>717</x>
@@ -6567,7 +6585,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
     <hint type="destinationlabel">
      <x>535</x>
-     <y>1917</y>
+     <y>1863</y>
     </hint>
    </hints>
   </connection>
@@ -6583,7 +6601,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
     <hint type="destinationlabel">
      <x>535</x>
-     <y>1917</y>
+     <y>1863</y>
     </hint>
    </hints>
   </connection>
@@ -6727,7 +6745,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
     <hint type="destinationlabel">
      <x>1015</x>
-     <y>1917</y>
+     <y>1863</y>
     </hint>
    </hints>
   </connection>
@@ -6791,7 +6809,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
     <hint type="destinationlabel">
      <x>1027</x>
-     <y>1879</y>
+     <y>1863</y>
     </hint>
    </hints>
   </connection>
@@ -6919,7 +6937,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
     <hint type="destinationlabel">
      <x>0</x>
-     <y>1917</y>
+     <y>1863</y>
     </hint>
    </hints>
   </connection>
@@ -6935,7 +6953,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
     <hint type="destinationlabel">
      <x>0</x>
-     <y>1917</y>
+     <y>1863</y>
     </hint>
    </hints>
   </connection>
@@ -6951,7 +6969,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
     <hint type="destinationlabel">
      <x>0</x>
-     <y>1917</y>
+     <y>1863</y>
     </hint>
    </hints>
   </connection>
@@ -6967,7 +6985,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
     <hint type="destinationlabel">
      <x>0</x>
-     <y>1917</y>
+     <y>1863</y>
     </hint>
    </hints>
   </connection>
@@ -7042,12 +7060,12 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleStereoMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1337</x>
-     <y>1304</y>
+     <x>1284</x>
+     <y>1310</y>
     </hint>
     <hint type="destinationlabel">
      <x>383</x>
-     <y>1917</y>
+     <y>1863</y>
     </hint>
    </hints>
   </connection>
@@ -7058,12 +7076,12 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleStereoMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1477</x>
-     <y>1304</y>
+     <x>1442</x>
+     <y>1310</y>
     </hint>
     <hint type="destinationlabel">
      <x>384</x>
-     <y>1898</y>
+     <y>1863</y>
     </hint>
    </hints>
   </connection>
@@ -7106,8 +7124,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ToggleMesh()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1317</x>
-     <y>239</y>
+     <x>1264</x>
+     <y>237</y>
     </hint>
     <hint type="destinationlabel">
      <x>1197</x>
@@ -7138,8 +7156,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetMeshDefOpacity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1600</x>
-     <y>372</y>
+     <x>1601</x>
+     <y>369</y>
     </hint>
     <hint type="destinationlabel">
      <x>1200</x>
@@ -7154,8 +7172,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>SetMeshScaleAndBias()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1300</x>
-     <y>373</y>
+     <x>1247</x>
+     <y>371</y>
     </hint>
     <hint type="destinationlabel">
      <x>1193</x>
@@ -7170,8 +7188,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>AddGeometry()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1479</x>
-     <y>116</y>
+     <x>1566</x>
+     <y>115</y>
     </hint>
     <hint type="destinationlabel">
      <x>1198</x>
@@ -7186,12 +7204,44 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>RemoveGeometry()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1565</x>
-     <y>118</y>
+     <x>1519</x>
+     <y>232</y>
     </hint>
     <hint type="destinationlabel">
      <x>1198</x>
      <y>160</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton_ExportMesh</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ExportMesh()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1374</x>
+     <y>226</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1199</x>
+     <y>229</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButton_ExpIsoToMesh</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ExportIsosurface()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1548</x>
+     <y>849</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1142</x>
+     <y>845</y>
     </hint>
    </hints>
   </connection>
@@ -7304,5 +7354,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>SetMeshDefOpacity()</slot>
   <slot>SetMeshScaleAndBias()</slot>
   <slot>RemoveGeometry()</slot>
+  <slot>ExportIsosurface()</slot>
  </slots>
 </ui>

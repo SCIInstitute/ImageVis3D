@@ -323,7 +323,7 @@ void MainWindow::Use1DTrans() {
 
   checkBox_Lighting->setEnabled(true);
 
-  toolButton_ExpMesh->setEnabled(false);
+  toolButton_ExpIsoToMesh->setEnabled(false);
   m_1DTransferFunction->setEnabled(true);
   m_2DTransferFunction->setEnabled(false);
 
@@ -355,7 +355,7 @@ void MainWindow::Use2DTrans() {
 
   checkBox_Lighting->setEnabled(true);
 
-  toolButton_ExpMesh->setEnabled(false);
+  toolButton_ExpIsoToMesh->setEnabled(false);
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(true);
 
@@ -396,7 +396,7 @@ void MainWindow::UseIso() {
 
   checkBox_Lighting->setEnabled(false);
 
-  toolButton_ExpMesh->setEnabled(true);
+  toolButton_ExpIsoToMesh->setEnabled(true);
   m_1DTransferFunction->setEnabled(false);
   m_2DTransferFunction->setEnabled(false);
 

@@ -118,9 +118,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void CaptureSequence();
     void CaptureRotation();
     void LoadDataset();
-    void LoadDataset(std::string strFilename) ;
+    void LoadDataset(std::string strFilename);
     void LoadDirectory();
     void AddGeometry();
+    void ExportGeometry();
     void RemoveGeometry();
     void CloseCurrentView();
     void ResizeCurrentView(int iSizeX, int iSizeY);
@@ -192,8 +193,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void ExportDataset();
     void MergeDatasets();
     bool ExportDataset(UINT32 iLODLevel, std::string targetFileName);
-    void ExportMesh();
-    bool ExportMesh(UINT32 iLODLevel, std::string targetFileName);
+    void ExportIso();
+    bool ExportIso(UINT32 iLODLevel, std::string targetFileName);
 
     void RenderWindowActive(RenderWindow* sender);
     void RenderWindowClosing(RenderWindow* sender);
@@ -444,6 +445,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
                                  const std::string& strTargetDir,
                                  PleaseWaitDialog& pleaseWait,
                                  bool bOverrideExisting);
+    bool ExportGeometry(size_t i, std::string strFilename);
+
     TextfileOut* m_pTextout;
 
     RenderWindow* ActiveRenderWin();

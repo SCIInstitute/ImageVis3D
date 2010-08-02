@@ -107,6 +107,61 @@ void MainWindow::LoadDataset() {
   }
 }
 
+
+void MainWindow::ExportGeometry() {
+ QFileDialog::Options options;
+#ifdef DETECTED_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/ExportMesh", ".").toString();
+
+  QString fileName =
+    QFileDialog::getSaveFileName(this, "Export Current Mesh to File",
+         strLastDir,
+         m_MasterController.IOMan()->GetGeoExportDialogString().c_str(),
+         &selectedFilter, options);
+
+  if (!fileName.isEmpty()) {
+    settings.setValue("Folders/ExportMesh", QFileInfo(fileName).absoluteDir().path());
+    string targetFileName = string(fileName.toAscii());
+
+    // still a valid filename ext ?
+    if (!m_MasterController.IOMan()->GetGeoConverterForExt(SysTools::ToLowerCase(SysTools::GetExt(string(fileName.toAscii()))),true)) {
+      ShowCriticalDialog("Extension Error", "Unable to determine the file type from the file extension.");
+      return;
+    }
+
+    int iCurrent = listWidget_DatasetComponents->currentRow();
+
+    if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) {
+      T_ERROR("No Mesh selected.");
+      return;
+    }
+
+    if (!ExportGeometry(iCurrent-1,targetFileName)) {
+      ShowCriticalDialog("Export Error", "Unable to export the mesh "
+                         "to the selected file. "
+                         "For details please check the debug log "
+                         "('Help | Debug Window').");
+      return;
+    }
+  }
+
+}
+
+bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
+  if (!m_pActiveRenderWin) return false;
+  const UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
+  if (!currentDataset) return false;
+
+  const std::vector<Mesh*>& meshes = currentDataset->GetMeshes();
+  return m_MasterController.IOMan()->ExportMesh(meshes[i], strFilename);
+}
+
+
 void MainWindow::RemoveGeometry() {
   // TODO
 }
@@ -662,9 +717,9 @@ void MainWindow::ExportDataset() {
 }
 
 
-bool MainWindow::ExportMesh(UINT32 iLODLevel, string targetFileName) {
+bool MainWindow::ExportIso(UINT32 iLODLevel, string targetFileName) {
     if (!m_pActiveRenderWin) {
-      m_MasterController.DebugOut()->Warning("MainWindow::ExportMesh", "No active renderwin");
+      m_MasterController.DebugOut()->Warning("MainWindow::ExportIso", "No active renderwin");
       return false;
     }
     PleaseWaitDialog pleaseWait(this);
@@ -689,7 +744,7 @@ bool MainWindow::ExportMesh(UINT32 iLODLevel, string targetFileName) {
     return bResult;
 }
 
-void MainWindow::ExportMesh() {
+void MainWindow::ExportIso() {
   QFileDialog::Options options;
 #ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
@@ -697,7 +752,7 @@ void MainWindow::ExportMesh() {
   QString selectedFilter;
 
   QSettings settings;
-  QString strLastDir = settings.value("Folders/ExportMesh", ".").toString();
+  QString strLastDir = settings.value("Folders/ExportIso", ".").toString();
 
   QString fileName =
     QFileDialog::getSaveFileName(this, "Export Current Isosurface to Mesh",
@@ -706,7 +761,7 @@ void MainWindow::ExportMesh() {
          &selectedFilter, options);
 
   if (!fileName.isEmpty()) {
-    settings.setValue("Folders/ExportMesh", QFileInfo(fileName).absoluteDir().path());
+    settings.setValue("Folders/ExportIso", QFileInfo(fileName).absoluteDir().path());
     string targetFileName = string(fileName.toAscii());
 
     // still a valid filename ext ?
@@ -734,7 +789,7 @@ void MainWindow::ExportMesh() {
         iLODLevel = lodDlg.GetLOD();
     }
 
-    if(!ExportMesh(UINT32(iLODLevel), targetFileName))
+    if(!ExportIso(UINT32(iLODLevel), targetFileName))
       ShowCriticalDialog( "Error during mesh export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
   }
 }

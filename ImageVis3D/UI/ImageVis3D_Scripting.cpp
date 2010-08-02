@@ -112,7 +112,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "mode2d")          { Use2DTrans();} else
   if (strCommand == "modeiso")         { UseIso();} else
   if (strCommand == "export")          { ExportDataset( (strParams.size()>1) ? atoi(strParams[1].c_str()) : 0, strParams[0]); } else
-  if (strCommand == "exportiso")       { ExportMesh( (strParams.size()>1) ? atoi(strParams[1].c_str()) : 0, strParams[0]); } else
+  if (strCommand == "exportiso")       { ExportIso( (strParams.size()>1) ? atoi(strParams[1].c_str()) : 0, strParams[0]); } else
   if (strCommand == "compare")         { CompareFiles(strParams[0], strParams[1]);} else
   if (strCommand == "close")           { CloseCurrentView();} else
   if (strCommand == "resize")          { ResizeCurrentView(atoi(strParams[0].c_str()), atoi(strParams[1].c_str()));} else
