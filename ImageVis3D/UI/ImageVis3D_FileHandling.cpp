@@ -157,6 +157,10 @@ bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
   const UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
   if (!currentDataset) return false;
 
+  PleaseWaitDialog pleaseWait(this);
+  pleaseWait.SetText("Exporting Mesh...");
+  pleaseWait.AttachLabel(&m_MasterController);
+
   const std::vector<Mesh*>& meshes = currentDataset->GetMeshes();
   return m_MasterController.IOMan()->ExportMesh(meshes[i], strFilename);
 }
