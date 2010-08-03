@@ -136,7 +136,7 @@ void MainWindow::ExportGeometry() {
 
     int iCurrent = listWidget_DatasetComponents->currentRow();
 
-    if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) {
+    if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) {
       T_ERROR("No Mesh selected.");
       return;
     }
@@ -165,9 +165,33 @@ bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
   return m_MasterController.IOMan()->ExportMesh(meshes[i], strFilename);
 }
 
-
 void MainWindow::RemoveGeometry() {
-  // TODO
+  if (!m_pActiveRenderWin) return;
+  UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
+  if (!currentDataset) return;
+
+  PleaseWaitDialog pleaseWait(this);
+  pleaseWait.SetText("Removing Mesh from UVF file...");
+  pleaseWait.AttachLabel(&m_MasterController);
+
+  int iCurrent = listWidget_DatasetComponents->currentRow();
+
+  if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) {
+    T_ERROR("No Mesh selected.");
+    return;
+  }
+
+  if (!currentDataset->RemoveMesh(size_t(iCurrent-1))) {
+    pleaseWait.close();
+    ShowCriticalDialog("Mesh Removal Failed.",
+             "Could ot remove mesh from the UVF file, "
+             "maybe the file is write protected? For details please "
+             "check the debug log ('Help | Debug Window').");
+  } else {
+    m_pActiveRenderWin->GetRenderer()->RemoveMeshData(size_t(iCurrent-1));
+    UpdateExplorerView(true);
+    pleaseWait.close();
+  }
 }
 
 void MainWindow::AddGeometry() {
@@ -739,8 +763,12 @@ bool MainWindow::ExportIsosurface(UINT32 iLODLevel, string targetFileName) {
     const UVFDataset *ds = dynamic_cast<UVFDataset*>(
       &(m_pActiveRenderWin->GetRenderer()->GetDataset())
     );
+
+    FLOATVECTOR4 color(m_pActiveRenderWin->GetIsosufaceColor(),1.0f);
+
+
     bool bResult = m_MasterController.IOMan()->ExtractIsosurface(
-                      ds, iLODLevel, iValue, vfRescaleFactors,
+                      ds, iLODLevel, iValue, vfRescaleFactors, color,
                       targetFileName, m_strTempDir
                    );
     pleaseWait.close();

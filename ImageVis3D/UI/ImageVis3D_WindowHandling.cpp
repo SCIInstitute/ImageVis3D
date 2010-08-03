@@ -858,7 +858,7 @@ void MainWindow::ToggleMesh() {
   if (!m_pActiveRenderWin) return;
 
   int iCurrent = listWidget_DatasetComponents->currentRow();
-  if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) return;
+  if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
   RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
   mesh->SetActive(checkBox_ComponenEnable->isChecked());
@@ -870,7 +870,7 @@ void MainWindow::SetMeshDefOpacity() {
   if (!m_pActiveRenderWin) return;
 
   int iCurrent = listWidget_DatasetComponents->currentRow();
-  if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) return;
+  if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
   RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
   
@@ -889,7 +889,7 @@ void MainWindow::SetMeshScaleAndBias() {
   if (!m_pActiveRenderWin) return;
 
   int iCurrent = listWidget_DatasetComponents->currentRow();
-  if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) return;
+  if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
   RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
   
@@ -909,7 +909,7 @@ void MainWindow::SetMeshDefColor() {
   if (!m_pActiveRenderWin) return;
 
   int iCurrent = listWidget_DatasetComponents->currentRow();
-  if (iCurrent < 0 || iCurrent >= listWidget_DatasetComponents->count()) return;
+  if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
   RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
   
