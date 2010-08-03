@@ -394,8 +394,8 @@
   <widget class="QDockWidget" name="dockWidget_Information">
    <property name="minimumSize">
     <size>
-     <width>420</width>
-     <height>404</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -2938,8 +2938,8 @@
   <widget class="QDockWidget" name="dockWidget_RenderOptions">
    <property name="minimumSize">
     <size>
-     <width>294</width>
-     <height>408</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -3574,8 +3574,8 @@
   <widget class="QDockWidget" name="dockWidget_IsoSurface">
    <property name="minimumSize">
     <size>
-     <width>379</width>
-     <height>351</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -4620,8 +4620,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    </property>
    <property name="maximumSize">
     <size>
-     <width>524287</width>
-     <height>524287</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -5523,7 +5523,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>357</x>
-     <y>815</y>
+     <y>807</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5539,7 +5539,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>69</x>
-     <y>815</y>
+     <y>807</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5555,7 +5555,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>219</x>
-     <y>815</y>
+     <y>807</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5571,7 +5571,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>143</x>
-     <y>815</y>
+     <y>807</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -5587,7 +5587,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <hints>
     <hint type="sourcelabel">
      <x>276</x>
-     <y>815</y>
+     <y>807</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -6306,8 +6306,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Show1DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1320</x>
-     <y>567</y>
+     <x>1373</x>
+     <y>573</y>
     </hint>
     <hint type="destinationlabel">
      <x>959</x>
@@ -6322,8 +6322,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>Show2DTrans()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1320</x>
-     <y>602</y>
+     <x>1373</x>
+     <y>607</y>
     </hint>
     <hint type="destinationlabel">
      <x>957</x>
@@ -6338,8 +6338,8 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <slot>ShowIsoEdit()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1320</x>
-     <y>637</y>
+     <x>1373</x>
+     <y>641</y>
     </hint>
     <hint type="destinationlabel">
      <x>958</x>
@@ -7263,7 +7263,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
    <sender>toolButton_ExpIsoToMesh</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>ExportGeometry()</slot>
+   <slot>ExportIsosurface()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>1548</x>
