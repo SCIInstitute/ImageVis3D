@@ -278,9 +278,6 @@ void MainWindow::ApplySettings() {
   settings.endGroup();
 
   actionTransfer_to_ImageVis3D_Mobile_Device->setVisible(m_bI3MFeatures);
-  actionAdd_Geometry_to_Data_Set->setVisible(experimental);
-  toolButton_AddMesh->setVisible(experimental);
-  toolButton_RemoveMesh->setVisible(experimental);
 
   settings.beginGroup("Renderer");
   m_eVolumeRendererType = (MasterController::EVolumeRendererType)settings.value("RendererType", (unsigned int)m_eVolumeRendererType).toUInt();

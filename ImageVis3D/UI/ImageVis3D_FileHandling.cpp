@@ -257,7 +257,7 @@ void MainWindow::AddGeometry() {
     }
 
     // make sure we have at least normals
-    if (m->GetNormalIndices().size() == 0) {
+    if (m->GetNormalIndices().empty()) {
       pleaseWait.SetText("Computing normals, please wait  ...");
       m->RecomputeNormals();
     }
