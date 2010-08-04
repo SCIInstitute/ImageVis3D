@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
-	Name="UVFReader"
+	Version="9,00"
+	Name="TuvokReader"
 	ProjectGUID="{741CA829-A68D-4CAC-844A-E23FFDC94323}"
 	RootNamespace="UVFConverter"
 	Keyword="Win32Proj"
