@@ -109,11 +109,11 @@ RenderWindow::~RenderWindow()
 
 
 void RenderWindow::SetAvoidCompositing(bool bAvoidCompositing) {
-  m_Renderer->SetAvoidSeperateCompositing(bAvoidCompositing);
+  m_Renderer->SetAvoidSeparateCompositing(bAvoidCompositing);
 }
 
 bool RenderWindow::GetAvoidCompositing() const {
-  return m_Renderer->GetAvoidSeperateCompositing();
+  return m_Renderer->GetAvoidSeparateCompositing();
 }
 
 void RenderWindow::ToggleHQCaptureMode() {

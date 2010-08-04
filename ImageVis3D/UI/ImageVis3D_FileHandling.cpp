@@ -218,13 +218,16 @@ void MainWindow::AddGeometry() {
   QString strLastDir = settings.value("Folders/AddTriGeo", ".").toString();
 
   QString geoFile =
-    QFileDialog::getOpenFileName(this, "Select Source Geometry File", strLastDir,
+    QFileDialog::getOpenFileName(this, "Select Geometry File", strLastDir,
                                   dialogString,
                                   &selFilter, options);
   if(geoFile.isEmpty()) {
     WARNING("No Geometry file. Dialog was probably cancelled.");
     return;
   }
+
+  settings.setValue("Folders/AddTriGeo", QFileInfo(geoFile).absoluteDir().path());
+
 
 /*  bool bInplace = QMessageBox::Yes ==
      QMessageBox::question(NULL, "Add Mesh to Volume",
@@ -239,7 +242,12 @@ void MainWindow::AddGeometry() {
     pleaseWait.SetText("Loading mesh, please wait  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
-    Mesh* m = m_MasterController.IOMan()->LoadMesh(string(geoFile.toAscii()));
+    Mesh* m = NULL;
+    try {
+      m = m_MasterController.IOMan()->LoadMesh(string(geoFile.toAscii()));
+    } catch (const tuvok::io::DSOpenFailed& err) {
+      WARNING("Conversion failed! %s", err.what());
+    }
 
     if (m == NULL)  {
       ShowCriticalDialog("Mesh Import Failed.",

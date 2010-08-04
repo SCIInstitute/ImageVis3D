@@ -475,7 +475,7 @@
         <item>
          <widget class="QLabel" name="label_Components">
           <property name="text">
-           <string>Seperate Components in the Dataset</string>
+           <string>Separate Components in the Dataset</string>
           </property>
          </widget>
         </item>
