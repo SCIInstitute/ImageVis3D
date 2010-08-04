@@ -50,6 +50,7 @@
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "DebugOut/HRConsoleOut.h"
+#include "../Tuvok/IO/TuvokIOError.h"
 #include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/IO/DirectoryParser.h"
 
@@ -64,6 +65,27 @@ using namespace tuvok;
   #endif
 #endif
   */
+
+enum {
+  EXIT_FAILURE_ARG = 1,       // invalid argument
+  EXIT_FAILURE_UNKNOWN_OUT,   // unknown file type for output file
+  EXIT_FAILURE_RO_VOL_OUT,    // file known as volume but converter is read only
+  EXIT_FAILURE_RO_GEO_OUT,    // file known as mesh but converter is read only
+  EXIT_FAILURE_UNKNOWN_1,     // unknown file type for first input file
+  EXIT_FAILURE_UNKNOWN_2,     // unknown file type for second file in merge
+  EXIT_FAILURE_CROSS_1,       // trying to convert a volume into a mesh
+  EXIT_FAILURE_CROSS_2,       // trying to convert a mesh into a volume
+  EXIT_FAILURE_MESH_MERGE,    // trying to merge meshes
+  EXIT_FAILURE_TO_RAW,        // error during source to raw conversion step 
+  EXIT_FAILURE_TO_UVF,        // error during raw to uvf conversion step 
+  EXIT_FAILURE_GENERAL,       // general error during conversion (not to UVF)
+  EXIT_FAILURE_IN_MESH_LOAD,  // unable to open the input mesh
+  EXIT_FAILURE_OUT_MESH_WRITE,// unable to write utput mesh
+  EXIT_FAILURE_MERGE,         // general error during file merge
+  EXIT_FAILURE_DIR_MERGE,     // attempting to merge in directory mode
+  EXIT_FAILURE_MERGE_NO_UVF,  // attempting to merge to format other than UVF
+  EXIT_FAILURE_GENERAL_DIR    // general error during conversion in dir mode
+};
 
 int main(int argc, const char* argv[])
 {
@@ -102,6 +124,7 @@ int main(int argc, const char* argv[])
     TCLAP::ValueArg<double> scale("s", "scale",
                                   "(merging) scaling value for second file",
                                   false, 0.0, "floating point number");
+    
     cmd.xorAdd(inputs, directory);
     cmd.add(output);
     cmd.add(bias);
@@ -123,7 +146,7 @@ int main(int argc, const char* argv[])
     fScale = scale.getValue();
   } catch(const TCLAP::ArgException& e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << "\n";
-    return EXIT_FAILURE;
+    return EXIT_FAILURE_ARG;
   }
 
   HRConsoleOut* debugOut = new HRConsoleOut();
@@ -134,57 +157,134 @@ int main(int argc, const char* argv[])
   IOManager ioMan;
 
   string targetType = SysTools::ToLowerCase(SysTools::GetExt(strOutfile));
+  bool bIsVolExtOut = ioMan.GetConverterForExt(targetType, true) != NULL;
+  bool bIsGeoExtOut = ioMan.GetGeoConverterForExt(targetType, true) != NULL;
+
+  if (!bIsVolExtOut && !bIsGeoExtOut)  {
+    bool bIsVolExtOutRO = ioMan.GetConverterForExt(targetType, false) != NULL;
+    bool bIsGeoExtOutRO = ioMan.GetGeoConverterForExt(targetType, false) != NULL;
+
+    if (!bIsVolExtOutRO && !bIsGeoExtOutRO)  {
+      std::cerr << "error: Unknown file type of file " << strInFile << "\n";
+      return EXIT_FAILURE_UNKNOWN_OUT;
+    } else {
+      if (bIsVolExtOutRO) {
+        std::cerr << "error: Volume converter for output file " << strInFile << " is read only.\n";
+        return EXIT_FAILURE_RO_VOL_OUT;
+      } 
+      std::cerr << "error: Geometry converter for output file " << strInFile << " is read only.\n";
+      return EXIT_FAILURE_RO_GEO_OUT;
+    }
+  }
+
   if (strInFile != "") {
 
     string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
+    bool bIsVolExt1 = ioMan.GetConverterForExt(sourceType, false) != NULL;
+    bool bIsGeoExt1 = ioMan.GetGeoConverterForExt(sourceType, false) != NULL;
+
+    if (!bIsVolExt1 && !bIsGeoExt1)  {
+      std::cerr << "error: Unknown file type of file " << strInFile << "\n";
+      return EXIT_FAILURE_UNKNOWN_1;
+    }
+
+    if (bIsVolExt1 && bIsGeoExtOut)  {
+      std::cerr << "error: cannot convert volume to geometry\n";
+      return EXIT_FAILURE_CROSS_1;
+    }
+
+    if (bIsGeoExt1 && bIsVolExtOut)  {
+      std::cerr << "error: cannot convert geometry to volume\n";
+      return EXIT_FAILURE_CROSS_2;
+    }
+
     if (strInFile2 == "") {
 
-      if (targetType == "uvf" && sourceType == "uvf") {
-        cout << endl << "Running in UVF to UVF mode, perserving only the raw data from " << strInFile.c_str() << " to " << strOutfile.c_str() << endl;
+      if (bIsVolExt1) {
+
+        if (targetType == "uvf" && sourceType == "uvf") {
+          cout << endl << "Running in UVF to UVF mode, perserving only the raw data from " << strInFile.c_str() << " to " << strOutfile.c_str() << endl;
 
 
-        cout << "Step 1. Extracting raw data" << endl;
-        string tmpFile = SysTools::ChangeExt(strOutfile,"nrrd"); /// use some simple format as intermediate file
+          cout << "Step 1. Extracting raw data" << endl;
+          string tmpFile = SysTools::ChangeExt(strOutfile,"nrrd"); /// use some simple format as intermediate file
 
-        if (ioMan.ConvertDataset(strInFile, tmpFile, SysTools::GetPath(tmpFile))) { // HACK: use the output file's dir as temp dir
-          cout << endl << "Success." << endl << endl;
-        } else {
-          cout << endl << "Extraction failed!" << endl << endl;
-          return EXIT_FAILURE;
-        }
-
-        cout << "Step 2. Writing new UVF file" << endl;
-
-        if (ioMan.ConvertDataset(tmpFile, strOutfile, SysTools::GetPath(strOutfile))) { // HACK: use the output file's dir as temp dir
-          if(std::remove(tmpFile.c_str()) == -1) {
-           cout << endl << "Conversion succeeded but could not delete tmp file " << tmpFile.c_str() << endl << endl;
+          if (ioMan.ConvertDataset(strInFile, tmpFile, SysTools::GetPath(tmpFile))) { // HACK: use the output file's dir as temp dir
+            cout << endl << "Success." << endl << endl;
           } else {
-           cout << endl << "Success." << endl << endl;
+            cout << endl << "Extraction failed!" << endl << endl;
+            return EXIT_FAILURE_TO_RAW;
           }
-          return EXIT_SUCCESS;
-        } else {
-          if(std::remove(tmpFile.c_str()) == -1) {
-           cout << endl << "UVF write failed and could not delete tmp file " << tmpFile.c_str() << endl << endl;
+
+          cout << "Step 2. Writing new UVF file" << endl;
+
+          if (ioMan.ConvertDataset(tmpFile, strOutfile, SysTools::GetPath(strOutfile))) { // HACK: use the output file's dir as temp dir
+            if(std::remove(tmpFile.c_str()) == -1) {
+             cout << endl << "Conversion succeeded but could not delete tmp file " << tmpFile.c_str() << endl << endl;
+            } else {
+             cout << endl << "Success." << endl << endl;
+            }
+            return EXIT_SUCCESS;
           } else {
-           cout << endl << "UVF write failed." << endl << endl;
+            if(std::remove(tmpFile.c_str()) == -1) {
+             cout << endl << "UVF write failed and could not delete tmp file " << tmpFile.c_str() << endl << endl;
+            } else {
+             cout << endl << "UVF write failed." << endl << endl;
+            }
+            return EXIT_FAILURE_TO_UVF;
           }
-          return EXIT_FAILURE;
+
+
+
+        } else {
+          cout << endl << "Running in volume file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;
+          if (ioMan.ConvertDataset(strInFile, strOutfile, SysTools::GetPath(strOutfile))) { // HACK: use the output file's dir as temp dir
+            cout << endl << "Success." << endl << endl;
+            return EXIT_SUCCESS;
+          } else {
+            cout << endl << "Conversion failed!" << endl << endl;
+            return EXIT_FAILURE_GENERAL;
+          }
         }
-
-
-
       } else {
-        cout << endl << "Running in file mode." << endl << "Converting " << strInFile.c_str() << " to " << strOutfile.c_str() << endl << endl;
-        if (ioMan.ConvertDataset(strInFile, strOutfile, SysTools::GetPath(strOutfile))) { // HACK: use the output file's dir as temp dir
-          cout << endl << "Success." << endl << endl;
-          return EXIT_SUCCESS;
-        } else {
-          cout << endl << "Conversion failed!" << endl << endl;
-          return EXIT_FAILURE;
-        }
+          AbstrGeoConverter* sourceConv = ioMan.GetGeoConverterForExt(sourceType, false);
+          AbstrGeoConverter* targetConv = ioMan.GetGeoConverterForExt(targetType, false);
+
+          cout << endl 
+               << "Running in geometry file mode." << endl
+               << "Converting " << strInFile.c_str() << " (" << sourceConv->GetDesc() << ")" 
+               << " to " << strOutfile.c_str() << " (" << targetConv->GetDesc() << ")" << endl;
+          Mesh* m = NULL;
+          try {
+            m = sourceConv->ConvertToMesh(strInFile);
+          } catch (const tuvok::io::DSOpenFailed& err) {
+            cerr << "Error trying to open the input mesh (" << err.what() << ")" << endl;
+            return EXIT_FAILURE_IN_MESH_LOAD;
+          }
+          if (!targetConv->ConvertToNative(*m,strOutfile)) {
+            cerr << "Error writing target mesh" << endl;
+            return EXIT_FAILURE_OUT_MESH_WRITE;
+          }
+          delete m;
       }
     } else {
+
+      string sourceType2 = SysTools::ToLowerCase(SysTools::GetExt(strInFile2));
+
+      bool bIsVolExt2 = ioMan.GetConverterForExt(sourceType2, false) != NULL;
+      bool bIsGeoExt2 = ioMan.GetGeoConverterForExt(sourceType2, false) != NULL;
+
+      if (!bIsVolExt2 && !bIsGeoExt2)  {
+        std::cerr << "error: Unknown file type of file " << strInFile2 << "\n";
+        return EXIT_FAILURE_UNKNOWN_2;
+      }
+
+      if (bIsGeoExt2)   {
+        std::cerr << "error: Mesh merge not supported at the moment\n";
+        return EXIT_FAILURE_MESH_MERGE;
+      }
+
       vector<string> vDataSets;
       vector<double> vScales;
       vector<double> vBiases;
@@ -206,7 +306,7 @@ int main(int argc, const char* argv[])
         return EXIT_SUCCESS;
       } else {
         cout << endl << "Merging datasets failed!" << endl << endl;
-        return EXIT_FAILURE;
+        return EXIT_FAILURE_MERGE;
       }
 
     }
@@ -215,13 +315,13 @@ int main(int argc, const char* argv[])
 
     if (strInFile2 != "") {
       cout << endl << "Error: Currently file merging is only supported in file mode (i.e. specify -f and not -d)." << endl << endl;
-      return EXIT_FAILURE;
+      return EXIT_FAILURE_DIR_MERGE;
     }
 
     /// \todo: remove this restricition (one solution would be to create a UVF first and then convert it to whatever is needed)
     if (targetType != "uvf") {
       cout << endl << "Error: Currently only uvf is only supported as target type for directory processing." << endl << endl;
-      return EXIT_FAILURE;
+      return EXIT_FAILURE_MERGE_NO_UVF;
     }
 
     cout << endl << "Running in directory mode." << endl << "Converting " << strInDir.c_str() << " to " << strOutfile.c_str() << endl << endl;
@@ -248,7 +348,7 @@ int main(int argc, const char* argv[])
         cout << endl << "Conversion failed!" << endl << endl;
         iFailCount++;
         for (size_t i = 0;i<dirinfo.size();i++) delete dirinfo[i];
-        return EXIT_FAILURE;
+        return EXIT_FAILURE_GENERAL_DIR;
       }
     }
 
