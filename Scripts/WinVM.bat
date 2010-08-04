@@ -90,11 +90,11 @@ time /t  >> result.txt
 
 echo Deleting previous binaries >> result.txt
 del "Build\Win32\%CONFIG%\ImageVis3D-32.exe"
-del "CmdLineConverter\Build\v\%CONFIG%\UVFConverter32.exe"
-del "UVFReader\Build\Win32\%CONFIG%\UVFReader32.exe"
+del "CmdLineConverter\Build\v\%CONFIG%\TuvokConverter32.exe"
+del "UVFReader\Build\Win32\%CONFIG%\TuvokReader32.exe"
 del "Build\x64\%CONFIG%\ImageVis3D-64.exe"
-del "CmdLineConverter\Build\x64\%CONFIG%\UVFConverter64.exe"
-del "UVFReader\Build\x64\%CONFIG%\UVFReader64.exe"
+del "CmdLineConverter\Build\x64\%CONFIG%\TuvokConverter64.exe"
+del "UVFReader\Build\x64\%CONFIG%\TuvokReader64.exe"
 
 echo Build Environment completed >> result.txt
 
@@ -119,20 +119,20 @@ IF EXIST "Build\x64\%CONFIG%\ImageVis3D-64.exe" (
   echo ImageVis 64bit build failed >> result.txt
 )
 
-IF EXIST "CmdLineConverter\Build\x64\%CONFIG%\UVFConverter64.exe" (
+IF EXIST "CmdLineConverter\Build\x64\%CONFIG%\TuvokConverter64.exe" (
   set BUILDUVF64=TRUE
-  echo UVFConverter64 completed >> result.txt
+  echo TuvokConverter64 completed >> result.txt
 ) ELSE (
   set BUILDUVF64=FALSE
-  echo UVFConverter64 failed >> result.txt
+  echo TuvokConverter64 failed >> result.txt
 )
 
-IF EXIST "UVFReader\Build\x64\%CONFIG%\UVFReader64.exe" (
+IF EXIST "UVFReader\Build\x64\%CONFIG%\TuvokReader64.exe" (
   set BUILDUVFR64=TRUE
-  echo UVFReader64 completed >> result.txt
+  echo TuvokReader64 completed >> result.txt
 ) ELSE (
   set BUILDUVFR64=FALSE
-  echo UVFReader64 failed >> result.txt
+  echo TuvokReader64 failed >> result.txt
 )
 
 IF EXIST out32.txt del out32.txt
@@ -154,20 +154,20 @@ IF EXIST "Build\Win32\%CONFIG%\ImageVis3D-32.exe" (
   echo ImageVis 32bit build failed >> result.txt
 )
 
-IF EXIST "CmdLineConverter\Build\Win32\%CONFIG%\UVFConverter32.exe" (
+IF EXIST "CmdLineConverter\Build\Win32\%CONFIG%\TuvokConverter32.exe" (
   set BUILDUVF32=TRUE
-  echo UVFConverter32 completed >> result.txt
+  echo TuvokConverter32 completed >> result.txt
 ) ELSE (
   set BUILDUVF32=FALSE
-  echo UVFConverter32 failed >> result.txt
+  echo TuvokConverter32 failed >> result.txt
 )
 
-IF EXIST "UVFReader\Build\Win32\%CONFIG%\UVFReader32.exe" (
+IF EXIST "UVFReader\Build\Win32\%CONFIG%\TuvokReader32.exe" (
   set BUILDUVFR32=TRUE
-  echo UVFReader32 completed >> result.txt
+  echo TuvokReader32 completed >> result.txt
 ) ELSE (
   set BUILDUVFR32=FALSE
-  echo UVFReader32 failed >> result.txt
+  echo TuvokReader32 failed >> result.txt
 )
 
 IF NOT EXIST \\geronimo\share\IV3D-WIN\nul mkdir \\geronimo\share\IV3D-WIN
@@ -213,14 +213,10 @@ if NOT !BUILDUVF64!==TRUE (
 
 if !BUILDUVF64!==TRUE xcopy /y "..\CmdLineConverter\Build\x64\%CONFIG%\*.exe" .
 if !BUILDUVF32!==TRUE xcopy /y "..\CmdLineConverter\Build\Win32\%CONFIG%\*.exe" .
-
-"C:\Program Files\7-Zip\7z" a -r ..\UVFConverter_Win_r%REVSTR%.zip
-del . /F /S /Q
-
 if !BUILDUVFR64!==TRUE xcopy /y "..\UVFReader\Build\x64\%CONFIG%\*.exe" .
 if !BUILDUVFR32!==TRUE xcopy /y "..\UVFReader\Build\Win32\%CONFIG%\*.exe" .
 
-"C:\Program Files\7-Zip\7z" a -r ..\UVFReader_Win_r%REVSTR%.zip
+"C:\Program Files\7-Zip\7z" a -r ..\TuvokCmdlineTools_Win_r%REVSTR%.zip
 del . /F /S /Q
 
 xcopy ..\ImageVis3D_%IV3DCODEVERSION%_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WIN /Y
@@ -239,26 +235,16 @@ if !BUILD64!==TRUE (
 )
 
 
-IF EXIST ..\UVFConverter_Win_r%REVSTR%.zip (
+IF EXIST ..\TuvokCmdlineTools_Win_r%REVSTR%.zip (
   time /t  >> ..\result.txt
-  echo UVFConverter build successful >> ..\result.txt
+  echo Command Line tools build successful >> ..\result.txt
 ) else (
   goto ZIPFAILUVF
 )
 
-xcopy ..\UVFConverter_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WIN /Y
-del ..\UVFConverter_Win_r%REVSTR%.zip
+xcopy ..\TuvokCmdlineTools_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WIN /Y
+del ..\TuvokCmdlineTools_Win_r%REVSTR%.zip
 
-
-IF EXIST ..\UVFReader_Win_r%REVSTR%.zip (
-  time /t  >> ..\result.txt
-  echo UVFReader build successful >> ..\result.txt
-) else (
-  goto ZIPFAILUVFR
-)
-
-xcopy ..\UVFReader_Win_r%REVSTR%.zip \\geronimo\share\IV3D-WIN /Y
-del ..\UVFReader_Win_r%REVSTR%.zip
 
 :UVFAILED
 
@@ -284,12 +270,7 @@ goto END
 
 :ZIPFAILUVF
 
-echo Packing the final UVFConverter ZIP file failed  >> result.txt
-goto END
-
-:ZIPFAILUVFR
-
-echo Packing the final UVFReader ZIP file failed  >> result.txt
+echo Packing the final TuvokConverter ZIP file failed  >> result.txt
 goto END
 
 :ALLFAILED
