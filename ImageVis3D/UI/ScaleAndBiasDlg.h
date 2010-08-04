@@ -48,6 +48,8 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
     ScaleAndBiasDlg(const std::string& strDesc, 
                     const FLOATVECTOR3& min, 
                     const FLOATVECTOR3& max,
+                    const FLOATVECTOR3& vmin, 
+                    const FLOATVECTOR3& vmax,
                     QWidget* parent = 0 , 
                     Qt::WindowFlags flags = 0);
     virtual ~ScaleAndBiasDlg();
@@ -61,6 +63,8 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
   protected slots:
     void ScaleIsotropic();
     void ScaleUnisotropic();
+    void ScaleIsotropicVol();
+    void ScaleUnisotropicVol();
     void ValuesChanged();
     void ApplyExpertMatrix();
     void CopyScaleAndBias();
@@ -71,6 +75,8 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
   private:
     FLOATVECTOR3 m_min;
     FLOATVECTOR3 m_max;
+    FLOATVECTOR3 m_minVolume;
+    FLOATVECTOR3 m_maxVolume;
 
     void UpdatePostSize();
     void setupUi(QDialog *ScaleAndBiasDlg, const std::string& strDesc);

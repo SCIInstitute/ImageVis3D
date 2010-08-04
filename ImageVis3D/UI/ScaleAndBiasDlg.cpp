@@ -40,12 +40,16 @@ using namespace std;
 
 ScaleAndBiasDlg::ScaleAndBiasDlg(const std::string& strDesc, 
                                  const FLOATVECTOR3& min, 
-                                 const FLOATVECTOR3& max, 
+                                 const FLOATVECTOR3& max,
+                                 const FLOATVECTOR3& vmin, 
+                                 const FLOATVECTOR3& vmax,
                                  QWidget* parent /* = 0 */, 
                                  Qt::WindowFlags flags /* = 0 */) :
   QDialog(parent, flags),
   m_min(min),
-  m_max(max)
+  m_max(max),
+  m_minVolume(vmin),
+  m_maxVolume(vmax)
 {
   setupUi(this, strDesc);
 }
@@ -89,6 +93,43 @@ void ScaleAndBiasDlg::ScaleUnisotropic() {
 
   ValuesChanged();
 }
+
+void ScaleAndBiasDlg::ScaleIsotropicVol() {
+  FLOATVECTOR3 s = (m_max-m_min)/(m_maxVolume-m_minVolume);
+  FLOATVECTOR3 scaleVec = 1.0f/s;
+
+  float scale = scaleVec.minVal();
+  FLOATVECTOR3 c = ((m_max+m_min)/2.0f)*scale;
+  FLOATVECTOR3 biasVec = -c;
+
+  doubleSpinBox_Sx->setValue(scale);
+  doubleSpinBox_Sy->setValue(scale);
+  doubleSpinBox_Sz->setValue(scale);
+
+  doubleSpinBox_Bx->setValue(biasVec.x);
+  doubleSpinBox_By->setValue(biasVec.y);
+  doubleSpinBox_Bz->setValue(biasVec.z);
+
+  ValuesChanged();
+}
+
+void ScaleAndBiasDlg::ScaleUnisotropicVol() {
+  FLOATVECTOR3 s = (m_max-m_min)/(m_maxVolume-m_minVolume);
+  FLOATVECTOR3 scaleVec = 1.0f/s;
+  FLOATVECTOR3 c = ((m_max+m_min)/2.0f)*scaleVec;
+  FLOATVECTOR3 biasVec = -c;
+
+  doubleSpinBox_Sx->setValue(scaleVec.x);
+  doubleSpinBox_Sy->setValue(scaleVec.y);
+  doubleSpinBox_Sz->setValue(scaleVec.z);
+
+  doubleSpinBox_Bx->setValue(biasVec.x);
+  doubleSpinBox_By->setValue(biasVec.y);
+  doubleSpinBox_Bz->setValue(biasVec.z);
+
+  ValuesChanged();
+}
+
 
 void ScaleAndBiasDlg::ValuesChanged() {
   scaleVec = FLOATVECTOR3(doubleSpinBox_Sx->value(),

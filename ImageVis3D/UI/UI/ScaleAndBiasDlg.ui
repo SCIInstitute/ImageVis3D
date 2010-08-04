@@ -17,7 +17,7 @@
    <enum>Qt::DefaultContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>Mesh Scale and Bias</string>
+   <string>Mesh Transform</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
@@ -1059,6 +1059,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_ScaleToFit3</sender>
+   <signal>clicked()</signal>
+   <receiver>ScaleAndBiasDlg</receiver>
+   <slot>ScaleIsotropicVol()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>195</x>
+     <y>280</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>280</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_ScaleToFit4</sender>
+   <signal>clicked()</signal>
+   <receiver>ScaleAndBiasDlg</receiver>
+   <slot>ScaleUnisotropicVol()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>339</x>
+     <y>282</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>452</x>
+     <y>292</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>ScaleIsotropic()</slot>
@@ -1069,5 +1101,7 @@
   <slot>ToggleExpertView()</slot>
   <slot>InvertMatrix()</slot>
   <slot>RestoreLast()</slot>
+  <slot>ScaleIsotropicVol()</slot>
+  <slot>ScaleUnisotropicVol()</slot>
  </slots>
 </ui>

@@ -892,8 +892,14 @@ void MainWindow::SetMeshScaleAndBias() {
   if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
   RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
-  
-  ScaleAndBiasDlg sbd(mesh->Name(),mesh->GetMin(),mesh->GetMax(), this);
+
+  UINT64VECTOR3 vDomainSize = m_pActiveRenderWin->GetRenderer()->GetDataset().GetDomainSize();
+  FLOATVECTOR3 vScale = FLOATVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataset().GetScale());  
+  FLOATVECTOR3 vExtend = FLOATVECTOR3(vDomainSize) * vScale;
+  vExtend /= vExtend.maxVal();
+
+  ScaleAndBiasDlg sbd(mesh->Name(),mesh->GetMin(),mesh->GetMax(),
+                      -0.5f*vExtend,0.5f*vExtend,this);
   int iReturnCode = sbd.exec();
   if (iReturnCode == QDialog::Accepted) {
     mesh->ScaleAndBias(sbd.scaleVec, sbd.biasVec);
