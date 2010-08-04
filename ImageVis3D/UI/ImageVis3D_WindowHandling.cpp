@@ -995,6 +995,7 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
           : "using default color";
     lineEdit_ColorCount->setText(strColorcount);
     horizontalSlider_MeshDefOpacity->setVisible(mesh->GetMeshType() == Mesh::MT_TRIANGLES);
+    label_MeshOpacity->setVisible(mesh->GetMeshType() == Mesh::MT_TRIANGLES);
     horizontalSlider_MeshDefOpacity->setValue(int(mesh->GetDefaultColor().w*100));
     frame_meshDefColor->setVisible(colorcount == 0);
   }
