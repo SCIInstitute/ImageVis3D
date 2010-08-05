@@ -863,6 +863,7 @@ void MainWindow::ToggleMesh() {
   RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
   mesh->SetActive(checkBox_ComponenEnable->isChecked());
   m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+  ToggleClearViewControls();
 }
 
 
@@ -961,6 +962,7 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
       listWidget_DatasetComponents->addItem(meshdesc);
     }
     listWidget_DatasetComponents->setCurrentRow(0);
+    ToggleClearViewControls();
   }
 
   int iCurrent = listWidget_DatasetComponents->currentRow();
@@ -1026,16 +1028,28 @@ void MainWindow::UpdateMinMaxLODLimitLabel() {
 
 }
 
-void MainWindow::ToggleClearViewControls(int iRange) {
+void MainWindow::ToggleClearViewControls() {
+  if (!m_pActiveRenderWin) return;
+
   if (m_pActiveRenderWin->GetRenderer()->SupportsClearView()) {
     checkBox_ClearView->setVisible(true);
     frame_ClearView->setVisible(true);
-
     checkBox_ClearView->setChecked(m_pActiveRenderWin->GetRenderer()->GetCV());
+    label_CVDisableReason->setVisible(false);
   } else {
+    checkBox_ClearView->setChecked(false);
     checkBox_ClearView->setVisible(false);
     frame_ClearView->setVisible(false);
+
+    QString reason = tr("ClearView Is Disabled because %1").arg(m_pActiveRenderWin->GetRenderer()->ClearViewDisableReason().c_str());
+    label_CVDisableReason->setText(reason);
+    label_CVDisableReason->setVisible(true);
+    m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
   }
+}
+
+void MainWindow::ToggleClearViewControls(int iRange) {
+  ToggleClearViewControls();
   AbstrRenderer * const ren = m_pActiveRenderWin->GetRenderer();
 
   SetFocusIsoValueSlider(int(ren->GetCVIsoValue()), iRange);

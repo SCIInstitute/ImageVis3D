@@ -398,6 +398,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void SetToggleClipLockedLabel(bool);
     void ClearProgressViewAndInfo();
 
+    void ToggleClearViewControls();
     void ToggleClearViewControls(int iRange);
     void SetFocusIsoValueSlider(int iValue, int iMaxValue);
     void UpdateFocusIsoValLabel(int iValue, int iMaxValue);
