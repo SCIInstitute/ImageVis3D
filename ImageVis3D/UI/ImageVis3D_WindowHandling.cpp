@@ -872,7 +872,8 @@ void MainWindow::SetMeshDefOpacity() {
   int iCurrent = listWidget_DatasetComponents->currentRow();
   if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
-  RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
+  RenderMesh* mesh = (RenderMesh*)renderer->GetMeshes()[iCurrent-1];
   
   FLOATVECTOR4 meshcolor = mesh->GetDefaultColor();
 
@@ -891,15 +892,18 @@ void MainWindow::SetMeshScaleAndBias() {
   int iCurrent = listWidget_DatasetComponents->currentRow();
   if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
-  RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
+  RenderMesh* mesh = (RenderMesh*)renderer->GetMeshes()[iCurrent-1];
 
-  UINT64VECTOR3 vDomainSize = m_pActiveRenderWin->GetRenderer()->GetDataset().GetDomainSize();
-  FLOATVECTOR3 vScale = FLOATVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataset().GetScale());  
-  FLOATVECTOR3 vExtend = FLOATVECTOR3(vDomainSize) * vScale;
-  vExtend /= vExtend.maxVal();
+  FLOATVECTOR3 vCenter, vExtend;
+  renderer->GetVolumeAABB(vCenter, vExtend);
 
-  ScaleAndBiasDlg sbd(mesh->Name(),mesh->GetMin(),mesh->GetMax(),
-                      -0.5f*vExtend,0.5f*vExtend,this);
+  ScaleAndBiasDlg sbd(mesh->Name(),
+                      mesh->GetMin(),
+                      mesh->GetMax(),
+                      vCenter-0.5f*vExtend,
+                      vCenter+0.5f*vExtend,
+                      this);
   int iReturnCode = sbd.exec();
   if (iReturnCode == QDialog::Accepted) {
     mesh->ScaleAndBias(sbd.scaleVec, sbd.biasVec);
@@ -908,7 +912,7 @@ void MainWindow::SetMeshScaleAndBias() {
     mesh->Transform(sbd.GetExpertTransform());
   }
 
-  m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+  renderer->Schedule3DWindowRedraws();
 }
 
 void MainWindow::SetMeshDefColor() {
@@ -917,7 +921,8 @@ void MainWindow::SetMeshDefColor() {
   int iCurrent = listWidget_DatasetComponents->currentRow();
   if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
-  RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
+  RenderMesh* mesh = (RenderMesh*)renderer->GetMeshes()[iCurrent-1];
   
   FLOATVECTOR4 meshcolor = mesh->GetDefaultColor();
 
@@ -934,23 +939,24 @@ void MainWindow::SetMeshDefColor() {
     meshcolor.y = color.green()/255.0f;
     meshcolor.z = color.blue()/255.0f;
     mesh->SetDefaultColor(meshcolor);
-    m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+    renderer->Schedule3DWindowRedraws();
   }
 }
 
 void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
   if (!m_pActiveRenderWin) return;
 
+  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
   if (bRepopulateListBox) {
     listWidget_DatasetComponents->clear();
     
-    QString voldesc = tr("Volume (%1)").arg(m_pActiveRenderWin->GetRenderer()->GetDataset().Name());
+    QString voldesc = tr("Volume (%1)").arg(renderer->GetDataset().Name());
     listWidget_DatasetComponents->addItem(voldesc);
 
     for (size_t i = 0;
-         i<m_pActiveRenderWin->GetRenderer()->GetMeshes().size();
+         i<renderer->GetMeshes().size();
          i++) {
-      const RenderMesh* mesh = (const RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[i];
+      const RenderMesh* mesh = (const RenderMesh*)renderer->GetMeshes()[i];
       QString meshdesc = tr("%1 (%2)").arg(mesh->GetMeshType() == Mesh::MT_TRIANGLES ? "Triangle Mesh" : "Lines").arg(mesh->Name().c_str());
       listWidget_DatasetComponents->addItem(meshdesc);
     }
@@ -977,7 +983,7 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     page_Geometry->setVisible(true);   
     stackedWidget_componentInfo->setCurrentIndex(1);
 
-    const RenderMesh* mesh = (const RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+    const RenderMesh* mesh = (const RenderMesh*)renderer->GetMeshes()[iCurrent-1];
 
     size_t iVerticesPerPoly = mesh->GetVerticesPerPoly();
 
