@@ -184,7 +184,7 @@ void MainWindow::RemoveGeometry() {
   if (!currentDataset->RemoveMesh(size_t(iCurrent-1))) {
     pleaseWait.close();
     ShowCriticalDialog("Mesh Removal Failed.",
-             "Could ot remove mesh from the UVF file, "
+             "Could not remove mesh from the UVF file, "
              "maybe the file is write protected? For details please "
              "check the debug log ('Help | Debug Window').");
   } else {

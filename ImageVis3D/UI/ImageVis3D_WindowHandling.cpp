@@ -60,6 +60,7 @@
 #include "RenderWindowDX.h"
 #include "../Tuvok/Renderer/RenderMesh.h"
 #include "ScaleAndBiasDlg.h"
+#include "PleaseWait.h"
 
 using namespace std;
 
@@ -96,7 +97,7 @@ void MainWindow::dropEvent(QDropEvent* ev)
 }
 
 // ******************************************
-// Geometry
+// Window Geometry
 // ******************************************
 
 bool MainWindow::LoadGeometry() {
@@ -899,21 +900,67 @@ void MainWindow::SetMeshScaleAndBias() {
   FLOATVECTOR3 vCenter, vExtend;
   renderer->GetVolumeAABB(vCenter, vExtend);
 
-  ScaleAndBiasDlg sbd(mesh->Name(),
-                      mesh->GetMin(),
-                      mesh->GetMax(),
+  ScaleAndBiasDlg sbd(mesh,iCurrent-1,
                       vCenter-0.5f*vExtend,
                       vCenter+0.5f*vExtend,
                       this);
-  int iReturnCode = sbd.exec();
-  if (iReturnCode == QDialog::Accepted) {
-    mesh->ScaleAndBias(sbd.scaleVec, sbd.biasVec);
-  } else 
-  if (iReturnCode == 2) {
-    mesh->Transform(sbd.GetExpertTransform());
-  }
+  connect(&sbd, SIGNAL(SaveTransform(ScaleAndBiasDlg*)), this, SLOT(SaveMeshTransform(ScaleAndBiasDlg*)));
+  connect(&sbd, SIGNAL(RestoreTransform(ScaleAndBiasDlg*)), this, SLOT(RestoreMeshTransform(ScaleAndBiasDlg*)));
+  connect(&sbd, SIGNAL(ApplyTransform(ScaleAndBiasDlg*)), this, SLOT(ApplMeshTransform(ScaleAndBiasDlg*)));
+  connect(&sbd, SIGNAL(ApplyMatrixTransform(ScaleAndBiasDlg*)), this, SLOT(ApplyMatrixMeshTransform(ScaleAndBiasDlg*)));
 
+  sbd.exec();
+
+  disconnect(&sbd, SIGNAL(SaveTransform(ScaleAndBiasDlg*)), this, SLOT(SaveMeshTransform(ScaleAndBiasDlg*)));
+  disconnect(&sbd, SIGNAL(RestoreTransform(ScaleAndBiasDlg*)), this, SLOT(RestoreMeshTransform(ScaleAndBiasDlg*)));
+  disconnect(&sbd, SIGNAL(ApplyTransform(ScaleAndBiasDlg*)), this, SLOT(ApplMeshTransform(ScaleAndBiasDlg*)));
+  disconnect(&sbd, SIGNAL(ApplyMatrixTransform(ScaleAndBiasDlg*)), this, SLOT(ApplyMatrixMeshTransform(ScaleAndBiasDlg*)));
+}
+
+void MainWindow::ApplMeshTransform(ScaleAndBiasDlg* sender) {
+  if (!m_pActiveRenderWin || !sender) return;
+  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
+
+  sender->m_pMesh->ScaleAndBias(sender->scaleVec, sender->biasVec);
   renderer->Schedule3DWindowRedraws();
+}
+
+void MainWindow::ApplyMatrixMeshTransform(ScaleAndBiasDlg* sender) {
+  if (!m_pActiveRenderWin || !sender) return;
+  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
+
+  sender->m_pMesh->Transform(sender->GetExpertTransform());
+  renderer->Schedule3DWindowRedraws();
+}
+
+void MainWindow::RestoreMeshTransform(ScaleAndBiasDlg* sender) {
+  if (!m_pActiveRenderWin || !sender) return;
+  const Mesh* m = m_pActiveRenderWin->GetRenderer()->GetDataset().GetMeshes()[sender->m_index];
+  m_pActiveRenderWin->GetRenderer()->ReloadMesh(sender->m_index, m);
+  m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+}
+
+void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {
+  if (!m_pActiveRenderWin || !sender) return;
+  UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
+  if (!currentDataset) return;
+
+  PleaseWaitDialog pleaseWait(this);
+  pleaseWait.SetText("Saving transformation to UVF file...");
+  pleaseWait.AttachLabel(&m_MasterController);
+
+  const FLOATMATRIX4& m = m_pActiveRenderWin->GetRenderer()->GetMeshes()[sender->m_index]->GetTransformFromOriginal();
+
+  if (!currentDataset->GeometryTransformToFile(size_t(sender->m_index),m)) {
+    pleaseWait.close();
+    ShowCriticalDialog("Transform Save Failed.",
+             "Could not save geometry transform to the UVF file, "
+             "maybe the file is write protected? For details please "
+             "check the debug log ('Help | Debug Window').");
+  } else {
+    m_pActiveRenderWin->GetRenderer()->GetMeshes()[sender->m_index]->DeleteTransformFromOriginal();
+    pleaseWait.close();
+  }
 }
 
 void MainWindow::SetMeshDefColor() {
@@ -1082,6 +1129,7 @@ void MainWindow::EnableStereoWidgets() {
   horizontalSlider_FocalLength->setEnabled(true);
   frame_StereoMode->setEnabled(true);
 }
+
 void MainWindow::DisableStereoWidgets() {
   frame_Stereo->setEnabled(false);
   horizontalSlider_EyeDistance->setEnabled(false);

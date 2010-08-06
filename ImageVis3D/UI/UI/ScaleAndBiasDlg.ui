@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>457</width>
-    <height>588</height>
+    <height>631</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -793,6 +793,42 @@
        <number>0</number>
       </property>
       <item>
+       <widget class="QPushButton" name="pushButton_Save">
+        <property name="text">
+         <string>Save To File</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_Restore">
+        <property name="text">
+         <string>Restore From File</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_apply">
+        <property name="text">
+         <string>Apply</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame_6">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
        <widget class="QCheckBox" name="checkBoxShowExpert">
         <property name="text">
          <string>Show expert options</string>
@@ -800,15 +836,22 @@
        </widget>
       </item>
       <item>
-       <widget class="QDialogButtonBox" name="buttonBox">
-        <property name="locale">
-         <locale language="English" country="UnitedStates"/>
-        </property>
+       <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="standardButtons">
-         <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_close">
+        <property name="text">
+         <string>Close</string>
         </property>
        </widget>
       </item>
@@ -948,38 +991,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>ScaleAndBiasDlg</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>447</x>
-     <y>578</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>255</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>ScaleAndBiasDlg</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>447</x>
-     <y>578</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>255</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>pushButton_ApplyExpertMatrix</sender>
    <signal>clicked()</signal>
    <receiver>ScaleAndBiasDlg</receiver>
@@ -1018,8 +1029,8 @@
    <slot>ToggleExpertView()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>39</x>
-     <y>568</y>
+     <x>58</x>
+     <y>608</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -1035,7 +1046,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>265</x>
-     <y>530</y>
+     <y>550</y>
     </hint>
     <hint type="destinationlabel">
      <x>383</x>
@@ -1051,7 +1062,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>264</x>
-     <y>491</y>
+     <y>511</y>
     </hint>
     <hint type="destinationlabel">
      <x>61</x>
@@ -1091,6 +1102,70 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_Save</sender>
+   <signal>clicked()</signal>
+   <receiver>ScaleAndBiasDlg</receiver>
+   <slot>Save()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>150</x>
+     <y>572</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>7</x>
+     <y>312</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Restore</sender>
+   <signal>clicked()</signal>
+   <receiver>ScaleAndBiasDlg</receiver>
+   <slot>Restore()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>585</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>442</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_apply</sender>
+   <signal>clicked()</signal>
+   <receiver>ScaleAndBiasDlg</receiver>
+   <slot>Apply()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>362</x>
+     <y>582</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>592</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_close</sender>
+   <signal>clicked()</signal>
+   <receiver>ScaleAndBiasDlg</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>414</x>
+     <y>608</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>454</x>
+     <y>538</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>ScaleIsotropic()</slot>
@@ -1103,5 +1178,8 @@
   <slot>RestoreLast()</slot>
   <slot>ScaleIsotropicVol()</slot>
   <slot>ScaleUnisotropicVol()</slot>
+  <slot>Save()</slot>
+  <slot>Restore()</slot>
+  <slot>Apply()</slot>
  </slots>
 </ui>

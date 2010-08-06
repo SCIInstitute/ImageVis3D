@@ -41,13 +41,16 @@
 #include <StdDefines.h>
 #include "../Tuvok/Basics/Vectors.h"
 
+namespace tuvok {
+  class RenderMesh;
+};
+
 class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
 {
   Q_OBJECT
   public:
-    ScaleAndBiasDlg(const std::string& strDesc, 
-                    const FLOATVECTOR3& min, 
-                    const FLOATVECTOR3& max,
+    ScaleAndBiasDlg(tuvok::RenderMesh* mesh,
+                    size_t index,
                     const FLOATVECTOR3& vmin, 
                     const FLOATVECTOR3& vmax,
                     QWidget* parent = 0 , 
@@ -60,6 +63,9 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
     FLOATMATRIX4 GetExpertTransform();
     void SetExpertTransform(const FLOATMATRIX4& m);
 
+    size_t m_index;
+    tuvok::RenderMesh* m_pMesh;
+
   protected slots:
     void ScaleIsotropic();
     void ScaleUnisotropic();
@@ -71,6 +77,15 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
     void ToggleExpertView();
     void InvertMatrix();
     void RestoreLast();
+    void Restore();
+    void Save();
+    void Apply();
+
+  signals:
+    void SaveTransform(ScaleAndBiasDlg*);
+    void RestoreTransform(ScaleAndBiasDlg*);
+    void ApplyTransform(ScaleAndBiasDlg*);
+    void ApplyMatrixTransform(ScaleAndBiasDlg*);
 
   private:
     FLOATVECTOR3 m_min;
@@ -78,6 +93,7 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
     FLOATVECTOR3 m_minVolume;
     FLOATVECTOR3 m_maxVolume;
 
+    void UpdatePreSize();
     void UpdatePostSize();
     void setupUi(QDialog *ScaleAndBiasDlg, const std::string& strDesc);
 

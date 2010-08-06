@@ -69,6 +69,7 @@ class QFile;
 class QTimer;
 class FTPDialog;
 class PleaseWaitDialog;
+class ScaleAndBiasDlg;
 
 class MainWindow : public QMainWindow, protected Ui_MainWindow,
                    public Scriptable
@@ -287,7 +288,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void SetMeshDefColor();
     void SetMeshDefOpacity();
     void SetMeshScaleAndBias();
-    void CheckForMeshCapabilities(bool bNoUserInteraction, QStringList files=QStringList(""));
+    void SaveMeshTransform(ScaleAndBiasDlg* sender);
+    void RestoreMeshTransform(ScaleAndBiasDlg* sender);
+    void ApplMeshTransform(ScaleAndBiasDlg* sender);
+    void ApplyMatrixMeshTransform(ScaleAndBiasDlg* sender);
 
   private :
     QTimer*                                   m_pRedrawTimer;
@@ -479,6 +483,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
                                    struct VersionNumber& iv3d,
                                    struct VersionNumber& tuvok);
     void DeleteUpdateFile();
+    void CheckForMeshCapabilities(bool bNoUserInteraction, 
+                                  QStringList files=QStringList(""));
 
     // ftp
     FTPDialog*   m_pFTPDialog;
