@@ -194,9 +194,8 @@ void MainWindow::RemoveGeometry() {
   }
 }
 
-void MainWindow::AddGeometry() {
+void MainWindow::AddGeometry(std::string filename) {
   if (!m_pActiveRenderWin) return;
-
   UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
   if (!currentDataset) {
     ShowCriticalDialog("Mesh Import Failed.",
@@ -204,6 +203,50 @@ void MainWindow::AddGeometry() {
     return;
   }
 
+  PleaseWaitDialog pleaseWait(this);
+
+  pleaseWait.SetText("Loading mesh, please wait  ...");
+  pleaseWait.AttachLabel(&m_MasterController);
+
+  Mesh* m = NULL;
+  try {
+    m = m_MasterController.IOMan()->LoadMesh(filename);
+  } catch (const tuvok::io::DSOpenFailed& err) {
+    WARNING("Conversion failed! %s", err.what());
+  }
+
+  if (m == NULL)  {
+    ShowCriticalDialog("Mesh Import Failed.",
+                 "Could not load mesh file. For details please "
+                 "check the debug log ('Help | Debug Window').");
+    return;
+  }
+
+  // make sure we have at least normals
+  if (m->GetNormalIndices().empty()) {
+    pleaseWait.SetText("Computing normals, please wait  ...");
+    m->RecomputeNormals();
+  }
+
+  pleaseWait.SetText("Integrating Mesh into volume file, please wait  ...");
+
+  if (!currentDataset->AppendMesh(m)) {
+    pleaseWait.close();
+    ShowCriticalDialog("Mesh Import Failed.",
+                 "Could not integrate the mesh into this UVF file. "
+                 "For details please check the debug log "
+                 "('Help | Debug Window').");
+    delete m;
+  } else {
+    pleaseWait.SetText("Creating render resources, please wait  ...");
+    m_pActiveRenderWin->GetRenderer()->ScanForNewMeshes();
+    pleaseWait.close();
+    UpdateExplorerView(true);
+  }
+  delete m;
+}
+
+void MainWindow::AddGeometry() {
   QFileDialog::Options options;
 #ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
@@ -222,103 +265,12 @@ void MainWindow::AddGeometry() {
                                   dialogString,
                                   &selFilter, options);
   if(geoFile.isEmpty()) {
-    WARNING("No Geometry file. Dialog was probably cancelled.");
     return;
   }
 
   settings.setValue("Folders/AddTriGeo", QFileInfo(geoFile).absoluteDir().path());
 
-
-/*  bool bInplace = QMessageBox::Yes ==
-     QMessageBox::question(NULL, "Add Mesh to Volume",
-      "Do you want to integrate the mesh into this volume? If you select "
-      "'no' than a copy of this volume file with the mesh is created.",
-      QMessageBox::Yes, QMessageBox::No);
-
-  if (bInplace)  {
-*/  
-    PleaseWaitDialog pleaseWait(this);
-
-    pleaseWait.SetText("Loading mesh, please wait  ...");
-    pleaseWait.AttachLabel(&m_MasterController);
-
-    Mesh* m = NULL;
-    try {
-      m = m_MasterController.IOMan()->LoadMesh(string(geoFile.toAscii()));
-    } catch (const tuvok::io::DSOpenFailed& err) {
-      WARNING("Conversion failed! %s", err.what());
-    }
-
-    if (m == NULL)  {
-      ShowCriticalDialog("Mesh Import Failed.",
-                   "Could not load mesh file. For details please "
-                   "check the debug log ('Help | Debug Window').");
-      return;
-    }
-
-    // make sure we have at least normals
-    if (m->GetNormalIndices().empty()) {
-      pleaseWait.SetText("Computing normals, please wait  ...");
-      m->RecomputeNormals();
-    }
-
-    pleaseWait.SetText("Integrating Mesh into volume file, please wait  ...");
-
-
-    if (!currentDataset->AppendMesh(m)) {
-      ShowCriticalDialog("Mesh Import Failed.",
-                   "Could not integrate the mesh into this UVF file. "
-                   "For details please check the debug log "
-                   "('Help | Debug Window').");
-      delete m;
-    } else {
-      pleaseWait.SetText("Creating render resources, please wait  ...");
-      m_pActiveRenderWin->GetRenderer()->ScanForNewMeshes();
-      UpdateExplorerView(true);
-    }
-    pleaseWait.close();
-    delete m;
- /* } else {
-
-    strLastDir = settings.value("Folders/AddTriUVF", ".").toString();
-    QString uvfFile =
-      QFileDialog::getSaveFileName(this, "Select Target UVF File", strLastDir,
-                                    "UVFs (*.uvf)",
-                                    &selFilter, options);
-    if(uvfFile.isEmpty()) {
-      WARNING("No UVF file. Dialog was probably cancelled.");
-      return;
-    }
-
-    if (QFileInfo(uvfFile) == QFileInfo(m_pActiveRenderWin->GetDatasetName())) {
-      ShowCriticalDialog("No Inplace Conversion.",
-           "Inplace conversion not supported, please select another UVF file.");
-      return;
-    }
-
-    settings.setValue("Folders/AddTriUVF", QFileInfo(uvfFile).absoluteDir().path());
-    settings.setValue("Folders/AddTriGeo", QFileInfo(geoFile).absoluteDir().path());
-
-    try {
-      m_MasterController.IOMan()->AddMesh(currentDataset->GetUVFFile(),
-                                             string(geoFile.toAscii()),
-                                             string(uvfFile.toAscii()));
-    } catch (const tuvok::io::DSOpenFailed& err) {
-      ShowCriticalDialog("Mesh Import Failed.",
-                   "Could not integrate maesh file into UVF file. Please"
-                   " check the debug log ('Help | Debug Window') for "
-                   "errors, and/or use 'Help | Report an Issue' to "
-                   "notify the ImageVis3D developers.");
-      T_ERROR(err.what());
-      return;
-    }
-    if(QMessageBox::Yes ==
-       QMessageBox::question(NULL, "Geometry Import Completed",
-        "Sucesfully integrated mesh data into UVF file. Do you want to load the new dataset now?",
-        QMessageBox::Yes, QMessageBox::No)) {
-      LoadDataset(string(uvfFile.toAscii()));
-    }
-  }*/
+  AddGeometry(string(geoFile.toAscii()));
 }
 
 void MainWindow::LoadDataset(std::string strFilename) {
@@ -763,11 +715,6 @@ bool MainWindow::ExportIsosurface(UINT32 iLODLevel, string targetFileName) {
     pleaseWait.AttachLabel(&m_MasterController);
 
     int iValue = horizontalSlider_Isovalue->value();
-    DOUBLEVECTOR3 vfRescaleFactors;
-    vfRescaleFactors.x = doubleSpinBox_RescaleX->value();
-    vfRescaleFactors.y = doubleSpinBox_RescaleY->value();
-    vfRescaleFactors.z = doubleSpinBox_RescaleZ->value();
-
     const UVFDataset *ds = dynamic_cast<UVFDataset*>(
       &(m_pActiveRenderWin->GetRenderer()->GetDataset())
     );
@@ -776,7 +723,7 @@ bool MainWindow::ExportIsosurface(UINT32 iLODLevel, string targetFileName) {
 
 
     bool bResult = m_MasterController.IOMan()->ExtractIsosurface(
-                      ds, iLODLevel, iValue, vfRescaleFactors, color,
+                      ds, iLODLevel, iValue, color,
                       targetFileName, m_strTempDir
                    );
     pleaseWait.close();
@@ -829,8 +776,18 @@ void MainWindow::ExportIsosurface() {
         iLODLevel = lodDlg.GetLOD();
     }
 
-    if(!ExportIsosurface(UINT32(iLODLevel), targetFileName))
+    if(!ExportIsosurface(UINT32(iLODLevel), targetFileName)) {
       ShowCriticalDialog( "Error during mesh export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+      return;
+    }
+
+    if(QMessageBox::Yes ==
+     QMessageBox::question(this, "Add Mesh to Project",
+      "Do you want to integrate load the surface a part of this project?",
+      QMessageBox::Yes, QMessageBox::No)) {
+
+      AddGeometry(targetFileName);
+    }
   }
 }
 
