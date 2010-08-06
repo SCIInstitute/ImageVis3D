@@ -344,7 +344,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
     bool                                      m_bStayOpenAfterScriptEnd;
 
-    void MainWindow::AddGeometry(std::string filename);
+    void AddGeometry(std::string filename);
 
     RenderWindow* WidgetToRenderWin(QWidget* w);
     RenderWindow* CreateNewRenderWindow(QString dataset);
