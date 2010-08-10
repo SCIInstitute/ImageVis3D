@@ -57,13 +57,17 @@ Grid Types
 ----------
 
 Data can be defined on a wide variety of grid types.  ImageVis3D can
-only handle what is called "regular" gridded data.  Think of an image
-file: it is defined as a series of pixels, with an implicit ordering
-and distance between each pixel.  That is, if we call a pixel `x` and
-define a pixel `x+1` to be the pixel to the right of `x`, then we
-know that the distance between `x` and `x+1` is equal to the distance
-between `x+1` and `x+2`.  Regular data is an extension of this property
-to 3D: all data are layed out on an even grid.
+handle "regular" gridded data as well as geometry, though at present
+all geometry data must be associated with some kind of volume data.
+
+
+Gridded data is similar to an image file: it is defined as a series of
+voxels, with an implicit ordering and distance between each voxels.
+That is, if we call a pixel `x` and define a pixel `x+1` to be the
+pixel to the right of `x`, then we know that the distance between `x`
+and `x+1` is equal to the distance between `x+1` and `x+2`.  Regular
+data is an extension of this property to 3D: all data are layed out on
+an even grid.
 
 .Example Regular Gridded Data (`.` represents a grid location)
 ........................................
@@ -81,20 +85,15 @@ That is, the difference in space between `x` and `x+1` need not be
 equal to the difference between `y` and `y+1`.  More succinctly, the
 spacing information can vary per-dimension, but not within a dimension.
 
-.Unstructured Data (`.`: grid location, `\-/x`: edge)
-........................................
-  .----.--.---.---.
-   \   |   \ /    .
-    \  .    x     |\
-     ./    / \    | \
-      \   .---.---.--.
-       \ /   /
-        .---.
-........................................
+ImageVis3D can also associate geometry with a volume.  Generally this
+must be in the format of a triangle mesh.
 
-If your data do not exemplify regular grid data, ImageVis3D will not be
-able to handle it natively.  For now, your best bet is to import such data
-into ImageVis3D is to resample it onto a regular grid.
+If your data do not exemplify regular grid data or geometry, ImageVis3D
+will not be able to handle it natively.  For now, your best bet to
+import such data into ImageVis3D is to resample it onto a regular grid.
+The http://www.visitusers.org/[VisIt] software package might be able to
+do this resampling for you; a sample Python script which uses VisIt to
+do this is given later in this document.
 
 Existing File Formats
 ---------------------
@@ -104,6 +103,11 @@ about into its native UVF container format.  You might also consider
 rewriting data in one of these formats to better support ImageVis3D.
 If your data are inherently single-block, this will be your quickest
 path to loading and visualizing your data.
+
+Volume Data
+~~~~~~~~~~~
+
+For 3D gridded volume data, ImageVis3D supports:
 
 - *DICOM stacks* (`.dcm` extension, normally): A set of DICOM files which form a
   volume.  Use the "Load Dataset from Directory" feature to load these
@@ -129,7 +133,7 @@ path to loading and visualizing your data.
 - *Raw* data, optionally compressed
 
 DICOM Stacks
-~~~~~~~~~~~~
+^^^^^^^^^^^^
 
 DICOMs are notoriously difficult to parse, work with, and have
 poor access times.  Do not use DICOM if you are not already.  We will not
@@ -138,7 +142,7 @@ the entire ~3000 page specification on link:http://medical.nema.org/[the
 official DICOM web site].
 
 Image Stacks
-~~~~~~~~~~~~
+^^^^^^^^^^^^
 
 ImageVis3D supports loading sets of images in the common formats.
 Specifications for each image type are beyond the scope of this
@@ -150,7 +154,7 @@ before it is handed to ImageVis3D's IO subsystem.  This is fixable, but
 at present has yet to be a pressing concern.
 
 QVis
-~~~~
+^^^^
 
 QVis is a simple 'header + data' file format.  The file which the user
 selects via the ImageVis3D UI, which must have the extension `.dat`, is
@@ -202,7 +206,7 @@ If you would like to write your own QVis data exporters, we recommend:
   Patches are welcome.
 
 Nearly Raw Raster Data (NRRD)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 NRRD is a very simple format comprised of a header with
 accompanying data.  The NRRD file format is described extensively
@@ -221,7 +225,7 @@ a second file comprising the data.  In the "detached" form, the file
 extension is normally ".nhdr" instead of ".nrrd".
 
 Metamorph "Stack" Files
-~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Metamorph "Stack" files are a special case of TIFF.  ImageVis3D can
 read them by forcing the underlying `libtiff` library to read TIFF
@@ -232,7 +236,7 @@ past and present Metamorph users.  If you have a choice, do not use
 this format.
 
 TIFF Volumes
-~~~~~~~~~~~~
+^^^^^^^^^^^^
 
 While the majority of TIFFs contain just a single image inside them,
 a little known feature of the format is that it stores each image in
@@ -255,14 +259,14 @@ library, which has link:http://www.libtiff.org/libtiff.html[excellent
 documentation].
 
 VFF
-~~~
+^^^
 
 This format was written for a specific collaborator.  It is a `header
 + data' format, very similar to an attached NRRD.  Little other
 information is available at this time.
 
-Brick of Values
-~~~~~~~~~~~~~~~
+Brick of Values (BOV)
+^^^^^^^^^^^^^^^^^^^^^
 
 This is a compatibility format, meant to allow importing data from the
 VisIt software package.  It is a header + data format, very similar in
@@ -288,7 +292,7 @@ After modifying the `db = ...` line, invoke the script with:
 `/path/to/visit -cli -nowin -s script.py`.
 
 Fraunhofer Raw Volumes
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^
 
 This is a simple binary format which directly supports a collaborator's
 work.  Not much else is known at this time, but you could ask for more
@@ -297,7 +301,7 @@ link:https://lists.sci.utah.edu/sympa/subscribe/tuvok-developers[tuvok-developer
 mailing list.
 
 Inveon
-~~~~~~
+^^^^^^
 
 The Inveon format is a header + data format, similar in concept to a
 detached NRRD.  In ImageVis3D, users select a `.hdr` file, which is
@@ -314,7 +318,7 @@ therefore it is recommended that other formats be used in your
 visualization solutions, if you have the choice.
 
 Analyze
-~~~~~~~
+^^^^^^^
 
 The Analyze file format was developed at the Mayo Clinic as part of a
 software package of the same name.  Do note that there are multiple
@@ -324,7 +328,7 @@ Data sets in this format consist of small `.hdr` files which describe
 the data, and then put raw data in `.img` files.
 
 Raw Data
-~~~~~~~~
+^^^^^^^^
 
 If ImageVis3D cannot identify your data type, it will assume the data
 are raw and open up a conversion dialog to specify the data parameters.
@@ -343,13 +347,197 @@ batch mode, as is the case when scripting commands are being executed.
 The source repository includes a command line tool to batch convert a
 set of datasets.
 
-Adding a Converter
-------------------
+Geometry Data
+~~~~~~~~~~~~~
+
+Geometry also supports loading meshes and rendering them concurrently
+with volumes.
+
+- *OBJ* (`.obj` extension): geometry definition popularized by Wavefront
+software packages.
+- *PLY* (`.ply` extension): the file format used for the
+http://graphics.stanford.edu/projects/mich/[Digital Michelangelo]
+project.
+- *MedAlyVis* (`.trk`, `.tri` extensions): collaborator-specific format.
+- *IV3D Mobile* (`.g3d`, `.g3dx` extensions): format used to render geometry in
+ImageVis3D Mobile.
+
+
+OBJ
+^^^
+
+The http://en.wikipedia.org/wiki/Obj[obj file format] is a fairly
+simple ascii-based file format which is incredibly popular.  This is a
+good format to choose for interoperation with other tools, but is not
+efficient and thus not a good choice for large data.
+
+ImageVis3D can only render geometry which consists of triangular
+faces.  OBJ files can, however, store meshes with an arbitrary number
+of vertices per face.  ImageVis3D will triangulate such data during
+conversion.
+
+PLY
+^^^
+
+PLY is the format used for a variety of models from the Stanford model
+repository.  These are typically scans of objects which have been
+obtained via a high resolution laser scanner.  The models have become
+very popular in visualization and computer graphics research, as a test
+bed for algorithms.
+
+MedAlyVis
+^^^^^^^^^
+
+This software does not appear to be generally available, but has a
+relatively simple format.  The format might be a good choice if you do
+not have an existing format and need to import some simple triangle
+meshes into ImageVis3D.
+
+.MedAlyVis Geometry File Format
+[options="header"]
+|=============================================================================
+| Field | Type | Byte Offset | Width
+| number of vertices | 32-bit unsigned integer | 0 | 4
+| number of triangles | 32-bit unsigned integer | 4 | 4
+| vertex | float | 8 | 12/element
+| triangle indices | 3x 32-bit unsigned integer | 8 + sizeof(vertex data) |
+12/element
+|=============================================================================
+
+Do note that data are assumed to be written out in the same endianness
+of the machine which is reading the data.
+
+IV3D Mobile
+^^^^^^^^^^^
+
+ImageVis3D mobile is the mobile counterpart to ImageVis3D.
+
+Adding a Volume Data Converter
+------------------------------
 
 :leveloffset: 1
 include::add-converter.adoc[]
 
 :leveloffset: 0
+
+Adding a Geometry Converter
+---------------------------
+
+The conversion interface for geometric data is very similar to that of
+volume data.
+
+1. Create a new class, derived from `AbstrGeoConverter`.
+2. Register your class with the IO subsystem.
+3. Override the `ConvertToMesh` function to read a file and create an
+   in-memory mesh.
+
+Geometry Converter Skeleton
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You'll need both a header file (`.h` and an implementation file
+(`.cpp`) for your format.  They should define a class, derived from
+`AbstrGeoConverter`, which implements the `ConvertToMesh` method.
+Here's an example header file:
+
+[c++]
+source~~~~~
+#include "AbstrGeoConverter.h"
+
+namespace tuvok {
+
+class YourConverter : public AbstrGeoConverter {
+public:
+  YourConverter();
+  virtual Mesh* ConvertToMesh(const std::string& strFilename);
+};
+
+}
+source~~~~
+
+For now, just sketch out the implementation file by returning `NULL` in
+the mesh loading routine:
+
+[c++]
+source~~~~
+#include "YourConverter.h"
+
+YourConverter::YourConverter() {}
+Mesh* YourConverter::ConvertToMesh(const std::string& fn)
+{
+    return NULL;
+}
+source~~~~
+
+Building Your Geometry Converter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Just like when implementing your volume data converter, you'll need to
+add your source files to the project files so that they will be built
+as part of ImageVis.  Open up `Tuvok/Tuvok.pro` in a text editor and
+add your converter to both the '`HEADERS`' and '`SOURCES`' variables:
+
+............................
+  HEADERS += \
+    ...
+    IO/AbstrGeoConverter.h \
+    IO/YourFileHere.h \
+    IO/PLYGeoConverter.h \
+    ...
+  SOURCES += \
+    ...
+    IO/AbstrGeoConverter.cpp \
+    IO/YourFileHere.cpp \
+    IO/PLYGeoConverter.cpp \
+    ...
+............................
+
+On Windows, the visual studio project files are separate from the qmake
+profile files.  Please be sure to add your new files into the `.pro`
+file anyway, however; otherwise your additions will not be available on
+Linux or Apple platforms.
+
+Register Your Geometry Converter with the IO Subsystem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To inform ImageVis3D that your converter exists, you need to register
+it with the IO subsystem.  Open up `IOManager.cpp` and add a `#include`
+line for your converter's header file.  Then, in the `IOManager`
+constructor, add a line which creates an instance of your converter and
+adds it to the list of available geometry converters:
+
+[c++]
+source~~~~
+  m_vpGeoConverters.push_back(new YourConverter());
+source~~~~
+
+Register Your File Extensions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The constructor for your geometry converter should modify two internal
+class variables: `m_vConverterDesc` and `m_vSupportedExt`.  The former
+should be set to a short human-readable string that describes the
+format.  This must be a single line and should generally be a short
+phrase of a few words or less -- for example, "Wavefront Object File".
+The second variable is a vector which holds the valid file extensions
+for the format, using only capital letters and without the trailing
+".".
+
+[c++]
+source~~~~
+YourConverter::YourConverter()
+{
+  m_vConverterDesc = "My File Format";
+  m_vSupportedExt.push_back("YOUR");
+  m_vSupportedExt.push_back("YUR");
+}
+source~~~~~
+
+Implement `ConvertToMesh`
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is where all the work is done.  You should allocate a
+`tuvok::Mesh` on the heap, fill in all the information you can, and
+return it from this method.
 
 Implementing a Reader Parallel to UVF
 -------------------------------------
@@ -358,6 +546,9 @@ If your data format meets certain criteria, it is possible for you to
 write a reader which sits parallel to UVF.  This will allow ImageVis3D
 to read your data natively, without any conversion process.  For
 extremely large data, a conversion process is infeasible.
+
+NOTE: Only volume data is currently supported via this interface;
+geometry data must be loaded via the conversion interface.
 
 The criteria your format must meet are:
 
@@ -710,9 +901,12 @@ order, these components are:
   endian data.  This effects all subsequent data in the file, from the next
   values in this header, to data stored within UVF's blocks.
 - An unsigned, 64-bit integer which gives the version of the UVF file.
-  ImageVis3D has been writing out version 2 UVF files since 1.0 was released in
-  May 2009.  ImageVis3D does not support version 0 or 1 UVF files, and any
-  differences between those and version 2 will not be documented here.
+  ImageVis3D wrote out version 2 UVF files since 1.0 was released in May 2009.
+  However, starting in August 2010 ImageVis3D has begun writing
+  out version 3 UVF files, and will do so in a release starting with
+  version 2.0.  ImageVis3D does not support version 0 or 1 UVF files,
+  and any differences between those and version 2 will not be documented
+  here.
 - An unsigned, 64-bit integer which details how the file checksum was
   calculated, according to the following table.
 
@@ -785,7 +979,7 @@ in order, is:
 | 5    | 1D Histogram
 | 6    | 2D Histogram
 | 7    | Maximum and minimum data values (acceleration structure)
-| 8    | Triangle soup
+| 8    | Geometry
 | *    | Undefined.  Reserved.
 |====================================================================
 
@@ -882,41 +1076,49 @@ dimension of the data.
 _(Sadly, this part of the documentation is not complete.  In the meantime, see
 the source for more information.)_
 
-Triangle Soup Block
-+++++++++++++++++++
+Geometry Block
+++++++++++++++
 
-As one might guess, this block stores a collection of triangles, in
-"soup" form (that is, there is guarantee that the triangles form a
-surface, nor are they written out with any defined order).
+This block stores a collection of indexed triangles.  It exists only in
+version 3 UVF files and up; it is an error to write a geometry block
+into a UVF with a version number of 2 or lower.
 
-Triangle soup is 3-dimensional.  The format for triangle soup is quite
+Geometry data are 3-dimensional.  The format for the block is quite
 simple.  First, a header gives size information for arrays:
 
-- First 64-bits: unsigned integer `n_vertices`
-- Next 64-bits: unsigned integer `n_normals`
-- Next 64-bits: unsigned integer `n_texcoords`
-- Next 64-bits: unsigned integer `n_colors`
-- Next 64-bits: unsigned integer `n_vertex_indices`
-- Next 64-bits: unsigned integer `n_normal_indices`
-- Next 64-bits: unsigned integer `n_texcoord_indices`
-- Next 64-bits: unsigned integer `n_color_indices`
+.Geometry Block Header
+[cols="1,6,1,2", options="header"]
+|=============================================================================
+| Byte offset | Field                         | Field Width | Field Type
+|  0          | number of vertices            |     8       | unsigned integer
+|  8          | number of normals             |     8       | unsigned integer
+| 16          | number of texture coordinates |     8       | unsigned integer
+| 24          | number of color values        |     8       | unsigned integer
+| 32          | number of vertex indices      |     8       | unsigned integer
+| 40          | number of normal indices      |     8       | unsigned integer
+| 48          | number of tex coord indices   |     8       | unsigned integer
+| 64          | number of color indices       |     8       | unsigned integer
+| 72          | default color, "R" channel    |     4       | IEEE-754 float
+| 76          | default color, "G" channel    |     4       | IEEE-754 float
+| 80          | default color, "B" channel    |     4       | IEEE-754 float
+| 84          | default color, "A" channel    |     4       | IEEE-754 float
+| 88          | length of a string            |     8       | unsigned integer
+| 96          | description of the data       |   variable  | character
+| 96+str len  | vertices per polygon          |     8       | unsigned integer
+|=============================================================================
 
-Then we find the data:
+Afterwards comes the `vertices`, `normals`, `texture coordinates`, and
+`color` data, all as IEEE-754 floating point arrays, and in that order.
+They are sized as given in the header.  Note that the sizes give the
+number of elements in the array, not the number of elements.  Since
+a vertex consists of 3 elements, for example, if there are 3 vertex
+indices that means there is only a single triangle in the geometry
+block.
 
-- `n_vertices` 32-bit IEEE-754 FP values representing the triangle vertices.
-- `n_normals` 32-bit IEEE-754 FP values representing the triangle normals.
-- `n_texcoords` 32-bit IEEE-754 FP values representing texture coordinates
-- `n_colors` 32-bit IEEE-754 FP values representing color information
-
-and finally indices into that data:
-
-- `n_vertex_indices` 32-bit unsigned integers indexing into the triangle
-vertices.
-- `n_normal_indices` 32-bit unsigned integers indexing into the normals.
-- `n_texcoord_indices` 32-bit unsigned integers indexing into the texture
-coordinates.
-- `n_color_indices` 32-bit unsigned integers indexing into the array of
-colors.
+Finally come the indices into the data.  These come in the same order
+(vertex indices, then normal indices, then texture coordinate indices,
+followed by color indices), and again are sized as given in the header.
+However, index data is always stored as 32-bit unsigned integers.
 
 Contribute Back
 ---------------

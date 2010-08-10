@@ -1,4 +1,3 @@
-import os
 db = "/path/to/dataset.silo"
 OpenDatabase(db)
 
