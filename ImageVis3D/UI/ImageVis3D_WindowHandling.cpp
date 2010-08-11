@@ -1088,9 +1088,10 @@ void MainWindow::ToggleClearViewControls() {
     checkBox_ClearView->setVisible(false);
     frame_ClearView->setVisible(false);
 
-    QString reason = tr("ClearView Is Disabled because %1").arg(m_pActiveRenderWin->GetRenderer()->ClearViewDisableReason().c_str());
+    QString reason = tr("ClearView is disabled because %1").arg(m_pActiveRenderWin->GetRenderer()->ClearViewDisableReason().c_str());
     label_CVDisableReason->setText(reason);
     label_CVDisableReason->setVisible(true);
+    label_CVDisableReason->setWordWrap(true);
     m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
   }
 }
