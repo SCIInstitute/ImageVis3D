@@ -85,8 +85,10 @@ That is, the difference in space between `x` and `x+1` need not be
 equal to the difference between `y` and `y+1`.  More succinctly, the
 spacing information can vary per-dimension, but not within a dimension.
 
-ImageVis3D can also associate geometry with a volume.  Generally this
-must be in the format of a triangle mesh.
+ImageVis3D can also associate geometry with a volume.  This geometry
+must be in the form of a triangle mesh or a set of lines.  Note that
+some formats have more complicated meshes, which are triangulated on
+the fly during load to meet this requirement.
 
 If your data do not exemplify regular grid data or geometry, ImageVis3D
 will not be able to handle it natively.  For now, your best bet to
