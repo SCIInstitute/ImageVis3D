@@ -170,6 +170,7 @@ void MainWindow::RemoveGeometry() {
   UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
   if (!currentDataset) return;
 
+
   PleaseWaitDialog pleaseWait(this);
   pleaseWait.SetText("Removing Mesh from UVF file...");
   pleaseWait.AttachLabel(&m_MasterController);
@@ -180,6 +181,8 @@ void MainWindow::RemoveGeometry() {
     T_ERROR("No Mesh selected.");
     return;
   }
+
+  m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
 
   if (!currentDataset->RemoveMesh(size_t(iCurrent-1))) {
     pleaseWait.close();
@@ -192,6 +195,8 @@ void MainWindow::RemoveGeometry() {
     UpdateExplorerView(true);
     pleaseWait.close();
   }
+
+    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
 }
 
 void MainWindow::AddGeometry(std::string filename) {
@@ -230,6 +235,8 @@ void MainWindow::AddGeometry(std::string filename) {
 
   pleaseWait.SetText("Integrating Mesh into volume file, please wait  ...");
 
+  m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
+
   if (!currentDataset->AppendMesh(m)) {
     pleaseWait.close();
     ShowCriticalDialog("Mesh Import Failed.",
@@ -244,6 +251,8 @@ void MainWindow::AddGeometry(std::string filename) {
     UpdateExplorerView(true);
   }
   delete m;
+
+  m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
 }
 
 void MainWindow::AddGeometry() {
@@ -362,10 +371,15 @@ void MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList f
 
 bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
                              bool bNoUserInteraction) {
+
   if(files.empty()) {
     T_ERROR("No files!");
     return false;
   }
+
+  PleaseWaitDialog pleaseWait(this);
+  pleaseWait.SetText("Loading dataset, please wait  ...");
+  pleaseWait.AttachLabel(&m_MasterController);
 
   // First check to make sure the list of files we've been given makes sense.
   for(QStringList::const_iterator fn = files.begin();
@@ -425,7 +439,6 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
     }
 
     PleaseWaitDialog pleaseWait(this);
-
     pleaseWait.SetText("Converting, please wait  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
@@ -866,6 +879,7 @@ void MainWindow::MergeDatasets() {
 
 void MainWindow::SaveAspectRatioToUVF() {
   if (m_pActiveRenderWin) {
+    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
 
     PleaseWaitDialog pleaseWait(this);
     pleaseWait.SetText("Writing rescale factors to file...");
@@ -883,5 +897,6 @@ void MainWindow::SaveAspectRatioToUVF() {
     doubleSpinBox_RescaleZ->setValue(vfRescaleFactors.z);
 
     pleaseWait.close();
+    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
   }
 }

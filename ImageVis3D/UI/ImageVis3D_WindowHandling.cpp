@@ -953,6 +953,8 @@ void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {
 
   const FLOATMATRIX4& m = m_pActiveRenderWin->GetRenderer()->GetMeshes()[sender->m_index]->GetTransformFromOriginal();
 
+  m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
+
   if (!currentDataset->GeometryTransformToFile(size_t(sender->m_index),m)) {
     pleaseWait.close();
     ShowCriticalDialog("Transform Save Failed.",
@@ -963,6 +965,8 @@ void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {
     m_pActiveRenderWin->GetRenderer()->GetMeshes()[sender->m_index]->DeleteTransformFromOriginal();
     pleaseWait.close();
   }
+
+    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
 }
 
 void MainWindow::SetMeshDefColor() {
