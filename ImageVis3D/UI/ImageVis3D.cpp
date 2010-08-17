@@ -645,6 +645,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
   if (m_bAutoSaveGEO) SaveDefaultGeometry();
   if (m_bAutoSaveWSP) SaveDefaultWorkspace();
   m_MasterController.RemoveDebugOut(m_pDebugOut);
+  m_pDebugOut = NULL;
   event->accept();
 }
 

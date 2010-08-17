@@ -214,7 +214,14 @@ void MainWindow::ParseAndExecuteDebugCommand() {
 
   m_MasterController.ScriptEngine()->ParseLine(lineEdit_DebugCommand->text().toStdString());
 
-  GetDebugOut()->SetShowMessages(bTemp);
+  if (GetDebugOut()) {
+    GetDebugOut()->SetShowMessages(bTemp);
+  } else {
+    // we executed a command - such as "quit" - that caused imagevis
+    // to close so all the widgets are invalid and nothing is left to be done
+    return;
+  }
+
   if (listWidget_DebugOut->count() > 0)
     listWidget_DebugOut->setCurrentRow(listWidget_DebugOut->count()-1);
 
