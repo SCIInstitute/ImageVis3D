@@ -57,9 +57,14 @@ mkdir -p staging
 cp -R CmdLineConverter/Build/uvfconvert.app staging/
 cp -R Build/ImageVis3D.app staging/
 echo "Running Qt's mac deployment tool on uvfconvert..."
-pushd staging/
+pushd staging/ &>/dev/null
   ${macdeployqt} uvfconvert.app
-popd
+popd &>/dev/null
+echo "Copying manuals into root of dmg..."
+pushd staging/ &>/dev/null
+  ln ImageVis3D.app/Contents/Resources/ImageVis3D.pdf
+  ln ImageVis3D.app/Contents/Resources/$(basename "${import}")
+popd &>/dev/null
 hdiutil create                    \
   -volname "ImageVis3D"           \
   -srcfolder staging/             \
