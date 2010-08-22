@@ -35,10 +35,12 @@ revision
 
 echo "Copying ImageVis3D Manual into app..."
 man=$(manual)
+import=$(import_data_manual)
 pushd ${PREFIX}/Contents/Resources
   rm -f ImageVis3D.pdf
   curl -skLO "${man}"
   mv $(basename "${man}") ImageVis3D.pdf
+  curl -skLO "${import}"
 popd
 
 tarball=$(nm_tarball)

@@ -26,6 +26,7 @@ cd ..
 pushd Scripts\installer
   del /f ImageVis3D.pdf
   wget --no-check-certificate http://www.sci.utah.edu/images/docs/imagevis3d.pdf
+  wget --no-check-certificate http://ci.sci.utah.edu:8011/devbuilds/GettingDataIntoImageVis3D.pdf
   rename imagevis3d.pdf ImageVis3D.pdf
 popd
 

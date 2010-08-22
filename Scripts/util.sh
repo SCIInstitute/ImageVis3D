@@ -197,3 +197,9 @@ function manual
       cut -d \" -f 2)
   echo "${m}"
 }
+
+# Returns the current location of the data manual
+function import_data_manual
+{
+  echo "http://ci.sci.utah.edu:8011/devbuilds/GettingDataIntoImageVis3D.pdf"
+}
