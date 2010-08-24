@@ -42,6 +42,7 @@
 
 #include <string>
 #include <QtGui/QListWidget>
+#include <QtCore/QMutex>
 #include <StdDefines.h>
 #include "../Tuvok/Basics/ArcBall.h"
 #include "../Tuvok/Basics/Plane.h"
@@ -182,6 +183,7 @@ class RenderWindow
     virtual void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {m_iTimeSliceMSecsActive = iActive; m_iTimeSliceMSecsInActive = iInactive;}
 
   protected:
+    QMutex            m_strMultiRenderGuard;
     QString           m_strDataset;
     QString           m_strID;
     AbstrRenderer*    m_Renderer;

@@ -1280,6 +1280,11 @@ void RenderWindow::ResizeRenderer(int width, int height)
 
 void RenderWindow::PaintRenderer()
 {
+  if (!m_strMultiRenderGuard.tryLock()) {
+    MESSAGE("Rejecting dublicate Paint call");
+    return;
+  }
+
   if (m_Renderer != NULL && m_bRenderSubsysOK) {
     if (!m_Renderer->Paint()) {
       static bool bBugUseronlyOnce = true;
@@ -1321,6 +1326,7 @@ void RenderWindow::PaintRenderer()
   }
 
  PaintOverlays();
+ m_strMultiRenderGuard.unlock();
 }
 
 void RenderWindow::ResetRenderingParameters()
