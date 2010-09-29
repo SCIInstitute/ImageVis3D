@@ -75,8 +75,10 @@ void MainWindow::ToggleStereoMode() {
     m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::SM_RB);
   else if (radioButton_ScanlineStereo->isChecked()) 
     m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::SM_SCANLINE);
-  else 
+  else if (radioButton_SideBySide->isChecked()) 
     m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::SM_SBS);
+  else 
+    m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::SM_AF);
 }
 
 void MainWindow::ToggleStereoEyeSwap() {

@@ -4563,6 +4563,13 @@ smaller values while make it apear behind. While the first effect usualy looks m
           </property>
          </widget>
         </item>
+         <item>
+           <widget class="QRadioButton" name="radioButton_AlterFrame">
+             <property name="text">
+               <string>Alternating Frame</string>
+             </property>
+           </widget>
+         </item>
        </layout>
       </widget>
      </item>
@@ -7074,7 +7081,23 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
-  <connection>
+   <connection>
+     <sender>radioButton_SideBySide</sender>
+     <signal>toggled(bool)</signal>
+     <receiver>MainWindow</receiver>
+     <slot>ToggleStereoMode()</slot>
+     <hints>
+       <hint type="sourcelabel">
+         <x>1442</x>
+         <y>1347</y>
+       </hint>
+       <hint type="destinationlabel">
+         <x>384</x>
+         <y>1863</y>
+       </hint>
+     </hints>
+   </connection>
+   <connection>
    <sender>actionAdd_Geometry_to_Data_Set</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>

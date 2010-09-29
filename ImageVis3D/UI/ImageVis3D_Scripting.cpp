@@ -80,6 +80,10 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "rotateZ", "angle","rotate the data by \"angle\" degree around the z axis");
   pScriptEngine->RegisterCommand(this, "translate", "x y z","translate the data by [x,y,z]");
   pScriptEngine->RegisterCommand(this, "reset", "","reset all rendering parameters to their inital state");
+  pScriptEngine->RegisterCommand(this, "setLOD", "true/false", "enabled/disables the LOD meachnism and always renders only the high res dataset");
+  pScriptEngine->RegisterCommand(this, "setStereo", "true/false", "enabled/disables stereo rendering");
+  pScriptEngine->RegisterCommand(this, "setStereoMode", "0/1/2/3", "choose stereo mode, see radiobox in stereo widget for modes");
+  pScriptEngine->RegisterCommand(this, "setStereoDisparity", "disparity", "set the eye distance in stereo mode");
   pScriptEngine->RegisterCommand(this, "capturesingle", "targetfile", "capture a single image into targetfile");
   pScriptEngine->RegisterCommand(this, "capturesequence", "targetfile", "capture a single image into targetfile_counter");
   pScriptEngine->RegisterCommand(this, "stayopen", "", "do not close the application at the end of the script");
@@ -106,8 +110,8 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "open")            { bResult = LoadDataset(strParams); if (!bResult) {strMessage = "Unable to load dataset file "+strParams[0];}} else
   if (strCommand == "open1d")          { bResult = Transfer1DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0];}} else
   if (strCommand == "open2d")          { bResult = Transfer2DLoad(strParams[0]); if (!bResult) {strMessage = "Unable to load transfer function "+strParams[0];}} else
-  if (strCommand == "setiso")          { SetIsoValue(float(atof(strParams[0].c_str())));} else
-  if (strCommand == "setcviso")        { SetClearViewIsoValue(float(atof(strParams[0].c_str()))); } else
+  if (strCommand == "setiso")          { SetIsoValue(SysTools::FromString<float>(strParams[0]));} else
+  if (strCommand == "setcviso")        { SetClearViewIsoValue(SysTools::FromString<float>(strParams[0])); } else
   if (strCommand == "mode1d")          { Use1DTrans();} else
   if (strCommand == "mode2d")          { Use2DTrans();} else
   if (strCommand == "modeiso")         { UseIso();} else
@@ -127,8 +131,13 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "pack")            { bResult = Pack(strParams);} else
   if (strCommand == "upload")          { bResult = FtpTransfer(strParams[0], (strParams.size()>1) ? strParams[1].c_str() : GenUniqueName("Script", "data"), false );} else
   if (strCommand == "delete")          { bResult = remove(strParams[0].c_str()) == 0;} else
+  if (strCommand == "setLOD")            { if (m_pActiveRenderWin) m_pActiveRenderWin->GetRenderer()->SetCaptureMode(!SysTools::ToLowerCase(strParams[0]) == "true"); } else
+  if (strCommand == "setStereo")         { checkBox_Stereo->setChecked(SysTools::ToLowerCase(strParams[0]) == "true"); ToggleStereoRendering(); } else
+  if (strCommand == "setStereoMode")     { SetStereoMode(SysTools::FromString<unsigned int>(strParams[0])); } else
+  if (strCommand == "setStereoEyedist"){ SetStereoEyeDistance(SysTools::FromString<float>(strParams[0])); } else
+  if (strCommand == "setStereoFLength"){ SetStereoFocalLength(SysTools::FromString<float>(strParams[0])); } else
   if (strCommand == "quit")            { bResult = close();} else
-  if (strCommand == "samplingrate")    { assert(!strParams.empty()); SetSampleRate(atoi(strParams[0].c_str())); } else
+  if (strCommand == "samplingrate")    { SetSampleRate(SysTools::FromString<unsigned int>(strParams[0])); } else
   if (strCommand == "lighting")        {
     if(!strParams.empty()) {
       std::string arg;
@@ -151,6 +160,16 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   return true;
 }
 
+
+void MainWindow::SetStereoMode(unsigned int iMode) {
+  if (m_pActiveRenderWin == NULL || iMode >= (unsigned int)(AbstrRenderer::SM_INVALID) ) return;
+  m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::EStereoMode(iMode));
+}
+
+void MainWindow::SetStereoFocalLength(float fLength) {
+  if (m_pActiveRenderWin == NULL) return;
+  m_pActiveRenderWin->GetRenderer()->SetStereoFocalLength(fLength);
+}
 
 bool MainWindow::Pack(const std::vector< std::string >& strParams) {
   vector<string> vFiles(strParams.begin(), strParams.end()-1);

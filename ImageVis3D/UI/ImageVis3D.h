@@ -496,6 +496,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool         FtpTransfer(std::string strSource, std::string strDest, bool bDeleteSource = true);
     std::string  GenUniqueName(const std::string& strPrefix, const std::string& strExt="txt");
     bool         Pack(const std::vector< std::string >& strParams);
+    void SetStereoMode(unsigned int iMode);
+    void SetStereoFocalLength(float fLength);
 
     bool m_bClipDisplay;
     bool m_bClipLocked;
