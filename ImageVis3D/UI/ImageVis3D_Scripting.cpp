@@ -84,6 +84,7 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "setStereo", "true/false", "enabled/disables stereo rendering");
   pScriptEngine->RegisterCommand(this, "setStereoMode", "0/1/2/3", "choose stereo mode, see radiobox in stereo widget for modes");
   pScriptEngine->RegisterCommand(this, "setStereoDisparity", "disparity", "set the eye distance in stereo mode");
+  pScriptEngine->RegisterCommand(this, "setStereoFLength", "focalLength", "set the focal length in stereo mode");
   pScriptEngine->RegisterCommand(this, "capturesingle", "targetfile", "capture a single image into targetfile");
   pScriptEngine->RegisterCommand(this, "capturesequence", "targetfile", "capture a single image into targetfile_counter");
   pScriptEngine->RegisterCommand(this, "stayopen", "", "do not close the application at the end of the script");
@@ -134,7 +135,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "setLOD")            { if (m_pActiveRenderWin) m_pActiveRenderWin->GetRenderer()->SetCaptureMode(SysTools::ToLowerCase(strParams[0]) != "true"); } else
   if (strCommand == "setStereo")         { checkBox_Stereo->setChecked(SysTools::ToLowerCase(strParams[0]) == "true"); ToggleStereoRendering(); } else
   if (strCommand == "setStereoMode")     { SetStereoMode(SysTools::FromString<unsigned int>(strParams[0])); } else
-  if (strCommand == "setStereoEyedist"){ SetStereoEyeDistance(SysTools::FromString<float>(strParams[0])); } else
+  if (strCommand == "setStereoDisparity"){ SetStereoEyeDistance(SysTools::FromString<float>(strParams[0])); } else
   if (strCommand == "setStereoFLength"){ SetStereoFocalLength(SysTools::FromString<float>(strParams[0])); } else
   if (strCommand == "quit")            { bResult = close();} else
   if (strCommand == "samplingrate")    { SetSampleRate(SysTools::FromString<unsigned int>(strParams[0])); } else
