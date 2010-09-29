@@ -498,6 +498,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool         Pack(const std::vector< std::string >& strParams);
     void SetStereoMode(unsigned int iMode);
     void SetStereoFocalLength(float fLength);
+    void SetStereoEyeDistance(float fEyeDist);
 
     bool m_bClipDisplay;
     bool m_bClipLocked;

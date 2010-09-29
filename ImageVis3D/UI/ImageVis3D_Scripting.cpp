@@ -131,7 +131,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "pack")            { bResult = Pack(strParams);} else
   if (strCommand == "upload")          { bResult = FtpTransfer(strParams[0], (strParams.size()>1) ? strParams[1].c_str() : GenUniqueName("Script", "data"), false );} else
   if (strCommand == "delete")          { bResult = remove(strParams[0].c_str()) == 0;} else
-  if (strCommand == "setLOD")            { if (m_pActiveRenderWin) m_pActiveRenderWin->GetRenderer()->SetCaptureMode(!SysTools::ToLowerCase(strParams[0]) == "true"); } else
+  if (strCommand == "setLOD")            { if (m_pActiveRenderWin) m_pActiveRenderWin->GetRenderer()->SetCaptureMode(SysTools::ToLowerCase(strParams[0]) != "true"); } else
   if (strCommand == "setStereo")         { checkBox_Stereo->setChecked(SysTools::ToLowerCase(strParams[0]) == "true"); ToggleStereoRendering(); } else
   if (strCommand == "setStereoMode")     { SetStereoMode(SysTools::FromString<unsigned int>(strParams[0])); } else
   if (strCommand == "setStereoEyedist"){ SetStereoEyeDistance(SysTools::FromString<float>(strParams[0])); } else
@@ -165,6 +165,12 @@ void MainWindow::SetStereoMode(unsigned int iMode) {
   if (m_pActiveRenderWin == NULL || iMode >= (unsigned int)(AbstrRenderer::SM_INVALID) ) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::EStereoMode(iMode));
 }
+
+void MainWindow::SetStereoEyeDistance(float fEyeDist) {
+  if (m_pActiveRenderWin == NULL) return;
+  m_pActiveRenderWin->GetRenderer()->SetStereoEyeDist(fEyeDist);
+}
+
 
 void MainWindow::SetStereoFocalLength(float fLength) {
   if (m_pActiveRenderWin == NULL) return;
