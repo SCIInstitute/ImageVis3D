@@ -71,20 +71,22 @@ void MainWindow::dragEnterEvent(QDragEnterEvent* ev)
 
 void MainWindow::dropEvent(QDropEvent* ev)
 {
-  const QMimeData* md = ev->mimeData();
-  QStringList lst = md->formats();
-  std::string filename = "";
-  for(int i=0; i < lst.size(); ++i) {
-    if(lst[i] == "text/uri-list") {
-      QList<QUrl> urllist = md->urls();
-      for(int i=0; i < urllist.size(); ++i) {
-        std::string fn = urllist[i].path().toStdString();
-        if(SysTools::FileExists(fn)) {
-          filename = fn;
-        }
-      }
+  if (!ev->mimeData()->hasUrls()) return;
+
+  string filename;
+
+  QList<QUrl> urllist = ev->mimeData()->urls();
+  for(int i=0; i < urllist.size(); ++i) {
+    std::string fn = string(urllist[i].path().toAscii());
+
+#ifdef DETECTED_OS_WINDOWS
+    if (!fn.empty() && fn[0] == '/') fn = fn.substr(1);
+#endif
+    if(SysTools::FileExists(fn)) {
+      filename = fn;
     }
   }
+
   if(filename == "") {
     // we didn't find a valid filename
     ev->ignore();
