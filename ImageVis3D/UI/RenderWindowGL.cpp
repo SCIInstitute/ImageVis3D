@@ -280,6 +280,8 @@ void RenderWindowGL::PaintOverlays() {
 
 
 void RenderWindowGL::RenderSeparatingLines() {
+  GLSLProgram::Disable();
+
   glDisable(GL_BLEND);
   glDisable(GL_DEPTH_TEST);
 
