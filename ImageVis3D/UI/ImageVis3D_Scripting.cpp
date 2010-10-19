@@ -84,7 +84,11 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "setStereo", "true/false", "enabled/disables stereo rendering");
   pScriptEngine->RegisterCommand(this, "setStereoMode", "0/1/2/3", "choose stereo mode, see radiobox in stereo widget for modes");
   pScriptEngine->RegisterCommand(this, "setStereoDisparity", "disparity", "set the eye distance in stereo mode");
+  pScriptEngine->RegisterCommand(this, "incStereoFLength", "deltafocalLength", "add a delta to the focal length in stereo mode");
+  pScriptEngine->RegisterCommand(this, "incStereoDisparity", "deltadisparity", "add a delta to the eye distance in stereo mode");
   pScriptEngine->RegisterCommand(this, "setStereoFLength", "focalLength", "set the focal length in stereo mode");
+  pScriptEngine->RegisterCommand(this, "initAFStereo", "", "active left eye in alternating frame stereo mode");
+  pScriptEngine->RegisterCommand(this, "toggleAFStereo", "", "toggle active eye in alternating frame stereo mode");
   pScriptEngine->RegisterCommand(this, "capturesingle", "targetfile", "capture a single image into targetfile");
   pScriptEngine->RegisterCommand(this, "capturesequence", "targetfile", "capture a single image into targetfile_counter");
   pScriptEngine->RegisterCommand(this, "stayopen", "", "do not close the application at the end of the script");
@@ -134,9 +138,13 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "delete")          { bResult = remove(strParams[0].c_str()) == 0;} else
   if (strCommand == "setLOD")            { if (m_pActiveRenderWin) m_pActiveRenderWin->GetRenderer()->SetCaptureMode(SysTools::ToLowerCase(strParams[0]) != "true"); } else
   if (strCommand == "setStereo")         { checkBox_Stereo->setChecked(SysTools::ToLowerCase(strParams[0]) == "true"); ToggleStereoRendering(); } else
-  if (strCommand == "setStereoMode")     { SetStereoMode(SysTools::FromString<unsigned int>(strParams[0])); } else
-  if (strCommand == "setStereoDisparity"){ SetStereoEyeDistance(SysTools::FromString<float>(strParams[0])); } else
+  if (strCommand == "setStereoMode")     { SetStereoMode(SysTools::FromString<unsigned int>(strParams[0])); } else  
   if (strCommand == "setStereoFLength"){ SetStereoFocalLength(SysTools::FromString<float>(strParams[0])); } else
+  if (strCommand == "setStereoDisparity"){ SetStereoEyeDistance(SysTools::FromString<float>(strParams[0])); } else
+  if (strCommand == "incStereoFLength")     { IncStereoFocalLength(SysTools::FromString<float>(strParams[0])); } else
+  if (strCommand == "incStereoDisparity")   { IncStereoEyeDistance(SysTools::FromString<float>(strParams[0])); } else
+  if (strCommand == "initAFStereo")    { InitAFStereo(); } else
+  if (strCommand == "toggleAFStereo")  { ToggleAFStereo(); } else
   if (strCommand == "quit")            { bResult = close();} else
   if (strCommand == "samplingrate")    { SetSampleRate(SysTools::FromString<unsigned int>(strParams[0])); } else
   if (strCommand == "lighting")        {
@@ -172,10 +180,19 @@ void MainWindow::SetStereoEyeDistance(float fEyeDist) {
   m_pActiveRenderWin->GetRenderer()->SetStereoEyeDist(fEyeDist);
 }
 
-
 void MainWindow::SetStereoFocalLength(float fLength) {
   if (m_pActiveRenderWin == NULL) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoFocalLength(fLength);
+}
+
+void MainWindow::IncStereoEyeDistance(float fEyeDistDelta) {
+  if (m_pActiveRenderWin == NULL) return;
+  m_pActiveRenderWin->GetRenderer()->SetStereoEyeDist(m_pActiveRenderWin->GetRenderer()->GetStereoEyeDist() + fEyeDistDelta);
+}
+
+void MainWindow::IncStereoFocalLength(float fLengthDelta) {
+  if (m_pActiveRenderWin == NULL) return;
+  m_pActiveRenderWin->GetRenderer()->SetStereoFocalLength(m_pActiveRenderWin->GetRenderer()->GetStereoFocalLength() + fLengthDelta);
 }
 
 bool MainWindow::Pack(const std::vector< std::string >& strParams) {
@@ -186,4 +203,15 @@ bool MainWindow::Pack(const std::vector< std::string >& strParams) {
 
 bool MainWindow::RunScript(const std::string& strFilename) {
   return m_MasterController.ScriptEngine()->ParseFile(strFilename);
+}
+
+
+void MainWindow::InitAFStereo() {
+  if (m_pActiveRenderWin == NULL) return;
+  m_pActiveRenderWin->GetRenderer()->InitStereoFrame();
+}
+
+void MainWindow::ToggleAFStereo() {
+  if (m_pActiveRenderWin == NULL) return;
+  m_pActiveRenderWin->GetRenderer()->ToggleStereoFrame();
 }

@@ -264,6 +264,10 @@ void RenderWindowGL::ForceRepaint() {
   repaint();
 }
 
+void RenderWindowGL::SwapBuffers() {
+  swapBuffers();
+}
+
 void RenderWindowGL::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {
   makeCurrent();
   RenderWindow::SetBlendPrecision(eBlendPrecisionMode);

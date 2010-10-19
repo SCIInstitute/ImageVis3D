@@ -757,8 +757,9 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
     QCoreApplication::processEvents();
     PaintRenderer();
   }
-  // make sure we have the same results in the front and in the backbuffer:
-  ForceRepaint();
+  
+  // as the window is double buffered call repaint twice
+  ForceRepaint();  ForceRepaint();
   bool rv = f.CaptureSingleFrame(strFilename, bPreserveTransparency);
   m_Renderer->SetCaptureMode(false);
   return rv;
@@ -775,13 +776,14 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   bool bSystemOrtho = m_Renderer->GetOrthoView();
   if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bOrtho);
   m_Renderer->SetMIPLOD(bUseLOD);
-  ForceRepaint();
-  ForceRepaint(); // make sure we have the same results in the front and in the backbuffer
   if (bFinalFrame) { // restore state
     m_Renderer->SetMIPRotationAngle(0.0f);
     if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bSystemOrtho);
   }
-  return f.CaptureSequenceFrame(strFilename, bPreserveTransparency, strRealFilename);
+  // as the window is double buffered call repaint twice
+  ForceRepaint();  ForceRepaint();
+  bool bResult = f.CaptureSequenceFrame(strFilename, bPreserveTransparency, strRealFilename);
+  return bResult;
 }
 
 bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
@@ -794,8 +796,8 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
     QCoreApplication::processEvents();
     PaintRenderer();
   }
-  // make sure we have the same results in the front and in the backbuffer
-  ForceRepaint();
+  // as the window is double buffered call repaint twice
+  ForceRepaint();  ForceRepaint();
   bool rv = f.CaptureSequenceFrame(strFilename, bPreserveTransparency,
                                    strRealFilename);
   m_Renderer->SetCaptureMode(false);

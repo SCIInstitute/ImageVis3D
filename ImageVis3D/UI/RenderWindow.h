@@ -249,6 +249,7 @@ class RenderWindow
     void KeyPressEvent ( QKeyEvent * event );
     void Cleanup();
     void Initialize();
+    virtual void SwapBuffers() {}
 
     void UpdateCursor(const RenderRegion *region, INTVECTOR2 pos, bool translate);
 

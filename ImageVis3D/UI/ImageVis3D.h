@@ -265,6 +265,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void ToggleStereoEyeSwap();
     void SetStereoEyeDistance();
     void SetStereoFocalLength();
+    void InitAFStereo();
+    void ToggleAFStereo();
 
     void Show1DTrans();
     void Show2DTrans();
@@ -499,6 +501,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void SetStereoMode(unsigned int iMode);
     void SetStereoFocalLength(float fLength);
     void SetStereoEyeDistance(float fEyeDist);
+    void IncStereoFocalLength(float fLengthDelta);
+    void IncStereoEyeDistance(float fEyeDistDelta);
 
     bool m_bClipDisplay;
     bool m_bClipLocked;

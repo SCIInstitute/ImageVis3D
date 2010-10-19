@@ -495,6 +495,7 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
     }
   }
 
+  if (renderWin) RenderWindowActive(renderWin);
   CheckForMeshCapabilities(bNoUserInteraction, files);
 
   return true;
