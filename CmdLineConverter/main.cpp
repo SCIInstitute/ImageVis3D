@@ -169,16 +169,17 @@ int main(int argc, const char* argv[])
       return EXIT_FAILURE_UNKNOWN_OUT;
     } else {
       if (bIsVolExtOutRO) {
-        std::cerr << "error: Volume converter for output file " << strInFile << " is read only.\n";
+        std::cerr << "error: Volume converter for output file " << strInFile
+                  << " is read only.\n";
         return EXIT_FAILURE_RO_VOL_OUT;
       } 
-      std::cerr << "error: Geometry converter for output file " << strInFile << " is read only.\n";
+      std::cerr << "error: Geometry converter for output file " << strInFile
+                << " is read only.\n";
       return EXIT_FAILURE_RO_GEO_OUT;
     }
   }
 
   if (strInFile != "") {
-
     string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
     bool bIsVolExt1 = ioMan.GetConverterForExt(sourceType, false) != NULL;
@@ -312,19 +313,22 @@ int main(int argc, const char* argv[])
     }
 
   } else {
-
     if (strInFile2 != "") {
-      cout << endl << "Error: Currently file merging is only supported in file mode (i.e. specify -f and not -d)." << endl << endl;
+      cout << "\nError: Currently file merging is only supported "
+           << " in file mode (i.e. specify -f and not -d).\n\n";
       return EXIT_FAILURE_DIR_MERGE;
     }
 
-    /// \todo: remove this restricition (one solution would be to create a UVF first and then convert it to whatever is needed)
+    /// \todo: remove this restricition (one solution would be to create a UVF
+    // first and then convert it to whatever is needed)
     if (targetType != "uvf") {
-      cout << endl << "Error: Currently only uvf is only supported as target type for directory processing." << endl << endl;
+      cout << endl << "Error: Currently only uvf is the only supported "
+           << "target type for directory processing.\n\n";
       return EXIT_FAILURE_MERGE_NO_UVF;
     }
 
-    cout << endl << "Running in directory mode." << endl << "Converting " << strInDir.c_str() << " to " << strOutfile.c_str() << endl << endl;
+    cout << endl << "Running in directory mode.\nConverting "
+         << strInDir << " to " << strOutfile << "\n\n";
 
     vector<FileStackInfo*> dirinfo = ioMan.ScanDirectory(strInDir);
 
@@ -333,7 +337,8 @@ int main(int argc, const char* argv[])
        vStrFilenames[0] = strOutfile;
     } else {
       string strFilenameAndDirectory = SysTools::RemoveExt(strOutfile);
-      string strExt = SysTools::GetExt(strOutfile);  // should be "uvf" but we never know what the user specified
+      // should be "uvf" but we never know what the user specified
+      string strExt = SysTools::GetExt(strOutfile);
       for (size_t i = 0;i<dirinfo.size();i++) {
         vStrFilenames[i] = SysTools::AppendFilename(strOutfile, int(i)+1);
       }
@@ -342,7 +347,8 @@ int main(int argc, const char* argv[])
 
     int iFailCount = 0;
     for (size_t i = 0;i<dirinfo.size();i++) {
-      if (ioMan.ConvertDataset(dirinfo[i], vStrFilenames[i], SysTools::GetPath(vStrFilenames[i]))) {
+      if (ioMan.ConvertDataset(dirinfo[i], vStrFilenames[i],
+                               SysTools::GetPath(vStrFilenames[i]))) {
         cout << endl << "Success." << endl << endl;
       } else {
         cout << endl << "Conversion failed!" << endl << endl;
@@ -353,7 +359,8 @@ int main(int argc, const char* argv[])
     }
 
     if (iFailCount != 0)  {
-      cout << endl << iFailCount << " out of " << dirinfo.size() << " stacks failed to convert properly."<< endl << endl;
+      cout << endl << iFailCount << " out of " << dirinfo.size() <<
+           << " stacks failed to convert properly.\n\n";
     }
 
     for (size_t i = 0;i<dirinfo.size();i++) delete dirinfo[i];
