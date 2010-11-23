@@ -813,6 +813,12 @@ void RenderWindow::SetTranslation(RenderRegion *renderRegion,
   m_Renderer->SetTranslation(renderRegion, mAccumulatedTranslation);
   RegionData *regionData = GetRegionData(renderRegion);
   regionData->arcBall.SetTranslation(mAccumulatedTranslation);
+
+  if(m_Renderer->ClipPlaneLocked()) {
+    ExtendedPlane p = m_Renderer->GetClipPlane();
+    SetClipPlane(renderRegion, p);
+  }
+
   Controller::Instance().Provenance("translation", "translate");
 }
 
@@ -867,8 +873,12 @@ void RenderWindow::FinalizeRotation(const RenderRegion *region, bool bPropagate)
 void RenderWindow::SetRotation(RenderRegion *region,
                                const FLOATMATRIX4& newRotation) {
   m_Renderer->SetRotation(region, newRotation);
+  if(m_Renderer->ClipPlaneLocked()) {
+    ExtendedPlane deflt;
+    deflt = deflt * newRotation;
+    SetClipPlane(region, deflt);
+  }
 }
-
 
 void RenderWindow::SetRotationDelta(RenderRegion *region,
                                     const FLOATMATRIX4& rotDelta, bool bPropagate) {
