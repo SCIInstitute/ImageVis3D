@@ -140,18 +140,18 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
     bool bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
 
-    FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0f).toULongLong(),
-                            settings.value("Background1G", 0.0f).toULongLong(),
-                            settings.value("Background1B", 0.0f).toULongLong());
+    FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0).toDouble(),
+                            settings.value("Background1G", 0.0).toDouble(),
+                            settings.value("Background1B", 0.0).toDouble());
 
-    FLOATVECTOR3 vBackColor2(settings.value("Background2R", 0.0f).toULongLong(),
-                            settings.value("Background2G", 0.0f).toULongLong(),
-                            settings.value("Background2B", 0.0f).toULongLong());
+    FLOATVECTOR3 vBackColor2(settings.value("Background2R", 0.0).toDouble(),
+                            settings.value("Background2G", 0.0).toDouble(),
+                            settings.value("Background2B", 0.0).toDouble());
 
-    FLOATVECTOR4 vTextColor(settings.value("TextR", 1.0f).toULongLong(),
-                            settings.value("TextG", 1.0f).toULongLong(),
-                            settings.value("TextB", 1.0f).toULongLong(),
-                            settings.value("TextA", 1.0f).toULongLong());
+    FLOATVECTOR4 vTextColor(settings.value("TextR", 1.0).toDouble(),
+                            settings.value("TextG", 1.0).toDouble(),
+                            settings.value("TextB", 1.0).toDouble(),
+                            settings.value("TextA", 1.0).toDouble());
 
     QString strLogoFilename = settings.value("LogoFilename", m_strLogoFilename).toString();
     int iLogoPos            = settings.value("LogoPosition", m_iLogoPos).toInt();
@@ -288,18 +288,24 @@ void MainWindow::ApplySettings() {
   m_bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
   m_bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
 
-  m_vBackgroundColors[0] = FLOATVECTOR3(settings.value("Background1R", 0.0f).toULongLong(),
-                          settings.value("Background1G", 0.0f).toULongLong(),
-                          settings.value("Background1B", 0.0f).toULongLong());
+  m_vBackgroundColors[0] = FLOATVECTOR3(
+    settings.value("Background1R", 0.0).toDouble(),
+    settings.value("Background1G", 0.0).toDouble(),
+    settings.value("Background1B", 0.0).toDouble()
+  );
 
-  m_vBackgroundColors[1] = FLOATVECTOR3(settings.value("Background2R", 0.0f).toULongLong(),
-                          settings.value("Background2G", 0.0f).toULongLong(),
-                          settings.value("Background2B", 0.0f).toULongLong());
+  m_vBackgroundColors[1] = FLOATVECTOR3(
+    settings.value("Background2R", 0.0).toDouble(),
+    settings.value("Background2G", 0.0).toDouble(),
+    settings.value("Background2B", 0.0).toDouble()
+  );
 
-  m_vTextColor = FLOATVECTOR4(settings.value("TextR", 1.0f).toULongLong(),
-                          settings.value("TextG", 1.0f).toULongLong(),
-                          settings.value("TextB", 1.0f).toULongLong(),
-                          settings.value("TextA", 1.0f).toULongLong());
+  m_vTextColor = FLOATVECTOR4(
+    settings.value("TextR", 1.0).toDouble(),
+    settings.value("TextG", 1.0).toDouble(),
+    settings.value("TextB", 1.0).toDouble(),
+    settings.value("TextA", 1.0).toDouble()
+  );
   m_strLogoFilename = settings.value("LogoFilename", m_strLogoFilename).toString();
   m_iLogoPos        = settings.value("LogoPosition", m_iLogoPos).toInt();
 
