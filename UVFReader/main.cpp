@@ -505,10 +505,18 @@ int main(int argc, char* argv[])
           }
         }
         break;
-        case UVFTables::BS_MAXMIN_VALUES:
-          /// @todo FIXME: implement :)
-          cout << "      Query of MaxMin data block info is unimplemented.\n";
+        case UVFTables::BS_MAXMIN_VALUES: {
+          const MaxMinDataBlock* b = dynamic_cast<const MaxMinDataBlock*>
+                                                 (uvfFile.GetDataBlock(i));
+          assert(b);
+          cout << "      Minimum: " << b->m_GlobalMaxMin.minScalar << "\n";
+          cout << "      Maximum: " << b->m_GlobalMaxMin.maxScalar << "\n";
+          cout << "      "
+                  "Min Gradient: " << b->m_GlobalMaxMin.minGradient << "\n";
+          cout << "      "
+                  "Max Gradient: " << b->m_GlobalMaxMin.maxGradient << "\n";
           break;
+        }
         case UVFTables::BS_GEOMETRY: {
             const GeometryDataBlock* b = (const GeometryDataBlock*)uvfFile.GetDataBlock(i);
 
