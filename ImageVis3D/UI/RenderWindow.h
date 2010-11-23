@@ -173,6 +173,7 @@ class RenderWindow
 
     RegionSplitter GetRegionSplitter(INTVECTOR2 pos) const;
 
+    RenderRegion3D* GetFirst3DRegion();
     const std::vector<RenderRegion*>& GetActiveRenderRegions() const;
     void SetActiveRenderRegions(const std::vector<RenderRegion*>&) const;
     void ResetRenderingParameters();

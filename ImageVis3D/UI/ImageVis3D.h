@@ -44,6 +44,7 @@
 #include <string>
 #include <vector>
 
+class ExtendedPlane;
 class TextfileOut;
 
 #include "AutoGen/ui_ImageVis3D.h"

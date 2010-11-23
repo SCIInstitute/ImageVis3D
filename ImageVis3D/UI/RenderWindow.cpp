@@ -128,28 +128,21 @@ void RenderWindow::ToggleHQCaptureMode() {
 
 void RenderWindow::Translate(const FLOATMATRIX4& mTranslation,
                              RenderRegion *region) {
-  if (region) {
+  if(region == NULL) {
+    region = GetFirst3DRegion();
+  }
+  if(region) {
     SetTranslation(region, mTranslation*m_Renderer->GetTranslation(region));
-  } else {
-    for (size_t i=0; i < GetActiveRenderRegions().size(); ++i) {
-      region = GetActiveRenderRegions()[i];
-      if (region->is3D()) {
-        SetTranslation(region, mTranslation*m_Renderer->GetTranslation(region));
-      }
-    }
   }
 }
 
 void RenderWindow::Rotate(const FLOATMATRIX4& mRotation, RenderRegion *region) {
-  if (region) {
+  if(region == NULL) {
+    region = GetFirst3DRegion();
+  }
+
+  if(region) {
     SetRotation(region, mRotation*m_Renderer->GetRotation(region));
-  } else {
-    for (size_t i=0; i < GetActiveRenderRegions().size(); ++i) {
-      region = GetActiveRenderRegions()[i];
-      if (region->is3D()) {
-        SetRotation(region, mRotation*m_Renderer->GetRotation(region));
-      }
-    }
   }
 }
 
@@ -604,6 +597,17 @@ static std::string view_mode(RenderWindow::EViewMode mode) {
     case RenderWindow::VM_INVALID: /* fall-through */
     default: return "invalid"; break;
   }
+}
+
+RenderRegion3D*
+RenderWindow::GetFirst3DRegion() {
+  const std::vector<RenderRegion*>& rr = GetActiveRenderRegions();
+  for(size_t i=0; i < rr.size(); ++i) {
+    if(rr[i]->is3D()) {
+      return dynamic_cast<RenderRegion3D*>(rr[i]);
+    }
+  }
+  return NULL;
 }
 
 const std::vector<RenderRegion*>&
@@ -1143,7 +1147,7 @@ void RenderWindow::SetClipPlaneEnabled(bool enable, bool bPropagate)
     SetClipPlaneRelativeLock(m_SavedClipLocked, bPropagate);
   } else {
     // Disable the clip plane, and then implicitly lock it to the volume.  This
-    // means that the clip plane will appear `follow' the volume while it is
+    // means that the clip plane will appear to `follow' the volume while it is
     // disabled, which is a bit unintuitive in some sense.
     // However, it might occur that interactions that happen while the clip
     // plane is disabled could cause it to clip the entire volume when
