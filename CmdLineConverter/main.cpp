@@ -88,6 +88,31 @@ enum {
   EXIT_FAILURE_NEED_UVF,      // UVFs must be input to eval expressions.
 };
 
+// reads an entire file into a string.
+static std::string readfile(const std::string& filename)
+{
+  // open in append mode so the file pointer will be at EOF and we can
+  // therefore easily/quickly figure out the file size.
+  std::ifstream ifs(filename.c_str(), std::ios::in | std::ios::ate);
+  if(!ifs.is_open()) {
+    T_ERROR("Could not open file '%s'", filename.c_str());
+    return "";
+  }
+  std::ifstream::pos_type len = ifs.tellg();
+  ifs.seekg(0, std::ios::beg);
+
+  std::vector<char> contents(len+std::ifstream::pos_type(1), 0);
+  size_t offset=0;
+  do {
+    std::streamsize length = std::streamsize(len) - std::streamsize(offset);
+    ifs.read(&contents[offset], length);
+    offset += ifs.gcount();
+  } while(!ifs.eof() && std::ifstream::pos_type(offset) < len);
+  ifs.close();
+
+  return std::string(&contents[0]);
+}
+
 int main(int argc, const char* argv[])
 {
 /*
@@ -98,14 +123,15 @@ int main(int argc, const char* argv[])
     #endif
   #endif
 */
-  std::list<std::string> input;
+  std::vector<std::string> input;
   std::string output, directory;
+  std::string expression;
 
   // temp
-  string strInFile = "";
-  string strInFile2 = "";
-  string strInDir = "";
-  string strOutfile = "";
+  string strInFile;
+  string strInFile2;
+  string strInDir;
+  string strOutFile;
   double fScale = 0.0;
   double fBias = 0.0;
 
@@ -117,6 +143,8 @@ int main(int argc, const char* argv[])
     TCLAP::ValueArg<std::string> directory("d", "directory",
                                            "input directory", true, "",
                                            "path");
+    TCLAP::ValueArg<std::string> expr("e", "expression",
+                                      "merge expression", false, "", "string");
     TCLAP::ValueArg<std::string> output("o", "output", "output file (uvf)",
                                         true, "", "filename");
     TCLAP::ValueArg<double> bias("b", "bias",
@@ -130,6 +158,7 @@ int main(int argc, const char* argv[])
     cmd.add(output);
     cmd.add(bias);
     cmd.add(scale);
+    cmd.add(expr);
     cmd.parse(argc, argv);
 
     // which of "-i" or "-d" did they give?
@@ -138,13 +167,21 @@ int main(int argc, const char* argv[])
       if(inputs.getValue().size() > 1) {
         strInFile2 = inputs.getValue()[1];
       }
+      input = inputs.getValue();
     }
     if(directory.isSet()) {
       strInDir = directory.getValue();
     }
-    strOutfile = output.getValue();
+    strOutFile = output.getValue();
     fBias = bias.getValue();
     fScale = scale.getValue();
+
+    if(expr.isSet()) {
+      expression = expr.getValue();
+      if(SysTools::FileExists(expression)) {
+        expression = readfile(expression);
+      }
+    }
   } catch(const TCLAP::ArgException& e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << "\n";
     return EXIT_FAILURE_ARG;
@@ -157,32 +194,51 @@ int main(int argc, const char* argv[])
   Controller::Instance().AddDebugOut(debugOut);
   IOManager ioMan;
 
-  string targetType = SysTools::ToLowerCase(SysTools::GetExt(strOutfile));
-  bool bIsVolExtOut = ioMan.GetConverterForExt(targetType, true) != NULL;
-  bool bIsGeoExtOut = ioMan.GetGeoConverterForExt(targetType, true) != NULL;
+  // If they gave us an expression, evaluate that.  Otherwise we're doing a
+  // normal conversion.
+  if(!expression.empty()) {
+    // All the input files need to be UVFs if they're merging volumes.
+    for(std::vector<std::string>::const_iterator f = input.begin();
+        f != input.end(); ++f) {
+      if(ioMan.NeedsConversion(*f)) {
+        T_ERROR("Expression evaluation currently requires all input volumes "
+                "to be stored as UVFs.");
+        return EXIT_FAILURE_NEED_UVF;
+      }
+    }
+    try {
+      ioMan.EvaluateExpression(expression.c_str(), input, strOutFile);
+    } catch(const std::exception& e) {
+      std::cerr << "expr exception: " << e.what() << "\n";
+      return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
+  }
 
-  if (!bIsVolExtOut && !bIsGeoExtOut)  {
-    bool bIsVolExtOutRO = ioMan.GetConverterForExt(targetType, false) != NULL;
-    bool bIsGeoExtOutRO = ioMan.GetGeoConverterForExt(targetType, false) != NULL;
+  // Verify we can actually convert the data.  We can't do this for
+  // directories unless we've scanned the directory already, so delay
+  // error detection there.
+  if(strInDir.empty()) {
+    for(std::vector<std::string>::const_iterator f = input.begin();
+        f != input.end(); ++f) {
+      std::string ext = SysTools::ToLowerCase(SysTools::GetExt(*f));
+      bool conv_vol = ioMan.GetConverterForExt(ext, true) != NULL;
+      bool conv_geo = ioMan.GetGeoConverterForExt(ext, true) != NULL;
+      if(conv_vol || conv_geo) { continue; }
 
-    if (!bIsVolExtOutRO && !bIsGeoExtOutRO)  {
-      std::cerr << "error: Unknown file type of file " << strInFile << "\n";
-      return EXIT_FAILURE_UNKNOWN_OUT;
-    } else {
-      if (bIsVolExtOutRO) {
-        std::cerr << "error: Volume converter for output file " << strInFile
-                  << " is read only.\n";
-        return EXIT_FAILURE_RO_VOL_OUT;
-      } 
-      std::cerr << "error: Geometry converter for output file " << strInFile
-                << " is read only.\n";
-      return EXIT_FAILURE_RO_GEO_OUT;
+      if(!conv_vol && !conv_geo) {
+        T_ERROR("Unknown file type for '%s'", f->c_str());
+        return EXIT_FAILURE_UNKNOWN_OUT;
+      }
     }
   }
 
-  if (strInFile != "") {
+  string targetType = SysTools::ToLowerCase(SysTools::GetExt(strOutFile));
+  if (!strInFile.empty()) {
     string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
+    bool bIsVolExtOut = ioMan.GetConverterForExt(targetType, true) != NULL;
+    bool bIsGeoExtOut = ioMan.GetGeoConverterForExt(targetType, true) != NULL;
     bool bIsVolExt1 = ioMan.GetConverterForExt(sourceType, false) != NULL;
     bool bIsGeoExt1 = ioMan.GetGeoConverterForExt(sourceType, false) != NULL;
 
