@@ -285,7 +285,7 @@ int main(int argc, char* argv[])
       return EXIT_FAILURE;
     }
 
-    if (!uvfFile.AddDataBlock(&testVolume,testVolume.ComputeDataSize(), true)) {
+    if (!uvfFile.AddDataBlock(&testVolume, true)) {
       T_ERROR("AddDataBlock failed!");
       uvfFile.Close();
       return EXIT_FAILURE;
