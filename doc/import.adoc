@@ -436,7 +436,7 @@ volume data.
 Geometry Converter Skeleton
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You'll need both a header file (`.h` and an implementation file
+You'll need both a header file (`.h`) and an implementation file
 (`.cpp`) for your format.  They should define a class, derived from
 `AbstrGeoConverter`, which implements the `ConvertToMesh` method.
 Here's an example header file:
