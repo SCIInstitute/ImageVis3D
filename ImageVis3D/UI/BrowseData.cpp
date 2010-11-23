@@ -55,9 +55,7 @@ BrowseData::BrowseData(MasterController& masterController, QDialog* pleaseWaitDi
 }
 
 BrowseData::~BrowseData() {
-  for (size_t iStackID = 0;iStackID < m_dirInfo.size();iStackID++) {
-    delete m_dirInfo[iStackID];
-  }
+  this->m_dirInfo.clear();
 }
 
 void BrowseData::showEvent ( QShowEvent * ) {

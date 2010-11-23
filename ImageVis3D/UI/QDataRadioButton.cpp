@@ -41,7 +41,8 @@
 #include "../Tuvok/IO/DICOM/DICOMParser.h"
 #include "../Tuvok/IO/3rdParty/jpeglib/jconfig.h"
 
-QDataRadioButton::QDataRadioButton(FileStackInfo* stack, QWidget *parent) :
+QDataRadioButton::QDataRadioButton(std::tr1::shared_ptr<FileStackInfo> stack,
+                                   QWidget *parent) :
   QRadioButton(parent),
   m_iCurrentImage((unsigned int)(-1)),
   m_stackInfo(stack),
@@ -49,7 +50,9 @@ QDataRadioButton::QDataRadioButton(FileStackInfo* stack, QWidget *parent) :
 {
   SetupInfo();
 }
-QDataRadioButton::QDataRadioButton(FileStackInfo* stack, const QString &text, QWidget *parent) :
+
+QDataRadioButton::QDataRadioButton(std::tr1::shared_ptr<FileStackInfo> stack,
+                                   const QString &text, QWidget *parent) :
   QRadioButton(text, parent),
   m_iCurrentImage((unsigned int)(-1)),
   m_stackInfo(stack),
@@ -59,17 +62,18 @@ QDataRadioButton::QDataRadioButton(FileStackInfo* stack, const QString &text, QW
 }
 
 
-void QDataRadioButton::leaveEvent ( QEvent * event ) {
+void QDataRadioButton::leaveEvent(QEvent * event) {
   QRadioButton::leaveEvent(event);
 
-  SetStackImage(int(m_stackInfo.m_Elements.size()/2));
+  SetStackImage(int(m_stackInfo->m_Elements.size()/2));
 }
 
 void QDataRadioButton::mouseMoveEvent(QMouseEvent *event){
   QRadioButton::mouseMoveEvent(event);
+  unsigned int i;
 
-  unsigned int i = (unsigned int)(float(event->x())/float(width())*m_stackInfo.m_Elements.size());
-
+  i = (unsigned int)(float(event->x()) / float(width()) *
+                     m_stackInfo->m_Elements.size());
   SetStackImage(i);
 }
 
@@ -93,22 +97,23 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
   QIcon icon;
 
   std::vector<char> vData;
-  if (m_stackInfo.m_bIsJPEGEncoded) {
-    tuvok::JPEG jpg(m_stackInfo.m_Elements[i]->m_strFileName,
+  if (m_stackInfo->m_bIsJPEGEncoded) {
+    tuvok::JPEG jpg(m_stackInfo->m_Elements[i]->m_strFileName,
                     dynamic_cast<SimpleDICOMFileInfo*>
-                      (m_stackInfo.m_Elements[i])->GetOffsetToData());
+                      (m_stackInfo->m_Elements[i])->GetOffsetToData());
     const char *jpg_data = jpg.data();
     // JPEG library automagically downsamples the data.
-    m_stackInfo.m_iAllocated = BITS_IN_JSAMPLE;
+    m_stackInfo->m_iAllocated = BITS_IN_JSAMPLE;
     vData.resize(jpg.size());
     std::copy(jpg_data, jpg_data + jpg.size(), &vData[0]);
   } else {
-    m_stackInfo.m_Elements[i]->GetData(vData);
+    m_stackInfo->m_Elements[i]->GetData(vData);
   }
-  QImage image(m_stackInfo.m_ivSize.x, m_stackInfo.m_ivSize.y, QImage::Format_RGB32);
+  QImage image(m_stackInfo->m_ivSize.x, m_stackInfo->m_ivSize.y,
+               QImage::Format_RGB32);
 
-  if (m_stackInfo.m_iComponentCount == 1) {
-    switch (m_stackInfo.m_iAllocated) {
+  if (m_stackInfo->m_iComponentCount == 1) {
+    switch (m_stackInfo->m_iAllocated) {
       case 8  :{
             unsigned int i = 0;
             unsigned char* pCharData = reinterpret_cast<unsigned char*>
@@ -126,7 +131,10 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
                                                          (&vData[0]);
             for (int y = 0;y<image.height();y++)
               for (int x = 0;x<image.width();x++) {
-                unsigned char value = (unsigned char)(std::min(255.0f,255.0f*m_fScale*float(pShortData[i])/float((2<<m_stackInfo.m_iStored))));
+                unsigned char value = (unsigned char)(
+                  std::min(255.0f, 255.0f * m_fScale * float(pShortData[i]) /
+                                   float((2<<m_stackInfo->m_iStored)))
+                );
                 image.setPixel(x,y, qRgb(value,value,value));
                 i++;
               }
@@ -150,13 +158,13 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
 void QDataRadioButton::SetupInfo() {
   setMouseTracking(true);
 
-  size_t iElemCount = m_stackInfo.m_Elements.size();
+  size_t iElemCount = m_stackInfo->m_Elements.size();
 
   QString desc = tr(" %1 \n Size: %2 x %3 x %4\n")
-    .arg(m_stackInfo.m_strDesc.c_str())
-    .arg(m_stackInfo.m_ivSize.x)
-    .arg(m_stackInfo.m_ivSize.y)
-    .arg(m_stackInfo.m_ivSize.z*iElemCount);
+    .arg(m_stackInfo->m_strDesc.c_str())
+    .arg(m_stackInfo->m_ivSize.x)
+    .arg(m_stackInfo->m_ivSize.y)
+    .arg(m_stackInfo->m_ivSize.z*iElemCount);
 
   setText(desc);
 

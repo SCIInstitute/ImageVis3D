@@ -330,7 +330,8 @@ int main(int argc, const char* argv[])
     cout << endl << "Running in directory mode.\nConverting "
          << strInDir << " to " << strOutfile << "\n\n";
 
-    vector<FileStackInfo*> dirinfo = ioMan.ScanDirectory(strInDir);
+    vector<std::tr1::shared_ptr<FileStackInfo> > dirinfo =
+      ioMan.ScanDirectory(strInDir);
 
     vector<string> vStrFilenames(dirinfo.size());
     if (dirinfo.size() == 1) {
@@ -347,23 +348,21 @@ int main(int argc, const char* argv[])
 
     int iFailCount = 0;
     for (size_t i = 0;i<dirinfo.size();i++) {
-      if (ioMan.ConvertDataset(dirinfo[i], vStrFilenames[i],
+      if (ioMan.ConvertDataset(&*dirinfo[i], vStrFilenames[i],
                                SysTools::GetPath(vStrFilenames[i]))) {
         cout << endl << "Success." << endl << endl;
       } else {
         cout << endl << "Conversion failed!" << endl << endl;
         iFailCount++;
-        for (size_t i = 0;i<dirinfo.size();i++) delete dirinfo[i];
         return EXIT_FAILURE_GENERAL_DIR;
       }
     }
 
     if (iFailCount != 0)  {
-      cout << endl << iFailCount << " out of " << dirinfo.size() <<
+      cout << endl << iFailCount << " out of " << dirinfo.size()
            << " stacks failed to convert properly.\n\n";
     }
 
-    for (size_t i = 0;i<dirinfo.size();i++) delete dirinfo[i];
     return EXIT_SUCCESS;
   }
 }

@@ -25,8 +25,6 @@
    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
    DEALINGS IN THE SOFTWARE.
 */
-
-
 //!    File   : BrowseData.h
 //!    Author : Jens Krueger
 //!             SCI Institute
@@ -34,12 +32,16 @@
 //!    Date   : September 2008
 //
 //!    Copyright (C) 2008 SCI Institute
-
-
 #pragma once
 
 #ifndef BROWSEDATA_H
 #define BROWSEDATA_H
+
+#ifdef _MSC_VER
+# include <memory>
+#else
+# include <tr1/memory>
+#endif
 
 #include "AutoGen/ui_BrowseData.h"
 #include "../Tuvok/Controller/MasterController.h"
@@ -56,7 +58,7 @@ class BrowseData : public QDialog, protected Ui_BrowseData
 
     bool DataFound() {return m_bDataFound;}
 
-    FileStackInfo* GetStackInfo() {
+    std::tr1::shared_ptr<FileStackInfo> GetStackInfo() {
       return m_dirInfo[m_iSelected];
     }
 
@@ -65,16 +67,14 @@ class BrowseData : public QDialog, protected Ui_BrowseData
     virtual void SetBrightness(int iScale);
 
   private:
-    MasterController&              m_MasterController;
-    bool                           m_bDataFound;
-    QString                        m_strDir;
-    std::vector<QDataRadioButton*> m_vRadioButtons;
-    std::vector<FileStackInfo*>    m_dirInfo;
-    size_t                         m_iSelected;
+    MasterController&                                 m_MasterController;
+    bool                                              m_bDataFound;
+    QString                                           m_strDir;
+    std::vector<QDataRadioButton*>                    m_vRadioButtons;
+    std::vector<std::tr1::shared_ptr<FileStackInfo> > m_dirInfo;
+    size_t                                            m_iSelected;
 
     bool FillTable(QDialog* pleaseWaitDialog);
     virtual void showEvent ( QShowEvent * event );
 };
-
-
 #endif // BROWSEDATA_H

@@ -586,19 +586,27 @@ void MainWindow::LoadDirectory() {
         // label was detached when the dialog was closed by BrowseData
         pleaseWait.AttachLabel(&m_MasterController);
 
-        if (!m_MasterController.IOMan()->ConvertDataset(browseDataDialog.GetStackInfo(), targetFilename.toStdString(), m_strTempDir)) {
+        /// @todo FIXME rewrite this ConvertDataset to take a shared_ptr
+        /// instead of a raw pointer.
+        if (!m_MasterController.IOMan()->ConvertDataset(
+          &*browseDataDialog.GetStackInfo(), targetFilename.toStdString(),
+          m_strTempDir)) {
           QString strText =
-            tr("Unable to convert file stack from directory %1 into %2.").arg(directoryName).arg(targetFilename);
-          ShowCriticalDialog( "Conversion Error", strText);
-          m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", strText.toStdString().c_str());
+            tr("Unable to convert file stack from directory "
+               "%1 into %2.").arg(directoryName).arg(targetFilename);
+          ShowCriticalDialog("Conversion Error", strText);
+          T_ERROR("%s", strText.toStdString().c_str());
         }
         pleaseWait.DetachLabel();
 
         RenderWindow *renderWin = CreateNewRenderWindow(targetFilename);
 
         if(NULL == renderWin || !renderWin->IsRenderSubsysOK()) {
-          ShowCriticalDialog( "Renderer Error", "Unable to open the converted data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
-          m_MasterController.DebugOut()->Error("MainWindow::LoadDirectory", "Unable to open dataset, please check previous error messages.");
+          ShowCriticalDialog("Renderer Error",
+                             "Unable to open the converted data set, "
+                             "please check the error log for details "
+                             "(Menu -> \"Help\" -> \"Debug Window\").");
+          T_ERROR("Unable to open dataset, please check previous error msgs.");
           delete renderWin;
           return;
         }
