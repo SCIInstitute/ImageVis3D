@@ -26,7 +26,6 @@
    DEALINGS IN THE SOFTWARE.
 */
 
-
 //!    File   : main.cpp
 //!    Author : Jens Krueger
 //!             IVDA, MMCI, DFKI Saarbruecken
@@ -34,6 +33,13 @@
 //!    Date   : October 2009
 //
 //!    Copyright (C) 2009 IVDA, MMC, DFKI, SCI Institute
+
+#include <string>
+#include <vector>
+#include <sstream>
+#include <iostream>
+
+#include <tclap/CmdLine.h>
 
 #include "../Tuvok/StdTuvokDefines.h"
 #include "../Tuvok/Controller/Controller.h"
@@ -49,11 +55,6 @@
 #include "../Tuvok/IO/UVF/KeyValuePairDataBlock.h"
 #include "../Tuvok/IO/UVF/GeometryDataBlock.h"
 
-
-#include <string>
-#include <vector>
-#include <sstream>
-#include <iostream>
 using namespace std;
 using namespace tuvok;
 
@@ -65,35 +66,6 @@ using namespace tuvok;
     #include <crtdbg.h>
   #endif
 #endif
-
-void ShowUsage(string filename) {
-  cout << endl <<
-   filename << " V" << READER_VERSION << " (using Tuvok V" << TUVOK_VERSION <<
-   " " << TUVOK_VERSION_TYPE << ")" << endl << endl <<
-   " Reads, verifies, and creates UVF Files" << endl << endl <<
-   " Usage:" << endl <<
-   "  " << filename << " -f File.uvf [-noverify -create [-lod UINT]\n"
-   "            [-sizeX UINT] [-sizeY UINT] [-sizeZ UINT]] " << endl << endl <<
-   "     Mandatory Arguments:" << endl <<
-   "         -f       the filename of the UVF file to process" << endl <<
-   "     Optional Arguments:" << endl <<
-   "        -noverify    disables the checksum test" << endl <<
-   "        -show1dhist  also output 1D histogram to console" << endl <<
-   "        -show2dhist  also output 2D histogram to console" << endl <<
-   "        -create      if set create a new test UVF file with a\n"
-   "                     filename set by -f" << endl <<
-   "        -sizeX       requires '-create' argument, specifies the width\n"
-   "                     of the volume to be created (default = 100)"<< endl <<
-   "        -sizeY       requires '-create' argument, specifies the height\n"
-   "                     of the volume to be created (default = 200)"<< endl <<
-   "        -sizeZ       requires '-create' argument, specifies the depth\n"
-   "                     of the volume to be created (default = 300)"<< endl <<
-   "        -bits        requires '-create' argument, specifies the bit depth\n"
-   "                     of the volume, may be 8, 16 (default = 8)" << endl <<
-   "        -brickSize   requires '-create' argument, specifies the maximum\n"
-   "                     bricksize (default = " << DEFAULT_BRICKSIZE <<")"
-   << endl;
-}
 
 int main(int argc, char* argv[])
 {
@@ -119,57 +91,71 @@ int main(int argc, char* argv[])
   int iSizeZ = 300;
   int iBitSize = 8;
   unsigned int iBrickSize = DEFAULT_BRICKSIZE;
+  bool bCreateFile;
+  bool bVerify;
+  bool bShow1dhist;
+  bool bShow2dhist;
 
-  SysTools::CmdLineParams comLine(argc,argv);
-  string strFilename = SysTools::GetFilename(argv[0]);
+  try {
+    TCLAP::CmdLine cmd("UVF diagnostic tool");
+    TCLAP::MultiArg<std::string> inputs("i", "input", "input file.",
+                                        true, "filename");
+    TCLAP::SwitchArg noverify("n", "noverify", "disable the checksum test",
+                              false);
+    TCLAP::SwitchArg hist1d("1", "1dhist", "output the 1D histogram", false);
+    TCLAP::SwitchArg hist2d("2", "2dhist", "output the 2D histogram", false);
+    TCLAP::SwitchArg create("c", "create", "create instead of read a UVF",
+                            false);
+    std::string uint = "unsigned integer";
+    TCLAP::ValueArg<size_t> sizeX("x", "sizeX", "width of created volume",
+                                  false, static_cast<size_t>(100), uint);
+    TCLAP::ValueArg<size_t> sizeY("y", "sizeY", "height of created volume",
+                                  false, static_cast<size_t>(200), uint);
+    TCLAP::ValueArg<size_t> sizeZ("z", "sizeZ", "depth of created volume",
+                                  false, static_cast<size_t>(300), uint);
+    TCLAP::ValueArg<size_t> bits("b", "bits", "bit width of created volume",
+                                 false, static_cast<size_t>(8), uint);
+    TCLAP::ValueArg<size_t> bsize("s", "bricksize", "maximum width, "
+                                  "in any dimension, for a created volume",
+                                  false, static_cast<size_t>(256), uint);
+    cmd.add(inputs);
+    cmd.add(noverify);
+    cmd.add(hist1d);
+    cmd.add(hist2d);
+    cmd.add(create);
+    cmd.add(sizeX);
+    cmd.add(sizeY);
+    cmd.add(sizeZ);
+    cmd.add(bits);
+    cmd.add(bsize);
+    cmd.parse(argc, argv);
 
-  comLine.GetValue("F", strUVFName);
-  comLine.GetValue("SIZEX", iSizeX);
-  comLine.GetValue("SIZEY", iSizeY);
-  comLine.GetValue("SIZEZ", iSizeZ);
-  comLine.GetValue("BITS", iBitSize);
-  comLine.GetValue("BRICKSIZE", iBrickSize);
+    /// @todo FIXME support a list of filenames and process them in sequence.
+    strUVFName = inputs.getValue()[0];
+    iSizeX = sizeX.getValue();
+    iSizeY = sizeY.getValue();
+    iSizeZ = sizeZ.getValue();
+    iBitSize = bits.getValue();
+    iBrickSize = bsize.getValue();
+
+    bCreateFile = create.getValue();
+    bVerify = !noverify.getValue();
+    bShow1dhist = hist1d.getValue();
+    bShow2dhist = hist2d.getValue();
+  } catch(const TCLAP::ArgException& e) {
+    std::cerr << "error: " << e.error() << " for arg " << e.argId() << "\n";
+    return EXIT_FAILURE;
+  }
 
   VECTOR3<UINT64> iSize = VECTOR3<UINT64>(UINT64(iSizeX),UINT64(iSizeY),UINT64(iSizeZ));
 
-  bool bCreateFile = comLine.SwitchSet("CREATE");
-  bool bVerify     = !comLine.SwitchSet("NOVERIFY");
-  bool bShow1dhist = comLine.SwitchSet("SHOW1DHIST");
-  bool bShow2dhist = comLine.SwitchSet("SHOW2DHIST");
-
-  if (strUVFName == "") {
+  if (strUVFName.empty()) {
     cerr << endl << "Missing Argument -f or filename was empty" << endl;
-    ShowUsage(strFilename);
-    return EXIT_FAILURE;
-  }
-
-  if (!bCreateFile && comLine.SwitchSet("SIZEX")) {
-    cerr << endl << "Argument -sizeX requires -create" << endl;
-    ShowUsage(strFilename);
-    return EXIT_FAILURE;
-  }
-
-  if (!bCreateFile && comLine.SwitchSet("SIZEY")) {
-    cerr << endl << "Argument -sizeY requires -create" << endl;
-    ShowUsage(strFilename);
-    return EXIT_FAILURE;
-  }
-
-  if (!bCreateFile && comLine.SwitchSet("SIZEZ")) {
-    cerr << endl << "Argument -sizeZ requires -create" << endl;
-    ShowUsage(strFilename);
-    return EXIT_FAILURE;
-  }
-
-  if (!bCreateFile && comLine.SwitchSet("BITS")) {
-    cerr << endl << "Argument -bits requires -create" << endl;
-    ShowUsage(strFilename);
     return EXIT_FAILURE;
   }
 
   if (iBitSize != 8 && iBitSize != 16) {
     cerr << endl << "Argument -bits can only be 8 or 16" << endl;
-    ShowUsage(strFilename);
     return EXIT_FAILURE;
   }
 
@@ -275,7 +261,9 @@ int main(int argc, char* argv[])
                   }
                   break;
                }
-      default: assert(0); // should never happen as we test this during parameter check
+      default:
+        // should never happen as we test this during parameter check
+        assert(0);
     }
 
     string strProblemDesc;
@@ -544,9 +532,9 @@ int main(int argc, char* argv[])
             const std::vector< float >&  col = b->GetDefaultColor();
             cout << "      Default Color: " << col[0] << " "
                  << col[1] << " " << col[2] << " " << col[3];
-            if (c > 0) 
-              cout << " (no used since vertex colors are specified)\n";
-            else 
+            if (c > 0)
+              cout << " (not used since vertex colors are specified)\n";
+            else
               cout << "\n";
 
           }
