@@ -10,9 +10,12 @@ macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/UVFConverter
 unix:TARGET       = Build/uvfconvert
 QT               += opengl
-DEPENDPATH       += .
-INCLUDEPATH      += . ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW
-INCLUDEPATH      += ../Tuvok/Basics/3rdParty ../Tuvok
+incpath           = . ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW
+incpath          += ../Tuvok/IO/exception
+incpath          += ../Tuvok/Basics
+incpath          += ../Tuvok/Basics/3rdParty ../Tuvok
+DEPENDPATH       += $$incpath
+INCLUDEPATH      += $$incpath
 LIBS              = -L../Tuvok/Build -L../Tuvok/IO/expressions -lTuvok
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
