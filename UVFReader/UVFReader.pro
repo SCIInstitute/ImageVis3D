@@ -13,7 +13,7 @@ QT               += opengl
 DEPENDPATH       += .
 INCLUDEPATH      += . ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW
 INCLUDEPATH      += ../Tuvok ../Tuvok/Basics/3rdParty
-LIBS              = -L../Tuvok/Build -lTuvok
+LIBS              = -L../Tuvok/Build -L../Tuvok/IO/expressions -lTuvok
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 

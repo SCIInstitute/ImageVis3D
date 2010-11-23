@@ -10,7 +10,7 @@ macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/ExtractDebugInfo
 DEPENDPATH       += .
 INCLUDEPATH      += . ../ ../Tuvok/Basics/3rdParty ../Tuvok
-LIBS              = -L../Tuvok/Build -lTuvok
+LIBS              = -L../Tuvok/Build -L../Tuvok/IO/expressions -lTuvok
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 
