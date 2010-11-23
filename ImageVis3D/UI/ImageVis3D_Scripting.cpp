@@ -169,7 +169,6 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   return true;
 }
 
-
 void MainWindow::SetStereoMode(unsigned int iMode) {
   if (m_pActiveRenderWin == NULL || iMode >= (unsigned int)(AbstrRenderer::SM_INVALID) ) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::EStereoMode(iMode));
