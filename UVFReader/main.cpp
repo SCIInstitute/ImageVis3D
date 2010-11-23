@@ -95,6 +95,7 @@ int main(int argc, char* argv[])
   bool bVerify;
   bool bShow1dhist;
   bool bShow2dhist;
+  bool bShowData;
 
   try {
     TCLAP::CmdLine cmd("UVF diagnostic tool");
@@ -106,6 +107,8 @@ int main(int argc, char* argv[])
     TCLAP::SwitchArg hist2d("2", "2dhist", "output the 2D histogram", false);
     TCLAP::SwitchArg create("c", "create", "create instead of read a UVF",
                             false);
+    TCLAP::SwitchArg output_data("d", "data", "display data at finest"
+                                 " resolution", false);
     std::string uint = "unsigned integer";
     TCLAP::ValueArg<size_t> sizeX("x", "sizeX", "width of created volume",
                                   false, static_cast<size_t>(100), uint);
@@ -128,6 +131,7 @@ int main(int argc, char* argv[])
     cmd.add(sizeZ);
     cmd.add(bits);
     cmd.add(bsize);
+    cmd.add(output_data);
     cmd.parse(argc, argv);
 
     /// @todo FIXME support a list of filenames and process them in sequence.
@@ -142,6 +146,7 @@ int main(int argc, char* argv[])
     bVerify = !noverify.getValue();
     bShow1dhist = hist1d.getValue();
     bShow2dhist = hist2d.getValue();
+    bShowData = output_data.getValue();
   } catch(const TCLAP::ArgException& e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << "\n";
     return EXIT_FAILURE;
@@ -434,6 +439,54 @@ int main(int argc, char* argv[])
               }
               cout << endl;
             }
+          }
+          if(bShowData) {
+            std::cout << "        raw data:\n";
+            const RasterDataBlock* rdb = dynamic_cast<const RasterDataBlock*>(
+              uvfFile.GetDataBlock(i)
+            );
+            UINT64 bit_width = rdb->ulElementBitSize[0][0];
+            const bool is_signed = rdb->bSignedElement[0][0];
+            const bool is_float = rdb->ulElementMantissa[0][0];
+            if(is_float && bit_width == 32) {
+              std::copy(LODBrickIterator<float, FINEST_RESOLUTION>(rdb),
+                        LODBrickIterator<float, FINEST_RESOLUTION>(),
+                        std::ostream_iterator<float>(std::cout, " "));
+            } else if(is_float && bit_width == 64) {
+              std::copy(LODBrickIterator<double, FINEST_RESOLUTION>(rdb),
+                        LODBrickIterator<double, FINEST_RESOLUTION>(),
+                        std::ostream_iterator<double>(std::cout, " "));
+            } else if(!is_signed && bit_width ==  8) {
+              // note for this and uint8 we use "int", but only in the output
+              // iterator -- otherwise the stream interprets it as character
+              // data and outputs garbage.
+              std::copy(LODBrickIterator<uint8_t, FINEST_RESOLUTION>(rdb),
+                        LODBrickIterator<uint8_t, FINEST_RESOLUTION>(),
+                        std::ostream_iterator<int>(std::cout, " "));
+            } else if( is_signed && bit_width ==  8) {
+              std::copy(LODBrickIterator<int8_t, FINEST_RESOLUTION>(rdb),
+                        LODBrickIterator<int8_t, FINEST_RESOLUTION>(),
+                        std::ostream_iterator<int>(std::cout, " "));
+            } else if(!is_signed && bit_width == 16) {
+              std::copy(LODBrickIterator<uint16_t, FINEST_RESOLUTION>(rdb),
+                        LODBrickIterator<uint16_t, FINEST_RESOLUTION>(),
+                        std::ostream_iterator<uint16_t>(std::cout, " "));
+            } else if( is_signed && bit_width == 16) {
+              std::copy(LODBrickIterator<int16_t, FINEST_RESOLUTION>(rdb),
+                        LODBrickIterator<int16_t, FINEST_RESOLUTION>(),
+                        std::ostream_iterator<int16_t>(std::cout, " "));
+            } else if(!is_signed && bit_width == 32) {
+              std::copy(LODBrickIterator<uint32_t, FINEST_RESOLUTION>(rdb),
+                        LODBrickIterator<uint32_t, FINEST_RESOLUTION>(),
+                        std::ostream_iterator<uint32_t>(std::cout, " "));
+            } else if( is_signed && bit_width == 32) {
+              std::copy(LODBrickIterator<int32_t, FINEST_RESOLUTION>(rdb),
+                        LODBrickIterator<int32_t, FINEST_RESOLUTION>(),
+                        std::ostream_iterator<int32_t>(std::cout, " "));
+            } else {
+              T_ERROR("Unsupported data type!");
+            }
+            std::cout << "\n";
           }
         }
         break;
