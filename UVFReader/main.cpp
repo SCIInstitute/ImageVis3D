@@ -87,10 +87,10 @@ int main(int argc, char* argv[])
 
   string strUVFName = "";
 
-  int iSizeX = 100;
-  int iSizeY = 200;
-  int iSizeZ = 300;
-  int iBitSize = 8;
+  size_t iSizeX = 100;
+  size_t iSizeY = 200;
+  size_t iSizeZ = 300;
+  size_t iBitSize = 8;
   unsigned int iBrickSize = DEFAULT_BRICKSIZE;
   bool bCreateFile;
   bool bVerify;
@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
     iSizeY = sizeY.getValue();
     iSizeZ = sizeZ.getValue();
     iBitSize = bits.getValue();
-    iBrickSize = bsize.getValue();
+    iBrickSize = static_cast<unsigned>(bsize.getValue());
 
     bCreateFile = create.getValue();
     bVerify = !noverify.getValue();
@@ -301,11 +301,11 @@ int main(int argc, char* argv[])
       return EXIT_FAILURE;
     }
     MESSAGE("Storing histogram data...");
-    uvfFile.AddDataBlock(&Histogram1D,Histogram1D.ComputeDataSize());
-    uvfFile.AddDataBlock(&Histogram2D,Histogram2D.ComputeDataSize());
+    uvfFile.AddDataBlock(&Histogram1D);
+    uvfFile.AddDataBlock(&Histogram2D);
 
     MESSAGE("Storing acceleration data...");
-    uvfFile.AddDataBlock(&MaxMinData, MaxMinData.ComputeDataSize());
+    uvfFile.AddDataBlock(&MaxMinData);
 
     MESSAGE("Storing metadata...");
 
@@ -321,8 +321,7 @@ int main(int argc, char* argv[])
     metaPairs.AddPair("Source Type","integer");
     metaPairs.AddPair("Source Bitwidth",SysTools::ToString(iBitSize));
 
-    UINT64 iDataSize = metaPairs.ComputeDataSize();
-    uvfFile.AddDataBlock(&metaPairs,iDataSize);
+    uvfFile.AddDataBlock(&metaPairs);
 
     MESSAGE("Writing UVF file...");
 
@@ -448,7 +447,7 @@ int main(int argc, char* argv[])
             );
             UINT64 bit_width = rdb->ulElementBitSize[0][0];
             const bool is_signed = rdb->bSignedElement[0][0];
-            const bool is_float = rdb->ulElementMantissa[0][0];
+            const bool is_float = bit_width != rdb->ulElementMantissa[0][0];
             if(is_float && bit_width == 32) {
               std::copy(LODBrickIterator<float, FINEST_RESOLUTION>(rdb),
                         LODBrickIterator<float, FINEST_RESOLUTION>(),

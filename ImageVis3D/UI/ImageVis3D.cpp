@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include "StdDefines.h"
 #include <algorithm>
 #include "ImageVis3D.h"
 #include "BrowseData.h"
