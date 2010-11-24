@@ -55,6 +55,7 @@
 #include "../Tuvok/IO/UVF/KeyValuePairDataBlock.h"
 #include "../Tuvok/IO/UVF/GeometryDataBlock.h"
 
+using namespace boost;
 using namespace std;
 using namespace tuvok;
 
