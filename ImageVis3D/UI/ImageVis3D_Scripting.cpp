@@ -42,12 +42,12 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/Appendix.h"
 #include "../Tuvok/Scripting/Scripting.h"
-#ifndef DETECTED_OS_WINDOWS
-#pragma GCC visibility push(default)
+#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
+# pragma GCC visibility push(default)
 #endif
 #include <QtOpenGL/QtOpenGL>
-#ifndef DETECTED_OS_WINDOWS
-#pragma GCC visibility pop
+#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
+# pragma GCC visibility pop
 #endif
 
 using namespace std;

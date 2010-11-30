@@ -37,12 +37,12 @@
 
 #include <cstdlib>
 #include <fstream>
-#ifdef __GNUC__
+#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
 # pragma GCC visibility push(default)
 #endif
 #include <QtGui/QtGui>
 #include <QtNetwork/QtNetwork>
-#ifdef __GNUC__
+#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
 # pragma GCC visibility pop
 #endif
 

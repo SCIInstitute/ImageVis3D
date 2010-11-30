@@ -39,13 +39,13 @@
 #include <cassert>
 #include <sstream>
 #include <stdexcept>
-#ifndef DETECTED_OS_WINDOWS
-#pragma GCC visibility push(default)
+#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
+# pragma GCC visibility push(default)
 #endif
 #include <QtGui/QtGui>
 #include <QtGui/QMessageBox>
-#ifndef DETECTED_OS_WINDOWS
-#pragma GCC visibility pop
+#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
+# pragma GCC visibility pop
 #endif
 
 #include "RenderWindow.h"

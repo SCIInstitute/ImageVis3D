@@ -38,14 +38,14 @@
 #include "../Tuvok/StdTuvokDefines.h"
 #include <sstream>
 #include "GL/glew.h"
-#ifndef DETECTED_OS_WINDOWS
-#pragma GCC visibility push(default)
+#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
+# pragma GCC visibility push(default)
 #endif
 #include <QtGui/QtGui>
 #include <QtGui/QMessageBox>
 #include <QtOpenGL/QtOpenGL>
-#ifndef DETECTED_OS_WINDOWS
-#pragma GCC visibility pop
+#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
+# pragma GCC visibility pop
 #endif
 
 #include "RenderWindowGL.h"
