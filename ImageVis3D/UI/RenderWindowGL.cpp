@@ -53,6 +53,7 @@
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 #include "../Tuvok/IO/IOManager.h"
+#include "../Tuvok/Renderer/GL/GLInclude.h"
 
 using namespace std;
 using namespace tuvok;
@@ -300,13 +301,13 @@ void RenderWindowGL::RenderSeparatingLines() {
   glLineWidth(regionSplitterWidth);
 
   if (GetViewMode() == VM_TWOBYTWO) {
-    glBegin(GL_LINES);
+    GLBEGIN(GL_LINES);
       glColor4f(1.0f,1.0f,1.0f,1.0f);
       glVertex3f(m_vWinFraction.x,-1,0);
       glVertex3f(m_vWinFraction.x,1,0);
       glVertex3f(-1,m_vWinFraction.y,0);
       glVertex3f(1,m_vWinFraction.y,0);
-    glEnd();
+    GLEND();
   }
 
   glLineWidth(1);
