@@ -222,8 +222,8 @@ int main(int argc, const char* argv[])
     for(std::vector<std::string>::const_iterator f = input.begin();
         f != input.end(); ++f) {
       std::string ext = SysTools::ToLowerCase(SysTools::GetExt(*f));
-      bool conv_vol = ioMan.GetConverterForExt(ext, true) != NULL;
-      bool conv_geo = ioMan.GetGeoConverterForExt(ext, true) != NULL;
+      bool conv_vol = ioMan.GetConverterForExt(ext, false) != NULL;
+      bool conv_geo = ioMan.GetGeoConverterForExt(ext, false) != NULL;
       if(conv_vol || conv_geo) { continue; }
 
       if(!conv_vol && !conv_geo) {
