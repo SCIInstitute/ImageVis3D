@@ -1044,10 +1044,7 @@ void RenderWindow::CloneRendermode(RenderWindow* other) {
   m_Renderer->SetCVBorderScale(other->m_Renderer->GetCVBorderScale());
   m_Renderer->SetCVColor(other->m_Renderer->GetCVColor());
   m_Renderer->SetCV(other->m_Renderer->GetCV());
-
-  for (int i=0; i < MAX_RENDER_REGIONS; ++i)
-    for (int j=0; j < NUM_WINDOW_MODES; ++j)
-      m_Renderer->SetCVFocusPos(*renderRegions[i][j], other->m_Renderer->GetCVFocusPos());
+  m_Renderer->SetCVFocusPos(other->m_Renderer->GetCVFocusPos());
 }
 
 void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate) {
