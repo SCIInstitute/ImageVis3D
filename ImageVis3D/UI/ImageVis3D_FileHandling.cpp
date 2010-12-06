@@ -335,13 +335,17 @@ bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
 
 void MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList files) {
   if (bNoUserInteraction) {
-    WARNING("This dataset conatins mesh data but the current "
-            "renderer does not supports rendering meshes. Mesh "
-            "rendering is disabled until you switch to a renderer "
-            "that supports this feature e.g. the 3D slice "
-            "based volume renderer.");
-    m_pActiveRenderWin->GetRenderer()->GetMeshes().clear();
-    UpdateExplorerView(true);
+    if (m_pActiveRenderWin && 
+      !m_pActiveRenderWin->GetRenderer()->SupportsMeshes() &&
+      m_pActiveRenderWin->GetRenderer()->GetMeshes().size() > 0) {
+        WARNING("This dataset contains mesh data but the current "
+                "renderer does not supports rendering meshes. Mesh "
+                "rendering is disabled until you switch to a renderer "
+                "that supports this feature e.g. the 3D slice "
+                "based volume renderer.");
+        m_pActiveRenderWin->GetRenderer()->GetMeshes().clear();
+        UpdateExplorerView(true);
+    }
   } else {
     if (m_pActiveRenderWin && 
       !m_pActiveRenderWin->GetRenderer()->SupportsMeshes() &&
@@ -349,7 +353,7 @@ void MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList f
       if(QMessageBox::Yes == 
         QMessageBox::question(NULL, 
                          "Mesh feature not supported in this renderer",
-                         "This dataset conatins mesh data but the current "
+                         "This dataset contains mesh data but the current "
                          "renderer does not supports rendering meshes. Mesh "
                          "rendering is disabled until you switch to a renderer "
                          "that supports this feature e.g. the 3D slice "
