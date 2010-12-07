@@ -41,6 +41,7 @@
 #include <iostream>
 #endif
 #include "../Tuvok/IO/Tuvok_QtPlugins.h"
+#include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QString>
 #include <QtGui/QApplication>
@@ -143,30 +144,45 @@ int main(int argc, char* argv[])
   // else: only do this check in interactive mode.
   else {
     if(!QFile::exists("./ImageVis3D")) {
-      const char* msg =
-        "ImageVis3D's \"working directory\" is not the same as the "
-        "directory it was started from.  If you've used a tarball "
-        "installation of ImageVis3D, this is going to make it "
-        "almost impossible for us to find our shaders, which means "
-        "you won't be able to open a data set!\n\n"
-        "This almost assuredly happened because you opened ImageVis3D "
-        "by double-clicking it in KDE's file browser.  As outlined in "
-        "KDE bug 131010, KDE does not properly set working directories.\n\n"
-        "The only way we could presumably fix this is to provide distribution-"
-        "specific binaries for all varieties of Linux out there.  Of course, "
-        "given our limited resources this is impossible.  You can help us by "
-        "commenting on the KDE bug about how unreasonable this behavior is "
-        "and how difficult it is for a small development house to conform to "
-        "this behavior.\n\n"
-        "The URL is: https://bugs.kde.org/show_bug.cgi?id=131010.";
-      QString err = QString(msg);
-      QClipboard *c = QApplication::clipboard();
-      if(c->text().isEmpty()) {
-        c->setText("https://bugs.kde.org/show_bug.cgi?id=131010");
-        err += QString("  Since your clipboard was empty anyway, I have "
-                       "copied that URL into your clipboard's text.");
+      MESSAGE("Working directory wrong!  Applying hack.");
+      // grab a copy of the full path w/ "ImageVis3D" lopped off the end.
+      QDir d = QDir(argv[0]);
+      std::string s;
+      s.insert(0, d.absolutePath().toStdString());
+      size_t iv3d = s.rfind("ImageVis3D");
+      if(iv3d != std::string::npos) {
+        std::string dir;
+        dir.insert(0, s.c_str(), iv3d);
+        MESSAGE("cd'ing to dir: %s", dir.c_str());
+        if(!QDir::setCurrent(QString(dir.c_str()))) {
+          WARNING("Could not set sane working directory!");
+          const char* msg =
+            "ImageVis3D's \"working directory\" is not the same as the "
+            "directory it was started from, and I could not fix it.  "
+            "If you've used a tarball "
+            "installation of ImageVis3D, this is going to make it "
+            "almost impossible for us to find our shaders, which means "
+            "you won't be able to open a data set!\n\n"
+            "This almost assuredly happened because you opened ImageVis3D "
+            "by double-clicking it in KDE's file browser.  As outlined in "
+            "KDE bug 131010, KDE does not properly set working directories.\n\n"
+            "The only way we could presumably fix this is to provide "
+            "distribution-specific binaries for all varieties of Linux out "
+            "there.  Of course, given our limited resources this is "
+            "impossible.  You can help us by commenting on the KDE bug about "
+            "how unreasonable this behavior is and how difficult it is for a "
+            "small development house to conform to this behavior.\n\n"
+            "The URL is: https://bugs.kde.org/show_bug.cgi?id=131010.";
+          QString err = QString(msg);
+          QClipboard *c = QApplication::clipboard();
+          if(c->text().isEmpty()) {
+            c->setText("https://bugs.kde.org/show_bug.cgi?id=131010");
+            err += QString("  Since your clipboard was empty anyway, I have "
+                           "copied that URL into your clipboard's text.");
+          }
+          QMessageBox::warning(&mainWindow, "Invalid working directory", err);
+        }
       }
-      QMessageBox::warning(&mainWindow, "Incorrect working directory", err);
     }
   }
 #endif
