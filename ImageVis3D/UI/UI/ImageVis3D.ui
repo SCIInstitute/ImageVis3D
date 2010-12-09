@@ -4844,7 +4844,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <string>Welcome Screen</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+W</string>
+    <string>Ctrl+Alt+W</string>
    </property>
   </action>
   <action name="actionReport_an_Issue">
