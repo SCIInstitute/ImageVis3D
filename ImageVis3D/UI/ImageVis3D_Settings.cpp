@@ -88,6 +88,11 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     settings.beginGroup("Memory");
     UINT64 iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
     UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+
+    bool bOverrideDetMax = settings.value("OverrideDetectedMaxima", false).toBool();
+    unsigned int iOverMaxCPU = settings.value("OverriddenCPUMax", 0).toUInt();
+    unsigned int iOverMaxGPU = settings.value("OverriddenGPUMax", 0).toUInt();
+
     string strTempDir(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
     unsigned int iMaxBrickSize = settings.value("MaxBricksize", static_cast<qulonglong>(MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize()))).toUInt();
     unsigned int iMaxMaxBrickSize = settings.value("MaxMaxBricksize", 14).toUInt();
@@ -160,7 +165,8 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bIsDirectX10Capable = m_MasterController.SysInfo()->IsDirectX10Capable();
 
     // hand data to form
-    settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU, strTempDir,
+    settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU, bOverrideDetMax,
+                          iOverMaxCPU, iOverMaxGPU, strTempDir,
                           bQuickopen, iMinFramerate, bUseAllMeans, iLODDelay, iActiveTS, iInactiveTS,
                           bWriteLogFile, bShowCrashDialog, string(strLogFileName.toAscii()), iLogLevel,
                           bShowVersionInTitle,
@@ -177,6 +183,12 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.beginGroup("Memory");
       settings.setValue("MaxGPUMem", static_cast<qulonglong>(settingsDlg.GetGPUMem()));
       settings.setValue("MaxCPUMem", static_cast<qulonglong>(settingsDlg.GetCPUMem()));
+
+      settings.setValue("OverrideDetectedMaxima", settingsDlg.OverrideMaxMem());
+      settings.setValue("OverriddenCPUMax", settingsDlg.GetMaxCPUMem());
+      settings.setValue("OverriddenGPUMax", settingsDlg.GetMaxGPUMem());
+
+
       settings.setValue("TempDir", settingsDlg.GetTempDir().c_str());
       settings.setValue("MaxBricksize", static_cast<qulonglong>(settingsDlg.GetMaxBrickSize()));
       settings.endGroup();

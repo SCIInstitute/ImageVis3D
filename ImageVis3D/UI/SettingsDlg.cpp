@@ -63,7 +63,11 @@ SettingsDlg::~SettingsDlg(void)
 }
 
 void SettingsDlg::setupUi(QDialog *SettingsDlg) {
+
+
   Ui_SettingsDlg::setupUi(SettingsDlg);
+
+  frame_ignoreMax->setVisible(false);
 
   UINT64 iMaxCPUMemSize   = m_MasterController.SysInfo()->GetCPUMemSize();
   UINT64 iMaxGPUMemSize   = m_MasterController.SysInfo()->GetGPUMemSize();
@@ -96,31 +100,16 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   desc = tr("Running in %1 bit mode").arg(iBitWidth);
   label_NumBits->setText(desc);
 
-  iMaxCPUMemSize /= 1024*1024;
-  horizontalSlider_CPUMem->setMaximum(iMaxCPUMemSize);
-  if (!m_MasterController.SysInfo()->IsCPUSizeComputed()) {
-    horizontalSlider_CPUMem->setValue(1024); // choose one gig as default in core size if the max size is not-computed the default
-  } else {
-    horizontalSlider_CPUMem->setValue(int(iMaxCPUMemSize*0.8f));
-  }
 
-  // on a 32bit system allow only a maximum of 2 gig to be adressed
-  if (iBitWidth == 32)
-    horizontalSlider_CPUMem->setMaximum(min(horizontalSlider_CPUMem->maximum(), 2048));
+  unsigned int iMaxCPUMB=static_cast<unsigned int>(iMaxCPUMemSize/(1024*1024));
+  unsigned int iMaxGPUMB=static_cast<unsigned int>(iMaxGPUMemSize/(1024*1024));
 
-  iMaxGPUMemSize /= 1024*1024;
-
-  horizontalSlider_GPUMem->setMaximum(iMaxGPUMemSize);
-  m_InitialGPUMemMax = iMaxGPUMemSize;
-  if (!m_MasterController.SysInfo()->IsGPUSizeComputed()) {
-    horizontalSlider_GPUMem->setValue(512); // choose 512 meg as default in core size if the max size is not-computed the default
-  } else {
-    horizontalSlider_GPUMem->setValue(int(iMaxGPUMemSize*0.8f));
-  }
+  MaxToSliders(iMaxCPUMB, iMaxGPUMB);
 
   // init mem sliders
   horizontalSlider_GPUMem->setMinimum(32);
   horizontalSlider_CPUMem->setMinimum(512);
+
 
 #if defined(_WIN32) && defined(USE_DIRECTX)
   if(m_MasterController.ExperimentalFeatures()) {
@@ -131,6 +120,40 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
 #else
   groupBox_7->setVisible(false);
 #endif
+}
+
+void SettingsDlg::MaxToSliders(unsigned int iMaxCPUMB, unsigned int iMaxGPUMB) {
+  horizontalSlider_CPUMem->setMaximum(iMaxCPUMB);
+  if (!m_MasterController.SysInfo()->IsCPUSizeComputed()) {
+    horizontalSlider_CPUMem->setValue(1024); // choose one gig as default in core size if the max size is not-computed the default
+  } else {
+    horizontalSlider_CPUMem->setValue(int(iMaxCPUMB*0.8f));
+  }
+
+  // on a 32bit system allow only a maximum of 2 gig to be adressed
+  if (m_MasterController.SysInfo()->GetProgramBitWidth() == 32)
+    horizontalSlider_CPUMem->setMaximum(min(horizontalSlider_CPUMem->maximum(), 2048));
+
+  horizontalSlider_GPUMem->setMaximum(iMaxGPUMB);
+  m_InitialGPUMemMax = iMaxGPUMB;
+  if (!m_MasterController.SysInfo()->IsGPUSizeComputed()) {
+    horizontalSlider_GPUMem->setValue(512); // choose 512 meg as default in core size if the max size is not-computed the default
+  } else {
+    horizontalSlider_GPUMem->setValue(int(iMaxGPUMB*0.8f));
+  }
+}
+
+
+bool SettingsDlg::OverrideMaxMem() const {
+  return checkBox_OverrideMax->isChecked();
+}
+
+unsigned int SettingsDlg::GetMaxGPUMem() const {
+  return checkBox_OverrideMax->isChecked() ? spinBox_GPUMax->value() : 0;
+}
+
+unsigned int SettingsDlg::GetMaxCPUMem() const {
+  return checkBox_OverrideMax->isChecked() ? spinBox_CPUMax->value() : 0;
 }
 
 
@@ -293,6 +316,8 @@ void SettingsDlg::SelectBackColor2() {
 
 // make sure the user cannot select more GPU than CPU mem
 void SettingsDlg::SetMaxMemCheck() {
+  if (checkBox_OverrideMax->isChecked()) return;
+
   if (horizontalSlider_GPUMem->value() > horizontalSlider_CPUMem->value()) {
     horizontalSlider_GPUMem->setValue(horizontalSlider_CPUMem->value());
   }
@@ -336,7 +361,8 @@ void SettingsDlg::SetLogoLabel() {
   }
 }
 
-void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU, const std::string& tempDir,
+void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU, bool bIgnoreMax,
+                            unsigned int iUserMaxCPUMB, unsigned int iUserMaxGPUMB, const std::string& tempDir,
                             bool bQuickopen, unsigned int iMinFramerate, bool bUseAllMeans, unsigned int iLODDelay,
                             unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, UINT32 iLogLevel,
@@ -352,10 +378,20 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
                             unsigned int iMaxMaxBrickSize,
                             bool expFeatures) {
   m_bInit = true;
+
+  checkBox_OverrideMax->setChecked(bIgnoreMax);
+  if (bIgnoreMax) {
+    spinBox_CPUMax->setValue(iUserMaxCPUMB);
+    spinBox_GPUMax->setValue(iUserMaxGPUMB);
+  } else {
+    spinBox_CPUMax->setValue(horizontalSlider_CPUMem->maximum());
+    spinBox_GPUMax->setValue(horizontalSlider_GPUMem->maximum());
+  }
+
   horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
   horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
-  lineEdit_TempDir->setText(tempDir.c_str());
 
+  lineEdit_TempDir->setText(tempDir.c_str());
   horizontalSlider_BS->setValue(iMaxBrickSize);
   horizontalSlider_BS->setMaximum(iMaxMaxBrickSize);
 
@@ -620,5 +656,24 @@ void SettingsDlg::SelectTempDir() {
     if (directoryName[directoryName.size()-1] != '/' &&
         directoryName[directoryName.size()-1] != '\\') directoryName = directoryName+'/';
     lineEdit_TempDir->setText(directoryName);
+  }
+}
+
+
+void SettingsDlg::MemMaxChanged() {
+  if (checkBox_OverrideMax->isChecked()) {
+    horizontalSlider_CPUMem->setMaximum(spinBox_CPUMax->value());
+    horizontalSlider_GPUMem->setMaximum(spinBox_GPUMax->value());
+  }
+}
+
+void SettingsDlg::OverrideMaxToggled(bool bOverride) {
+  if (bOverride) {
+    horizontalSlider_CPUMem->setMaximum(spinBox_CPUMax->value());
+    horizontalSlider_GPUMem->setMaximum(spinBox_GPUMax->value());
+  } else {
+    UINT64 iMaxCPUMemSize   = m_MasterController.SysInfo()->GetCPUMemSize();
+    UINT64 iMaxGPUMemSize   = m_MasterController.SysInfo()->GetGPUMemSize();
+    MaxToSliders(iMaxCPUMemSize/(1024*1024), iMaxGPUMemSize/(1024*1024));
   }
 }

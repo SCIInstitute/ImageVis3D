@@ -56,6 +56,11 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     UINT64        GetGPUMem() const;
     UINT64        GetCPUMem() const;
+
+    bool OverrideMaxMem() const;
+    unsigned int GetMaxGPUMem() const;
+    unsigned int GetMaxCPUMem() const;
+
     std::string   GetTempDir() const;
 
     bool          GetQuickopen() const;
@@ -102,6 +107,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     void Data2Form(bool bIsDirectX10Capable,
                    UINT64 iMaxCPU, UINT64 iMaxGPU,
+                   bool bIgnoreMax,
+                   unsigned int iUserMaxCPUMB, unsigned int iUserMaxGPUMB,
                    const std::string& tempDir,
                    bool bQuickopen,
                    unsigned int iMinFramerate,
@@ -140,6 +147,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool expFeatures);
 
   protected slots:
+    void MemMaxChanged();
+    void OverrideMaxToggled(bool bOverride);
     void SelectTextColor();
     void SetTextOpacity(int iOpacity);
     void SelectBackColor1();
@@ -168,6 +177,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
 
     void setupUi(QDialog *SettingsDlg);
     void SetLogoLabel();
+    void MaxToSliders(unsigned int iMaxCPUMB, unsigned int iMaxGPUMB);
 
 };
 
