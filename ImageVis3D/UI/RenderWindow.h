@@ -68,7 +68,7 @@ class RenderWindow
                  unsigned int iCounter,
                  QWidget* parent,
                  const UINTVECTOR2& vMinSize = UINTVECTOR2(50, 50),
-                 const UINTVECTOR2& vDefaultSize= UINTVECTOR2(400, 400));
+                 const UINTVECTOR2& vDefaultSize= UINTVECTOR2(512, 512));
 
     virtual ~RenderWindow();
 
