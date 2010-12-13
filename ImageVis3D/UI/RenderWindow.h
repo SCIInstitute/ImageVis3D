@@ -301,8 +301,8 @@ class RenderWindow
     INTVECTOR2        m_viMousePos;
     FLOATMATRIX4      m_mCaptureStartRotation;
     bool              m_bAbsoluteViewLock;
-    bool              m_bCaptureMode;
     bool              m_bInvWheel;
+    AbstrRenderer::ERendererTarget m_RTModeBeforeCapture;
 
     FLOATMATRIX4      m_mAccumulatedClipTranslation;
     ExtendedPlane     m_ClipPlane;

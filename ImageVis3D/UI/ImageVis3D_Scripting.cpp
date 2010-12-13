@@ -136,7 +136,7 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
   if (strCommand == "pack")            { bResult = Pack(strParams);} else
   if (strCommand == "upload")          { bResult = FtpTransfer(strParams[0], (strParams.size()>1) ? strParams[1].c_str() : GenUniqueName("Script", "data"), false );} else
   if (strCommand == "delete")          { bResult = remove(strParams[0].c_str()) == 0;} else
-  if (strCommand == "setLOD")            { if (m_pActiveRenderWin) m_pActiveRenderWin->GetRenderer()->SetCaptureMode(SysTools::ToLowerCase(strParams[0]) != "true"); } else
+  if (strCommand == "setLOD")          { if (m_pActiveRenderWin) m_pActiveRenderWin->GetRenderer()->SetRendererTarget( (SysTools::ToLowerCase(strParams[0]) != "true") ? AbstrRenderer::RT_CAPTURE : AbstrRenderer::RT_INTERACTIVE); } else
   if (strCommand == "setStereo")         { checkBox_Stereo->setChecked(SysTools::ToLowerCase(strParams[0]) == "true"); ToggleStereoRendering(); } else
   if (strCommand == "setStereoMode")     { SetStereoMode(SysTools::FromString<unsigned int>(strParams[0])); } else  
   if (strCommand == "setStereoFLength"){ SetStereoFocalLength(SysTools::FromString<float>(strParams[0])); } else

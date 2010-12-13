@@ -170,7 +170,7 @@ void MainWindow::CaptureRotation() {
         fAngle = float(i)/float(iNumImages) * 360.0f;
         m_pActiveRenderWin->SetCaptureRotationAngle(fAngle);
 
-        m_pActiveRenderWin->GetRenderer()->SetCaptureMode(true);
+        m_pActiveRenderWin->GetRenderer()->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
         while(m_pActiveRenderWin->GetRenderer()->CheckForRedraw() &&
               !pleaseWait.Canceled()) {
           const AbstrRenderer *ren = m_pActiveRenderWin->GetRenderer();
@@ -201,7 +201,7 @@ void MainWindow::CaptureRotation() {
           m_pActiveRenderWin->UpdateWindow();
         }
       }
-      m_pActiveRenderWin->GetRenderer()->SetCaptureMode(false);
+      m_pActiveRenderWin->GetRenderer()->SetRendererTarget(AbstrRenderer::RT_INTERACTIVE);
       m_pRedrawTimer->start(20);
     } else {
       if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
