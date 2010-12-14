@@ -37,7 +37,7 @@
 
 #include "../Tuvok/StdTuvokDefines.h"
 #include <sstream>
-#include "GL/glew.h"
+#include <3rdParty/GLEW/GL/glew.h>
 #if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
 # pragma GCC visibility push(default)
 #endif

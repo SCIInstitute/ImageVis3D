@@ -43,7 +43,7 @@
 /// We need this first because GPUMemMan depends on OpenGL
 /// but shouldn't, and GLEW will blow up if we don't include
 /// GLEW before GL includes.
-#include <GL/glew.h>
+#include "3rdParty/GLEW/GL/glew.h"
 
 #include "RenderWindowDX.h"
 #include "ImageVis3D.h"
