@@ -129,10 +129,6 @@ need to add your converter to the list specified in both variables.
 Once you've done that, rerun `qmake' from the root directory, and
 `make' to rebuild -- your converter should now be part of ImageVis3D!
 
-IMPORTANT: On Windows, the solution/project files do *not* respect the
-settings given in the `Tuvok.pro` file.  You must manually add your new
-files to the Visual Studio project in the normal way.
-
 CAUTION: On Windows, the solution/project files have diverged from the
 settings given in the qmake project file.  You will need to add your
 files to the Visual Studio project file in the normal way.  Do *not*

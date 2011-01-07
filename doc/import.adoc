@@ -26,7 +26,7 @@ structure of your data, and will require someone with C++ programming
 experience to make it happen.  However, the payoff is large: ImageVis3D
 will be able to open your formats `natively', without the costly
 conversion step, and you will no longer have to deal with the same data
-replicated across multiple files.
+replicated across your toolchain's native file format and UVF.
 
 .Use our code!
 [NOTE]
@@ -62,7 +62,7 @@ all geometry data must be associated with some kind of volume data.
 
 
 Gridded data is similar to an image file: it is defined as a series of
-voxels, with an implicit ordering and distance between each voxels.
+voxels, with an implicit ordering and distance between each voxel.
 That is, if we call a pixel `x` and define a pixel `x+1` to be the
 pixel to the right of `x`, then we know that the distance between `x`
 and `x+1` is equal to the distance between `x+1` and `x+2`.  Regular
@@ -92,10 +92,11 @@ the fly during load to meet this requirement.
 
 If your data do not exemplify regular grid data or geometry, ImageVis3D
 will not be able to handle it natively.  For now, your best bet to
-import such data into ImageVis3D is to resample it onto a regular grid.
-The http://www.visitusers.org/[VisIt] software package might be able to
-do this resampling for you; a sample Python script which uses VisIt to
-do this is given later in this document.
+be able to import such data into ImageVis3D is to resample it onto a
+regular grid.  The http://www.visitusers.org/[VisIt] software package
+might be able to do this resampling for you; a sample Python script
+which uses VisIt to do this is given later in this document (see the
+section on the "BOV" file format).
 
 Existing File Formats
 ---------------------
@@ -153,7 +154,8 @@ discourage reliance on image stacks due to slow access times.
 
 For many if not all image types, image data is downsampled to 8bits
 before it is handed to ImageVis3D's IO subsystem.  This is fixable, but
-at present has yet to be a pressing concern.
+at present has yet to be a pressing concern.  Please let us know if
+this is a significant hurdle for your data.
 
 QVis
 ^^^^
@@ -210,7 +212,7 @@ If you would like to write your own QVis data exporters, we recommend:
 Nearly Raw Raster Data (NRRD)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-NRRD is a very simple format comprised of a header with
+NRRD is a single-block format comprised of a header with
 accompanying data.  The NRRD file format is described extensively
 link:http://teem.sourceforge.net/nrrd/format.html[on its web site].
 
@@ -278,7 +280,7 @@ In some cases, a BOV may be split into multiple files, using a special
 `%` notation for the filenames within the header.  This variation is
 not supported by ImageVis3D.  To ensure you will only have a single
 data file, make sure you have a "single block" dataset in VisIt.  You
-can obtain one by applying a non-distributed `Resample' operation on
+can obtain one by applying a non-distributed "Resample" operation on
 the data.
 
 Here is a VisIt-python script which converts a dataset in the
@@ -343,6 +345,9 @@ to accomodate typical "header + value" formats.
 
 The data must vary in X slowest, and Z quickest.  If this is not the
 case for your data, you should swap X and Z dimensions that you input.
+Note that 'X slow, Z fast' corresponds to what many think of as the "C"
+way to write data, whereas 'Z fast, X slow' corresponds to what many
+people consider "Fortran arrays".
 
 The raw conversion dialog is not available when ImageVis3D is run in
 batch mode, as is the case when scripting commands are being executed.
