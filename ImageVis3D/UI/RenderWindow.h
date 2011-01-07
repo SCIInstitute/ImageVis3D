@@ -104,9 +104,9 @@ class RenderWindow
                           bool bPropagate);
     void SetClipPlane(RenderRegion *region, const ExtendedPlane &p);
     void SetClipTranslationDelta(RenderRegion *region, const FLOATVECTOR3& trans,
-                                 bool);
+                                 bool, bool);
     void SetClipRotationDelta(RenderRegion *region, const FLOATMATRIX4& rotDelta,
-                              bool);
+                              bool, bool);
     void SetPlaneAtClick(const ExtendedPlane& plane, bool propagate=true);
     void CloneViewState(RenderWindow* other);
     void FinalizeRotation(const RenderRegion *region, bool bPropagate);
@@ -214,7 +214,7 @@ class RenderWindow
       ArcBall arcBall;
       ArcBall clipArcBall;
 
-      FLOATMATRIX4 clipRotation;
+      FLOATMATRIX4 clipRotation[2];
     };
 
     RegionData regionDatas[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];

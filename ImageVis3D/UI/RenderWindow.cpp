@@ -294,7 +294,7 @@ bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate,
     RegionData *regionData = GetRegionData(region);
     SetClipRotationDelta(region,
                          regionData->clipArcBall.Drag(upos).ComputeRotation(),
-                         true);
+                         true, true);
     regionData->clipArcBall.Click(UINTVECTOR2(pos.x, pos.y));
     bUpdate = true;
   }
@@ -305,7 +305,7 @@ bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate,
                             FLOATVECTOR3(float(viPosDelta.x*2) / m_vWinDim.x,
                                          float(viPosDelta.y*2) / m_vWinDim.y,
                                          0),
-                            true);
+                            true, true);
     bUpdate = true;
   }
   return bUpdate;
@@ -359,7 +359,7 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
     // regardless of whether or not control is held.
     if(event->modifiers() & Qt::ControlModifier) {
       SetClipTranslationDelta(renderRegion,
-                              FLOATVECTOR3(fZoom/10.f, fZoom/10.f, 0.f), true);
+                              FLOATVECTOR3(fZoom/10.f, fZoom/10.f, 0.f), true, true);
     } else {
       SetTranslationDelta(renderRegion, FLOATVECTOR3(0,0,fZoom), true);
     }
@@ -818,8 +818,22 @@ void RenderWindow::SetTranslation(RenderRegion *renderRegion,
   regionData->arcBall.SetTranslation(mAccumulatedTranslation);
 
   if(m_Renderer->ClipPlaneLocked()) {
-    ExtendedPlane p = m_Renderer->GetClipPlane();
-    SetClipPlane(renderRegion, p);
+    // We want to translate the plane to the *dataset's* origin before rotating,
+    // not the origin of the entire 3D domain!  The difference is particularly
+    // relevant when the clip plane is outside the dataset's domain: the `center'
+    // of the plane (*cough*) should rotate about the dataset, not about the
+    // plane itself.
+    FLOATMATRIX4 from_pt_to_0, from_0_to_pt;
+    from_pt_to_0.Translation(-m_Renderer->GetTranslation(renderRegion).m41,
+                             -m_Renderer->GetTranslation(renderRegion).m42,
+                             -m_Renderer->GetTranslation(renderRegion).m43);
+    from_0_to_pt.Translation(m_Renderer->GetTranslation(renderRegion).m41,
+                             m_Renderer->GetTranslation(renderRegion).m42,
+                             m_Renderer->GetTranslation(renderRegion).m43);
+
+    m_ClipPlane.Default(false);
+    m_ClipPlane.Transform(m_Renderer->GetTranslation(renderRegion) * from_pt_to_0 * regionData->clipRotation[0] * from_0_to_pt, false);
+    SetClipPlane(renderRegion, m_ClipPlane);
   }
 
   Controller::Instance().Provenance("translation", "translate");
@@ -843,7 +857,8 @@ void RenderWindow::SetTranslationDelta(RenderRegion *renderRegion,
     // ourself.
     FLOATMATRIX4 translation;
     translation.Translation(trans.x, -trans.y, trans.z);
-    SetClipPlane(renderRegion, m_ClipPlane * translation);
+    m_ClipPlane.Transform(translation, false);
+    SetClipPlane(renderRegion, m_ClipPlane);
   }
 
   if (bPropagate){
@@ -862,7 +877,8 @@ void RenderWindow::FinalizeRotation(const RenderRegion *region, bool bPropagate)
   // Reset the clip matrix we'll apply; the state is already stored/applied in
   // the ExtendedPlane instance.
   RegionData* regionData = GetRegionData(region);
-  regionData->clipRotation = FLOATMATRIX4();
+  regionData->clipRotation[0] = FLOATMATRIX4();
+  regionData->clipRotation[1] = FLOATMATRIX4();
   if (bPropagate) {
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
       RenderRegion *otherRegion = GetCorrespondingRenderRegion(m_vpLocks[0][i],
@@ -877,9 +893,26 @@ void RenderWindow::SetRotation(RenderRegion *region,
                                const FLOATMATRIX4& newRotation) {
   m_Renderer->SetRotation(region, newRotation);
   if(m_Renderer->ClipPlaneLocked()) {
-    ExtendedPlane deflt;
-    deflt = deflt * newRotation;
-    SetClipPlane(region, deflt);
+    
+    FLOATMATRIX4 from_pt_to_0, from_0_to_pt;
+
+    // We want to translate the plane to the *dataset's* origin before rotating,
+    // not the origin of the entire 3D domain!  The difference is particularly
+    // relevant when the clip plane is outside the dataset's domain: the `center'
+    // of the plane (*cough*) should rotate about the dataset, not about the
+    // plane itself.
+    from_pt_to_0.Translation(-m_Renderer->GetTranslation(region).m41,
+                             -m_Renderer->GetTranslation(region).m42,
+                             -m_Renderer->GetTranslation(region).m43);
+    from_0_to_pt.Translation(m_Renderer->GetTranslation(region).m41,
+                             m_Renderer->GetTranslation(region).m42,
+                             m_Renderer->GetTranslation(region).m43);
+  
+    RegionData* regionData = GetRegionData(region);
+    regionData->clipRotation[0] = newRotation;
+    m_ClipPlane.Default(false);
+    m_ClipPlane.Transform(m_Renderer->GetTranslation(region) * from_pt_to_0 * regionData->clipRotation[0] * from_0_to_pt, false);
+    SetClipPlane(region, m_ClipPlane);
   }
 }
 
@@ -889,7 +922,7 @@ void RenderWindow::SetRotationDelta(RenderRegion *region,
   m_Renderer->SetRotation(region, newRotation);
 
   if(m_Renderer->ClipPlaneLocked()) {
-    SetClipRotationDelta(region, rotDelta, false);
+    SetClipRotationDelta(region, rotDelta, bPropagate, false);
   }
 
   if (bPropagate){
@@ -926,12 +959,13 @@ void RenderWindow::SetClipPlane(RenderRegion *renderRegion, const ExtendedPlane 
 // avoids any sort of issues w.r.t. rotating about the wrong point.
 void RenderWindow::SetClipRotationDelta(RenderRegion *renderRegion,
                                         const FLOATMATRIX4& rotDelta,
-                                        bool bPropagate)
+                                        bool bPropagate,
+                                        bool bSecondary)
 {
   RegionData* regionData = GetRegionData(renderRegion);
 
-  regionData->clipRotation = regionData->clipRotation * rotDelta;
-  FLOATVECTOR3 pt = m_PlaneAtClick.Point();
+  regionData->clipRotation[bSecondary ? 1 : 0] = regionData->clipRotation[bSecondary ? 1 : 0] * rotDelta;
+ 
   FLOATMATRIX4 from_pt_to_0, from_0_to_pt;
 
   // We want to translate the plane to the *dataset's* origin before rotating,
@@ -947,8 +981,7 @@ void RenderWindow::SetClipRotationDelta(RenderRegion *renderRegion,
                            m_Renderer->GetTranslation(renderRegion).m43);
 
   ExtendedPlane rotated = m_PlaneAtClick;
-  rotated.Transform(from_pt_to_0 * regionData->clipRotation * from_0_to_pt);
-
+  rotated.Transform(from_pt_to_0 * regionData->clipRotation[bSecondary ? 1 : 0] * from_0_to_pt, bSecondary);
   SetClipPlane(renderRegion, rotated);
 
   if (bPropagate) {
@@ -960,7 +993,7 @@ void RenderWindow::SetClipRotationDelta(RenderRegion *renderRegion,
       if (m_bAbsoluteViewLock) {
         (*iter)->SetClipPlane(otherRegion, m_ClipPlane);
       } else {
-        (*iter)->SetClipRotationDelta(otherRegion, rotDelta, false);
+        (*iter)->SetClipRotationDelta(otherRegion, rotDelta, bPropagate, bSecondary);
       }
     }
   }
@@ -970,7 +1003,8 @@ void RenderWindow::SetClipRotationDelta(RenderRegion *renderRegion,
 // plane's normal.
 void RenderWindow::SetClipTranslationDelta(RenderRegion *renderRegion,
                                            const FLOATVECTOR3 &trans,
-                                           bool bPropagate)
+                                           bool bPropagate,
+                                           bool bSecondary)
 {
   FLOATMATRIX4 translation;
 
@@ -983,7 +1017,7 @@ void RenderWindow::SetClipTranslationDelta(RenderRegion *renderRegion,
   translation.Translation(tr.x, tr.y, tr.z);
 
   ExtendedPlane translated = m_ClipPlane;
-  translated.Transform(translation);
+  translated.Transform(translation, bSecondary);
   SetClipPlane(renderRegion, translated);
 
   if (bPropagate) {
@@ -995,7 +1029,7 @@ void RenderWindow::SetClipTranslationDelta(RenderRegion *renderRegion,
       if (m_bAbsoluteViewLock) {
         (*iter)->SetClipPlane(otherRegion, m_ClipPlane);
       } else {
-        (*iter)->SetClipTranslationDelta(otherRegion, trans, false);
+        (*iter)->SetClipTranslationDelta(otherRegion, trans, bPropagate, bSecondary);
       }
     }
   }
@@ -1352,12 +1386,13 @@ void RenderWindow::ResetRenderingParameters()
 
   for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
     for (int j=0; j < NUM_WINDOW_MODES; ++j) {
-      regionDatas[i][j].clipRotation = mIdentity;
+      regionDatas[i][j].clipRotation[0] = mIdentity;
+      regionDatas[i][j].clipRotation[1] = mIdentity;
 
       RenderRegion *region = renderRegions[i][j];
       m_Renderer->SetRotation(region, mIdentity);
       m_Renderer->SetTranslation(region, mIdentity);
-      SetClipPlane(region, PLANE<float>(0,0,1,0));
+      SetClipPlane(region, ExtendedPlane());
     }
   }
   SetWindowFraction2x2(FLOATVECTOR2(0.5f, 0.5f));
