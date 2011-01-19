@@ -117,7 +117,7 @@ bool RenderWindow::GetAvoidCompositing() const {
 }
 
 void RenderWindow::ToggleHQCaptureMode() {
-  if (m_RTModeBeforeCapture == AbstrRenderer::RT_CAPTURE) {
+  if (m_Renderer->GetRendererTarget() == AbstrRenderer::RT_CAPTURE) {
     // restore rotation from before the capture process
     SetRotation(GetActiveRenderRegions()[0], m_mCaptureStartRotation);
     m_Renderer->SetRendererTarget(m_RTModeBeforeCapture);
@@ -759,6 +759,7 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
                                 bool bPreserveTransparency)
 {
   GLFrameCapture f;
+  AbstrRenderer::ERendererTarget mode = m_Renderer->GetRendererTarget();
   m_Renderer->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
   while(m_Renderer->CheckForRedraw()) {
     QCoreApplication::processEvents();
@@ -768,7 +769,7 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
   // as the window is double buffered call repaint twice
   ForceRepaint();  ForceRepaint();
   bool rv = f.CaptureSingleFrame(strFilename, bPreserveTransparency);
-  m_Renderer->SetRendererTarget(AbstrRenderer::RT_INTERACTIVE);
+  m_Renderer->SetRendererTarget(mode);
   return rv;
 }
 
@@ -798,6 +799,7 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
                                         std::string* strRealFilename)
 {
   GLFrameCapture f;
+  AbstrRenderer::ERendererTarget mode = m_Renderer->GetRendererTarget();
   m_Renderer->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
   while(m_Renderer->CheckForRedraw()) {
     QCoreApplication::processEvents();
@@ -807,7 +809,7 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
   ForceRepaint();  ForceRepaint();
   bool rv = f.CaptureSequenceFrame(strFilename, bPreserveTransparency,
                                    strRealFilename);
-  m_Renderer->SetRendererTarget(AbstrRenderer::RT_INTERACTIVE);
+  m_Renderer->SetRendererTarget(mode);
   return rv;
 }
 

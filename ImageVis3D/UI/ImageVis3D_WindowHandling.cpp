@@ -608,11 +608,23 @@ bool MainWindow::ApplyWorkspace() {
 
 
 void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
-  if (ActiveSubWindow())
-    ActiveSubWindow()->resize(iSizeX, iSizeY);
-  else
-    if (mdiArea->activeSubWindow())
-      mdiArea->activeSubWindow()->resize(iSizeX, iSizeY);
+  if (ActiveSubWindow()) {
+    UINTVECTOR2 renderSize = m_pActiveRenderWin->GetRenderer()->GetSize();
+    UINTVECTOR2 windowSize(ActiveSubWindow()->size().width(), 
+                           ActiveSubWindow()->size().height());
+
+    UINTVECTOR2 winDecoSize = windowSize-renderSize;
+    ActiveSubWindow()->resize(iSizeX+winDecoSize.x, iSizeY+winDecoSize.y);
+  } else {
+    if (mdiArea->activeSubWindow()) {
+      UINTVECTOR2 renderSize = WidgetToRenderWin(mdiArea->activeSubWindow()->widget())->GetRenderer()->GetSize();
+      UINTVECTOR2 windowSize(mdiArea->activeSubWindow()->size().width(), 
+                             mdiArea->activeSubWindow()->size().height());
+
+      UINTVECTOR2 winDecoSize = windowSize-renderSize;
+      mdiArea->activeSubWindow()->resize(iSizeX+winDecoSize.x, iSizeY+winDecoSize.y);
+    }
+  }
 }
 
 void MainWindow::CloseCurrentView() {

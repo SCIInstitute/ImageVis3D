@@ -201,8 +201,7 @@ void MainWindow::CaptureRotation() {
           m_pActiveRenderWin->UpdateWindow();
         }
       }
-      m_pActiveRenderWin->GetRenderer()->SetRendererTarget(AbstrRenderer::RT_INTERACTIVE);
-      m_pRedrawTimer->start(20);
+      
     } else {
       if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
         bool bReUse = true;
@@ -351,6 +350,7 @@ void MainWindow::CaptureRotation() {
       }
     }
     m_pActiveRenderWin->ToggleHQCaptureMode();
+    m_pRedrawTimer->start(20);
     pleaseWait.close();
     pleaseWait.DetachLabel();
     m_pActiveRenderWin->GetRenderer()->ScheduleCompleteRedraw();  // to make sure front and backbuffer are valid
