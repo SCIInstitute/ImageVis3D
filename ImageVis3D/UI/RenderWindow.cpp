@@ -425,6 +425,9 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
     case Qt::Key_C :
       m_Renderer->SetRenderCoordArrows(!m_Renderer->GetRenderCoordArrows());
       break;
+    case Qt::Key_T :
+      m_Renderer->Transfer3DRotationToMIP();
+      break;
     case Qt::Key_P :
       m_Renderer->Set2DPlanesIn3DView(!m_Renderer->Get2DPlanesIn3DView());
       break;
@@ -1398,4 +1401,5 @@ void RenderWindow::ResetRenderingParameters()
     }
   }
   SetWindowFraction2x2(FLOATVECTOR2(0.5f, 0.5f));
+  m_Renderer->Transfer3DRotationToMIP();
 }
