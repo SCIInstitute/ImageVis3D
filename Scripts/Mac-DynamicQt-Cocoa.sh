@@ -40,6 +40,7 @@ echo "yes" | \
         -no-multimedia \
         -no-phonon \
         -no-phonon-backend \
+        -no-multimedia \
         -no-webkit \
         -no-svg \
         -no-scripttools \
