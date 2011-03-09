@@ -1274,6 +1274,7 @@ void MainWindow::UpdateMenus() {
   bool bHasMdiChild = mdiArea->subWindowList().size() > 0;
   actionExport_Dataset->setEnabled(bHasMdiChild);
   actionTransfer_to_ImageVis3D_Mobile_Device->setEnabled(bHasMdiChild);
+  actionAdd_Geometry_to_Data_Set->setEnabled(bHasMdiChild);
 
   actionGo_Fullscreen->setEnabled(bHasMdiChild);
   actionCascade->setEnabled(bHasMdiChild);

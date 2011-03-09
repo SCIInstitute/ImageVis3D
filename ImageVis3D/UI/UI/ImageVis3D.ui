@@ -4918,7 +4918,10 @@ smaller values while make it apear behind. While the first effect usualy looks m
    </property>
   </action>
   <action name="actionAdd_Geometry_to_Data_Set">
-   <property name="text">
+    <property name="enabled">
+      <bool>false</bool>
+    </property>
+    <property name="text">
     <string>Add Geometry to this Data Set</string>
    </property>
   </action>
