@@ -66,9 +66,14 @@ string MainWindow::ConvertTF(const string& strSource1DTFilename,
   string strTarget1DTFilename = strTargetDir+"/"+filenameOnly;
   MESSAGE("Converting transferfunction to %s",strTarget1DTFilename.c_str());
 
-  // resample 1D tf to 8bit
   TransferFunction1D tfIn(strSource1DTFilename);
-  tfIn.Resample(256);
+  if (tfIn.GetSize() > 256) {
+    // resample 1D tf to 8bit
+    tfIn.Resample(256);
+  } else {
+    // if it is 8bit already simply fill it to 256 entries
+    tfIn.FillOrTruncate(256);
+  }
   if (!tfIn.Save(strTarget1DTFilename)) return "";
 
 
