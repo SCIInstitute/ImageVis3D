@@ -73,7 +73,6 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
 
     if (rawDialog.ComputeExpectedSize() > iSize) return false;
 
-
     strTitle = "Raw data";
     eType             = UVFTables::ES_UNDEFINED;
     iComponentCount = 1; 
@@ -83,14 +82,17 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
     unsigned int  encID          = rawDialog.GetEncoding();
     iHeaderSkip       = rawDialog.GetHeaderSize();
     bConvertEndianess = encID != 1 && rawDialog.IsBigEndian() != EndianConvert::IsBigEndian();
-    bSigned           = quantID == 2 || rawDialog.IsSigned();
+    bSigned           = quantID >= 3 || rawDialog.IsSigned();
     
 
     iComponentSize = 8;
     if (quantID == 1) iComponentSize = 16;
-      if (quantID > 1) iComponentSize = 32;
+    if (quantID == 2 || quantID == 3) iComponentSize = 32;
+    if (quantID == 4) iComponentSize = 64;
 
-    bIsFloat = quantID == 3;
+    bIsFloat = quantID == 3 || quantID == 4;
+
+    MESSAGE("setting component size to: %llu", iComponentSize);
 
     if (encID == 0)  {
       strIntermediateFile = strSourceFilename;

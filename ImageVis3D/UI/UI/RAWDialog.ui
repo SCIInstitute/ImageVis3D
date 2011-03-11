@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>529</width>
-    <height>394</height>
+    <width>733</width>
+    <height>490</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -255,6 +255,13 @@
           <widget class="QRadioButton" name="radioButton_32BitFloat">
            <property name="text">
             <string>32 bit (float)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_Double">
+           <property name="text">
+            <string>64 bit (double)</string>
            </property>
           </widget>
          </item>

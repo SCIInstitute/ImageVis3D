@@ -97,9 +97,13 @@ void RAWDialog::GuessHeaderSize() {
 
 UINT64 RAWDialog::ComputeExpectedSize() {
   UINT64 iCompSize = 0;
-  if (radioButton_8bit->isChecked()) iCompSize = 1; else
-    if (radioButton_16bit->isChecked()) iCompSize = 2; else
-      iCompSize = 4;
+  switch(this->GetQuantization()) {
+    case 0: iCompSize = 1; break; /* 8bit */
+    case 1: iCompSize = 2; break; /* 16bit */
+    case 2:
+    case 3: iCompSize = 4; break; /* 32 bit int and float */
+    case 4: iCompSize = 8; break; /* 64bit float */
+  }
 
   return UINT64(spinBox_SizeX->value()) * UINT64(spinBox_SizeY->value()) * UINT64(spinBox_SizeZ->value()) * iCompSize + UINT64(spinBox_HeaderSkip->value());
 }
@@ -114,11 +118,13 @@ FLOATVECTOR3 RAWDialog::GetAspectRatio() {
 }
 
 unsigned int RAWDialog::GetQuantization() {
-  unsigned int iID = 3;
-  if (radioButton_8bit->isChecked()) iID = 0; else
-    if (radioButton_16bit->isChecked()) iID = 1; else
-      if (radioButton_32BitInt->isChecked()) iID = 2;
-  return iID;
+  if(radioButton_8bit->isChecked()) { return 0; }
+  else if(radioButton_16bit->isChecked()) { return 1; }
+  else if(radioButton_32BitInt->isChecked()) { return 2; }
+  else if(radioButton_32BitFloat->isChecked()) { return 3; }
+  else if(radioButton_Double->isChecked()) { return 4; }
+
+  return std::numeric_limits<unsigned int>::max();
 }
 
 unsigned int RAWDialog::GetEncoding() {
