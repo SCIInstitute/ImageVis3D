@@ -319,10 +319,10 @@
               </size>
              </property>
              <property name="toolTip">
-              <string>To capture multiple images press this button. This will create a new with the filename spcified above appending an increasing number.</string>
+              <string>To capture multiple images press this button. This will create a new with the filename specified above appending an increasing number.</string>
              </property>
              <property name="statusTip">
-              <string>To capture multiple images press this button. This will create a new with the filename spcified above appending an increasing number.</string>
+              <string>To capture multiple images press this button. This will create a new with the filename specified above appending an increasing number.</string>
              </property>
              <property name="text">
               <string>Sequence</string>
