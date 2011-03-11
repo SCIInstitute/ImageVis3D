@@ -986,15 +986,16 @@ void RenderWindow::SetClipRotationDelta(RenderRegion *renderRegion,
                            m_Renderer->GetTranslation(renderRegion).m43);
 
   ExtendedPlane rotated = m_PlaneAtClick;
-  rotated.Transform(from_pt_to_0 * regionData->clipRotation[bSecondary ? 1 : 0] * from_0_to_pt, bSecondary);
+  rotated.Transform(from_pt_to_0 *
+                    regionData->clipRotation[bSecondary ? 1 : 0] *
+                    from_0_to_pt, bSecondary);
   SetClipPlane(renderRegion, rotated);
 
   if (bPropagate) {
-    for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
+    for(std::vector<RenderWindow*>::const_iterator iter = m_vpLocks[0].begin();
         iter != m_vpLocks[0].end(); ++iter) {
-
-      RenderRegion *otherRegion = GetCorrespondingRenderRegion(*iter, renderRegion);
-
+      RenderRegion *otherRegion = GetCorrespondingRenderRegion(*iter,
+                                                               renderRegion);
       if (m_bAbsoluteViewLock) {
         (*iter)->SetClipPlane(otherRegion, m_ClipPlane);
       } else {
