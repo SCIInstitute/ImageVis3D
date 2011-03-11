@@ -502,6 +502,17 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
   if (renderWin) RenderWindowActive(renderWin);
   CheckForMeshCapabilities(bNoUserInteraction, files);
 
+  if(renderWin) {
+    AbstrRenderer* ren = renderWin->GetRenderer();
+    const Dataset& ds = ren->GetDataset();
+    UINT64VECTOR3 dom_sz = ds.GetDomainSize(0);
+    if(dom_sz[2] == 1) {
+      checkBox_Lighting->setChecked(false);
+      checkBox_Lighting->setEnabled(false);
+      SetLighting(false);
+    }
+  }
+
   return true;
 }
 
