@@ -84,6 +84,8 @@ void MainWindow::dropEvent(QDropEvent* ev)
 #endif
     if(SysTools::FileExists(fn)) {
       filename = fn;
+    } else {
+      WARNING("Ignoring drop of %s: file does not exist.", fn.c_str());
     }
   }
 
@@ -94,7 +96,11 @@ void MainWindow::dropEvent(QDropEvent* ev)
   }
 
   MESSAGE("Got file '%s' from drop event.", filename.c_str());
-  this->LoadDataset(filename);
+  if(SysTools::GetExt(filename) == "1dt") {
+    this->Transfer1DLoad(filename);
+  } else {
+    this->LoadDataset(filename);
+  }
   ev->accept();
 }
 
