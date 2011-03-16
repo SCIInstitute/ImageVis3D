@@ -259,7 +259,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButton_Double">
+          <widget class="QRadioButton" name="radioButton_64BitFloat">
            <property name="text">
             <string>64 bit (double)</string>
            </property>
@@ -484,8 +484,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>293</x>
-     <y>384</y>
+     <x>302</x>
+     <y>480</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -500,8 +500,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>346</x>
-     <y>384</y>
+     <x>355</x>
+     <y>480</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -564,8 +564,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>63</x>
-     <y>189</y>
+     <x>83</x>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
      <x>8</x>
@@ -581,7 +581,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>181</x>
-     <y>189</y>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -597,7 +597,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>346</x>
-     <y>189</y>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
      <x>435</x>
@@ -612,8 +612,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>71</x>
-     <y>247</y>
+     <x>91</x>
+     <y>291</y>
     </hint>
     <hint type="destinationlabel">
      <x>435</x>
@@ -628,8 +628,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>133</x>
-     <y>247</y>
+     <x>184</x>
+     <y>291</y>
     </hint>
     <hint type="destinationlabel">
      <x>434</x>
@@ -644,8 +644,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>193</x>
-     <y>247</y>
+     <x>270</x>
+     <y>291</y>
     </hint>
     <hint type="destinationlabel">
      <x>439</x>
@@ -660,8 +660,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>253</x>
-     <y>247</y>
+     <x>355</x>
+     <y>291</y>
     </hint>
     <hint type="destinationlabel">
      <x>435</x>
@@ -676,8 +676,8 @@
    <slot>CheckValues()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>106</x>
-     <y>308</y>
+     <x>143</x>
+     <y>364</y>
     </hint>
     <hint type="destinationlabel">
      <x>237</x>
@@ -692,8 +692,8 @@
    <slot>ToggleEndianessDialog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>46</x>
-     <y>247</y>
+     <x>66</x>
+     <y>291</y>
     </hint>
     <hint type="destinationlabel">
      <x>201</x>
@@ -709,7 +709,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>279</x>
-     <y>310</y>
+     <y>365</y>
     </hint>
     <hint type="destinationlabel">
      <x>440</x>
@@ -725,7 +725,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>257</x>
-     <y>189</y>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
      <x>521</x>
@@ -741,11 +741,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>346</x>
-     <y>189</y>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
-     <x>417</x>
-     <y>189</y>
+     <x>722</x>
+     <y>236</y>
     </hint>
    </hints>
   </connection>
@@ -757,11 +757,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>257</x>
-     <y>189</y>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
-     <x>371</x>
-     <y>189</y>
+     <x>722</x>
+     <y>236</y>
     </hint>
    </hints>
   </connection>
@@ -773,11 +773,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>181</x>
-     <y>189</y>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
-     <x>442</x>
-     <y>178</y>
+     <x>722</x>
+     <y>236</y>
     </hint>
    </hints>
   </connection>
@@ -788,12 +788,12 @@
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>283</x>
-     <y>179</y>
+     <x>346</x>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
-     <x>471</x>
-     <y>188</y>
+     <x>712</x>
+     <y>219</y>
     </hint>
    </hints>
   </connection>
@@ -804,12 +804,44 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>63</x>
-     <y>180</y>
+     <x>83</x>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
-     <x>412</x>
-     <y>155</y>
+     <x>722</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_64BitFloat</sender>
+   <signal>clicked()</signal>
+   <receiver>RAWDialog</receiver>
+   <slot>CheckValues()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>386</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1</x>
+     <y>379</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_64BitFloat</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>radioButton_Signed</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>407</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>693</x>
+     <y>213</y>
     </hint>
    </hints>
   </connection>

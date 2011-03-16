@@ -122,7 +122,7 @@ unsigned int RAWDialog::GetQuantization() {
   else if(radioButton_16bit->isChecked()) { return 1; }
   else if(radioButton_32BitInt->isChecked()) { return 2; }
   else if(radioButton_32BitFloat->isChecked()) { return 3; }
-  else if(radioButton_Double->isChecked()) { return 4; }
+  else if(radioButton_64BitFloat->isChecked()) { return 4; }
 
   return std::numeric_limits<unsigned int>::max();
 }
