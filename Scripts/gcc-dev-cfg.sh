@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #-D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED
 VIS="-fvisibility=hidden"
