@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="StandaloneTuvok"
 	ProjectGUID="{D1D7C8D7-C8E8-4A36-A049-FFBDEB742875}"
 	RootNamespace="StandaloneTuvok"
@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Tuvok;../Tuvok/Basics/3rdParty;&quot;E:\Local Data\Projects\ImageVis3D\Tuvok\IO\3rdParty\boost&quot;;../Tuvok/Basics/3rdParty/boost"
+				AdditionalIncludeDirectories="../Tuvok;../Tuvok/Basics/3rdParty;../Tuvok/IO/3rdParty/boost;../Tuvok/Basics/3rdParty/boost"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -119,7 +119,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Tuvok;../Tuvok/Basics/3rdParty;&quot;E:\Local Data\Projects\ImageVis3D\Tuvok\IO\3rdParty\boost&quot;;../Tuvok/Basics/3rdParty/boost"
+				AdditionalIncludeDirectories="../Tuvok;../Tuvok/Basics/3rdParty;../Tuvok/IO/3rdParty/boost;../Tuvok/Basics/3rdParty/boost"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -195,7 +195,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../Tuvok;../Tuvok/Basics/3rdParty;&quot;E:\Local Data\Projects\ImageVis3D\Tuvok\IO\3rdParty\boost&quot;;../Tuvok/Basics/3rdParty/boost"
+				AdditionalIncludeDirectories="../Tuvok;../Tuvok/Basics/3rdParty;../Tuvok/IO/3rdParty/boost;../Tuvok/Basics/3rdParty/boost"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -273,7 +273,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../Tuvok;../Tuvok/Basics/3rdParty;&quot;E:\Local Data\Projects\ImageVis3D\Tuvok\IO\3rdParty\boost&quot;;../Tuvok/Basics/3rdParty/boost"
+				AdditionalIncludeDirectories="../Tuvok;../Tuvok/Basics/3rdParty;../Tuvok/IO/3rdParty/boost;../Tuvok/Basics/3rdParty/boost"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
