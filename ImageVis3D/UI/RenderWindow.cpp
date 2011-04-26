@@ -999,7 +999,7 @@ void RenderWindow::SetClipRotationDelta(RenderRegion *renderRegion,
       if (m_bAbsoluteViewLock) {
         (*iter)->SetClipPlane(otherRegion, m_ClipPlane);
       } else {
-        (*iter)->SetClipRotationDelta(otherRegion, rotDelta, bPropagate, bSecondary);
+        (*iter)->SetClipRotationDelta(otherRegion, rotDelta, false, bSecondary);
       }
     }
   }
