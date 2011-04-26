@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>494</width>
-    <height>712</height>
+    <width>419</width>
+    <height>482</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -1076,13 +1076,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QCheckBox" name="checkBox_AvoidCompositing">
-            <property name="text">
-             <string>Avoid Compositing</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="1">
            <widget class="QCheckBox" name="checkBox_DownSampleTo8Bits">
             <property name="text">
@@ -1097,7 +1090,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="0" column="2">
            <widget class="QCheckBox" name="checkBox_NoRCClipplanes">
             <property name="text">
              <string>Disable clip planes in Raycaster</string>
@@ -1338,8 +1331,8 @@
    <slot>SelectBackColor1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>81</y>
+     <x>286</x>
+     <y>472</y>
     </hint>
     <hint type="destinationlabel">
      <x>319</x>
@@ -1354,8 +1347,8 @@
    <slot>SelectBackColor2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>81</y>
+     <x>432</x>
+     <y>472</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1370,8 +1363,8 @@
    <slot>SelectTextColor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>81</y>
+     <x>286</x>
+     <y>512</y>
     </hint>
     <hint type="destinationlabel">
      <x>278</x>
@@ -1386,8 +1379,8 @@
    <slot>SetTextOpacity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>81</y>
+     <x>432</x>
+     <y>510</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1482,8 +1475,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>69</y>
+     <x>238</x>
+     <y>113</y>
     </hint>
     <hint type="destinationlabel">
      <x>35</x>
@@ -1498,8 +1491,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>93</x>
-     <y>69</y>
+     <x>82</x>
+     <y>113</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -1514,8 +1507,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>69</y>
+     <x>358</x>
+     <y>113</y>
     </hint>
     <hint type="destinationlabel">
      <x>92</x>
@@ -1530,8 +1523,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>69</y>
+     <x>460</x>
+     <y>113</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1546,8 +1539,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>106</x>
-     <y>77</y>
+     <x>127</x>
+     <y>335</y>
     </hint>
     <hint type="destinationlabel">
      <x>159</x>
@@ -1562,8 +1555,8 @@
    <slot>RemoveLogo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>110</x>
-     <y>85</y>
+     <x>132</x>
+     <y>649</y>
     </hint>
     <hint type="destinationlabel">
      <x>26</x>
@@ -1578,8 +1571,8 @@
    <slot>SelectLogo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>110</x>
-     <y>85</y>
+     <x>132</x>
+     <y>620</y>
     </hint>
     <hint type="destinationlabel">
      <x>351</x>
@@ -1594,8 +1587,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>106</x>
-     <y>77</y>
+     <x>127</x>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
      <x>349</x>
@@ -1610,8 +1603,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>77</y>
+     <x>359</x>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
      <x>354</x>
@@ -1642,8 +1635,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>106</x>
-     <y>77</y>
+     <x>127</x>
+     <y>391</y>
     </hint>
     <hint type="destinationlabel">
      <x>357</x>
@@ -1674,8 +1667,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>69</y>
+     <x>156</x>
+     <y>113</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>

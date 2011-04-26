@@ -329,7 +329,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool                                      m_bPowerOfTwo;
     bool                                      m_bDownSampleTo8Bits;
     bool                                      m_bDisableBorder;
-    bool                                      m_bAvoidCompositing;
     bool                                      m_bNoRCClipplanes;
     bool                                      m_bI3MFeatures;
     bool                                      m_bAutoSaveGEO;

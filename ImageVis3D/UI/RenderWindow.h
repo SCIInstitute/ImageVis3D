@@ -113,9 +113,6 @@ class RenderWindow
     void CloneRendermode(RenderWindow* other);
     void SetAbsoluteViewLock(bool bAbsoluteViewLock);
 
-    void SetAvoidCompositing(bool bAvoidCompositing);
-    bool GetAvoidCompositing() const;
-
     void SetInvMouseWheel(const bool bInvWheel) {m_bInvWheel = bInvWheel;}
     bool GetInvMouseWheel() const {return m_bInvWheel;}
 

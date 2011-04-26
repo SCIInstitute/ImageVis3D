@@ -142,7 +142,6 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
     bool bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
     bool bDisableBorder = settings.value("DisableBorder", m_bDisableBorder).toBool();
-    bool bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
     bool bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
 
     FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0).toDouble(),
@@ -174,7 +173,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
                           bCheckForUpdatesOnStartUp, bCheckForDevBuilds, bShowWelcomeScreen,
                           bInvWheel, bI3MFeatures,
                           iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
-                          bDisableBorder, bAvoidCompositing, bNoRCClipplanes,
+                          bDisableBorder, bNoRCClipplanes,
                           vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos,
                           iMaxBrickSize, iMaxMaxBrickSize, expFeatures);
 
@@ -228,7 +227,6 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("PowerOfTwo", settingsDlg.GetUseOnlyPowerOfTwo());
       settings.setValue("DownSampleTo8Bits", settingsDlg.GetDownSampleTo8Bits());
       settings.setValue("DisableBorder", settingsDlg.GetDisableBorder());
-      settings.setValue("AvoidCompositing", settingsDlg.GetAvoidCompositing());
       settings.setValue("NoRCClipplanes", settingsDlg.GetNoRCClipplanes());
       settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
       settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
@@ -297,7 +295,6 @@ void MainWindow::ApplySettings() {
   m_bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
   m_bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
   m_bDisableBorder = settings.value("DisableBorder", m_bDisableBorder).toBool();
-  m_bAvoidCompositing = settings.value("AvoidCompositing", m_bAvoidCompositing).toBool();
   m_bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
 
   m_vBackgroundColors[0] = FLOATVECTOR3(
@@ -356,7 +353,6 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
   renderWin->SetPerfMeasures(m_iMinFramerate, m_bUseAllMeans, 2.0f, 2.0f, m_iLODDelay/m_pRedrawTimer->interval(), m_iActiveTS, m_iInactiveTS);
   renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
   renderWin->SetAbsoluteViewLock(m_bAbsoluteViewLocks);
-  renderWin->SetAvoidCompositing(m_bAvoidCompositing);
   renderWin->SetInvMouseWheel(m_bInvWheel);
 }
 

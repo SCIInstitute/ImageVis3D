@@ -371,7 +371,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
                             bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
                             bool bInvWheel, bool bI3MFeatures,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits,
-                            bool bDisableBorder, bool bAvoidCompositing, bool bNoRCClipplanes,
+                            bool bDisableBorder, bool bNoRCClipplanes,
                             const FLOATVECTOR3& vBackColor1, const FLOATVECTOR3& vBackColor2, const FLOATVECTOR4& vTextColor,
                             const QString& strLogo, int iLogoPos,
                             unsigned int iMaxBrickSize,
@@ -475,7 +475,6 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   SetLogoLabel();
 
   checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
-  checkBox_AvoidCompositing->setChecked(bAvoidCompositing);
   checkBox_DisableBorder->setChecked(bDisableBorder);
   checkBox_DownSampleTo8Bits->setChecked(bDownSampleTo8Bits);
   checkBox_NoRCClipplanes->setChecked(bNoRCClipplanes);
@@ -555,10 +554,6 @@ bool SettingsDlg::GetDownSampleTo8Bits() const {
 
 bool SettingsDlg::GetDisableBorder() const {
   return checkBox_DisableBorder->isChecked();
-}
-
-bool SettingsDlg::GetAvoidCompositing() const {
-  return checkBox_AvoidCompositing->isChecked();
 }
 
 bool SettingsDlg::GetNoRCClipplanes() const {

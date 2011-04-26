@@ -97,7 +97,6 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetUseOnlyPowerOfTwo() const;
     bool          GetDownSampleTo8Bits() const;
     bool          GetDisableBorder() const;
-    bool          GetAvoidCompositing() const;
     bool          GetNoRCClipplanes() const;
 
     QString       GetLogoFilename() const;
@@ -135,7 +134,6 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bPowerOfTwo,
                    bool bDownSampleTo8Bits,
                    bool bDisableBorder,
-                   bool bAvoidCompositing,
                    bool bNoRCClipplanes,
                    const FLOATVECTOR3& vBackColor1,
                    const FLOATVECTOR3& vBackColor2,
