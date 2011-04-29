@@ -41,6 +41,7 @@
 #include <QtCore/QFile>
 
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/Controller/Controller.h"
 
 using namespace std;
 
@@ -60,7 +61,6 @@ FTPDialog::~FTPDialog(void)
 }
 
 void FTPDialog::Start() {
-
   show();
 
   m_pFtp = new QFtp(this);
@@ -86,43 +86,52 @@ void FTPDialog::Start() {
 
   m_pFile = new QFile(m_strSource.c_str());
   if (!m_pFile->open(QIODevice::ReadOnly)) {
-     delete m_pFile;
-     emit TransferFailure();
-     close();
-     return;
+    T_ERROR("Could not create '%s' file.", m_strSource.c_str());
+    delete m_pFile;
+    m_pFile = NULL;
+    emit TransferFailure();
+    close();
+    return;
   }
 
   m_pFtp->put(m_pFile, m_strTargetPath.c_str());
 }
 
 
-void FTPDialog::ftpCommandFinished(int, bool error) {
-  if (m_pFtp->currentCommand() == QFtp::ConnectToHost) {
-     if (error) {
-         m_pFile->close();
-         delete m_pFile;
-         emit TransferFailure();
-         close();
-         return;
-     }
-     label_TransferDesc->setText(tr("Uploading %1...").arg(SysTools::GetFilename(m_strSource).c_str()));
-     return;
+void FTPDialog::ftpCommandFinished(int cmdId, bool error) {
+  if (cmdId == QFtp::ConnectToHost) {
+    if (error) {
+      T_ERROR("Error connecting to host: %s",
+              m_pFtp->errorString().toStdString().c_str());
+      m_pFile->close();
+      delete m_pFile;
+      m_pFile = NULL;
+      emit TransferFailure();
+      close();
+      return;
+    }
+    label_TransferDesc->setText(tr("Uploading %1...").arg(SysTools::GetFilename(m_strSource).c_str()));
+    return;
   }
 
-  if (m_pFtp->currentCommand() == QFtp::Put) {
-     if (error) {
-         m_pFile->close();
-         delete m_pFile;
-         emit TransferFailure();
-         close();
-         return;
-     } else {
-         m_pFile->close();
-         delete m_pFile;
-         emit TransferSuccess();
-         close();
-         return;
-     }
+  if (cmdId == QFtp::Put) {
+    if (error) {
+      T_ERROR("Error putting data on the remote host.");
+      m_pFile->close();
+      delete m_pFile;
+      m_pFile = NULL;
+      emit TransferFailure();
+      close();
+      return;
+    } else {
+      MESSAGE("File transfer complete.");
+      m_pFile->close();
+      delete m_pFile;
+      m_pFile = NULL;
+      emit TransferSuccess();
+      close();
+      return;
+    }
   }
 }
 
@@ -133,7 +142,7 @@ void FTPDialog::updateDataTransferProgress(qint64 readBytes, qint64 totalBytes) 
 
 void FTPDialog::Disconnect()
 {
-  if ( m_pFtp ) {
+  if (m_pFtp) {
     m_pFtp->abort();
     m_pFtp->deleteLater();
     m_pFtp = NULL;
@@ -144,6 +153,7 @@ void FTPDialog::AbortTransfer()
 {
   m_pFile->close();
   delete m_pFile;
+  m_pFile = NULL;
   Disconnect();
   emit TransferFailure();
   close();

@@ -336,7 +336,8 @@ void MainWindow::UploadLogToServer() {
   QFile* pFTPTempFile =new QFile("SubmittedDebugOutput.txt");
 
   if (!pFTPTempFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
-     ShowInformationDialog("Transfer failed", "Transfer failed");
+     ShowInformationDialog("Log creation failed",
+                           "Could not create a log file to submit.");
      return;
   }
   QTextStream outstream(pFTPTempFile);
