@@ -13,8 +13,16 @@
 
 using namespace tuvok;
 
-
 #define SHADER_PATH "Shaders"
+
+
+#ifdef _WIN32
+  // CRT's memory leak detection on windows
+  #if defined(DEBUG) || defined(_DEBUG)
+    #include <crtdbg.h>
+  #endif
+#endif
+
 
 bool SaveFBOToDisk(const std::string& filename) 
 {
