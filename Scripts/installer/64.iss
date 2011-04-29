@@ -29,13 +29,13 @@
 ; "iscc.exe" from Inno Setup 5.
 [Setup]
 AppName=ImageVis3D
-AppVerName=ImageVis3D 1.3
-AppVersion=1.3
+AppVerName=ImageVis3D 2.0
+AppVersion=2.0
 AppPublisher=SCI Institute
 AppPublisherURL=http://software.sci.utah.edu/
 AppSupportURL=http://software.sci.utah.edu/
 AppUpdatesURL=http://software.sci.utah.edu/
-AppCopyright=Copyright (c) 2010 Scientific Computing and Imaging Institute, University of Utah.
+AppCopyright=Copyright (c) 2011 Scientific Computing and Imaging Institute, University of Utah.
 DefaultDirName={pf}\ImageVis3D
 DefaultGroupName=ImageVis3D
 OutputDir=Scripts\installer
