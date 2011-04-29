@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName
+      Include="UI">
+      <Targets>_UI</Targets>
+    </AvailableItemName>
+    <AvailableItemName
+      Include="QRC">
+      <Targets>_QRC</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <UsingTask
+    TaskName="UI"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <UsingTask
+    TaskName="QRC"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_UI"
+    BeforeTargets="$(UIBeforeTargets)"
+    AfterTargets="$(UIAfterTargets)"
+    Condition="'@(UI)' != ''"
+    DependsOnTargets="$(UIDependsOn);ComputeUIOutput"
+    Outputs="%(UI.Outputs)"
+    Inputs="%(UI.Identity);%(UI.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <UI
+        Remove="@(UI)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <UI_tlog
+        Include="%(UI.Outputs)"
+        Condition="'%(UI.Outputs)' != '' and '%(UI.ExcludedFromBuild)' != 'true'">
+        <Source>@(UI, '|')</Source>
+      </UI_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(UI.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(UI_tlog)' != '' and '%(UI_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(UI_tlog.Source);@(UI_tlog-&gt;'%(Fullpath)')" />
+    <UI
+      Condition="'@(UI)' != '' and '%(UI.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(UI.CommandLineTemplate)"
+      AdditionalOptions="%(UI.AdditionalOptions)"
+      Inputs="%(UI.Identity)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeUIOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeUIOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputeUIOutput"
+    Condition="'@(UI)' != ''">
+    <ItemGroup>
+      <UIDirsToMake
+        Condition="'@(UI)' != '' and '%(UI.ExcludedFromBuild)' != 'true'"
+        Include="%(UI.Outputs)" />
+      <Link
+        Include="%(UIDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(UIDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(UIDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(UIDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+  <Target
+    Name="_QRC"
+    BeforeTargets="$(QRCBeforeTargets)"
+    AfterTargets="$(QRCAfterTargets)"
+    Condition="'@(QRC)' != ''"
+    DependsOnTargets="$(QRCDependsOn);ComputeQRCOutput"
+    Outputs="%(QRC.Outputs)"
+    Inputs="%(QRC.Identity);%(QRC.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <QRC
+        Remove="@(QRC)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <QRC_tlog
+        Include="%(QRC.Outputs)"
+        Condition="'%(QRC.Outputs)' != '' and '%(QRC.ExcludedFromBuild)' != 'true'">
+        <Source>@(QRC, '|')</Source>
+      </QRC_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(QRC.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(QRC_tlog)' != '' and '%(QRC_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(QRC_tlog.Source);@(QRC_tlog-&gt;'%(Fullpath)')" />
+    <QRC
+      Condition="'@(QRC)' != '' and '%(QRC.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(QRC.CommandLineTemplate)"
+      AdditionalOptions="%(QRC.AdditionalOptions)"
+      Inputs="%(QRC.Identity)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeQRCOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeQRCOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="ComputeQRCOutput"
+    Condition="'@(QRC)' != ''">
+    <ItemGroup>
+      <QRCDirsToMake
+        Condition="'@(QRC)' != '' and '%(QRC.ExcludedFromBuild)' != 'true'"
+        Include="%(QRC.Outputs)" />
+      <Link
+        Include="%(QRCDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(QRCDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(QRCDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(QRCDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+</Project>
