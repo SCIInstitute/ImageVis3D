@@ -134,6 +134,7 @@ int main(int argc, const char* argv[])
   string strOutFile;
   double fScale = 0.0;
   double fBias = 0.0;
+  bool debug;
 
   try {
     TCLAP::CmdLine cmd("uvf converter");
@@ -153,12 +154,14 @@ int main(int argc, const char* argv[])
     TCLAP::ValueArg<double> scale("s", "scale",
                                   "(merging) scaling value for second file",
                                   false, 0.0, "floating point number");
+    TCLAP::SwitchArg dbg("g", "debug", "Enable debugging mode", false);
     
     cmd.xorAdd(inputs, directory);
     cmd.add(output);
     cmd.add(bias);
     cmd.add(scale);
     cmd.add(expr);
+    cmd.add(dbg);
     cmd.parse(argc, argv);
 
     // which of "-i" or "-d" did they give?
@@ -182,6 +185,7 @@ int main(int argc, const char* argv[])
         expression = readfile(expression);
       }
     }
+    debug = dbg.getValue();
   } catch(const TCLAP::ArgException& e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << "\n";
     return EXIT_FAILURE_ARG;
@@ -189,7 +193,9 @@ int main(int argc, const char* argv[])
 
   HRConsoleOut* debugOut = new HRConsoleOut();
   debugOut->SetOutput(true, true, true, false);
-  debugOut->SetClearOldMessage(true);
+  if(!debug) {
+    debugOut->SetClearOldMessage(true);
+  }
 
   Controller::Instance().AddDebugOut(debugOut);
   IOManager ioMan;
