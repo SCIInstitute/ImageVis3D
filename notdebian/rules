@@ -17,14 +17,15 @@ configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
 
+	FLAGS="-fno-strict-aliasing -U_DEBUG -DNDEBUG -QT_SHARED -DDEBIAN"
+	FLAGS="${FLAGS} -DPACKAGE_MANAGER"
 	qmake QMAKE_CONFIG=release \
-        QMAKE_CFLAGS+="-fno-strict-aliasing -U_DEBUG -DNDEBUG -DQT_SHARED" \
-	      QMAKE_CXXFLAGS+="-fno-strict-aliasing -U_DEBUG -DNDEBUG -DQT_SHARED" \
+	      QMAKE_CFLAGS+="${FLAGS}" \
+	      QMAKE_CXXFLAGS+="${FLAGS}" \
         -recursive \
-        -spec linux-g++ || (echo "qmake failed" && exit 1)
+	      -spec linux-g++ || (echo "qmake failed" && exit 1)
 	mkdir -p Build/objects Tuvok/Build/objects ImageVis3D/UI/AutoGen
 	touch configure-stamp
-
 
 build: build-stamp
 

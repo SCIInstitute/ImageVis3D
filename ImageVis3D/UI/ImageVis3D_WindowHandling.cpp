@@ -323,9 +323,13 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   lineEditCaptureFile->setText(fileName);
   checkBox_PreserveTransparency->setChecked(settings.value("PreserveTransparency", true).toBool());
 
+#ifndef PACKAGE_MANAGER
+  // Don't bother if the system has a package manager... they should get their
+  // updates through that.
   m_pHttp = new QHttp(this);
   connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
   connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
+#endif
 
   pushButton_NewTriangle->setStyleSheet( "QPushButton { background: rgb(0, 150, 0); color: rgb(255, 255, 255) }" );
   pushButton_NewRectangle->setStyleSheet( "QPushButton { background: rgb(0, 150, 0); color: rgb(255, 255, 255) }" );
