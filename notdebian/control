@@ -2,13 +2,13 @@ Source: imagevis3d
 Section: x11
 Priority: optional
 Maintainer: Thomas Fogal <tfogal@alumni.unh.edu>
-Build-Depends: debhelper (>= 7), bison, flex, libqt4-dev, qt4-dev-tools, libqt4-opengl-dev
+Build-Depends: debhelper (>= 7), bison, flex, libqt4-dev, qt4-dev-tools, libqt4-opengl-dev zlib1g-dev
 Standards-Version: 3.8.0
 Homepage: http://www.imagevis3d.org/
 
 Package: imagevis3d
 Architecture: any
-Depends: ${shlibs:Depends}, libqtcore4, libqtgui4, libqt4-opengl, libqt4-network
+Depends: ${shlibs:Depends}, libqtcore4, libqtgui4, libqt4-opengl, libqt4-network zlib1g
 Description: desktop volume rendering application for large data
  ImageVis3D is a volume rendering application specifically designed to
  render large data.  This is achieved by splitting the dataset into
