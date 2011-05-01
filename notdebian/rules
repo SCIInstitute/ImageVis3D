@@ -22,6 +22,7 @@ configure-stamp:
 	qmake QMAKE_CONFIG=release \
 	      QMAKE_CFLAGS+="$(FLAGS)" \
 	      QMAKE_CXXFLAGS+="$(FLAGS)" \
+	      CONFIG+="release" \
         -recursive \
 	      -spec linux-g++ || (echo "qmake failed" && exit 1)
 	mkdir -p Build/objects Tuvok/Build/objects ImageVis3D/UI/AutoGen
