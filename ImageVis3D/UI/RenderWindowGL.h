@@ -42,11 +42,13 @@
 
 #include "../Tuvok/Controller/MasterController.h"
 
-#include <QtOpenGL/QGLWidget>
+
 #include "../Tuvok/Basics/ArcBall.h"
 #include <string>
 #include <StdDefines.h>
 #include "RenderWindow.h"
+
+#include <QtOpenGL/QGLWidget>
 
 class MainWindow;
 
