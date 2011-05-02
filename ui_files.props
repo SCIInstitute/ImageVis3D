@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(UIBeforeTargets)' == '' and '$(UIAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <UIBeforeTargets>Midl</UIBeforeTargets>
+    <UIAfterTargets>CustomBuild</UIAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <UIDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(UIDependsOn)</UIDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <UI>
+      <CommandLineTemplate>$(QTDIR32)\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)..\AutoGen\ui_%(Filename).h"</CommandLineTemplate>
+      <Outputs>%(RootDir)%(Directory)..\AutoGen\ui_%(Filename).h</Outputs>
+      <ExecutionDescription>Creating UI File ui_%(Filename).h ...</ExecutionDescription>
+    </UI>
+  </ItemDefinitionGroup>
+  <PropertyGroup
+    Condition="'$(QRCBeforeTargets)' == '' and '$(QRCAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <QRCBeforeTargets>Midl</QRCBeforeTargets>
+    <QRCAfterTargets>CustomBuild</QRCAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <QRCDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(QRCDependsOn)</QRCDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <QRC>
+      <CommandLineTemplate>$(QTDIR32)\bin\rcc.exe "%(FullPath)" -o "$(OutDir)..\..\..\rcc\qrc_%(Filename).cpp"</CommandLineTemplate>
+      <Outputs>$(OutDir)..\..\..\rcc\qrc_%(Filename).cpp</Outputs>
+      <ExecutionDescription>Creating CPP File from resource %(Filename).rcc ...</ExecutionDescription>
+    </QRC>
+  </ItemDefinitionGroup>
+</Project>
