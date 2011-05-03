@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="DebugOut">
+      <UniqueIdentifier>{c1471151-b033-44b0-b041-38c2035de411}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DebugOut\HRConsoleOut.cpp">
+      <Filter>DebugOut</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DebugOut\HRConsoleOut.h">
+      <Filter>DebugOut</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CmdLineConverter.pro" />
+  </ItemGroup>
+</Project>

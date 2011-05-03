@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="DebugOut">
+      <UniqueIdentifier>{f868371d-022b-43ef-878e-a34d9e84f6d7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\CmdLineConverter\DebugOut\HRConsoleOut.cpp">
+      <Filter>DebugOut</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\CmdLineConverter\DebugOut\HRConsoleOut.h">
+      <Filter>DebugOut</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UVFReader.pro" />
+  </ItemGroup>
+</Project>
