@@ -61,12 +61,21 @@
 
 /*
 #ifdef _WIN32
-  // CRT's memory leak detection on windows
   #if defined(DEBUG) || defined(_DEBUG)
+    #define _CRTDBG_MAP_ALLOC
+    #include <stdlib.h>
     #include <crtdbg.h>
+
+    #ifndef DBG_NEW
+      #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+      #define new DBG_NEW
+    #endif
   #endif
 #endif
 */
+
+// Include the following line for the Visual Leak detection tool
+// #include <vld.h>
 
 using namespace tuvok;
 
@@ -83,14 +92,16 @@ int main(int argc, char* argv[])
     DynamicDX::InitializeDX();
   #endif
 
-  /*
+/*  
   // Enable run-time memory check for debug builds on windows
-  #ifdef _WIN32
-    #if defined(DEBUG) | defined(_DEBUG)
-      _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-    #endif
+#ifdef _WIN32
+  // CRT's memory leak detection on windows
+  #if defined(DEBUG) || defined(_DEBUG)
+  _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+  _CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
   #endif
-  */
+#endif
+*/  
 
   // get command line paramers
   SysTools::CmdLineParams parameters(argc, argv);
