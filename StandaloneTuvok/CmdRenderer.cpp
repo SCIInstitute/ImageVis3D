@@ -10,15 +10,15 @@
 #include "IO/IOManager.h"
 #include "GLContext.h"
 #include "SmallImage.h"
-
-using namespace tuvok;
+#include "Renderer/ContextIdentification.h"
 
 #define SHADER_PATH "Shaders"
-
 
 #ifdef _WIN32
   // CRT's memory leak detection on windows
   #if defined(DEBUG) || defined(_DEBUG)
+    #define _CRTDBG_MAP_ALLOC
+    #include <stdlib.h>
     #include <crtdbg.h>
   #endif
 #endif
@@ -50,6 +50,14 @@ bool SaveFBOToDisk(const std::string& filename)
 
 int main(int argc, char * argv[])
 {
+
+#ifdef _WIN32
+  // CRT's memory leak detection on windows
+  #if defined(DEBUG) || defined(_DEBUG)
+  _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+  #endif
+#endif
+
 	std::string filename;
 	try 
 	{
@@ -77,25 +85,25 @@ int main(int argc, char * argv[])
 			return EXIT_FAILURE;
 		}
 		
-		Controller::Instance().DebugOut()->SetOutput(true, true, true, true);
+		tuvok::Controller::Instance().DebugOut()->SetOutput(true, true, true, true);
 
 		// Convert the data into a UVF if necessary 
     if ( SysTools::ToLowerCase(SysTools::GetExt(filename)) != "uvf" ) {
 		  std::string uvf_file = SysTools::RemoveExt(filename) + ".uvf";
 		  const std::string tmpdir = "/tmp/";
 		  const bool quantize8 = false;
-		  Controller::Instance().IOMan()->ConvertDataset(filename, uvf_file, tmpdir, true, 256, 4, quantize8);
+		  tuvok::Controller::Instance().IOMan()->ConvertDataset(filename, uvf_file, tmpdir, true, 256, 4, quantize8);
       filename = uvf_file;
     }
-		AbstrRenderer * renderer = Controller::Instance().RequestNewVolumeRenderer(MasterController::OPENGL_SBVR, 
+		tuvok::AbstrRenderer * renderer = tuvok::Controller::Instance().RequestNewVolumeRenderer(tuvok::MasterController::OPENGL_SBVR, 
 																				false, false, false, false, false);
 	
     renderer->LoadDataset(filename);
 		renderer->AddShaderPath(SHADER_PATH);
 		renderer->Resize(UINTVECTOR2(1920, 1200));
-		renderer->Initialize();
-		const std::vector<RenderRegion*> & rr = renderer->GetRenderRegions();
-    renderer->SetRendererTarget(AbstrRenderer::RT_HEADLESS);
+		renderer->Initialize(tuvok::GLContextID::Current());
+		const std::vector<tuvok::RenderRegion*> & rr = renderer->GetRenderRegions();
+    renderer->SetRendererTarget(tuvok::AbstrRenderer::RT_HEADLESS);
 
     FLOATMATRIX4 rm;
 		rm.RotationX(45.0);
@@ -104,7 +112,7 @@ int main(int argc, char * argv[])
 		SaveFBOToDisk("image.bmp");   
 
 		renderer->Cleanup();
-		Controller::Instance().ReleaseVolumeRenderer(renderer);
+		tuvok::Controller::Instance().ReleaseVolumeRenderer(renderer);
 		context.restorePrevious();
 	} 
 	catch (const std::exception & e) 
@@ -112,6 +120,7 @@ int main(int argc, char * argv[])
 		std::cerr << "Exception: " << e.what() << "\n";
 		return EXIT_FAILURE;
 	}
+
 
 	return EXIT_SUCCESS;
 }

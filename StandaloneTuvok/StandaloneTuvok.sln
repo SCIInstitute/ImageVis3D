@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StandaloneTuvok", "StandaloneTuvok.vcproj", "{D1D7C8D7-C8E8-4A36-A049-FFBDEB742875}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StandaloneTuvok", "StandaloneTuvok.vcxproj", "{D1D7C8D7-C8E8-4A36-A049-FFBDEB742875}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
