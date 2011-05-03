@@ -27,8 +27,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <QRC>
-      <CommandLineTemplate>$(QTDIR32)\bin\rcc.exe "%(FullPath)" -o "$(OutDir)..\..\..\rcc\qrc_%(Filename).cpp"</CommandLineTemplate>
-      <Outputs>$(OutDir)..\..\..\rcc\qrc_%(Filename).cpp</Outputs>
+      <CommandLineTemplate>$(QTDIR32)\bin\rcc.exe "%(FullPath)" -o "$(OutDir)..\..\rcc\qrc_%(Filename).cpp"</CommandLineTemplate>
+      <Outputs>$(OutDir)..\..\rcc\qrc_%(Filename).cpp</Outputs>
       <ExecutionDescription>Creating CPP File from resource %(Filename).rcc ...</ExecutionDescription>
     </QRC>
   </ItemDefinitionGroup>

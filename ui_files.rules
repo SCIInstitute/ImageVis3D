@@ -18,8 +18,8 @@
     		<CustomBuildRule
 			Name="QRC"
 			DisplayName="Compile QRC Recource File (*.qrc)"
-			CommandLine="$(QTDIR32)\bin\rcc.exe &quot;$(InputPath)&quot; -o &quot;$(OutDir)..\..\..\rcc\qrc_$(InputName).cpp&quot;"
-			Outputs="$(OutDir)..\..\..\rcc\qrc_$(InputName).cpp"
+			CommandLine="$(QTDIR32)\bin\rcc.exe &quot;$(InputPath)&quot; -o &quot;$(OutDir)..\..\rcc\qrc_$(InputName).cpp&quot;"
+			Outputs="$(OutDir)..\..\rcc\qrc_$(InputName).cpp"
 			FileExtensions="*.qrc"
 			ExecutionDescription="Creating CPP File from resource $(InputName).rcc ..."
 			>
