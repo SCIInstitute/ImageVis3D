@@ -103,7 +103,7 @@ void RenderWindowDX::InitializeRenderer()
   if (m_Renderer == NULL)
     m_bRenderSubsysOK = false;
   else
-    m_bRenderSubsysOK = m_Renderer->Initialize();
+    m_bRenderSubsysOK = dynamic_cast<DXRenderer*>(m_Renderer)->Initialize();
 
   if (!m_bRenderSubsysOK) {
     m_Renderer->Cleanup();

@@ -55,7 +55,7 @@
 #include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/Renderer/GL/GLInclude.h"
 #include "../Tuvok/Renderer/GL/GLRenderer.h"
-
+#include "../Tuvok/Renderer/ContextIdentification.h"
 
 using namespace std;
 using namespace tuvok;
@@ -247,7 +247,7 @@ void RenderWindowGL::InitializeRenderer()
   #ifdef DETECTED_OS_LINUX
       m_Renderer->AddShaderPath("/usr/share/imagevis3d/shaders");
   #endif
-      m_bRenderSubsysOK = dynamic_cast<GLRenderer*>(m_Renderer)->Initialize(CTGLContext::Current());
+      m_bRenderSubsysOK = m_Renderer->Initialize(GLContextID::Current());
     }
   }
 
