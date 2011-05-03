@@ -4,6 +4,21 @@
 # define _SECURE_SCL 0
 #endif
 
+#ifdef _WIN32
+  // CRT's memory leak detection on windows
+  #if defined(DEBUG) || defined(_DEBUG)
+    #define _CRTDBG_MAP_ALLOC
+    #include <stdlib.h>
+    #include <crtdbg.h>
+
+   #ifndef DBG_NEW
+      #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+      #define new DBG_NEW
+   #endif
+
+  #endif
+#endif
+
 #include <StdTuvokDefines.h>
 #include <tclap/CmdLine.h>
 #include "Renderer/GL/GLRenderer.h"
@@ -14,14 +29,6 @@
 
 #define SHADER_PATH "Shaders"
 
-#ifdef _WIN32
-  // CRT's memory leak detection on windows
-  #if defined(DEBUG) || defined(_DEBUG)
-    #define _CRTDBG_MAP_ALLOC
-    #include <stdlib.h>
-    #include <crtdbg.h>
-  #endif
-#endif
 
 
 bool SaveFBOToDisk(const std::string& filename) 
@@ -55,6 +62,7 @@ int main(int argc, char * argv[])
   // CRT's memory leak detection on windows
   #if defined(DEBUG) || defined(_DEBUG)
   _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+  _CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
   #endif
 #endif
 
