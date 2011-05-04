@@ -287,10 +287,13 @@ void RenderWindowGL::PaintOverlays() {
 
 
 void RenderWindowGL::RenderSeparatingLines() {
+  GetRenderer()->SyncStateManager();
   GetRenderer()->FixedFunctionality();
 
   glDisable(GL_BLEND);
   glDisable(GL_DEPTH_TEST);
+  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_TEXTURE_3D);
 
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
@@ -312,10 +315,10 @@ void RenderWindowGL::RenderSeparatingLines() {
     glEnd();
   }
 
-  glLineWidth(1);
-
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
   glMatrixMode(GL_MODELVIEW);
   glPopMatrix();
+
+  GetRenderer()->SyncStateManager();
 }
