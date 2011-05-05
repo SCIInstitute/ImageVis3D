@@ -49,8 +49,8 @@ using namespace std;
 
 QLightPreview::QLightPreview(QWidget *parent) :
   QWidget(parent),
-  m_cAmbient(1.0f,1.0f,1.0f,0.4f),
-  m_cDiffuse(1.0f,1.0f,1.0f,0.6f),
+  m_cAmbient(1.0f,1.0f,1.0f,0.1f),
+  m_cDiffuse(1.0f,1.0f,1.0f,1.0f),
   m_cSpecular(1.0f,1.0f,1.0f,1.0f),
   m_vLightDir(0.0f,0.0f,-1.0f),
   m_iCachedHeight(0),

@@ -852,8 +852,8 @@ void MainWindow::ChangeLightColors() {
 
 
 void MainWindow::UpdateColorWidget() {
-  FLOATVECTOR4 cAmbient(1,1,1,0.2f);
-  FLOATVECTOR4 cDiffuse(1,1,1,0.8f);
+  FLOATVECTOR4 cAmbient(1,1,1,0.1f);
+  FLOATVECTOR4 cDiffuse(1,1,1,1.0f);
   FLOATVECTOR4 cSpecular(1,1,1,1);
   FLOATVECTOR3 vLightDir(0,0,-1);
 
