@@ -632,6 +632,22 @@ void RenderWindow::ToggleRenderWindowView2x2() {
   SetViewMode(newRenderRegions, VM_TWOBYTWO);
 }
 
+
+bool RenderWindow::SetRenderWindowView3D() {
+  std::vector<RenderRegion*> newRenderRegions;
+
+  for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
+    for (int j=0; j < NUM_WINDOW_MODES; ++j) {
+      if (renderRegions[i][j]->is3D()) {
+        newRenderRegions.push_back(renderRegions[i][j]);
+        SetViewMode(newRenderRegions, RenderWindow::VM_SINGLE);
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 void RenderWindow::ToggleRenderWindowViewSingle() {
   std::vector<RenderRegion*> newRenderRegions;
   if (!GetActiveRenderRegions().empty())
@@ -679,6 +695,8 @@ void RenderWindow::Initialize() {
   // Note that we create the RenderRegions here and not directly in the constructor
   // because we first need the dataset to be loaded so that we can setup the
   // initial slice index.
+
+
   for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
     renderRegions[i][0] = new RenderRegion3D();
 

@@ -178,6 +178,7 @@ class RenderWindow
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
     virtual void ToggleRenderWindowViewSingle();
+    virtual bool SetRenderWindowView3D();
     virtual void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {m_iTimeSliceMSecsActive = iActive; m_iTimeSliceMSecsInActive = iInactive;}
 
   protected:
