@@ -1091,6 +1091,12 @@ void RenderWindow::CloneRendermode(RenderWindow* other) {
   m_Renderer->SetSampleRateModifier(other->m_Renderer->GetSampleRateModifier());
   m_Renderer->SetGlobalBBox(other->m_Renderer->GetGlobalBBox());
   m_Renderer->SetLocalBBox(other->m_Renderer->GetLocalBBox());
+
+  if (other->m_Renderer->IsClipPlaneEnabled())
+    m_Renderer->EnableClipPlane();
+  else
+    m_Renderer->DisableClipPlane();
+
   m_Renderer->SetIsosufaceColor(other->m_Renderer->GetIsosufaceColor());
   m_Renderer->SetIsoValue(other->m_Renderer->GetIsoValue());
   m_Renderer->SetCVIsoValue(other->m_Renderer->GetCVIsoValue());
