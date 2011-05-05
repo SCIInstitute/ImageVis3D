@@ -333,7 +333,7 @@ bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
   return LoadDataset(QStringList(inFile.c_str()), convFile.c_str(), false);
 }
 
-void MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList files) {
+bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList files) {
   if (bNoUserInteraction) {
     if (m_pActiveRenderWin && 
       !m_pActiveRenderWin->GetRenderer()->SupportsMeshes() &&
@@ -365,12 +365,14 @@ void MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList f
         m_eVolumeRendererType = MasterController::OPENGL_SBVR;
         LoadDataset(files);
         m_eVolumeRendererType = currentType;
+        return true;
       } else {
         m_pActiveRenderWin->GetRenderer()->GetMeshes().clear();
         UpdateExplorerView(true);
       }
     }
   }
+  return false;
 }
 
 bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
@@ -500,7 +502,7 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
   }
 
   if (renderWin) RenderWindowActive(renderWin);
-  CheckForMeshCapabilities(bNoUserInteraction, files);
+  if (CheckForMeshCapabilities(bNoUserInteraction, files)) return true;
 
   if(renderWin) {
     AbstrRenderer* ren = renderWin->GetRenderer();

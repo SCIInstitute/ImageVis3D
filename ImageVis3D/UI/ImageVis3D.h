@@ -491,7 +491,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
                                    struct VersionNumber& iv3d,
                                    struct VersionNumber& tuvok);
     void DeleteUpdateFile();
-    void CheckForMeshCapabilities(bool bNoUserInteraction, 
+    bool CheckForMeshCapabilities(bool bNoUserInteraction, 
                                   QStringList files=QStringList(""));
 
     // ftp
