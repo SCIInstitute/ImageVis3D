@@ -201,6 +201,27 @@ void MainWindow::RemoveGeometry() {
 
 void MainWindow::AddGeometry(std::string filename) {
   if (!m_pActiveRenderWin) return;
+
+  if(!m_pActiveRenderWin->GetRenderer()->SupportsMeshes()) {
+      if(QMessageBox::Yes == 
+        QMessageBox::question(NULL, 
+                         "Mesh feature not supported in this renderer",
+                         "You can add a mesh to this dataset but you will "
+                         "not be able to see it until you switch to a renderer "
+                         "that supports this feature e.g. the 3D slice "
+                         "based volume renderer. Do you want to switch to "
+                         "the 3D slice based volume renderer now?",
+          QMessageBox::Yes, QMessageBox::No)) {
+        QString dataset = m_pActiveRenderWin->GetDatasetName();
+        CloseCurrentView();
+        MasterController::EVolumeRendererType currentType = m_eVolumeRendererType;
+        m_eVolumeRendererType = MasterController::OPENGL_SBVR;    
+        LoadDataset(std::string(dataset.toAscii()));
+        m_eVolumeRendererType = currentType;
+      }
+  }
+
+
   UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
   if (!currentDataset) {
     ShowCriticalDialog("Mesh Import Failed.",
