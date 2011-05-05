@@ -179,6 +179,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void Transfer2DUpdateGradientBox();
     void Transfer2DUpdateGradientButtons();
 
+    void SetHistogramScale1D(int v);
+    void SetHistogramScale2D(int v);
+
     bool LoadWorkspace();
     bool SaveWorkspace();
     bool ApplyWorkspace();
@@ -443,6 +446,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
     void UpdateMinMaxLODLimitLabel();
     void UpdateExplorerView(bool bRepopulateListBox);
+    void UpdateTFScaleSliders();
     void UpdateColorWidget();
     
     std::string ConvertTF(const std::string& strSource1DTFilename,

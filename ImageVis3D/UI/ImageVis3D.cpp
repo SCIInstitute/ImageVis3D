@@ -850,6 +850,12 @@ void MainWindow::ChangeLightColors() {
                                                cSpecular, vLightDir);
 }
 
+void MainWindow::UpdateTFScaleSliders() {
+  if (!m_pActiveRenderWin) return;
+
+  verticalSlider_1DTransHistScale->setValue(m_pActiveRenderWin->GetCurrent1DHistScale()*verticalSlider_1DTransHistScale->maximum());
+  verticalSlider_2DTransHistScale->setValue(m_pActiveRenderWin->GetCurrent2DHistScale()*verticalSlider_2DTransHistScale->maximum());
+}
 
 void MainWindow::UpdateColorWidget() {
   FLOATVECTOR4 cAmbient(1,1,1,0.1f);

@@ -87,6 +87,8 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_MainWindow((MainWindow*)parent),
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),
+  m_1DHistScale(0.25f),
+  m_2DHistScale(0.75f),
   initialClickPos(0,0),
   m_viMousePos(0,0),
   m_bAbsoluteViewLock(true),
@@ -1413,4 +1415,21 @@ void RenderWindow::ResetRenderingParameters()
   }
   SetWindowFraction2x2(FLOATVECTOR2(0.5f, 0.5f));
   m_Renderer->Transfer3DRotationToMIP();
+}
+
+
+void RenderWindow::SetCurrent1DHistScale(const float value) {
+  m_1DHistScale = value;
+}
+
+void RenderWindow::SetCurrent2DHistScale(const float value) {
+  m_2DHistScale = value;
+}
+
+float RenderWindow::GetCurrent1DHistScale() const {
+  return m_1DHistScale;
+}
+
+float RenderWindow::GetCurrent2DHistScale() const {
+  return m_2DHistScale;
 }

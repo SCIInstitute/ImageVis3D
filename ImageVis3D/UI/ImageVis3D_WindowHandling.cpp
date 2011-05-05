@@ -221,6 +221,20 @@ void MainWindow::SetTitle() {
 }
 
 
+void MainWindow::SetHistogramScale1D(int v) {
+  m_1DTransferFunction->SetHistogramScale(v);
+
+  if (!m_pActiveRenderWin) return;
+  m_pActiveRenderWin->SetCurrent1DHistScale(float(v)/verticalSlider_1DTransHistScale->maximum());
+}
+
+void MainWindow::SetHistogramScale2D(int v) {
+  m_2DTransferFunction->SetHistogramScale(v);
+
+  if (!m_pActiveRenderWin) return;
+  m_pActiveRenderWin->SetCurrent2DHistScale(float(v)/verticalSlider_2DTransHistScale->maximum());
+}
+
 void MainWindow::setupUi(QMainWindow *MainWindow) {
   Ui_MainWindow::setupUi(MainWindow);
 
@@ -242,10 +256,11 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
   connect(m_pQLightPreview, SIGNAL(lightMoved()), this, SLOT(LightMoved()));
 
-  connect(verticalSlider_2DTransHistScale, SIGNAL(valueChanged(int)),
-    m_2DTransferFunction, SLOT(SetHistogramScale(int)));
   connect(verticalSlider_1DTransHistScale, SIGNAL(valueChanged(int)),
-    m_1DTransferFunction, SLOT(SetHistogramScale(int)));
+    this, SLOT(SetHistogramScale1D(int)));
+  connect(verticalSlider_2DTransHistScale, SIGNAL(valueChanged(int)),
+    this, SLOT(SetHistogramScale2D(int)));
+
 
   // These values need to be different than the initial values set via Qt's
   // `designer'.  It ensures that setValue generates a `change' event, which in
@@ -879,6 +894,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   UpdateMinMaxLODLimitLabel();
 
   UpdateColorWidget();
+
+  UpdateTFScaleSliders();
 }
 
 void MainWindow::ToggleMesh() {

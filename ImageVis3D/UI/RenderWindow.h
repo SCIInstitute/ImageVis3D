@@ -116,6 +116,12 @@ class RenderWindow
     void SetInvMouseWheel(const bool bInvWheel) {m_bInvWheel = bInvWheel;}
     bool GetInvMouseWheel() const {return m_bInvWheel;}
 
+    void SetCurrent1DHistScale(const float value);
+    void SetCurrent2DHistScale(const float value);
+
+    float GetCurrent1DHistScale() const;
+    float GetCurrent2DHistScale() const;
+
     void SetUseLighting(bool bLighting, bool bPropagate=true);
     bool GetUseLighting() const;
     void SetSampleRateModifier(float fSampleRateModifier, bool bPropagate=true);
@@ -294,6 +300,8 @@ class RenderWindow
     MainWindow*       m_MainWindow;
     unsigned int      m_iTimeSliceMSecsActive;
     unsigned int      m_iTimeSliceMSecsInActive;
+    float             m_1DHistScale;
+    float             m_2DHistScale;
 
     INTVECTOR2        initialClickPos;
     INTVECTOR2        m_viMousePos;
