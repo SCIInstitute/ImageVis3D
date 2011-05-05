@@ -853,8 +853,8 @@ void MainWindow::ChangeLightColors() {
 void MainWindow::UpdateTFScaleSliders() {
   if (!m_pActiveRenderWin) return;
 
-  verticalSlider_1DTransHistScale->setValue(m_pActiveRenderWin->GetCurrent1DHistScale()*verticalSlider_1DTransHistScale->maximum());
-  verticalSlider_2DTransHistScale->setValue(m_pActiveRenderWin->GetCurrent2DHistScale()*verticalSlider_2DTransHistScale->maximum());
+  verticalSlider_1DTransHistScale->setValue(int(m_pActiveRenderWin->GetCurrent1DHistScale()*verticalSlider_1DTransHistScale->maximum()));
+  verticalSlider_2DTransHistScale->setValue(int(m_pActiveRenderWin->GetCurrent2DHistScale()*verticalSlider_2DTransHistScale->maximum()));
 }
 
 void MainWindow::UpdateColorWidget() {
