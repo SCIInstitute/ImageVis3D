@@ -226,7 +226,7 @@ void MainWindow::Populate1DTFLibList() {
   settings.setValue("Folders/Transfer1DLib", strLibDir);
 
 
-  vector<string> files = SysTools::GetDirContents(string(strLibDir.toAscii()), "*", "1DT");
+  vector<string> files = SysTools::GetDirContents(string(strLibDir.toAscii()), "*", "1dt");
   for (size_t i = 0;i<files.size();i++)       
     comboBox_1DTFLib->insertItem(0,SysTools::RemoveExt(SysTools::GetFilename(files[i])).c_str(),files[i].c_str());
 }
