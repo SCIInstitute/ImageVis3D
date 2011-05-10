@@ -54,7 +54,8 @@ public:
   Q1DTransferFunction(MasterController& masterController, QWidget *parent=0);
   virtual ~Q1DTransferFunction(void);
 
-  void SetData(const Histogram1D* vHistogram, TransferFunction1D* Trans);
+  void SetData(const Histogram1D* vHistogram,
+               unsigned int iMaxValue, TransferFunction1D* Trans);
 
   const TransferFunction1D* GetTrans() {return m_pTrans;}
 
@@ -112,7 +113,7 @@ private:
 
   void SetColor(bool bIsEnabled);
 
-  // scale apearance, may be changed in the constructor
+  // scale apearance, defaults can be changed in the constructor
   unsigned int m_iMarkersX;
   unsigned int m_iMarkersY;
   unsigned int m_iBigMarkerSpacingX;

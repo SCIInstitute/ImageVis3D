@@ -67,9 +67,9 @@ Q1DTransferFunction::Q1DTransferFunction(MasterController& masterController, QWi
   m_iRightBorder(0),
   m_iTopBorder(0),
   // scale apearance, may be changed arbitrarily (except for the marker length wich should be less or equal to both m_iLeftBorder and m_iBottomBorder)
-  m_iMarkersX(40),
-  m_iMarkersY (40),
-  m_iBigMarkerSpacingX(5),
+  m_iMarkersX(50),
+  m_iMarkersY(20),
+  m_iBigMarkerSpacingX(10),
   m_iBigMarkerSpacingY(5),
   m_iMarkerLength(5),
   m_iBigMarkerLength(m_iMarkerLength*3),
@@ -97,9 +97,14 @@ void Q1DTransferFunction::PreparePreviewData() {
 }
 
 void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
+                                  unsigned int iMaxValue,
                                   TransferFunction1D* pTrans) {
   m_pTrans = pTrans;
   if (m_pTrans == NULL || vHistogram == NULL) return;
+
+  m_iMarkersX = iMaxValue;
+  if (m_iMarkersX > 1000) m_iMarkersX /= 10;
+  if (m_iMarkersX > 100) m_iMarkersX /= 10;
 
   // resize internal histogram, we only consider histogram values to the maximum entry that is non-zero
   m_vHistogram.Resize(vHistogram->GetFilledSize());

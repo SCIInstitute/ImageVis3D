@@ -798,7 +798,11 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   AbstrRenderer *const ren = sender->GetRenderer();
 
   MESSAGE("Getting 1D Transfer Function.");
+
+
+  std::pair<double,double> range = ren->GetDataset().GetRange();
   m_1DTransferFunction->SetData(&ren->GetDataset().Get1DHistogram(),
+                                static_cast<unsigned int>(range.second-range.first),
                                 ren->Get1DTrans());
   m_1DTransferFunction->update();
   MESSAGE("Getting 2D Transfer Function.");
@@ -1199,7 +1203,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   disconnect(sender->GetQtWidget(), SIGNAL(RenderWindowViewChanged(int)), this, SLOT(RenderWindowViewChanged(int)));
   disconnect(sender->GetQtWidget(), SIGNAL(StereoDisabled()), this, SLOT(StereoDisabled()));
 
-  m_1DTransferFunction->SetData(NULL, NULL);
+  m_1DTransferFunction->SetData(NULL, 10, NULL);
   m_1DTransferFunction->update();
   m_2DTransferFunction->SetData(NULL, NULL);
   m_2DTransferFunction->update();
