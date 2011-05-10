@@ -103,8 +103,7 @@ void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
   if (m_pTrans == NULL || vHistogram == NULL) return;
 
   m_iMarkersX = iMaxValue;
-  if (m_iMarkersX > 1000) m_iMarkersX /= 10;
-  if (m_iMarkersX > 100) m_iMarkersX /= 10;
+  while (m_iMarkersX > 100) m_iMarkersX /= 10;
 
   // resize internal histogram, we only consider histogram values to the maximum entry that is non-zero
   m_vHistogram.Resize(vHistogram->GetFilledSize());
@@ -184,21 +183,43 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 
   if (m_pTrans == NULL) return;
 
+  unsigned int iLeftBorder = m_iLeftBorder+2;
+  unsigned int iRightBorder = m_iRightBorder+2;
+
   // compute some grid dimensions
-  unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
+  unsigned int iGridWidth  = width()-(iLeftBorder+iRightBorder)-3;
   unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
 
   // draw the histogram a as large polygon
   // define the polygon ...
   std::vector<QPointF> pointList;
-  pointList.push_back(QPointF(m_iLeftBorder+1, iGridHeight-m_iBottomBorder));
-  for (size_t i = 0;i<m_vHistogram.GetSize();i++) {
-    float value = min<float>(1.0f, pow(m_vHistogram.Get(i),1.0f/(1+(m_fHistfScale-1)/100.0f)));
-    pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1),
-                                m_iTopBorder+iGridHeight-value*iGridHeight));
+  pointList.push_back(QPointF(iLeftBorder+1, iGridHeight-m_iBottomBorder));
+
+  if (iGridWidth < m_vHistogram.GetSize()) {
+    float fHistStep = m_vHistogram.GetSize()/float(iGridWidth);
+    size_t iHistStep = size_t(ceil(fHistStep));
+
+    for (size_t i = 0;i<iGridWidth;i++) {
+      float singleValue = 0;
+      for (size_t j = 0;j<iHistStep;j++) {
+        singleValue += m_vHistogram.Get(std::min(int(i*fHistStep)+j, m_vHistogram.GetSize()-1));
+      }
+      singleValue /= fHistStep;
+
+      float value = min<float>(1.0f, pow(singleValue,1.0f/(1+(m_fHistfScale-1)/100.0f)));
+      pointList.push_back(QPointF(iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1),
+                                  m_iTopBorder+iGridHeight-value*iGridHeight));
+    }
+  } else {
+    for (size_t i = 0;i<m_vHistogram.GetSize();i++) {
+      float value = min<float>(1.0f, pow(m_vHistogram.Get(i),1.0f/(1+(m_fHistfScale-1)/100.0f)));
+      pointList.push_back(QPointF(iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1),
+                                  m_iTopBorder+iGridHeight-value*iGridHeight));
+    }
   }
-  pointList.push_back(QPointF(m_iLeftBorder+iGridWidth, m_iTopBorder+iGridHeight));
-  pointList.push_back(QPointF(m_iLeftBorder+1, m_iTopBorder+iGridHeight));
+
+  pointList.push_back(QPointF(iLeftBorder+iGridWidth, m_iTopBorder+iGridHeight));
+  pointList.push_back(QPointF(iLeftBorder+1, m_iTopBorder+iGridHeight));
 
   // ... draw it
   painter.setPen(Qt::NoPen);
