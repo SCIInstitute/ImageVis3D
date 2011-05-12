@@ -20,6 +20,6 @@ for d in . ; do
         QMAKE_CONFIG="debug" \
         QMAKE_CFLAGS="${VIS} ${CF}" \
         QMAKE_CXXFLAGS="${VIS} ${INL} ${CF} ${CXF}" \
-        -recursive
+        -recursive || exit 1
   popd &>/dev/null
 done
