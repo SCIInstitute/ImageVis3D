@@ -131,12 +131,15 @@ void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
 }
 
 void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
+
+  unsigned int iReducedLeftBorder = m_iLeftBorder - 2;
+
   // adjust left and bottom border so that the marker count can be met
-  m_iRightBorder   = (width()-(m_iLeftBorder+2)) %m_iMarkersX;
+  unsigned int iReducedRightBorder = (width()-(iReducedLeftBorder+2)) %m_iMarkersX;
   m_iTopBorder     = (height()-(m_iBottomBorder+2+m_iTopPreviewHeight+m_iTopPreviewDist)) %m_iMarkersY + m_iTopPreviewHeight+m_iTopPreviewDist;
 
   // compute the actual marker spaceing
-  unsigned int iMarkerSpacingX = (width()-(m_iLeftBorder+2))/m_iMarkersX;
+  unsigned int iMarkerSpacingX = (width()-(iReducedLeftBorder+2))/m_iMarkersX;
   unsigned int iMarkerSpacingY = (height()-(m_iBottomBorder+2+m_iTopBorder))/m_iMarkersY;
 
   // draw background
@@ -147,7 +150,7 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
   // draw grid borders
   QPen borderPen(m_colorBorder, 1, Qt::SolidLine);
   painter.setPen(borderPen);
-  QRect borderRect(m_iLeftBorder, m_iTopBorder, width()-(m_iLeftBorder+2+m_iRightBorder), height()-(m_iTopBorder+m_iBottomBorder+2));
+  QRect borderRect(iReducedLeftBorder, m_iTopBorder, width()-(iReducedLeftBorder+2+iReducedRightBorder), height()-(m_iTopBorder+m_iBottomBorder+2));
   painter.drawRect(borderRect);
 
   // draw Y axis markers
@@ -158,17 +161,17 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
 
     if (i%m_iBigMarkerSpacingY == 0) {
       painter.setPen(penLargeScale);
-      painter.drawLine(m_iLeftBorder-m_iBigMarkerLength, iPosY, m_iLeftBorder, iPosY);
+      painter.drawLine(iReducedLeftBorder-m_iBigMarkerLength, iPosY, iReducedLeftBorder, iPosY);
     } else {
       painter.setPen(penScale);
-      painter.drawLine(m_iLeftBorder-m_iMarkerLength, iPosY, m_iLeftBorder, iPosY);
+      painter.drawLine(iReducedLeftBorder-m_iMarkerLength, iPosY, iReducedLeftBorder, iPosY);
     }
   }
 
   // draw X axis markers
   unsigned int iStartY = height()-(m_iBottomBorder+2);
   for (unsigned int i = 0;i<m_iMarkersX;i++) {
-    int iPosX = m_iLeftBorder+i*iMarkerSpacingX;
+    int iPosX = iReducedLeftBorder+i*iMarkerSpacingX;
     if (i%m_iBigMarkerSpacingX == 0) {
       painter.setPen(penLargeScale);
       painter.drawLine(iPosX, iStartY+m_iBigMarkerLength, iPosX, iStartY);
@@ -177,23 +180,22 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
       painter.drawLine(iPosX, iStartY+m_iMarkerLength, iPosX, iStartY);
     }
   }
+
+  m_iRightBorder = iReducedRightBorder+2;
 }
 
 void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 
   if (m_pTrans == NULL) return;
 
-  unsigned int iLeftBorder = m_iLeftBorder+2;
-  unsigned int iRightBorder = m_iRightBorder+2;
-
   // compute some grid dimensions
-  unsigned int iGridWidth  = width()-(iLeftBorder+iRightBorder)-3;
+  unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
   unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
 
   // draw the histogram a as large polygon
   // define the polygon ...
   std::vector<QPointF> pointList;
-  pointList.push_back(QPointF(iLeftBorder+1, iGridHeight-m_iBottomBorder));
+  pointList.push_back(QPointF(m_iLeftBorder+1, iGridHeight-m_iBottomBorder));
 
   if (iGridWidth < m_vHistogram.GetSize()) {
     float fHistStep = m_vHistogram.GetSize()/float(iGridWidth);
@@ -204,22 +206,22 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
       for (size_t j = 0;j<iHistStep;j++) {
         singleValue += m_vHistogram.Get(std::min(int(i*fHistStep)+j, m_vHistogram.GetSize()-1));
       }
-      singleValue /= fHistStep;
+      singleValue /= iHistStep;
 
       float value = min<float>(1.0f, pow(singleValue,1.0f/(1+(m_fHistfScale-1)/100.0f)));
-      pointList.push_back(QPointF(iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1),
+      pointList.push_back(QPointF(m_iLeftBorder+1+i,
                                   m_iTopBorder+iGridHeight-value*iGridHeight));
     }
   } else {
     for (size_t i = 0;i<m_vHistogram.GetSize();i++) {
       float value = min<float>(1.0f, pow(m_vHistogram.Get(i),1.0f/(1+(m_fHistfScale-1)/100.0f)));
-      pointList.push_back(QPointF(iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1),
+      pointList.push_back(QPointF(m_iLeftBorder+1+float(iGridWidth)*i/(m_vHistogram.GetSize()-1),
                                   m_iTopBorder+iGridHeight-value*iGridHeight));
     }
   }
 
-  pointList.push_back(QPointF(iLeftBorder+iGridWidth, m_iTopBorder+iGridHeight));
-  pointList.push_back(QPointF(iLeftBorder+1, m_iTopBorder+iGridHeight));
+  pointList.push_back(QPointF(m_iLeftBorder+iGridWidth, m_iTopBorder+iGridHeight));
+  pointList.push_back(QPointF(m_iLeftBorder+1, m_iTopBorder+iGridHeight));
 
   // ... draw it
   painter.setPen(Qt::NoPen);
