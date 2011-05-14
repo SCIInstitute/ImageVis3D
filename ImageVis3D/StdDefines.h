@@ -64,7 +64,7 @@
 #endif
 
 #ifdef DETECTED_OS_APPLE
-  #define UPDATE_FILE "ImageVis3D-OSX-10.4-Latest.zip"
+  #define UPDATE_FILE "ImageVis3D-OSX-10.5-Latest.zip"
   #define UPDATE_VERSION_FILE "OSX_Latest_Version.txt"
 #endif
 
