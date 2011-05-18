@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=4.6.2
+VERSION=4.7.3
 PREFIX="${HOME}/sw"
 QTDIR="qt-everywhere-opensource-src-${VERSION}"
 echo "Removing old build..."
