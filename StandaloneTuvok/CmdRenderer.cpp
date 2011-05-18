@@ -108,8 +108,8 @@ int main(int argc, char * argv[])
 	
     renderer->LoadDataset(filename);
 		renderer->AddShaderPath(SHADER_PATH);
-		renderer->Resize(UINTVECTOR2(1920, 1200));
 		renderer->Initialize(tuvok::GLContextID::Current());
+		renderer->Resize(UINTVECTOR2(1920, 1200));
 		const std::vector<tuvok::RenderRegion*> & rr = renderer->GetRenderRegions();
     renderer->SetRendererTarget(tuvok::AbstrRenderer::RT_HEADLESS);
 
