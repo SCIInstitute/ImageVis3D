@@ -200,6 +200,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool ExportDataset(UINT32 iLODLevel, std::string targetFileName);
     void ExportIsosurface();
     bool ExportIsosurface(UINT32 iLODLevel, std::string targetFileName);
+    void ExportImageStack();
+    bool ExportImageStack(UINT32 iLODLevel, std::string targetFileName);
 
     void RenderWindowActive(RenderWindow* sender);
     void RenderWindowClosing(RenderWindow* sender);

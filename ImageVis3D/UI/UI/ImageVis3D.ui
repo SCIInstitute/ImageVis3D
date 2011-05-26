@@ -67,6 +67,7 @@
     <addaction name="actionMerge_Data_Sets"/>
     <addaction name="actionTransfer_to_ImageVis3D_Mobile_Device"/>
     <addaction name="actionExport_Dataset"/>
+    <addaction name="actionExport_Image_Stack"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -4925,6 +4926,14 @@ smaller values while make it apear behind. While the first effect usualy looks m
     <string>Add Geometry to this Data Set</string>
    </property>
   </action>
+  <action name="actionExport_Image_Stack">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Export Image Stack</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="0"/>
  <tabstops>
@@ -7260,6 +7269,22 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionExport_Image_Stack</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ExportImageStack()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>810</x>
+     <y>950</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -7370,5 +7395,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>SetMeshScaleAndBias()</slot>
   <slot>RemoveGeometry()</slot>
   <slot>ExportIsosurface()</slot>
+  <slot>ExportImageStack()</slot>
  </slots>
 </ui>

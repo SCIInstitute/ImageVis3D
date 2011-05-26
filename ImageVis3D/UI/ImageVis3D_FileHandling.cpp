@@ -791,6 +791,74 @@ bool MainWindow::ExportIsosurface(UINT32 iLODLevel, string targetFileName) {
     return bResult;
 }
 
+void MainWindow::ExportImageStack() {
+  QFileDialog::Options options;
+#ifdef DETECTED_OS_APPLE
+  options |= QFileDialog::DontUseNativeDialog;
+#endif
+  QString selectedFilter;
+
+  QSettings settings;
+  QString strLastDir = settings.value("Folders/ExportImageStack", ".").toString();
+
+  QString fileName =
+    QFileDialog::getSaveFileName(this, "Export Current Dataset to a Set of Images",
+         strLastDir,
+         m_MasterController.IOMan()->GetImageExportDialogString().c_str(),
+         &selectedFilter, options);
+
+  if (!fileName.isEmpty()) {
+    settings.setValue("Folders/ExportImageStack", QFileInfo(fileName).absoluteDir().path());
+    string targetFileName = string(fileName.toAscii());
+
+    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataset().GetLODLevelCount())-1;
+
+    int iLODLevel = 0;
+    if (iMaxLODLevel > 0) {
+      int iMinLODLevel = 0;
+      vector<QString> vDesc;
+      for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
+        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataset().GetDomainSize(i));
+        QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
+        vDesc.push_back(qstrDesc);
+      }
+      LODDlg lodDlg("For which LOD Level do you want to export the image stack?", iMinLODLevel, iMaxLODLevel, vDesc, this);
+
+      if (lodDlg.exec() != QDialog::Accepted)
+        return;
+      else
+        iLODLevel = lodDlg.GetLOD();
+    }
+
+    if(!ExportImageStack(UINT32(iLODLevel), targetFileName)) {
+      ShowCriticalDialog( "Error during image stack export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+      return;
+    }
+
+  }
+}
+
+bool MainWindow::ExportImageStack(UINT32 iLODLevel, std::string targetFileName) {
+    if (!m_pActiveRenderWin) {
+      m_MasterController.DebugOut()->Warning("MainWindow::ExportImageStack", "No active renderwin");
+      return false;
+    }
+    PleaseWaitDialog pleaseWait(this);
+    pleaseWait.SetText("Exporting image stack, please wait  ...");
+    pleaseWait.AttachLabel(&m_MasterController);
+
+    const UVFDataset *ds = dynamic_cast<UVFDataset*>(
+      &(m_pActiveRenderWin->GetRenderer()->GetDataset())
+    );
+
+    FLOATVECTOR4 color(m_pActiveRenderWin->GetIsosufaceColor(),1.0f);
+
+    bool bResult = m_MasterController.IOMan()->ExtractImageStack( ds, m_1DTransferFunction->GetTrans(), iLODLevel,  targetFileName, m_strTempDir );
+    pleaseWait.close();
+
+    return bResult;
+}
+
 void MainWindow::ExportIsosurface() {
   QFileDialog::Options options;
 #ifdef DETECTED_OS_APPLE
