@@ -900,6 +900,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   UpdateColorWidget();
 
   UpdateTFScaleSliders();
+
+  UpdateInterpolant();
 }
 
 void MainWindow::ToggleMesh() {

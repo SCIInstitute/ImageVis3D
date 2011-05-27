@@ -87,7 +87,6 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bWriteLogFile(false),
   m_strLogFileName("debugLog.txt"),
   m_iLogLevel(2),
-  m_bNearestNeighbor(false),
   m_pWelcomeDialog(new WelcomeDialog(this, Qt::Tool)),
   m_pMetadataDialog(new MetadataDlg(this, Qt::Tool)),
   m_iBlendPrecisionMode(0),
@@ -849,6 +848,19 @@ void MainWindow::ChangeLightColors() {
   m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular,vLightDir);
   m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse,
                                                cSpecular, vLightDir);
+}
+
+void MainWindow::SetTagVolume() {
+  if (!m_pActiveRenderWin) return;
+  if (checkBox_TagVolume->isChecked())
+    m_pActiveRenderWin->GetRenderer()->SetInterpolant(tuvok::NearestNeighbor);
+  else
+    m_pActiveRenderWin->GetRenderer()->SetInterpolant(tuvok::Linear);
+}
+
+void MainWindow::UpdateInterpolant() {
+  if (!m_pActiveRenderWin) return;
+  checkBox_TagVolume->setChecked( m_pActiveRenderWin->GetRenderer()->GetInterpolant() == tuvok::NearestNeighbor);
 }
 
 void MainWindow::UpdateTFScaleSliders() {

@@ -1106,6 +1106,7 @@ void RenderWindow::CloneRendermode(RenderWindow* other) {
   m_Renderer->SetCVColor(other->m_Renderer->GetCVColor());
   m_Renderer->SetCV(other->m_Renderer->GetCV());
   m_Renderer->SetCVFocusPos(other->m_Renderer->GetCVFocusPos());
+  m_Renderer->SetInterpolant(other->m_Renderer->GetInterpolant());
 }
 
 void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate) {

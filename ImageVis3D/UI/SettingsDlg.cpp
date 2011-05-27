@@ -143,7 +143,6 @@ void SettingsDlg::MaxToSliders(unsigned int iMaxCPUMB, unsigned int iMaxGPUMB) {
   }
 }
 
-
 bool SettingsDlg::OverrideMaxMem() const {
   return checkBox_OverrideMax->isChecked();
 }
@@ -155,7 +154,6 @@ unsigned int SettingsDlg::GetMaxGPUMem() const {
 unsigned int SettingsDlg::GetMaxCPUMem() const {
   return checkBox_OverrideMax->isChecked() ? spinBox_CPUMax->value() : 0;
 }
-
 
 UINT64 SettingsDlg::GetGPUMem() const {
   return UINT64(horizontalSlider_GPUMem->value())*1024*1024;
@@ -372,7 +370,6 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
                             bool bInvWheel, bool bI3MFeatures,
                             unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits,
                             bool bDisableBorder, bool bNoRCClipplanes,
-                            bool bNearestNeighbor,
                             const FLOATVECTOR3& vBackColor1,
                             const FLOATVECTOR3& vBackColor2,
                             const FLOATVECTOR4& vTextColor,
@@ -481,7 +478,6 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
   checkBox_DisableBorder->setChecked(bDisableBorder);
   checkBox_DownSampleTo8Bits->setChecked(bDownSampleTo8Bits);
   checkBox_NoRCClipplanes->setChecked(bNoRCClipplanes);
-  cBox_NearestNeighbor->setChecked(bNearestNeighbor);
 
   QString strStyle =
   tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
@@ -562,10 +558,6 @@ bool SettingsDlg::GetDisableBorder() const {
 
 bool SettingsDlg::GetNoRCClipplanes() const {
   return checkBox_NoRCClipplanes->isChecked();
-}
-
-bool SettingsDlg::GetNearestNeighbor() const {
-  return cBox_NearestNeighbor->isChecked();
 }
 
 QString SettingsDlg::GetLogoFilename() const {

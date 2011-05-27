@@ -170,6 +170,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void Transfer2DToggleTFMode();
 
     void SetUpdateMode();
+    void SetTagVolume();
     void ApplyUpdate();
 
     void Transfer2DSwatchesChanged();
@@ -326,7 +327,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool                                      m_bWriteLogFile;
     QString                                   m_strLogFileName;
     unsigned int                              m_iLogLevel;
-    bool                                      m_bNearestNeighbor;
 
     WelcomeDialog*                            m_pWelcomeDialog;
     MetadataDlg*                              m_pMetadataDialog;
@@ -450,6 +450,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void UpdateMinMaxLODLimitLabel();
     void UpdateExplorerView(bool bRepopulateListBox);
     void UpdateTFScaleSliders();
+    void UpdateInterpolant();
     void UpdateColorWidget();
     
     std::string ConvertTF(const std::string& strSource1DTFilename,

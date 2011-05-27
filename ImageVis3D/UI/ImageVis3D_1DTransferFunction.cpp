@@ -110,6 +110,7 @@ void MainWindow::Transfer1DSetGroups() {
     SetPaintMode( (Q1DTransferFunction::paintMode ) iPaintMode);
 }
 
+
 void MainWindow::SetUpdateMode() {
   if( radioButton_UpdateContinuous->isChecked() ) {
     m_1DTransferFunction->SetExecutionMode( QTransferFunction::CONTINUOUS );

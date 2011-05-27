@@ -3330,6 +3330,13 @@
             <number>6</number>
            </property>
            <item>
+            <widget class="QCheckBox" name="checkBox_TagVolume">
+             <property name="text">
+              <string>Tag Volume</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QFrame" name="frame_26">
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
@@ -7285,6 +7292,22 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>checkBox_TagVolume</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>SetTagVolume()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1244</x>
+     <y>688</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1195</x>
+     <y>512</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -7396,5 +7419,6 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>RemoveGeometry()</slot>
   <slot>ExportIsosurface()</slot>
   <slot>ExportImageStack()</slot>
+  <slot>SetTagVolume()</slot>
  </slots>
 </ui>
