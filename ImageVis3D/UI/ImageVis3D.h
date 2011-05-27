@@ -326,6 +326,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool                                      m_bWriteLogFile;
     QString                                   m_strLogFileName;
     unsigned int                              m_iLogLevel;
+    bool                                      m_bNearestNeighbor;
 
     WelcomeDialog*                            m_pWelcomeDialog;
     MetadataDlg*                              m_pMetadataDialog;

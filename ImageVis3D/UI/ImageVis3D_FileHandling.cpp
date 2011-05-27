@@ -47,6 +47,7 @@
 #include <QtCore/QSettings>
 #include <QtGui/QMessageBox>
 
+#include "../Tuvok/Basics/Interpolant.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/IO/IOManager.h"
@@ -529,10 +530,17 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
     AbstrRenderer* ren = renderWin->GetRenderer();
     const Dataset& ds = ren->GetDataset();
     UINT64VECTOR3 dom_sz = ds.GetDomainSize(0);
+    // Disable lighting for 2D datasets (images).
     if(dom_sz[2] == 1) {
       checkBox_Lighting->setChecked(false);
       checkBox_Lighting->setEnabled(false);
       SetLighting(false);
+    }
+    // Setup the correct interpolant.
+    if(m_bNearestNeighbor) {
+      MESSAGE("Setting nearest neighbor interpolation...");
+      Dataset& ds = ren->GetDataset();
+      ds.SetInterpolant(tuvok::NearestNeighbor);
     }
   }
 

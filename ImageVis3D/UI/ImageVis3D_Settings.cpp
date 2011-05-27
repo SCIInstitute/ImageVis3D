@@ -143,6 +143,8 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
     bool bDisableBorder = settings.value("DisableBorder", m_bDisableBorder).toBool();
     bool bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
+    bool bNearestNeighbor = settings.value("NearestNeighborInterpolation",
+                                           m_bNearestNeighbor).toBool();
 
     FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0).toDouble(),
                             settings.value("Background1G", 0.0).toDouble(),
@@ -173,7 +175,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
                           bCheckForUpdatesOnStartUp, bCheckForDevBuilds, bShowWelcomeScreen,
                           bInvWheel, bI3MFeatures,
                           iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
-                          bDisableBorder, bNoRCClipplanes,
+                          bDisableBorder, bNoRCClipplanes, bNearestNeighbor,
                           vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos,
                           iMaxBrickSize, iMaxMaxBrickSize, expFeatures);
 
@@ -228,6 +230,8 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("DownSampleTo8Bits", settingsDlg.GetDownSampleTo8Bits());
       settings.setValue("DisableBorder", settingsDlg.GetDisableBorder());
       settings.setValue("NoRCClipplanes", settingsDlg.GetNoRCClipplanes());
+      settings.setValue("NearestNeighborInterpolation",
+                        settingsDlg.GetNearestNeighbor());
       settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
       settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
       settings.setValue("Background1B", settingsDlg.GetBackgroundColor1().z);
@@ -296,6 +300,8 @@ void MainWindow::ApplySettings() {
   m_bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
   m_bDisableBorder = settings.value("DisableBorder", m_bDisableBorder).toBool();
   m_bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
+  m_bNearestNeighbor = settings.value("NearestNeighborInterpolation",
+                                      m_bNearestNeighbor).toBool();
 
   m_vBackgroundColors[0] = FLOATVECTOR3(
     settings.value("Background1R", 0.0).toDouble(),

@@ -98,6 +98,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetDownSampleTo8Bits() const;
     bool          GetDisableBorder() const;
     bool          GetNoRCClipplanes() const;
+    bool          GetNearestNeighbor() const;
 
     QString       GetLogoFilename() const;
     int           GetLogoPos() const;
@@ -135,6 +136,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bDownSampleTo8Bits,
                    bool bDisableBorder,
                    bool bNoRCClipplanes,
+                   bool bNearestNeighbor,
                    const FLOATVECTOR3& vBackColor1,
                    const FLOATVECTOR3& vBackColor2,
                    const FLOATVECTOR4& vTextColor,
@@ -176,7 +178,5 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void setupUi(QDialog *SettingsDlg);
     void SetLogoLabel();
     void MaxToSliders(unsigned int iMaxCPUMB, unsigned int iMaxGPUMB);
-
 };
-
 #endif // SETTINGSDLG_H
