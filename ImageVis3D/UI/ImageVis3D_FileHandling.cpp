@@ -831,7 +831,11 @@ void MainWindow::ExportImageStack() {
         iLODLevel = lodDlg.GetLOD();
     }
 
-    if(!ExportImageStack(UINT32(iLODLevel), targetFileName)) {
+    bool bAllDirs = QMessageBox::Yes == QMessageBox::question(this, "Texture Stack Exporter",
+                                                                    "Do you want to export three stacks along all three directions? Otherwise only one stack along the z-axis is created.",
+                                                              QMessageBox::Yes, QMessageBox::No);
+
+    if(!ExportImageStack(UINT32(iLODLevel), targetFileName, bAllDirs)) {
       ShowCriticalDialog( "Error during image stack export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
       return;
     }
@@ -839,7 +843,7 @@ void MainWindow::ExportImageStack() {
   }
 }
 
-bool MainWindow::ExportImageStack(UINT32 iLODLevel, std::string targetFileName) {
+bool MainWindow::ExportImageStack(UINT32 iLODLevel, std::string targetFileName, bool bAllDirs) {
     if (!m_pActiveRenderWin) {
       m_MasterController.DebugOut()->Warning("MainWindow::ExportImageStack", "No active renderwin");
       return false;
@@ -854,7 +858,7 @@ bool MainWindow::ExportImageStack(UINT32 iLODLevel, std::string targetFileName) 
 
     FLOATVECTOR4 color(m_pActiveRenderWin->GetIsosufaceColor(),1.0f);
 
-    bool bResult = m_MasterController.IOMan()->ExtractImageStack( ds, m_1DTransferFunction->GetTrans(), iLODLevel,  targetFileName, m_strTempDir );
+    bool bResult = m_MasterController.IOMan()->ExtractImageStack( ds, m_1DTransferFunction->GetTrans(), iLODLevel,  targetFileName, m_strTempDir, bAllDirs);
     pleaseWait.close();
 
     return bResult;
