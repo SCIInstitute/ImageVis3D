@@ -202,7 +202,7 @@
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Tuvok.lib;opengl32.lib;shlwapi.lib;QtOpenGLd.lib;QtGuid.lib;QtCored.lib;QtNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Tuvok.lib;opengl32.lib;shlwapi.lib;QtOpenGL.lib;QtGui.lib;QtCore.lib;QtNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)32.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Tuvok\Build\$(Platform)\$(Configuration);$(QTDIR32)\lib;$(QTDIR32)\plugins\imageformats;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -251,7 +251,7 @@
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Tuvok.lib;opengl32.lib;shlwapi.lib;QtOpenGLd.lib;QtGuid.lib;QtCored.lib;QtNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Tuvok.lib;opengl32.lib;shlwapi.lib;QtOpenGL.lib;QtGui.lib;QtCore.lib;QtNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)32.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Tuvok\Build\$(Platform)\$(Configuration);$(QTDIR32)\lib;$(QTDIR32)\plugins\imageformats;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
