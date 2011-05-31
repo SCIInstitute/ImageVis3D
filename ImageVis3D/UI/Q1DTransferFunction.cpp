@@ -102,7 +102,7 @@ void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
   m_pTrans = pTrans;
   if (m_pTrans == NULL || vHistogram == NULL) return;
 
-  m_iMarkersX = iMaxValue;
+  m_iMarkersX = std::max<unsigned int>(1,iMaxValue);
   while (m_iMarkersX > 100) m_iMarkersX /= 10;
 
   // resize internal histogram, we only consider histogram values to the maximum entry that is non-zero
