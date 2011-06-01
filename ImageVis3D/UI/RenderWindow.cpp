@@ -246,6 +246,8 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
     region = NULL;
   }
 
+  MESSAGE("Got mouse move of %d x %d", m_viMousePos[0], m_viMousePos[1]);
+
   UpdateCursor(region, m_viMousePos, translate);
 
   // mouse is over the 3D window
