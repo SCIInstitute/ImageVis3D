@@ -177,18 +177,24 @@ void MainWindow::Transfer1DLoad() {
 void MainWindow::Transfer1DSave() {
   QSettings settings;
   QString strLastDir="";
-
-  // First try to grab the directory from the currently-opened file.
+  std::string defaultFilename;
+  
+  // First try to grab the directory from the currently-opened file...
   if(m_pActiveRenderWin) {
     const FileBackedDataset& ds = dynamic_cast<const FileBackedDataset&>(
       m_pActiveRenderWin->GetRenderer()->GetDataset()
     );
     strLastDir = QString(SysTools::GetPath(ds.Filename()).c_str());
+
+    defaultFilename = SysTools::ChangeExt(ds.Filename(), "1dt");
   }
 
-  // if that didn't work, fall back on our previously saved path.
-  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdString())) {
+  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdString()+".")) {
+    // ...if that didn't work, fall back on our previously saved path.
     strLastDir = settings.value("Folders/Transfer1DSave", ".").toString();
+  } else {
+    // if the path exitst propose the default name as save default
+    strLastDir = QString(defaultFilename.c_str());
   }
 
   QString selectedFilter;
