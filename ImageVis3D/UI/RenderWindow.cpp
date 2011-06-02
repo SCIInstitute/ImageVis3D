@@ -246,8 +246,6 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
     region = NULL;
   }
 
-  MESSAGE("Got mouse move of %d x %d", m_viMousePos[0], m_viMousePos[1]);
-
   UpdateCursor(region, m_viMousePos, translate);
 
   // mouse is over the 3D window
@@ -349,6 +347,7 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
   // mouse is over the 3D window
   if (renderRegion->is3D()) {
     float fZoom = ((m_bInvWheel) ? -1 : 1) * event->delta()/1000.0f;
+    MESSAGE("mousewheel click, delta/zoom: %d/%f", event->delta(), fZoom);
 
     // User can hold control to modify only the clip plane.  Note however that
     // if the plane is locked to the volume, we'll end up translating the plane
