@@ -393,7 +393,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool RebrickDataset(QString filename, QString targetFilename,
                         bool bNoUserInteraction);
 
-    QString GetConvFilename();
+    QString GetConvFilename(const QString& sourceName = "");
 
     void InitDockWidget(QDockWidget * v) const;
     void InitAllWorkspaces();

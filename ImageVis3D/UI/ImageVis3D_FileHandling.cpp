@@ -314,7 +314,7 @@ void MainWindow::LoadDataset(std::string strFilename) {
   }
 }
 
-QString MainWindow::GetConvFilename() {
+QString MainWindow::GetConvFilename(const QString& sourceName) {
   QFileDialog::Options options;
   #ifdef DETECTED_OS_APPLE
     options |= QFileDialog::DontUseNativeDialog;
@@ -323,6 +323,13 @@ QString MainWindow::GetConvFilename() {
 
   QSettings settings;
   QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
+
+  QString suggestedFileName = SysTools::ChangeExt(
+                                SysTools::GetFilename(string(sourceName.toAscii())),
+                                                      "uvf"
+                              ).c_str();
+  
+  strLastDir = tr("%1/%2").arg(strLastDir).arg(suggestedFileName);
 
   QString targetFilename =
     QFileDialog::getSaveFileName(this, "Select filename for converted data",
@@ -455,7 +462,7 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
   QString filename = files[0];
   if(needs_conversion) {
     if (!bNoUserInteraction && targetFilename.isEmpty()) {
-      targetFilename = GetConvFilename();
+      targetFilename = GetConvFilename(files[0]);
     }
     if (targetFilename.isEmpty()) return false;
 
@@ -618,7 +625,7 @@ void MainWindow::LoadDirectory() {
       #endif
         QString selectedFilter;
 
-        QString targetFilename = GetConvFilename();
+        QString targetFilename = GetConvFilename(directoryName);
         if (targetFilename.isEmpty()) return;
 
         pleaseWait.SetText("Converting, please wait  ...");
