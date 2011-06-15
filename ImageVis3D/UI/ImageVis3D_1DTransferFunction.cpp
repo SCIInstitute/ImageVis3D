@@ -59,20 +59,35 @@ using namespace std;
 // 1D Transfer Function Dock
 // ******************************************
 
+
+
 void MainWindow::Transfer1DSetColors() {
 
   radioButton_User->setChecked(true);
 
   unsigned int iPaintMode = Q1DTransferFunction::PAINT_NONE;
 
-  if (checkBox_Red->isChecked() )
-    iPaintMode |= Q1DTransferFunction::PAINT_RED;
-  if (checkBox_Green->isChecked() )
-    iPaintMode |= Q1DTransferFunction::PAINT_GREEN;
-  if (checkBox_Blue->isChecked() )
-    iPaintMode |= Q1DTransferFunction::PAINT_BLUE;
-  if (checkBox_Alpha->isChecked() )
-    iPaintMode |= Q1DTransferFunction::PAINT_ALPHA;
+  if (!checkBox_Red->isChecked() && 
+      !checkBox_Green->isChecked() &&
+      !checkBox_Blue->isChecked() &&
+      !checkBox_Alpha->isChecked() ) {
+      // everything disable -> not a good idea
+
+    groupBox_6->setStyleSheet("background-color: red");
+
+  } else {
+    groupBox_6->setStyleSheet("");
+
+    if (checkBox_Red->isChecked() )
+      iPaintMode |= Q1DTransferFunction::PAINT_RED;
+    if (checkBox_Green->isChecked() )
+      iPaintMode |= Q1DTransferFunction::PAINT_GREEN;
+    if (checkBox_Blue->isChecked() )
+      iPaintMode |= Q1DTransferFunction::PAINT_BLUE;
+    if (checkBox_Alpha->isChecked() )
+      iPaintMode |= Q1DTransferFunction::PAINT_ALPHA;
+  }
+
 
   m_1DTransferFunction->
     SetPaintMode( (Q1DTransferFunction::paintMode ) iPaintMode);
@@ -99,15 +114,7 @@ void MainWindow::Transfer1DSetGroups() {
   checkBox_Blue->setChecked(true);
   checkBox_Alpha->setChecked(iRadioState==2);
 
-  unsigned int iPaintMode = (Q1DTransferFunction::PAINT_RED |
-           Q1DTransferFunction::PAINT_GREEN |
-           Q1DTransferFunction::PAINT_BLUE |
-           ((iRadioState==2) ?
-            Q1DTransferFunction::PAINT_ALPHA :
-            Q1DTransferFunction::PAINT_NONE) );
-
-  m_1DTransferFunction->
-    SetPaintMode( (Q1DTransferFunction::paintMode ) iPaintMode);
+  Transfer1DSetColors();
 }
 
 
