@@ -1289,7 +1289,9 @@
     <UI Include="UI\UI\BugRepDlg.ui" />
     <UI Include="UI\UI\CrashDetDlg.ui" />
     <UI Include="UI\UI\FTPDialog.ui" />
-    <UI Include="UI\UI\ImageVis3D.ui" />
+    <UI Include="UI\UI\ImageVis3D.ui">
+      <SubType>Designer</SubType>
+    </UI>
     <UI Include="UI\UI\LODDlg.ui" />
     <UI Include="UI\UI\MergeDlg.ui" />
     <UI Include="UI\UI\Metadata.ui" />

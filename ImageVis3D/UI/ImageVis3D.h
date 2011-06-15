@@ -144,6 +144,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void UseIso();
     void DisableAllTrans();
 
+    void Invert1DTransComp();
     void Transfer1DSetColors();
     void Transfer1DSetGroups();
     void Transfer1DLoad();
@@ -238,6 +239,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void ToggleClipPlane(bool);
     void ClipToggleLock(bool);
     void ClipToggleShow(bool);
+    void CropData();
     void SetTimestep(int);
     void SetTimestepSlider(int iValue, int iMaxValue);
     void UpdateTimestepLabel(int iValue, int iMaxValue);

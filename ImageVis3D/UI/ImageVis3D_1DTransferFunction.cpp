@@ -59,7 +59,14 @@ using namespace std;
 // 1D Transfer Function Dock
 // ******************************************
 
+void MainWindow::Invert1DTransComp() {
+  checkBox_Red->setChecked(!checkBox_Red->isChecked());
+  checkBox_Green->setChecked(!checkBox_Green->isChecked());
+  checkBox_Blue->setChecked(!checkBox_Blue->isChecked());
+  checkBox_Alpha->setChecked(!checkBox_Alpha->isChecked());
 
+  Transfer1DSetColors();
+}
 
 void MainWindow::Transfer1DSetColors() {
 

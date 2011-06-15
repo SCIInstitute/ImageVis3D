@@ -174,6 +174,7 @@ MainWindow::MainWindow(MasterController& masterController,
 
   checkBox_ClipShow->setEnabled(false);
   checkBox_ClipLockObject->setEnabled(false);
+  toolButton_CropData->setEnabled(false);
   DisableStereoWidgets();
 
   m_pRedrawTimer = new QTimer(this);
@@ -192,7 +193,7 @@ MainWindow::~MainWindow()
     m_MasterController.RemoveDebugOut(m_pDebugOut);
   }
 
-  // cleanup updatefile, this codepath is taken for instance when the
+  // cleanup updatefile, this code path is taken for instance when the
   // windows firewall blocked an http request
   if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
     m_pUpdateFile->close();
@@ -259,7 +260,7 @@ void MainWindow::SetAndCheckRunningFlag() {
             settings.setValue("Performance/WriteLogFile", true);
             settings.setValue("Performance/LogLevel", 2);
           } else {
-            // if debuging was not enabled assume that has been opended multiple times
+            // if debugging was not enabled assume that has been opened multiple times
             settings.setValue("SaneCounter", iSaneCounter);
           }
         }
@@ -577,13 +578,10 @@ void MainWindow::ToggleClipPlane(bool bClip)
   if(rw == NULL) { return; }
 
   rw->SetClipPlaneEnabled(bClip);
-  if(bClip) {
-    checkBox_ClipShow->setEnabled(true);
-    checkBox_ClipLockObject->setEnabled(true);
-  } else {
-    checkBox_ClipShow->setEnabled(false);
-    checkBox_ClipLockObject->setEnabled(false);
-  }
+
+  checkBox_ClipShow->setEnabled(bClip);
+  checkBox_ClipLockObject->setEnabled(bClip);
+  toolButton_CropData->setEnabled(bClip);
 }
 
 void MainWindow::ClipToggleShow(bool bShow)

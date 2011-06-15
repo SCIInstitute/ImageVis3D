@@ -1344,6 +1344,19 @@
                 </property>
                </widget>
               </item>
+              <item>
+                <widget class="QPushButton" name="pushButton_invert1DTransComp">
+                  <property name="minimumSize">
+                    <size>
+                      <width>0</width>
+                      <height>23</height>
+                    </size>
+                  </property>
+                  <property name="text">
+                    <string>Invert</string>
+                  </property>
+                </widget>
+              </item>
              </layout>
             </widget>
            </item>
@@ -3460,6 +3473,16 @@
              </property>
              <property name="checked">
               <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="toolButton_CropData">
+              <property name="enabled">
+                <bool>false</bool>
+              </property>
+              <property name="text">
+              <string>Crop Data</string>
              </property>
             </widget>
            </item>
@@ -7308,6 +7331,28 @@ smaller values while make it apear behind. While the first effect usualy looks m
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_invert1DTransComp</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>Invert1DTransComp()</slot>
+  </connection>
+   <connection>
+     <sender>toolButton_CropData</sender>
+     <signal>clicked()</signal>
+     <receiver>MainWindow</receiver>
+     <slot>CropData()</slot>
+     <hints>
+       <hint type="sourcelabel">
+         <x>1553</x>
+         <y>817</y>
+       </hint>
+       <hint type="destinationlabel">
+         <x>1192</x>
+         <y>784</y>
+       </hint>
+     </hints>
+   </connection>
  </connections>
  <slots>
   <slot>HideVisualizationWindows()</slot>
@@ -7420,5 +7465,7 @@ smaller values while make it apear behind. While the first effect usualy looks m
   <slot>ExportIsosurface()</slot>
   <slot>ExportImageStack()</slot>
   <slot>SetTagVolume()</slot>
+  <slot>CropData()</slot>
+  <slot>Invert1DTransComp()</slot>
  </slots>
 </ui>

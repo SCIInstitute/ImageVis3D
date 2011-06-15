@@ -1027,3 +1027,45 @@ void MainWindow::SaveAspectRatioToUVF() {
     m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
   }
 }
+
+
+void MainWindow::CropData() {
+  if (m_pActiveRenderWin) {
+
+    // todo fix this by copying the meshes from the old dataset to the new one
+    if (!m_pActiveRenderWin->GetRenderer()->GetDataset().GetMeshes().empty()) {
+      QMessageBox::warning(this, "File Error", "Cropping datasets that contain meshes is not supported at the moment.", QMessageBox::Ok);
+      return;
+    }
+
+    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
+
+    PleaseWaitDialog pleaseWait(this);
+    pleaseWait.SetText("Cropping dataset");
+    pleaseWait.AttachLabel(&m_MasterController);
+
+    ExtendedPlane p = m_pActiveRenderWin->GetRenderer()->GetClipPlane();
+    FLOATMATRIX4 trans = m_pActiveRenderWin->GetFirst3DRegion()->rotation * 
+                         m_pActiveRenderWin->GetFirst3DRegion()->translation;
+
+    // get rid of the viewing transformation in the plane
+    p.Transform(trans.inverse(),false);
+
+
+    if (!m_pActiveRenderWin->GetRenderer()->CropDataset(m_strTempDir)) {
+      if (!m_bScriptMode) {
+        QMessageBox::warning(this, "File Error", "Unable to crop dataset, is the file write protected?", QMessageBox::Ok);
+      }
+    } else {
+      ToggleClipPlane(false);
+
+    }
+    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
+
+    RenderWindow* current = m_pActiveRenderWin;
+    m_pActiveRenderWin = NULL; // set m_pActiveRenderWin to NULL so RenderWindowActive thinks it has changed
+    RenderWindowActive(current);
+
+    pleaseWait.close();
+  }
+}
