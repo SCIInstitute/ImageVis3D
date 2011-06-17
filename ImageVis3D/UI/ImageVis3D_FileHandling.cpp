@@ -1038,6 +1038,10 @@ void MainWindow::CropData() {
       return;
     }
 
+    bool bKeepOldData = (QMessageBox::Yes == 
+      QMessageBox::question(NULL, "Create Backup?", "Do you want to create a backup of the current dataset before cropping?", QMessageBox::Yes, QMessageBox::No));
+
+
     m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
 
     PleaseWaitDialog pleaseWait(this);
@@ -1051,8 +1055,7 @@ void MainWindow::CropData() {
     // get rid of the viewing transformation in the plane
     p.Transform(trans.inverse(),false);
 
-
-    if (!m_pActiveRenderWin->GetRenderer()->CropDataset(m_strTempDir)) {
+    if (!m_pActiveRenderWin->GetRenderer()->CropDataset(m_strTempDir,bKeepOldData)) {
       if (!m_bScriptMode) {
         QMessageBox::warning(this, "File Error", "Unable to crop dataset, is the file write protected?", QMessageBox::Ok);
       }
