@@ -105,7 +105,13 @@ function revision
     pushd Tuvok &>/dev/null
         R_TUVOK=`$VCS info | grep Revision | awk '{print $2}'`
     popd &> /dev/null
-    echo "${R_IMAGEVIS3D}_${R_TUVOK}"
+    pushd Tuvok/Basics &>/dev/null
+        R_BASICS=`$VCS info | grep Revision | awk '{print $2}'`
+    popd &> /dev/null
+    pushd Tuvok/IO &>/dev/null
+        R_IO=`$VCS info | grep Revision | awk '{print $2}'`
+    popd &> /dev/null
+    echo "${R_IMAGEVIS3D}_${R_TUVOK}_${R_BASICS}_${R_IO}"
 }
 
 # Reads the version numbers from Std*Defines.h.  Sets IV3D_VERSION,
@@ -149,29 +155,26 @@ function version
     export TUVOK_VERSION="${TUVOK_MAJOR}.${TUVOK_MINOR}.${TUVOK_PATCH}"
 }
 
-# Determine the architecture name according SCI conventions.  Basically, this
-# is one of (Linux|osx|Win) with one of (32|64) appended.
+# Determine the platform of the current machine.
 function sci_arch
 {
     local arch=`uname -m`
     local opsys=`uname -s`
     if test "x${opsys}" = "xDarwin" ; then
-        opsys="osx"
         # 10.4?  10.5?  This gets the system version.
         local sysver=$(system_profiler                          \
                          -detailLevel mini SPSoftwareDataType | \
                        grep "System Version:" |                 \
                        awk '{print $6}')
-        opsys="${opsys}${sysver}"
+        opsys="${opsys}-${sysver}"
     fi
-    if test "x${arch}" = "xi386" -o "x${arch}" = "xi686" ; then
-        arch="32bit"
-    elif test "x${arch}" = "xx86_64" ; then
-        arch="64bit"
+    if test `uname` = "Linux" ; then
+      distro=$(lsb_release -i | awk '{print $3}')
+      distro_release=$(lsb_release -r | awk '{print $2}')
+      echo "${distro}-${distro_release}-${arch}"
+    else
+      echo "${opsys}-${arch}"
     fi
-    # else who knows .. just stick with the uname output, there's no convention
-    # anymore anyway.
-    echo "${opsys}-${arch}"
 }
 
 # Gives the name of the appropriate tarball.
