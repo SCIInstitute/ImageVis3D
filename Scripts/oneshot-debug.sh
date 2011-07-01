@@ -39,12 +39,15 @@ if test -z "${MAKE_OPTIONS}" ; then
   MAKE_OPTIONS="-j2 -l 2.0"
 fi
 
-for d in . Tuvok/IO/test ; do
-  echo "BUILDING IN ${d}"
-  pushd ${d} &> /dev/null || exit 1
+echo "BUILDING Tuvok..."
+make --no-print-directory ${MAKE_OPTIONS}
+
+# Darwin's compiler is broken w.r.t. tr1, our IO tests won't work.
+if test `uname -s` != "Darwin" ; then
+  pushd Tuvok/IO/test &> /dev/null || exit 1
     make --no-print-directory ${MAKE_OPTIONS}
   popd &> /dev/null
-done
+fi
 
 echo "Bundling..."
 if test `uname -s` = "Darwin" ; then
