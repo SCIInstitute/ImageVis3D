@@ -12,6 +12,7 @@ DEPENDPATH       += .
 INCLUDEPATH      += . ../ ../Tuvok/Basics/3rdParty ../Tuvok
 QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
+win32:LIBS       += shlwapi.lib
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 
