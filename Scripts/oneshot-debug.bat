@@ -9,7 +9,7 @@ qmake -tp vc ^
   -recursive ^
   ImageVis3d.pro
 REM hardcoding vs2008 for now =(
-bld="C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\devenv.COM"
+set bld="C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\devenv.COM"
 %bld% ^
   ImageVis3D.sln ^
   /nologo ^
