@@ -1,5 +1,5 @@
-; Script to build everything we can in a single invocation, using
-; a set of options which is appropriate for creating debug builds.
+REM Script to build everything we can in a single invocation, using
+REM a set of options which is appropriate for creating debug builds.
 
 set w32_cf="-D_CRT_SECURE_NO_WARNINGS=1 -D_SCL_SECURE_NO_WARNINGS=1"
 qmake -tp vc ^
@@ -8,7 +8,7 @@ qmake -tp vc ^
   QMAKE_LFLAGS+=%w32_cf% ^
   -recursive ^
   ImageVis3d.pro
-; hardcoding vs2008 for now =(
+REM hardcoding vs2008 for now =(
 bld="C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\devenv.COM"
 %bld% ^
   ImageVis3D.sln ^
@@ -36,11 +36,11 @@ pushd Tuvok\IO\test
     /Rebuild
 popd
 
-; download documentation
+REM download documentation
 set manual="http://www.sci.utah.edu/images/docs/imagevis3d.pdf"
 set mdata="http://ci.sci.utah.edu:8011/devbuilds/GettingDataIntoImageVis3D.pdf"
 wget --no-check-certificate -q %manual%
 wget --no-check-certificate -q %mdata%
 
-; bundle it.
+REM bundle it.
 iscc Scripts/installer/64.iss
