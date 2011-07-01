@@ -4,7 +4,7 @@
 
 TEMPLATE          = app
 win32:TEMPLATE    = vcapp
-CONFIG           += exceptions largefile link_prl static stl warn_on
+CONFIG           += exceptions largefile static stl warn_on
 CONFIG           -= app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/UVFReader
@@ -13,7 +13,8 @@ QT               += opengl
 DEPENDPATH       += .
 INCLUDEPATH      += . ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW
 INCLUDEPATH      += ../Tuvok ../Tuvok/Basics/3rdParty ../Tuvok/Basics
-LIBS              = -L../Tuvok/Build -L../Tuvok/IO/expressions -lTuvok
+QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
+LIBS              = -lTuvok -ltuvokexpr
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 

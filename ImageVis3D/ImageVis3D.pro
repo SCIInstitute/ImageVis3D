@@ -4,7 +4,7 @@
 
 TEMPLATE          = app
 win32:TEMPLATE    = vcapp
-CONFIG           += exceptions largefile link_prl qt static stl warn_on
+CONFIG           += exceptions largefile qt static stl warn_on
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = ../Build/ImageVis3D
 RCC_DIR           = ../Build/rcc
@@ -21,7 +21,7 @@ INCLUDEPATH      += $$incpath
 #INCLUDEPATH      += . ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW ../Tuvok
 QT               += opengl network
 LIBPATH          += ../Tuvok/Build ../Tuvok/IO/expressions
-LIBS              = -lTuvok
+LIBS              = -lTuvok -ltuvokexpr
 RESOURCES         = ImageVis3D.qrc
 RC_FILE 	  = Resources/ImageVis3D.rc
 QMAKE_INFO_PLIST  = ../IV3D.plist

@@ -4,13 +4,14 @@
 
 TEMPLATE          = app
 win32:TEMPLATE    = vcapp
-CONFIG           += exceptions largefile link_prl static stl warn_on
+CONFIG           += exceptions largefile static stl warn_on
 CONFIG           -= app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/ExtractDebugInfo
 DEPENDPATH       += .
 INCLUDEPATH      += . ../ ../Tuvok/Basics/3rdParty ../Tuvok
-LIBS              = -L../Tuvok/Build -L../Tuvok/IO/expressions -lTuvok
+QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
+LIBS              = -lTuvok -ltuvokexpr
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 
