@@ -36,5 +36,11 @@ pushd Tuvok\IO\test
     /Rebuild
 popd
 
+; download documentation
+set manual="http://www.sci.utah.edu/images/docs/imagevis3d.pdf"
+set mdata="http://ci.sci.utah.edu:8011/devbuilds/GettingDataIntoImageVis3D.pdf"
+wget --no-check-certificate -q %manual%
+wget --no-check-certificate -q %mdata%
+
 ; bundle it.
 iscc Scripts/installer/64.iss
