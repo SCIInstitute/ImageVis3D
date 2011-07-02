@@ -22,6 +22,7 @@ INCLUDEPATH      += $$incpath
 QT               += opengl network
 LIBPATH          += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
+unix:LIBS        += -lz
 RESOURCES         = ImageVis3D.qrc
 RC_FILE 	  = Resources/ImageVis3D.rc
 QMAKE_INFO_PLIST  = ../IV3D.plist
