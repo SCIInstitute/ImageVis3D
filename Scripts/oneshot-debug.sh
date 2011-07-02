@@ -40,12 +40,12 @@ if test -z "${MAKE_OPTIONS}" ; then
 fi
 
 echo "BUILDING Tuvok..."
-make --no-print-directory ${MAKE_OPTIONS}
+make --no-print-directory ${MAKE_OPTIONS} || exit 1
 
 # Darwin's compiler is broken w.r.t. tr1, our IO tests won't work.
 if test `uname -s` != "Darwin" ; then
   pushd Tuvok/IO/test &> /dev/null || exit 1
-    make --no-print-directory ${MAKE_OPTIONS}
+    make --no-print-directory ${MAKE_OPTIONS} || exit 1
   popd &> /dev/null
 fi
 
