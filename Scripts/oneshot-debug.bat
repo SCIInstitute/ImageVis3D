@@ -5,7 +5,6 @@ set w32_cf="-D_CRT_SECURE_NO_WARNINGS=1 -D_SCL_SECURE_NO_WARNINGS=1"
 qmake -tp vc ^
   QMAKE_CFLAGS+=%w32_cf% ^
   QMAKE_CXXFLAGS+=%w32_cf% ^
-  QMAKE_LFLAGS+=%w32_cf% ^
   -recursive ^
   ImageVis3d.pro
 REM hardcoding vs2008 for now =(
@@ -26,7 +25,6 @@ pushd Tuvok\IO\test
   qmake -tp vc ^
     QMAKE_CFLAGS+=%w32_cf% ^
     QMAKE_CXXFLAGS+=%w32_cf% ^
-    QMAKE_LFLAGS+=%w32_cf% ^
     -recursive ^
     test.pro
 
