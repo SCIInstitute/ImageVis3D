@@ -41,4 +41,4 @@ wget --no-check-certificate -q %manual%
 wget --no-check-certificate -q %mdata%
 
 REM bundle it.
-iscc Scripts/installer/64.iss
+iscc Scripts/installer/32-debug.iss
