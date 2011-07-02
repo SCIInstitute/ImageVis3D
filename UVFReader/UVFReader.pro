@@ -16,6 +16,7 @@ INCLUDEPATH      += ../Tuvok ../Tuvok/Basics/3rdParty ../Tuvok/Basics
 QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
 unix:LIBS        += -lz
+macx:LIBS        += -framework CoreFoundation
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 
