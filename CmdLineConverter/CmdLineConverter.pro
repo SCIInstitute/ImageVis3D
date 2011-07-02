@@ -18,6 +18,7 @@ DEPENDPATH       += $$incpath
 INCLUDEPATH      += $$incpath
 QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
+unix:LIBS        += -lz
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 

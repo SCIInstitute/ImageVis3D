@@ -15,6 +15,7 @@ INCLUDEPATH      += . ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW
 INCLUDEPATH      += ../Tuvok ../Tuvok/Basics/3rdParty ../Tuvok/Basics
 QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
+unix:LIBS        += -lz
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 
