@@ -29,7 +29,7 @@ pushd Tuvok\IO\test
     test.pro
 
   %bld% ^
-    test.sln ^
+    cxxtester.vcproj ^
     /nologo ^
     /Rebuild
 popd
