@@ -23,11 +23,12 @@ QT               += opengl network
 LIBPATH          += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
 unix:LIBS        += -lz
+macx:LIBS        +=-framework CoreFoundation
+win32:LIBS       += shlwapi.lib
 RESOURCES         = ImageVis3D.qrc
 RC_FILE 	  = Resources/ImageVis3D.rc
 QMAKE_INFO_PLIST  = ../IV3D.plist
 ICON              = Resources/ImageVis3D.icns
-macx:LIBS        +=-framework CoreFoundation
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 
