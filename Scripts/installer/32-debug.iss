@@ -83,7 +83,7 @@ Name: {group}\Manual; Filename: {app}\ImageVis3D.pdf; WorkingDir: {app}
 Name: {group}\Manual; Filename: {app}\GettingDataIntoImageVis3D.pdf; WorkingDir: {app}
 
 [Run]
-Filename: {app}\ImageVis3D-32.exe; Description: {cm:LaunchProgram,ImageVis3D}; Flags: nowait postinstall
+Filename: {app}\ImageVis3D.exe; Description: {cm:LaunchProgram,ImageVis3D}; Flags: nowait postinstall
 ;Filename: {tmp}\vcredist.exe; StatusMsg: "Installing required Visual C++ runtime..."
 
 [UninstallDelete]
