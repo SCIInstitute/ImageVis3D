@@ -124,6 +124,8 @@ void MainWindow::ListSupportedVolumes() {
     string strVolumeFormats = "  " + tr1::get<0>(conv[i]) + " " + tr1::get<1>(conv[i]);
     if (!tr1::get<2>(conv[i])) 
       strVolumeFormats += " (Readonly)";
+    if (!tr1::get<3>(conv[i])) 
+      strVolumeFormats += " (Writeonly)";
     m_MasterController.DebugOut()->printf(strVolumeFormats.c_str());
   }
 
@@ -139,6 +141,8 @@ void MainWindow::ListSupportedGeometry() {
     string strGeoFormats = "  " + tr1::get<0>(conv[i]) + " " + tr1::get<1>(conv[i]);
       if (!tr1::get<2>(conv[i])) 
         strGeoFormats += " (Readonly)";
+    if (!tr1::get<3>(conv[i])) 
+      strGeoFormats += " (Writeonly)";
     m_MasterController.DebugOut()->printf(strGeoFormats.c_str());
   }
 }

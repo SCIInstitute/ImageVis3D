@@ -52,6 +52,7 @@
 #include "DebugOut/HRConsoleOut.h"
 #include "../Tuvok/IO/TuvokIOError.h"
 #include "../Tuvok/IO/IOManager.h"
+#include "../Tuvok/IO/AbstrConverter.h"
 #include "../Tuvok/IO/DirectoryParser.h"
 
 using namespace std;
@@ -71,6 +72,8 @@ enum {
   EXIT_FAILURE_UNKNOWN_OUT,   // unknown file type for output file
   EXIT_FAILURE_RO_VOL_OUT,    // file known as volume but converter is read only
   EXIT_FAILURE_RO_GEO_OUT,    // file known as mesh but converter is read only
+  EXIT_FAILURE_RO_VOL_IN,    // file known as volume but converter is write only
+  EXIT_FAILURE_RO_GEO_IN,    // file known as mesh but converter is write only
   EXIT_FAILURE_UNKNOWN_1,     // unknown file type for first input file
   EXIT_FAILURE_UNKNOWN_2,     // unknown file type for second file in merge
   EXIT_FAILURE_CROSS_1,       // trying to convert a volume into a mesh
@@ -228,8 +231,8 @@ int main(int argc, const char* argv[])
     for(std::vector<std::string>::const_iterator f = input.begin();
         f != input.end(); ++f) {
       std::string ext = SysTools::ToLowerCase(SysTools::GetExt(*f));
-      bool conv_vol = ioMan.GetConverterForExt(ext, false) != NULL;
-      bool conv_geo = ioMan.GetGeoConverterForExt(ext, false) != NULL;
+      bool conv_vol = ioMan.GetConverterForExt(ext, false, true) != NULL;
+      bool conv_geo = ioMan.GetGeoConverterForExt(ext, false, true) != NULL;
       if(conv_vol || conv_geo) { continue; }
 
       if(!conv_vol && !conv_geo) {
@@ -243,10 +246,10 @@ int main(int argc, const char* argv[])
   if (!strInFile.empty()) {
     string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
-    bool bIsVolExtOut = ioMan.GetConverterForExt(targetType, true) != NULL;
-    bool bIsGeoExtOut = ioMan.GetGeoConverterForExt(targetType, true) != NULL;
-    bool bIsVolExt1 = ioMan.GetConverterForExt(sourceType, false) != NULL;
-    bool bIsGeoExt1 = ioMan.GetGeoConverterForExt(sourceType, false) != NULL;
+    bool bIsVolExtOut = ioMan.GetConverterForExt(targetType, false, false) != NULL;
+    bool bIsGeoExtOut = ioMan.GetGeoConverterForExt(targetType, false, false) != NULL;
+    bool bIsVolExt1 = ioMan.GetConverterForExt(sourceType, false, false) != NULL;
+    bool bIsGeoExt1 = ioMan.GetGeoConverterForExt(sourceType, false, false) != NULL;
 
     if (!bIsVolExt1 && !bIsGeoExt1)  {
       std::cerr << "error: Unknown file type for '" << strInFile << "'\n";
@@ -262,6 +265,37 @@ int main(int argc, const char* argv[])
       std::cerr << "error: cannot convert geometry to volume\n";
       return EXIT_FAILURE_CROSS_2;
     }
+
+    if (bIsGeoExt1 && bIsGeoExtOut)  {
+      AbstrGeoConverter* importer = ioMan.GetGeoConverterForExt(sourceType, false, false);
+      AbstrGeoConverter* exporter =  ioMan.GetGeoConverterForExt(targetType, false, false);
+
+      if (!importer->CanImportData()) {
+        std::cerr << "error: cannot read that type of geometry (only write)\n";
+        return EXIT_FAILURE_RO_GEO_IN;
+      }
+
+      if (!exporter->CanExportData()) {
+        std::cerr << "error: cannot write that type of geometry (only read)\n";
+        return EXIT_FAILURE_RO_GEO_OUT;
+      }
+    }
+
+    if (bIsVolExt1 && bIsVolExtOut)  {
+      AbstrConverter* importer = ioMan.GetConverterForExt(sourceType, false, false);
+      AbstrConverter* exporter =  ioMan.GetConverterForExt(targetType, false, false);
+
+      if (!importer->CanImportData()) {
+        std::cerr << "error: cannot read that type of volume (only write)\n";
+        return EXIT_FAILURE_RO_VOL_IN;
+      }
+
+      if (!exporter->CanExportData()) {
+        std::cerr << "error: cannot write that type of volume (only read)\n";
+        return EXIT_FAILURE_RO_VOL_OUT;
+      }
+    }
+
 
     if (strInFile2.empty()) {
       if (bIsVolExt1) {
@@ -317,8 +351,8 @@ int main(int argc, const char* argv[])
           }
         }
       } else {
-          AbstrGeoConverter* sourceConv = ioMan.GetGeoConverterForExt(sourceType, false);
-          AbstrGeoConverter* targetConv = ioMan.GetGeoConverterForExt(targetType, false);
+          AbstrGeoConverter* sourceConv = ioMan.GetGeoConverterForExt(sourceType, false, true);
+          AbstrGeoConverter* targetConv = ioMan.GetGeoConverterForExt(targetType, false, true);
 
           cout << "\nRunning in geometry file mode.\n"
                << "Converting " << strInFile
@@ -342,8 +376,8 @@ int main(int argc, const char* argv[])
 
       string sourceType2 = SysTools::ToLowerCase(SysTools::GetExt(strInFile2));
 
-      bool bIsVolExt2 = ioMan.GetConverterForExt(sourceType2, false) != NULL;
-      bool bIsGeoExt2 = ioMan.GetGeoConverterForExt(sourceType2, false) != NULL;
+      bool bIsVolExt2 = ioMan.GetConverterForExt(sourceType2, false, true) != NULL;
+      bool bIsGeoExt2 = ioMan.GetGeoConverterForExt(sourceType2, false, true) != NULL;
 
       if (!bIsVolExt2 && !bIsGeoExt2)  {
         std::cerr << "error: Unknown file type for '" << strInFile2 << "'\n";

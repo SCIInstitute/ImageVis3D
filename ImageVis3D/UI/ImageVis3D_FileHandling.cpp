@@ -129,7 +129,7 @@ void MainWindow::ExportGeometry() {
     string targetFileName = string(fileName.toAscii());
 
     // still a valid filename ext ?
-    if (!m_MasterController.IOMan()->GetGeoConverterForExt(SysTools::ToLowerCase(SysTools::GetExt(string(fileName.toAscii()))),true)) {
+    if (!m_MasterController.IOMan()->GetGeoConverterForExt(SysTools::ToLowerCase(SysTools::GetExt(string(fileName.toAscii()))),true,false)) {
       ShowCriticalDialog("Extension Error", "Unable to determine the file type from the file extension.");
       return;
     }
@@ -892,7 +892,7 @@ void MainWindow::ExportIsosurface() {
     string targetFileName = string(fileName.toAscii());
 
     // still a valid filename ext ?
-    if (!m_MasterController.IOMan()->GetGeoConverterForExt(SysTools::ToLowerCase(SysTools::GetExt(string(fileName.toAscii()))),true)) {
+    if (!m_MasterController.IOMan()->GetGeoConverterForExt(SysTools::ToLowerCase(SysTools::GetExt(string(fileName.toAscii()))),true,false)) {
       ShowCriticalDialog("Extension Error", "Unable to determine the file type from the file extension.");
       return;
     }
@@ -921,12 +921,16 @@ void MainWindow::ExportIsosurface() {
       return;
     }
 
-    if(QMessageBox::Yes ==
-     QMessageBox::question(this, "Add Mesh to Project",
-      "Do you want to integrate load the surface a part of this project?",
-      QMessageBox::Yes, QMessageBox::No)) {
+    // if the choosen format supports import then ask the users if they want to re-import the mesh
+    AbstrGeoConverter* c = m_MasterController.IOMan()->GetGeoConverterForExt(SysTools::GetExt(targetFileName),false,true);
+    if (c) {
+     if(QMessageBox::Yes ==
+       QMessageBox::question(this, "Add Mesh to Project",
+        "Do you want to integrate load the surface a part of this project?",
+        QMessageBox::Yes, QMessageBox::No)) {
 
-      AddGeometry(targetFileName);
+        AddGeometry(targetFileName);
+      }
     }
   }
 }
