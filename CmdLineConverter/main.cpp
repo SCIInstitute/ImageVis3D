@@ -352,7 +352,7 @@ int main(int argc, const char* argv[])
         }
       } else {
           AbstrGeoConverter* sourceConv = ioMan.GetGeoConverterForExt(sourceType, false, true);
-          AbstrGeoConverter* targetConv = ioMan.GetGeoConverterForExt(targetType, false, true);
+          AbstrGeoConverter* targetConv = ioMan.GetGeoConverterForExt(targetType, true, false);
 
           cout << "\nRunning in geometry file mode.\n"
                << "Converting " << strInFile
