@@ -39,6 +39,7 @@
 #include <cassert>
 #include <sstream>
 #include <stdexcept>
+#include "GL/glew.h"
 #if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
 # pragma GCC visibility push(default)
 #endif
@@ -53,6 +54,9 @@
 #include "ImageVis3D.h"
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
+#include "../Tuvok/Renderer/GL/GLFBOTex.h"
+#include "../Tuvok/Renderer/GL/GLRenderer.h"
+#include "../Tuvok/Renderer/GL/GLTargetBinder.h"
 #include "../Tuvok/Basics/MathTools.h"
 #include "Basics/tr1.h"
 
@@ -774,7 +778,6 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, bool bUseAllMeans
 bool RenderWindow::CaptureFrame(const std::string& strFilename,
                                 bool bPreserveTransparency)
 {
-  GLFrameCapture f;
   AbstrRenderer::ERendererTarget mode = m_Renderer->GetRendererTarget();
   m_Renderer->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
   while(m_Renderer->CheckForRedraw()) {
@@ -784,8 +787,14 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
   
   // as the window is double buffered call repaint twice
   ForceRepaint();  ForceRepaint();
-  bool rv = f.CaptureSingleFrame(strFilename, bPreserveTransparency);
-  m_Renderer->SetRendererTarget(mode);
+
+  tuvok::GLRenderer* glren = dynamic_cast<GLRenderer*>(m_Renderer);
+  GLFBOTex* fbo = glren->GetLastFBO();
+  GLTargetBinder bind(&Controller::Instance());
+  GLFrameCapture fc;
+  bool rv = fc.CaptureSingleFrame(strFilename, fbo, bPreserveTransparency);
+
+  m_Renderer->SetRendererTarget(mode); // reset mode
   return rv;
 }
 
