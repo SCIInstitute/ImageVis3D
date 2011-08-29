@@ -37,6 +37,7 @@ else
 fi
 
 mv imagevis3d "imagevis3d-${VER}"
+export GZIP="--best"
 tar zcf imagevis3d_${VER}.orig.tar.gz imagevis3d-${VER}
 
 pushd imagevis3d-${VER} || die "imagevis3d-${VER} directory does not exist"
