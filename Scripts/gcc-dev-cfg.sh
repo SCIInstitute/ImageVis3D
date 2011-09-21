@@ -3,7 +3,7 @@
 #-D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
-CF="-g -Wall -Wextra -O0 -D_DEBUG"
+CF="-ggdb3 -Wall -Wextra -O0 -D_DEBUG"
 CXF="-D_GLIBCXX_CONCEPT_CHECK -Werror"
 if test `uname -s` != "Darwin" ; then
   CXF="${CXF} -D_GLIBCXX_DEBUG"
