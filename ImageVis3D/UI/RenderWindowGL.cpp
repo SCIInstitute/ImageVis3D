@@ -81,11 +81,11 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   if(!SetNewRenderer( bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder))
     return;
 
-
   setObjectName("RenderWindowGL");  // this is used by WidgetToRenderWin() to detect the type
   setWindowTitle(m_strID);
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
+  setAttribute(Qt::WA_DeleteOnClose, true);
 
   Initialize(); //finish initializing.
 }
