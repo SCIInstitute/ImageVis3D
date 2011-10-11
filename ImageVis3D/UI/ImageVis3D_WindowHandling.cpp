@@ -1200,10 +1200,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
   RemoveAllLocks(sender);
 
-  disconnect(sender->GetQtWidget(), SIGNAL(WindowActive(RenderWindow*)),  this, SLOT(RenderWindowActive(RenderWindow*)));
-  disconnect(sender->GetQtWidget(), SIGNAL(WindowClosing(RenderWindow*)), this, SLOT(RenderWindowClosing(RenderWindow*)));
-  disconnect(sender->GetQtWidget(), SIGNAL(RenderWindowViewChanged(int)), this, SLOT(RenderWindowViewChanged(int)));
-  disconnect(sender->GetQtWidget(), SIGNAL(StereoDisabled()), this, SLOT(StereoDisabled()));
+  disconnect(sender->GetQtWidget());
 
   m_1DTransferFunction->SetData(NULL, 10, NULL);
   m_1DTransferFunction->update();
