@@ -511,11 +511,12 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
   }
 }
 
-void RenderWindow::CloseEvent(QCloseEvent*) {
+void RenderWindow::CloseEvent(QCloseEvent* close) {
   this->GetQtWidget()->setEnabled(false);
-  this->GetQtWidget()->hide();
+  this->GetQtWidget()->lower();
   EmitWindowClosing();
   Cleanup();
+  close->accept();
 }
 
 void RenderWindow::FocusInEvent ( QFocusEvent * event ) {
