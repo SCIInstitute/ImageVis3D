@@ -137,6 +137,7 @@ MainWindow::MainWindow(MasterController& masterController,
 
   SysTools::GetTempDirectory(m_strTempDir);
 
+  ApplySettings();
   SetupWorkspaceMenu();
 
   if (!LoadDefaultGeometry()) SaveDefaultGeometry();

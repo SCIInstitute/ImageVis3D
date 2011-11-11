@@ -397,6 +397,7 @@ void MainWindow::SetupWorkspaceMenu() {
 
   if(m_MasterController.ExperimentalFeatures()) {
     menu_Workspace->addAction(dockWidget_Time->toggleViewAction());
+    dockWidget_Time->toggleViewAction()->setShortcut(tr("Ctrl-Alt-t"));
   }
   /// @todo FIXME need a shortcut for timestep dockWidget
   //dockWidget_IsoSurface->toggleViewAction()->setShortcut(tr("Ctrl+Alt+5"));
