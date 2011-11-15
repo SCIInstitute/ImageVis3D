@@ -86,6 +86,11 @@ void MainWindow::ShowGPUInfo(bool bWithExtensions) {
                    " via 2D texture stacks");
       dbg->printf(tex_size.str().c_str());
     }
+    if (RenderWindow::Get3ImageLoadStoreInDriver()) {
+      m_MasterController.DebugOut()->printf("Image Load/Store supported");
+    } else {
+      m_MasterController.DebugOut()->printf("Image Load/Store NOT supported");
+    }
 
     if (!bWithExtensions) return;
 

@@ -150,6 +150,7 @@ class RenderWindow
     static const std::string& GetVendorString() {return ms_gpuVendorString;}
     static UINT32 GetMax3DTexDims() {return ms_iMaxVolumeDims;}
     static bool Get3DTexInDriver() {return ms_b3DTexInDriver;}
+    static bool Get3ImageLoadStoreInDriver() {return ms_bImageLoadStoreInDriver;}
 
     virtual QWidget* GetQtWidget() = 0;
 
@@ -213,6 +214,7 @@ class RenderWindow
     static std::string ms_gpuVendorString;
     static UINT32      ms_iMaxVolumeDims;
     static bool        ms_b3DTexInDriver;
+    static bool        ms_bImageLoadStoreInDriver;
 
     struct RegionData {
       ArcBall arcBall;
