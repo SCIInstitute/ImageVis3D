@@ -17,9 +17,12 @@ fi
 for d in . ; do
   pushd ${d} &>/dev/null
     ${qm} \
-        QMAKE_CONFIG="debug" \
+        QMAKE_CONFIG+="debug" \
+        CONFIG+="debug" \
         QMAKE_CFLAGS="${VIS} ${CF}" \
         QMAKE_CXXFLAGS="${VIS} ${INL} ${CF} ${CXF}" \
+        QMAKE_CFLAGS_RELEASE="-O0" \
+        QMAKE_CXXFLAGS_RELEASE="-O0" \
         -recursive || exit 1
   popd &>/dev/null
 done
