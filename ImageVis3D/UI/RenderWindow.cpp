@@ -780,29 +780,25 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, bool bUseAllMeans
 bool RenderWindow::CaptureFrame(const std::string& strFilename,
                                 bool bPreserveTransparency)
 {
+  GLFrameCapture f;
   AbstrRenderer::ERendererTarget mode = m_Renderer->GetRendererTarget();
-  m_Renderer->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
   FLOATVECTOR3 color[2] = {m_Renderer->GetBackgroundColor(0), m_Renderer->GetBackgroundColor(1)};
   FLOATVECTOR3 black[2] = {FLOATVECTOR3(0,0,0), FLOATVECTOR3(0,0,0)};
   if (bPreserveTransparency) m_Renderer->SetBackgroundColors(black); 
 
+  m_Renderer->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
   while(m_Renderer->CheckForRedraw()) {
     QCoreApplication::processEvents();
     PaintRenderer();
   }
-
   // as the window is double buffered call repaint twice
   ForceRepaint();  ForceRepaint();
 
-  tuvok::GLRenderer* glren = dynamic_cast<GLRenderer*>(m_Renderer);
-  GLFBOTex* fbo = glren->GetLastFBO();
-  GLTargetBinder bind(&Controller::Instance());
-  GLFrameCapture fc;
-  bool rv = fc.CaptureSingleFrame(strFilename, fbo, bPreserveTransparency);
-
-  m_Renderer->SetRendererTarget(mode); // reset mode
-  m_Renderer->SetBackgroundColors(color); 
+  bool rv = f.CaptureSingleFrame(strFilename, bPreserveTransparency);
+  m_Renderer->SetRendererTarget(mode);
+  if (bPreserveTransparency) m_Renderer->SetBackgroundColors(color); 
   return rv;
+
 }
 
 
@@ -822,32 +818,19 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   }
   // as the window is double buffered call repaint twice
   ForceRepaint();  ForceRepaint();
-  bool bResult = f.CaptureSequenceFrame(strFilename, bPreserveTransparency, strRealFilename);
-  return bResult;
+
+  std::string strSequenceName = SysTools::FindNextSequenceName(strFilename);
+  if (strRealFilename) (*strRealFilename) = strSequenceName;
+  return f.CaptureSingleFrame(strSequenceName, bPreserveTransparency);
 }
 
 bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
                                         bool bPreserveTransparency,
                                         std::string* strRealFilename)
 {
-  GLFrameCapture f;
-  AbstrRenderer::ERendererTarget mode = m_Renderer->GetRendererTarget();
-  FLOATVECTOR3 color[2] = {m_Renderer->GetBackgroundColor(0), m_Renderer->GetBackgroundColor(1)};
-  FLOATVECTOR3 black[2] = {FLOATVECTOR3(0,0,0), FLOATVECTOR3(0,0,0)};
-  if (bPreserveTransparency) m_Renderer->SetBackgroundColors(black); 
-
-  m_Renderer->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
-  while(m_Renderer->CheckForRedraw()) {
-    QCoreApplication::processEvents();
-    PaintRenderer();
-  }
-  // as the window is double buffered call repaint twice
-  ForceRepaint();  ForceRepaint();
-  bool rv = f.CaptureSequenceFrame(strFilename, bPreserveTransparency,
-                                   strRealFilename);
-  m_Renderer->SetRendererTarget(mode);
-  m_Renderer->SetBackgroundColors(color); 
-  return rv;
+  std::string strSequenceName = SysTools::FindNextSequenceName(strFilename);
+  if (strRealFilename) (*strRealFilename) = strSequenceName;
+  return CaptureFrame(strSequenceName, bPreserveTransparency); 
 }
 
 void RenderWindow::SetTranslation(RenderRegion *renderRegion,
