@@ -73,4 +73,13 @@
   #define UPDATE_VERSION_FILE "Linux_Latest_Version.txt"
 #endif
 
+// make sure they have a definition, so code that uses the defines always
+// compiles... even if that definition doesn't exactly make sense.
+#ifndef UPDATE_FILE
+# define UPDATE_FILE "ImageVis3D-Unsupported-Latest.zip"
+#endif
+#ifndef UPDATE_VERSION_FILE
+# define UPDATE_VERSION_FILE "Unsupported-Latest-Version.txt"
+#endif
+
 #endif // STDIMAGEVISDEFINES_H

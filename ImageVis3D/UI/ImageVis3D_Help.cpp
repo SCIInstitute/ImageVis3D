@@ -132,6 +132,7 @@ void MainWindow::CheckForUpdates() {
 }
 
 void MainWindow::CheckForUpdatesInternal() {
+#ifndef PACKAGE_MANAGER
   // cleanup updatefile, this codepath is taken for instance when the windows firewall blocked an http request
   if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
     m_pUpdateFile->close();
@@ -161,6 +162,7 @@ void MainWindow::CheckForUpdatesInternal() {
   QByteArray remotePath = QUrl::toPercentEncoding(url.path(), "!$&'()*+,;=:@/");
   if (remotePath.isEmpty()) remotePath = "/";
   m_iHttpGetId = m_pHttp->get(remotePath, m_pUpdateFile);
+#endif
 }
 
 void MainWindow::httpRequestFinished(int requestId, bool error) {
