@@ -396,7 +396,7 @@ void MainWindow::OnlineHelp() {
   QDesktopServices::openUrl(QString(HELP_URL));
 }
 
-static bool readable(const std::string& f) {
+bool readable(const std::string& f) {
   return QFile(QString(f.c_str())).permissions() & QFile::ReadUser;
 }
 
