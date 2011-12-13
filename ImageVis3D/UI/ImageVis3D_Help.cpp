@@ -38,6 +38,7 @@
 #include "../Tuvok/Basics/StdDefines.h"
 #include <algorithm>
 #include <cstdio>
+#include <fstream>
 #include <string>
 #ifdef _MSC_VER
 # include <array>
@@ -45,21 +46,15 @@
 # include <tr1/array>
 #endif
 
-#ifdef DETECTED_OS_LINUX
-# include <libgen.h>
-# include <unistd.h>
-#endif
-#include <fstream>
-
 #include <QtCore/QUrl>
 #include <QtCore/QTime>
 #include <QtCore/QDate>
 #include <QtCore/QDir>
-#include <QtCore/QTemporaryFile>
+#include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QSettings>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTextStream>
-#include <QtCore/QSettings>
 #include <QtGui/QMessageBox>
 #include <QtGui/QDesktopServices>
 #include <QtNetwork/QHttp>
@@ -401,11 +396,9 @@ void MainWindow::OnlineHelp() {
   QDesktopServices::openUrl(QString(HELP_URL));
 }
 
-#ifdef DETECTED_OS_LINUX
-static bool readable(const std::string &f) {
-  return (access(f.c_str(), R_OK) == 0);
+static bool readable(const std::string& f) {
+  return QFile(QString(f.c_str())).permissions() & QFile::ReadUser;
 }
-#endif
 
 void MainWindow::OpenManual() {
 #ifdef DETECTED_OS_WINDOWS
@@ -419,19 +412,20 @@ void MainWindow::OpenManual() {
 
   /// Find out where our binary lives.  The manual is placed in the same
   /// directory in the case of the binary tarballs we provide.
-  std::vector<std::string> paths(4);
+  std::vector<std::string> paths; paths.reserve(4);
   char linkbuf[1024];
   memset(linkbuf, 0, 1024);
   if(readlink("/proc/self/exe", linkbuf, 1024) == -1) {
     T_ERROR("Error reading /proc/self/exe; ignoring binary directory while "
             "searching for manual.");
   } else {
-    paths.push_back(std::string(dirname(linkbuf)) + MANUAL_NAME);
+    paths.push_back(QFileInfo(linkbuf).absolutePath().toStdString() +
+                    MANUAL_NAME);
   }
   paths.push_back(std::string("/usr/share/doc/imagevis3d/") + MANUAL_NAME);
   paths.push_back(std::string("/usr/local/share/doc/imagevis3d/") +
                   MANUAL_NAME);
-  paths.push_back(std::string("./") + MANUAL_NAME);
+  paths.push_back(MANUAL_NAME);
   std::vector<std::string>::const_iterator found = find_if(paths.begin(),
                                                            paths.end(),
                                                            readable);
@@ -449,24 +443,28 @@ void MainWindow::OpenManual() {
   }
   MESSAGE("Manual found at: %s", found->c_str());
 
-  // Now, figure out how to load the PDF.  Ideally, we'd use FD.o's
-  // shared-mime-info to lookup which program the user wants to use for
-  // this.  Qt is probably linking to this in some way, so it's likely
-  // we can use it directly, but I'm having trouble verifying that.
-  /// @todo FIXME use shared-mime-info to figure out PDF-reading program
-  // So, for now, just iterate through a hardcoded list and use the first that
-  // works.
-
-  typedef std::tr1::array<std::string, 3> progvec;
-  progvec viewers = {{ "evince", "xpdf", "acroread" }};
-  // Now iterate through each of those programs until one of them
-  // successfully launches.
-  for(progvec::const_iterator prog = viewers.begin(); prog != viewers.end();
-      ++prog) {
-    char manual[1024];
-    snprintf(manual, 1024, "%s %s", prog->c_str(), found->c_str());
-    if(system(manual) != -1) {
-      break;
+  // Now, figure out how to load the PDF.
+  QUrl uri;
+  {
+    std::ostringstream u;
+    u << *found;
+    QString pth = QFileInfo(u.str().c_str()).absoluteFilePath();
+    uri.setUrl(pth);
+    MESSAGE("uri: %s", pth.toStdString().c_str());
+  }
+  if(!QDesktopServices::openUrl(uri)) {
+    MESSAGE("Manual open failed, relying on manual method.");
+    typedef std::tr1::array<std::string, 3> progvec;
+    progvec viewers = {{ "evince", "xpdf", "acroread" }};
+    // Now iterate through each of those programs until one of them
+    // successfully launches.
+    for(progvec::const_iterator prog = viewers.begin(); prog != viewers.end();
+        ++prog) {
+      char manual[1024];
+      snprintf(manual, 1024, "%s %s", prog->c_str(), found->c_str());
+      if(system(manual) != -1) {
+        break;
+      }
     }
   }
 #endif
