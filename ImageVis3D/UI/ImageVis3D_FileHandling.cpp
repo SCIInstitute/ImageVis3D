@@ -304,13 +304,30 @@ void MainWindow::AddGeometry() {
 }
 
 void MainWindow::LoadDataset(std::string strFilename) {
-  if (!LoadDataset(QStringList(strFilename.c_str()))) {
-        ShowCriticalDialog("Render window initialization failed.",
-                     "Could not open a render window!  This normally "
-                     "means ImageVis3D does not support your GPU.  Please"
-                     " check the debug log ('Help | Debug Window') for "
-                     "errors, and/or use 'Help | Report an Issue' to "
-                     "notify the ImageVis3D developers.");
+  try {
+    if(LoadDataset(QStringList(strFilename.c_str())) != 0) {
+      ShowCriticalDialog("Render window initialization failed.",
+        "Could not open a render window!  This normally "
+        "means ImageVis3D does not support your GPU.  Please"
+        " check the debug log ('Help | Debug Window') for "
+        "errors, and/or use 'Help | Report an Issue' to "
+        "notify the ImageVis3D developers."
+      );
+    }
+  } catch(const tuvok::io::DSParseFailed& ds) {
+    std::ostringstream err;
+    err << "Could not parse '" << ds.File() << "': " << ds.what() << "\n"
+        << "This typically means the file has been corrupted.";
+    ShowCriticalDialog("Could not parse file", err.str().c_str());
+  } catch(const tuvok::io::DSVerificationFailed& ds) {
+    std::ostringstream err;
+    err << "The checksum for '" << ds.File() << "' is invalid: " << ds.what()
+        << "\nThe file has been corrupted.";
+    ShowCriticalDialog("Checksum failed", err.str().c_str());
+  } catch(const tuvok::io::DSOpenFailed& ds) {
+    std::ostringstream err;
+    err << "Could not open '" << ds.File() << "': " << ds.what();
+    ShowCriticalDialog("Could not open file", err.str().c_str());
   }
 }
 
