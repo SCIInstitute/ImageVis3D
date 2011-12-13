@@ -961,7 +961,7 @@ Data Blocks
 
 There are relatively few data blocks currently defined.  They are: 1D
 histograms, 2D histograms, Key-value pairs, maximum and minimum data
-values, and raster data.
+values, raster data, and geometry data.
 
 All data blocks start with a common header.  The data in this header,
 in order, is:
@@ -1010,8 +1010,8 @@ in order, is:
 This data block essentially contains just an array of values which form
 a histogram for a scalar dataset.
 
-- First 8 bytes: unsigned integer which gives the `histogram_size`
-- `histogram_size` 8-byte elements following that: the histogram.
+- First 64 bits: unsigned integer which gives the `histogram_size`
+- `histogram_size` 64-bit elements following that: the histogram.
   Indices into the array detail the data value; values in the array give
   the number of times that data value occurs.  Thus, if `arr[8] == 19`,
   then the value `8` occurs in the dataset `19` times.
@@ -1028,12 +1028,12 @@ would be an error.
 Stores a 2D histogram for a given dataset.  Essentially, this stores
 a contiguous array of 1D histograms.  The histogram is assumed to be
 "square": the second dimension does not vary from its initial value.
-It is implied that the second dimension is gradient magnitude.
+ImageVis3D assumes that the second dimension is gradient magnitude.
 
 - First 32-bits: IEEE-754 representation of the max gradient magnitude.
-- Following 8 bytes: unsigned integer count, `elems_X`.
-- Following 8 bytes: unsigned integer count, `elems_Y`.
-- Final `elems_X` x `elems_Y` x 8 bytes: the histogram, with X as the slowest
+- Following 64 bits: unsigned integer count, `elems_X`.
+- Following 64 bits: unsigned integer count, `elems_Y`.
+- Final `elems_X` x `elems_Y` x 64 bits: the histogram, with X as the slowest
   moving dimension.
 
 Key Value Pairs Block
@@ -1054,7 +1054,7 @@ Raster Data Block
 +++++++++++++++++
 
 This is where ImageVis3D stores the data it renders. It is intended to
-store N-dimensions, regularly gridded data.
+store N-dimensional, regularly gridded data.
 
 - First 64-bits: unsigned integer `n_dimensions`
 - Only if `n_dimensions` is non-zero:
@@ -1091,7 +1091,8 @@ version 3 UVF files and up; it is an error to write a geometry block
 into a UVF with a version number of 2 or lower.
 
 Geometry data are 3-dimensional.  The format for the block is quite
-simple.  First, a header gives size information for arrays:
+simple.  First, a header gives size information for arrays (all sizes
+are in bytes):
 
 .Geometry Block Header
 [cols="1,6,1,2", options="header"]
