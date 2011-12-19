@@ -186,7 +186,7 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
 
 void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 
-  if (m_pTrans == NULL) return;
+  if (m_pTrans == NULL || m_vHistogram.GetSize() < 2) return;
 
   // compute some grid dimensions
   unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
