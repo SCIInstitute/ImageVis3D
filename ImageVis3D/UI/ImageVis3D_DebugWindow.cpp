@@ -157,8 +157,8 @@ void MainWindow::ShowSysInfo() {
   const GPUMemMan *mm = m_MasterController.MemMan();
 
   const size_t one_megabyte = 1024*1024;
-  UINT64 cpu_mem = mm->GetCPUMem();
-  UINT64 max_cpu_mem = m_MasterController.SysInfo()->GetMaxUsableCPUMem();
+  uint64_t cpu_mem = mm->GetCPUMem();
+  uint64_t max_cpu_mem = m_MasterController.SysInfo()->GetMaxUsableCPUMem();
 
   sysinfo << "This is a " << m_MasterController.MemMan()->GetBitWidthMem() << "bit build\n"
           << "CPU Memory: Total " << cpu_mem / one_megabyte << " MB, "

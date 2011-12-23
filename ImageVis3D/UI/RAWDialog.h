@@ -47,7 +47,7 @@ class RAWDialog : public QDialog, protected Ui_RAWDialog
 {
   Q_OBJECT
   public:
-    RAWDialog(const std::string& strFilename, UINT64 iFileSize, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    RAWDialog(const std::string& strFilename, uint64_t iFileSize, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~RAWDialog();
 
     UINT64VECTOR3 GetSize();
@@ -58,7 +58,7 @@ class RAWDialog : public QDialog, protected Ui_RAWDialog
     bool IsBigEndian();
     bool IsSigned();
 
-    UINT64 ComputeExpectedSize();
+    uint64_t ComputeExpectedSize();
 
   protected slots:
     void CheckValues();
@@ -67,7 +67,7 @@ class RAWDialog : public QDialog, protected Ui_RAWDialog
 
   private:
     std::string m_strFilename;
-    UINT64 m_iFileSize;
+    uint64_t m_iFileSize;
     void setupUi(QDialog *RAWDialog);
 
 };

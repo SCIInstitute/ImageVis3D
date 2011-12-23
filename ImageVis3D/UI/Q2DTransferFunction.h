@@ -234,7 +234,7 @@ private:
   void Draw1DTrans(QPainter& painter);
 
   void GenerateHistogramImage();
-  void ComputeCachedImageSize(UINT32 &w , UINT32 &h) const;
+  void ComputeCachedImageSize(uint32_t &w , uint32_t &h) const;
 
   // helper
   INTVECTOR2   Normalized2Offscreen(FLOATVECTOR2 vfCoord) const;

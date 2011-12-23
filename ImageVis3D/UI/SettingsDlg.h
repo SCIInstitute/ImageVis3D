@@ -54,8 +54,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                 Qt::WindowFlags flags = 0);
     virtual ~SettingsDlg();
 
-    UINT64        GetGPUMem() const;
-    UINT64        GetCPUMem() const;
+    uint64_t        GetGPUMem() const;
+    uint64_t        GetCPUMem() const;
 
     bool OverrideMaxMem() const;
     unsigned int GetMaxGPUMem() const;
@@ -74,7 +74,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetShowCrashDialog() const;
 
     const std::string GetLogFileName() const;
-    UINT32        GetLogLevel() const;
+    uint32_t        GetLogLevel() const;
 
     bool          GetShowVersionInTitle() const;
     bool          GetAutoSaveGEO() const;
@@ -105,7 +105,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     unsigned int  GetMaxBrickSize() const;
 
     void Data2Form(bool bIsDirectX10Capable,
-                   UINT64 iMaxCPU, UINT64 iMaxGPU,
+                   uint64_t iMaxCPU, uint64_t iMaxGPU,
                    bool bIgnoreMax,
                    unsigned int iUserMaxCPUMB, unsigned int iUserMaxGPUMB,
                    const std::string& tempDir,
@@ -118,7 +118,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bWriteLogFile,
                    bool bShowCrashDialog,
                    const std::string& strLogFileName,
-                   UINT32 iLogLevel,
+                   uint32_t iLogLevel,
                    bool bShowVersionInTitle,
                    bool bAutoSaveGEO,
                    bool bAutoSaveWSP,
@@ -162,6 +162,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void PickLogFile();
     void SelectTempDir();
     void MaxBSChanged(int iValue);
+    void ToggleExperimentalFeatures();
 
   private:
     MasterController& m_MasterController;

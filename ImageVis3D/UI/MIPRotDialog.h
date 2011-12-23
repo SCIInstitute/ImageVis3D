@@ -45,14 +45,14 @@ class MIPRotDialog : public QDialog, protected Ui_MIPRotDialog
 {
   Q_OBJECT
   public:
-    MIPRotDialog(UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD, UINT32 iEyeDist, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    MIPRotDialog(uint32_t iImages, bool bOrthoView, bool bStereo, bool bUseLOD, uint32_t iEyeDist, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~MIPRotDialog();
 
-    UINT32 GetNumImages() const;
+    uint32_t GetNumImages() const;
     bool GetUseOrtho() const;
     bool GetUseStereo() const;
     bool GetUseLOD() const;
-    UINT32 GetEyeDist() const;
+    uint32_t GetEyeDist() const;
 
   protected slots:
     void UpdateDegreeLabel();
@@ -61,7 +61,7 @@ class MIPRotDialog : public QDialog, protected Ui_MIPRotDialog
 
 
   private:
-    void setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD, UINT32 iEyeDist);
+    void setupUi(QDialog *MIPRotDialog, uint32_t iImages, bool bOrthoView, bool bStereo, bool bUseLOD, uint32_t iEyeDist);
 
 };
 

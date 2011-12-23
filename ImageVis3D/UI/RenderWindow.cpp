@@ -64,7 +64,7 @@ using namespace std;
 using namespace tuvok;
 
 std::string RenderWindow::ms_gpuVendorString = "";
-UINT32 RenderWindow::ms_iMaxVolumeDims = 0;
+uint32_t RenderWindow::ms_iMaxVolumeDims = 0;
 bool RenderWindow::ms_b3DTexInDriver = false;
 bool RenderWindow::ms_bImageLoadStoreInDriver = false;
 
@@ -288,8 +288,8 @@ bool RenderWindow::MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate,
 {
   bool bUpdate = false;
   if (rotate) {
-    UINTVECTOR2 upos(static_cast<UINT32>(pos.x),
-                     static_cast<UINT32>(pos.y));
+    UINTVECTOR2 upos(static_cast<uint32_t>(pos.x),
+                     static_cast<uint32_t>(pos.y));
     RegionData *regionData = GetRegionData(region);
     SetClipRotationDelta(region,
                          regionData->clipArcBall.Drag(upos).ComputeRotation(),
@@ -372,7 +372,7 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
     iNewSliceDepth =
       std::min<int>(iNewSliceDepth,
                     m_Renderer->GetDataset().GetDomainSize()[sliceDimension]-1);
-    m_Renderer->SetSliceDepth(renderRegion, UINT64(iNewSliceDepth));
+    m_Renderer->SetSliceDepth(renderRegion, uint64_t(iNewSliceDepth));
   }
   UpdateWindow();
 }
@@ -502,7 +502,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
         if (event->key() == Qt::Key_PageDown)
           sliceChange = -sliceChange;
         int newSliceDepth = MathTools::Clamp(currSlice + sliceChange, 0, numSlices);
-        m_Renderer->SetSliceDepth(selectedRegion, UINT64(newSliceDepth));
+        m_Renderer->SetSliceDepth(selectedRegion, uint64_t(newSliceDepth));
       }
       else if (selectedRegion && selectedRegion->is3D()) {
         const float zoom = (event->key() == Qt::Key_PageDown) ? 0.01f : -0.01f;
@@ -710,7 +710,7 @@ void RenderWindow::Initialize() {
     renderRegions[i][0] = new RenderRegion3D();
 
     int mode = static_cast<int>(RenderRegion::WM_SAGITTAL);
-    UINT64 sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
+    uint64_t sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
     renderRegions[i][1] = new RenderRegion2D(RenderRegion::WM_SAGITTAL,
                                              sliceIndex);
 

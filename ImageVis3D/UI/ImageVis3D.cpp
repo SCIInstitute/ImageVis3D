@@ -235,8 +235,8 @@ void MainWindow::StartTimer() {
 
 void MainWindow::SetAndCheckRunningFlag() {
   QSettings settings;
-  UINT32 iInstanceCounter = settings.value("InstanceCounter", 0).toUInt();
-  UINT32 iSaneCounter = settings.value("SaneCounter", 0).toUInt();
+  uint32_t iInstanceCounter = settings.value("InstanceCounter", 0).toUInt();
+  uint32_t iSaneCounter = settings.value("SaneCounter", 0).toUInt();
 
   settings.beginGroup("Performance");
   bool bWriteLogFile = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
@@ -262,7 +262,7 @@ void MainWindow::SetAndCheckRunningFlag() {
             settings.setValue("Performance/LogLevel", 2);
           } else {
             // if debugging was not enabled assume that has been opened multiple times
-            settings.setValue("SaneCounter", iSaneCounter);
+            settings.setValue("SaneCounter", (unsigned int)iSaneCounter);
           }
         }
       }
@@ -283,16 +283,16 @@ void MainWindow::SetAndCheckRunningFlag() {
     }
   }
 
-  settings.setValue("InstanceCounter", iInstanceCounter+1);
+  settings.setValue("InstanceCounter", (unsigned int)iInstanceCounter+1);
 }
 
 void MainWindow::RemoveRunningFlag() {
   QSettings settings;
-//  UINT32 iInstanceCounter = settings.value("InstanceCounter", 1).toUInt();
+//  uint32_t iInstanceCounter = settings.value("InstanceCounter", 1).toUInt();
   settings.setValue("InstanceCounter", 0);
 
-  UINT32 iSaneCounter = settings.value("SaneCounter", 0).toUInt();
-  settings.setValue("SaneCounter", iSaneCounter+1);
+  uint32_t iSaneCounter = settings.value("SaneCounter", 0).toUInt();
+  settings.setValue("SaneCounter", (unsigned int)iSaneCounter+1);
 }
 
 // ******************************************

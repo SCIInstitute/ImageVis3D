@@ -51,7 +51,7 @@ DialogConverter::DialogConverter(QWidget* parent) :
 
 bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename, 
                                    const std::string& strTempDir, bool bNoUserInteraction,
-                                   UINT64& iHeaderSkip, UINT64& iComponentSize, UINT64& iComponentCount, 
+                                   uint64_t& iHeaderSkip, uint64_t& iComponentSize, uint64_t& iComponentCount, 
                                    bool& bConvertEndianess, bool& bSigned, bool& bIsFloat, UINT64VECTOR3& vVolumeSize,
                                    FLOATVECTOR3& vVolumeAspect, std::string& strTitle,
                                    UVFTables::ElementSemanticTable& eType, std::string& strIntermediateFile,
@@ -65,7 +65,7 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
   
   LargeRAWFile f(strSourceFilename);
   f.Open(false);
-  UINT64 iSize = f.GetCurrentSize();
+  uint64_t iSize = f.GetCurrentSize();
   f.Close();
 
   RAWDialog rawDialog(strSourceFilename, iSize, m_parent);

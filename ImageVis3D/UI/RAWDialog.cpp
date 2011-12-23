@@ -40,7 +40,7 @@
 
 using namespace std;
 
-RAWDialog::RAWDialog(const string& strFilename, UINT64 iFileSize, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
+RAWDialog::RAWDialog(const string& strFilename, uint64_t iFileSize, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
   QDialog(parent, flags),
   m_strFilename(strFilename),
   m_iFileSize(iFileSize)
@@ -71,7 +71,7 @@ void RAWDialog::CheckValues() {
     return;
   }
 
-  UINT64 iExpectedSize = ComputeExpectedSize();
+  uint64_t iExpectedSize = ComputeExpectedSize();
 
   if (iExpectedSize < m_iFileSize) {
     label_Information->setText("Settings may work (file is larger then your settings dictate).");
@@ -90,13 +90,13 @@ void RAWDialog::ToggleEndianessDialog() {
 }
 
 void RAWDialog::GuessHeaderSize() {
-  UINT64 iExpectedSize = ComputeExpectedSize();
+  uint64_t iExpectedSize = ComputeExpectedSize();
 
   if ( m_iFileSize >= iExpectedSize) spinBox_HeaderSkip->setValue(m_iFileSize - iExpectedSize);
 }
 
-UINT64 RAWDialog::ComputeExpectedSize() {
-  UINT64 iCompSize = 0;
+uint64_t RAWDialog::ComputeExpectedSize() {
+  uint64_t iCompSize = 0;
   switch(this->GetQuantization()) {
     case 0: iCompSize = 1; break; /* 8bit */
     case 1: iCompSize = 2; break; /* 16bit */
@@ -105,12 +105,12 @@ UINT64 RAWDialog::ComputeExpectedSize() {
     case 4: iCompSize = 8; break; /* 64bit float */
   }
 
-  return UINT64(spinBox_SizeX->value()) * UINT64(spinBox_SizeY->value()) * UINT64(spinBox_SizeZ->value()) * iCompSize + UINT64(spinBox_HeaderSkip->value());
+  return uint64_t(spinBox_SizeX->value()) * uint64_t(spinBox_SizeY->value()) * uint64_t(spinBox_SizeZ->value()) * iCompSize + uint64_t(spinBox_HeaderSkip->value());
 }
 
 
 UINT64VECTOR3 RAWDialog::GetSize() {
-  return UINT64VECTOR3(UINT64(spinBox_SizeX->value()) , UINT64(spinBox_SizeY->value()) , UINT64(spinBox_SizeZ->value()));
+  return UINT64VECTOR3(uint64_t(spinBox_SizeX->value()) , uint64_t(spinBox_SizeY->value()) , uint64_t(spinBox_SizeZ->value()));
 }
 
 FLOATVECTOR3 RAWDialog::GetAspectRatio() {

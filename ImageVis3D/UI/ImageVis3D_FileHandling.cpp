@@ -686,7 +686,7 @@ void MainWindow::LoadDirectory() {
   }
 }
 
-bool MainWindow::ExportDataset(UINT32 iLODLevel, std::string targetFileName) {
+bool MainWindow::ExportDataset(uint32_t iLODLevel, std::string targetFileName) {
   if (!m_pActiveRenderWin) {
     WARNING("No active render window");
     return false;
@@ -790,7 +790,7 @@ void MainWindow::ExportDataset() {
 }
 
 
-bool MainWindow::ExportIsosurface(UINT32 iLODLevel, string targetFileName) {
+bool MainWindow::ExportIsosurface(uint32_t iLODLevel, string targetFileName) {
     if (!m_pActiveRenderWin) {
       m_MasterController.DebugOut()->Warning("MainWindow::ExportIso", "No active renderwin");
       return false;
@@ -859,7 +859,7 @@ void MainWindow::ExportImageStack() {
                                                                     "Do you want to export three stacks along all three directions? Otherwise only one stack along the z-axis is created.",
                                                               QMessageBox::Yes, QMessageBox::No);
 
-    if(!ExportImageStack(UINT32(iLODLevel), targetFileName, bAllDirs)) {
+    if(!ExportImageStack(uint32_t(iLODLevel), targetFileName, bAllDirs)) {
       ShowCriticalDialog( "Error during image stack export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
       return;
     }
@@ -867,7 +867,7 @@ void MainWindow::ExportImageStack() {
   }
 }
 
-bool MainWindow::ExportImageStack(UINT32 iLODLevel, std::string targetFileName, bool bAllDirs) {
+bool MainWindow::ExportImageStack(uint32_t iLODLevel, std::string targetFileName, bool bAllDirs) {
     if (!m_pActiveRenderWin) {
       m_MasterController.DebugOut()->Warning("MainWindow::ExportImageStack", "No active renderwin");
       return false;
@@ -933,7 +933,7 @@ void MainWindow::ExportIsosurface() {
         iLODLevel = lodDlg.GetLOD();
     }
 
-    if(!ExportIsosurface(UINT32(iLODLevel), targetFileName)) {
+    if(!ExportIsosurface(uint32_t(iLODLevel), targetFileName)) {
       ShowCriticalDialog( "Error during mesh export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
       return;
     }

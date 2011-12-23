@@ -40,7 +40,7 @@
 
 using namespace std;
 
-MIPRotDialog::MIPRotDialog(UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD, UINT32 iEyeDist, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
+MIPRotDialog::MIPRotDialog(uint32_t iImages, bool bOrthoView, bool bStereo, bool bUseLOD, uint32_t iEyeDist, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
   QDialog(parent, flags)
 {
 
@@ -51,7 +51,7 @@ MIPRotDialog::~MIPRotDialog(void)
 {
 }
 
-void MIPRotDialog::setupUi(QDialog *MIPRotDialog, UINT32 iImages, bool bOrthoView, bool bStereo, bool bUseLOD, UINT32 iEyeDist) {
+void MIPRotDialog::setupUi(QDialog *MIPRotDialog, uint32_t iImages, bool bOrthoView, bool bStereo, bool bUseLOD, uint32_t iEyeDist) {
   Ui_MIPRotDialog::setupUi(MIPRotDialog);
 
   spinBox_Images->setValue(iImages);
@@ -96,8 +96,8 @@ void MIPRotDialog::UpdateEyeDistLabel() {
 
 
 
-UINT32 MIPRotDialog::GetNumImages() const {
-  return UINT32(spinBox_Images->value());
+uint32_t MIPRotDialog::GetNumImages() const {
+  return uint32_t(spinBox_Images->value());
 }
 
 bool MIPRotDialog::GetUseOrtho() const {
@@ -112,6 +112,6 @@ bool MIPRotDialog::GetUseLOD() const {
   return !checkBox_NoLOD->isChecked();
 }
 
-UINT32 MIPRotDialog::GetEyeDist() const {
-  return UINT32(horizontalSlider_EyeDist->value());
+uint32_t MIPRotDialog::GetEyeDist() const {
+  return uint32_t(horizontalSlider_EyeDist->value());
 }

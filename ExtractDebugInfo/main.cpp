@@ -133,10 +133,10 @@ int main(int argc, char* argv[])
         if (fi[i].m_iSize < 1024*1024*10) {
           cout << "  " << fi[i].m_strName << " Size: " << fi[i].m_iSize/1024 << " KB" << endl;
         } else {
-          if (fi[i].m_iSize < UINT64(1024)*1024*1024*10) {
+          if (fi[i].m_iSize < uint64_t(1024)*1024*1024*10) {
             cout << "  " << fi[i].m_strName << " Size: " << fi[i].m_iSize/(1024*1024) << " MB" << endl;
           } else {
-            cout << "  " << fi[i].m_strName << " Size: " << fi[i].m_iSize/(UINT64(1024)*1024*1024) << " TB" << endl;
+            cout << "  " << fi[i].m_strName << " Size: " << fi[i].m_iSize/(uint64_t(1024)*1024*1024) << " TB" << endl;
           }
         }
       }

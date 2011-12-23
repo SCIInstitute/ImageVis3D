@@ -86,8 +86,8 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     SettingsDlg settingsDlg(m_pActiveRenderWin != NULL, m_MasterController, this);
 
     settings.beginGroup("Memory");
-    UINT64 iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
-    UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+    uint64_t iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
+    uint64_t iMaxCPU = std::min<uint64_t>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
 
     bool bOverrideDetMax = settings.value("OverrideDetectedMaxima", false).toBool();
     unsigned int iOverMaxCPU = settings.value("OverriddenCPUMax", 0).toUInt();
@@ -202,7 +202,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("WriteLogFile", settingsDlg.GetWriteLogFile());
       settings.setValue("ShowCrashDialog", settingsDlg.GetShowCrashDialog());
       settings.setValue("LogFileName", settingsDlg.GetLogFileName().c_str());
-      settings.setValue("LogLevel", settingsDlg.GetLogLevel());
+      settings.setValue("LogLevel", (unsigned int)settingsDlg.GetLogLevel());
       settings.endGroup();
 
       settings.beginGroup("UI");
@@ -326,11 +326,11 @@ void MainWindow::ApplySettings() {
   settings.endGroup();
 
   settings.beginGroup("Memory");
-  UINT64 iMaxCPU = std::min<UINT64>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
-  UINT64 iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
+  uint64_t iMaxCPU = std::min<uint64_t>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+  uint64_t iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
   m_strTempDir = std::string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
 
-  if (!m_MasterController.IOMan()->SetMaxBrickSize(MathTools::Pow2(settings.value("MaxBrickSize",  static_cast<qulonglong>(MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize()))).toUInt()))) {
+  if (!m_MasterController.IOMan()->SetMaxBrickSize(MathTools::Pow2((uint64_t)settings.value("MaxBrickSize",  static_cast<qulonglong>(MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize()))).toUInt()))) {
     WARNING("Invalid MaxBrickSize read from configuration, ignoring value. Please check the configuration in the settings dialog.");
   }
   settings.endGroup();

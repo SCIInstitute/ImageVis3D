@@ -717,7 +717,8 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   #if defined(_WIN32) && defined(USE_DIRECTX)
     if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR ||
         m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER ||
-        m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR) {
+        m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR ||
+        m_eVolumeRendererType == MasterController::DIRECTX_TRAYCASTER) {
       renderWin = new RenderWindowDX(m_MasterController, m_eVolumeRendererType, dataset,
                                        iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
                                        m_bDisableBorder, this, 0);
@@ -733,7 +734,8 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
   #else
     if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR ||
         m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER ||
-        m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR) {
+        m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR ||
+        m_eVolumeRendererType == MasterController::DIRECTX_TRAYCASTER) {
       ShowInformationDialog( "No DirectX Support", "The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
       m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
 
@@ -741,8 +743,10 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
         m_eVolumeRendererType = MasterController::OPENGL_SBVR;
       else if (m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER)
         m_eVolumeRendererType = MasterController::OPENGL_RAYCASTER;
-      else
+      else if (m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR)
         m_eVolumeRendererType = MasterController::OPENGL_2DSBVR;
+      else
+        m_eVolumeRendererType = MasterController::OPENGL_TRAYCASTER;
     }
     QGLFormat fmt;
     fmt.setAlpha(true);
@@ -865,7 +869,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   lineEdit_DatasetName->setText(QFileInfo(m_pActiveRenderWin->
                                           GetDatasetName()).fileName());
   UINT64VECTOR3 vSize = ren->GetDataset().GetDomainSize();
-  UINT64 iBitWidth = ren->GetDataset().GetBitWidth();
+  uint64_t iBitWidth = ren->GetDataset().GetBitWidth();
 
   pair<double, double> pRange = ren->GetDataset().GetRange();
 
@@ -874,8 +878,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
                                                arg(vSize.z).
                                                arg(iBitWidth);
   if (pRange.first<=pRange.second) {
-    strSize = strSize + tr(" Min=%1 Max=%2").arg(UINT64(pRange.first)).
-                                             arg(UINT64(pRange.second));
+    strSize = strSize + tr(" Min=%1 Max=%2").arg(uint64_t(pRange.first)).
+                                             arg(uint64_t(pRange.second));
   }
   // -1: slider is 0 based, but label is not.
   SetTimestepSlider(static_cast<int>(ren->Timestep()),
@@ -884,7 +888,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
                       ren->GetDataset().GetNumberOfTimesteps());
 
   lineEdit_MaxSize->setText(strSize);
-  UINT64 iLevelCount = ren->GetDataset().GetLODLevelCount();
+  uint64_t iLevelCount = ren->GetDataset().GetLODLevelCount();
   QString strLevelCount = tr("%1").arg(iLevelCount);
   lineEdit_MaxLODLevels->setText(strLevelCount);
 

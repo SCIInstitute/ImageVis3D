@@ -148,7 +148,7 @@ class RenderWindow
     FLOATVECTOR3 GetCVColor() const;
 
     static const std::string& GetVendorString() {return ms_gpuVendorString;}
-    static UINT32 GetMax3DTexDims() {return ms_iMaxVolumeDims;}
+    static uint32_t GetMax3DTexDims() {return ms_iMaxVolumeDims;}
     static bool Get3DTexInDriver() {return ms_b3DTexInDriver;}
     static bool Get3ImageLoadStoreInDriver() {return ms_bImageLoadStoreInDriver;}
 
@@ -212,7 +212,7 @@ class RenderWindow
     int selected2x2Regions[4]; //index into renderRegions
 
     static std::string ms_gpuVendorString;
-    static UINT32      ms_iMaxVolumeDims;
+    static uint32_t      ms_iMaxVolumeDims;
     static bool        ms_b3DTexInDriver;
     static bool        ms_bImageLoadStoreInDriver;
 

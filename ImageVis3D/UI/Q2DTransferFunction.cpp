@@ -1106,17 +1106,17 @@ void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
 }
 
 
-void Q2DTransferFunction::ComputeCachedImageSize(UINT32 &w , UINT32 &h) const {
+void Q2DTransferFunction::ComputeCachedImageSize(uint32_t &w , uint32_t &h) const {
   // find an image size that has the same aspect ratio as the histogram
   // but is no smaller than the widget
 
-  w = UINT32(width());
+  w = uint32_t(width());
   float fRatio = float(m_pTrans->GetRenderSize().x) / float(m_pTrans->GetRenderSize().y);
-  h = static_cast<UINT32>(w / fRatio);
+  h = static_cast<uint32_t>(w / fRatio);
 
-  if (h > UINT32(height())) {
-    h = UINT32(height());
-    w = static_cast<UINT32>(h * fRatio);
+  if (h > uint32_t(height())) {
+    h = uint32_t(height());
+    w = static_cast<uint32_t>(h * fRatio);
   }
 }
 
@@ -1130,7 +1130,7 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
     return;
   }
 
-  UINT32 w,h;
+  uint32_t w,h;
   ComputeCachedImageSize(w,h);
 
   // as drawing the histogram can become quite expensive we'll cache it in an image and only redraw if needed

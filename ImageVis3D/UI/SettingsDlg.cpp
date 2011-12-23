@@ -69,8 +69,8 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
 
   frame_ignoreMax->setVisible(false);
 
-  UINT64 iMaxCPUMemSize   = m_MasterController.SysInfo()->GetCPUMemSize();
-  UINT64 iMaxGPUMemSize   = m_MasterController.SysInfo()->GetGPUMemSize();
+  uint64_t iMaxCPUMemSize   = m_MasterController.SysInfo()->GetCPUMemSize();
+  uint64_t iMaxGPUMemSize   = m_MasterController.SysInfo()->GetGPUMemSize();
   unsigned int iProcCount = m_MasterController.SysInfo()->GetNumberOfCPUs();
   unsigned int iBitWidth  = m_MasterController.SysInfo()->GetProgramBitWidth();
 
@@ -110,16 +110,7 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   horizontalSlider_GPUMem->setMinimum(32);
   horizontalSlider_CPUMem->setMinimum(512);
 
-
-#if defined(_WIN32) && defined(USE_DIRECTX)
-  if(m_MasterController.ExperimentalFeatures()) {
-    groupBox_7->setVisible(true);
-  } else {
-    groupBox_7->setVisible(false);
-  }
-#else
-  groupBox_7->setVisible(false);
-#endif
+  ToggleExperimentalFeatures();
 }
 
 void SettingsDlg::MaxToSliders(unsigned int iMaxCPUMB, unsigned int iMaxGPUMB) {
@@ -155,12 +146,12 @@ unsigned int SettingsDlg::GetMaxCPUMem() const {
   return checkBox_OverrideMax->isChecked() ? spinBox_CPUMax->value() : 0;
 }
 
-UINT64 SettingsDlg::GetGPUMem() const {
-  return UINT64(horizontalSlider_GPUMem->value())*1024*1024;
+uint64_t SettingsDlg::GetGPUMem() const {
+  return uint64_t(horizontalSlider_GPUMem->value())*1024*1024;
 }
 
-UINT64 SettingsDlg::GetCPUMem() const {
-  return UINT64(horizontalSlider_CPUMem->value())*1024*1024;
+uint64_t SettingsDlg::GetCPUMem() const {
+  return uint64_t(horizontalSlider_CPUMem->value())*1024*1024;
 }
 
 std::string SettingsDlg::GetTempDir() const {
@@ -359,11 +350,11 @@ void SettingsDlg::SetLogoLabel() {
   }
 }
 
-void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMaxGPU, bool bIgnoreMax,
+void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t iMaxGPU, bool bIgnoreMax,
                             unsigned int iUserMaxCPUMB, unsigned int iUserMaxGPUMB, const std::string& tempDir,
                             bool bQuickopen, unsigned int iMinFramerate, bool bUseAllMeans, unsigned int iLODDelay,
                             unsigned int iActiveTS, unsigned int iInactiveTS,
-                            bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, UINT32 iLogLevel,
+                            bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, uint32_t iLogLevel,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
                             bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
@@ -433,9 +424,10 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
 
   // adjust rendermode to GL if no DX support is present but set
   if (!bIsDirectX10Capable) {
-    if (iVolRenType == 2) iVolRenType = 0;
-    if (iVolRenType == 3) iVolRenType = 1;
-    if (iVolRenType == 5) iVolRenType = 4;
+    if (iVolRenType == 2) iVolRenType = 0; else 
+    if (iVolRenType == 3) iVolRenType = 1; else 
+    if (iVolRenType == 5) iVolRenType = 4; else 
+    if (iVolRenType == 6) iVolRenType = 5;
   }
 
 
@@ -455,8 +447,14 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, UINT64 iMaxCPU, UINT64 iMa
     case 4    : radioButton_APIGL->setChecked(true);
                 radioButton_SBVR2D->setChecked(true);
                 break;
-    default   : radioButton_APIDX->setChecked(true);
+    case 5    : radioButton_APIDX->setChecked(true);
                 radioButton_SBVR2D->setChecked(true);
+                break;
+    case 6    : radioButton_APIGL->setChecked(true);
+                radioButton_TRaycast->setChecked(true);
+                break;
+    default   : radioButton_APIDX->setChecked(true);
+                radioButton_TRaycast->setChecked(true);
                 break;
   }
 
@@ -523,13 +521,13 @@ const string SettingsDlg::GetLogFileName() const {
   return string(lineEdit_filename->text().toAscii());
 }
 
-UINT32 SettingsDlg::GetLogLevel() const {
+uint32_t SettingsDlg::GetLogLevel() const {
   return horizontalSlider_loglevel->value();
 }
 
 void SettingsDlg::WarnAPIMethodChange() {
   if (m_bWarnAPIChange && !m_bInit) {
-    QMessageBox::warning(this, "Warning", "A change to the render API, the rendermode, or the compatibiliy settings only affects new render windows.");
+    QMessageBox::warning(this, "Warning", "A change to the render API, the rendermode, or the compatibility settings only affects new render windows.");
     m_bWarnAPIChange = false;
   }
 }
@@ -573,7 +571,7 @@ int SettingsDlg::GetLogoPos() const {
 
 
 void SettingsDlg::MaxBSChanged(int iValue) {
-  QString str = tr("%1^3").arg(MathTools::Pow2(UINT32(iValue)));
+  QString str = tr("%1^3").arg(MathTools::Pow2(uint32_t(iValue)));
 
   label_BS->setText(str);
 }
@@ -667,8 +665,31 @@ void SettingsDlg::OverrideMaxToggled(bool bOverride) {
     horizontalSlider_CPUMem->setMaximum(spinBox_CPUMax->value());
     horizontalSlider_GPUMem->setMaximum(spinBox_GPUMax->value());
   } else {
-    UINT64 iMaxCPUMemSize   = m_MasterController.SysInfo()->GetCPUMemSize();
-    UINT64 iMaxGPUMemSize   = m_MasterController.SysInfo()->GetGPUMemSize();
+    uint64_t iMaxCPUMemSize   = m_MasterController.SysInfo()->GetCPUMemSize();
+    uint64_t iMaxGPUMemSize   = m_MasterController.SysInfo()->GetGPUMemSize();
     MaxToSliders(iMaxCPUMemSize/(1024*1024), iMaxGPUMemSize/(1024*1024));
   }
+}
+
+void SettingsDlg::ToggleExperimentalFeatures() {
+#if defined(_WIN32) && defined(USE_DIRECTX)
+  if(GetExperimentalFeatures()) {
+    groupBox_7->setVisible(true);
+  } else {
+    groupBox_7->setVisible(false);
+    radioButton_APIGL->setChecked(true);
+  }
+#else
+  groupBox_7->setVisible(false);
+  radioButton_APIGL->setChecked(true);
+#endif
+
+  if(GetExperimentalFeatures()) {
+    radioButton_TRaycast->setVisible(true);
+  } else {
+    radioButton_TRaycast->setVisible(false);
+    if (radioButton_TRaycast->isChecked()) 
+      radioButton_Raycast->setChecked(true);
+  }
+
 }

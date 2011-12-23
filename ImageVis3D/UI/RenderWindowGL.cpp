@@ -147,11 +147,11 @@ void RenderWindowGL::InitializeRenderer()
       bool bOpenGLFBO      = glewGetExtension("GL_EXT_framebuffer_object");
 
       // for image_load_store
-      bool bOpenGLSO42     = atof((const char*)version) >= 4.2;
+      bool bOpenGL42       = atof((const char*)version) >= 4.2;
       bool bOpenGLILS_EXT  = glewGetExtension("GL_EXT_shader_image_load_store");
       bool bOpenGLILS_ARB  = glewGetExtension("GL_ARB_shader_image_load_store");
 
-      ms_bImageLoadStoreInDriver = bOpenGLSO42 || bOpenGLILS_EXT || bOpenGLILS_ARB;
+      ms_bImageLoadStoreInDriver = bOpenGL42 || bOpenGLILS_EXT || bOpenGLILS_ARB;
 
       GLint iMaxVolumeDims;
       if (bOpenGLSO12 || bOpenGL3DT ) {

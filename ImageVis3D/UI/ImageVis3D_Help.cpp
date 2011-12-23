@@ -545,7 +545,7 @@ void MainWindow::ReportABug(const string& strFile) {
     if (b.SubmitSysinfo() ) {
       reportFile << endl << endl << "Memory info:" << endl;
 
-      const UINT64 mb = 1024*1024;
+      const uint64_t mb = 1024*1024;
       reportFile << "CPU Memory: Total "
                  << m_MasterController.MemMan()->GetCPUMem()/mb
                  << " MB, Usable "

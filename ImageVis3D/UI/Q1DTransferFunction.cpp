@@ -327,7 +327,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
   // compute some grid dimensions
   unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
   unsigned int iGridHeight = height()-(m_iBottomBorder+m_iTopBorder)-2;
-  unsigned int iVectorSize = UINT32(m_vHistogram.GetSize());
+  unsigned int iVectorSize = uint32_t(m_vHistogram.GetSize());
 
   // compute position in color array
   int iCurrentIndex = int((float(event->x())-float(m_iLeftBorder)-1.0f)*float(iVectorSize-1)/float(iGridWidth));
