@@ -261,7 +261,7 @@ void RenderWindowGL::InitializeRenderer()
   #ifdef DETECTED_OS_LINUX
       m_Renderer->AddShaderPath("/usr/share/imagevis3d/shaders");
   #endif
-      m_bRenderSubsysOK = m_Renderer->Initialize(GLContextID::Current());
+      m_bRenderSubsysOK = m_Renderer->Initialize(GLContextID::Current(0));
     }
   }
 
