@@ -436,6 +436,7 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
   for(QStringList::const_iterator fn = files.begin();
       fn != files.end(); ++fn) {
     if(fn->isEmpty()) {
+      T_ERROR("Empty filelist");
       return false;
     }
     if(!SysTools::FileExists(std::string(fn->toAscii()))) {
@@ -481,7 +482,10 @@ bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
     if (!bNoUserInteraction && targetFilename.isEmpty()) {
       targetFilename = GetConvFilename(files[0]);
     }
-    if (targetFilename.isEmpty()) return false;
+    if (targetFilename.isEmpty()) {
+      T_ERROR("User interaction disabled but no targetFilename given");
+      return false;
+    }
 
     std::list<std::string> stdfiles;
     for(QStringList::const_iterator fn = files.begin();
