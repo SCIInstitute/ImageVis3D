@@ -305,7 +305,7 @@ void MainWindow::AddGeometry() {
 
 void MainWindow::LoadDataset(std::string strFilename) {
   try {
-    if(LoadDataset(QStringList(strFilename.c_str())) != 0) {
+    if(!LoadDataset(QStringList(strFilename.c_str())) != 0) {
       ShowCriticalDialog("Render window initialization failed.",
         "Could not open a render window!  This normally "
         "means ImageVis3D does not support your GPU.  Please"
