@@ -98,6 +98,8 @@ void MainWindow::RegisterCalls(Scripting* pScriptEngine) {
   pScriptEngine->RegisterCommand(this, "quit", "", "quit ImageVis3D");
   pScriptEngine->RegisterCommand(this, "lighting", "[true/false]", "Enable, disable, or toggle (no args) lighting");
   pScriptEngine->RegisterCommand(this, "samplingrate", "percent", "Sets the sampling rate; default is 100");
+  pScriptEngine->RegisterCommand(this, "setTimestep", "uint",
+                                 "changes the current timestep.");
 }
 
 bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::string >& strParams, std::string& strMessage) {
@@ -160,6 +162,9 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
     } else {
       ToggleLighting();
     }
+  } else
+  if (strCommand == "setTimestep") {
+    SetTimestep(SysTools::FromString<unsigned>(strParams[0]));
   } else {
     return false;
   }
