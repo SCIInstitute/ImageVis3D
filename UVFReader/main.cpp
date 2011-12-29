@@ -219,26 +219,36 @@ int main(int argc, char* argv[])
     uvfGlobalHeader.ulChecksumSemanticsEntry = UVFTables::CS_MD5;
     uvfFile.SetGlobalHeader(uvfGlobalHeader);
 
-    DataBlock testBlock;
-    testBlock.strBlockID = "Test Block 1";
-    testBlock.ulCompressionScheme = UVFTables::COS_NONE;
-    uvfFile.AddDataBlock(&testBlock,0);
+    std::tr1::shared_ptr<DataBlock> testBlock(new DataBlock());
+    testBlock->strBlockID = "Test Block 1";
+    testBlock->ulCompressionScheme = UVFTables::COS_NONE;
+    uvfFile.AddDataBlock(testBlock);
 
-    testBlock.strBlockID = "Test Block 2";
-    uvfFile.AddDataBlock(&testBlock,0);
+    testBlock = std::tr1::shared_ptr<DataBlock>(new DataBlock());
+    testBlock->strBlockID = "Test Block 2";
+    uvfFile.AddDataBlock(testBlock);
 
-    DataBlock* pTestVolume;
-    MaxMinDataBlock MaxMinData(1);
-    RasterDataBlock testRasterVolume;
-    TOCBlock tocBlock;
+    std::tr1::shared_ptr<DataBlock> pTestVolume;
+    std::tr1::shared_ptr<MaxMinDataBlock> MaxMinData(
+      new MaxMinDataBlock(1)
+    );
+    std::tr1::shared_ptr<RasterDataBlock> testRasterVolume(
+      new RasterDataBlock()
+    );
+    std::tr1::shared_ptr<TOCBlock> tocBlock(new TOCBlock());
 
     if (bUseToCBlock)  {
-      tocBlock.strBlockID = "Test TOC Volume 1";
-      tocBlock.ulCompressionScheme = UVFTables::COS_NONE;
+      tocBlock->strBlockID = "Test TOC Volume 1";
+      tocBlock->ulCompressionScheme = UVFTables::COS_NONE;
 
-      tocBlock.SetMaxBricksize(UINTVECTOR3(iBrickSize, iBrickSize, iBrickSize));
-      tocBlock.SetOverlap(DEFAULT_BRICKOVERLAP/2);
-      bool bResult = tocBlock.FlatDataToBrickedLOD("./dummyData.raw", "./tempFile.tmp", iBitSize == 8 ?ExtendedOctree:: CT_UINT8 : ExtendedOctree::CT_UINT16, 1, vSize, DOUBLEVECTOR3(1,1,1), 1024*1024*1024, &MaxMinData, &Controller::Debug::Out());
+      tocBlock->SetMaxBricksize(UINTVECTOR3(iBrickSize,iBrickSize,iBrickSize));
+      tocBlock->SetOverlap(DEFAULT_BRICKOVERLAP/2);
+      bool bResult = tocBlock->FlatDataToBrickedLOD("./dummyData.raw",
+        "./tempFile.tmp", iBitSize == 8 ? ExtendedOctree::CT_UINT8
+                                        : ExtendedOctree::CT_UINT16,
+        1, vSize, DOUBLEVECTOR3(1,1,1), 1024*1024*1024, MaxMinData,
+        &Controller::Debug::Out()
+      );
 
       if (!bResult) {
         T_ERROR("Failed to subdivide the volume into bricks");
@@ -247,27 +257,27 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
       }
 
-      pTestVolume = &tocBlock;
+      pTestVolume = tocBlock;
     } else {
 
-      testRasterVolume.strBlockID = "Test Volume 1";
+      testRasterVolume->strBlockID = "Test Volume 1";
 
-      testRasterVolume.ulCompressionScheme = UVFTables::COS_NONE;
-      testRasterVolume.ulDomainSemantics.push_back(UVFTables::DS_X);
-      testRasterVolume.ulDomainSemantics.push_back(UVFTables::DS_Y);
-      testRasterVolume.ulDomainSemantics.push_back(UVFTables::DS_Z);
+      testRasterVolume->ulCompressionScheme = UVFTables::COS_NONE;
+      testRasterVolume->ulDomainSemantics.push_back(UVFTables::DS_X);
+      testRasterVolume->ulDomainSemantics.push_back(UVFTables::DS_Y);
+      testRasterVolume->ulDomainSemantics.push_back(UVFTables::DS_Z);
 
-      testRasterVolume.ulDomainSize.push_back(vSize.x);
-      testRasterVolume.ulDomainSize.push_back(vSize.y);
-      testRasterVolume.ulDomainSize.push_back(vSize.z);
+      testRasterVolume->ulDomainSize.push_back(vSize.x);
+      testRasterVolume->ulDomainSize.push_back(vSize.y);
+      testRasterVolume->ulDomainSize.push_back(vSize.z);
 
-      testRasterVolume.ulLODDecFactor.push_back(2);
-      testRasterVolume.ulLODDecFactor.push_back(2);
-      testRasterVolume.ulLODDecFactor.push_back(2);
+      testRasterVolume->ulLODDecFactor.push_back(2);
+      testRasterVolume->ulLODDecFactor.push_back(2);
+      testRasterVolume->ulLODDecFactor.push_back(2);
 
-      testRasterVolume.ulLODGroups.push_back(0);
-      testRasterVolume.ulLODGroups.push_back(0);
-      testRasterVolume.ulLODGroups.push_back(0);
+      testRasterVolume->ulLODGroups.push_back(0);
+      testRasterVolume->ulLODGroups.push_back(0);
+      testRasterVolume->ulLODGroups.push_back(0);
 
       uint64_t iLodLevelCount = 1;
       uint32_t iMaxVal = uint32_t(vSize.maxVal());
@@ -277,27 +287,27 @@ int main(int argc, char* argv[])
         iLodLevelCount++;
       }
 
-      testRasterVolume.ulLODLevelCount.push_back(iLodLevelCount);
+      testRasterVolume->ulLODLevelCount.push_back(iLodLevelCount);
 
-      testRasterVolume.SetTypeToScalar(iBitSize,iBitSize,false,UVFTables::ES_CT);
+      testRasterVolume->SetTypeToScalar(iBitSize,iBitSize,false,UVFTables::ES_CT);
 
-      testRasterVolume.ulBrickSize.push_back(iBrickSize);
-      testRasterVolume.ulBrickSize.push_back(iBrickSize);
-      testRasterVolume.ulBrickSize.push_back(iBrickSize);
+      testRasterVolume->ulBrickSize.push_back(iBrickSize);
+      testRasterVolume->ulBrickSize.push_back(iBrickSize);
+      testRasterVolume->ulBrickSize.push_back(iBrickSize);
 
-      testRasterVolume.ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
-      testRasterVolume.ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
-      testRasterVolume.ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
+      testRasterVolume->ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
+      testRasterVolume->ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
+      testRasterVolume->ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
 
       vector<double> vScale;
       vScale.push_back(double(vSize.maxVal())/double(vSize.x));
       vScale.push_back(double(vSize.maxVal())/double(vSize.y));
       vScale.push_back(double(vSize.maxVal())/double(vSize.z));
-      testRasterVolume.SetScaleOnlyTransformation(vScale);
+      testRasterVolume->SetScaleOnlyTransformation(vScale);
 
       switch (iBitSize) {
       case 8 : {
-                    if (!testRasterVolume.FlatDataToBrickedLOD("./dummyData.raw", "./tempFile.tmp", CombineAverage<unsigned char,1>, SimpleMaxMin<unsigned char,1>, &MaxMinData, &Controller::Debug::Out())){
+                    if (!testRasterVolume->FlatDataToBrickedLOD("./dummyData.raw", "./tempFile.tmp", CombineAverage<unsigned char,1>, SimpleMaxMin<unsigned char,1>, MaxMinData, &Controller::Debug::Out())){
                       T_ERROR("Failed to subdivide the volume into bricks");
                       uvfFile.Close();
                       dummyData.Delete();
@@ -306,7 +316,7 @@ int main(int argc, char* argv[])
                     break;
                   }
       case 16 :{
-                  if (!testRasterVolume.FlatDataToBrickedLOD("./dummyData.raw", "./tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short,1>, &MaxMinData, &Controller::Debug::Out())){
+                  if (!testRasterVolume->FlatDataToBrickedLOD("./dummyData.raw", "./tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short,1>, MaxMinData, &Controller::Debug::Out())){
                     T_ERROR("Failed to subdivide the volume into bricks");
                     uvfFile.Close();
                     dummyData.Delete();
@@ -317,49 +327,58 @@ int main(int argc, char* argv[])
       }
 
       string strProblemDesc;
-      if (!testRasterVolume.Verify(&strProblemDesc)) {
-        T_ERROR("Verify failed with the following reason: %s", strProblemDesc.c_str());
+      if (!testRasterVolume->Verify(&strProblemDesc)) {
+        T_ERROR("Verify failed with the following reason: %s",
+                strProblemDesc.c_str());
         uvfFile.Close();
         dummyData.Delete();
         return EXIT_FAILURE;
       }
 
-      pTestVolume = &testRasterVolume;
+      pTestVolume = testRasterVolume;
     }
     
     dummyData.Delete();
 
-    if (!uvfFile.AddDataBlock(pTestVolume, true)) {
+    if (!uvfFile.AddDataBlock(pTestVolume)) {
       T_ERROR("AddDataBlock failed!");
       uvfFile.Close();
       return EXIT_FAILURE;
     }
 
-    Histogram1DDataBlock Histogram1D;
-    Histogram2DDataBlock Histogram2D;
+    std::tr1::shared_ptr<Histogram1DDataBlock> Histogram1D(
+      new Histogram1DDataBlock()
+    );
+    std::tr1::shared_ptr<Histogram2DDataBlock> Histogram2D(
+      new Histogram2DDataBlock()
+    );
     if (bUseToCBlock) {
       MESSAGE("Computing 1D Histogram...");
-      if (!Histogram1D.Compute( &tocBlock, 0 )) {
+      if (!Histogram1D->Compute(tocBlock.get(), 0)) {
         T_ERROR("Computation of 1D Histogram failed!");
         uvfFile.Close();
         return EXIT_FAILURE;
       }
-      Histogram1D.Compress(4096);
+      Histogram1D->Compress(4096);
       MESSAGE("Computing 2D Histogram...");
-      if (!Histogram2D.Compute(&tocBlock, 0, Histogram1D.GetHistogram().size(), MaxMinData.GetGlobalValue().maxScalar)) {
+      if (!Histogram2D->Compute(tocBlock.get(), 0,
+                                Histogram1D->GetHistogram().size(),
+                                MaxMinData->GetGlobalValue().maxScalar)) {
         T_ERROR("Computation of 2D Histogram failed!");
         uvfFile.Close();
         return EXIT_FAILURE;
       }
     } else {
-      if (!Histogram1D.Compute( &testRasterVolume )) {
+      if (!Histogram1D->Compute(testRasterVolume.get())) {
         T_ERROR("Computation of 1D Histogram failed!");
         uvfFile.Close();
         return EXIT_FAILURE;
       }
-      Histogram1D.Compress(4096);
+      Histogram1D->Compress(4096);
       MESSAGE("Computing 2D Histogram...");
-      if (!Histogram2D.Compute(&testRasterVolume, Histogram1D.GetHistogram().size(), MaxMinData.GetGlobalValue().maxScalar)) {
+      if (!Histogram2D->Compute(testRasterVolume.get(),
+                                Histogram1D->GetHistogram().size(),
+                                MaxMinData->GetGlobalValue().maxScalar)) {
         T_ERROR("Computation of 2D Histogram failed!");
         uvfFile.Close();
         return EXIT_FAILURE;
@@ -367,27 +386,29 @@ int main(int argc, char* argv[])
     }
 
     MESSAGE("Storing histogram data...");
-    uvfFile.AddDataBlock(&Histogram1D);
-    uvfFile.AddDataBlock(&Histogram2D);
+    uvfFile.AddDataBlock(Histogram1D);
+    uvfFile.AddDataBlock(Histogram2D);
 
     MESSAGE("Storing acceleration data...");
-    uvfFile.AddDataBlock(&MaxMinData);
+    uvfFile.AddDataBlock(MaxMinData);
 
     MESSAGE("Storing metadata...");
 
-    KeyValuePairDataBlock metaPairs;
-    metaPairs.AddPair("Data Source","This file was created by the UVFReader");
-    metaPairs.AddPair("Description","Dummy file for testing purposes.");
+    std::tr1::shared_ptr<KeyValuePairDataBlock> metaPairs(
+      new KeyValuePairDataBlock()
+    );
+    metaPairs->AddPair("Data Source","This file was created by the UVFReader");
+    metaPairs->AddPair("Description","Dummy file for testing purposes.");
 
     if (EndianConvert::IsLittleEndian())
-      metaPairs.AddPair("Source Endianess","little");
+      metaPairs->AddPair("Source Endianess","little");
     else
-      metaPairs.AddPair("Source Endianess","big");
+      metaPairs->AddPair("Source Endianess","big");
 
-    metaPairs.AddPair("Source Type","integer");
-    metaPairs.AddPair("Source Bit width",SysTools::ToString(iBitSize));
+    metaPairs->AddPair("Source Type","integer");
+    metaPairs->AddPair("Source Bit width",SysTools::ToString(iBitSize));
 
-    uvfFile.AddDataBlock(&metaPairs);
+    uvfFile.AddDataBlock(metaPairs);
 
     MESSAGE("Writing UVF file...");
 
