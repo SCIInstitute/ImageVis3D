@@ -60,7 +60,7 @@ using namespace boost;
 using namespace std;
 using namespace tuvok;
 
-#define READER_VERSION 1.1
+#define READER_VERSION 2.0
 
 #ifdef _WIN32
   // CRT's memory leak detection
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
   bool bShow1dhist;
   bool bShow2dhist;
   bool bShowData;
-  bool bUseToCBlock = true;
+  bool bUseToCBlock;
 
   try {
     TCLAP::CmdLine cmd("UVF diagnostic tool");
@@ -124,6 +124,8 @@ int main(int argc, char* argv[])
     TCLAP::ValueArg<size_t> bsize("s", "bricksize", "maximum width, "
                                   "in any dimension, for a created volume",
                                   false, static_cast<size_t>(256), uint);
+    TCLAP::SwitchArg use_rdb("r", "rdb", "use older raster data block", false);
+
     cmd.add(inputs);
     cmd.add(noverify);
     cmd.add(hist1d);
@@ -134,6 +136,7 @@ int main(int argc, char* argv[])
     cmd.add(sizeZ);
     cmd.add(bits);
     cmd.add(bsize);
+    cmd.add(use_rdb);
     cmd.add(output_data);
     cmd.parse(argc, argv);
 
@@ -150,6 +153,7 @@ int main(int argc, char* argv[])
     bShow1dhist = hist1d.getValue();
     bShow2dhist = hist2d.getValue();
     bShowData = output_data.getValue();
+    bUseToCBlock = !use_rdb.getValue();
   } catch(const TCLAP::ArgException& e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << "\n";
     return EXIT_FAILURE;
@@ -173,8 +177,8 @@ int main(int argc, char* argv[])
   if (bCreateFile) {
     MESSAGE("Generating dummy data");
 
-    LargeRAWFile dummyData("./dummyData.raw");
-    if (!dummyData.Create(vSize.volume()*iBitSize/8)) {
+    LargeRAWFile_ptr dummyData = LargeRAWFile_ptr(new LargeRAWFile("./dummyData.raw"));
+    if (!dummyData->Create(vSize.volume()*iBitSize/8)) {
       T_ERROR("Failed to create ./dummyData.raw file");
       return EXIT_FAILURE;
     }
@@ -187,7 +191,7 @@ int main(int argc, char* argv[])
                       for (uint64_t x = 0;x<vSize.x;x++) {
                         source[x] = static_cast<unsigned char>(std::max(0.0f,(0.5f-(0.5f-FLOATVECTOR3(float(x),float(y),float(z))/FLOATVECTOR3(vSize)).length())*512.0f));
                       }
-                      dummyData.WriteRAW(source, vSize.x);
+                      dummyData->WriteRAW(source, vSize.x);
                     }
                   }
                   delete [] source;
@@ -200,7 +204,7 @@ int main(int argc, char* argv[])
                       for (uint64_t x = 0;x<vSize.x;x++) {
                         source[x] = static_cast<unsigned short>(std::max(0.0f,(0.5f-(0.5f-FLOATVECTOR3(float(x),float(y),float(z))/FLOATVECTOR3(vSize)).length())*131072.0f));
                       }
-                      dummyData.WriteRAW((uint8_t*)source, vSize.x*2);
+                      dummyData->WriteRAW((uint8_t*)source, vSize.x*2);
                     }
                   }
                   delete [] source;
@@ -210,7 +214,7 @@ int main(int argc, char* argv[])
         T_ERROR("Invalid bitsize");
         return EXIT_FAILURE;
     }
-    dummyData.Close();
+    dummyData->Close();
 
 
     MESSAGE("Preparing creation of UVF file %s", strUVFName.c_str());
@@ -241,18 +245,18 @@ int main(int argc, char* argv[])
       tocBlock->strBlockID = "Test TOC Volume 1";
       tocBlock->ulCompressionScheme = UVFTables::COS_NONE;
 
-      tocBlock->SetMaxBricksize(UINTVECTOR3(iBrickSize,iBrickSize,iBrickSize));
-      tocBlock->SetOverlap(DEFAULT_BRICKOVERLAP/2);
       bool bResult = tocBlock->FlatDataToBrickedLOD("./dummyData.raw",
         "./tempFile.tmp", iBitSize == 8 ? ExtendedOctree::CT_UINT8
                                         : ExtendedOctree::CT_UINT16,
-        1, vSize, DOUBLEVECTOR3(1,1,1), 1024*1024*1024, MaxMinData,
+        1, vSize, DOUBLEVECTOR3(1,1,1), UINTVECTOR3(iBrickSize,iBrickSize,iBrickSize),
+        DEFAULT_BRICKOVERLAP/2,
+        1024*1024*1024, MaxMinData,
         &Controller::Debug::Out()
       );
 
       if (!bResult) {
         T_ERROR("Failed to subdivide the volume into bricks");
-        dummyData.Delete();
+        dummyData->Delete();
         uvfFile.Close();
         return EXIT_FAILURE;
       }
@@ -305,21 +309,22 @@ int main(int argc, char* argv[])
       vScale.push_back(double(vSize.maxVal())/double(vSize.z));
       testRasterVolume->SetScaleOnlyTransformation(vScale);
 
+      dummyData->Open();
       switch (iBitSize) {
       case 8 : {
-                    if (!testRasterVolume->FlatDataToBrickedLOD("./dummyData.raw", "./tempFile.tmp", CombineAverage<unsigned char,1>, SimpleMaxMin<unsigned char,1>, MaxMinData, &Controller::Debug::Out())){
+                    if (!testRasterVolume->FlatDataToBrickedLOD(dummyData, "./tempFile.tmp", CombineAverage<unsigned char,1>, SimpleMaxMin<unsigned char,1>, MaxMinData, &Controller::Debug::Out())){
                       T_ERROR("Failed to subdivide the volume into bricks");
                       uvfFile.Close();
-                      dummyData.Delete();
+                      dummyData->Delete();
                       return EXIT_FAILURE;
                     }
                     break;
                   }
       case 16 :{
-                  if (!testRasterVolume->FlatDataToBrickedLOD("./dummyData.raw", "./tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short,1>, MaxMinData, &Controller::Debug::Out())){
+                  if (!testRasterVolume->FlatDataToBrickedLOD(dummyData, "./tempFile.tmp", CombineAverage<unsigned short,1>, SimpleMaxMin<unsigned short,1>, MaxMinData, &Controller::Debug::Out())){
                     T_ERROR("Failed to subdivide the volume into bricks");
                     uvfFile.Close();
-                    dummyData.Delete();
+                    dummyData->Delete();
                     return EXIT_FAILURE;
                   }
                   break;
@@ -331,14 +336,14 @@ int main(int argc, char* argv[])
         T_ERROR("Verify failed with the following reason: %s",
                 strProblemDesc.c_str());
         uvfFile.Close();
-        dummyData.Delete();
+        dummyData->Delete();
         return EXIT_FAILURE;
       }
 
       pTestVolume = testRasterVolume;
     }
     
-    dummyData.Delete();
+    dummyData->Delete();
 
     if (!uvfFile.AddDataBlock(pTestVolume)) {
       T_ERROR("AddDataBlock failed!");
