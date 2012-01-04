@@ -43,7 +43,7 @@
 #endif
 #include <QtGui/QtGui>
 #include <QtGui/QMessageBox>
-#include <QtOpenGL/QtOpenGL>
+
 #if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
 # pragma GCC visibility pop
 #endif
