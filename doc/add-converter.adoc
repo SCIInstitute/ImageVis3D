@@ -131,8 +131,7 @@ Once you've done that, rerun `qmake' from the root directory, and
 
 CAUTION: On Windows, the solution/project files have diverged from the
 settings given in the qmake project file.  You will need to add your
-files to the Visual Studio project file in the normal way.  Do *not*
-run qmake on Windows, or you will not be able to compile ImageVis3D!
+files to the Visual Studio project file in the normal way.
 
 Register Your Converter with the IO Subsystem
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
