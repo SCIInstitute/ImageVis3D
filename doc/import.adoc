@@ -133,6 +133,8 @@ For 3D gridded volume data, ImageVis3D supports:
 - *Inveon* (`.hdr` extension, with accompanying `.img`): files from Inveon
   scanner.
 - *Analyze* (`.hdr` extension, with accompanying `.img`): Analyze 7.5 files.
+- *Amira* (`.am` extension): so-called "AmiraMesh" files, which, despite the
+  name, consist of gridded 3D volume data.
 - *Raw* data, optionally compressed
 
 DICOM Stacks
@@ -330,6 +332,21 @@ versions of this format; ImageVis3D supports the 7.5 variant.
 
 Data sets in this format consist of small `.hdr` files which describe
 the data, and then put raw data in `.img` files.
+
+Amira
+^^^^^
+
+Amira is a visualization package developed by "Visage Imaging".  The
+program can export so-called "AmiraMesh" files, which are ASCII files
+which consist of a small header and a raw listing of the data.
+
+Amira can also export ".grd" ("grid") files, which ImageVis3D does not
+currently support.  If this is a limiting factor for you, please let us
+know!  Adding support for this variation shouldn't be too difficult.
+
+"AmiraMesh" would be a poor choice to standardize around for your
+data visualization and analysis needs, because it does not support
+anisotropy and data access is extremely slow.
 
 Raw Data
 ^^^^^^^^
