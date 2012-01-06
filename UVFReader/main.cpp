@@ -249,7 +249,7 @@ int main(int argc, char* argv[])
         "./tempFile.tmp", iBitSize == 8 ? ExtendedOctree::CT_UINT8
                                         : ExtendedOctree::CT_UINT16,
         1, vSize, DOUBLEVECTOR3(1,1,1), UINTVECTOR3(iBrickSize,iBrickSize,iBrickSize),
-        DEFAULT_BRICKOVERLAP/2,
+        DEFAULT_BRICKOVERLAP,
         1024*1024*1024, MaxMinData,
         &Controller::Debug::Out()
       );
@@ -299,9 +299,9 @@ int main(int argc, char* argv[])
       testRasterVolume->ulBrickSize.push_back(iBrickSize);
       testRasterVolume->ulBrickSize.push_back(iBrickSize);
 
-      testRasterVolume->ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
-      testRasterVolume->ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
-      testRasterVolume->ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP);
+      testRasterVolume->ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP*2);
+      testRasterVolume->ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP*2);
+      testRasterVolume->ulBrickOverlap.push_back(DEFAULT_BRICKOVERLAP*2);
 
       vector<double> vScale;
       vScale.push_back(double(vSize.maxVal())/double(vSize.x));
