@@ -43,8 +43,9 @@
 #include "ImageVis3D.h"
 #include "BrowseData.h"
 
-#include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
+#include <QtGui/QFileDialog>
 #include <QtGui/QMessageBox>
 
 #include "../Tuvok/Basics/SysTools.h"
@@ -395,6 +396,7 @@ bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList f
     if (m_pActiveRenderWin && 
       !m_pActiveRenderWin->GetRenderer()->SupportsMeshes() &&
       m_pActiveRenderWin->GetRenderer()->GetMeshes().size() > 0) {
+      m_pRedrawTimer->stop();
       if(QMessageBox::Yes == 
         QMessageBox::question(NULL, 
                          "Mesh feature not supported in this renderer",
@@ -415,6 +417,7 @@ bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList f
         m_pActiveRenderWin->GetRenderer()->GetMeshes().clear();
         UpdateExplorerView(true);
       }
+      m_pRedrawTimer->start(20);
     }
   }
   return false;
