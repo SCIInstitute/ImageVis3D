@@ -399,7 +399,7 @@ bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList f
         QMessageBox::question(NULL, 
                          "Mesh feature not supported in this renderer",
                          "This dataset contains mesh data but the current "
-                         "renderer does not supports rendering meshes. Mesh "
+                         "renderer does not support rendering meshes. Mesh "
                          "rendering is disabled until you switch to a renderer "
                          "that supports this feature e.g. the 3D slice "
                          "based volume renderer. Do you want to switch to "
