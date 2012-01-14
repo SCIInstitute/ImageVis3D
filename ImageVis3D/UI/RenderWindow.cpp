@@ -798,7 +798,6 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
   m_Renderer->SetRendererTarget(mode);
   if (bPreserveTransparency) m_Renderer->SetBackgroundColors(color); 
   return rv;
-
 }
 
 
