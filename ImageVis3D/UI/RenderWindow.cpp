@@ -52,12 +52,13 @@
 #include "RenderWindow.h"
 
 #include "ImageVis3D.h"
+#include "../Tuvok/Basics/MathTools.h"
+#include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
 #include "../Tuvok/Renderer/GL/GLFBOTex.h"
 #include "../Tuvok/Renderer/GL/GLRenderer.h"
 #include "../Tuvok/Renderer/GL/GLTargetBinder.h"
-#include "../Tuvok/Basics/MathTools.h"
 #include "Basics/tr1.h"
 
 using namespace std;
