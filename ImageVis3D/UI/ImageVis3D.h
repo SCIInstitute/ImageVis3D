@@ -323,7 +323,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool                                      m_bQuickopen;
     unsigned int                              m_iMinFramerate;
     unsigned int                              m_iLODDelay;
-    bool                                      m_bUseAllMeans;
+    bool                                      m_bRenderLowResIntermediateResults;
     unsigned int                              m_iActiveTS;
     unsigned int                              m_iInactiveTS;
     bool                                      m_bWriteLogFile;

@@ -768,13 +768,13 @@ void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecis
   m_Renderer->SetBlendPrecision(eBlendPrecisionMode);
 }
 
-void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, bool bUseAllMeans,
+void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, bool bRenderLowResIntermediateResults,
                                    float fScreenResDecFactor, float fSampleDecFactor,
                                    unsigned int iLODDelay, unsigned int iActiveTS,
                                    unsigned int iInactiveTS) {
   m_iTimeSliceMSecsActive   = iActiveTS;
   m_iTimeSliceMSecsInActive = iInactiveTS;
-  m_Renderer->SetPerfMeasures(iMinFramerate, bUseAllMeans, fScreenResDecFactor,
+  m_Renderer->SetPerfMeasures(iMinFramerate, bRenderLowResIntermediateResults, fScreenResDecFactor,
                               fSampleDecFactor, iLODDelay);
 }
 

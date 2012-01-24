@@ -352,7 +352,7 @@ void SettingsDlg::SetLogoLabel() {
 
 void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t iMaxGPU, bool bIgnoreMax,
                             unsigned int iUserMaxCPUMB, unsigned int iUserMaxGPUMB, const std::string& tempDir,
-                            bool bQuickopen, unsigned int iMinFramerate, bool bUseAllMeans, unsigned int iLODDelay,
+                            bool bQuickopen, unsigned int iMinFramerate, bool bRenderLowResIntermediateResults, unsigned int iLODDelay,
                             unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, uint32_t iLogLevel,
                             bool bShowVersionInTitle,
@@ -388,7 +388,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t
 
   checkBoxQuickload->setChecked(bQuickopen);
   horizontalSlider_MinFramerate->setValue(iMinFramerate);
-  checkBox_useAllMeans->setChecked(bUseAllMeans);
+  checkBox_useAllMeans->setChecked(bRenderLowResIntermediateResults);
   horizontalSlider_LODDelay->setValue(iLODDelay);
   horizontalSlider_ActTS->setValue(iActiveTS);
   horizontalSlider_InactTS->setValue(iInactiveTS);

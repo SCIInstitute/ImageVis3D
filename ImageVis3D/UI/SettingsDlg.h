@@ -111,7 +111,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    const std::string& tempDir,
                    bool bQuickopen,
                    unsigned int iMinFramerate,
-                   bool bUseAllMeans,
+                   bool bRenderLowResIntermediateResults,
                    unsigned int iLODDelay,
                    unsigned int iActiveTS,
                    unsigned int iInactiveTS,
