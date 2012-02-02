@@ -359,7 +359,7 @@ int main(int argc, const char* argv[])
                << "Converting " << strInFile
                << " (" << sourceConv->GetDesc() << ") to "
                << strOutFile << " (" << targetConv->GetDesc() << ")\n";
-          Mesh* m = NULL;
+          std::tr1::shared_ptr<Mesh> m;
           try {
             m = sourceConv->ConvertToMesh(strInFile);
           } catch (const tuvok::io::DSOpenFailed& err) {
@@ -371,7 +371,6 @@ int main(int argc, const char* argv[])
             cerr << "Error writing target mesh\n";
             return EXIT_FAILURE_OUT_MESH_WRITE;
           }
-          delete m;
       }
     } else {
 

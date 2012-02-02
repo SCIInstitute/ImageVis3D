@@ -235,14 +235,14 @@ void MainWindow::AddGeometry(std::string filename) {
   pleaseWait.SetText("Loading mesh, please wait  ...");
   pleaseWait.AttachLabel(&m_MasterController);
 
-  Mesh* m = NULL;
+  std::tr1::shared_ptr<Mesh> m;
   try {
     m = m_MasterController.IOMan()->LoadMesh(filename);
   } catch (const tuvok::io::DSOpenFailed& err) {
     WARNING("Conversion failed! %s", err.what());
   }
 
-  if (m == NULL)  {
+  if (!m)  {
     ShowCriticalDialog("Mesh Import Failed.",
                  "Could not load mesh file. For details please "
                  "check the debug log ('Help | Debug Window').");
@@ -259,20 +259,18 @@ void MainWindow::AddGeometry(std::string filename) {
 
   m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
 
-  if (!currentDataset->AppendMesh(m)) {
+  if (!currentDataset->AppendMesh(*m)) {
     pleaseWait.close();
     ShowCriticalDialog("Mesh Import Failed.",
                  "Could not integrate the mesh into this UVF file. "
                  "For details please check the debug log "
                  "('Help | Debug Window').");
-    delete m;
   } else {
     pleaseWait.SetText("Creating render resources, please wait  ...");
     m_pActiveRenderWin->GetRenderer()->ScanForNewMeshes();
     pleaseWait.close();
     UpdateExplorerView(true);
   }
-  delete m;
 
   m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
 }
