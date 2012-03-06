@@ -85,6 +85,8 @@ class MergeDlg : public QDialog, protected Ui_MergeDlg
     virtual ~MergeDlg();
     std::vector<DataSetListElem*> m_vDataSetList;
     bool UseMax() { return radioButton_max->isChecked(); }
+    bool UseCustomExpr() { return grpCustomExpressionMode->isChecked(); }
+    QString GetCustomExpr() { return txtExpression->text(); }
 
   protected slots:
     void AnalyzeCurrentDataset();
@@ -95,8 +97,11 @@ class MergeDlg : public QDialog, protected Ui_MergeDlg
     void CancelMerge();
     void ChangedScale(double fScale);
     void ChangedBias(double fBias);
+    void ToggleDefaultMergeSet(bool bChecked);
+    void ToggleCustomMergeSet(bool bChecked);
 
   private:
+
     MainWindow*                     m_pMainWindow;
 
     void UpadeListView();

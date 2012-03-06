@@ -1011,10 +1011,23 @@ void MainWindow::MergeDatasets() {
       pleaseWait.SetText("Merging ...");
       pleaseWait.AttachLabel(&m_MasterController);
       const IOManager& iom = *(m_MasterController.IOMan());
-      if(!iom.MergeDatasets(strFilenames, vScales, vBiases, stdFile,
-                            m_strTempDir, m.UseMax())) {
-        ShowCriticalDialog("Data set Merge Error", "Unable to merge the selected data sets, make sure that the size and type of the data sets are the same.");
-        return;
+      if (m.UseCustomExpr()) {
+    	try {
+    	  iom.EvaluateExpression(m.GetCustomExpr().toStdString().c_str(), strFilenames, stdFile);
+    	}
+    	catch (tuvok::Exception& e) {
+    	  std::string errMsg = "Unable to merge the selected data sets, make sure that the size and type of the data sets are the same. Also, check your expression. Error: ";
+    	  errMsg += e.what();
+    	  ShowCriticalDialog("Data Set Expression Merge Error", errMsg.c_str());
+    	  return;
+    	}
+      }
+      else {
+		if(!iom.MergeDatasets(strFilenames, vScales, vBiases, stdFile,
+							  m_strTempDir, m.UseMax())) {
+		  ShowCriticalDialog("Data set Merge Error", "Unable to merge the selected data sets, make sure that the size and type of the data sets are the same.");
+		  return;
+		}
       }
       pleaseWait.close();
     }

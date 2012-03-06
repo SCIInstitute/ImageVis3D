@@ -1,131 +1,160 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>MergeDlg</class>
- <widget class="QDialog" name="MergeDlg" >
-  <property name="windowModality" >
+ <widget class="QDialog" name="MergeDlg">
+  <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
-  <property name="geometry" >
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>402</width>
-    <height>427</height>
+    <width>557</width>
+    <height>633</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Merge Files</string>
   </property>
-  <property name="modal" >
+  <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox_2" >
-     <property name="title" >
-      <string>Merge Mode</string>
+    <widget class="QGroupBox" name="grpMergeText">
+     <property name="title">
+      <string>Merge Modes</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_4" >
+     <layout class="QVBoxLayout" name="verticalLayout_jh">
       <item>
-       <widget class="QRadioButton" name="radioButton_max" >
-        <property name="text" >
-         <string>Store only the maximum of all data sets</string>
+       <widget class="QGroupBox" name="grpDefaultExpressionModes">
+        <property name="title">
+         <string>Use a Default Mode</string>
         </property>
-        <property name="checked" >
+        <property name="checkable">
          <bool>true</bool>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="radioButton_add" >
-        <property name="text" >
-         <string>Add all data sets together</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3" >
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0" >
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="frame_2" >
-     <property name="frameShape" >
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow" >
-      <enum>QFrame::Raised</enum>
-     </property>
-     <property name="lineWidth" >
-      <number>0</number>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout" >
-      <property name="margin" >
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QFrame" name="frame_4" >
-        <property name="frameShape" >
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="frameShadow" >
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_3" >
-         <property name="margin" >
-          <number>0</number>
-         </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
-          <widget class="QListWidget" name="listWidget_datasets" />
+          <widget class="QRadioButton" name="radioButton_max">
+           <property name="text">
+            <string>Store only the maximum of all data sets</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_add">
+           <property name="text">
+            <string>Add all data sets together</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
       </item>
       <item>
-       <widget class="QFrame" name="frame_3" >
-        <property name="frameShape" >
+       <widget class="QGroupBox" name="grpCustomExpressionMode">
+        <property name="title">
+         <string>Use a Custom Expression</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Expression: </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="txtExpression"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame_2">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="frame_4">
+        <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
         </property>
-        <property name="frameShadow" >
+        <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <property name="lineWidth" >
-         <number>0</number>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2" >
-         <property name="margin" >
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="margin">
           <number>0</number>
          </property>
          <item>
-          <widget class="QPushButton" name="pushButton_addData" >
-           <property name="text" >
+          <widget class="QListWidget" name="listWidget_datasets"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame_3">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="pushButton_addData">
+           <property name="text">
             <string>Add Data Set</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_removeData" >
-           <property name="text" >
+          <widget class="QPushButton" name="pushButton_removeData">
+           <property name="text">
             <string>Remove Data Set</string>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer" >
-           <property name="orientation" >
+          <spacer name="verticalSpacer">
+           <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
              <height>40</height>
@@ -134,11 +163,11 @@
           </spacer>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_AutoAnalyze" >
-           <property name="text" >
+          <widget class="QCheckBox" name="checkBox_AutoAnalyze">
+           <property name="text">
             <string>Auto-Analyze</string>
            </property>
-           <property name="checked" >
+           <property name="checked">
             <bool>true</bool>
            </property>
           </widget>
@@ -150,36 +179,36 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame_5" >
-     <property name="frameShape" >
+    <widget class="QFrame" name="frame_5">
+     <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
-     <property name="frameShadow" >
+     <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <property name="lineWidth" >
+     <property name="lineWidth">
       <number>0</number>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_5" >
-      <property name="margin" >
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <property name="margin">
        <number>0</number>
       </property>
       <item>
-       <widget class="QGroupBox" name="groupBox_Info" >
-        <property name="title" >
+       <widget class="QGroupBox" name="groupBox_Info">
+        <property name="title">
          <string>Information</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_4" >
+        <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <widget class="QLabel" name="label_Info" >
-           <property name="text" >
+          <widget class="QLabel" name="label_Info">
+           <property name="text">
             <string>Click Analyze to get information about the data set</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_Analyze" >
-           <property name="text" >
+          <widget class="QPushButton" name="pushButton_Analyze">
+           <property name="text">
             <string>Analyze</string>
            </property>
           </widget>
@@ -188,51 +217,51 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_SB" >
-        <property name="title" >
+       <widget class="QGroupBox" name="groupBox_SB">
+        <property name="title">
          <string>Bias and Scale</string>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_3" >
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QLabel" name="label" >
-           <property name="text" >
+          <widget class="QLabel" name="label">
+           <property name="text">
             <string>Bias</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_bias" >
-           <property name="minimum" >
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_bias">
+           <property name="minimum">
             <double>-100000.000000000000000</double>
            </property>
-           <property name="maximum" >
+           <property name="maximum">
             <double>100000.000000000000000</double>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_2" >
-           <property name="text" >
+          <widget class="QLabel" name="label_2">
+           <property name="text">
             <string>Scale</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_scale" >
-           <property name="minimum" >
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_scale">
+           <property name="minimum">
             <double>-100000.000000000000000</double>
            </property>
-           <property name="maximum" >
+           <property name="maximum">
             <double>100000.000000000000000</double>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_2" >
-           <property name="orientation" >
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
              <height>20</height>
@@ -247,26 +276,26 @@
     </widget>
    </item>
    <item>
-    <widget class="QFrame" name="frame" >
-     <property name="frameShape" >
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
-     <property name="frameShadow" >
+     <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <property name="lineWidth" >
+     <property name="lineWidth">
       <number>0</number>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" >
-      <property name="margin" >
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="margin">
        <number>0</number>
       </property>
       <item>
-       <spacer name="horizontalSpacer" >
-        <property name="orientation" >
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
           <height>20</height>
@@ -275,15 +304,15 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_save" >
-        <property name="text" >
+       <widget class="QPushButton" name="pushButton_save">
+        <property name="text">
          <string>Save</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_cancel" >
-        <property name="text" >
+       <widget class="QPushButton" name="pushButton_cancel">
+        <property name="text">
          <string>Cancel</string>
         </property>
        </widget>
@@ -293,6 +322,22 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>grpDefaultExpressionModes</tabstop>
+  <tabstop>radioButton_max</tabstop>
+  <tabstop>radioButton_add</tabstop>
+  <tabstop>grpCustomExpressionMode</tabstop>
+  <tabstop>txtExpression</tabstop>
+  <tabstop>listWidget_datasets</tabstop>
+  <tabstop>pushButton_addData</tabstop>
+  <tabstop>pushButton_removeData</tabstop>
+  <tabstop>checkBox_AutoAnalyze</tabstop>
+  <tabstop>pushButton_Analyze</tabstop>
+  <tabstop>doubleSpinBox_bias</tabstop>
+  <tabstop>doubleSpinBox_scale</tabstop>
+  <tabstop>pushButton_save</tabstop>
+  <tabstop>pushButton_cancel</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -301,11 +346,11 @@
    <receiver>MergeDlg</receiver>
    <slot>AnalyzeCurrentDataset()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>114</x>
-     <y>307</y>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>490</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>7</x>
      <y>148</y>
     </hint>
@@ -317,11 +362,11 @@
    <receiver>MergeDlg</receiver>
    <slot>ChangedActiveDataset()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>141</x>
-     <y>132</y>
+    <hint type="sourcelabel">
+     <x>153</x>
+     <y>383</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>4</x>
      <y>231</y>
     </hint>
@@ -333,11 +378,11 @@
    <receiver>MergeDlg</receiver>
    <slot>AddDataset()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>335</x>
-     <y>77</y>
+    <hint type="sourcelabel">
+     <x>541</x>
+     <y>300</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>6</x>
      <y>75</y>
     </hint>
@@ -349,11 +394,11 @@
    <receiver>MergeDlg</receiver>
    <slot>RemoveDataset()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>346</x>
-     <y>112</y>
+    <hint type="sourcelabel">
+     <x>541</x>
+     <y>334</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>3</x>
      <y>188</y>
     </hint>
@@ -365,11 +410,11 @@
    <receiver>MergeDlg</receiver>
    <slot>ExecuteMerge()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>309</x>
-     <y>408</y>
+    <hint type="sourcelabel">
+     <x>461</x>
+     <y>620</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>2</x>
      <y>302</y>
     </hint>
@@ -381,11 +426,11 @@
    <receiver>MergeDlg</receiver>
    <slot>CancelMerge()</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>392</x>
-     <y>408</y>
+    <hint type="sourcelabel">
+     <x>544</x>
+     <y>620</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>4</x>
      <y>275</y>
     </hint>
@@ -397,11 +442,11 @@
    <receiver>MergeDlg</receiver>
    <slot>ChangedScale(double)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>154</x>
-     <y>371</y>
+    <hint type="sourcelabel">
+     <x>320</x>
+     <y>556</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>396</x>
      <y>240</y>
     </hint>
@@ -413,13 +458,45 @@
    <receiver>MergeDlg</receiver>
    <slot>ChangedBias(double)</slot>
    <hints>
-    <hint type="sourcelabel" >
-     <x>66</x>
-     <y>371</y>
+    <hint type="sourcelabel">
+     <x>127</x>
+     <y>556</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>400</x>
      <y>275</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>grpDefaultExpressionModes</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>MergeDlg</receiver>
+   <slot>ToggleDefaultMergeSet(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>56</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>278</x>
+     <y>316</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>grpCustomExpressionMode</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>MergeDlg</receiver>
+   <slot>ToggleCustomMergeSet(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>278</x>
+     <y>316</y>
     </hint>
    </hints>
   </connection>
@@ -433,5 +510,7 @@
   <slot>CancelMerge()</slot>
   <slot>ChangedScale(double)</slot>
   <slot>ChangedBias(double)</slot>
+  <slot>ToggleDefaultMergeSet(bool)</slot>
+  <slot>ToggleCustomMergeSet(bool)</slot>
  </slots>
 </ui>
