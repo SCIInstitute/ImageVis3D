@@ -115,20 +115,18 @@ void MergeDlg::ChangedActiveDataset() {
 void MergeDlg::ToggleDefaultMergeSet(bool bChecked) {
   // The code below swaps the checked states of the group boxes like they are radio buttons.
   if (bChecked == true && grpCustomExpressionMode->isChecked() == true) {
-	grpCustomExpressionMode->setChecked(false);
-  }
-  else if (bChecked == false && grpCustomExpressionMode->isChecked() == false) {
-	grpDefaultExpressionModes->setChecked(true);
+    grpCustomExpressionMode->setChecked(false);
+  } else if (bChecked == false && grpCustomExpressionMode->isChecked() == false) {
+    grpDefaultExpressionModes->setChecked(true);
   }
 }
 
 void MergeDlg::ToggleCustomMergeSet(bool bChecked) {
   // The code below swaps the checked states of the group boxes like they are radio buttons.
   if (bChecked == true && grpDefaultExpressionModes->isChecked() == true) {
-	grpDefaultExpressionModes->setChecked(false);
-  }
-  else if (bChecked == false && grpDefaultExpressionModes->isChecked() == false) {
-	grpCustomExpressionMode->setChecked(true);
+    grpDefaultExpressionModes->setChecked(false);
+  } else if (bChecked == false && grpDefaultExpressionModes->isChecked() == false) {
+    grpCustomExpressionMode->setChecked(true);
   }
 }
 
