@@ -84,9 +84,9 @@ class MergeDlg : public QDialog, protected Ui_MergeDlg
     MergeDlg(MainWindow* parent, Qt::WindowFlags flags = Qt::Tool);
     virtual ~MergeDlg();
     std::vector<DataSetListElem*> m_vDataSetList;
-    bool UseMax() { return radioButton_max->isChecked(); }
-    bool UseCustomExpr() { return grpCustomExpressionMode->isChecked(); }
-    const std::string GetCustomExpr() { return txtExpression->text().toStdString(); }
+    bool UseMax() const { return radioButton_max->isChecked(); }
+    bool UseCustomExpr() const { return grpCustomExpressionMode->isChecked(); }
+    std::string GetCustomExpr() const { return txtExpression->text().toStdString(); }
 
   protected slots:
     void AnalyzeCurrentDataset();
