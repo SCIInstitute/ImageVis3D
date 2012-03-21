@@ -159,6 +159,8 @@ int main(int argc, const char* argv[])
                                   "(merging) scaling value for second file",
                                   false, 0.0, "floating point number");
     TCLAP::SwitchArg dbg("g", "debug", "Enable debugging mode", false);
+    TCLAP::SwitchArg experim("", "experimental",
+                             "Enable experimental features", false);
     
     cmd.xorAdd(inputs, directory);
     cmd.add(output);
@@ -166,6 +168,7 @@ int main(int argc, const char* argv[])
     cmd.add(scale);
     cmd.add(expr);
     cmd.add(dbg);
+    cmd.add(experim);
     cmd.parse(argc, argv);
 
     // which of "-i" or "-d" did they give?
@@ -190,6 +193,7 @@ int main(int argc, const char* argv[])
       }
     }
     debug = dbg.getValue();
+    Controller::Instance().ExperimentalFeatures(experim.getValue());
   } catch(const TCLAP::ArgException& e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << "\n";
     return EXIT_FAILURE_ARG;
