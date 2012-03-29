@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=4.6.0
+VERSION=4.8.1
 PREFIX="${HOME}/sw"
 QTDIR="qt-everywhere-opensource-src-${VERSION}"
 echo "Removing old build..."
@@ -27,39 +27,41 @@ echo "yes" | \
         -release \
         -opensource \
         -fast \
+        -largefile \
+        -exceptions \
+        -no-accessibility \
         -stl \
-        -opengl \
-        -qt-libjpeg \
-        -qt-libtiff \
-        -qt-libpng \
-        -qt-libmng \
-        -qt-gif \
-        -no-sql-sqlite \
-        -no-sql-sqlite2 \
+        -no-qt3support \
         -no-xmlpatterns \
         -no-multimedia \
+        -no-audio-backend \
         -no-phonon \
         -no-phonon-backend \
         -no-webkit \
         -no-javascript-jit \
-        -no-script \
-        -no-svg \
         -no-scripttools \
-        -no-nis \
-        -no-gtkstyle \
-        -no-nas-sound \
-        -no-dbus \
-        -no-cups \
+        -no-declarative \
+        -no-declarative-debug \
+        -graphicssystem opengl \
+        -no-gif \
+        -qt-libtiff \
+        -qt-libpng \
+        -qt-libmng \
+        -qt-libjpeg \
         -no-openssl \
-        -no-qt3support \
+        -no-nis \
+        -no-cups \
+        -no-iconv \
+        -no-nas-sound \
+        -opengl desktop \
+        -no-openvg \
+        -no-sm \
         -make libs \
         -make tools \
         -nomake examples \
         -nomake demos \
         -nomake docs \
-        -nomake translations \
-        -no-sm
-
+        -nomake translations
 if test $? -ne 0; then
         echo "configure failed"
         exit 1
