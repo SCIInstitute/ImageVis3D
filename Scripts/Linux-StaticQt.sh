@@ -24,6 +24,7 @@ echo "yes" | \
 ./configure \
         -prefix ${HOME}/sw \
         -buildkey "imagevis3d" \
+        -static \
         -release \
         -opensource \
         -fast \
