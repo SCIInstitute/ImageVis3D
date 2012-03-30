@@ -16,6 +16,12 @@ QT               += opengl
 unix:LIBS        += -lz
 win32:LIBS       += shlwapi.lib
 macx:LIBS        += -framework CoreFoundation
+# Qt 4.8 no longer provides GLU for us.  See Qt bug 1022
+if(static) {
+  unix:LIBS      += /usr/lib/libGLU.a
+} else {
+  unix:LIBS      += -lGLU
+}
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 
