@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=4.7.3
+VERSION=4.8.1
 PREFIX="${HOME}/sw"
 QTDIR="qt-everywhere-opensource-src-${VERSION}"
 echo "Removing old build..."
@@ -23,38 +23,48 @@ pushd ${QTDIR} || exit 1
 echo "yes" | \
 ./configure \
         -prefix ${HOME}/sw \
-        -arch x86 \
         -buildkey "imagevis3d" \
-        -fast \
-        -stl \
         -release \
         -opensource \
-        -opengl \
-        -qt-libjpeg \
-        -qt-libtiff \
-        -qt-libpng \
-        -qt-gif \
-        -no-sql-sqlite \
-        -no-sql-sqlite2 \
+        -largefile \
+        -exceptions \
+        -fast \
+        -stl \
+        -no-qt3support \
         -no-xmlpatterns \
         -no-multimedia \
+        -no-audio-backend \
         -no-phonon \
         -no-phonon-backend \
-        -no-multimedia \
-        -no-webkit \
         -no-svg \
+        -no-webkit \
+        -no-javascript-jit \
+        -no-script \
         -no-scripttools \
-        -no-nis \
-        -no-gtkstyle \
-        -no-nas-sound \
-        -no-xinerama \
-        -no-dbus \
-        -no-cups \
+        -no-declarative \
+        -no-declarative-debug \
+        -platform macx-g++42 \
+        -graphicssystem opengl \
+        -no-scripttools \
+        -system-zlib \
+        -no-gif \
+        -qt-libtiff \
+        -qt-libpng \
+        -qt-libmng \
+        -qt-libjpeg \
         -no-openssl \
-        -no-qt3support \
         -make libs \
         -make tools \
-        -cocoa
+        -nomake examples \
+        -nomake demos \
+        -nomake docs \
+        -nomake translations \
+        -no-nis \
+        -no-cups \
+        -no-iconv \
+        -no-pch \
+        -no-dbus \
+        -arch "x86 x86_64"
 
 if test $? -ne 0; then
         echo "configure failed"
