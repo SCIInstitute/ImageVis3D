@@ -21,7 +21,7 @@ LIBS              = -lTuvok -ltuvokexpr
 unix:LIBS        += -lz
 macx:LIBS        += -framework CoreFoundation
 win32:LIBS       += shlwapi.lib
-LIBS             += -lGLU
+unix:!macx:LIBS  += -lGLU
 # Try to link to GLU statically.
 gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
 for(d, gludirs) {
