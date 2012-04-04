@@ -4,7 +4,7 @@
 
 TEMPLATE          = app
 win32:TEMPLATE    = vcapp
-CONFIG           += exceptions largefile qt static stl warn_on
+CONFIG           += exceptions largefile qt rtti static stl warn_on
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = ../Build/ImageVis3D
 RCC_DIR           = ../Build/rcc

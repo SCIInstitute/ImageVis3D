@@ -4,7 +4,7 @@
 
 TEMPLATE          = app
 win32:TEMPLATE    = vcapp
-CONFIG           += exceptions largefile static stl warn_on
+CONFIG           += exceptions largefile rtti static stl warn_on
 macx:CONFIG      += app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/UVFConverter
