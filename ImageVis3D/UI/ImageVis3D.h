@@ -72,6 +72,8 @@ class FTPDialog;
 class PleaseWaitDialog;
 class ScaleAndBiasDlg;
 
+static const int IV3D_TIMER_INTERVAL = 20; // in milliseconds
+
 class MainWindow : public QMainWindow, protected Ui_MainWindow,
                    public Scriptable
 {

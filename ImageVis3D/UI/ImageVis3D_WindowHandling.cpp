@@ -1250,7 +1250,7 @@ void MainWindow::CheckForRedraw() {
       r->CheckForRedraw();
     }
   }
-  m_pRedrawTimer->start(20);
+  m_pRedrawTimer->start(IV3D_TIMER_INTERVAL);
 }
 
 // ******************************************

@@ -66,7 +66,6 @@
 
 using namespace std;
 
-static const int IV3D_TIMER_INTERVAL = 20; // in milliseconds
 
 MainWindow::MainWindow(MasterController& masterController,
            bool bScriptMode, /* = false */

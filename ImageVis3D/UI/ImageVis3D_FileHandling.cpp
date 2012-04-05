@@ -410,12 +410,13 @@ bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList f
         m_eVolumeRendererType = MasterController::OPENGL_SBVR;
         LoadDataset(files);
         m_eVolumeRendererType = currentType;
+        m_pRedrawTimer->start(IV3D_TIMER_INTERVAL);
         return true;
       } else {
         m_pActiveRenderWin->GetRenderer()->GetMeshes().clear();
         UpdateExplorerView(true);
       }
-      m_pRedrawTimer->start(20);
+      m_pRedrawTimer->start(IV3D_TIMER_INTERVAL);
     }
   }
   return false;
