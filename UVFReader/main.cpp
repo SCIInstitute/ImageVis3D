@@ -533,11 +533,11 @@ int main(int argc, char* argv[])
               uvfFile.Close();
               return EXIT_FAILURE;
             }
-            size_t j = 0;
+            size_t jj = 0;
             for (size_t y = 0;y<ulTransformDimension;y++) {
               cout << "        ";
               for (size_t x = 0;x<ulTransformDimension;x++) {
-                cout << " " << b->dDomainTransformation[j++];
+                cout << " " << b->dDomainTransformation[jj++];
               }
               cout << endl;
             }
