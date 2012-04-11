@@ -68,7 +68,22 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
   uint64_t iSize = f.GetCurrentSize();
   f.Close();
 
+#ifdef DETECTED_OS_APPLE
+  // Why we need to specify null for the parent on Mac OS X:
+  // the PleaseWaitDialog instances in ImageVis3D_FileHandling.cpp in the
+  // LoadDataset function.
+  //
+  // Mac OS X is presumably waiting for the first modal dialog
+  // (PleaseWaitDialog) to finish before opening up the next modal dialog
+  // (RAWDialog). Since the user cannot interact with PleaseWaitDialog, we
+  // are stuck in a modal state with no where to go.
+  //
+  // Specifying NULL circumvents this issue by making the dialog a
+  // "top-level widget" with no parent.
+  RAWDialog rawDialog(strSourceFilename, iSize, NULL);
+#else
   RAWDialog rawDialog(strSourceFilename, iSize, m_parent);
+#endif
   if (rawDialog.exec() == QDialog::Accepted) {
 
     if (rawDialog.ComputeExpectedSize() > iSize) return false;
