@@ -489,6 +489,7 @@
     <ClCompile Include="UI\BrowseData.cpp" />
     <ClCompile Include="UI\BugRepDlg.cpp" />
     <ClCompile Include="UI\CrashDetDlg.cpp" />
+    <ClCompile Include="UI\DebugScriptWindow.cpp" />
     <ClCompile Include="UI\FTPDialog.cpp" />
     <ClCompile Include="UI\LODDlg.cpp" />
     <ClCompile Include="UI\MergeDlg.cpp" />
@@ -952,6 +953,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
+    <ClInclude Include="UI\DebugScriptWindow.h" />
     <ClInclude Include="UI\QDataRadioButton.h" />
     <CustomBuild Include="UI\QLightPreview.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
