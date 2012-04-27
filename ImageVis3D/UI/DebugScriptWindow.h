@@ -34,29 +34,55 @@
 #define DEBUGSCRIPTWINDOW_H_
 
 #include <QtGui/QDockWidget.h>
+#include "../Tuvok/Controller/MasterController.h"
+#include "../Tuvok/LUAScripting/LUAMemberReg.h"
 
 class QVBoxLayout;
 class QTabWidget;
+class QPushButton;
+class QComboBox;
+class QTextEdit;
+class QLineEdit;
+class QListWidget;
 
 class DebugScriptWindow: public QDockWidget
 {
   Q_OBJECT
 public:
 
-  DebugScriptWindow(QWidget* parent);
+  DebugScriptWindow(tuvok::MasterController& controller, QWidget* parent);
   virtual ~DebugScriptWindow();
+
+protected slots:
+
+  void execClicked();
+  void oneLineEditOnReturnPressed();
+  void exampComboIndexChanged(int index);
 
 private:
 
+  void setupUI();
   void hookLuaFunctions();
+  void execLua(const std::string& cmd);
 
   // Lua registered function hooks.
   void hook_logInfo(std::string info);
+  void hook_logWarning(std::string warn);
   void hook_logError(std::string error);
 
   QVBoxLayout*  mMainLayout;
   QTabWidget*   mTabWidget;
-  QWidget*      mDockWidgetContents;
+  QComboBox*    mScriptExamplesBox;
+  QPushButton*  mExecButton;
+  QListWidget*  mListWidget;
+
+  QTextEdit*    mScriptTextEdit;
+  QLineEdit*    mScriptOneLineEdit;
+
+  tuvok::MasterController&                    mController;
+  tuvok::LuaMemberReg                         mMemReg;
+  std::tr1::shared_ptr<tuvok::LuaScripting>   mLua;
+
 };
 
 #endif /* DEBUGSCRIPTWINDOW_H_ */

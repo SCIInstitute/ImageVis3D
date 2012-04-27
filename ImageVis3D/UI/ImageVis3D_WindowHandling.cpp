@@ -239,8 +239,8 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
 
   Ui_MainWindow::setupUi(MainWindow);
 
-  m_pDebugScriptWindow->hide();
   this->addDockWidget(Qt::BottomDockWidgetArea, m_pDebugScriptWindow);
+  m_pDebugScriptWindow->setObjectName(QString::fromUtf8("DebugScriptWindow"));
 
   SetTitle();
 
