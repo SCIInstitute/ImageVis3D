@@ -236,7 +236,11 @@ void MainWindow::SetHistogramScale2D(int v) {
 }
 
 void MainWindow::setupUi(QMainWindow *MainWindow) {
+
   Ui_MainWindow::setupUi(MainWindow);
+
+  m_pDebugScriptWindow->hide();
+  this->addDockWidget(Qt::BottomDockWidgetArea, m_pDebugScriptWindow);
 
   SetTitle();
 
@@ -417,6 +421,8 @@ void MainWindow::SetupWorkspaceMenu() {
 
   menu_Help->addAction(dockWidget_Debug->toggleViewAction());
   dockWidget_Debug->toggleViewAction()->setShortcut(tr("Ctrl+Alt+D"));
+
+  menu_Help->addAction(m_pDebugScriptWindow->toggleViewAction());
 }
 
 void MainWindow::ClearWSMRUList()
@@ -511,6 +517,7 @@ void MainWindow::InitAllWorkspaces() {
   InitDockWidget(dockWidget_Time);
   InitDockWidget(dockWidget_Debug);
   InitDockWidget(dockWidget_Stereo);
+  InitDockWidget(m_pDebugScriptWindow);
 }
 
 

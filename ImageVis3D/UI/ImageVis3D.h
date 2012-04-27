@@ -61,6 +61,7 @@ class TextfileOut;
 #include <UI/Welcome.h>
 #include <UI/MetadataDlg.h>
 #include "../Tuvok/IO/uvfDataset.h"
+#include "DebugScriptWindow.h"
 
 class QDragEnterEvent;
 class QDropEvent;
@@ -334,6 +335,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
     WelcomeDialog*                            m_pWelcomeDialog;
     MetadataDlg*                              m_pMetadataDialog;
+    DebugScriptWindow*                        m_pDebugScriptWindow;
 
     unsigned int                              m_iBlendPrecisionMode;
     bool                                      m_bPowerOfTwo;

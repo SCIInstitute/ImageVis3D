@@ -92,7 +92,8 @@ HEADERS += StdDefines.h \
            UI/ScaleAndBiasDlg.h \
            DebugOut/QTOut.h \
            DebugOut/QTLabelOut.h \
-           IO/DialogConverter.h
+           IO/DialogConverter.h \
+    UI/DebugScriptWindow.h
 
 FORMS += UI/UI/BrowseData.ui \
          UI/UI/ImageVis3D.ui \
@@ -150,7 +151,8 @@ SOURCES += UI/BrowseData.cpp \
            DebugOut/QTOut.cpp \
            DebugOut/QTLabelOut.cpp \
            IO/DialogConverter.cpp \
-           main.cpp
+           main.cpp \
+    UI/DebugScriptWindow.cpp
 
 win32 {
   HEADERS += UI/RenderWindowDX.h
