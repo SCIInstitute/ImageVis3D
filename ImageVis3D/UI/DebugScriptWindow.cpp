@@ -34,12 +34,14 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QTabWidget>
 #include <QtGui/QListWidget>
+#include <QtGui/QTextEdit>
+#include <QtGui/QLineEdit>
 
 #include "DebugScriptWindow.h"
 
 //-----------------------------------------------------------------------------
 DebugScriptWindow::DebugScriptWindow(QWidget* parent)
-: QDockWidget("Debug / Scripting Window", NULL)
+: QDockWidget("Debug / Scripting Window", parent)
 {
   // TODO: Implement as setupUI function (modeling after QT).
 
@@ -55,14 +57,35 @@ DebugScriptWindow::DebugScriptWindow(QWidget* parent)
   mTabWidget = new QTabWidget;
   mMainLayout->addWidget(mTabWidget);
 
-  QWidget* scriptTabContents = new QWidget();
-  mTabWidget->addTab(scriptTabContents, QString::fromUtf8("script"));
+  {
+	  QWidget* scriptTabContents = new QWidget();
+	  mTabWidget->addTab(scriptTabContents, QString::fromUtf8("script"));
 
-  QVBoxLayout* scriptLayout = new QVBoxLayout(scriptTabContents);
-  scriptTabContents->setLayout(scriptLayout);
+	  QHBoxLayout* scriptLayout = new QHBoxLayout(scriptTabContents);
+	  scriptTabContents->setLayout(scriptLayout);
 
-  QListWidget* list = new QListWidget();
-  scriptLayout->addWidget(list);
+	  {
+		  QWidget* outputContents = new QWidget();
+		  scriptLayout->addWidget(outputContents);
+
+		  QVBoxLayout* outputLayout = new QVBoxLayout();
+		  outputContents->setLayout(outputLayout);
+
+		  QListWidget* scriptOutput = new QListWidget();
+		  outputLayout->addWidget(scriptOutput);
+
+		  QLineEdit* textLine = new QLineEdit();
+		  outputLayout->addWidget(textLine);
+	  }
+
+	  {
+		  QWidget* editContents = new QWidget();
+		  scriptLayout->addWidget(editContents);
+
+		  QTextEdit* text = new QTextEdit();
+		  scriptLayout->addWidget(text);
+	  }
+  }
 
   QWidget* debugTabContents = new QWidget();
   mTabWidget->addTab(debugTabContents, QString::fromUtf8("debug"));
@@ -85,12 +108,12 @@ void DebugScriptWindow::hookLuaFunctions()
 //-----------------------------------------------------------------------------
 void DebugScriptWindow::hook_logInfo(std::string info)
 {
-
+	(void)info;
 }
 
 //-----------------------------------------------------------------------------
 void DebugScriptWindow::hook_logError(std::string error)
 {
-
+	(void)error;
 }
 
