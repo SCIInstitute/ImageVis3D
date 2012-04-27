@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ImageVis3D"
 	ProjectGUID="{85742DE8-68C9-4140-A6A7-412CF789DECA}"
 	RootNamespace="test"
@@ -1468,6 +1468,14 @@
 							Outputs="$(InputDir)AutoGen\moc_$(InputName).cpp"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\UI\DebugScriptWindow.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UI\DebugScriptWindow.h"
+					>
 				</File>
 				<File
 					RelativePath=".\UI\FTPDialog.cpp"
