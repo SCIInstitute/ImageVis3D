@@ -461,6 +461,7 @@
     <ClCompile Include="UI\AutoGen\moc_BrowseData.cpp" />
     <ClCompile Include="UI\AutoGen\moc_BugRepDlg.cpp" />
     <ClCompile Include="UI\AutoGen\moc_CrashDetDlg.cpp" />
+    <ClCompile Include="UI\AutoGen\moc_DebugScriptWindow.cpp" />
     <ClCompile Include="UI\AutoGen\moc_FTPDialog.cpp" />
     <ClCompile Include="UI\AutoGen\moc_ImageVis3D.cpp" />
     <ClCompile Include="UI\AutoGen\moc_LODDlg.cpp" />
@@ -953,7 +954,14 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <ClInclude Include="UI\DebugScriptWindow.h" />
+    <CustomBuild Include="UI\DebugScriptWindow.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
+    </CustomBuild>
     <ClInclude Include="UI\QDataRadioButton.h" />
     <CustomBuild Include="UI\QLightPreview.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
