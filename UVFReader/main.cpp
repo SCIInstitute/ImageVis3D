@@ -248,7 +248,7 @@ int main(int argc, char* argv[])
       bool bResult = tocBlock->FlatDataToBrickedLOD("./dummyData.raw",
         "./tempFile.tmp", iBitSize == 8 ? ExtendedOctree::CT_UINT8
                                         : ExtendedOctree::CT_UINT16,
-        1, vSize, DOUBLEVECTOR3(1,1,1), UINTVECTOR3(iBrickSize,iBrickSize,iBrickSize),
+        1, vSize, DOUBLEVECTOR3(1,1,1), UINT64VECTOR3(iBrickSize,iBrickSize,iBrickSize),
         DEFAULT_BRICKOVERLAP,
         1024*1024*1024, MaxMinData,
         &Controller::Debug::Out()
