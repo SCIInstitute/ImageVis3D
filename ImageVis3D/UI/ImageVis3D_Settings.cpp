@@ -102,7 +102,6 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("MaxMaxBricksize", iMaxMaxBrickSize);
     }
   
-
     settings.endGroup();
     
 
@@ -330,7 +329,23 @@ void MainWindow::ApplySettings() {
   uint64_t iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
   m_strTempDir = std::string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
 
-  if (!m_MasterController.IOMan()->SetMaxBrickSize(MathTools::Pow2((uint64_t)settings.value("MaxBrickSize",  static_cast<qulonglong>(MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize()))).toUInt()))) {
+  uint64_t iMaxBrickSizeLog = MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize());
+  uint64_t iMaxBrickSize = MathTools::Pow2((uint64_t)settings.value("MaxBrickSize",  static_cast<qulonglong>(iMaxBrickSizeLog)).toUInt());
+  iMaxBrickSizeLog = MathTools::Log2(iMaxBrickSize);
+
+  // sanity check: make sure a RGBA float brick would fit into the specified memory
+  uint64_t _iMaxBrickSizeLog = iMaxBrickSizeLog;
+  while (iMaxBrickSizeLog > 1 && iMaxBrickSize*iMaxBrickSize*iMaxBrickSize*4*sizeof(float) > iMaxCPU) {
+    iMaxBrickSizeLog--;
+    iMaxBrickSize = MathTools::Pow2(iMaxBrickSizeLog);
+  }
+
+  if (_iMaxBrickSizeLog != iMaxBrickSizeLog)  {
+    WARNING("Reducing max bricksize from %i to %i because CPU memory limit would not allow bricks to be loaded", int(MathTools::Pow2(_iMaxBrickSizeLog)), int(MathTools::Pow2(iMaxBrickSizeLog)));
+  }
+
+
+  if (!m_MasterController.IOMan()->SetMaxBrickSize(iMaxBrickSize)) {
     WARNING("Invalid MaxBrickSize read from configuration, ignoring value. Please check the configuration in the settings dialog.");
   }
   settings.endGroup();
