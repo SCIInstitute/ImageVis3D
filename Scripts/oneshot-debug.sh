@@ -29,11 +29,11 @@ echo "Configuring..."
 for d in $dirs ; do
   pushd ${d} &> /dev/null || exit 1
     ${qm} \
+      -makefile \
       QMAKE_CONFIG+="debug" \
       QMAKE_CFLAGS+="${VIS} ${CF}" \
       QMAKE_CXXFLAGS+="${VIS} ${INL} ${CF} ${CXF}" \
       QMAKE_LFLAGS+="${VIS} ${COVERAGE}" \
-      -makefile \
       -recursive || exit 1
   popd &> /dev/null
 done
