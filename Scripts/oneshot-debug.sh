@@ -21,8 +21,12 @@ else
   qm="qmake"
 fi
 
+dirs="."
+if test `uname` != "Darwin" ; then
+  dirs="$dirs Tuvok/IO/test"
+fi
 echo "Configuring..."
-for d in . Tuvok/IO/test ; do
+for d in $dirs ; do
   pushd ${d} &> /dev/null || exit 1
     ${qm} \
       QMAKE_CONFIG+="debug" \
