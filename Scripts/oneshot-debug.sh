@@ -33,6 +33,7 @@ for d in $dirs ; do
       QMAKE_CFLAGS+="${VIS} ${CF}" \
       QMAKE_CXXFLAGS+="${VIS} ${INL} ${CF} ${CXF}" \
       QMAKE_LFLAGS+="${VIS} ${COVERAGE}" \
+      -makefile \
       -recursive || exit 1
   popd &> /dev/null
 done
