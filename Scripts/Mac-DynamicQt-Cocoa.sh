@@ -43,7 +43,7 @@ echo "yes" | \
         -no-scripttools \
         -no-declarative \
         -no-declarative-debug \
-        -platform macx-g++42 \
+        -platform macx-g++ \
         -graphicssystem opengl \
         -no-scripttools \
         -system-zlib \
