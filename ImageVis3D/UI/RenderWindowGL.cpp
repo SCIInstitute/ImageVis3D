@@ -111,6 +111,11 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
 
 RenderWindowGL::~RenderWindowGL()
 {
+  // Notify the scripting engine of this class' deletion. It's safe to make this
+  // call against pointers that were not registered with the script engine.
+  tr1::shared_ptr<LuaScripting> se = m_MasterController.LuaScriptEngine();
+  se->notifyOfDeletion(reinterpret_cast<void*>(this));
+
   // needed for the cleanup call in the parent destructor to work properly
   makeCurrent();
 
@@ -340,8 +345,14 @@ void RenderWindowGL::RenderSeparatingLines() {
 void RenderWindowGL::DefineLuaInterface(LuaClassInstanceReg& reg,
                                         MainWindow* mw)
 {
+  RenderWindowGL* inst = reg.getClassInstance<RenderWindowGL>();
+
   reg.memberConstructor(mw, &MainWindow::LuaCreateNewGLWindow,
                         "Creates a new OpenGL render window");
 
-  // TODO: Call base class to regeister all of its functions.
+  // Inst will be null if we are being called for the constructor only...
+  if (inst != NULL)
+  {
+    inst->BaseRegisterLuaFunctions(reg);
+  }
 }

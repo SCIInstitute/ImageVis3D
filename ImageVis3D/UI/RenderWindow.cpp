@@ -1445,3 +1445,22 @@ float RenderWindow::GetCurrent1DHistScale() const {
 float RenderWindow::GetCurrent2DHistScale() const {
   return m_2DHistScale;
 }
+
+
+void RenderWindow::BaseRegisterLuaFunctions(LuaClassInstanceReg& reg) {
+
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScriptEngine();
+
+  reg.function(&RenderWindow::GetCurrent1DHistScale, "getHist1DScale",
+               "Retrieves 1D histogram's scale.", false);
+  reg.function(&RenderWindow::SetCurrent1DHistScale, "setHist1DScale",
+               "Sets 1D histogram's scale.", true);
+  ss->setDefaults(reg.getFQName() + ".setHist1DScale", m_1DHistScale, false);
+
+  reg.function(&RenderWindow::GetCurrent2DHistScale, "getHist2DScale",
+               "Retrieves 2D histogram's scale.", false);
+  reg.function(&RenderWindow::SetCurrent2DHistScale, "setHist2DScale",
+               "Sets 2D histogram's scale.", true);
+  ss->setDefaults(reg.getFQName() + ".setHist2DScale", m_2DHistScale, false);
+}
+

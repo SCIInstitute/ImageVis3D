@@ -48,6 +48,8 @@
 #include "../Tuvok/Basics/Plane.h"
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/Renderer/AbstrRenderer.h"
+#include "../Tuvok/LUAScripting/LUAScripting.h"
+#include "../Tuvok/LUAScripting/LUAClassInstanceReg.h"
 
 #ifdef DETECTED_OS_WINDOWS
 # include <unordered_map>
@@ -259,6 +261,9 @@ class RenderWindow
     virtual void SwapBuffers() {}
 
     void UpdateCursor(const RenderRegion *region, INTVECTOR2 pos, bool translate);
+
+    void BaseRegisterLuaFunctions(LuaClassInstanceReg& reg);
+    void BaseSetLuaDefaults();
 
     /// @param[in,out] newRenderRegions with coordinates updated to reflect the
     /// new view mode.
