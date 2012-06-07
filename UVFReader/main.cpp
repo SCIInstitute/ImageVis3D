@@ -47,6 +47,7 @@
 #include "../CmdLineConverter/DebugOut/HRConsoleOut.h"
 
 #include "../Tuvok/IO/IOManager.h"
+#include "../Tuvok/IO/TuvokSizes.h"
 #include "../Tuvok/IO/UVF/UVF.h"
 #include "../Tuvok/IO/UVF/Histogram1DDataBlock.h"
 #include "../Tuvok/IO/UVF/Histogram2DDataBlock.h"
