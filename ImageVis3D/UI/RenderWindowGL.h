@@ -51,7 +51,7 @@
 #include <QtOpenGL/QGLWidget>
 
 #include "../Tuvok/LUAScripting/LUAScripting.h"
-#include "../Tuvok/LUAScripting/LUAClassInstanceReg.h"
+#include "../Tuvok/LUAScripting/LUAClassRegistration.h"
 
 class MainWindow;
 
@@ -78,10 +78,6 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     virtual void UpdateWindow() {updateGL();}
     virtual void InitializeContext() { glInit(); }
 
-    // Lua class definition
-    static void DefineLuaInterface(tuvok::LuaClassInstanceReg& reg,
-                                   MainWindow* mw);
-
   protected:
     virtual void ToggleFullscreen();
     virtual void PaintOverlays();
@@ -89,12 +85,16 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     virtual void SwapBuffers();
 
   private:
+
     virtual void InitializeRenderer();
     bool SetNewRenderer(bool bUseOnlyPowerOfTwo, 
                         bool bDownSampleTo8Bits,
                         bool bDisableBorder);
     static std::string ms_glExtString;
     bool m_bNoRCClipplanes;
+
+    LuaClassRegistration  mLuaReg;
+    void registerLuaFunctions();
 
 
   // **************** Qt widget connector calls

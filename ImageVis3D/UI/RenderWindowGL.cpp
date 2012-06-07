@@ -76,7 +76,8 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
                                Qt::WindowFlags flags) :
   QGLWidget(fmt, parent, glShareWidget, flags),
   RenderWindow(masterController, eType, dataset, iCounter, parent),
-  m_bNoRCClipplanes(bNoRCClipplanes)
+  m_bNoRCClipplanes(bNoRCClipplanes),
+  mLuaReg(masterController.LuaScriptEngine(), this)
 {
   if(!SetNewRenderer( bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder))
     return;
@@ -88,6 +89,9 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   setAttribute(Qt::WA_DeleteOnClose, true);
 
   Initialize(); //finish initializing.
+
+  // Register lua functions
+  registerLuaFunctions();
 }
 
 bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo, 
@@ -111,11 +115,6 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
 
 RenderWindowGL::~RenderWindowGL()
 {
-  // Notify the scripting engine of this class' deletion. It's safe to make this
-  // call against pointers that were not registered with the script engine.
-  tr1::shared_ptr<LuaScripting> se = m_MasterController.LuaScriptEngine();
-  se->notifyOfDeletion(reinterpret_cast<void*>(this));
-
   // needed for the cleanup call in the parent destructor to work properly
   makeCurrent();
 
@@ -342,17 +341,6 @@ void RenderWindowGL::RenderSeparatingLines() {
   GetRenderer()->SyncStateManager();
 }
 
-void RenderWindowGL::DefineLuaInterface(LuaClassInstanceReg& reg,
-                                        MainWindow* mw)
-{
-  RenderWindowGL* inst = reg.getClassInstance<RenderWindowGL>();
-
-  reg.memberConstructor(mw, &MainWindow::LuaCreateNewGLWindow,
-                        "Creates a new OpenGL render window");
-
-  // Inst will be null if we are being called for the constructor only...
-  if (inst != NULL)
-  {
-    inst->BaseRegisterLuaFunctions(reg);
-  }
+void RenderWindowGL::registerLuaFunctions() {
+  BaseRegisterLuaFunctions(mLuaReg);
 }

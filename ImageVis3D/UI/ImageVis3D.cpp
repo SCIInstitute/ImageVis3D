@@ -904,10 +904,8 @@ void MainWindow::ResetRenderingParameters() {
 
 
 void MainWindow::RegisterLuaClasses() {
-  m_MasterController.LuaScriptEngine()->addLuaClassDef(
-      tr1::bind(RenderWindowGL::DefineLuaInterface,
-                tr1::placeholders::_1,
-                this),
-      "iv3d.renderWindow");
+  m_MasterController.LuaScriptEngine()->registerClass(
+      this, &MainWindow::LuaCreateNewGLWindow,
+      "iv3d.renderWindow", "Constructs a new render window");
 }
 

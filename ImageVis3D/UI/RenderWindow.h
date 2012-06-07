@@ -49,7 +49,7 @@
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/Renderer/AbstrRenderer.h"
 #include "../Tuvok/LUAScripting/LUAScripting.h"
-#include "../Tuvok/LUAScripting/LUAClassInstanceReg.h"
+#include "../Tuvok/LUAScripting/LUAClassRegistration.h"
 
 #ifdef DETECTED_OS_WINDOWS
 # include <unordered_map>
@@ -262,7 +262,7 @@ class RenderWindow
 
     void UpdateCursor(const RenderRegion *region, INTVECTOR2 pos, bool translate);
 
-    void BaseRegisterLuaFunctions(LuaClassInstanceReg& reg);
+    void BaseRegisterLuaFunctions(LuaClassRegistration& reg);
     void BaseSetLuaDefaults();
 
     /// @param[in,out] newRenderRegions with coordinates updated to reflect the

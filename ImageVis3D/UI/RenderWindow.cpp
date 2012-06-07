@@ -1447,7 +1447,7 @@ float RenderWindow::GetCurrent2DHistScale() const {
 }
 
 
-void RenderWindow::BaseRegisterLuaFunctions(LuaClassInstanceReg& reg) {
+void RenderWindow::BaseRegisterLuaFunctions(LuaClassRegistration& reg) {
 
   tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScriptEngine();
 
