@@ -130,6 +130,7 @@ class RenderWindow
     void SetPlaneAtClick(const ExtendedPlane& plane, bool propagate=true);
     void CloneViewState(RenderWindow* other);
     void FinalizeRotation(tuvok::LuaClassInstance region, bool bPropagate);
+    void FinalizeTranslation(tuvok::LuaClassInstance region, bool bPropagate);
     void CloneRendermode(RenderWindow* other);
     void SetAbsoluteViewLock(bool bAbsoluteViewLock);
 

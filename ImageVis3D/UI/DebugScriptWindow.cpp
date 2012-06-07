@@ -49,10 +49,10 @@
 DebugScriptWindow::DebugScriptWindow(tuvok::MasterController& controller,
                                      QWidget* parent)
 : QDockWidget("Debug / Scripting Window", parent)
+, mSavedInputPos(0)
 , mController(controller)
 , mMemReg(controller.LuaScript())
 , mLua(controller.LuaScript())
-, mSavedInputPos(0)
 {
   setupUI();
   hookLuaFunctions();
@@ -360,7 +360,7 @@ bool DebugScriptWindow::eventFilter(QObject *obj, QEvent *event)
           std::string fullCmdPrefix = cmdPath + prefix;
           mScriptOneLineEdit->setText(QString::fromStdString(fullCmdPrefix));
 
-          mController.LuaScript()->exec("");
+          mController.LuaScript()->exec("print('')");
           mController.LuaScript()->exec("print('Completions:')");
           for (std::vector<std::string>::iterator it = completions.begin();
               it != completions.end(); ++it)
