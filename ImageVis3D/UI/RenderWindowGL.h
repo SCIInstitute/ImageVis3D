@@ -50,6 +50,9 @@
 
 #include <QtOpenGL/QGLWidget>
 
+#include "../Tuvok/LUAScripting/LUAScripting.h"
+#include "../Tuvok/LUAScripting/LUAClassInstanceReg.h"
+
 class MainWindow;
 
 class RenderWindowGL : public QGLWidget, public RenderWindow
@@ -74,6 +77,10 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     virtual void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
     virtual void UpdateWindow() {updateGL();}
     virtual void InitializeContext() { glInit(); }
+
+    // Lua class definition
+    static void DefineLuaInterface(tuvok::LuaClassInstanceReg& reg,
+                                   MainWindow* mw);
 
   protected:
     virtual void ToggleFullscreen();

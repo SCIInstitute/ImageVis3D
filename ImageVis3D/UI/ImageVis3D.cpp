@@ -123,6 +123,7 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bClipLocked(false)
 {
   RegisterCalls(m_MasterController.ScriptEngine());
+  RegisterLuaClasses();
 
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
   QCoreApplication::setOrganizationDomain(SCI_ORGANIZATION_DOMAIN);
@@ -900,3 +901,13 @@ void MainWindow::ResetRenderingParameters() {
   if (!m_pActiveRenderWin) return;
   m_pActiveRenderWin->ResetRenderingParameters();
 }
+
+
+void MainWindow::RegisterLuaClasses() {
+  m_MasterController.LuaScriptEngine()->addLuaClassDef(
+      tr1::bind(RenderWindowGL::DefineLuaInterface,
+                tr1::placeholders::_1,
+                this),
+      "iv3d.renderWindow");
+}
+

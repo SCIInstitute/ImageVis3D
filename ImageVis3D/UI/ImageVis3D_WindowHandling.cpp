@@ -716,8 +716,17 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
   return false;
 }
 
-RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset)
-{
+
+RenderWindowGL* MainWindow::LuaCreateNewGLWindow(std::string dataset) {
+  RenderWindow* initialRenderWindow = m_pActiveRenderWin;
+  LoadDataset(dataset);
+  if (m_pActiveRenderWin != initialRenderWindow)
+    return dynamic_cast<RenderWindowGL*>(m_pActiveRenderWin);
+  else
+    return NULL;
+}
+
+RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
   static unsigned int iCounter = 0;
   RenderWindow *renderWin;
 

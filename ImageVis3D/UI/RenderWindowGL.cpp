@@ -336,3 +336,12 @@ void RenderWindowGL::RenderSeparatingLines() {
 
   GetRenderer()->SyncStateManager();
 }
+
+void RenderWindowGL::DefineLuaInterface(LuaClassInstanceReg& reg,
+                                        MainWindow* mw)
+{
+  reg.memberConstructor(mw, &MainWindow::LuaCreateNewGLWindow,
+                        "Creates a new OpenGL render window");
+
+  // TODO: Call base class to regeister all of its functions.
+}

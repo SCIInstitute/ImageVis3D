@@ -63,6 +63,9 @@ class TextfileOut;
 #include "../Tuvok/IO/uvfDataset.h"
 #include "DebugScriptWindow.h"
 
+#include "../Tuvok/LUAScripting/LUAScripting.h"
+#include "../Tuvok/LUAScripting/LUAClassInstanceReg.h"
+
 class QDragEnterEvent;
 class QDropEvent;
 class QHttp;
@@ -100,6 +103,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     /// rendering.
     void StartTimer();
     const std::string& GetTempDir() {return m_strTempDir;}
+
+    // Lua function binding
+
+    /// Member function constructor for RenderWindowGL.
+    RenderWindowGL* LuaCreateNewGLWindow(std::string dataset);
 
   public slots:
     void SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
@@ -459,6 +467,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void UpdateInterpolant();
     void UpdateColorWidget();
     
+    void RegisterLuaClasses();
+
     std::string ConvertTF(const std::string& strSource1DTFilename,
                           const std::string& strTargetDir,
                           const UVFDataset* currentDataset,
