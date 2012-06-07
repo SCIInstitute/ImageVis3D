@@ -80,15 +80,27 @@ class RenderWindow
     QSize sizeHint() const;
     AbstrRenderer* GetRenderer() {return m_Renderer;}
     void CheckForRedraw();
-    void SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate=true);
+    void SetRendermode(AbstrRenderer::ERenderMode eRenderMode,
+                       bool bPropagate=true);
     AbstrRenderer::ERenderMode GetRenderMode() const;
 
-    void SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor);
+    void SetColors(FLOATVECTOR3 vTopColor, FLOATVECTOR3 vBotColor,
+                   FLOATVECTOR4 vTextColor);
     virtual void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
-    void SetPerfMeasures(unsigned int iMinFramerate, bool bRenderLowResIntermediateResults, float fScreenResDecFactor, float fSampleDecFactor, unsigned int iLODDelay, unsigned int iActiveTS, unsigned int iInactiveTS);
-    bool CaptureFrame(const std::string& strFilename, bool bPreserveTransparency);
-    bool CaptureSequenceFrame(const std::string& strFilename, bool bPreserveTransparency, std::string* strRealFilename=NULL);
-    bool CaptureMIPFrame(const std::string& strFilename, float fAngle, bool bOrtho, bool bFinalFrame, bool bUseLOD, bool bPreserveTransparency, std::string* strRealFilename=NULL);
+    void SetPerfMeasures(unsigned int iMinFramerate,
+                         bool bRenderLowResIntermediateResults,
+                         float fScreenResDecFactor, float fSampleDecFactor,
+                         unsigned int iLODDelay,
+                         unsigned int iActiveTS, unsigned int iInactiveTS);
+    bool CaptureFrame(const std::string& strFilename,
+                      bool bPreserveTransparency);
+    bool CaptureSequenceFrame(const std::string& strFilename,
+                              bool bPreserveTransparency,
+                              std::string* strRealFilename=NULL);
+    bool CaptureMIPFrame(const std::string& strFilename,
+                         float fAngle, bool bOrtho, bool bFinalFrame,
+                         bool bUseLOD, bool bPreserveTransparency,
+                         std::string* strRealFilename=NULL);
     void ToggleHQCaptureMode();
     void Translate(const FLOATMATRIX4& mTranslation, RenderRegion *region=NULL);
     void Rotate(const FLOATMATRIX4& mRotation, RenderRegion *region=NULL);
@@ -205,6 +217,7 @@ class RenderWindow
     FLOATVECTOR2      m_vWinFraction;
     static const int  regionSplitterWidth = 6;
     RenderRegion*     activeRegion; // The region that should have focus
+    LuaClassRegistration<RenderWindow>  m_LuaReg;
 
     // If later on more than 4 regions are desired this can either be
     // increased or something fancier than an array can be used.
@@ -262,7 +275,7 @@ class RenderWindow
 
     void UpdateCursor(const RenderRegion *region, INTVECTOR2 pos, bool translate);
 
-    void BaseRegisterLuaFunctions(LuaClassRegistration& reg);
+    void BaseRegisterLuaFunctions();
     void BaseSetLuaDefaults();
 
     /// @param[in,out] newRenderRegions with coordinates updated to reflect the

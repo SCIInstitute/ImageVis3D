@@ -93,7 +93,6 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     static std::string ms_glExtString;
     bool m_bNoRCClipplanes;
 
-    LuaClassRegistration  mLuaReg;
     void registerLuaFunctions();
 
 

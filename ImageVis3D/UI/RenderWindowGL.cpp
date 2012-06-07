@@ -56,6 +56,8 @@
 #include "../Tuvok/Renderer/GL/GLInclude.h"
 #include "../Tuvok/Renderer/GL/GLRenderer.h"
 #include "../Tuvok/Renderer/ContextIdentification.h"
+#include "../Tuvok/LUAScripting/LUAScripting.h"
+#include "../Tuvok/LUAScripting/LUATuvokSpecificTypes.h"
 
 using namespace std;
 using namespace tuvok;
@@ -76,8 +78,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
                                Qt::WindowFlags flags) :
   QGLWidget(fmt, parent, glShareWidget, flags),
   RenderWindow(masterController, eType, dataset, iCounter, parent),
-  m_bNoRCClipplanes(bNoRCClipplanes),
-  mLuaReg(masterController.LuaScript(), this)
+  m_bNoRCClipplanes(bNoRCClipplanes)
 {
   if(!SetNewRenderer( bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder))
     return;
@@ -112,7 +113,7 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
   // 'Inherit' ourselves from the abstract renderer. We act like a derived
   // class of abstract renderer, where all of abstract renderer's functions
   // can be called from our class.
-  mLuaReg.inherit(inst);
+  //m_LuaReg.inherit(inst);
 
   // so far we are not rendering anything previous to this renderer 
   // so we can disable the depth-buffer to offscreen copy operations
@@ -355,5 +356,5 @@ void RenderWindowGL::RenderSeparatingLines() {
 }
 
 void RenderWindowGL::registerLuaFunctions() {
-  BaseRegisterLuaFunctions(mLuaReg);
+
 }

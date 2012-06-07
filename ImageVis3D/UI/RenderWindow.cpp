@@ -59,6 +59,8 @@
 #include "../Tuvok/Renderer/GL/GLFBOTex.h"
 #include "../Tuvok/Renderer/GL/GLRenderer.h"
 #include "../Tuvok/Renderer/GL/GLTargetBinder.h"
+#include "../Tuvok/LUAScripting/LUAScripting.h"
+#include "../Tuvok/LUAScripting/LUATuvokSpecificTypes.h"
 #include "Basics/tr1.h"
 
 using namespace std;
@@ -89,6 +91,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_eViewMode(VM_SINGLE),
   m_vWinFraction(0.5, 0.5),
   activeRegion(NULL),
+  m_LuaReg(masterController.LuaScript(), this),
   m_eRendererType(eType),
   m_MainWindow((MainWindow*)parent),
   m_iTimeSliceMSecsActive(500),
@@ -108,6 +111,8 @@ RenderWindow::RenderWindow(MasterController& masterController,
   for (int i=0; i < MAX_RENDER_REGIONS; ++i)
     for (int j=0; j < NUM_WINDOW_MODES; ++j)
       renderRegions[i][j] = NULL;
+
+  BaseRegisterLuaFunctions();
 }
 
 RenderWindow::~RenderWindow()
@@ -768,13 +773,17 @@ void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecis
   m_Renderer->SetBlendPrecision(eBlendPrecisionMode);
 }
 
-void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate, bool bRenderLowResIntermediateResults,
-                                   float fScreenResDecFactor, float fSampleDecFactor,
-                                   unsigned int iLODDelay, unsigned int iActiveTS,
+void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate,
+                                   bool bRenderLowResIntermediateResults,
+                                   float fScreenResDecFactor,
+                                   float fSampleDecFactor,
+                                   unsigned int iLODDelay,
+                                   unsigned int iActiveTS,
                                    unsigned int iInactiveTS) {
   m_iTimeSliceMSecsActive   = iActiveTS;
   m_iTimeSliceMSecsInActive = iInactiveTS;
-  m_Renderer->SetPerfMeasures(iMinFramerate, bRenderLowResIntermediateResults, fScreenResDecFactor,
+  m_Renderer->SetPerfMeasures(iMinFramerate, bRenderLowResIntermediateResults,
+                              fScreenResDecFactor,
                               fSampleDecFactor, iLODDelay);
 }
 
@@ -783,9 +792,10 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
 {
   GLFrameCapture f;
   AbstrRenderer::ERendererTarget mode = m_Renderer->GetRendererTarget();
-  FLOATVECTOR3 color[2] = {m_Renderer->GetBackgroundColor(0), m_Renderer->GetBackgroundColor(1)};
+  FLOATVECTOR3 color[2] = {m_Renderer->GetBackgroundColor(0),
+                           m_Renderer->GetBackgroundColor(1)};
   FLOATVECTOR3 black[2] = {FLOATVECTOR3(0,0,0), FLOATVECTOR3(0,0,0)};
-  if (bPreserveTransparency) m_Renderer->SetBackgroundColors(black); 
+  if (bPreserveTransparency) m_Renderer->SetBackgroundColors(black[0],black[1]);
 
   m_Renderer->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
   while(m_Renderer->CheckForRedraw()) {
@@ -797,7 +807,7 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
 
   bool rv = f.CaptureSingleFrame(strFilename, bPreserveTransparency);
   m_Renderer->SetRendererTarget(mode);
-  if (bPreserveTransparency) m_Renderer->SetBackgroundColors(color); 
+  if (bPreserveTransparency) m_Renderer->SetBackgroundColors(color[0],color[1]);
   return rv;
 }
 
@@ -1123,8 +1133,9 @@ void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bP
   }
 }
 
-void RenderWindow::SetColors(FLOATVECTOR3 vBackColors[2], FLOATVECTOR4 vTextColor) {
-  m_Renderer->SetBackgroundColors(vBackColors);
+void RenderWindow::SetColors(FLOATVECTOR3 vTopColor, FLOATVECTOR3 vBotColor,
+                             FLOATVECTOR4 vTextColor) {
+  m_Renderer->SetBackgroundColors(vTopColor, vBotColor);
   m_Renderer->SetTextColor(vTextColor);
 }
 
@@ -1447,22 +1458,36 @@ float RenderWindow::GetCurrent2DHistScale() const {
 }
 
 
-void RenderWindow::BaseRegisterLuaFunctions(LuaClassRegistration& reg) {
+void RenderWindow::BaseRegisterLuaFunctions() {
 
-  if (reg.canRegister() == false) return;
+  if (m_LuaReg.canRegister() == false) return;
 
   tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string id;
 
-  reg.function(&RenderWindow::GetCurrent1DHistScale, "getHist1DScale",
-               "Retrieves 1D histogram's scale.", false);
-  reg.function(&RenderWindow::SetCurrent1DHistScale, "setHist1DScale",
-               "Sets 1D histogram's scale.", true);
-  ss->setDefaults(reg.getFQName() + ".setHist1DScale", m_1DHistScale, false);
+  id = m_LuaReg.function(&RenderWindow::SetColors, "setColors",
+                         "Sets the background and text colors.", true);
+  ss->addParamInfo(id, 0, "topColor", "Render window top [0,1] RGB color.");
+  ss->addParamInfo(id, 1, "botColor", "Render window bottom [0,1] RGB color");
+  ss->addParamInfo(id, 2, "textColor", "Text [0,1] RGBA color.");
 
-  reg.function(&RenderWindow::GetCurrent2DHistScale, "getHist2DScale",
-               "Retrieves 2D histogram's scale.", false);
-  reg.function(&RenderWindow::SetCurrent2DHistScale, "setHist2DScale",
-               "Sets 2D histogram's scale.", true);
-  ss->setDefaults(reg.getFQName() + ".setHist2DScale", m_2DHistScale, false);
+//  reg.function(&RenderWindow::GetCurrent1DHistScale, "getHist1DScale",
+//               "Retrieves 1D histogram's scale.", false);
+//  reg.function(&RenderWindow::SetCurrent1DHistScale, "setHist1DScale",
+//               "Sets 1D histogram's scale.", true);
+//  ss->setDefaults(reg.getFQName() + ".setHist1DScale", m_1DHistScale, false);
+//
+//  reg.function(&RenderWindow::GetCurrent2DHistScale, "getHist2DScale",
+//               "Retrieves 2D histogram's scale.", false);
+//  reg.function(&RenderWindow::SetCurrent2DHistScale, "setHist2DScale",
+//               "Sets 2D histogram's scale.", true);
+//  ss->setDefaults(reg.getFQName() + ".setHist2DScale", m_2DHistScale, false);
+
+//  renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
+//  renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
+//  renderWin->SetPerfMeasures(m_iMinFramerate, m_bRenderLowResIntermediateResults, 2.0f, 2.0f, m_iLODDelay/m_pRedrawTimer->interval(), m_iActiveTS, m_iInactiveTS);
+//  renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
+//  renderWin->SetAbsoluteViewLock(m_bAbsoluteViewLocks);
+//  renderWin->SetInvMouseWheel(m_bInvWheel);
 }
 

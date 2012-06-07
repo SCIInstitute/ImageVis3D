@@ -368,7 +368,8 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
 
   if (!renderWin || !renderWin->GetRenderer()) return;
 
-  renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
+  renderWin->SetColors(m_vBackgroundColors[0],
+                       m_vBackgroundColors[1], m_vTextColor);
   renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
   renderWin->SetPerfMeasures(m_iMinFramerate, m_bRenderLowResIntermediateResults, 2.0f, 2.0f, m_iLODDelay/m_pRedrawTimer->interval(), m_iActiveTS, m_iInactiveTS);
   renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
