@@ -275,17 +275,36 @@ void DebugScriptWindow::setupUI()
 }
 
 //-----------------------------------------------------------------------------
+std::string getLongestPrefix( const std::vector<std::string>& strs)
+{
+   std::vector<std::string>::const_iterator vsi = strs.begin();
+   int maxCharactersCommon = vsi->length() ;
+   std::string compareString = *vsi ;
+   for ( vsi = strs.begin() + 1 ; vsi != strs.end() ; vsi++ )
+   {
+      std::pair<std::string::const_iterator , std::string::const_iterator> p =
+          std::mismatch( compareString.begin() , compareString.end() ,
+                         vsi->begin() ) ;
+      if (( p.first - compareString.begin() ) < maxCharactersCommon )
+        maxCharactersCommon = p.first - compareString.begin() ;
+   }
+   //std::string::size_type found = compareString.rfind( separator , maxCharactersCommon ) ;
+   //return compareString.substr( 0 , found ) ;
+   return compareString.substr(0, (size_t)maxCharactersCommon);
+}
+
+//-----------------------------------------------------------------------------
 bool DebugScriptWindow::eventFilter(QObject *obj, QEvent *event)
 {
   if (obj == mScriptOneLineEdit)
   {
-    if (mSavedInput.size() == 0) return false;
-
     if (event->type() == QEvent::KeyPress)
     {
       QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
       if (keyEvent->key() == Qt::Key_Up)
       {
+        if (mSavedInput.size() == 0) return false;
+
         /// @todo Implement scrolling through prior command history.
         //mController.LuaScript()->exec("print('key up')");
         mScriptOneLineEdit->setText(
@@ -296,6 +315,8 @@ bool DebugScriptWindow::eventFilter(QObject *obj, QEvent *event)
       }
       else if (keyEvent->key() == Qt::Key_Down)
       {
+        if (mSavedInput.size() == 0) return false;
+
         //mController.LuaScript()->exec("print('key down')");
         if (mSavedInputPos < (int)mSavedInput.size() - 1)
         {
@@ -306,6 +327,54 @@ bool DebugScriptWindow::eventFilter(QObject *obj, QEvent *event)
         else
         {
           mScriptOneLineEdit->setText(QString::fromUtf8(""));
+        }
+
+        return true;
+      }
+      else if (keyEvent->key() == Qt::Key_Tab)
+      {
+        // Attempt to complete the current command.
+        QString qs = mScriptOneLineEdit->text();
+        std::vector<std::string> completions =
+            mController.LuaScript()->completeCommand(qs.toStdString());
+
+        if (completions.size() == 1)
+        {
+          // Just replace what the user was typing.
+          std::string cmdPath =
+              mController.LuaScript()->getCmdPath(qs.toStdString());
+          if (cmdPath.size() > 0)
+            cmdPath += ".";
+          std::string fullCmdPrefix = cmdPath + completions[0];
+          mScriptOneLineEdit->setText(QString::fromStdString(fullCmdPrefix));
+        }
+        else if (completions.size() > 1)
+        {
+          // Attempt to find a comman prefix, and replace the user's text
+          // with that.
+          std::string prefix = getLongestPrefix(completions);
+          std::string cmdPath =
+              mController.LuaScript()->getCmdPath(qs.toStdString());
+          if (cmdPath.size() > 0)
+            cmdPath += ".";
+          std::string fullCmdPrefix = cmdPath + prefix;
+          mScriptOneLineEdit->setText(QString::fromStdString(fullCmdPrefix));
+
+          mController.LuaScript()->exec("");
+          mController.LuaScript()->exec("print('Completions:')");
+          for (std::vector<std::string>::iterator it = completions.begin();
+              it != completions.end(); ++it)
+          {
+            std::string out = "print('";
+            out += *it;
+            out += "')";
+            mController.LuaScript()->exec(out);
+          }
+        }
+        else
+        {
+          mController.LuaScript()->exec("");
+          mController.LuaScript()->exec("print('No valid completions.')");
         }
 
         return true;
