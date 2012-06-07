@@ -8,3 +8,8 @@ tuvok
 *.gcno
 debugLog.txt
 ImageVis3D.pro.user
+*.vcxproj.user
+*.sdf
+*.suo
+*.opensdf
+ImageVis3D/UI/AutoGen

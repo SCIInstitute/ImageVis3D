@@ -493,6 +493,7 @@
     <ClCompile Include="UI\DebugScriptWindow.cpp" />
     <ClCompile Include="UI\FTPDialog.cpp" />
     <ClCompile Include="UI\LODDlg.cpp" />
+    <ClCompile Include="UI\MDIRenderWin.cpp" />
     <ClCompile Include="UI\MergeDlg.cpp" />
     <ClCompile Include="UI\MetadataDlg.cpp" />
     <ClCompile Include="UI\MIPRotDialog.cpp" />
@@ -968,6 +969,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
+    <ClInclude Include="UI\MDIRenderWin.h" />
     <ClInclude Include="UI\QDataRadioButton.h" />
     <CustomBuild Include="UI\QLightPreview.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>

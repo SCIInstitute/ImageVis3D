@@ -40,8 +40,8 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
 #include <QtGui/QSpacerItem>
-#include <QEvent>
-#include <QKeyEvent>
+#include <QtCore/QEvent>
+#include <QtGui/QKeyEvent>
 
 #include "DebugScriptWindow.h"
 

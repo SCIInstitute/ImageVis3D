@@ -273,6 +273,9 @@
     <ClCompile Include="UI\AutoGen\moc_DebugScriptWindow.cpp">
       <Filter>UI\Automatically Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="UI\MDIRenderWin.cpp">
+      <Filter>UI\Implemented Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UI\AutoGen\ui_About.h">
@@ -339,6 +342,9 @@
       <Filter>IO</Filter>
     </ClInclude>
     <ClInclude Include="StdDefines.h" />
+    <ClInclude Include="UI\MDIRenderWin.h">
+      <Filter>UI\Implemented Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <UI Include="UI\UI\About.ui">
