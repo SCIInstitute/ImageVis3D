@@ -173,10 +173,10 @@ FLOATMATRIX4 RenderWindow::GetTranslation(LuaClassInstance region)
 
 void RenderWindow::Translate(const FLOATMATRIX4& translation,
                              LuaClassInstance region) {
-  if(region.isDefaultInstance()) {
+  if(region.isValid(m_MasterController.LuaScript()) == false) {
     region = GetFirst3DRegion();
   }
-  if(region.isDefaultInstance() == false) {
+  if(region.isValid(m_MasterController.LuaScript())) {
     /// @todo 4x4 matrix mult -> vector addition.
     FLOATMATRIX4 regionTrans = GetTranslation(region);
     SetTranslation(region, translation * regionTrans, false);
@@ -185,10 +185,10 @@ void RenderWindow::Translate(const FLOATMATRIX4& translation,
 
 void RenderWindow::Rotate(const FLOATMATRIX4& rotation,
                           LuaClassInstance region) {
-  if(region.isDefaultInstance()) {
+  if(region.isValid(m_MasterController.LuaScript()) == false) {
     region = GetFirst3DRegion();
   }
-  if(region.isDefaultInstance() == false) {
+  if(region.isValid(m_MasterController.LuaScript())) {
     FLOATMATRIX4 regionRot = GetRotation(region);
     SetRotation(region, rotation * regionRot, false);
   }
@@ -349,7 +349,7 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
 
   activeRegion = GetRegionUnderCursor(m_viMousePos);
 
-  if (activeRegion.isDefaultInstance() == false) {
+  if (activeRegion.isValid(m_MasterController.LuaScript())) {
     // mouse is over the 3D window
     if (IsRegion3D(activeRegion) ) {
       SetPlaneAtClick(m_ClipPlane);
@@ -375,7 +375,7 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
 
 void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
   if (event->button() == Qt::LeftButton) {
-    if (!activeRegion.isDefaultInstance())
+    if (activeRegion.isValid(m_MasterController.LuaScript()))
       FinalizeRotation(activeRegion, true);
   }
 
@@ -407,7 +407,7 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
   UpdateCursor(region, m_viMousePos, translate);
 
   // mouse is over the 3D window
-  if (region.isValid() && IsRegion3D(region)) {
+  if (region.isValid(m_MasterController.LuaScript()) && IsRegion3D(region)) {
     bool bPerformUpdate = false;
 
     if(clip) {
@@ -499,7 +499,7 @@ bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
 
 void RenderWindow::WheelEvent(QWheelEvent *event) {
   LuaClassInstance renderRegion = GetRegionUnderCursor(m_viMousePos);
-  if (renderRegion.isDefaultInstance())
+  if (renderRegion.isValid(m_MasterController.LuaScript()) == false)
     return;
 
   // mouse is over the 3D window
@@ -546,7 +546,8 @@ LuaClassInstance RenderWindow::GetRegionUnderCursor(INTVECTOR2 vPos) const {
 
 void RenderWindow::UpdateCursor(LuaClassInstance region,
                                 INTVECTOR2 pos, bool translate) {
-  if (region.isValid() == false) { // We are likely dealing with a splitter
+  if (region.isValid(m_MasterController.LuaScript()) == false) {
+    // We are likely dealing with a splitter
     if (selectedRegionSplitter == REGION_SPLITTER_NONE) { // else cursor already set.
       RegionSplitter hoveredRegionSplitter = GetRegionSplitter(pos);
       switch (hoveredRegionSplitter) {
@@ -600,7 +601,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       }
       break;
     case Qt::Key_Space : {
-      if (selectedRegion.isValid() == false)
+      if (selectedRegion.isValid(m_MasterController.LuaScript()) == false)
         break;
 
       EViewMode newViewMode = EViewMode((int(GetViewMode()) + 1) % int(VM_INVALID));
@@ -623,21 +624,24 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
     }
       break;
     case Qt::Key_X :
-      if(selectedRegion.isValid() && IsRegion2D(selectedRegion)) {
+      if (   selectedRegion.isValid(m_MasterController.LuaScript())
+          && IsRegion2D(selectedRegion)) {
         bool flipX = Get2DFlipModeX(selectedRegion);
         flipX = !flipX;
         Set2DFlipMode(selectedRegion, flipX, Get2DFlipModeY(selectedRegion));
       }
       break;
     case Qt::Key_Y :
-      if(selectedRegion.isValid() && IsRegion2D(selectedRegion)) {
+      if(    selectedRegion.isValid(m_MasterController.LuaScript())
+          && IsRegion2D(selectedRegion)) {
         bool flipY = Get2DFlipModeY(selectedRegion);
         flipY = !flipY;
         Set2DFlipMode(selectedRegion, Get2DFlipModeX(selectedRegion), flipY);
       }
       break;
     case Qt::Key_M :
-      if(selectedRegion.isValid() && IsRegion2D(selectedRegion)) {
+      if(    selectedRegion.isValid(m_MasterController.LuaScript())
+          && IsRegion2D(selectedRegion)) {
         bool useMIP = !GetUseMIP(selectedRegion);
         SetUseMIP(selectedRegion, useMIP);
       }
@@ -649,7 +653,8 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
     }
       break;
     case Qt::Key_PageDown : case Qt::Key_PageUp :
-      if (selectedRegion.isValid() && IsRegion2D(selectedRegion)) {
+      if (   selectedRegion.isValid(m_MasterController.LuaScript())
+          && IsRegion2D(selectedRegion)) {
         const size_t sliceDimension = static_cast<size_t>(GetRegionWindowMode(selectedRegion));
         const int currSlice = static_cast<int>(GetSliceDepth(selectedRegion));
         const int numSlices = m_Renderer->GetDataset().GetDomainSize()[sliceDimension]-1;
@@ -659,7 +664,8 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
         int newSliceDepth = MathTools::Clamp(currSlice + sliceChange, 0, numSlices);
         SetSliceDepth(selectedRegion, uint64_t(newSliceDepth));
       }
-      else if (selectedRegion.isValid() && IsRegion3D(selectedRegion)) {
+      else if (   selectedRegion.isValid(m_MasterController.LuaScript())
+               && IsRegion3D(selectedRegion)) {
         const float zoom = (event->key() == Qt::Key_PageDown) ? 0.01f : -0.01f;
         SetTranslationDelta(selectedRegion, FLOATVECTOR3(0, 0, zoom), true);
       }
