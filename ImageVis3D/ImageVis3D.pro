@@ -87,6 +87,7 @@ HEADERS += StdDefines.h \
            UI/URLDlg.h \
            UI/BugRepDlg.h \           
            UI/LODDlg.h \
+           UI/MDIRenderWin.h \
            UI/MergeDlg.h \
            UI/CrashDetDlg.h \
            UI/ScaleAndBiasDlg.h \
@@ -129,6 +130,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/ImageVis3D_I3M.cpp \
            UI/PleaseWait.cpp \
            UI/Welcome.cpp \
+           UI/MDIRenderWin.cpp \
            UI/MetadataDlg.cpp \
            UI/AboutDlg.cpp \
            UI/URLDlg.cpp \

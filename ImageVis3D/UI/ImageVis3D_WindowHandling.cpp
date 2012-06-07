@@ -55,6 +55,7 @@
 #include "../Tuvok/Basics/SysTools.h"
 
 #include "ImageVis3D.h"
+#include "MDIRenderWin.h"
 #include "BrowseData.h"
 #include "RenderWindowGL.h"
 #include "RenderWindowDX.h"
@@ -781,7 +782,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
           this, SLOT(RenderWindowViewChanged(int)));
   connect(renderWin->GetQtWidget(), SIGNAL(StereoDisabled()),
           this, SLOT(StereoDisabled()));
-  mdiArea->addSubWindow(renderWin->GetQtWidget());
+  mdiArea->addSubWindow(new MDIRenderWin(m_MasterController, renderWin));
   renderWin->InitializeContext();
 
   if(m_pActiveRenderWin != renderWin && !renderWin->IsRenderSubsysOK()) {
