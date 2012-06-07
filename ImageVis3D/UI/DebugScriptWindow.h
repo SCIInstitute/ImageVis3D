@@ -57,7 +57,7 @@ protected slots:
 
   void execClicked();
   void oneLineEditOnReturnPressed();
-  void oneLineEditOnEdited();
+  void oneLineEditOnEdited(const QString&);
   void exampComboIndexChanged(int index);
 
 protected:

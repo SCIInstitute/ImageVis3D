@@ -124,8 +124,8 @@ void DebugScriptWindow::setupUI()
         hboxLayout->addWidget(mScriptOneLineEdit);
         QObject::connect(mScriptOneLineEdit, SIGNAL(returnPressed()), this,
                          SLOT(oneLineEditOnReturnPressed()));
-        QObject::connect(mScriptOneLineEdit, SIGNAL(textEdited()), this,
-                         SLOT(oneLineEditOnEdited()));
+        QObject::connect(mScriptOneLineEdit, SIGNAL(textEdited(const QString&)),
+                         this, SLOT(oneLineEditOnEdited(const QString&)));
       }
     }
 
@@ -403,7 +403,7 @@ void DebugScriptWindow::oneLineEditOnReturnPressed()
 }
 
 //-----------------------------------------------------------------------------
-void DebugScriptWindow::oneLineEditOnEdited()
+void DebugScriptWindow::oneLineEditOnEdited(const QString&)
 {
   // Reset the stack pointer
   mSavedInputPos = mSavedInput.size() - 1;

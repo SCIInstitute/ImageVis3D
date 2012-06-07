@@ -359,11 +359,18 @@ class RenderWindow
                      tuvok::LuaClassInstance region);
 
     void SetRotation(tuvok::LuaClassInstance region,
-                     FLOATMATRIX4 newRotation,
-                     bool logProvenance);
+                     FLOATMATRIX4 newRotation);
     void SetTranslation(tuvok::LuaClassInstance region,
-                        FLOATMATRIX4 accumulatedTranslation,
-                        bool logProvenance);
+                        FLOATMATRIX4 accumulatedTranslation);
+    void SetProvTransformAndClip(tuvok::LuaClassInstance region,
+                                 FLOATMATRIX4 transform);
+    void SetProvRotationAndClip(tuvok::LuaClassInstance region, FLOATMATRIX4 r);
+    void SetProvTransAndClip(tuvok::LuaClassInstance region, FLOATMATRIX4 t);
+    void LuaSetTransform(FLOATMATRIX4 m);
+    void LuaSetRotation(FLOATMATRIX3 m);
+    void LuaSetTranslation(VECTOR3<float> m);
+    void LuaSetTranslationAs4x4(FLOATMATRIX4 m);
+    void LuaSetRotationAs4x4(FLOATMATRIX4 m);
 
     /// Returns the Lua Renderer. This is used instead of inheriting the methods
     /// from the renderer, because, for the most part, the user won't care about

@@ -137,7 +137,7 @@ void RenderWindow::EnableHQCaptureMode(bool enable) {
     // restore rotation from before the capture process
     if (enable == false) {
       /// @fixme Shouldn't this be GetFirst3DRegion?
-      SetRotation(GetActiveRenderRegions()[0], m_mCaptureStartRotation, false);
+      SetRotation(GetActiveRenderRegions()[0], m_mCaptureStartRotation);
       ss->cexec(abstrRenName + ".setRendererTarget", m_RTModeBeforeCapture);
     }
   } else {
@@ -177,7 +177,7 @@ void RenderWindow::Translate(const FLOATMATRIX4& translation,
   if(region.isValid(m_MasterController.LuaScript())) {
     /// @todo 4x4 matrix mult -> vector addition.
     FLOATMATRIX4 regionTrans = GetTranslation(region);
-    SetTranslation(region, translation * regionTrans, false);
+    SetTranslation(region, translation * regionTrans);
   }
 }
 
@@ -188,7 +188,7 @@ void RenderWindow::Rotate(const FLOATMATRIX4& rotation,
   }
   if(region.isValid(m_MasterController.LuaScript())) {
     FLOATMATRIX4 regionRot = GetRotation(region);
-    SetRotation(region, rotation * regionRot, false);
+    SetRotation(region, rotation * regionRot);
   }
 }
 
@@ -197,7 +197,7 @@ void RenderWindow::SetCaptureRotationAngle(float fAngle) {
   matRot.RotationY(3.141592653589793238462643383*double(fAngle)/180.0);
   matRot = m_mCaptureStartRotation * matRot;
   /// @fixme Is the lack of provenance on this next call correct?
-  SetRotation(GetActiveRenderRegions()[0], matRot, false);
+  SetRotation(GetActiveRenderRegions()[0], matRot);
   PaintRenderer();
 }
 
@@ -1029,12 +1029,11 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
 }
 
 void RenderWindow::SetTranslation(LuaClassInstance renderRegion,
-                                  FLOATMATRIX4 accumulatedTranslation,
-                                  bool logProvenance) {
+                                  FLOATMATRIX4 accumulatedTranslation) {
   tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  if (!logProvenance) ss->setTempProvDisable(true);
+  ss->setTempProvDisable(true);
   ss->cexec(renderRegion.fqName()+".setTranslation4x4",accumulatedTranslation);
-  if (!logProvenance) ss->setTempProvDisable(false);
+  ss->setTempProvDisable(false);
 
   RegionData *regionData = GetRegionData(renderRegion);
   regionData->arcBall.SetTranslation(accumulatedTranslation);
@@ -1097,7 +1096,7 @@ void RenderWindow::SetTranslationDelta(LuaClassInstance renderRegion,
       LuaClassInstance otherRegion = GetCorrespondingRenderRegion(
           m_vpLocks[0][i], renderRegion);
       if (m_bAbsoluteViewLock)
-        m_vpLocks[0][i]->SetTranslation(otherRegion, newTranslation, false);
+        m_vpLocks[0][i]->SetTranslation(otherRegion, newTranslation);
       else
         m_vpLocks[0][i]->SetTranslationDelta(otherRegion, trans, false);
     }
@@ -1107,9 +1106,14 @@ void RenderWindow::SetTranslationDelta(LuaClassInstance renderRegion,
 void RenderWindow::FinalizeRotation(LuaClassInstance region, bool bPropagate) {
   // Reset the clip matrix we'll apply; the state is already stored/applied in
   // the ExtendedPlane instance.
+  // setRotationAs4x4
 
-  // Call SetRotation with logProvenance = true.
-  SetRotation(region, GetRotation(region), true);
+  // We group the functions inside of SetProvRotationAndClip together so that
+  // one undo command will undo them all.
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->beginCommandGroup();
+  SetProvRotationAndClip(region, GetRotation(region));
+  ss->endCommandGroup();
 
   RegionData* regionData = GetRegionData(region);
   regionData->clipRotation[0] = FLOATMATRIX4();
@@ -1125,7 +1129,12 @@ void RenderWindow::FinalizeRotation(LuaClassInstance region, bool bPropagate) {
 
 void RenderWindow::FinalizeTranslation(LuaClassInstance region, bool bPropagate)
 {
-  SetTranslation(region, GetTranslation(region), true);
+  // Call our registered Lua function so that undo of both the clipping plane
+  // and the rotation occur in one step.
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->beginCommandGroup();
+  SetProvTransAndClip(region, GetTranslation(region));
+  ss->endCommandGroup();
 
   RegionData* regionData = GetRegionData(region);
   regionData->clipRotation[0] = FLOATMATRIX4();
@@ -1140,8 +1149,7 @@ void RenderWindow::FinalizeTranslation(LuaClassInstance region, bool bPropagate)
 }
 
 void RenderWindow::SetRotation(LuaClassInstance region,
-                               FLOATMATRIX4 newRotation,
-                               bool logProvenance) {
+                               FLOATMATRIX4 newRotation) {
 
   tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
@@ -1149,9 +1157,9 @@ void RenderWindow::SetRotation(LuaClassInstance region,
   // rotation command, only the final rotation command.
   /// @todo should wrap in try catch so that setTempProvDisable always gets
   ///       called.
-  if (!logProvenance) ss->setTempProvDisable(true);
+  ss->setTempProvDisable(true);
   ss->cexec(region.fqName() + ".setRotation4x4", newRotation);
-  if (!logProvenance) ss->setTempProvDisable(false);
+  ss->setTempProvDisable(false);
 
   if(m_Renderer->ClipPlaneLocked()) {
     
@@ -1203,7 +1211,7 @@ void RenderWindow::SetRotationDelta(LuaClassInstance region,
           m_vpLocks[0][i], region);
 
       if (m_bAbsoluteViewLock)
-        m_vpLocks[0][i]->SetRotation(otherRegion, newRotation, false);
+        m_vpLocks[0][i]->SetRotation(otherRegion, newRotation);
       else
         m_vpLocks[0][i]->SetRotationDelta(otherRegion, rotDelta, false);
     }
@@ -1220,14 +1228,13 @@ void RenderWindow::SetPlaneAtClick(const ExtendedPlane& plane, bool propagate) {
   }
 }
 
-void RenderWindow::SetClipPlane(LuaClassInstance renderRegion,
+void RenderWindow::SetClipPlane(LuaClassInstance region,
                                 const ExtendedPlane &p) {
-  /// @fixme I punted and did not add the ExtendedPlane type to
-  /// LuaTuvokTypes.h (some of the data is private).
   tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   m_ClipPlane = p;
-  m_Renderer->SetClipPlane(renderRegion.getRawPointer<RenderRegion>(ss),
-                           m_ClipPlane);
+  ss->setTempProvDisable(true);
+  ss->cexec(region.fqName() + ".setClipPlane", m_ClipPlane);
+  ss->setTempProvDisable(false);
 }
 
 // Applies the given rotation matrix to the clip plane.
@@ -1478,8 +1485,11 @@ void RenderWindow::SetLocalBBox(bool bRenderBBox, bool bPropagate) {
 }
 void RenderWindow::SetClipPlaneEnabled(bool enable, bool bPropagate)
 {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->beginCommandGroup();
   if(enable) {
-    m_Renderer->EnableClipPlane();
+    ss->cexec(GetFirst3DRegion().fqName() + ".enableClipPlane", true);
+    //m_Renderer->EnableClipPlane();
     // Restore the locking setting which was active when the clip plane was
     // disabled.
     SetClipPlaneRelativeLock(m_SavedClipLocked, bPropagate);
@@ -1491,8 +1501,10 @@ void RenderWindow::SetClipPlaneEnabled(bool enable, bool bPropagate)
     // plane is disabled could cause it to clip the entire volume when
     // re-enabled, which is *very* confusing.  By keeping it locked while
     // disabled, this is prevented, so it's the lesser of the two evils.
-    m_SavedClipLocked = m_Renderer->ClipPlaneLocked();
-    m_Renderer->DisableClipPlane();
+    m_SavedClipLocked =
+        ss->cexecRet<bool>(GetLuaAbstrRenderer().fqName()
+                           + ".isClipPlaneLocked");
+    ss->cexec(GetFirst3DRegion().fqName() + ".enableClipPlane", false);
     SetClipPlaneRelativeLock(true, bPropagate);
   }
 
@@ -1502,6 +1514,7 @@ void RenderWindow::SetClipPlaneEnabled(bool enable, bool bPropagate)
       (*locks)->SetClipPlaneEnabled(enable, false);
     }
   }
+  ss->endCommandGroup();
 }
 
 void RenderWindow::SetClipPlaneDisplayed(bool bDisp, bool bPropagate)
@@ -1517,7 +1530,8 @@ void RenderWindow::SetClipPlaneDisplayed(bool bDisp, bool bPropagate)
 
 void RenderWindow::SetClipPlaneRelativeLock(bool bLock, bool bPropagate)
 {
-  m_Renderer->ClipPlaneRelativeLock(bLock);
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->cexec(GetLuaAbstrRenderer().fqName() + ".setClipPlaneLocked", bLock);
   if(bPropagate) {
     for(std::vector<RenderWindow*>::iterator locks = m_vpLocks[1].begin();
         locks != m_vpLocks[1].end(); ++locks) {
@@ -1733,6 +1747,66 @@ LuaClassInstance RenderWindow::GetLuaInstance() const {
   return m_LuaThisClass;
 }
 
+void RenderWindow::SetProvTransformAndClip(tuvok::LuaClassInstance region,
+                                           FLOATMATRIX4 m){
+  // Extract the translational component from the matrix.
+  FLOATMATRIX4 t4;
+  t4.m14 = m.m14;
+  t4.m24 = m.m24;
+  t4.m34 = m.m34;
+
+  FLOATMATRIX4 r4;
+  r4.m11 = m.m11; r4.m12 = m.m12; r4.m13 = m.m13;
+  r4.m21 = m.m21; r4.m22 = m.m22; r4.m23 = m.m23;
+  r4.m31 = m.m31; r4.m32 = m.m32; r4.m33 = m.m33;
+
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->cexec(region.fqName() + ".setRotation4x4", r4);
+  ss->cexec(region.fqName() + ".setTranslation4x4", t4);
+  ss->cexec(region.fqName() + ".setClipPlane", m_ClipPlane);
+}
+
+void RenderWindow::SetProvRotationAndClip(tuvok::LuaClassInstance region,
+                                          FLOATMATRIX4 r) {
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->cexec(region.fqName() + ".setRotation4x4", r);
+  ss->cexec(region.fqName() + ".setClipPlane", m_ClipPlane);
+}
+
+void RenderWindow::SetProvTransAndClip(tuvok::LuaClassInstance region,
+                                       FLOATMATRIX4 t) {
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->cexec(region.fqName() + ".setTranslation4x4", t);
+  ss->cexec(region.fqName() + ".setClipPlane", m_ClipPlane);
+}
+
+void RenderWindow::LuaSetTransform(FLOATMATRIX4 m) {
+  SetProvTransformAndClip(GetFirst3DRegion(), m);
+}
+
+void RenderWindow::LuaSetRotation(FLOATMATRIX3 m) {
+  FLOATMATRIX4 r4;
+  r4.m11 = m.m11; r4.m12 = m.m12; r4.m13 = m.m13;
+  r4.m21 = m.m21; r4.m22 = m.m22; r4.m23 = m.m23;
+  r4.m31 = m.m31; r4.m32 = m.m32; r4.m33 = m.m33;
+  SetProvRotationAndClip(GetFirst3DRegion(), r4);
+}
+void RenderWindow::LuaSetTranslation(VECTOR3<float> v) {
+  FLOATMATRIX4 t4;
+  t4.m14 = v.x;
+  t4.m24 = v.y;
+  t4.m34 = v.z;
+  SetProvTransAndClip(GetFirst3DRegion(), t4);
+}
+
+void RenderWindow::LuaSetTranslationAs4x4(FLOATMATRIX4 m) {
+  SetProvTransAndClip(GetFirst3DRegion(), m);
+}
+
+void RenderWindow::LuaSetRotationAs4x4(FLOATMATRIX4 m) {
+  SetProvRotationAndClip(GetFirst3DRegion(), m);
+}
+
 void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
@@ -1778,6 +1852,22 @@ void RenderWindow::RegisterLuaFunctions(
   ss->addParamInfo(id, 0, "filename", "Filename of the screen cap.");
   ss->addParamInfo(id, 1, "preserveTransparency", "True if you want to preserve"
       " transparency in the screen cap.");
+
+  id = reg.function(&RenderWindow::LuaSetTransform, "setTransform",
+                    "Sets the 4x4 matrix transformation for the first 3D "
+                    "render region.", true);
+  id = reg.function(&RenderWindow::LuaSetRotation, "setRotation",
+                    "Sets 3x3 rotation matrix for the first 3D "
+                    "render region.", true);
+  id = reg.function(&RenderWindow::LuaSetTranslation, "setTranslation",
+                    "Sets translation for the first 3D "
+                    "render region.", true);
+  id = reg.function(&RenderWindow::LuaSetRotationAs4x4, "setRotationAs4x4",
+                    "Sets 3x3 rotation matrix for the first 3D "
+                    "render region.", true);
+  id = reg.function(&RenderWindow::LuaSetTranslationAs4x4,"setTranslationAs4x4",
+                    "Sets translation for the first 3D "
+                    "render region.", true);
 }
 
 
