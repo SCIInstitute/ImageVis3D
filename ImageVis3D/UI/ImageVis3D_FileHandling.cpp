@@ -27,7 +27,7 @@
 */
 
 
-//!    File   : ImageVis3D_FileHandling.fcpp
+//!    File   : ImageVis3D_FileHandling.cpp
 //!    Author : Jens Krueger
 //!             SCI Institute
 //!             University of Utah
@@ -48,11 +48,12 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QMessageBox>
 
-#include "../Tuvok/Basics/SysTools.h"
-#include "../Tuvok/Controller/Controller.h"
-#include "../Tuvok/IO/IOManager.h"
-#include "../Tuvok/IO/TuvokIOError.h"
-#include "../Tuvok/IO/uvfDataset.h"
+#include "Basics/Mesh.h"
+#include "Basics/SysTools.h"
+#include "Controller/Controller.h"
+#include "IO/IOManager.h"
+#include "IO/TuvokIOError.h"
+#include "IO/uvfDataset.h"
 
 #include "DebugOut/QTLabelOut.h"
 #include "LODDlg.h"
