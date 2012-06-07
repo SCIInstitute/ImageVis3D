@@ -205,6 +205,11 @@ class RenderWindow
     void SetActiveRenderRegions(const std::vector<tuvok::RenderRegion*>&) const;
     void ResetRenderingParameters();
 
+    static void RegisterLuaFunctions(
+          tuvok::LuaClassRegistration<RenderWindow>& reg,
+          RenderWindow* me,
+          tuvok::LuaScripting* ss);
+
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
     virtual void ToggleRenderWindowViewSingle();
@@ -227,7 +232,7 @@ class RenderWindow
     FLOATVECTOR2              m_vWinFraction;
     static const int          regionSplitterWidth = 6;
     tuvok::RenderRegion*      activeRegion; // The region that should have focus
-    tuvok::LuaClassRegistration<RenderWindow>  m_LuaReg;
+    tuvok::LuaClassInstance   m_ThisClass;
     tuvok::LuaClassInstance   m_LuaRenderer;
     MainWindow*               m_MainWindow;
 
@@ -289,7 +294,6 @@ class RenderWindow
     void UpdateCursor(const tuvok::RenderRegion *region,
                       INTVECTOR2 pos, bool translate);
 
-    void BaseRegisterLuaFunctions();
     void BaseSetLuaDefaults();
 
     /// @param[in,out] newRenderRegions with coordinates updated to reflect the

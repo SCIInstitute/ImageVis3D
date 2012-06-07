@@ -90,9 +90,6 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   setAttribute(Qt::WA_DeleteOnClose, true);
 
   Initialize(); //finish initializing.
-
-  // Register lua functions
-  registerLuaFunctions();
 }
 
 bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo, 
@@ -109,11 +106,6 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
       m_eRendererType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
       bDisableBorder, m_bNoRCClipplanes, false);
   m_Renderer = m_LuaRenderer.getRawPointer<AbstrRenderer>(ss);
-
-  // 'Inherit' ourselves from the abstract renderer. We act like a derived
-  // class of abstract renderer, where all of abstract renderer's functions
-  // can be called from our class.
-  //m_LuaReg.inherit(m_LuaRenderer);
 
   // so far we are not rendering anything previous to this renderer 
   // so we can disable the depth-buffer to offscreen copy operations
@@ -357,12 +349,3 @@ void RenderWindowGL::RenderSeparatingLines() {
   GetRenderer()->SyncStateManager();
 }
 
-void RenderWindowGL::registerLuaFunctions() {
-  if (m_LuaReg.canRegister() == false) return;
-
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-  string id;
-
-  id = m_LuaReg.function(&RenderWindowGL::SetBlendPrecision, "setBlendPrecsion",
-                         "GL Specific - Sets the blend precision mode.", true);
-}

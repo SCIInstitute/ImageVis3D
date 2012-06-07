@@ -91,7 +91,6 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_eViewMode(VM_SINGLE),
   m_vWinFraction(0.5, 0.5),
   activeRegion(NULL),
-  m_LuaReg(masterController.LuaScript(), this),
   m_MainWindow((MainWindow*)parent),
   m_eRendererType(eType),
   m_iTimeSliceMSecsActive(500),
@@ -111,8 +110,6 @@ RenderWindow::RenderWindow(MasterController& masterController,
   for (int i=0; i < MAX_RENDER_REGIONS; ++i)
     for (int j=0; j < NUM_WINDOW_MODES; ++j)
       renderRegions[i][j] = NULL;
-
-  BaseRegisterLuaFunctions();
 }
 
 RenderWindow::~RenderWindow()
@@ -864,7 +861,9 @@ void RenderWindow::SetTranslation(RenderRegion *renderRegion,
                              m_Renderer->GetTranslation(renderRegion).m43);
 
     m_ClipPlane.Default(false);
-    m_ClipPlane.Transform(m_Renderer->GetTranslation(renderRegion) * from_pt_to_0 * regionData->clipRotation[0] * from_0_to_pt, false);
+    m_ClipPlane.Transform(m_Renderer->GetTranslation(renderRegion)
+                          * from_pt_to_0 * regionData->clipRotation[0] *
+                          from_0_to_pt, false);
     SetClipPlane(renderRegion, m_ClipPlane);
   }
 
@@ -1462,14 +1461,15 @@ LuaClassInstance RenderWindow::GetLuaRenderer() const {
 }
 
 LuaClassInstance RenderWindow::GetLuaInstance() const {
-  return m_LuaReg.getLuaInstance();
+  return m_ThisClass;
 }
 
-void RenderWindow::BaseRegisterLuaFunctions() {
-  LuaClassRegistration<RenderWindow>& reg = m_LuaReg;
-  if (reg.canRegister() == false) return;
+void RenderWindow::RegisterLuaFunctions(
+    LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
+    LuaScripting* ss) {
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  me->m_ThisClass = reg.getLuaInstance();
+
   string id;
 
   id = reg.function(&RenderWindow::SetColors, "setColors",
@@ -1484,6 +1484,27 @@ void RenderWindow::BaseRegisterLuaFunctions() {
   ss->addReturnInfo(id, "Lua class instance of Tuvok's abstract renderer."
       "Generally, you should use the methods exposed by the render window "
       "instead of resorting to raw access to the renderer.");
+
+  id = reg.function(&RenderWindow::SetBlendPrecision, "setBlendPrecision",
+                    "Sets the blending precision to 8, 16, or 32 bit.", true);
+
+  id = reg.function(&RenderWindow::SetPerfMeasures, "setPerformanceMeasures",
+                    "Sets various performance measures. See info for a detailed"
+                    " description of the parameters.", true);
+  ss->addParamInfo(id, 0, "minFramerate", "Minimum framerate.");
+  ss->addParamInfo(id, 1, "lowResRender", "If true, render low res intermediate"
+      "results.");
+  ss->addParamInfo(id, 2, "screenResDecFactor", "");  // screen res decrease?
+  ss->addParamInfo(id, 3, "sampleDecFactor", "");     // sample rate decrease?
+  ss->addParamInfo(id, 4, "LODDelay", "LOD Delay.");
+  ss->addParamInfo(id, 5, "activeTS", "");
+  ss->addParamInfo(id, 5, "inactiveTS", "");
+
+  id = reg.function(&RenderWindow::CaptureFrame, "screenCapture",
+                    "Screenshot of the current volume.", false);
+  ss->addParamInfo(id, 0, "filename", "Filename of the screen cap.");
+  ss->addParamInfo(id, 1, "preserveTransparency", "True if you want to preserve"
+      " transparency in the screen cap.");
 
 //  reg.function(&RenderWindow::GetCurrent1DHistScale, "getHist1DScale",
 //               "Retrieves 1D histogram's scale.", false);

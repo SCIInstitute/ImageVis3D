@@ -94,9 +94,6 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     static std::string ms_glExtString;
     bool m_bNoRCClipplanes;
 
-    void registerLuaFunctions();
-
-
   // **************** Qt widget connector calls
   protected:
     virtual void ForceRepaint();
