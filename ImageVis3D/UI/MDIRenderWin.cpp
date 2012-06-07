@@ -67,8 +67,10 @@ MDIRenderWin::~MDIRenderWin()
 }
 
 
-void MDIRenderWin::closeEvent(QCloseEvent*)
+void MDIRenderWin::closeEvent(QCloseEvent* event)
 {
+  QMdiSubWindow::closeEvent(event);
+
   // Kill off our child widget (in this case, the render window that was
   // given to us).
   mMasterController.LuaScript()->cexec("deleteClass",
