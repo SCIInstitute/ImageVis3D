@@ -52,9 +52,12 @@ DebugScriptWindow::DebugScriptWindow(tuvok::MasterController& controller,
 , mController(controller)
 , mMemReg(controller.LuaScript())
 , mLua(controller.LuaScript())
+, mSavedInputPos(0)
 {
   setupUI();
   hookLuaFunctions();
+
+  mSavedInput.reserve(50);
 
   // Install an event filter for our line edit
   mScriptOneLineEdit->installEventFilter(this);
@@ -121,6 +124,8 @@ void DebugScriptWindow::setupUI()
         hboxLayout->addWidget(mScriptOneLineEdit);
         QObject::connect(mScriptOneLineEdit, SIGNAL(returnPressed()), this,
                          SLOT(oneLineEditOnReturnPressed()));
+        QObject::connect(mScriptOneLineEdit, SIGNAL(textEdited()), this,
+                         SLOT(oneLineEditOnEdited()));
       }
     }
 
@@ -274,6 +279,8 @@ bool DebugScriptWindow::eventFilter(QObject *obj, QEvent *event)
 {
   if (obj == mScriptOneLineEdit)
   {
+    if (mSavedInput.size() == 0) return false;
+
     if (event->type() == QEvent::KeyPress)
     {
       QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
@@ -281,11 +288,26 @@ bool DebugScriptWindow::eventFilter(QObject *obj, QEvent *event)
       {
         /// @todo Implement scrolling through prior command history.
         //mController.LuaScript()->exec("print('key up')");
+        mScriptOneLineEdit->setText(
+            QString::fromStdString(mSavedInput[mSavedInputPos]));
+        if (mSavedInputPos > 0)
+          --mSavedInputPos;
         return true;
       }
       else if (keyEvent->key() == Qt::Key_Down)
       {
         //mController.LuaScript()->exec("print('key down')");
+        if (mSavedInputPos < (int)mSavedInput.size() - 1)
+        {
+          ++mSavedInputPos;
+          mScriptOneLineEdit->setText(
+              QString::fromStdString(mSavedInput[mSavedInputPos]));
+        }
+        else
+        {
+          mScriptOneLineEdit->setText(QString::fromUtf8(""));
+        }
+
         return true;
       }
     }
@@ -306,7 +328,16 @@ void DebugScriptWindow::oneLineEditOnReturnPressed()
 {
   QString qs = mScriptOneLineEdit->text();
   execLua(qs.toStdString());
+  mSavedInput.push_back(qs.toStdString());
+  mSavedInputPos = mSavedInput.size() - 1;
   mScriptOneLineEdit->setText(QString::fromUtf8(""));
+}
+
+//-----------------------------------------------------------------------------
+void DebugScriptWindow::oneLineEditOnEdited()
+{
+  // Reset the stack pointer
+  mSavedInputPos = mSavedInput.size() - 1;
 }
 
 //-----------------------------------------------------------------------------

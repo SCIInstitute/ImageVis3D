@@ -57,6 +57,7 @@ protected slots:
 
   void execClicked();
   void oneLineEditOnReturnPressed();
+  void oneLineEditOnEdited();
   void exampComboIndexChanged(int index);
 
 protected:
@@ -82,6 +83,9 @@ private:
 
   QTextEdit*    mScriptTextEdit;
   QLineEdit*    mScriptOneLineEdit;
+
+  std::vector<std::string>  mSavedInput;
+  int                       mSavedInputPos;
 
   tuvok::MasterController&                    mController;
   tuvok::LuaMemberReg                         mMemReg;

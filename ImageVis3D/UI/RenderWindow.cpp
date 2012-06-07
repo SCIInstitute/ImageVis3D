@@ -167,7 +167,7 @@ FLOATMATRIX4 RenderWindow::GetTranslation(LuaClassInstance region)
   string arn = GetLuaAbstrRenderer().fqName();
 
   FLOATMATRIX4 regionTrans =
-      ss->cexecRet<FLOATMATRIX4>(arn + ".setRegionTranslation4x4", region);
+      ss->cexecRet<FLOATMATRIX4>(arn + ".getRegionTranslation4x4", region);
   return regionTrans;
 }
 
@@ -211,7 +211,8 @@ RenderWindow::GetRegionData(LuaClassInstance renderRegion) const
   RegionDataMap::const_iterator iter = cthis->regionDataMap.find(
       renderRegion.getGlobalInstID());
 #else
-  RegionDataMap::const_iterator iter = regionDataMap.find(renderRegion);
+  RegionDataMap::const_iterator iter = regionDataMap.find(
+      renderRegion.getGlobalInstID());
 #endif
   if (iter == regionDataMap.end()) {
     // This should never happen if the renderRegion belongs to *this.
@@ -1074,7 +1075,13 @@ void RenderWindow::SetTranslationDelta(LuaClassInstance renderRegion,
   newTranslation.m41 += trans.x;
   newTranslation.m42 -= trans.y;
   newTranslation.m43 += trans.z;
-  SetTranslation(renderRegion, newTranslation, false);
+  //SetTranslation(renderRegion, newTranslation, false);
+
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string arn = GetLuaAbstrRenderer().fqName();
+  ss->cexec(arn + ".setRegionTranslation4x4",
+            renderRegion, newTranslation);
+
   RegionData *regionData = GetRegionData(renderRegion);
   regionData->arcBall.SetTranslation(newTranslation);
 
@@ -1105,6 +1112,10 @@ void RenderWindow::SetTranslationDelta(LuaClassInstance renderRegion,
 void RenderWindow::FinalizeRotation(LuaClassInstance region, bool bPropagate) {
   // Reset the clip matrix we'll apply; the state is already stored/applied in
   // the ExtendedPlane instance.
+
+  // Call SetRotation with logProvenance = true.
+  SetRotation(region, GetRotation(region), true);
+
   RegionData* regionData = GetRegionData(region);
   regionData->clipRotation[0] = FLOATMATRIX4();
   regionData->clipRotation[1] = FLOATMATRIX4();
@@ -1115,8 +1126,6 @@ void RenderWindow::FinalizeRotation(LuaClassInstance region, bool bPropagate) {
       m_vpLocks[0][i]->FinalizeRotation(otherRegion, false);
     }
   }
-  // Call SetRotation with logProvenance = true.
-  SetRotation(region, GetRotation(region), true);
 }
 
 void RenderWindow::SetRotation(LuaClassInstance region,
@@ -1128,6 +1137,8 @@ void RenderWindow::SetRotation(LuaClassInstance region,
 
   // Temporarily disable provenance. We don't want to record every single
   // rotation command, only the final rotation command.
+  /// @todo should wrap in try catch so that setTempProvDisable always gets
+  ///       called.
   if (!logProvenance) ss->setTempProvDisable(true);
   ss->cexec(arn + ".setRegionRotation4x4", region, newRotation);
   if (!logProvenance) ss->setTempProvDisable(false);
@@ -1152,7 +1163,12 @@ void RenderWindow::SetRotation(LuaClassInstance region,
     RegionData* regionData = GetRegionData(region);
     regionData->clipRotation[0] = newRotation;
     m_ClipPlane.Default(false);
-    m_ClipPlane.Transform(GetTranslation(region) * from_pt_to_0 * regionData->clipRotation[0] * from_0_to_pt, false);
+
+    FLOATMATRIX4 mat = regTrans * from_pt_to_0 * regionData->clipRotation[0] * from_0_to_pt;
+    m_MasterController.LuaScript()->cexec(
+        "log.info", LuaStrictStack<FLOATMATRIX4>::getValStr(mat));
+
+    m_ClipPlane.Transform(mat, false);
     SetClipPlane(region, m_ClipPlane);
   }
 }
@@ -1161,7 +1177,12 @@ void RenderWindow::SetRotationDelta(LuaClassInstance region,
                                     const FLOATMATRIX4& rotDelta,
                                     bool bPropagate) {
   const FLOATMATRIX4 newRotation = GetRotation(region) * rotDelta;
-  SetRotation(region, newRotation, false);
+
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string arn = GetLuaAbstrRenderer().fqName();
+  ss->setTempProvDisable(true);
+  ss->cexec(arn + ".setRegionRotation4x4", region, newRotation);
+  ss->setTempProvDisable(false);
 
   if(m_Renderer->ClipPlaneLocked()) {
     SetClipRotationDelta(region, rotDelta, bPropagate, false);
@@ -1301,6 +1322,9 @@ RenderWindow::GetCorrespondingRenderRegion(const RenderWindow* otherRW,
 void RenderWindow::CloneViewState(RenderWindow* other) {
   m_mAccumulatedClipTranslation = other->m_mAccumulatedClipTranslation;
 
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string arn = GetLuaAbstrRenderer().fqName();
+
   for (int i=0; i < MAX_RENDER_REGIONS; ++i)
     for (int j=0; j < NUM_WINDOW_MODES; ++j) {
       const LuaClassInstance otherRegion = other->luaRenderRegions[i][j];
@@ -1308,9 +1332,10 @@ void RenderWindow::CloneViewState(RenderWindow* other) {
       RegionData *data = GetRegionData(luaRenderRegions[i][j]);
       *data = *otherData;
 
-      SetRotation(luaRenderRegions[i][j], other->GetRotation(otherRegion), true);
-      SetTranslation(luaRenderRegions[i][j],
-                     other->GetTranslation(otherRegion), true);
+      ss->cexec(arn + ".setRegionRotation4x4",
+                luaRenderRegions[i][j], other->GetRotation(otherRegion));
+      ss->cexec(arn + ".setRegionTranslation4x4",
+                luaRenderRegions[i][j], other->GetTranslation(otherRegion));
     }
 }
 
@@ -1656,14 +1681,19 @@ void RenderWindow::ResetRenderingParameters()
   FLOATMATRIX4 mIdentity;
   m_mAccumulatedClipTranslation = mIdentity;
 
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string arn = GetLuaAbstrRenderer().fqName();
+
   for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
     for (int j=0; j < NUM_WINDOW_MODES; ++j) {
       regionDatas[i][j].clipRotation[0] = mIdentity;
       regionDatas[i][j].clipRotation[1] = mIdentity;
 
       LuaClassInstance region = luaRenderRegions[i][j];
-      SetRotation(region, mIdentity, true);
-      SetTranslation(region, mIdentity, true);
+
+      ss->cexec(arn + ".setRegionRotation4x4", region, mIdentity);
+      ss->cexec(arn + ".setRegionTranslation4x4", region, mIdentity);
+
       SetClipPlane(region, ExtendedPlane());
     }
   }
