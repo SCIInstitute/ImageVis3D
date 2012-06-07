@@ -92,8 +92,8 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_vWinFraction(0.5, 0.5),
   activeRegion(NULL),
   m_LuaReg(masterController.LuaScript(), this),
-  m_eRendererType(eType),
   m_MainWindow((MainWindow*)parent),
+  m_eRendererType(eType),
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),
   m_1DHistScale(0.25f),
@@ -1457,19 +1457,33 @@ float RenderWindow::GetCurrent2DHistScale() const {
   return m_2DHistScale;
 }
 
+LuaClassInstance RenderWindow::GetLuaRenderer() const {
+  return m_LuaRenderer;
+}
+
+LuaClassInstance RenderWindow::GetLuaInstance() const {
+  return m_LuaReg.getLuaInstance();
+}
 
 void RenderWindow::BaseRegisterLuaFunctions() {
-
-  if (m_LuaReg.canRegister() == false) return;
+  LuaClassRegistration<RenderWindow>& reg = m_LuaReg;
+  if (reg.canRegister() == false) return;
 
   tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string id;
 
-  id = m_LuaReg.function(&RenderWindow::SetColors, "setColors",
+  id = reg.function(&RenderWindow::SetColors, "setColors",
                          "Sets the background and text colors.", true);
   ss->addParamInfo(id, 0, "topColor", "Render window top [0,1] RGB color.");
   ss->addParamInfo(id, 1, "botColor", "Render window bottom [0,1] RGB color");
   ss->addParamInfo(id, 2, "textColor", "Text [0,1] RGBA color.");
+
+  id = reg.function(&RenderWindow::GetLuaRenderer, "getRawRenderer",
+                         "Returns the Tuvok abstract renderer instance.",
+                         false);
+  ss->addReturnInfo(id, "Lua class instance of Tuvok's abstract renderer."
+      "Generally, you should use the methods exposed by the render window "
+      "instead of resorting to raw access to the renderer.");
 
 //  reg.function(&RenderWindow::GetCurrent1DHistScale, "getHist1DScale",
 //               "Retrieves 1D histogram's scale.", false);
@@ -1490,4 +1504,5 @@ void RenderWindow::BaseRegisterLuaFunctions() {
 //  renderWin->SetAbsoluteViewLock(m_bAbsoluteViewLocks);
 //  renderWin->SetInvMouseWheel(m_bInvWheel);
 }
+
 

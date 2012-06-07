@@ -59,8 +59,8 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
 {
   Q_OBJECT
   public:
-    RenderWindowGL(MasterController& masterController,
-                 MasterController::EVolumeRendererType eType,
+    RenderWindowGL(tuvok::MasterController& masterController,
+                 tuvok::MasterController::EVolumeRendererType eType,
                  const QString& dataset,
                  unsigned int iCounter,
                  bool bUseOnlyPowerOfTwo,
@@ -74,7 +74,8 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
 
     virtual ~RenderWindowGL();
     static const std::string& GetExtString() {return ms_glExtString;}
-    virtual void SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
+    virtual void SetBlendPrecision(
+        tuvok::AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
     virtual void UpdateWindow() {updateGL();}
     virtual void InitializeContext() { glInit(); }
 
@@ -102,7 +103,9 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     virtual QWidget* GetQtWidget() {return this;}
 
     virtual void EmitStereoDisabled() {emit StereoDisabled();}
-    virtual void EmitRenderWindowViewChanged(int iViewID) {emit RenderWindowViewChanged(iViewID);}
+    virtual void EmitRenderWindowViewChanged(int iViewID) {
+      emit RenderWindowViewChanged(iViewID);
+    }
     virtual void EmitWindowActive() {emit WindowActive(this);}
     virtual void EmitWindowInActive() {emit WindowInActive(this);}
     virtual void EmitWindowClosing() {emit WindowClosing(this);}
@@ -113,9 +116,15 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     QSize sizeHint() const {return QSize(m_vDefaultSize.x, m_vDefaultSize.y);}
 
   public slots:
-    virtual void ToggleRenderWindowView2x2() {RenderWindow::ToggleRenderWindowView2x2();}
-    virtual void ToggleRenderWindowViewSingle() {RenderWindow::ToggleRenderWindowViewSingle();}
-    virtual void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {RenderWindow::SetTimeSlices(iActive, iInactive);}
+    virtual void ToggleRenderWindowView2x2() {
+      RenderWindow::ToggleRenderWindowView2x2();
+    }
+    virtual void ToggleRenderWindowViewSingle() {
+      RenderWindow::ToggleRenderWindowViewSingle();
+    }
+    virtual void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {
+      RenderWindow::SetTimeSlices(iActive, iInactive);
+    }
 
   signals:
     void StereoDisabled();

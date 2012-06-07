@@ -909,3 +909,20 @@ void MainWindow::RegisterLuaClasses() {
       "iv3d.renderWindow", "Constructs a new render window");
 }
 
+void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {
+  QMdiSubWindow* foundWindow = NULL;
+  QList<QMdiSubWindow*> list = mdiArea->subWindowList();
+
+  for (QList<QMdiSubWindow*>::iterator it = list.begin();
+       it != list.end(); ++it) {
+    if ((*it)->widget() == widget) {
+      foundWindow = *it;
+      break;
+    }
+  }
+
+  if (foundWindow) {
+    mdiArea->removeSubWindow(foundWindow);
+  }
+}
+

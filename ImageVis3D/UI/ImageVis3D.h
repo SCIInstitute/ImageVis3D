@@ -109,6 +109,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     /// Member function constructor for RenderWindowGL.
     RenderWindowGL* LuaCreateNewGLWindow(std::string dataset);
 
+    void closeMDISubWindowWithWidget(QWidget* widget);
+
   public slots:
     void SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
                                        unsigned int iCurrentCount,
