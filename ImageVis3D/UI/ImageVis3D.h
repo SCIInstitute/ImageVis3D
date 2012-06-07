@@ -492,6 +492,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     RenderWindow* ActiveRenderWin();
     QMdiSubWindow* ActiveSubWindow();
     RenderWindow* m_pActiveRenderWin;
+    RenderWindow* m_pLastLoadedRenderWin; ///< Use with caution -- could have
+                                          ///< been destroyed. Used to return
+                                          ///< render window.
 
     // update
     struct VersionNumber {

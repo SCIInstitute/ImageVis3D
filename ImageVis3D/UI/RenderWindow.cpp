@@ -60,7 +60,7 @@
 #include "../Tuvok/Renderer/GL/GLRenderer.h"
 #include "../Tuvok/Renderer/GL/GLTargetBinder.h"
 #include "../Tuvok/LuaScripting/LuaScripting.h"
-#include "../Tuvok/LuaScripting/LuaTuvokSpecificTypes.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 #include "Basics/tr1.h"
 
 using namespace std;
@@ -1508,6 +1508,8 @@ void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
 
+  ss->vPrint("Registering render window functions.");
+
   me->m_LuaThisClass = reg.getLuaInstance();
 
   string id;
@@ -1547,8 +1549,6 @@ void RenderWindow::RegisterLuaFunctions(
   ss->addParamInfo(id, 0, "filename", "Filename of the screen cap.");
   ss->addParamInfo(id, 1, "preserveTransparency", "True if you want to preserve"
       " transparency in the screen cap.");
-
-
 }
 
 

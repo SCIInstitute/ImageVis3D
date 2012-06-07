@@ -449,8 +449,6 @@ RenderWindow* MainWindow::LuaLoadDatasetInternal(vector<string> stdFiles,
                                                  string stdTargetFilename,
                                                  bool bNoUserInteraction)
 {
-  RenderWindow* initialRenderWindow = m_pActiveRenderWin;
-
   QStringList files;
   for (vector<string>::iterator it = stdFiles.begin(); it != stdFiles.end();
       ++it)
@@ -461,10 +459,16 @@ RenderWindow* MainWindow::LuaLoadDatasetInternal(vector<string> stdFiles,
   QString targetFilename = QString::fromStdString(stdTargetFilename);
 
   bool retVal = LoadDatasetInternal(files, targetFilename, bNoUserInteraction);
-  if (retVal == true && m_pActiveRenderWin != initialRenderWindow)
-    return m_pActiveRenderWin;
+  if (retVal == true)
+  {
+    return m_pLastLoadedRenderWin;
+  }
   else
+  {
+    m_MasterController.LuaScript()->vPrint("False returned from load dataset"
+        "internal.");
     return NULL;
+  }
 }
 
 bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,

@@ -719,14 +719,9 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
 
 
 RenderWindow* MainWindow::LuaCreateNewWindow(std::string dataset) {
-  RenderWindow* initialRenderWindow = m_pActiveRenderWin;
   std::vector<std::string> fileList;
   fileList.push_back(dataset);
-  LuaLoadDatasetInternal(fileList, std::string(""), false);
-  if (m_pActiveRenderWin != initialRenderWindow)
-    return m_pActiveRenderWin;
-  else
-    return NULL;
+  return LuaLoadDatasetInternal(fileList, std::string(""), false);
 }
 
 RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
@@ -786,6 +781,8 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
           this, SLOT(StereoDisabled()));
   mdiArea->addSubWindow(new MDIRenderWin(m_MasterController, renderWin));
   renderWin->InitializeContext();
+
+  m_pLastLoadedRenderWin = renderWin;
 
   if(m_pActiveRenderWin != renderWin && !renderWin->IsRenderSubsysOK()) {
     T_ERROR("Could not initialize render window!");
