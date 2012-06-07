@@ -115,20 +115,45 @@ RenderWindow::RenderWindow(MasterController& masterController,
 RenderWindow::~RenderWindow()
 {
   Cleanup();
+
+  // We notify the LuaScripting system because there are instances where this
+  // class is destroyed and deleteClass was not called upon it.
   m_MasterController.LuaScript()->notifyOfDeletion(m_LuaThisClass);
 }
 
 
 void RenderWindow::ToggleHQCaptureMode() {
+  /// @todo call explicitly through the command system to enable provenance.
+  ///       It is not entirely clear that this should be the only function
+  ///       called however.
+  if (m_Renderer->GetRendererTarget() == AbstrRenderer::RT_CAPTURE) {
+    EnableHQCaptureMode(false);
+  } else {
+    EnableHQCaptureMode(true);
+  }
+}
+
+void RenderWindow::EnableHQCaptureMode(bool enable) {
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string abstrRenName = GetLuaAbstrRenderer().fqName();
+
   if (m_Renderer->GetRendererTarget() == AbstrRenderer::RT_CAPTURE) {
     // restore rotation from before the capture process
-    SetRotation(GetActiveRenderRegions()[0], m_mCaptureStartRotation);
-    m_Renderer->SetRendererTarget(m_RTModeBeforeCapture);
+    // Should GetActiveRenderRegions()[0] just be GetFirst3DRegion? Seems like
+    // that would make the most sense.
+    if (enable == false) {
+      SetRotation(GetActiveRenderRegions()[0], m_mCaptureStartRotation);
+      ss->cexec(abstrRenName + ".setRendererTarget", m_RTModeBeforeCapture);
+      //m_Renderer->SetRendererTarget(m_RTModeBeforeCapture);
+    }
   } else {
     // remember rotation from before the capture process
-    m_RTModeBeforeCapture = m_Renderer->GetRendererTarget();
-    m_mCaptureStartRotation = m_Renderer->GetRotation(GetActiveRenderRegions()[0]);
-    m_Renderer->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
+    if (enable == true) {
+      m_RTModeBeforeCapture = m_Renderer->GetRendererTarget();
+      m_mCaptureStartRotation = m_Renderer->GetRotation(GetActiveRenderRegions()[0]);
+      ss->cexec(abstrRenName + ".setRendererTarget", AbstrRenderer::RT_CAPTURE);
+      //m_Renderer->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
+    }
   }
 }
 
@@ -612,6 +637,8 @@ static std::string view_mode(RenderWindow::EViewMode mode) {
 
 RenderRegion3D*
 RenderWindow::GetFirst3DRegion() {
+  /// @todo should be a call to the abstract renderer. There is a call that
+  ///       matches this exactly.
   const std::vector<RenderRegion*>& rr = GetActiveRenderRegions();
   for(size_t i=0; i < rr.size(); ++i) {
     if(rr[i]->is3D()) {
@@ -1493,6 +1520,7 @@ void RenderWindow::RegisterLuaFunctions(
   reg.inherit(ar, "setTextColor");
   reg.inherit(ar, "setBlendPrecision");
   reg.inherit(ar, "setLogoParams");
+  reg.inherit(ar, "setRendererTarget");
 
   // Register our own functions.
   id = reg.function(&RenderWindow::GetLuaAbstrRenderer, "getRawRenderer",
@@ -1512,13 +1540,17 @@ void RenderWindow::RegisterLuaFunctions(
   ss->addParamInfo(id, 3, "sampleDecFactor", "");     // sample rate decrease?
   ss->addParamInfo(id, 4, "LODDelay", "LOD Delay.");
   ss->addParamInfo(id, 5, "activeTS", "");
-  ss->addParamInfo(id, 5, "inactiveTS", "");
+  ss->addParamInfo(id, 6, "inactiveTS", "");
 
   id = reg.function(&RenderWindow::CaptureFrame, "screenCapture",
                     "Screenshot of the current volume.", false);
   ss->addParamInfo(id, 0, "filename", "Filename of the screen cap.");
   ss->addParamInfo(id, 1, "preserveTransparency", "True if you want to preserve"
       " transparency in the screen cap.");
+
+//  id = reg.function(&RenderWindow::EnableHQCaptureMode, "setHQCaptureMode",
+//                    "Enables/Disables high quality capture mode. Use this in "
+//                    "conjunction with screenCapture.", true); // Composite.
 }
 
 

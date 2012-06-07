@@ -905,10 +905,17 @@ void MainWindow::ResetRenderingParameters() {
 
 void MainWindow::RegisterLuaClasses() {
   m_MasterController.LuaScript()->registerClass<RenderWindow>(
-      this, &MainWindow::LuaCreateNewGLWindow,
-      "iv3d.renderWindow", "Constructs a new render window",
+      this, &MainWindow::LuaCreateNewWindow,
+      "iv3d.renderer", "Constructs a new render window",
       LuaClassRegCallback<RenderWindow>::Type(
           &RenderWindow::RegisterLuaFunctions));
+
+  m_MasterController.LuaScript()->registerClass<RenderWindow>(
+      this, &MainWindow::LuaLoadDatasetInternal, "iv3d.rendererWithParams",
+      "Open a render window the additional parameters and a list of files.",
+      LuaClassRegCallback<RenderWindow>::Type(
+                &RenderWindow::RegisterLuaFunctions)
+      );
 }
 
 void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {

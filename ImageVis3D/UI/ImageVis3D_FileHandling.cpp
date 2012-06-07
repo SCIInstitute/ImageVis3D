@@ -378,7 +378,8 @@ bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
   return LoadDataset(QStringList(inFile.c_str()), convFile.c_str(), false);
 }
 
-bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList files) {
+bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction,
+                                          QStringList files) {
   if (bNoUserInteraction) {
     if (m_pActiveRenderWin && 
       !m_pActiveRenderWin->GetRenderer()->SupportsMeshes() &&
@@ -425,6 +426,50 @@ bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction, QStringList f
 
 bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
                              bool bNoUserInteraction) {
+
+  std::vector<std::string> stdFiles;
+  for (QStringList::iterator it = files.begin(); it != files.end();
+      ++it)
+  {
+    string datasetName = it->toStdString();
+    stdFiles.push_back(datasetName);
+  }
+
+  string stdTargetFilename = targetFilename.toStdString();
+
+  LuaClassInstance inst =
+      m_MasterController.LuaScript()->cexecRet<LuaClassInstance>(
+      "iv3d.rendererWithParams.new", stdFiles, stdTargetFilename,
+      bNoUserInteraction);
+
+  return !inst.isDefaultInstance();
+}
+
+RenderWindow* MainWindow::LuaLoadDatasetInternal(vector<string> stdFiles,
+                                                 string stdTargetFilename,
+                                                 bool bNoUserInteraction)
+{
+  RenderWindow* initialRenderWindow = m_pActiveRenderWin;
+
+  QStringList files;
+  for (vector<string>::iterator it = stdFiles.begin(); it != stdFiles.end();
+      ++it)
+  {
+    files.push_back(QString::fromStdString(*it));
+  }
+
+  QString targetFilename = QString::fromStdString(stdTargetFilename);
+
+  bool retVal = LoadDatasetInternal(files, targetFilename, bNoUserInteraction);
+  if (retVal == true && m_pActiveRenderWin != initialRenderWindow)
+    return m_pActiveRenderWin;
+  else
+    return NULL;
+}
+
+bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
+                                     bool bNoUserInteraction)
+{
 
   if(files.empty()) {
     T_ERROR("No files!");

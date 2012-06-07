@@ -107,7 +107,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     // Lua function binding
 
     /// Member function constructor for RenderWindowGL.
-    RenderWindowGL* LuaCreateNewGLWindow(std::string dataset);
+    RenderWindow* LuaCreateNewWindow(std::string dataset);
 
     void closeMDISubWindowWithWidget(QWidget* widget);
 
@@ -406,6 +406,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool LoadDataset(const std::vector< std::string >& strParams);
     bool LoadDataset(QStringList fileName, QString targetFileName="",
                      bool bNoUserInteraction=false);
+    bool LoadDatasetInternal(QStringList files, QString targetFilename,
+                             bool bNoUserInteraction);
+    RenderWindow* LuaLoadDatasetInternal(std::vector<std::string> filename,
+                                         std::string targetFileName,
+                                         bool bNoUserInteraction);
     bool RebrickDataset(QString filename, QString targetFilename,
                         bool bNoUserInteraction);
 

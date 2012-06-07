@@ -101,6 +101,7 @@ class RenderWindow
                          bool bUseLOD, bool bPreserveTransparency,
                          std::string* strRealFilename=NULL);
     void ToggleHQCaptureMode();
+    void EnableHQCaptureMode(bool enable);
     void Translate(const FLOATMATRIX4& mTranslation,
                    tuvok::RenderRegion *region=NULL);
     void Rotate(const FLOATMATRIX4& mRotation,

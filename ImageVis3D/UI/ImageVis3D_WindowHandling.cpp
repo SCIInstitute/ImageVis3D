@@ -718,11 +718,13 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
 }
 
 
-RenderWindowGL* MainWindow::LuaCreateNewGLWindow(std::string dataset) {
+RenderWindow* MainWindow::LuaCreateNewWindow(std::string dataset) {
   RenderWindow* initialRenderWindow = m_pActiveRenderWin;
-  LoadDataset(dataset);
+  std::vector<std::string> fileList;
+  fileList.push_back(dataset);
+  LuaLoadDatasetInternal(fileList, std::string(""), false);
   if (m_pActiveRenderWin != initialRenderWindow)
-    return dynamic_cast<RenderWindowGL*>(m_pActiveRenderWin);
+    return m_pActiveRenderWin;
   else
     return NULL;
 }

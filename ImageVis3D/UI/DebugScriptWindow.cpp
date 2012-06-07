@@ -40,6 +40,8 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
 #include <QtGui/QSpacerItem>
+#include <QEvent>
+#include <QKeyEvent>
 
 #include "DebugScriptWindow.h"
 
@@ -53,6 +55,9 @@ DebugScriptWindow::DebugScriptWindow(tuvok::MasterController& controller,
 {
   setupUI();
   hookLuaFunctions();
+
+  // Install an event filter for our line edit
+  mScriptOneLineEdit->installEventFilter(this);
 }
 
 //-----------------------------------------------------------------------------
@@ -205,6 +210,31 @@ void DebugScriptWindow::setupUI()
 }
 
 //-----------------------------------------------------------------------------
+bool DebugScriptWindow::eventFilter(QObject *obj, QEvent *event)
+{
+  if (obj == mScriptOneLineEdit)
+  {
+    if (event->type() == QEvent::KeyPress)
+    {
+      QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+      if (keyEvent->key() == Qt::Key_Up)
+      {
+        /// @todo Implement scrolling through prior command history.
+        //mController.LuaScript()->exec("print('key up')");
+        return true;
+      }
+      else if (keyEvent->key() == Qt::Key_Down)
+      {
+        //mController.LuaScript()->exec("print('key down')");
+        return true;
+      }
+    }
+    return false;
+  }
+  return QDockWidget::eventFilter(obj, event);
+}
+
+//-----------------------------------------------------------------------------
 void DebugScriptWindow::execClicked()
 {
   QString qs = mScriptTextEdit->document()->toPlainText();
@@ -216,6 +246,7 @@ void DebugScriptWindow::oneLineEditOnReturnPressed()
 {
   QString qs = mScriptOneLineEdit->text();
   execLua(qs.toStdString());
+  mScriptOneLineEdit->setText(QString::fromUtf8(""));
 }
 
 //-----------------------------------------------------------------------------

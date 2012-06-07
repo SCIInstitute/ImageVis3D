@@ -59,6 +59,10 @@ protected slots:
   void oneLineEditOnReturnPressed();
   void exampComboIndexChanged(int index);
 
+protected:
+
+  bool eventFilter(QObject *obj, QEvent *event);
+
 private:
 
   void setupUI();
@@ -82,6 +86,7 @@ private:
   tuvok::MasterController&                    mController;
   tuvok::LuaMemberReg                         mMemReg;
   std::tr1::shared_ptr<tuvok::LuaScripting>   mLua;
+
 
 };
 
