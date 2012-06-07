@@ -103,9 +103,18 @@ int main(int argc, char * argv[])
 		  tuvok::Controller::Instance().IOMan()->ConvertDataset(filename, uvf_file, tmpdir, true, 256, 4, quantize8);
       filename = uvf_file;
     }
-		tuvok::AbstrRenderer * renderer = tuvok::Controller::Instance().RequestNewVolumeRenderer(tuvok::MasterController::OPENGL_SBVR, 
-																				false, false, false, false, false);
+//		tuvok::AbstrRenderer * renderer = tuvok::Controller::Instance().RequestNewVolumeRenderer(tuvok::MasterController::OPENGL_SBVR,
+//																				false, false, false, false, false);
 	
+    std::tr1::shared_ptr<tuvok::LuaScripting> ss =
+        tuvok::Controller::Instance().LuaScript();
+    tuvok::LuaClassInstance inst = ss->cexecRet<tuvok::LuaClassInstance>(
+        "tuvok.renderer.new",
+        int(tuvok::MasterController::OPENGL_SBVR), false, false,
+        false, false, false);
+    tuvok::AbstrRenderer* renderer =
+        inst.getRawPointer<tuvok::AbstrRenderer>(ss);
+
     renderer->LoadDataset(filename);
 		renderer->AddShaderPath(SHADER_PATH);
 		renderer->Initialize(tuvok::GLContextID::Current());

@@ -48,8 +48,8 @@ DebugScriptWindow::DebugScriptWindow(tuvok::MasterController& controller,
                                      QWidget* parent)
 : QDockWidget("Debug / Scripting Window", parent)
 , mController(controller)
-, mMemReg(controller.LuaScriptEngine())
-, mLua(controller.LuaScriptEngine())
+, mMemReg(controller.LuaScript())
+, mLua(controller.LuaScript())
 {
   setupUI();
   hookLuaFunctions();
@@ -181,12 +181,15 @@ void DebugScriptWindow::setupUI()
         QObject::connect(mScriptExamplesBox, SIGNAL(currentIndexChanged(int)),
                          this, SLOT(exampComboIndexChanged(int)));
 
-        QSpacerItem* spacer = new QSpacerItem(40, 20, QSizePolicy::Expanding,
-                                              QSizePolicy::Minimum);
+        QSpacerItem* spacer = new QSpacerItem(40, 10,
+                                              QSizePolicy::Expanding,
+                                              QSizePolicy::Preferred);
         comboExecLayout->addSpacerItem(spacer);
 
         mExecButton = new QPushButton();
-        mExecButton->setText(QString::fromUtf8("Execute Script Above"));
+        mExecButton->setMinimumSize(QSize(0, 23));  // Required, if not, button
+        // is shifted downwards beyond its layout control.
+        mExecButton->setText(QString::fromUtf8("Execute Script"));
         comboExecLayout->addWidget(mExecButton);
         QObject::connect(mExecButton, SIGNAL(clicked()), this,
                          SLOT(execClicked()));

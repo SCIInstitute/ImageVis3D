@@ -77,7 +77,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   QGLWidget(fmt, parent, glShareWidget, flags),
   RenderWindow(masterController, eType, dataset, iCounter, parent),
   m_bNoRCClipplanes(bNoRCClipplanes),
-  mLuaReg(masterController.LuaScriptEngine(), this)
+  mLuaReg(masterController.LuaScript(), this)
 {
   if(!SetNewRenderer( bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder))
     return;
@@ -97,10 +97,18 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
 bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo, 
                                     bool bDownSampleTo8Bits,
                                     bool bDisableBorder) {
-  m_Renderer = m_MasterController.RequestNewVolumeRenderer(
-                  m_eRendererType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
-                  bDisableBorder, m_bNoRCClipplanes, false
-               );
+//  m_Renderer = m_MasterController.RequestNewVolumeRenderer(
+//                  m_eRendererType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
+//                  bDisableBorder, m_bNoRCClipplanes, false
+//               );
+
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  LuaClassInstance inst = ss->cexecRet<LuaClassInstance>(
+      "tuvok.renderer.new",
+      int(m_eRendererType), bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
+      bDisableBorder, m_bNoRCClipplanes, false);
+  m_Renderer = inst.getRawPointer<AbstrRenderer>(ss);
+
   // so far we are not rendering anything previous to this renderer 
   // so we can disable the depth-buffer to offscreen copy operations
   m_Renderer->SetConsiderPreviousDepthbuffer(false);

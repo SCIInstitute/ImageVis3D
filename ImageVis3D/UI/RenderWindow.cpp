@@ -1449,7 +1449,9 @@ float RenderWindow::GetCurrent2DHistScale() const {
 
 void RenderWindow::BaseRegisterLuaFunctions(LuaClassRegistration& reg) {
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScriptEngine();
+  if (reg.canRegister() == false) return;
+
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   reg.function(&RenderWindow::GetCurrent1DHistScale, "getHist1DScale",
                "Retrieves 1D histogram's scale.", false);
