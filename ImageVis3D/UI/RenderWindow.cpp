@@ -115,6 +115,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
 RenderWindow::~RenderWindow()
 {
   Cleanup();
+  m_MasterController.LuaScript()->notifyOfDeletion(m_LuaThisClass);
 }
 
 
@@ -748,6 +749,7 @@ void RenderWindow::Cleanup() {
   if (m_Renderer == NULL || !m_bRenderSubsysOK) return;
 
   m_Renderer->Cleanup();
+  // ReleaseVoumeRenderer will call classDelete on our abstract renderer.
   m_MasterController.ReleaseVolumeRenderer(m_Renderer);
   m_Renderer = NULL;
 
@@ -766,8 +768,11 @@ AbstrRenderer::ERenderMode RenderWindow::GetRenderMode() const {
   return m_Renderer->GetRendermode();
 }
 
-void RenderWindow::SetBlendPrecision(AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {
-  m_Renderer->SetBlendPrecision(eBlendPrecisionMode);
+void RenderWindow::SetBlendPrecision(
+    AbstrRenderer::EBlendPrecision eBlendPrecisionMode) {
+  m_MasterController.LuaScript()->cexec(
+      GetLuaAbstrRenderer().fqName() + ".setBlendPrecision",
+      eBlendPrecisionMode);
 }
 
 void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate,
@@ -1134,8 +1139,13 @@ void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bP
 
 void RenderWindow::SetColors(FLOATVECTOR3 vTopColor, FLOATVECTOR3 vBotColor,
                              FLOATVECTOR4 vTextColor) {
-  m_Renderer->SetBackgroundColors(vTopColor, vBotColor);
-  m_Renderer->SetTextColor(vTextColor);
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string abstrRenName = GetLuaAbstrRenderer().fqName();
+
+  /// @todo Composite these two calls into one lua function to ensure they occur
+  ///       on the same undo/redo call.
+  ss->cexec(abstrRenName + ".setBGColors", vTopColor, vBotColor);
+  ss->cexec(abstrRenName + ".setTextColor", vTextColor);
 }
 
 void RenderWindow::SetUseLighting(bool bLighting, bool bPropagate) {
@@ -1320,7 +1330,10 @@ void RenderWindow::SetTimestep(size_t t, bool propagate)
 }
 
 void RenderWindow::SetLogoParams(QString strLogoFilename, int iLogoPos) {
-  m_Renderer->SetLogoParams(std::string(strLogoFilename.toAscii()), iLogoPos);
+  m_MasterController.LuaScript()->cexec(
+      GetLuaAbstrRenderer().fqName() + ".setLogoParams",
+      std::string(strLogoFilename.toAscii()),
+      iLogoPos);
 }
 
 void RenderWindow::SetAbsoluteViewLock(bool bAbsoluteViewLock) {
@@ -1456,37 +1469,38 @@ float RenderWindow::GetCurrent2DHistScale() const {
   return m_2DHistScale;
 }
 
-LuaClassInstance RenderWindow::GetLuaRenderer() const {
-  return m_LuaRenderer;
+LuaClassInstance RenderWindow::GetLuaAbstrRenderer() const {
+  return m_LuaAbstrRenderer;
 }
 
 LuaClassInstance RenderWindow::GetLuaInstance() const {
-  return m_ThisClass;
+  return m_LuaThisClass;
 }
 
 void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
 
-  me->m_ThisClass = reg.getLuaInstance();
+  me->m_LuaThisClass = reg.getLuaInstance();
 
   string id;
 
-  id = reg.function(&RenderWindow::SetColors, "setColors",
-                         "Sets the background and text colors.", true);
-  ss->addParamInfo(id, 0, "topColor", "Render window top [0,1] RGB color.");
-  ss->addParamInfo(id, 1, "botColor", "Render window bottom [0,1] RGB color");
-  ss->addParamInfo(id, 2, "textColor", "Text [0,1] RGBA color.");
+  LuaClassInstance ar = me->GetLuaAbstrRenderer();
 
-  id = reg.function(&RenderWindow::GetLuaRenderer, "getRawRenderer",
-                         "Returns the Tuvok abstract renderer instance.",
-                         false);
+  // Inherit functions from the Abstract Renderer.
+  reg.inherit(ar, "getDataset");
+  reg.inherit(ar, "setBGColors");
+  reg.inherit(ar, "setTextColor");
+  reg.inherit(ar, "setBlendPrecision");
+  reg.inherit(ar, "setLogoParams");
+
+  // Register our own functions.
+  id = reg.function(&RenderWindow::GetLuaAbstrRenderer, "getRawRenderer",
+                    "Returns the Tuvok abstract renderer instance.",
+                    false);
   ss->addReturnInfo(id, "Lua class instance of Tuvok's abstract renderer."
       "Generally, you should use the methods exposed by the render window "
       "instead of resorting to raw access to the renderer.");
-
-  id = reg.function(&RenderWindow::SetBlendPrecision, "setBlendPrecision",
-                    "Sets the blending precision to 8, 16, or 32 bit.", true);
 
   id = reg.function(&RenderWindow::SetPerfMeasures, "setPerformanceMeasures",
                     "Sets various performance measures. See info for a detailed"
@@ -1505,25 +1519,6 @@ void RenderWindow::RegisterLuaFunctions(
   ss->addParamInfo(id, 0, "filename", "Filename of the screen cap.");
   ss->addParamInfo(id, 1, "preserveTransparency", "True if you want to preserve"
       " transparency in the screen cap.");
-
-//  reg.function(&RenderWindow::GetCurrent1DHistScale, "getHist1DScale",
-//               "Retrieves 1D histogram's scale.", false);
-//  reg.function(&RenderWindow::SetCurrent1DHistScale, "setHist1DScale",
-//               "Sets 1D histogram's scale.", true);
-//  ss->setDefaults(reg.getFQName() + ".setHist1DScale", m_1DHistScale, false);
-//
-//  reg.function(&RenderWindow::GetCurrent2DHistScale, "getHist2DScale",
-//               "Retrieves 2D histogram's scale.", false);
-//  reg.function(&RenderWindow::SetCurrent2DHistScale, "setHist2DScale",
-//               "Sets 2D histogram's scale.", true);
-//  ss->setDefaults(reg.getFQName() + ".setHist2DScale", m_2DHistScale, false);
-
-//  renderWin->SetColors(m_vBackgroundColors, m_vTextColor);
-//  renderWin->SetBlendPrecision(AbstrRenderer::EBlendPrecision(m_iBlendPrecisionMode));
-//  renderWin->SetPerfMeasures(m_iMinFramerate, m_bRenderLowResIntermediateResults, 2.0f, 2.0f, m_iLODDelay/m_pRedrawTimer->interval(), m_iActiveTS, m_iInactiveTS);
-//  renderWin->SetLogoParams(m_strLogoFilename, m_iLogoPos);
-//  renderWin->SetAbsoluteViewLock(m_bAbsoluteViewLocks);
-//  renderWin->SetInvMouseWheel(m_bInvWheel);
 }
 
 

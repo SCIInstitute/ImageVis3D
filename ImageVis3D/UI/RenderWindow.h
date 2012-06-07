@@ -232,8 +232,8 @@ class RenderWindow
     FLOATVECTOR2              m_vWinFraction;
     static const int          regionSplitterWidth = 6;
     tuvok::RenderRegion*      activeRegion; // The region that should have focus
-    tuvok::LuaClassInstance   m_ThisClass;
-    tuvok::LuaClassInstance   m_LuaRenderer;
+    tuvok::LuaClassInstance   m_LuaThisClass;
+    tuvok::LuaClassInstance   m_LuaAbstrRenderer;
     MainWindow*               m_MainWindow;
 
     // If later on more than 4 regions are desired this can either be
@@ -337,7 +337,7 @@ class RenderWindow
     /// Returns the Lua Renderer. This is used instead of inheriting the methods
     /// from the renderer, because, for the most part, the user won't care about
     /// the methods in the renderer().
-    tuvok::LuaClassInstance GetLuaRenderer() const;
+    tuvok::LuaClassInstance GetLuaAbstrRenderer() const;
 
   private:
 

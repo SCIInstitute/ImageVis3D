@@ -101,11 +101,11 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
 //               );
 
   tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-  m_LuaRenderer = ss->cexecRet<LuaClassInstance>(
+  m_LuaAbstrRenderer = ss->cexecRet<LuaClassInstance>(
       "tuvok.renderer.new",
       m_eRendererType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
       bDisableBorder, m_bNoRCClipplanes, false);
-  m_Renderer = m_LuaRenderer.getRawPointer<AbstrRenderer>(ss);
+  m_Renderer = m_LuaAbstrRenderer.getRawPointer<AbstrRenderer>(ss);
 
   // so far we are not rendering anything previous to this renderer 
   // so we can disable the depth-buffer to offscreen copy operations
