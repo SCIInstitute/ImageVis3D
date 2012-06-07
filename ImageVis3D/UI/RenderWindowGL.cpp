@@ -105,9 +105,14 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
   tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   LuaClassInstance inst = ss->cexecRet<LuaClassInstance>(
       "tuvok.renderer.new",
-      int(m_eRendererType), bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
+      m_eRendererType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
       bDisableBorder, m_bNoRCClipplanes, false);
   m_Renderer = inst.getRawPointer<AbstrRenderer>(ss);
+
+  // 'Inherit' ourselves from the abstract renderer. We act like a derived
+  // class of abstract renderer, where all of abstract renderer's functions
+  // can be called from our class.
+  mLuaReg.inherit(inst);
 
   // so far we are not rendering anything previous to this renderer 
   // so we can disable the depth-buffer to offscreen copy operations
