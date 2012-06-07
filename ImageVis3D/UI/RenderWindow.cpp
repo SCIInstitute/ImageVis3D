@@ -90,7 +90,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
 
   m_eViewMode(VM_SINGLE),
   m_vWinFraction(0.5, 0.5),
-  activeRegion(NULL),
+  activeRegion(LuaClassInstance::DEFAULT_INSTANCE_ID),
   m_MainWindow((MainWindow*)parent),
   m_eRendererType(eType),
   m_iTimeSliceMSecsActive(500),

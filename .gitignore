@@ -13,3 +13,4 @@ ImageVis3D.pro.user
 *.suo
 *.opensdf
 ImageVis3D/UI/AutoGen
+*.o
