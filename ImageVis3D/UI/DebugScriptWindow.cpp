@@ -161,6 +161,7 @@ void DebugScriptWindow::setupUI()
             "regress_scriptDir = homeDir .. '/sci/imagevis3d/Tuvok/LuaScripting"
             "/Regression/iv3d'\n"
             "regress_c60Dir = homeDir .. '/sci/datasets/c60.uvf'\n"
+            "regress_outputDir = homeDir .. '/sci/outputDatasets'\n"
             "luaVerboseMode(true)\n\n"
             "-- Todo: Switch to LuaFileSystem -- cross platform\n"
             "for fname in dir(regress_scriptDir) do\n"
@@ -172,6 +173,45 @@ void DebugScriptWindow::setupUI()
             "luaVerboseMode(false)\n");
         mScriptExamplesBox->addItem(QString::fromUtf8("Regression Testing"),
                                     QVariant(regressionTesting));
+
+        QString autoScreenCap = QString::fromUtf8(
+            "-- This script will only run on a Posix compliant OS.\n"
+            "-- Opens the dataset given by 'filename' and begins taking screen captures.\n"
+            "-- You can manually transform the dataset while the script is running.\n"
+            "-- Expect horrible things to happen if you close the render window while\n"
+            "-- the script is running.\n"
+            "local homeDir = os.getenv('HOME')\n"
+            "local filename = homeDir .. '/sci/datasets/c60.uvf'\n"
+            "local outputDir = homeDir .. '/sci/imageOutput'\n"
+            "local numScreenCaps = 128\n\n"
+            "print('Animate and capture script')\n"
+            "print('Results will be output to: ' .. outputDir)\n"
+            "os.execute('mkdir -p ' .. outputDir)\n\n"
+            "-- data = Render window to animate.\n"
+            "-- numFrames = Number of frames to capture during the animation.\n"
+            "function doAnim (data, numFrames)\n"
+            "  local datasetPath = data.getDataset().path()\n"
+            "  local baseName = os.capture('basename ' .. datasetPath .. ' .uvf', false)\n"
+            "  print('Using basename: ' .. baseName)\n"
+            "  t = 0.0\n"
+            "  dt = 2.0 * math.pi / numFrames\n"
+            "  for i=1,numFrames do\n"
+            "    t = t + dt\n"
+            "    print('Capturing screen ' .. i)\n"
+            "    data.screenCapture(outputDir .. '/' .. baseName .. '_' .. i .. '.png', false)\n"
+            "    -- Dirty hack to get the UI to update.\n"
+            "    iv3d.processUI()\n"
+            "  end\n"
+            "end\n\n"
+            "print('Loading data')\n"
+            "data = iv3d.renderer.new(filename)\n"
+            "print('Performing screen captures')\n"
+            "data.setRendererTarget(1)\n"
+            "doAnim(data, numScreenCaps)\n"
+            "data.setRendererTarget(0)\n");
+        mScriptExamplesBox->addItem(QString::fromUtf8("Auto Screen Cap"),
+                                    QVariant(autoScreenCap));
+
 
         QString exampleMath = QString::fromUtf8(
             "print('-- Binary Operators --')\n"

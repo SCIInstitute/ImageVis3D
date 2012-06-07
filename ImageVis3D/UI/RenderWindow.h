@@ -103,9 +103,9 @@ class RenderWindow
     void ToggleHQCaptureMode();
     void EnableHQCaptureMode(bool enable);
     void Translate(const FLOATMATRIX4& mTranslation,
-                   tuvok::RenderRegion *region=NULL);
+                   tuvok::LuaClassInstance region=tuvok::LuaClassInstance());
     void Rotate(const FLOATMATRIX4& mRotation,
-                tuvok::RenderRegion *region=NULL);
+                tuvok::LuaClassInstance region=tuvok::LuaClassInstance());
     void SetCaptureRotationAngle(float fAngle);
     bool IsRenderSubsysOK() const {return m_bRenderSubsysOK;}
 
@@ -114,22 +114,22 @@ class RenderWindow
 
     void SetLogoParams(QString strLogoFilename, int iLogoPos);
 
-    void SetTranslationDelta(tuvok::RenderRegion *region,
+    void SetTranslationDelta(tuvok::LuaClassInstance region,
                              const FLOATVECTOR3& trans,
                              bool bPropagate);
-    void SetRotationDelta(tuvok::RenderRegion *region,
+    void SetRotationDelta(tuvok::LuaClassInstance region,
                           const FLOATMATRIX4& rotDelta,
                           bool bPropagate);
-    void SetClipPlane(tuvok::RenderRegion *region, const ExtendedPlane &p);
-    void SetClipTranslationDelta(tuvok::RenderRegion *region,
+    void SetClipPlane(tuvok::LuaClassInstance region, const ExtendedPlane &p);
+    void SetClipTranslationDelta(tuvok::LuaClassInstance region,
                                  const FLOATVECTOR3& trans,
                                  bool, bool);
-    void SetClipRotationDelta(tuvok::RenderRegion *region,
+    void SetClipRotationDelta(tuvok::LuaClassInstance region,
                               const FLOATMATRIX4& rotDelta,
                               bool, bool);
     void SetPlaneAtClick(const ExtendedPlane& plane, bool propagate=true);
     void CloneViewState(RenderWindow* other);
-    void FinalizeRotation(const tuvok::RenderRegion *region, bool bPropagate);
+    void FinalizeRotation(tuvok::LuaClassInstance region, bool bPropagate);
     void CloneRendermode(RenderWindow* other);
     void SetAbsoluteViewLock(bool bAbsoluteViewLock);
 
@@ -158,7 +158,7 @@ class RenderWindow
     void SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCV(bool bDoClearView, bool bPropagate=true);
-    void SetCVFocusPos(tuvok::RenderRegion *region, const INTVECTOR2& vMousePos,
+    void SetCVFocusPos(tuvok::LuaClassInstance region, const INTVECTOR2& vMousePos,
                        bool bPropagate=true);
     void SetTimestep(size_t, bool=true);
 
@@ -183,7 +183,7 @@ class RenderWindow
 
     tuvok::LuaClassInstance GetLuaInstance() const;
 
-    tuvok::RenderRegion* GetRegionUnderCursor(INTVECTOR2 vPos) const;
+    tuvok::LuaClassInstance GetRegionUnderCursor(INTVECTOR2 vPos) const;
 
     enum EViewMode {
       VM_SINGLE = 0,  /**< a single large image */
@@ -201,15 +201,38 @@ class RenderWindow
 
     RegionSplitter GetRegionSplitter(INTVECTOR2 pos) const;
 
-    tuvok::RenderRegion3D* GetFirst3DRegion();
-    const std::vector<tuvok::RenderRegion*>& GetActiveRenderRegions() const;
-    void SetActiveRenderRegions(const std::vector<tuvok::RenderRegion*>&) const;
+    tuvok::LuaClassInstance GetFirst3DRegion();
+    const std::vector<tuvok::LuaClassInstance> GetActiveRenderRegions() const;
+    void SetActiveRenderRegions(std::vector<tuvok::LuaClassInstance>) const;
     void ResetRenderingParameters();
 
     static void RegisterLuaFunctions(
           tuvok::LuaClassRegistration<RenderWindow>& reg,
           RenderWindow* me,
           tuvok::LuaScripting* ss);
+
+    // Helper functions for accessing components in the region/abstract
+    // renderer.
+    uint64_t GetSliceDepth(tuvok::LuaClassInstance renderRegion) const;
+    void SetSliceDepth(tuvok::LuaClassInstance renderRegion,
+                       uint64_t newDepth);
+    bool IsRegion2D(tuvok::LuaClassInstance region) const;
+    bool IsRegion3D(tuvok::LuaClassInstance region) const;
+    bool DoesRegionContainPoint(tuvok::LuaClassInstance region,
+                                UINTVECTOR2 pos) const;
+    tuvok::RenderRegion::EWindowMode GetRegionWindowMode(
+        tuvok::LuaClassInstance) const;
+    UINTVECTOR2 GetRegionMinCoord(tuvok::LuaClassInstance region) const;
+    UINTVECTOR2 GetRegionMaxCoord(tuvok::LuaClassInstance region) const;
+    void SetRegionMinCoord(tuvok::LuaClassInstance region,UINTVECTOR2 minCoord);
+    void SetRegionMaxCoord(tuvok::LuaClassInstance region,UINTVECTOR2 maxCoord);
+    bool Get2DFlipModeX(tuvok::LuaClassInstance region) const;
+    bool Get2DFlipModeY(tuvok::LuaClassInstance region) const;
+    void Set2DFlipMode(tuvok::LuaClassInstance region, bool flipX, bool flipY);
+    bool GetUseMIP(tuvok::LuaClassInstance region);
+    void SetUseMIP(tuvok::LuaClassInstance region, bool useMip);
+    FLOATMATRIX4 GetRotation(tuvok::LuaClassInstance region);
+    FLOATMATRIX4 GetTranslation(tuvok::LuaClassInstance region);
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
@@ -232,7 +255,7 @@ class RenderWindow
     EViewMode                 m_eViewMode;
     FLOATVECTOR2              m_vWinFraction;
     static const int          regionSplitterWidth = 6;
-    tuvok::RenderRegion*      activeRegion; // The region that should have focus
+    tuvok::LuaClassInstance   activeRegion; // The region that should have focus
     tuvok::LuaClassInstance   m_LuaThisClass;
     tuvok::LuaClassInstance   m_LuaAbstrRenderer;
     MainWindow*               m_MainWindow;
@@ -241,7 +264,8 @@ class RenderWindow
     // increased or something fancier than an array can be used.
     static const int MAX_RENDER_REGIONS = 4;
     static const int NUM_WINDOW_MODES = 4;
-    tuvok::RenderRegion *renderRegions[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];
+    tuvok::LuaClassInstance luaRenderRegions[MAX_RENDER_REGIONS]
+                                            [NUM_WINDOW_MODES];
     int selected2x2Regions[4]; //index into renderRegions
 
     static std::string ms_gpuVendorString;
@@ -258,11 +282,13 @@ class RenderWindow
 
     RegionData regionDatas[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];
 
-    typedef std::tr1::unordered_map<const tuvok::RenderRegion*, RegionData*>
+    /// The integer in this map is the global unique ID of the RenderRegion's
+    /// LuaClassInstance.
+    typedef std::tr1::unordered_map<tuvok::LuaClassInstance::IDType,RegionData*>
       RegionDataMap;
     RegionDataMap regionDataMap;
 
-    RegionData* GetRegionData(const tuvok::RenderRegion* const) const;
+    RegionData* GetRegionData(tuvok::LuaClassInstance) const;
 
     void SetupArcBall();
 
@@ -292,7 +318,7 @@ class RenderWindow
     void Initialize();
     virtual void SwapBuffers() {}
 
-    void UpdateCursor(const tuvok::RenderRegion *region,
+    void UpdateCursor(tuvok::LuaClassInstance region,
                       INTVECTOR2 pos, bool translate);
 
     void BaseSetLuaDefaults();
@@ -300,16 +326,16 @@ class RenderWindow
     /// @param[in,out] newRenderRegions with coordinates updated to reflect the
     /// new view mode.
     /// @param[in] eViewMode The new ViewMode to use.
-    virtual void SetViewMode(const std::vector<tuvok::RenderRegion*> &newRenderRegions,
+    virtual void SetViewMode(const std::vector<tuvok::LuaClassInstance> &newRenderRegions,
                              EViewMode eViewMode);
 
     void SetWindowFraction2x2(FLOATVECTOR2 f);
     FLOATVECTOR2 WindowFraction2x2() const { return m_vWinFraction; }
     void UpdateWindowFraction();
 
-    tuvok::RenderRegion* GetCorrespondingRenderRegion(
+    tuvok::LuaClassInstance GetCorrespondingRenderRegion(
         const RenderWindow* otherRW,
-        const tuvok::RenderRegion* myRR) const;
+        tuvok::LuaClassInstance myRR) const;
     tuvok::MasterController::EVolumeRendererType m_eRendererType;
 
   private:
@@ -320,7 +346,7 @@ class RenderWindow
     /// @param translate if this should translate the clip plane
     /// @param region    The active RenderRegion the mouse/user is operating in.
     bool MouseMoveClip(INTVECTOR2 pos, bool rotate, bool translate,
-                       tuvok::RenderRegion *region);
+                       tuvok::LuaClassInstance region);
 
     /// Called for a mouse update when in the 3D view mode.
     /// @param pos new position of the mouse cursor
@@ -329,11 +355,14 @@ class RenderWindow
     /// @param translate should this action translate the data
     /// @param region    The active RenderRegion the mouse/user is operating in.
     bool MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate, bool translate,
-                     tuvok::RenderRegion *region);
+                     tuvok::LuaClassInstance region);
 
-    void SetRotation(tuvok::RenderRegion *region, const FLOATMATRIX4& newRotation);
-    void SetTranslation(tuvok::RenderRegion *region,
-                        const FLOATMATRIX4& mAccumulatedTranslation);
+    void SetRotation(tuvok::LuaClassInstance region,
+                     FLOATMATRIX4 newRotation,
+                     bool logProvenance);
+    void SetTranslation(tuvok::LuaClassInstance region,
+                        FLOATMATRIX4 accumulatedTranslation,
+                        bool logProvenance);
 
     /// Returns the Lua Renderer. This is used instead of inheriting the methods
     /// from the renderer, because, for the most part, the user won't care about

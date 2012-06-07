@@ -1146,9 +1146,10 @@ void MainWindow::CropData() {
     pleaseWait.SetText("Cropping dataset");
     pleaseWait.AttachLabel(&m_MasterController);
 
+    LuaClassInstance first3DRegion = m_pActiveRenderWin->GetFirst3DRegion();
     ExtendedPlane p = m_pActiveRenderWin->GetRenderer()->GetClipPlane();
-    FLOATMATRIX4 trans = m_pActiveRenderWin->GetFirst3DRegion()->rotation * 
-                         m_pActiveRenderWin->GetFirst3DRegion()->translation;
+    FLOATMATRIX4 trans = m_pActiveRenderWin->GetRotation(first3DRegion) *
+                         m_pActiveRenderWin->GetTranslation(first3DRegion);
 
     // get rid of the viewing transformation in the plane
     p.Transform(trans.inverse(),false);

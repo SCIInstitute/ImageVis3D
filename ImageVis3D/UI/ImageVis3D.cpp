@@ -904,6 +904,11 @@ void MainWindow::ResetRenderingParameters() {
 }
 
 
+static void CallQTProcessEvents()
+{
+  QApplication::processEvents();
+}
+
 void MainWindow::RegisterLuaClasses() {
   m_MasterController.LuaScript()->registerClass<RenderWindow>(
       this, &MainWindow::LuaCreateNewWindow,
@@ -917,6 +922,20 @@ void MainWindow::RegisterLuaClasses() {
       LuaClassRegCallback<RenderWindow>::Type(
                 &RenderWindow::RegisterLuaFunctions)
       );
+
+  // And some lua functions...
+
+  // We need to expose QApplication::processEvents() because we are running
+  // in the GUI thread... This is useful for scripts that take a long time to
+  // run and need the UI to update.
+  m_MasterController.LuaScript()->registerFunction(
+      &CallQTProcessEvents,
+      "iv3d.processUI",
+      "Calls QT's QApplication::processEvents(). If you have a long running "
+      "script and want the UI to update while the script is running, you will "
+      "need to call this periodically. This is necessary because Tuvok runs on "
+      "the GUI's thread instead of on its own thread.",
+      false);
 }
 
 void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {

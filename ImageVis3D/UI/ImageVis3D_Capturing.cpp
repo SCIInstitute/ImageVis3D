@@ -99,7 +99,7 @@ void MainWindow::CaptureRotation() {
   if (m_pActiveRenderWin) {
     assert(m_pActiveRenderWin->GetActiveRenderRegions().size() == 1);
 
-    const RenderRegion *renderRegion =
+    const LuaClassInstance renderRegion =
       m_pActiveRenderWin->GetActiveRenderRegions()[0];
 
     QSettings settings;
@@ -110,8 +110,8 @@ void MainWindow::CaptureRotation() {
     int iEyeDist    = settings.value("Renderer/RotationEyeDist", 3).toInt();
 
     bool ok;
-    if (renderRegion->is2D() &&
-        m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
+    if (m_pActiveRenderWin->IsRegion2D(renderRegion) &&
+        m_pActiveRenderWin->GetUseMIP(renderRegion)) {
       MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD,
                                 iEyeDist, this);
       if (mipRotDialog.exec() == QDialog::Accepted) {
@@ -146,7 +146,7 @@ void MainWindow::CaptureRotation() {
     PleaseWaitDialog pleaseWait(this, Qt::Tool, true);
     QTLabelOut* labelOut = pleaseWait.AttachLabel(&m_MasterController);
 
-    if (renderRegion->is3D()) {
+    if (m_pActiveRenderWin->IsRegion3D(renderRegion)) {
       pleaseWait.SetText("Capturing a full 360° rotation, please wait  ...");
 
       int i = 0;
@@ -203,7 +203,7 @@ void MainWindow::CaptureRotation() {
       }
       
     } else {
-      if (m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion)) {
+      if (m_pActiveRenderWin->GetUseMIP(renderRegion)) {
         bool bReUse = true;
         int iReUseOffset = 0;
         string strImageFilename = lineEditCaptureFile->text().toStdString();
@@ -286,7 +286,7 @@ void MainWindow::CaptureRotation() {
         }
 
         if (!pleaseWait.Canceled() &&
-            m_pActiveRenderWin->GetRenderer()->GetUseMIP(renderRegion) &&
+            m_pActiveRenderWin->GetUseMIP(renderRegion) &&
             bStereo) {
           labelOut->SetOutput(true, true, true, false);
 
