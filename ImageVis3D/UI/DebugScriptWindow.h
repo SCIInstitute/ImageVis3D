@@ -35,7 +35,7 @@
 
 #include <QtGui/QDockWidget>
 #include "../Tuvok/Controller/MasterController.h"
-#include "../Tuvok/LUAScripting/LUAMemberReg.h"
+#include "../Tuvok/LuaScripting/LuaMemberReg.h"
 
 class QVBoxLayout;
 class QTabWidget;

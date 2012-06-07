@@ -56,8 +56,8 @@
 #include "../Tuvok/Renderer/GL/GLInclude.h"
 #include "../Tuvok/Renderer/GL/GLRenderer.h"
 #include "../Tuvok/Renderer/ContextIdentification.h"
-#include "../Tuvok/LUAScripting/LUAScripting.h"
-#include "../Tuvok/LUAScripting/LUATuvokSpecificTypes.h"
+#include "../Tuvok/LuaScripting/LuaScripting.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 
 using namespace std;
 using namespace tuvok;

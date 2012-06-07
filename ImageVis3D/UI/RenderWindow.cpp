@@ -59,8 +59,8 @@
 #include "../Tuvok/Renderer/GL/GLFBOTex.h"
 #include "../Tuvok/Renderer/GL/GLRenderer.h"
 #include "../Tuvok/Renderer/GL/GLTargetBinder.h"
-#include "../Tuvok/LUAScripting/LUAScripting.h"
-#include "../Tuvok/LUAScripting/LUATuvokSpecificTypes.h"
+#include "../Tuvok/LuaScripting/LuaScripting.h"
+#include "../Tuvok/LuaScripting/LuaTuvokSpecificTypes.h"
 #include "Basics/tr1.h"
 
 using namespace std;
@@ -1548,9 +1548,7 @@ void RenderWindow::RegisterLuaFunctions(
   ss->addParamInfo(id, 1, "preserveTransparency", "True if you want to preserve"
       " transparency in the screen cap.");
 
-//  id = reg.function(&RenderWindow::EnableHQCaptureMode, "setHQCaptureMode",
-//                    "Enables/Disables high quality capture mode. Use this in "
-//                    "conjunction with screenCapture.", true); // Composite.
+
 }
 
 

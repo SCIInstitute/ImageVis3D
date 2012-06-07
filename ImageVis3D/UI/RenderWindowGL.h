@@ -50,8 +50,8 @@
 
 #include <QtOpenGL/QGLWidget>
 
-#include "../Tuvok/LUAScripting/LUAScripting.h"
-#include "../Tuvok/LUAScripting/LUAClassRegistration.h"
+#include "../Tuvok/LuaScripting/LuaScripting.h"
+#include "../Tuvok/LuaScripting/LuaClassRegistration.h"
 
 class MainWindow;
 

@@ -63,8 +63,8 @@ class TextfileOut;
 #include "../Tuvok/IO/uvfDataset.h"
 #include "DebugScriptWindow.h"
 
-#include "../Tuvok/LUAScripting/LUAScripting.h"
-#include "../Tuvok/LUAScripting/LUAClassRegistration.h"
+#include "../Tuvok/LuaScripting/LuaScripting.h"
+#include "../Tuvok/LuaScripting/LuaClassRegistration.h"
 
 class QDragEnterEvent;
 class QDropEvent;

@@ -48,8 +48,8 @@
 #include "../Tuvok/Basics/Plane.h"
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/Renderer/AbstrRenderer.h"
-#include "../Tuvok/LUAScripting/LUAScripting.h"
-#include "../Tuvok/LUAScripting/LUAClassRegistration.h"
+#include "../Tuvok/LuaScripting/LuaScripting.h"
+#include "../Tuvok/LuaScripting/LuaClassRegistration.h"
 
 #ifdef DETECTED_OS_WINDOWS
 # include <unordered_map>

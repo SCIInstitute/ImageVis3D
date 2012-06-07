@@ -151,8 +151,31 @@ void DebugScriptWindow::setupUI()
         mScriptExamplesBox = new QComboBox();
         comboExecLayout->addWidget(mScriptExamplesBox);
         QString emptyExample = QString::fromUtf8(" ");
+
         mScriptExamplesBox->addItem(QString::fromUtf8(" "),
                                     QVariant(emptyExample));
+
+//        "function file_exists(name)\n"
+//        "  local f=io.open(name,'r')\n"
+//        "  if f~=nil then io.close(f) return true else return false end\n"
+//        "end\n"
+        QString regressionTesting = QString::fromUtf8(
+            "-- Please modify the variables below to point to valid paths.\n"
+            "local homeDir = os.getenv('HOME')\n"
+            "regress_scriptDir = homeDir .. '/sci/imagevis3d/Tuvok/LuaScripting"
+            "/Regression/iv3d'\n"
+            "regress_c60Dir = homeDir .. '/sci/datasets/c60.uvf'\n\n"
+            "\n"
+            "-- Todo: Switch to LuaFileSystem -- cross platform\n"
+            "for fname in dir(regress_scriptDir) do\n"
+            "  if fname ~= '.' and fname ~= '..' then\n"
+            "    print('Running \\'' .. fname .. '\\'')\n"
+            "    dofile(regress_scriptDir .. '/' .. fname)\n"
+            "  end\n"
+            "end\n");
+        mScriptExamplesBox->addItem(QString::fromUtf8("Regression Testing"),
+                                    QVariant(regressionTesting));
+
         QString exampleMath = QString::fromUtf8(
             "print('-- Binary Operators --')\n"
             "print(5 + 79)\n"
