@@ -7,8 +7,8 @@ qmake -tp vc ^
   QMAKE_CXXFLAGS+=%w32_cf% ^
   -recursive ^
   ImageVis3d.pro
-REM hardcoding vs2008 for now =(
-set bld="C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\devenv.COM"
+REM hardcoding vs2010 express for now =(
+set bld="C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\VCExpress.exe"
 %bld% ^
   ImageVis3D.sln ^
   /nologo ^
