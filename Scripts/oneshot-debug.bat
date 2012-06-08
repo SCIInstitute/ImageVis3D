@@ -10,9 +10,8 @@ qmake -tp vc ^
 REM hardcoding vs2010 express for now =(
 set bld="C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\VCExpress.exe"
 %bld% ^
-  ImageVis3D.sln ^
-  /nologo ^
-  /Rebuild
+  ImageVis3D-2010.sln ^
+  /build Release
 
 pushd Tuvok\IO\test
   python ../3rdParty/cxxtest/cxxtestgen.py ^
