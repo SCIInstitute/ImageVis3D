@@ -35,7 +35,7 @@ pushd Tuvok\IO\test
   %bld% ^
     cxxtester.vcproj ^
     /nologo ^
-    /Rebuild
+    /t:Rebuild
 popd
 
 REM download documentation
