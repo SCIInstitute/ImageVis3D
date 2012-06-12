@@ -11,7 +11,7 @@ REM hardcoding vs2010 express for now =(
 REM set bld="C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\VCExpress.exe"
 REM TODO - Set visual studio 2010 environment variables.
 REM Set environment for x86 build tools.
-"C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
+REM "C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
 set bld="msbuild"
 %bld% ^
   ImageVis3D-2010.sln ^
