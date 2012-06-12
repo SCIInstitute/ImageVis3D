@@ -14,3 +14,4 @@ ImageVis3D.pro.user
 *.opensdf
 ImageVis3D/UI/AutoGen
 *.o
+*.swp
