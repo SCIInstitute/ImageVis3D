@@ -64,9 +64,13 @@ Name: {userappdata}\ImageVis3D; Flags: uninsalwaysuninstall
 [Files]
 ; Dependencies.
 ;   MS redistributable crap.
-Source: C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\*; DestDir: {app}; Flags: recursesubdirs
-;Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.MFC\*"; DestDir: "{app}"; Flags: recursesubdirs
-;Source: "vcredist.exe"; DestDir: {tmp}; DestName: vcredist.exe; Flags: deleteafterinstall;
+; Getting rid of redistributable until we can either: 1) run vcredist_x86.exe during setup, or 2) install visual studio 2010
+; as opposed to visual studio 2010 express edition. Express edition does NOT come with a redist directory, but the full 
+; version does:
+; http://connect.microsoft.com/VisualStudio/feedback/details/559425/c-2010-express-web-install-vc-redist-folder-missing
+;
+;Source: C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\*; DestDir: {app}; Flags: recursesubdirs
+;;Source: "vcredist.exe"; DestDir: {tmp}; DestName: vcredist.exe; Flags: deleteafterinstall;
 
 
 ; ImageVis3D
