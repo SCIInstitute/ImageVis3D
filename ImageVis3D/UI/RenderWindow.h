@@ -50,6 +50,7 @@
 #include "../Tuvok/Renderer/AbstrRenderer.h"
 #include "../Tuvok/LuaScripting/LuaScripting.h"
 #include "../Tuvok/LuaScripting/LuaClassRegistration.h"
+#include "../Tuvok/LuaScripting/LuaMemberReg.h"
 
 #ifdef DETECTED_OS_WINDOWS
 # include <unordered_map>
@@ -260,6 +261,7 @@ class RenderWindow
     tuvok::LuaClassInstance   m_LuaThisClass;
     tuvok::LuaClassInstance   m_LuaAbstrRenderer;
     MainWindow*               m_MainWindow;
+    tuvok::LuaMemberReg       m_MemReg;
 
     // If later on more than 4 regions are desired this can either be
     // increased or something fancier than an array can be used.
@@ -376,6 +378,11 @@ class RenderWindow
     /// from the renderer, because, for the most part, the user won't care about
     /// the methods in the renderer().
     tuvok::LuaClassInstance GetLuaAbstrRenderer() const;
+
+    // Lua Callback functions.
+
+
+    void LuaCallbackEnableClipPlane(bool enable);
 
   private:
 

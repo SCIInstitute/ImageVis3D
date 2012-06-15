@@ -92,6 +92,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_vWinFraction(0.5, 0.5),
   activeRegion(LuaClassInstance::DEFAULT_INSTANCE_ID),
   m_MainWindow((MainWindow*)parent),
+  m_MemReg(masterController.LuaScript()),
   m_eRendererType(eType),
   m_iTimeSliceMSecsActive(500),
   m_iTimeSliceMSecsInActive(100),
@@ -669,7 +670,6 @@ void RenderWindow::CloseEvent(QCloseEvent* close) {
   this->GetQtWidget()->setEnabled(false);
   this->GetQtWidget()->lower();
   EmitWindowClosing();
-  Cleanup();
   close->accept();
 }
 
@@ -930,7 +930,6 @@ void RenderWindow::Cleanup() {
   if (m_Renderer == NULL || !m_bRenderSubsysOK) return;
 
   m_Renderer->Cleanup();
-  // ReleaseVoumeRenderer will call classDelete on our abstract renderer.
   m_MasterController.ReleaseVolumeRenderer(m_Renderer);
   m_Renderer = NULL;
 
@@ -1517,6 +1516,14 @@ void RenderWindow::SetClipPlaneEnabled(bool enable, bool bPropagate)
   ss->endCommandGroup();
 }
 
+void RenderWindow::LuaCallbackEnableClipPlane(bool enable)
+{
+  // This function is called from Lua every time enableClipPlane is called.
+  // We should be the active render window and we should change the checkbox
+  // state.
+  m_MainWindow->LuaCallbackToggleClipPlane(enable);
+}
+
 void RenderWindow::SetClipPlaneDisplayed(bool bDisp, bool bPropagate)
 {
   m_Renderer->ShowClipPlane(bDisp);
@@ -1818,6 +1825,10 @@ void RenderWindow::RegisterLuaFunctions(
   string id;
 
   LuaClassInstance ar = me->GetLuaAbstrRenderer();
+
+  // Hooks for updating the UI when events in Tuvok occur.
+  me->m_MemReg.strictHook(me, &RenderWindow::LuaCallbackEnableClipPlane,
+                          me->GetFirst3DRegion().fqName() + ".enableClipPlane");
 
   // Inherit functions from the Abstract Renderer.
   reg.inherit(ar, "getDataset");

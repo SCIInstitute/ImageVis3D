@@ -582,6 +582,18 @@ void MainWindow::ToggleClipPlane(bool bClip)
 
   rw->SetClipPlaneEnabled(bClip);
 
+  // We can live without calling LuaCallbackToggleClipPlane explicitly,
+  // since SetClipPlaneEnabled will end up calling it for us.
+  //LuaCallbackToggleClipPlane(bClip);
+}
+
+void MainWindow::LuaCallbackToggleClipPlane(bool bClip)
+{
+  // Check the 'enable' box, but make sure we don't send any sort of event.
+  checkBox_ClipPlane->blockSignals(true);
+  checkBox_ClipPlane->setChecked(bClip);
+  checkBox_ClipPlane->blockSignals(false);
+
   checkBox_ClipShow->setEnabled(bClip);
   checkBox_ClipLockObject->setEnabled(bClip);
   toolButton_CropData->setEnabled(bClip);

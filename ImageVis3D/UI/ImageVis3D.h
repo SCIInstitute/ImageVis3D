@@ -111,6 +111,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
     void closeMDISubWindowWithWidget(QWidget* widget);
 
+    // Lua callback functions (called from Lua when actions are undone/redone).
+    void LuaCallbackToggleClipPlane(bool bClip);
+
   public slots:
     void SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
                                        unsigned int iCurrentCount,

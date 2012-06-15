@@ -98,9 +98,9 @@ void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
   }
 
   if (pRenderWin && pRenderWin->IsRenderSubsysOK()) {
-    UINT64VECTOR3 vSize = pRenderWin->GetRenderer()->
-                                      GetDataset().
-                                      GetDomainSize(iMinLODIndex);
+    AbstrRenderer* ren = pRenderWin->GetRenderer();
+    Dataset& dataset = ren->GetDataset();
+    UINT64VECTOR3 vSize = dataset.GetDomainSize(iMinLODIndex);
     QString strSize = tr("%1 x %2 x %3").arg(vSize.x).arg(vSize.y).arg(vSize.z);
     if (strSize != lineEdit_SizeForView->text()) {
       lineEdit_SizeForView->setText(strSize);
