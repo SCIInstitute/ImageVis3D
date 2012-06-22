@@ -26,7 +26,6 @@
    DEALINGS IN THE SOFTWARE.
 */
 
-
 //!    File   : RenderWindow.cpp
 //!    Author : Jens Krueger
 //!             SCI Institute
@@ -123,7 +122,7 @@ void RenderWindow::ToggleHQCaptureMode() {
   /// @todo call explicitly through the command system to enable provenance.
   ///       It is not entirely clear that this should be the only function
   ///       called however.
-  if (m_Renderer->GetRendererTarget() == AbstrRenderer::RT_CAPTURE) {
+  if (GetRendererTarget() == AbstrRenderer::RT_CAPTURE) {
     EnableHQCaptureMode(false);
   } else {
     EnableHQCaptureMode(true);
@@ -134,12 +133,12 @@ void RenderWindow::EnableHQCaptureMode(bool enable) {
   tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string abstrRenName = GetLuaAbstrRenderer().fqName();
 
-  if (m_Renderer->GetRendererTarget() == AbstrRenderer::RT_CAPTURE) {
+  if (GetRendererTarget() == AbstrRenderer::RT_CAPTURE) {
     // restore rotation from before the capture process
     if (enable == false) {
       /// @fixme Shouldn't this be GetFirst3DRegion?
       SetRotation(GetActiveRenderRegions()[0], m_mCaptureStartRotation);
-      ss->cexec(abstrRenName + ".setRendererTarget", m_RTModeBeforeCapture);
+      SetRendererTarget(m_RTModeBeforeCapture);
     }
   } else {
     // remember rotation from before the capture process
@@ -147,9 +146,16 @@ void RenderWindow::EnableHQCaptureMode(bool enable) {
       m_RTModeBeforeCapture = ss->cexecRet<AbstrRenderer::ERendererTarget>(
           abstrRenName + ".getRendererTarget");
       m_mCaptureStartRotation = GetRotation(GetActiveRenderRegions()[0]);
-      ss->cexec(abstrRenName + ".setRendererTarget", AbstrRenderer::RT_CAPTURE);
+      SetRendererTarget(AbstrRenderer::RT_CAPTURE);
     }
   }
+}
+
+void RenderWindow::SetRendererTarget(AbstrRenderer::ERendererTarget targ)
+{
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string abstrRenName = GetLuaAbstrRenderer().fqName();
+  ss->cexec(abstrRenName + ".setRendererTarget", targ);
 }
 
 FLOATMATRIX4 RenderWindow::GetRotation(LuaClassInstance region)
@@ -311,7 +317,55 @@ void RenderWindow::SetRegionMaxCoord(LuaClassInstance region,
   regPtr->maxCoord = maxCoord;
 }
 
-RenderWindow::RegionSplitter RenderWindow::GetRegionSplitter(INTVECTOR2 pos) const
+tuvok::AbstrRenderer::ERendererTarget RenderWindow::GetRendererTarget() {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<tuvok::AbstrRenderer::ERendererTarget>(
+      m_LuaAbstrRenderer.fqName() + ".getRendererTarget");
+}
+
+bool RenderWindow::GetClearViewEnabled() {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<bool>(
+      m_LuaAbstrRenderer.fqName() + ".getClearViewEnabled");
+}
+
+LuaClassInstance RenderWindow::GetRendererDataset() {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<LuaClassInstance>(m_LuaAbstrRenderer.fqName() +
+                                        ".getDataset");
+}
+
+void RenderWindow::SetTimeSlice(uint32_t timeSlice) {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexec(m_LuaAbstrRenderer.fqName() + ".setTimeSlice", timeSlice);
+}
+
+void RenderWindow::ScheduleCompleteRedraw() {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->cexec(m_LuaAbstrRenderer.fqName() + ".scheduleCompleteRedraw");
+}
+
+bool RenderWindow::RendererCheckForRedraw() {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<bool>(m_LuaAbstrRenderer.fqName() + ".checkForRedraw");
+}
+
+FLOATVECTOR3 RenderWindow::GetBackgroundColor(int i) {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<FLOATVECTOR3>(m_LuaAbstrRenderer.fqName() +
+                                    ".getBackgroundColor", i);
+}
+
+void RenderWindow::SetBackgroundColors(FLOATVECTOR3 vTopColor,
+                                       FLOATVECTOR3 vBotColor)
+{
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->cexec(m_LuaAbstrRenderer.fqName() + ".setBackgroundColors",
+            vTopColor, vBotColor);
+}
+
+RenderWindow::RegionSplitter
+RenderWindow::GetRegionSplitter(INTVECTOR2 pos) const
 {
   switch (m_eViewMode) {
     case VM_SINGLE   : return REGION_SPLITTER_NONE;
@@ -463,8 +517,8 @@ bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
 {
   bool bPerformUpdate = false;
 
-  if (m_Renderer->GetRendermode() == AbstrRenderer::RM_ISOSURFACE &&
-      m_Renderer->GetCV() && clearview) {
+  if (GetRenderMode() == AbstrRenderer::RM_ISOSURFACE &&
+      GetClearViewEnabled() && clearview) {
     SetCVFocusPos(region, m_viMousePos);
   }
 
@@ -515,9 +569,13 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
       std::max<int>(0,
                     static_cast<int>(GetSliceDepth(renderRegion))+iZoom);
     size_t sliceDimension = size_t(GetRegionWindowMode(renderRegion));
+
+    tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+    LuaClassInstance dataset = GetRendererDataset();
+    UINT64VECTOR3 domainSize = ss->cexecRet<UINT64VECTOR3>(
+        dataset.fqName() + ".getDomainSize", (size_t)0, (size_t)0);
     iNewSliceDepth =
-      std::min<int>(iNewSliceDepth,
-                    m_Renderer->GetDataset().GetDomainSize()[sliceDimension]-1);
+      std::min<int>(iNewSliceDepth, domainSize[sliceDimension]-1);
     SetSliceDepth(renderRegion, uint64_t(iNewSliceDepth));
   }
   UpdateWindow();
@@ -566,32 +624,30 @@ void RenderWindow::UpdateCursor(LuaClassInstance region,
 }
 
 void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string rn = m_LuaAbstrRenderer.fqName();
 
   LuaClassInstance selectedRegion = GetRegionUnderCursor(m_viMousePos);
+
+  /// @todo Add keyboard shortcuts dialog.
 
   switch (event->key()) {
     case Qt::Key_F :
       ToggleFullscreen();
       break;
     case Qt::Key_C :
-      m_Renderer->SetRenderCoordArrows(!m_Renderer->GetRenderCoordArrows());
+      ss->cexec(rn + ".setCoordinateArrowsEnabled",
+                !ss->cexecRet<bool>(rn + ".getCoordinateArrowsEnabled"));
       break;
     case Qt::Key_T :
-      m_Renderer->Transfer3DRotationToMIP();
+      ss->cexec(rn + ".transfer3DRotationToMIP");
       break;
     case Qt::Key_P :
-      m_Renderer->Set2DPlanesIn3DView(!m_Renderer->Get2DPlanesIn3DView());
+      ss->cexec(rn + ".set2DPlanesIn3DView",
+                !ss->cexecRet<bool>(rn + ".get2DPlanesIn3DView"));
       break;
     case Qt::Key_R :
       ResetRenderingParameters();
-      break;
-    case Qt::Key_S:
-      try {
-        FLOATVECTOR3 loc = m_Renderer->Pick(UINTVECTOR2(m_viMousePos));
-        OTHER("pick location: %g %g %g", loc[0], loc[1], loc[2]);
-      } catch(const std::runtime_error& err) {
-        T_ERROR("Pick failed: %s", err.what());
-      }
       break;
     case Qt::Key_Space : {
       if (selectedRegion.isValid(m_MasterController.LuaScript()) == false)
@@ -603,8 +659,8 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       if (newViewMode == VM_SINGLE) {
         newRenderRegions.push_back(selectedRegion);
       } else {
-        if (m_Renderer->GetStereo()) {
-          m_Renderer->SetStereo(false);
+        if (ss->cexecRet<bool>(rn + ".getStereoEnabled")) {
+          ss->cexec(rn + ".setStereoEnabled", false);
           EmitStereoDisabled();
         }
         if (newViewMode == VM_TWOBYTWO) {
@@ -648,9 +704,13 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
     case Qt::Key_PageDown : case Qt::Key_PageUp :
       if (   selectedRegion.isValid(m_MasterController.LuaScript())
           && IsRegion2D(selectedRegion)) {
-        const size_t sliceDimension = static_cast<size_t>(GetRegionWindowMode(selectedRegion));
+        const size_t sliceDimension = static_cast<size_t>(
+            GetRegionWindowMode(selectedRegion));
         const int currSlice = static_cast<int>(GetSliceDepth(selectedRegion));
-        const int numSlices = m_Renderer->GetDataset().GetDomainSize()[sliceDimension]-1;
+        LuaClassInstance dataset = GetRendererDataset();
+        UINT64VECTOR3 domainSize = ss->cexecRet<UINT64VECTOR3>(
+            dataset.fqName() + ".getDomainSize", (size_t)0, (size_t)0);
+        const int numSlices = domainSize[sliceDimension]-1;
         int sliceChange = numSlices / 10;
         if (event->key() == Qt::Key_PageDown)
           sliceChange = -sliceChange;
@@ -674,13 +734,14 @@ void RenderWindow::CloseEvent(QCloseEvent* close) {
 }
 
 void RenderWindow::FocusInEvent ( QFocusEvent * event ) {
-  if (m_Renderer) m_Renderer->SetTimeSlice(m_iTimeSliceMSecsActive);
-
+  if (m_LuaAbstrRenderer.isValid(m_MasterController.LuaScript()))
+    SetTimeSlice(m_iTimeSliceMSecsActive);
   if (event->gotFocus()) EmitWindowActive();
 }
 
 void RenderWindow::FocusOutEvent ( QFocusEvent * event ) {
-  if (m_Renderer) m_Renderer->SetTimeSlice(m_iTimeSliceMSecsInActive);
+  if (m_LuaAbstrRenderer.isValid(m_MasterController.LuaScript()))
+    SetTimeSlice(m_iTimeSliceMSecsInActive);
   if (!event->gotFocus()) EmitWindowInActive();
 }
 
@@ -706,7 +767,7 @@ void RenderWindow::SetWindowFraction2x2(FLOATVECTOR2 f) {
   f.y = MathTools::Clamp(f.y, 0.0, 1.0);
 
   m_vWinFraction = f;
-  m_Renderer->ScheduleCompleteRedraw();
+  ScheduleCompleteRedraw();
   UpdateWindowFraction();
 }
 
@@ -862,7 +923,7 @@ RenderWindow::SetViewMode(const std::vector<LuaClassInstance> &newRenderRegions,
   }
 
   SetupArcBall();
-  m_Renderer->ScheduleCompleteRedraw();
+  ScheduleCompleteRedraw();
   UpdateWindow();
   EmitRenderWindowViewChanged(int(GetViewMode()));
 
@@ -887,21 +948,24 @@ void RenderWindow::Initialize() {
         "tuvok.renderRegion3D.new", GetLuaAbstrRenderer());
 
     int mode = static_cast<int>(RenderRegion::WM_SAGITTAL);
-    uint64_t sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
+    LuaClassInstance dataset = GetRendererDataset();
+    UINT64VECTOR3 domainSize = ss->cexecRet<UINT64VECTOR3>(
+        dataset.fqName() + ".getDomainSize", (size_t)0, (size_t)0);
+    uint64_t sliceIndex = domainSize[mode]/2;
     luaRenderRegions[i][1] = ss->cexecRet<LuaClassInstance>(
             "tuvok.renderRegion2D.new",
             mode,
             sliceIndex, GetLuaAbstrRenderer());
 
     mode = static_cast<int>(RenderRegion::WM_AXIAL);
-    sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
+    sliceIndex = domainSize[mode]/2;
     luaRenderRegions[i][2] = ss->cexecRet<LuaClassInstance>(
             "tuvok.renderRegion2D.new",
             mode,
             sliceIndex, GetLuaAbstrRenderer());
 
     mode = static_cast<int>(RenderRegion::WM_CORONAL);
-    sliceIndex = m_Renderer->GetDataset().GetDomainSize()[mode]/2;
+    sliceIndex = domainSize[mode]/2;
     luaRenderRegions[i][3] = ss->cexecRet<LuaClassInstance>(
             "tuvok.renderRegion2D.new",
             mode,
@@ -927,13 +991,13 @@ void RenderWindow::Initialize() {
 }
 
 void RenderWindow::Cleanup() {
-  if (m_Renderer == NULL || !m_bRenderSubsysOK) return;
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  if (m_LuaAbstrRenderer.isValid(ss) == false || !m_bRenderSubsysOK)
+    return;
 
-  m_Renderer->Cleanup();
-  m_MasterController.ReleaseVolumeRenderer(m_Renderer);
-  m_Renderer = NULL;
-
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->cexec(m_LuaAbstrRenderer.fqName() + ".cleanup");
+  m_MasterController.ReleaseVolumeRenderer(m_LuaAbstrRenderer);
+  m_LuaAbstrRenderer.invalidate();
 
   for (int i=0; i < MAX_RENDER_REGIONS; ++i)
     for (int j=0; j < NUM_WINDOW_MODES; ++j)
@@ -941,13 +1005,16 @@ void RenderWindow::Cleanup() {
 }
 
 void RenderWindow::CheckForRedraw() {
-  if (m_Renderer && m_Renderer->CheckForRedraw()) {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  if (m_LuaAbstrRenderer.isValid(ss) && RendererCheckForRedraw()) {
     UpdateWindow();
   }
 }
 
 AbstrRenderer::ERenderMode RenderWindow::GetRenderMode() const {
-  return m_Renderer->GetRendermode();
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<AbstrRenderer::ERenderMode>(m_LuaAbstrRenderer.fqName()
+                                                  + ".getRenderMode");
 }
 
 void RenderWindow::SetBlendPrecision(
@@ -966,23 +1033,30 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate,
                                    unsigned int iInactiveTS) {
   m_iTimeSliceMSecsActive   = iActiveTS;
   m_iTimeSliceMSecsInActive = iInactiveTS;
-  m_Renderer->SetPerfMeasures(iMinFramerate, bRenderLowResIntermediateResults,
-                              fScreenResDecFactor,
-                              fSampleDecFactor, iLODDelay);
+  m_MasterController.LuaScript()->cexec(m_LuaAbstrRenderer.fqName() +
+                                        ".setPerfMeasures",
+                                        iMinFramerate,
+                                        bRenderLowResIntermediateResults,
+                                        fScreenResDecFactor,
+                                        fSampleDecFactor, iLODDelay);
 }
 
 bool RenderWindow::CaptureFrame(const std::string& strFilename,
                                 bool bPreserveTransparency)
 {
-  GLFrameCapture f;
-  AbstrRenderer::ERendererTarget mode = m_Renderer->GetRendererTarget();
-  FLOATVECTOR3 color[2] = {m_Renderer->GetBackgroundColor(0),
-                           m_Renderer->GetBackgroundColor(1)};
-  FLOATVECTOR3 black[2] = {FLOATVECTOR3(0,0,0), FLOATVECTOR3(0,0,0)};
-  if (bPreserveTransparency) m_Renderer->SetBackgroundColors(black[0],black[1]);
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
 
-  m_Renderer->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
-  while(m_Renderer->CheckForRedraw()) {
+  ss->setTempProvDisable(true);
+
+  GLFrameCapture f;
+  AbstrRenderer::ERendererTarget mode = GetRendererTarget();
+  FLOATVECTOR3 color[2] = {GetBackgroundColor(0),
+                           GetBackgroundColor(1)};
+  FLOATVECTOR3 black[2] = {FLOATVECTOR3(0,0,0), FLOATVECTOR3(0,0,0)};
+  if (bPreserveTransparency) SetBackgroundColors(black[0],black[1]);
+
+  SetRendererTarget(AbstrRenderer::RT_CAPTURE);
+  while(RendererCheckForRedraw()) {
     QCoreApplication::processEvents();
     PaintRenderer();
   }
@@ -990,8 +1064,11 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
   ForceRepaint();  ForceRepaint();
 
   bool rv = f.CaptureSingleFrame(strFilename, bPreserveTransparency);
-  m_Renderer->SetRendererTarget(mode);
-  if (bPreserveTransparency) m_Renderer->SetBackgroundColors(color[0],color[1]);
+  SetRendererTarget(mode);
+  if (bPreserveTransparency) SetBackgroundColors(color[0],color[1]);
+
+  ss->setTempProvDisable(false);
+
   return rv;
 }
 
@@ -1001,20 +1078,29 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
                                    bool bPreserveTransparency,
                                    std::string* strRealFilename)
 {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+
+  ss->setTempProvDisable(true);
+
   GLFrameCapture f;
-  m_Renderer->SetMIPRotationAngle(fAngle);
-  bool bSystemOrtho = m_Renderer->GetOrthoView();
-  if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bOrtho);
-  m_Renderer->SetMIPLOD(bUseLOD);
+  ss->cexec(rn + ".setMipRotationAngle", fAngle);
+  bool bSystemOrtho = ss->cexecRet<bool>(rn + ".getOrthoViewEnabled");
+  if (bSystemOrtho != bOrtho) ss->cexec(rn + ".setOrthoViewEnabled", bOrtho);
+  ss->cexec(rn + ".setMIPLODEnabled", bUseLOD);
   if (bFinalFrame) { // restore state
-    m_Renderer->SetMIPRotationAngle(0.0f);
-    if (bSystemOrtho != bOrtho) m_Renderer->SetOrthoView(bSystemOrtho);
+    ss->cexec(rn + ".setMipRotationAngle", 0.0f);
+    if (bSystemOrtho != bOrtho)
+      ss->cexec(rn + ".setOrthoViewEnabled", bSystemOrtho);
   }
   // as the window is double buffered call repaint twice
   ForceRepaint();  ForceRepaint();
 
   std::string strSequenceName = SysTools::FindNextSequenceName(strFilename);
   if (strRealFilename) (*strRealFilename) = strSequenceName;
+
+  ss->setTempProvDisable(false);
+
   return f.CaptureSingleFrame(strSequenceName, bPreserveTransparency);
 }
 
@@ -1030,6 +1116,7 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
 void RenderWindow::SetTranslation(LuaClassInstance renderRegion,
                                   FLOATMATRIX4 accumulatedTranslation) {
   tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
   ss->setTempProvDisable(true);
   ss->cexec(renderRegion.fqName()+".setTranslation4x4",accumulatedTranslation);
   ss->setTempProvDisable(false);
@@ -1037,7 +1124,7 @@ void RenderWindow::SetTranslation(LuaClassInstance renderRegion,
   RegionData *regionData = GetRegionData(renderRegion);
   regionData->arcBall.SetTranslation(accumulatedTranslation);
 
-  if(m_Renderer->ClipPlaneLocked()) {
+  if(ss->cexecRet<bool>(rn + ".isClipPlaneLocked")) {
     // We want to translate the plane to the *dataset's* origin before rotating,
     // not the origin of the entire 3D domain!  The difference is particularly
     // relevant when the clip plane is outside the dataset's domain: the `center'
@@ -1151,6 +1238,7 @@ void RenderWindow::SetRotation(LuaClassInstance region,
                                FLOATMATRIX4 newRotation) {
 
   tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string rn = m_LuaAbstrRenderer.fqName();
 
   // Temporarily disable provenance. We don't want to record every single
   // rotation command, only the final rotation command.
@@ -1160,7 +1248,7 @@ void RenderWindow::SetRotation(LuaClassInstance region,
   ss->cexec(region.fqName() + ".setRotation4x4", newRotation);
   ss->setTempProvDisable(false);
 
-  if(m_Renderer->ClipPlaneLocked()) {
+  if(ss->cexecRet<bool>(rn + ".isClipPlaneLocked")) {
     
     FLOATMATRIX4 from_pt_to_0, from_0_to_pt;
 
@@ -1194,13 +1282,14 @@ void RenderWindow::SetRotationDelta(LuaClassInstance region,
                                     const FLOATMATRIX4& rotDelta,
                                     bool bPropagate) {
   const FLOATMATRIX4 newRotation = GetRotation(region) * rotDelta;
+  string rn = m_LuaAbstrRenderer.fqName();
 
   tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->setTempProvDisable(true);
   ss->cexec(region.fqName() + ".setRotation4x4", newRotation);
   ss->setTempProvDisable(false);
 
-  if(m_Renderer->ClipPlaneLocked()) {
+  if(ss->cexecRet<bool>(rn + ".isClipPlaneLocked")) {
     SetClipRotationDelta(region, rotDelta, bPropagate, false);
   }
 
@@ -1356,30 +1445,14 @@ void RenderWindow::CloneViewState(RenderWindow* other) {
 void RenderWindow::CloneRendermode(RenderWindow* other) {
   SetRendermode(other->GetRenderMode());
 
-  m_Renderer->SetUseLighting(other->m_Renderer->GetUseLighting());
-  m_Renderer->SetSampleRateModifier(other->m_Renderer->GetSampleRateModifier());
-  m_Renderer->SetGlobalBBox(other->m_Renderer->GetGlobalBBox());
-  m_Renderer->SetLocalBBox(other->m_Renderer->GetLocalBBox());
-
-  if (other->m_Renderer->IsClipPlaneEnabled())
-    m_Renderer->EnableClipPlane();
-  else
-    m_Renderer->DisableClipPlane();
-
-  m_Renderer->SetIsosufaceColor(other->m_Renderer->GetIsosufaceColor());
-  m_Renderer->SetIsoValue(other->m_Renderer->GetIsoValue());
-  m_Renderer->SetCVIsoValue(other->m_Renderer->GetCVIsoValue());
-  m_Renderer->SetCVSize(other->m_Renderer->GetCVSize());
-  m_Renderer->SetCVContextScale(other->m_Renderer->GetCVContextScale());
-  m_Renderer->SetCVBorderScale(other->m_Renderer->GetCVBorderScale());
-  m_Renderer->SetCVColor(other->m_Renderer->GetCVColor());
-  m_Renderer->SetCV(other->m_Renderer->GetCV());
-  m_Renderer->SetCVFocusPos(other->m_Renderer->GetCVFocusPos());
-  m_Renderer->SetInterpolant(other->m_Renderer->GetInterpolant());
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->cexec(m_LuaAbstrRenderer.fqName() + "cloneRenderMode",
+            other->m_LuaAbstrRenderer);
 }
 
 void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate) {
-  m_Renderer->SetRendermode(eRenderMode);
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->cexec(m_LuaAbstrRenderer.fqName() + ".setRenderMode", eRenderMode);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetRendermode(eRenderMode, false);
@@ -1399,7 +1472,10 @@ void RenderWindow::SetColors(FLOATVECTOR3 vTopColor, FLOATVECTOR3 vBotColor,
 }
 
 void RenderWindow::SetUseLighting(bool bLighting, bool bPropagate) {
-  m_Renderer->SetUseLighting(bLighting);
+  /// @todo Have callback that will toggle the 'lighting' checkbox.
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setLightingEnabled", bLighting);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetUseLighting(bLighting, false);
@@ -1408,11 +1484,19 @@ void RenderWindow::SetUseLighting(bool bLighting, bool bPropagate) {
 }
 
 bool RenderWindow::GetUseLighting() const {
-  return m_Renderer->GetUseLighting();
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".getLightingEnabled");
 }
 
-void RenderWindow::SetSampleRateModifier(float fSampleRateModifier, bool bPropagate) {
-  m_Renderer->SetSampleRateModifier(fSampleRateModifier);
+void RenderWindow::SetSampleRateModifier(float fSampleRateModifier,
+                                         bool bPropagate) {
+  /// @todo Prov: We need a set 'final' sample rate modifier. Otherwise, sample
+  ///       rate modifier calls stack up in the undo/redo stacks.
+  /// @todo Update sample rate slider from hook.
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setSampleRateModifier", fSampleRateModifier);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetSampleRateModifier(fSampleRateModifier, false);
@@ -1421,7 +1505,11 @@ void RenderWindow::SetSampleRateModifier(float fSampleRateModifier, bool bPropag
 }
 
 void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
-  m_Renderer->SetIsoValue(fIsoVal);
+  /// @todo Provenance: Need final iso value instead of continuous change.
+  /// @todo Update isovalue slider from hook.
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setIsoValue", fIsoVal);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetIsoValue(fIsoVal, false);
@@ -1430,7 +1518,12 @@ void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
 }
 
 void RenderWindow::SetCVIsoValue(float fIsoVal, bool bPropagate) {
-  m_Renderer->SetCVIsoValue(fIsoVal);
+  // CV = clear view
+  /// @todo Provenance: Need final iso value instead of continuous change.
+  /// @todo Update cv isovalue slider from hook.
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setCVIsoValue", fIsoVal);
   if (bPropagate) {
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVIsoValue(fIsoVal, false);
@@ -1439,7 +1532,11 @@ void RenderWindow::SetCVIsoValue(float fIsoVal, bool bPropagate) {
 }
 
 void RenderWindow::SetCVSize(float fSize, bool bPropagate) {
-  m_Renderer->SetCVSize(fSize);
+  /// @todo Provenance: Need final size value instead of continuous change.
+  /// @todo Update slider from hook.
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setCVSize", fSize);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVSize(fSize, false);
@@ -1448,7 +1545,11 @@ void RenderWindow::SetCVSize(float fSize, bool bPropagate) {
 }
 
 void RenderWindow::SetCVContextScale(float fScale, bool bPropagate) {
-  m_Renderer->SetCVContextScale(fScale);
+  /// @todo Provenance: Need final scale value instead of continuous change.
+  /// @todo Update slider from hook.
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setCVContextScale", fScale);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVContextScale(fScale, false);
@@ -1457,7 +1558,11 @@ void RenderWindow::SetCVContextScale(float fScale, bool bPropagate) {
 }
 
 void RenderWindow::SetCVBorderScale(float fScale, bool bPropagate) {
-  m_Renderer->SetCVBorderScale(fScale);
+  /// @todo Provenance: Need final scale value instead of continuous change.
+  /// @todo Update slider from hook.
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setCVBorderScale", fScale);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVBorderScale(fScale, false);
@@ -1466,7 +1571,9 @@ void RenderWindow::SetCVBorderScale(float fScale, bool bPropagate) {
 }
 
 void RenderWindow::SetGlobalBBox(bool bRenderBBox, bool bPropagate) {
-  m_Renderer->SetGlobalBBox(bRenderBBox);
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setGlobalBBox", bRenderBBox);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetGlobalBBox(bRenderBBox, false);
@@ -1475,7 +1582,9 @@ void RenderWindow::SetGlobalBBox(bool bRenderBBox, bool bPropagate) {
 }
 
 void RenderWindow::SetLocalBBox(bool bRenderBBox, bool bPropagate) {
-  m_Renderer->SetLocalBBox(bRenderBBox);
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setLocalBBox", bRenderBBox);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetLocalBBox(bRenderBBox, false);
@@ -1488,7 +1597,6 @@ void RenderWindow::SetClipPlaneEnabled(bool enable, bool bPropagate)
   ss->beginCommandGroup();
   if(enable) {
     ss->cexec(GetFirst3DRegion().fqName() + ".enableClipPlane", true);
-    //m_Renderer->EnableClipPlane();
     // Restore the locking setting which was active when the clip plane was
     // disabled.
     SetClipPlaneRelativeLock(m_SavedClipLocked, bPropagate);
@@ -1526,7 +1634,9 @@ void RenderWindow::LuaCallbackEnableClipPlane(bool enable)
 
 void RenderWindow::SetClipPlaneDisplayed(bool bDisp, bool bPropagate)
 {
-  m_Renderer->ShowClipPlane(bDisp);
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".showClipPlane", bDisp);
   if(bPropagate) {
     for(std::vector<RenderWindow*>::iterator locks = m_vpLocks[1].begin();
         locks != m_vpLocks[1].end(); ++locks) {
@@ -1548,7 +1658,9 @@ void RenderWindow::SetClipPlaneRelativeLock(bool bLock, bool bPropagate)
 }
 
 void RenderWindow::SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
-  m_Renderer->SetIsosufaceColor(vIsoColor);
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setIsosufaceColor", vIsoColor);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetIsosufaceColor(vIsoColor, false);
@@ -1557,7 +1669,9 @@ void RenderWindow::SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropag
 }
 
 void RenderWindow::SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
-  m_Renderer->SetCVColor(vIsoColor);
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setCVColor", vIsoColor);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVColor(vIsoColor, false);
@@ -1566,7 +1680,9 @@ void RenderWindow::SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
 }
 
 void RenderWindow::SetCV(bool bDoClearView, bool bPropagate) {
-  m_Renderer->SetCV(bDoClearView);
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setCV", bDoClearView);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCV(bDoClearView, false);
@@ -1619,11 +1735,15 @@ pair<double,double> RenderWindow::GetDynamicRange() const {
 }
 
 FLOATVECTOR3 RenderWindow::GetIsosufaceColor() const {
-  return m_Renderer->GetIsosufaceColor();
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<FLOATVECTOR3>(rn + ".getIsosufaceColor");
 }
 
 FLOATVECTOR3 RenderWindow::GetCVColor() const {
-  return m_Renderer->GetCVColor();
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<FLOATVECTOR3>(rn + ".getCVColor");
 }
 
 void RenderWindow::ResizeRenderer(int width, int height)
@@ -1726,7 +1846,7 @@ void RenderWindow::ResetRenderingParameters()
     }
   }
   SetWindowFraction2x2(FLOATVECTOR2(0.5f, 0.5f));
-  m_Renderer->Transfer3DRotationToMIP();
+  ss->cexec(m_LuaAbstrRenderer.fqName() + ".transfer3DRotationToMIP");
 }
 
 

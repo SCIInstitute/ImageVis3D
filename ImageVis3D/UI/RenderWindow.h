@@ -235,6 +235,16 @@ class RenderWindow
     void SetUseMIP(tuvok::LuaClassInstance region, bool useMip);
     FLOATMATRIX4 GetRotation(tuvok::LuaClassInstance region);
     FLOATMATRIX4 GetTranslation(tuvok::LuaClassInstance region);
+    tuvok::AbstrRenderer::ERendererTarget GetRendererTarget();
+    bool GetClearViewEnabled();
+    tuvok::LuaClassInstance GetRendererDataset();
+    void SetTimeSlice(uint32_t);
+    void ScheduleCompleteRedraw();
+    bool RendererCheckForRedraw();
+    FLOATVECTOR3 GetBackgroundColor(int i);
+    void SetBackgroundColors(FLOATVECTOR3 vTopColor,
+                             FLOATVECTOR3 vBotColor);
+    void SetRendererTarget(tuvok::AbstrRenderer::ERendererTarget targ);
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
