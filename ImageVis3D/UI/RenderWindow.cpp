@@ -1270,8 +1270,6 @@ void RenderWindow::SetRotation(LuaClassInstance region,
     m_ClipPlane.Default(false);
 
     FLOATMATRIX4 mat = regTrans * from_pt_to_0 * regionData->clipRotation[0] * from_0_to_pt;
-    m_MasterController.LuaScript()->cexec(
-        "log.info", LuaStrictStack<FLOATMATRIX4>::getValStr(mat));
 
     m_ClipPlane.Transform(mat, false);
     SetClipPlane(region, m_ClipPlane);
@@ -1446,7 +1444,7 @@ void RenderWindow::CloneRendermode(RenderWindow* other) {
   SetRendermode(other->GetRenderMode());
 
   tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  ss->cexec(m_LuaAbstrRenderer.fqName() + "cloneRenderMode",
+  ss->cexec(m_LuaAbstrRenderer.fqName() + ".cloneRenderMode",
             other->m_LuaAbstrRenderer);
 }
 
@@ -1636,7 +1634,7 @@ void RenderWindow::SetClipPlaneDisplayed(bool bDisp, bool bPropagate)
 {
   tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
-  ss->cexec(rn + ".showClipPlane", bDisp);
+  ss->cexec(rn + ".showClipPlane", bDisp, GetFirst3DRegion());
   if(bPropagate) {
     for(std::vector<RenderWindow*>::iterator locks = m_vpLocks[1].begin();
         locks != m_vpLocks[1].end(); ++locks) {
