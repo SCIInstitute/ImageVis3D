@@ -182,8 +182,13 @@ function nm_tarball
 {
     local arch=$(sci_arch)
     local revs=$(revision)
+    if [ ! -z "$IV3D_BUILD_TYPE" ] ; then
+      local btype=$IV3D_BUILD_TYPE
+    else
+      local btype="na"
+    fi
     version
-    echo "ImageVis3D-${arch}-${IV3D_VERSION}-r${revs}.tar.gz"
+    echo "ImageVis3D-${arch}-${IV3D_VERSION}-r${revs}-$btype.tar.gz"
 }
 
 # Gives the name of the appropriate zip file.

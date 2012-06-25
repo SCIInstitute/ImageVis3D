@@ -2,6 +2,7 @@
 # Script to build everything we can in a single invocation, using
 # a set of options which is appropriate for creating debug builds.
 
+IV3D_BUILD_TYPE="debug"
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 COVERAGE="-fprofile-arcs -ftest-coverage"
@@ -56,7 +57,7 @@ fi
 
 echo "Bundling..."
 if test `uname -s` = "Darwin" ; then
-  bash Scripts/mk_app.sh
+  env IV3D_BUILD_TYPE=$IV3D_BUILD_TYPE bash Scripts/mk_app.sh
 else
-  bash Scripts/mk_tarball.sh
+  env IV3D_BUILD_TYPE=$IV3D_BUILD_TYPE bash Scripts/mk_tarball.sh
 fi
