@@ -7,7 +7,7 @@ set bld="msbuild"
 %bld% ^
   ImageVis3D-2010.sln ^
   /nologo ^
-  /target:release ^
+  /p:Configuration=Release ^
   /t:Rebuild
 
 pushd Tuvok\IO\test
