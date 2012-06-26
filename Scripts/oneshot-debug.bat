@@ -1,15 +1,6 @@
 REM Script to build everything we can in a single invocation, using
 REM a set of options which is appropriate for creating debug builds.
 
-REM Is there better flow control than GOTO statements on windows?
-REM IF statements appear to be 1 line only.
-IF "%1"=="" GOTO x32_1
-REM Handle 64 bit compilation
-GOTO CompilationFinish
-:X32_1
-
-:CompilationFinish
-
 set w32_cf="-D_CRT_SECURE_NO_WARNINGS=1 -D_SCL_SECURE_NO_WARNINGS=1"
 REM qmake -tp vc ^
 REM  QMAKE_CFLAGS+=%w32_cf% ^
