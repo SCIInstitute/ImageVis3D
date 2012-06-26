@@ -182,7 +182,7 @@ function nm_tarball
 {
     local arch=$(sci_arch)
     local revs=$(revision)
-    if [ ! -z "$IV3D_BUILD_TYPE" ] ; then
+    if test ! -z "$IV3D_BUILD_TYPE" ; then
       local btype=$IV3D_BUILD_TYPE
     else
       local btype="na"

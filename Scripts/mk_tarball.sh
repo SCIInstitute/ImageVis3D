@@ -1,5 +1,8 @@
 #!/bin/bash
 # Creates a tarball binary of ImageVis3D.
+if test ! -z "$1" ; then
+  IV3D_BUILD_TYPE=$1
+fi
 source Scripts/util.sh
 
 tarball=$(nm_tarball)

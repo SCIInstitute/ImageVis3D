@@ -53,7 +53,7 @@ fi
 
 echo "Bundling..."
 if test `uname -s` = "Darwin" ; then
-  env IV3D_BUILD_TYPE=$IV3D_BUILD_TYPE bash Scripts/mk_app.sh
+  bash Scripts/mk_app.sh $IV3D_BUILD_TYPE
 else
-  env IV3D_BUILD_TYPE=$IV3D_BUILD_TYPE bash Scripts/mk_tarball.sh
+  bash Scripts/mk_tarball.sh $IV3D_BUILD_TYPE
 fi
