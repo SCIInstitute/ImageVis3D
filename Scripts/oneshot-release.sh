@@ -27,7 +27,7 @@ for d in $dirs ; do
   pushd ${d} &> /dev/null || exit 1
     ${qm} \
       -makefile \
-      QMAKE_CONFIG+="release" \
+      CONFIG+="release" \
       QMAKE_CFLAGS+="${VIS} ${CF}" \
       QMAKE_CXXFLAGS+="${VIS} ${INL} ${CF} ${CXF}" \
       QMAKE_LFLAGS+="${VIS} ${COVERAGE}" \
