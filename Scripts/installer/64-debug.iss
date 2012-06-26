@@ -39,7 +39,7 @@ AppCopyright=Copyright (c) 2011 Scientific Computing and Imaging Institute, Univ
 DefaultDirName={pf}\ImageVis3D
 DefaultGroupName=ImageVis3D
 OutputDir=Scripts\installer
-OutputBaseFilename=ImageVis3D-64bit
+OutputBaseFilename=ImageVis3D-64bit-debug
 AllowNoIcons=no
 Compression=lzma/ultra
 InternalCompressLevel=ultra
@@ -64,27 +64,27 @@ Name: {userappdata}\ImageVis3D; Flags: uninsalwaysuninstall
 [Files]
 ; Dependencies.
 ;   MS redistributable crap.
-;Source: C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\amd64\Microsoft.VC90.CRT\*; DestDir: {app}; Flags: recursesubdirs
+;Source: C:\Program Files (x85)\Microsoft Visual Studio 9.0\VC\redist\amd64\Microsoft.VC90.CRT\*; DestDir: {app}; Flags: recursesubdirs
 ;Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\amd64\Microsoft.VC90.MFC\*"; DestDir: "{app}"; Flags: recursesubdirs
 ;Source: "vcredist_x64.exe"; DestDir: {tmp}; DestName: vcredist.exe; Flags: deleteafterinstall;
 
 
 ; ImageVis3D
-Source: build\x64\Release\ImageVis3D-64.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
+Source: build\x64\Release\ImageVis3D-64-debug.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: Tuvok\Shaders\*; DestDir: {app}\Shaders; Excludes: .svn; Flags: ignoreversion replacesameversion
 Source: Scripts\installer\imagevis3d.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: Scripts\installer\GettingDataIntoImageVis3D.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
 
 [Icons]
-Name: {group}\ImageVis3D; Filename: {app}\ImageVis3D-64.exe; WorkingDir: {app}
-Name: {commondesktop}\ImageVis3D; Filename: {app}\ImageVis3D-64.exe; WorkingDir: {app}
+Name: {group}\ImageVis3D; Filename: {app}\ImageVis3D-64-debug.exe; WorkingDir: {app}
+Name: {commondesktop}\ImageVis3D; Filename: {app}\ImageVis3D-64-debug.exe; WorkingDir: {app}
 Name: {group}\{cm:UninstallProgram,ImageVis3D}; Filename: {uninstallexe}
 Name: {group}\Manual; Filename: {app}\ImageVis3D.pdf; WorkingDir: {app}
 Name: {group}\Manual; Filename: {app}\GettingDataIntoImageVis3D.pdf; WorkingDir: {app}
 
 
 [Run]
-Filename: {app}\ImageVis3D-64.exe; Description: {cm:LaunchProgram,ImageVis3D}; Flags: nowait postinstall
+Filename: {app}\ImageVis3D-64-debug.exe; Description: {cm:LaunchProgram,ImageVis3D}; Flags: nowait postinstall
 ;Filename: {tmp}\vcredist.exe; StatusMsg: "Installing required Visual C++ runtime..."
 
 [UninstallDelete]

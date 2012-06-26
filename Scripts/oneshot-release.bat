@@ -48,5 +48,9 @@ wget --no-check-certificate -q %manual%
 wget --no-check-certificate -q %mdata%
 
 REM bundle it
-iscc Scripts/installer/32.iss
+IF "%1"=="x64" (
+  iscc Scripts/installer/64.iss
+) ELSE (
+  iscc Scripts/installer/32.iss
+)
 
