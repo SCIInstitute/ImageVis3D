@@ -13,7 +13,7 @@ REM set bld="C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\VCExpress
 set bld="msbuild"
 IF "%1"=="x64" (
   REM Handle 64 bit compilation
-  call "C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x64
+  call "%VS100COMNTOOLS%\..\..\VC\vcvarsall.bat" x64
   %bld% ^
     ImageVis3D-2010.sln ^
     /nologo ^
@@ -21,7 +21,7 @@ IF "%1"=="x64" (
     /t:Rebuild
 ) ELSE (
   REM Handle 32 bit compilation
-  call "C:\Program Files\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
+  call "%VS100COMNTOOLS%\..\..\VC\vcvarsall.bat"
   %bld% ^
     ImageVis3D-2010.sln ^
     /nologo ^
