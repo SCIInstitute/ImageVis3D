@@ -278,7 +278,7 @@ void DebugScriptWindow::setupUI()
 std::string getLongestPrefix( const std::vector<std::string>& strs)
 {
    std::vector<std::string>::const_iterator vsi = strs.begin();
-   int maxCharactersCommon = vsi->length() ;
+   int maxCharactersCommon = static_cast<int>(vsi->length());
    std::string compareString = *vsi ;
    for ( vsi = strs.begin() + 1 ; vsi != strs.end() ; vsi++ )
    {
@@ -398,7 +398,7 @@ void DebugScriptWindow::oneLineEditOnReturnPressed()
   QString qs = mScriptOneLineEdit->text();
   execLua(qs.toStdString());
   mSavedInput.push_back(qs.toStdString());
-  mSavedInputPos = mSavedInput.size() - 1;
+  mSavedInputPos = static_cast<int>(mSavedInput.size()) - 1;
   mScriptOneLineEdit->setText(QString::fromUtf8(""));
 }
 
@@ -406,7 +406,7 @@ void DebugScriptWindow::oneLineEditOnReturnPressed()
 void DebugScriptWindow::oneLineEditOnEdited(const QString&)
 {
   // Reset the stack pointer
-  mSavedInputPos = mSavedInput.size() - 1;
+  mSavedInputPos = static_cast<int>(mSavedInput.size()) - 1;
 }
 
 //-----------------------------------------------------------------------------
