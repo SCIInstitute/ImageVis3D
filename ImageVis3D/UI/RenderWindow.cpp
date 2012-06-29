@@ -644,7 +644,8 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       break;
     case Qt::Key_P :
       ss->cexec(rn + ".set2DPlanesIn3DView",
-                !ss->cexecRet<bool>(rn + ".get2DPlanesIn3DView"));
+                !ss->cexecRet<bool>(rn + ".get2DPlanesIn3DView"),
+                GetFirst3DRegion());
       break;
     case Qt::Key_R :
       ResetRenderingParameters();
