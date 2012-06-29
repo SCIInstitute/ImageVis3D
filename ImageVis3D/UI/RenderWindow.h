@@ -291,6 +291,9 @@ class RenderWindow
       ArcBall clipArcBall;
 
       FLOATMATRIX4 clipRotation[2];
+      FLOATMATRIX4 toClipSpace;     // Can be relative to object space or world
+                                    // space depending on whether or not the
+                                    // clipping plane is locked.
     };
 
     RegionData regionDatas[MAX_RENDER_REGIONS][NUM_WINDOW_MODES];
@@ -393,6 +396,10 @@ class RenderWindow
 
 
     void LuaCallbackEnableClipPlane(bool enable);
+    void updateClipPlaneTransform(tuvok::LuaClassInstance region);
+    FLOATMATRIX4 computeClipToVolToWorldTransform(
+        tuvok::LuaClassInstance region);
+    FLOATMATRIX4 getHomogeneousVolToWorldTrafo(tuvok::LuaClassInstance region);
 
   private:
 
@@ -417,6 +424,10 @@ class RenderWindow
     /// This saves the value at disabling time, so we can restore it when the
     /// clip plane is re-enabled.
     bool              m_SavedClipLocked;
+
+
+    void watchSetRotation4x4(FLOATMATRIX4 m);
+    void watchSetTrans4x4(FLOATMATRIX4 m);
 };
 
 #endif // RENDERWINDOW_H

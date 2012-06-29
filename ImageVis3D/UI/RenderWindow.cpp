@@ -1125,27 +1125,7 @@ void RenderWindow::SetTranslation(LuaClassInstance renderRegion,
   RegionData *regionData = GetRegionData(renderRegion);
   regionData->arcBall.SetTranslation(accumulatedTranslation);
 
-  if(ss->cexecRet<bool>(rn + ".isClipPlaneLocked")) {
-    // We want to translate the plane to the *dataset's* origin before rotating,
-    // not the origin of the entire 3D domain!  The difference is particularly
-    // relevant when the clip plane is outside the dataset's domain: the `center'
-    // of the plane (*cough*) should rotate about the dataset, not about the
-    // plane itself.
-    FLOATMATRIX4 from_pt_to_0, from_0_to_pt;
-    FLOATMATRIX4 regTrans = GetTranslation(renderRegion);
-    from_pt_to_0.Translation(-regTrans.m41,
-                             -regTrans.m42,
-                             -regTrans.m43);
-    from_0_to_pt.Translation(regTrans.m41,
-                             regTrans.m42,
-                             regTrans.m43);
-
-    m_ClipPlane.Default(false);
-    m_ClipPlane.Transform(regTrans
-                          * from_pt_to_0 * regionData->clipRotation[0] *
-                          from_0_to_pt, false);
-    SetClipPlane(renderRegion, m_ClipPlane);
-  }
+  updateClipPlaneTransform(renderRegion);
 
   Controller::Instance().Provenance("translation", "translate");
 }
@@ -1166,17 +1146,7 @@ void RenderWindow::SetTranslationDelta(LuaClassInstance renderRegion,
   RegionData *regionData = GetRegionData(renderRegion);
   regionData->arcBall.SetTranslation(newTranslation);
 
-  if(GetRenderer()->ClipPlaneLocked()) {
-    // We can't use SetClipTranslationDelta, because it forces the clip plane
-    // to stay locked along its own normal.  We're not necessarily translating
-    // along the clip's normal when doing a regular translation (in fact, it's
-    // almost inconceivable that we would be), so we need to do the translation
-    // ourself.
-    FLOATMATRIX4 translation;
-    translation.Translation(trans.x, -trans.y, trans.z);
-    m_ClipPlane.Transform(translation, false);
-    SetClipPlane(renderRegion, m_ClipPlane);
-  }
+  updateClipPlaneTransform(renderRegion);
 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
@@ -1202,9 +1172,6 @@ void RenderWindow::FinalizeRotation(LuaClassInstance region, bool bPropagate) {
   SetProvRotationAndClip(region, GetRotation(region));
   ss->endCommandGroup();
 
-  RegionData* regionData = GetRegionData(region);
-  regionData->clipRotation[0] = FLOATMATRIX4();
-  regionData->clipRotation[1] = FLOATMATRIX4();
   if (bPropagate) {
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
       LuaClassInstance otherRegion = GetCorrespondingRenderRegion(
@@ -1223,9 +1190,6 @@ void RenderWindow::FinalizeTranslation(LuaClassInstance region, bool bPropagate)
   SetProvTransAndClip(region, GetTranslation(region));
   ss->endCommandGroup();
 
-  RegionData* regionData = GetRegionData(region);
-  regionData->clipRotation[0] = FLOATMATRIX4();
-  regionData->clipRotation[1] = FLOATMATRIX4();
   if (bPropagate) {
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
       LuaClassInstance otherRegion = GetCorrespondingRenderRegion(
@@ -1249,32 +1213,7 @@ void RenderWindow::SetRotation(LuaClassInstance region,
   ss->cexec(region.fqName() + ".setRotation4x4", newRotation);
   ss->setTempProvDisable(false);
 
-  if(ss->cexecRet<bool>(rn + ".isClipPlaneLocked")) {
-    
-    FLOATMATRIX4 from_pt_to_0, from_0_to_pt;
-
-    // We want to translate the plane to the *dataset's* origin before rotating,
-    // not the origin of the entire 3D domain!  The difference is particularly
-    // relevant when the clip plane is outside the dataset's domain: the `center'
-    // of the plane (*cough*) should rotate about the dataset, not about the
-    // plane itself.
-    FLOATMATRIX4 regTrans = GetTranslation(region);
-    from_pt_to_0.Translation(-regTrans.m41,
-                             -regTrans.m42,
-                             -regTrans.m43);
-    from_0_to_pt.Translation(regTrans.m41,
-                             regTrans.m42,
-                             regTrans.m43);
-  
-    RegionData* regionData = GetRegionData(region);
-    regionData->clipRotation[0] = newRotation;
-    m_ClipPlane.Default(false);
-
-    FLOATMATRIX4 mat = regTrans * from_pt_to_0 * regionData->clipRotation[0] * from_0_to_pt;
-
-    m_ClipPlane.Transform(mat, false);
-    SetClipPlane(region, m_ClipPlane);
-  }
+  updateClipPlaneTransform(region);
 }
 
 void RenderWindow::SetRotationDelta(LuaClassInstance region,
@@ -1288,9 +1227,7 @@ void RenderWindow::SetRotationDelta(LuaClassInstance region,
   ss->cexec(region.fqName() + ".setRotation4x4", newRotation);
   ss->setTempProvDisable(false);
 
-  if(ss->cexecRet<bool>(rn + ".isClipPlaneLocked")) {
-    SetClipRotationDelta(region, rotDelta, bPropagate, false);
-  }
+  updateClipPlaneTransform(region);
 
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[0].size();i++) {
@@ -1303,6 +1240,64 @@ void RenderWindow::SetRotationDelta(LuaClassInstance region,
         m_vpLocks[0][i]->SetRotationDelta(otherRegion, rotDelta, false);
     }
   }
+}
+
+void RenderWindow::updateClipPlaneTransform(LuaClassInstance region)
+{
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string renName = m_LuaAbstrRenderer.fqName();
+
+  // Test whether the clipping plane is locked. If it is, then utilize the
+  // model->world transform of the volume. Otherwise, just utilize the clip
+  // to world matrix.
+
+  /// @todo Handle inverted plane normal. A simple inverted boolean will
+  ///       suffice.
+  if(ss->cexecRet<bool>(renName + ".isClipPlaneLocked")) {
+    // (clip space ->) object space -> world space
+    FLOATMATRIX4 r = computeClipToVolToWorldTransform(region);
+
+    ExtendedPlane plane;
+    plane.Transform(r, false);
+    SetClipPlane(region, plane);
+  } else {
+    RegionData* regionData = GetRegionData(region);
+    FLOATMATRIX4 cs = regionData->toClipSpace;
+    ExtendedPlane plane;
+    plane.Transform(cs, false);
+    SetClipPlane(region, plane);
+  }
+}
+
+FLOATMATRIX4
+RenderWindow::getHomogeneousVolToWorldTrafo(LuaClassInstance region)
+{
+  FLOATMATRIX4 vr = GetRotation(region);
+  FLOATMATRIX4 vt = GetTranslation(region);
+
+  // Create homogeneous volume->world matrix.
+  FLOATMATRIX4 vx(vr);
+  vx.m41 = vt.m41;
+  vx.m42 = vt.m42;
+  vx.m43 = vt.m43;
+
+  return vx;
+}
+
+FLOATMATRIX4
+RenderWindow::computeClipToVolToWorldTransform(LuaClassInstance region)
+{
+  RegionData* regionData = GetRegionData(region);
+
+  // Create homogeneous volume->world matrix.
+  FLOATMATRIX4 vx = getHomogeneousVolToWorldTrafo(region);
+
+  /// @todo We need a homogenous matrix inversion. The inversion below is
+  ///       overkill.
+  FLOATMATRIX4 ics = regionData->toClipSpace.inverse();
+
+  // (clip space ->) object space -> world space
+  return ics * vx;
 }
 
 void RenderWindow::SetPlaneAtClick(const ExtendedPlane& plane, bool propagate) {
@@ -1334,29 +1329,8 @@ void RenderWindow::SetClipRotationDelta(LuaClassInstance renderRegion,
                                         bool bSecondary)
 {
   RegionData* regionData = GetRegionData(renderRegion);
-
-  regionData->clipRotation[bSecondary ? 1 : 0] = regionData->clipRotation[bSecondary ? 1 : 0] * rotDelta;
- 
-  FLOATMATRIX4 from_pt_to_0, from_0_to_pt;
-
-  // We want to translate the plane to the *dataset's* origin before rotating,
-  // not the origin of the entire 3D domain!  The difference is particularly
-  // relevant when the clip plane is outside the dataset's domain: the `center'
-  // of the plane (*cough*) should rotate about the dataset, not about the
-  // plane itself.
-  FLOATMATRIX4 regTrans = GetTranslation(renderRegion);
-  from_pt_to_0.Translation(-regTrans.m41,
-                           -regTrans.m42,
-                           -regTrans.m43);
-  from_0_to_pt.Translation(regTrans.m41,
-                           regTrans.m42,
-                           regTrans.m43);
-
-  ExtendedPlane rotated = m_PlaneAtClick;
-  rotated.Transform(from_pt_to_0 *
-                    regionData->clipRotation[bSecondary ? 1 : 0] *
-                    from_0_to_pt, bSecondary);
-  SetClipPlane(renderRegion, rotated);
+  regionData->toClipSpace = regionData->toClipSpace * rotDelta;
+  updateClipPlaneTransform(renderRegion);
 
   if (bPropagate) {
     for(std::vector<RenderWindow*>::const_iterator iter = m_vpLocks[0].begin();
@@ -1380,6 +1354,8 @@ void RenderWindow::SetClipTranslationDelta(LuaClassInstance renderRegion,
                                            bool bPropagate,
                                            bool bSecondary)
 {
+  RegionData* regionData = GetRegionData(renderRegion);
+
   FLOATMATRIX4 translation;
 
   // Get the scalar projection of the user's translation along the clip plane's
@@ -1388,11 +1364,11 @@ void RenderWindow::SetClipTranslationDelta(LuaClassInstance renderRegion,
   // The actual translation is along the clip's normal, weighted by the user's
   // translation.
   FLOATVECTOR3 tr = sproj * m_ClipPlane.Plane().xyz();
-  translation.Translation(tr.x, tr.y, tr.z);
+  regionData->toClipSpace.m41 += tr.x;
+  regionData->toClipSpace.m42 += tr.y;
+  regionData->toClipSpace.m43 += tr.z;
 
-  ExtendedPlane translated = m_ClipPlane;
-  translated.Transform(translation, bSecondary);
-  SetClipPlane(renderRegion, translated);
+  updateClipPlaneTransform(renderRegion);
 
   if (bPropagate) {
     for(std::vector<RenderWindow*>::iterator iter = m_vpLocks[0].begin();
@@ -1647,7 +1623,36 @@ void RenderWindow::SetClipPlaneDisplayed(bool bDisp, bool bPropagate)
 void RenderWindow::SetClipPlaneRelativeLock(bool bLock, bool bPropagate)
 {
   tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+
+  // NOTE: Assuming first 3D render region.
+  LuaClassInstance region = GetFirst3DRegion();
+  RegionData* regionData = GetRegionData(GetFirst3DRegion());
+
+  // Update clip plane.
+  bool currentlyLocked = ss->cexecRet<bool>(GetLuaAbstrRenderer().fqName()
+                                            + ".isClipPlaneLocked");
+  if (currentlyLocked == true && bLock == false)
+  {
+    // (clip space ->) object space -> world space
+    FLOATMATRIX4 r = computeClipToVolToWorldTransform(region);
+    regionData->toClipSpace = r;
+  }
+  else if (currentlyLocked == false && bLock == true)
+  {
+    // Obtain a new clipping space transform relative to the world space
+    // transformation of the render region's volume.
+    FLOATMATRIX4 vx = getHomogeneousVolToWorldTrafo(region);
+    FLOATMATRIX4 tmp = regionData->toClipSpace * vx.inverse();
+    FLOATMATRIX4 newClipSpace = tmp.inverse();
+    regionData->toClipSpace = newClipSpace;
+  }
+
   ss->cexec(GetLuaAbstrRenderer().fqName() + ".setClipPlaneLocked", bLock);
+
+  // This should have NO effect on the current xform of the clipping plane.
+  // Here as a visual debugging aid.
+  updateClipPlaneTransform(region);
+
   if(bPropagate) {
     for(std::vector<RenderWindow*>::iterator locks = m_vpLocks[1].begin();
         locks != m_vpLocks[1].end(); ++locks) {
@@ -1833,10 +1838,8 @@ void RenderWindow::ResetRenderingParameters()
 
   for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
     for (int j=0; j < NUM_WINDOW_MODES; ++j) {
-      regionDatas[i][j].clipRotation[0] = mIdentity;
-      regionDatas[i][j].clipRotation[1] = mIdentity;
-
       LuaClassInstance region = luaRenderRegions[i][j];
+      GetRegionData(region)->toClipSpace = mIdentity;
 
       ss->cexec(region.fqName() + ".setRotation4x4", mIdentity);
       ss->cexec(region.fqName() + ".setTranslation4x4", mIdentity);
@@ -1933,6 +1936,18 @@ void RenderWindow::LuaSetRotationAs4x4(FLOATMATRIX4 m) {
   SetProvRotationAndClip(GetFirst3DRegion(), m);
 }
 
+void RenderWindow::watchSetRotation4x4(FLOATMATRIX4)
+{
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->vPrint("Called Set rotation 4x4");
+}
+
+void RenderWindow::watchSetTrans4x4(FLOATMATRIX4)
+{
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->vPrint("Called Set trans 4x4");
+}
+
 void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
@@ -1998,6 +2013,13 @@ void RenderWindow::RegisterLuaFunctions(
   id = reg.function(&RenderWindow::LuaSetTranslationAs4x4,"setTranslationAs4x4",
                     "Sets translation for the first 3D "
                     "render region.", true);
+
+  /// Temporary debugging
+  string rname = me->GetFirst3DRegion().fqName();
+  string tmp = rname + ".setRotation4x4";
+  me->m_MemReg.strictHook(me, &RenderWindow::watchSetRotation4x4, tmp);
+  tmp = rname + ".setTranslation4x4";
+  me->m_MemReg.strictHook(me, &RenderWindow::watchSetTrans4x4, tmp);
 }
 
 
