@@ -360,7 +360,7 @@ void RenderWindow::SetBackgroundColors(FLOATVECTOR3 vTopColor,
                                        FLOATVECTOR3 vBotColor)
 {
   tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  ss->cexec(m_LuaAbstrRenderer.fqName() + ".setBackgroundColors",
+  ss->cexec(m_LuaAbstrRenderer.fqName() + ".setBGColors",
             vTopColor, vBotColor);
 }
 
