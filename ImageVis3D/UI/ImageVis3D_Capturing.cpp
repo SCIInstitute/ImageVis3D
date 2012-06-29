@@ -345,7 +345,7 @@ void MainWindow::CaptureRotation() {
       } else {
         pleaseWait.SetText("Slicing through the dataset, please wait  ...");
         /// \todo TODO slice capturing
-        QString msg = tr("Slice Capturing is not implemented yet. Aborting.");
+        QString msg = tr("Slice capturing is not implemented yet. Aborting.");
         ShowWarningDialog( tr("Error"), msg);
       }
     }
