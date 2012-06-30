@@ -1329,7 +1329,7 @@ void RenderWindow::SetClipRotationDelta(LuaClassInstance renderRegion,
                                         bool bSecondary)
 {
   RegionData* regionData = GetRegionData(renderRegion);
-  regionData->toClipSpace = regionData->toClipSpace * rotDelta;
+  regionData->toClipSpace = regionData->toClipSpace * rotDelta.inverse();
   updateClipPlaneTransform(renderRegion);
 
   if (bPropagate) {
@@ -1371,7 +1371,7 @@ void RenderWindow::SetClipTranslationDelta(LuaClassInstance renderRegion,
                                           // We can't just transform
                                           // m_ClipPlane.Plane().xyz() by
                                           // worldToClip.
-  FLOATVECTOR3 clipSpaceNormal = clipSpacePlane.xyz();
+  FLOATVECTOR3 clipSpaceNormal = - clipSpacePlane.xyz();
   // NOTE: We could just extract the negative 3rd column from the
   //       regionData->toClipSpace matrix.
   //       But this would make us dependent on the choice of the initial normal
