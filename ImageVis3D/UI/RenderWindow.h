@@ -148,6 +148,7 @@ class RenderWindow
     bool GetUseLighting() const;
     void SetSampleRateModifier(float fSampleRateModifier, bool bPropagate=true);
     void SetIsoValue(float fIsoVal, bool bPropagate=true);
+    void SetIsoValueRelative(float isoval, bool propagate);
     void SetCVIsoValue(float fIsoVal, bool bPropagate=true);
     void SetCVSize(float fSize, bool bPropagate=true);
     void SetCVContextScale(float fScale, bool bPropagate=true);

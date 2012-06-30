@@ -1485,9 +1485,26 @@ void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
   tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setIsoValue", fIsoVal);
-  if (bPropagate){
-    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
-      m_vpLocks[1][i]->SetIsoValue(fIsoVal, false);
+  if(bPropagate) {
+    /// @todo we actually want to do this in Lua, not C++ code...
+    std::pair<double,double> range =
+      this->GetRenderer()->GetDataset().GetRange();
+    float isoval = MathTools::lerp<double,float>(fIsoVal,
+      range.first,range.second, 0.0f,1.0f
+    );
+    for(size_t i=0; i < m_vpLocks[1].size(); ++i) {
+      m_vpLocks[1][i]->SetIsoValueRelative(isoval, false);
+    }
+  }
+}
+
+void RenderWindow::SetIsoValueRelative(float isoval, bool propagate) {
+  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setIsoValueRelative", isoval);
+  if(propagate) {
+    for(size_t i=0; i < m_vpLocks[1].size(); ++i) {
+      m_vpLocks[1][i]->SetIsoValueRelative(isoval, false);
     }
   }
 }
