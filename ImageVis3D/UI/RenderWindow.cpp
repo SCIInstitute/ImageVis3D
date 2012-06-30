@@ -1357,16 +1357,28 @@ void RenderWindow::SetClipTranslationDelta(LuaClassInstance renderRegion,
   RegionData* regionData = GetRegionData(renderRegion);
 
   FLOATMATRIX4 translation;
+  FLOATMATRIX4 worldToClip =
+      computeClipToVolToWorldTransform(renderRegion).inverse();
 
   // Get the scalar projection of the user's translation along the clip plane's
-  // normal.
+  // normal. We want to perform this scalar projection in world space.
   float sproj = trans ^ m_ClipPlane.Plane().xyz();
   // The actual translation is along the clip's normal, weighted by the user's
-  // translation.
-  FLOATVECTOR3 tr = sproj * m_ClipPlane.Plane().xyz();
-  regionData->toClipSpace.m41 += tr.x;
-  regionData->toClipSpace.m42 += tr.y;
-  regionData->toClipSpace.m43 += tr.z;
+  // translation. Done in clipping space.
+  PLANE<float> clipSpacePlane = m_ClipPlane.Plane();
+  clipSpacePlane.transform(worldToClip);  // Remember, transformations against
+                                          // planes are of the form (M^-1)^T.
+                                          // We can't just transform
+                                          // m_ClipPlane.Plane().xyz() by
+                                          // worldToClip.
+  FLOATVECTOR3 clipSpaceNormal = clipSpacePlane.xyz();
+  // NOTE: We could just extract the negative 3rd column from the
+  //       regionData->toClipSpace matrix.
+  //       But this would make us dependent on the choice of the initial normal
+  //       in extended plane (see ms_Plane in ExtendededPlane)
+  FLOATVECTOR3 tr = sproj * clipSpaceNormal;
+  translation.Translation(tr);
+  regionData->toClipSpace = regionData->toClipSpace * translation;
 
   updateClipPlaneTransform(renderRegion);
 
