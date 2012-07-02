@@ -66,22 +66,34 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
   RenderWindow(masterController, eType, dataset, iCounter, parent)
 {
   setBaseSize( sizeHint() );
-  m_Renderer = masterController.RequestNewVolumeRenderer(
-                  eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
-                  bDisableBorder, false, false
-               );
+
+  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  m_LuaAbstrRenderer = ss->cexecRet<LuaClassInstance>(
+      "tuvok.renderer.new",
+      eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
+      bDisableBorder, false, false);
+  m_Renderer = m_LuaAbstrRenderer.getRawPointer<AbstrRenderer>(ss);
+
+  // so far we are not rendering anything previous to this renderer 
+  // so we can disable the depth-buffer to offscreen copy operations
+  m_Renderer->SetConsiderPreviousDepthbuffer(false);
 
   if (m_Renderer) {
     ((DXRenderer*)m_Renderer)->SetWinID(parent->winId());  // hand over the handle of the window we are sitting in not the widget inside the window
-    m_Renderer->LoadDataset(m_strDataset.toStdString());
-    InitializeRenderer();
-    Initialize();
-  } else m_bRenderSubsysOK = false;
+    if (m_Renderer->LoadDataset(m_strDataset.toStdString())) {
+      InitializeRenderer();
+      Initialize();
 
-  setObjectName("RenderWindowDX");  // this is used by WidgetToRenderWin() to detect the type
-  setWindowTitle(m_strID);
-  setFocusPolicy(Qt::StrongFocus);
-  setMouseTracking(true);
+      setObjectName("RenderWindowDX");  // this is used by WidgetToRenderWin() to detect the type
+      setWindowTitle(m_strID);
+      setFocusPolicy(Qt::StrongFocus);
+      setMouseTracking(true);
+
+      m_bRenderSubsysOK = true;
+      return;
+    }
+  }
+  m_bRenderSubsysOK = false;
 }
 
 RenderWindowDX::~RenderWindowDX()
