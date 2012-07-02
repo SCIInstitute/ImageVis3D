@@ -9,7 +9,7 @@ IF "%1"=="x64" (
   %bld% ^
     ImageVis3D-2010.sln ^
     /nologo ^
-    /p:Configuration="Release",Platform=x64 ^
+    /p:Configuration="Release (with DirectX)",Platform=x64 ^
     /t:Rebuild
 ) ELSE (
   REM Handle 32 bit compilation
@@ -17,7 +17,7 @@ IF "%1"=="x64" (
   %bld% ^
     ImageVis3D-2010.sln ^
     /nologo ^
-    /p:Configuration="Release",Platform=Win32 ^
+    /p:Configuration="Release (with DirectX)",Platform=Win32 ^
     /t:Rebuild
 )
 
