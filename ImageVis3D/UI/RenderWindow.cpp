@@ -1085,12 +1085,12 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   ss->setTempProvDisable(true);
 
   GLFrameCapture f;
-  ss->cexec(rn + ".setMipRotationAngle", fAngle);
+  ss->cexec(rn + ".setMIPRotationAngle", fAngle);
   bool bSystemOrtho = ss->cexecRet<bool>(rn + ".getOrthoViewEnabled");
   if (bSystemOrtho != bOrtho) ss->cexec(rn + ".setOrthoViewEnabled", bOrtho);
   ss->cexec(rn + ".setMIPLODEnabled", bUseLOD);
   if (bFinalFrame) { // restore state
-    ss->cexec(rn + ".setMipRotationAngle", 0.0f);
+    ss->cexec(rn + ".setMIPRotationAngle", 0.0f);
     if (bSystemOrtho != bOrtho)
       ss->cexec(rn + ".setOrthoViewEnabled", bSystemOrtho);
   }
