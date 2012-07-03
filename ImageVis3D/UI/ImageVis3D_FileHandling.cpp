@@ -549,25 +549,29 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
     pleaseWait.SetText("Converting, please wait  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
-    if (!m_MasterController.IOMan()->ConvertDataset(
-          stdfiles, std::string(targetFilename.toAscii()),
-          m_strTempDir, bNoUserInteraction))
-    {
+    try {
+      m_MasterController.IOMan()->ConvertDataset(stdfiles,
+        std::string(targetFilename.toAscii()), m_strTempDir, bNoUserInteraction
+      );
+      filename = targetFilename;
+    } catch(const tuvok::io::IOException& e) {
+      // create a (hopefully) useful error message
       std::ostringstream error;
       error << "Unable to convert ";
       std::copy(stdfiles.begin(), stdfiles.end(),
                 std::ostream_iterator<std::string>(error, ", "));
-      error << " into " << std::string(targetFilename.toAscii());
+      error << " into " << std::string(targetFilename.toAscii())
+            << ": " << e.what();
       T_ERROR("%s", error.str().c_str());
-      if (!bNoUserInteraction) {
+      if(!bNoUserInteraction) {
         ShowCriticalDialog("Conversion Error", QString(error.str().c_str()));
       }
 
+      // now close that dialog and bail.
       pleaseWait.close();
       return false;
-    } else {
-      filename = targetFilename;
     }
+
     pleaseWait.close();
   }
 
