@@ -643,15 +643,18 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       ss->cexec(rn + ".transfer3DRotationToMIP");
       break;
     case Qt::Key_P :
-      ss->cexec(rn + ".set2DPlanesIn3DView",
-                !ss->cexecRet<bool>(rn + ".get2DPlanesIn3DView"),
-                selectedRegion);
+      if (selectedRegion.isValid(ss))
+      {
+        ss->cexec(rn + ".set2DPlanesIn3DView",
+                  !ss->cexecRet<bool>(rn + ".get2DPlanesIn3DView"),
+                  selectedRegion);
+      }
       break;
     case Qt::Key_R :
       ResetRenderingParameters();
       break;
     case Qt::Key_Space : {
-      if (selectedRegion.isValid(m_MasterController.LuaScript()) == false)
+      if (selectedRegion.isValid(ss) == false)
         break;
 
       EViewMode newViewMode = EViewMode((int(GetViewMode()) + 1) % int(VM_INVALID));
@@ -674,7 +677,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
     }
       break;
     case Qt::Key_X :
-      if (   selectedRegion.isValid(m_MasterController.LuaScript())
+      if (   selectedRegion.isValid(ss)
           && IsRegion2D(selectedRegion)) {
         bool flipX = Get2DFlipModeX(selectedRegion);
         flipX = !flipX;
@@ -682,7 +685,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       }
       break;
     case Qt::Key_Y :
-      if(    selectedRegion.isValid(m_MasterController.LuaScript())
+      if(    selectedRegion.isValid(ss)
           && IsRegion2D(selectedRegion)) {
         bool flipY = Get2DFlipModeY(selectedRegion);
         flipY = !flipY;
@@ -690,20 +693,23 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       }
       break;
     case Qt::Key_M :
-      if(    selectedRegion.isValid(m_MasterController.LuaScript())
+      if(    selectedRegion.isValid(ss)
           && IsRegion2D(selectedRegion)) {
         bool useMIP = !GetUseMIP(selectedRegion);
         SetUseMIP(selectedRegion, useMIP);
       }
       break;
     case Qt::Key_A : {
-      RegionData *regionData = GetRegionData(selectedRegion);
-      regionData->arcBall.SetUseTranslation(
+      if (selectedRegion.isValid(ss))
+      {
+        RegionData *regionData = GetRegionData(selectedRegion);
+        regionData->arcBall.SetUseTranslation(
                                       !regionData->arcBall.GetUseTranslation());
+      }
     }
       break;
     case Qt::Key_PageDown : case Qt::Key_PageUp :
-      if (   selectedRegion.isValid(m_MasterController.LuaScript())
+      if (   selectedRegion.isValid(ss)
           && IsRegion2D(selectedRegion)) {
         const size_t sliceDimension = static_cast<size_t>(
             GetRegionWindowMode(selectedRegion));
