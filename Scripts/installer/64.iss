@@ -70,7 +70,7 @@ Name: {userappdata}\ImageVis3D; Flags: uninsalwaysuninstall
 
 
 ; ImageVis3D
-Source: build\x64\Release\ImageVis3D-64.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
+Source: build\x64\Release (with DirectX)\ImageVis3D-64.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: Tuvok\Shaders\*; DestDir: {app}\Shaders; Excludes: .svn; Flags: ignoreversion replacesameversion
 Source: Scripts\installer\imagevis3d.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: Scripts\installer\GettingDataIntoImageVis3D.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
