@@ -270,8 +270,8 @@ void MainWindow::CaptureRotation() {
                 SysTools::AppendFilename(lineEditCaptureFile->text().
                                                             toStdString(),"_R");
               if (!m_pActiveRenderWin->CaptureMIPFrame(
-                    strImageFilenameRight, fAngle, bOrthoView, bUseLOD,
-                    i==(iNumImages-1),
+                    strImageFilenameRight, fAngle, bOrthoView,
+                    i==(iNumImages-1), bUseLOD,
                     checkBox_PreserveTransparency->isChecked(),
                     &strSequenceName)) {
                 QString msg = tr("Error writing image file %1.").
