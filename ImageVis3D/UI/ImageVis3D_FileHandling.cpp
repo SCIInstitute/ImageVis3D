@@ -98,13 +98,21 @@ void MainWindow::LoadDataset() {
   if (!files.isEmpty()) {
     settings.setValue("Folders/LoadDataset",
                       QFileInfo(files[0]).absoluteDir().path());
-    if(!LoadDataset(files)) {
-        ShowCriticalDialog("Render window initialization failed.",
-                     "Could not open a render window!  This normally "
+    const char* rwe ="Could not open a render window!  This normally "
                      "means ImageVis3D does not support your GPU.  Please"
                      " check the debug log ('Help | Debug Window') for "
                      "errors, and/or use 'Help | Report an Issue' to "
-                     "notify the ImageVis3D developers.");
+                     "notify the ImageVis3D developers.";
+    try {
+      if(!LoadDataset(files)) {
+        ShowCriticalDialog("Render window initialization failed.", rwe);
+      }
+    } catch(const tuvok::Exception& e) {
+      if(strlen(e.what()) > 0) {
+        ShowCriticalDialog("Could not load data set!", e.what());
+      } else {
+        ShowCriticalDialog("Render window initialization failed.", rwe);
+      }
     }
   }
 }
@@ -426,7 +434,6 @@ bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction,
 
 bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
                              bool bNoUserInteraction) {
-
   std::vector<std::string> stdFiles;
   for (QStringList::iterator it = files.begin(); it != files.end();
       ++it)
