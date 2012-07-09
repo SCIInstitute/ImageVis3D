@@ -553,7 +553,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
@@ -561,7 +561,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
@@ -569,7 +569,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
@@ -577,7 +577,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
@@ -587,14 +587,15 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
@@ -602,14 +603,16 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\BugRepDlg.h">
@@ -618,14 +621,15 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
@@ -633,14 +637,16 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\CrashDetDlg.h">
@@ -649,14 +655,15 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
@@ -664,14 +671,16 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\FTPDialog.h">
@@ -680,28 +689,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\LODDlg.h">
@@ -710,28 +723,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\MergeDlg.h">
@@ -740,28 +757,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\MetadataDlg.h">
@@ -770,28 +791,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\MIPRotDialog.h">
@@ -800,28 +825,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\PleaseWait.h">
@@ -830,28 +859,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\Q1DTransferFunction.h">
@@ -860,28 +893,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\Q2DTransferFunction.h">
@@ -890,28 +927,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\DebugScriptWindow.h">
@@ -927,18 +968,6 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
     </CustomBuild>
     <ClInclude Include="UI\MDIRenderWin.h" />
     <ClInclude Include="UI\QDataRadioButton.h" />
@@ -948,28 +977,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\QTransferFunction.h">
@@ -978,28 +1011,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\RAWDialog.h">
@@ -1008,28 +1045,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="UI\RenderWindow.h" />
@@ -1047,7 +1088,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"  -D USE_DIRECTX=1 -D _WIN32=1
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"  -D USE_DIRECTX=1 -D _WIN32=1
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
@@ -1057,28 +1098,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\ScaleAndBiasDlg.h">
@@ -1087,28 +1132,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\SettingsDlg.h">
@@ -1117,28 +1166,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\URLDlg.h">
@@ -1147,28 +1200,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\Welcome.h">
@@ -1177,28 +1234,32 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="UI\ImageVis3D.h">
@@ -1223,7 +1284,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR64)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
