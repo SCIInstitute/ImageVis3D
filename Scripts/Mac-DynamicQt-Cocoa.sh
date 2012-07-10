@@ -44,7 +44,6 @@ echo "yes" | \
         -no-declarative \
         -no-declarative-debug \
         -platform macx-g++ \
-        -graphicssystem opengl \
         -no-scripttools \
         -system-zlib \
         -no-gif \
