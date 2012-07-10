@@ -1507,6 +1507,12 @@ void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
     /// @todo we actually want to do this in Lua, not C++ code...
     std::pair<double,double> range =
       this->GetRenderer()->GetDataset().GetRange();
+    // we might not have a valid range (old UVFs, color data).  In that case,
+    // use the bit width.
+    if(range.second <= range.first) {
+      range.first = 0.0;
+      range.second = pow(2, this->GetRenderer()->GetDataset().GetBitWidth());
+    }
     float isoval = MathTools::lerp<double,float>(fIsoVal,
       range.first,range.second, 0.0f,1.0f
     );
