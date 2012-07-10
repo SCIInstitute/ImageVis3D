@@ -1224,7 +1224,9 @@ void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
   newSwatch.pGradientCoords[0] = FLOATVECTOR2(m_vZoomWindow.x + 0.1f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
   newSwatch.pGradientCoords[1] = FLOATVECTOR2(m_vZoomWindow.x + 0.9f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
 
-  GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),g2(0.5f,FLOATVECTOR4(1,1,1,1)),g3(1,FLOATVECTOR4(0,0,0,0));
+  GradientStop g1(0.0f, FLOATVECTOR4(0.0f,0.0f,0.0f,0.0f)),
+               g2(0.5f, FLOATVECTOR4(1.0f,1.0f,1.0f,1.0f)),
+               g3(1.0f, FLOATVECTOR4(0.0f,0.0f,0.0f,0.0f));
   newSwatch.pGradientStops.push_back(g1);
   newSwatch.pGradientStops.push_back(g2);
   newSwatch.pGradientStops.push_back(g3);
@@ -1247,7 +1249,9 @@ void Q2DTransferFunction::Transfer2DAddSwatch() {
   newSwatch.pGradientCoords[0] = FLOATVECTOR2(m_vZoomWindow.x + 0.3f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
   newSwatch.pGradientCoords[1] = FLOATVECTOR2(m_vZoomWindow.x + 0.7f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
 
-  GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),g2(0.5f,FLOATVECTOR4(1,1,1,1)),g3(1,FLOATVECTOR4(0,0,0,0));
+  GradientStop g1(0.0f,FLOATVECTOR4(0.0f,0.0f,0.0f,0.0f)),
+               g2(0.5f,FLOATVECTOR4(1.0f,1.0f,1.0f,1.0f)),
+               g3(1.0f,FLOATVECTOR4(0.0f,0.0f,0.0f,0.0f));
   newSwatch.pGradientStops.push_back(g1);
   newSwatch.pGradientStops.push_back(g2);
   newSwatch.pGradientStops.push_back(g3);
@@ -1270,7 +1274,11 @@ void Q2DTransferFunction::Transfer2DAddRectangleSwatch() {
   newSwatch.pGradientCoords[0] = (newSwatch.pPoints[0]+newSwatch.pPoints[1])/2.0f;
   newSwatch.pGradientCoords[1] = (newSwatch.pPoints[2]+newSwatch.pPoints[3])/2.0f;
 
-  GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),g2(0.5,FLOATVECTOR4(rand()/float(RAND_MAX),rand()/float(RAND_MAX),rand()/float(RAND_MAX),1)),g3(1,FLOATVECTOR4(0,0,0,0));
+  GradientStop g1(0.0f, FLOATVECTOR4(0.0f,0.0f,0.0f,0.0f)),
+               g2(0.5f,
+                  FLOATVECTOR4(rand()/float(RAND_MAX), rand()/float(RAND_MAX),
+                               rand()/float(RAND_MAX), 1.0f)),
+               g3(1.0f, FLOATVECTOR4(0.0f,0.0f,0.0f,0.0f));
   newSwatch.pGradientStops.push_back(g1);
   newSwatch.pGradientStops.push_back(g2);
   newSwatch.pGradientStops.push_back(g3);
@@ -1286,9 +1294,9 @@ void Q2DTransferFunction::Transfer2DAddRectangleSwatch() {
 
 
 void Q2DTransferFunction::ComputeGradientForPseudoTris(TFPolygon& swatch, const FLOATVECTOR4& color) {
-  GradientStop g1(0,FLOATVECTOR4(0,0,0,0)),
+  GradientStop g1(0.0f,FLOATVECTOR4(0.0f,0.0f,0.0f,0.0f)),
                g2(0.5f,color),
-               g3(1.0f,FLOATVECTOR4(0,0,0,0));
+               g3(1.0f,FLOATVECTOR4(0.0f,0.0f,0.0f,0.0f));
   swatch.pGradientStops.clear();
   swatch.pGradientStops.push_back(g1);
   swatch.pGradientStops.push_back(g2);
