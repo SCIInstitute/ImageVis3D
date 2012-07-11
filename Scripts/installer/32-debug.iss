@@ -69,7 +69,8 @@ Name: {userappdata}\ImageVis3D; Flags: uninsalwaysuninstall
 ; version does:
 ; http://connect.microsoft.com/VisualStudio/feedback/details/559425/c-2010-express-web-install-vc-redist-folder-missing
 ;
-;Source: C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\*; DestDir: {app}; Flags: recursesubdirs
+Source: C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x86\Microsoft.VC100.CRT\*; DestDir: {app}; Flags: recursesubdirs
+Source: C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x86\Microsoft.VC100.MFC\*; DestDir: {app}; Flags: recursesubdirs
 ;;Source: "vcredist.exe"; DestDir: {tmp}; DestName: vcredist.exe; Flags: deleteafterinstall;
 
 

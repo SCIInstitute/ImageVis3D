@@ -29,13 +29,13 @@
 ; "iscc.exe" from Inno Setup 5.
 [Setup]
 AppName=ImageVis3D
-AppVerName=ImageVis3D 2.0.1
-AppVersion=2.0.1
+AppVerName=ImageVis3D 2.1.0
+AppVersion=2.1.0
 AppPublisher=SCI Institute
 AppPublisherURL=http://software.sci.utah.edu/
 AppSupportURL=http://software.sci.utah.edu/
 AppUpdatesURL=http://software.sci.utah.edu/
-AppCopyright=Copyright (c) 2011 Scientific Computing and Imaging Institute, University of Utah.
+AppCopyright=Copyright (c) 2012 Scientific Computing and Imaging Institute, University of Utah.
 DefaultDirName={pf}\ImageVis3D
 DefaultGroupName=ImageVis3D
 OutputDir=Scripts\installer
@@ -64,8 +64,8 @@ Name: {userappdata}\ImageVis3D; Flags: uninsalwaysuninstall
 [Files]
 ; Dependencies.
 ;   MS redistributable crap.
-;Source: C:\Program Files (x85)\Microsoft Visual Studio 9.0\VC\redist\amd64\Microsoft.VC90.CRT\*; DestDir: {app}; Flags: recursesubdirs
-;Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\amd64\Microsoft.VC90.MFC\*"; DestDir: "{app}"; Flags: recursesubdirs
+Source: C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x64\Microsoft.VC100.CRT\*; DestDir: {app}; Flags: recursesubdirs
+Source: "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x64\Microsoft.VC100.MFC\*"; DestDir: "{app}"; Flags: recursesubdirs
 ;Source: "vcredist_x64.exe"; DestDir: {tmp}; DestName: vcredist.exe; Flags: deleteafterinstall;
 
 
