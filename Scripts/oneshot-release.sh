@@ -8,6 +8,12 @@ INL="-fvisibility-inlines-hidden"
 COVERAGE="-fprofile-arcs -ftest-coverage"
 CF="-Wall -Wextra -O2 ${COVERAGE}"
 CXF="-D_GLIBCXX_CONCEPT_CHECK -DQT_NODEBUG -Werror ${COVERAGE}"
+
+if test "$1" == "32" ; then
+  CF="$CF -m32"
+  COVERAGE="$COVERAGE -m32"
+fi
+
 LDFLAGS="${COVERAGE}"
 
 # Users can set the QT_BIN env var to point at a different Qt implementation.

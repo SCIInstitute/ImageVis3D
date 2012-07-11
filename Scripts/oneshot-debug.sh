@@ -8,11 +8,17 @@ INL="-fvisibility-inlines-hidden"
 COVERAGE="-fprofile-arcs -ftest-coverage"
 CF="-g -Wall -Wextra -O0 -D_DEBUG ${COVERAGE}"
 CXF="-D_GLIBCXX_CONCEPT_CHECK -Werror ${COVERAGE}"
-LDFLAGS="${COVERAGE}"
 # Darwin's debug STL support is broken.
 if test `uname -s` != "Darwin"; then
   CXF="${CXF} -D_GLIBCXX_DEBUG"
 fi
+
+if test "$1" == "32" ; then
+  CF="$CF -m32"
+  COVERAGE="$COVERAGE -m32"
+fi
+
+LDFLAGS="${COVERAGE}"
 
 # Users can set the QT_BIN env var to point at a different Qt implementation.
 if test -n "${QT_BIN}" ; then
