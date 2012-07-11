@@ -64,8 +64,8 @@ Name: {userappdata}\ImageVis3D; Flags: uninsalwaysuninstall
 [Files]
 ; Dependencies.
 ;   MS redistributable crap.
-Source: C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\amd64\Microsoft.VC100.CRT\*; DestDir: {app}; Flags: recursesubdirs
-Source: "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\amd64\Microsoft.VC100.MFC\*"; DestDir: "{app}"; Flags: recursesubdirs
+Source: C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x64\Microsoft.VC100.CRT\*; DestDir: {app}; Flags: recursesubdirs
+Source: "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x64\Microsoft.VC100.MFC\*"; DestDir: "{app}"; Flags: recursesubdirs
 ;Source: "vcredist_x64.exe"; DestDir: {tmp}; DestName: vcredist.exe; Flags: deleteafterinstall;
 
 
