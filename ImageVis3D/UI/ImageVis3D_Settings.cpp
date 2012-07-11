@@ -330,7 +330,7 @@ void MainWindow::ApplySettings() {
   m_strTempDir = std::string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
 
   uint64_t iMaxBrickSizeLog = MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize());
-  uint64_t iMaxBrickSize = MathTools::Pow2((uint64_t)settings.value("MaxBrickSize",  static_cast<qulonglong>(iMaxBrickSizeLog)).toUInt());
+  uint64_t iMaxBrickSize = MathTools::Pow2((uint64_t)settings.value("MaxBricksize",  static_cast<qulonglong>(iMaxBrickSizeLog)).toUInt());
   iMaxBrickSizeLog = MathTools::Log2(iMaxBrickSize);
 
   // sanity check: make sure a RGBA float brick would fit into the specified memory
