@@ -1,3 +1,11 @@
+imagevis3d (2.1.0-1.0) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * New upstream release.
+
+ -- Thomas Fogal <tfogal@alumni.unh.edu>  Thu, 12 Jul 2012 15:42:21 -0600
+
+
 imagevis3d (1.1.1-1.0) unstable; urgency=low
 
   * Non-maintainer upload.
