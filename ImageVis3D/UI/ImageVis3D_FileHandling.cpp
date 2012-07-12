@@ -332,32 +332,6 @@ void MainWindow::LoadDataset(std::string strFilename) {
     err << "The checksum for '" << ds.File() << "' is invalid: " << ds.what()
         << "\nThe file has been corrupted.";
     ShowCriticalDialog("Checksum failed", err.str().c_str());
-  } catch(tuvok::io::DSBricksOversized&) {
-    WARNING("Bricks are too large.  Querying the user to see if we should "
-            "rebrick the dataset.");
-//    if(bNoUserInteraction) {
-//      T_ERROR("Dataset needs rebricking but ImageVis3D is not running interactively.");
-//      return false;
-//    }
-    if(QMessageBox::Yes ==
-       QMessageBox::question(NULL, "Rebricking required",
-        "The bricking scheme in this dataset is not compatible with "
-        "your current brick size settings.  Do you want to convert this "
-        "dataset so that it can be loaded?  Note that this operation can "
-        "take as long as originally converting the data took!",
-        QMessageBox::Yes, QMessageBox::No))
-    {
-      if (!RebrickDataset(QString::fromStdString(strFilename), "", false))
-      {
-        ShowCriticalDialog("Render window initialization failed.",
-              "Could not open a render window!  This normally "
-              "means ImageVis3D does not support your GPU.  Please"
-              " check the debug log ('Help | Debug Window') for "
-              "errors, and/or use 'Help | Report an Issue' to "
-              "notify the ImageVis3D developers."
-            );
-      }
-    }
   } catch(const tuvok::io::DSOpenFailed& ds) {
     std::ostringstream err;
     err << "Could not open '" << ds.File() << "': " << ds.what();
@@ -609,16 +583,36 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
   }
 
   RenderWindow *renderWin = NULL;
-  renderWin = CreateNewRenderWindow(filename);
+  try {
+    renderWin = CreateNewRenderWindow(filename);
 
-  if(renderWin == NULL) {
-    T_ERROR("Renderwindow creation failed.  Bailing...");
-    return false;
+    if(renderWin == NULL) {
+      T_ERROR("Renderwindow creation failed.  Bailing...");
+      return false;
+    }
+
+    renderWin->GetQtWidget()->show();  // calls RenderWindowActive automatically
+    UpdateMenus();
+    AddFileToMRUList(filename);
+  } catch(tuvok::io::DSBricksOversized&) {
+    WARNING("Bricks are too large.  Querying the user to see if we should "
+            "rebrick the dataset.");
+    if(renderWin) { delete renderWin; renderWin = NULL; }
+    if(bNoUserInteraction) {
+      T_ERROR("Dataset needs rebricking but ImageVis3D is not running interactively.");
+      return false;
+    }
+    if(QMessageBox::Yes ==
+       QMessageBox::question(NULL, "Rebricking required",
+        "The bricking scheme in this dataset is not compatible with "
+        "your current brick size settings.  Do you want to convert this "
+        "dataset so that it can be loaded?  Note that this operation can "
+        "take as long as originally converting the data took!",
+        QMessageBox::Yes, QMessageBox::No)) {
+      RebrickDataset(filename, targetFilename, bNoUserInteraction);
+      return false;
+    }
   }
-
-  renderWin->GetQtWidget()->show();  // calls RenderWindowActive automatically
-  UpdateMenus();
-  AddFileToMRUList(filename);
 
   if (renderWin) RenderWindowActive(renderWin);
   if (CheckForMeshCapabilities(bNoUserInteraction, files)) return true;
