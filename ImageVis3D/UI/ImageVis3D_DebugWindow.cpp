@@ -126,10 +126,10 @@ void MainWindow::ListSupportedVolumes() {
   std::vector<tConverterFormat> conv = m_MasterController.IOMan()->GetFormatList();
 
   for (size_t i=0; i < conv.size(); i++) {
-    string strVolumeFormats = "  " + tr1::get<0>(conv[i]) + " " + tr1::get<1>(conv[i]);
-    if (!tr1::get<2>(conv[i])) 
+    string strVolumeFormats = "  " + std::get<0>(conv[i]) + " " + std::get<1>(conv[i]);
+    if (!std::get<2>(conv[i])) 
       strVolumeFormats += " (Readonly)";
-    if (!tr1::get<3>(conv[i])) 
+    if (!std::get<3>(conv[i])) 
       strVolumeFormats += " (Writeonly)";
     m_MasterController.DebugOut()->printf(strVolumeFormats.c_str());
   }
@@ -143,10 +143,10 @@ void MainWindow::ListSupportedGeometry() {
   std::vector<tConverterFormat> conv = m_MasterController.IOMan()->GetGeoFormatList();
 
   for (size_t i=0; i < conv.size(); i++) {
-    string strGeoFormats = "  " + tr1::get<0>(conv[i]) + " " + tr1::get<1>(conv[i]);
-      if (!tr1::get<2>(conv[i])) 
+    string strGeoFormats = "  " + std::get<0>(conv[i]) + " " + std::get<1>(conv[i]);
+      if (!std::get<2>(conv[i])) 
         strGeoFormats += " (Readonly)";
-    if (!tr1::get<3>(conv[i])) 
+    if (!std::get<3>(conv[i])) 
       strGeoFormats += " (Writeonly)";
     m_MasterController.DebugOut()->printf(strGeoFormats.c_str());
   }

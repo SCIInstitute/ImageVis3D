@@ -224,23 +224,23 @@ int main(int argc, char* argv[])
     uvfGlobalHeader.ulChecksumSemanticsEntry = UVFTables::CS_MD5;
     uvfFile.SetGlobalHeader(uvfGlobalHeader);
 
-    std::tr1::shared_ptr<DataBlock> testBlock(new DataBlock());
+    std::shared_ptr<DataBlock> testBlock(new DataBlock());
     testBlock->strBlockID = "Test Block 1";
     testBlock->ulCompressionScheme = UVFTables::COS_NONE;
     uvfFile.AddDataBlock(testBlock);
 
-    testBlock = std::tr1::shared_ptr<DataBlock>(new DataBlock());
+    testBlock = std::shared_ptr<DataBlock>(new DataBlock());
     testBlock->strBlockID = "Test Block 2";
     uvfFile.AddDataBlock(testBlock);
 
-    std::tr1::shared_ptr<DataBlock> pTestVolume;
-    std::tr1::shared_ptr<MaxMinDataBlock> MaxMinData(
+    std::shared_ptr<DataBlock> pTestVolume;
+    std::shared_ptr<MaxMinDataBlock> MaxMinData(
       new MaxMinDataBlock(1)
     );
-    std::tr1::shared_ptr<RasterDataBlock> testRasterVolume(
+    std::shared_ptr<RasterDataBlock> testRasterVolume(
       new RasterDataBlock()
     );
-    std::tr1::shared_ptr<TOCBlock> tocBlock(new TOCBlock());
+    std::shared_ptr<TOCBlock> tocBlock(new TOCBlock());
 
     if (bUseToCBlock)  {
       tocBlock->strBlockID = "Test TOC Volume 1";
@@ -352,10 +352,10 @@ int main(int argc, char* argv[])
       return EXIT_FAILURE;
     }
 
-    std::tr1::shared_ptr<Histogram1DDataBlock> Histogram1D(
+    std::shared_ptr<Histogram1DDataBlock> Histogram1D(
       new Histogram1DDataBlock()
     );
-    std::tr1::shared_ptr<Histogram2DDataBlock> Histogram2D(
+    std::shared_ptr<Histogram2DDataBlock> Histogram2D(
       new Histogram2DDataBlock()
     );
     if (bUseToCBlock) {
@@ -400,7 +400,7 @@ int main(int argc, char* argv[])
 
     MESSAGE("Storing metadata...");
 
-    std::tr1::shared_ptr<KeyValuePairDataBlock> metaPairs(
+    std::shared_ptr<KeyValuePairDataBlock> metaPairs(
       new KeyValuePairDataBlock()
     );
     metaPairs->AddPair("Data Source","This file was created by the UVFReader");

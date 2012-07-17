@@ -89,7 +89,7 @@ private:
 
   tuvok::MasterController&                    mController;
   tuvok::LuaMemberReg                         mMemReg;
-  std::tr1::shared_ptr<tuvok::LuaScripting>   mLua;
+  std::shared_ptr<tuvok::LuaScripting>   mLua;
 
 
 };

@@ -67,7 +67,7 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
 {
   setBaseSize( sizeHint() );
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   m_LuaAbstrRenderer = ss->cexecRet<LuaClassInstance>(
       "tuvok.renderer.new",
       eType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,

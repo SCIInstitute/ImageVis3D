@@ -244,7 +244,7 @@ void MainWindow::AddGeometry(std::string filename) {
   pleaseWait.SetText("Loading mesh, please wait  ...");
   pleaseWait.AttachLabel(&m_MasterController);
 
-  std::tr1::shared_ptr<Mesh> m;
+  std::shared_ptr<Mesh> m;
   try {
     m = m_MasterController.IOMan()->LoadMesh(filename);
   } catch (const tuvok::io::DSOpenFailed& err) {

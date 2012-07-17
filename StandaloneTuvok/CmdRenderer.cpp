@@ -106,7 +106,7 @@ int main(int argc, char * argv[])
 //		tuvok::AbstrRenderer * renderer = tuvok::Controller::Instance().RequestNewVolumeRenderer(tuvok::MasterController::OPENGL_SBVR,
 //																				false, false, false, false, false);
 	
-    std::tr1::shared_ptr<tuvok::LuaScripting> ss =
+    std::shared_ptr<tuvok::LuaScripting> ss =
         tuvok::Controller::Instance().LuaScript();
     tuvok::LuaClassInstance inst = ss->cexecRet<tuvok::LuaClassInstance>(
         "tuvok.renderer.new",

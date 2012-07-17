@@ -698,7 +698,7 @@ register UVF with the IO manager:
 
 [c++]
 source~~~~
-m_dsFactory->AddReader(std::tr1::shared_ptr<UVFDataset>(new UVFDataset()));
+m_dsFactory->AddReader(std::shared_ptr<UVFDataset>(new UVFDataset()));
 source~~~~
 
 Add a similar line for your reader.  You will also need to add a

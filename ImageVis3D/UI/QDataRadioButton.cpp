@@ -41,7 +41,7 @@
 #include "../Tuvok/IO/DICOM/DICOMParser.h"
 #include "../Tuvok/IO/3rdParty/jpeglib/jconfig.h"
 
-QDataRadioButton::QDataRadioButton(std::tr1::shared_ptr<FileStackInfo> stack,
+QDataRadioButton::QDataRadioButton(std::shared_ptr<FileStackInfo> stack,
                                    QWidget *parent) :
   QRadioButton(parent),
   m_iCurrentImage((unsigned int)(-1)),
@@ -51,7 +51,7 @@ QDataRadioButton::QDataRadioButton(std::tr1::shared_ptr<FileStackInfo> stack,
   SetupInfo();
 }
 
-QDataRadioButton::QDataRadioButton(std::tr1::shared_ptr<FileStackInfo> stack,
+QDataRadioButton::QDataRadioButton(std::shared_ptr<FileStackInfo> stack,
                                    const QString &text, QWidget *parent) :
   QRadioButton(text, parent),
   m_iCurrentImage((unsigned int)(-1)),

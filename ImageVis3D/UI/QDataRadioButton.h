@@ -40,22 +40,17 @@
 #ifndef QDATARADIOBUTTON_H
 #define QDATARADIOBUTTON_H
 
-#include <StdDefines.h>
-#ifdef _MSC_VER
-# include <memory>
-#else
-# include <tr1/memory>
-#endif
-
+#include "StdDefines.h"
+#include <memory>
 #include <QtGui/QRadioButton>
 #include <../Tuvok/IO/DirectoryParser.h>
 
 class QDataRadioButton : public QRadioButton
 {
 public:
-  QDataRadioButton(std::tr1::shared_ptr<FileStackInfo> stack,
+  QDataRadioButton(std::shared_ptr<FileStackInfo> stack,
                    QWidget* parent=0);
-  QDataRadioButton(std::tr1::shared_ptr<FileStackInfo> stack,
+  QDataRadioButton(std::shared_ptr<FileStackInfo> stack,
                    const QString &text, QWidget *parent=0);
   virtual ~QDataRadioButton() {}
 
@@ -63,7 +58,7 @@ public:
 
 protected:
   unsigned int                        m_iCurrentImage;
-  std::tr1::shared_ptr<FileStackInfo> m_stackInfo;
+  std::shared_ptr<FileStackInfo> m_stackInfo;
   float                               m_fScale;
 
   virtual void leaveEvent ( QEvent * event );

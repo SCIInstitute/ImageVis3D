@@ -37,14 +37,10 @@
 
 #include "../Tuvok/Basics/StdDefines.h"
 #include <algorithm>
+#include <array>
 #include <cstdio>
 #include <fstream>
 #include <string>
-#ifdef _MSC_VER
-# include <array>
-#else
-# include <tr1/array>
-#endif
 
 #include <QtCore/QUrl>
 #include <QtCore/QTime>
@@ -454,7 +450,7 @@ void MainWindow::OpenManual() {
   }
   if(!QDesktopServices::openUrl(uri)) {
     MESSAGE("Manual open failed, relying on manual method.");
-    typedef std::tr1::array<std::string, 3> progvec;
+    typedef std::array<std::string, 3> progvec;
     progvec viewers = {{ "evince", "xpdf", "acroread" }};
     // Now iterate through each of those programs until one of them
     // successfully launches.

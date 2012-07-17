@@ -40,10 +40,11 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
+#include "StdDefines.h"
 #include <string>
+#include <unordered_map>
 #include <QtGui/QListWidget>
 #include <QtCore/QMutex>
-#include <StdDefines.h>
 #include "../Tuvok/Basics/ArcBall.h"
 #include "../Tuvok/Basics/Plane.h"
 #include "../Tuvok/Controller/MasterController.h"
@@ -51,12 +52,6 @@
 #include "../Tuvok/LuaScripting/LuaScripting.h"
 #include "../Tuvok/LuaScripting/LuaClassRegistration.h"
 #include "../Tuvok/LuaScripting/LuaMemberReg.h"
-
-#ifdef DETECTED_OS_WINDOWS
-# include <unordered_map>
-#else
-# include <tr1/unordered_map>
-#endif
 
 class MainWindow;
 
@@ -301,7 +296,7 @@ class RenderWindow
 
     /// The integer in this map is the global unique ID of the RenderRegion's
     /// LuaClassInstance.
-    typedef std::tr1::unordered_map<tuvok::LuaClassInstance::IDType,RegionData*>
+    typedef std::unordered_map<tuvok::LuaClassInstance::IDType,RegionData*>
       RegionDataMap;
     RegionDataMap regionDataMap;
 

@@ -363,7 +363,7 @@ int main(int argc, const char* argv[])
                << "Converting " << strInFile
                << " (" << sourceConv->GetDesc() << ") to "
                << strOutFile << " (" << targetConv->GetDesc() << ")\n";
-          std::tr1::shared_ptr<Mesh> m;
+          std::shared_ptr<Mesh> m;
           try {
             m = sourceConv->ConvertToMesh(strInFile);
           } catch (const tuvok::io::DSOpenFailed& err) {
@@ -438,7 +438,7 @@ int main(int argc, const char* argv[])
     cout << "\nRunning in directory mode.\nConverting "
          << strInDir << " to " << strOutFile << "\n\n";
 
-    vector<std::tr1::shared_ptr<FileStackInfo> > dirinfo =
+    vector<std::shared_ptr<FileStackInfo> > dirinfo =
       ioMan.ScanDirectory(strInDir);
 
     vector<string> vStrFilenames(dirinfo.size());

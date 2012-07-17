@@ -100,7 +100,7 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
 //                  bDisableBorder, m_bNoRCClipplanes, false
 //               );
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   m_LuaAbstrRenderer = ss->cexecRet<LuaClassInstance>(
       "tuvok.renderer.new",
       m_eRendererType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,

@@ -37,12 +37,7 @@
 #ifndef BROWSEDATA_H
 #define BROWSEDATA_H
 
-#ifdef _MSC_VER
-# include <memory>
-#else
-# include <tr1/memory>
-#endif
-
+#include <memory>
 #include "AutoGen/ui_BrowseData.h"
 #include "../Tuvok/Controller/MasterController.h"
 #include "QDataRadioButton.h"
@@ -58,7 +53,7 @@ class BrowseData : public QDialog, protected Ui_BrowseData
 
     bool DataFound() {return m_bDataFound;}
 
-    std::tr1::shared_ptr<FileStackInfo> GetStackInfo() {
+    std::shared_ptr<FileStackInfo> GetStackInfo() {
       return m_dirInfo[m_iSelected];
     }
 
@@ -71,7 +66,7 @@ class BrowseData : public QDialog, protected Ui_BrowseData
     bool                                              m_bDataFound;
     QString                                           m_strDir;
     std::vector<QDataRadioButton*>                    m_vRadioButtons;
-    std::vector<std::tr1::shared_ptr<FileStackInfo> > m_dirInfo;
+    std::vector<std::shared_ptr<FileStackInfo> > m_dirInfo;
     size_t                                            m_iSelected;
 
     bool FillTable(QDialog* pleaseWaitDialog);

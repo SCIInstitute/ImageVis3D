@@ -130,7 +130,7 @@ void RenderWindow::ToggleHQCaptureMode() {
 }
 
 void RenderWindow::EnableHQCaptureMode(bool enable) {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string abstrRenName = GetLuaAbstrRenderer().fqName();
 
   if (GetRendererTarget() == AbstrRenderer::RT_CAPTURE) {
@@ -153,14 +153,14 @@ void RenderWindow::EnableHQCaptureMode(bool enable) {
 
 void RenderWindow::SetRendererTarget(AbstrRenderer::ERendererTarget targ)
 {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string abstrRenName = GetLuaAbstrRenderer().fqName();
   ss->cexec(abstrRenName + ".setRendererTarget", targ);
 }
 
 FLOATMATRIX4 RenderWindow::GetRotation(LuaClassInstance region)
 {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string rn = region.fqName();
   FLOATMATRIX4 regionRot = ss->cexecRet<FLOATMATRIX4>(rn + ".getRotation4x4");
   return regionRot;
@@ -168,7 +168,7 @@ FLOATMATRIX4 RenderWindow::GetRotation(LuaClassInstance region)
 
 FLOATMATRIX4 RenderWindow::GetTranslation(LuaClassInstance region)
 {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string rn = region.fqName();
 
   FLOATMATRIX4 regionTrans =
@@ -228,76 +228,76 @@ RenderWindow::GetRegionData(LuaClassInstance renderRegion) const
 }
 
 uint64_t RenderWindow::GetSliceDepth(LuaClassInstance renderRegion) const {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<uint64_t>(renderRegion.fqName() + ".getSliceDepth");
 }
 
 void RenderWindow::SetSliceDepth(LuaClassInstance renderRegion,
                                  uint64_t newDepth) {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec(renderRegion.fqName() + ".setSliceDepth", newDepth);
 }
 
 bool RenderWindow::IsRegion2D(LuaClassInstance region) const {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<bool>(region.fqName() + ".is2D");
 }
 
 bool RenderWindow::IsRegion3D(LuaClassInstance region) const {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<bool>(region.fqName() + ".is3D");
 }
 
 bool RenderWindow::DoesRegionContainPoint(LuaClassInstance region,
                                           UINTVECTOR2 pos) const {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<bool>(region.fqName() + ".containsPoint", pos);
 }
 
 RenderRegion::EWindowMode RenderWindow::GetRegionWindowMode(
     tuvok::LuaClassInstance region) const {
   /// @todo Remove raw pointer and replace with script call.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   RenderRegion* regPtr = region.getRawPointer<RenderRegion>(ss);
   return regPtr->windowMode;
 }
 
 bool RenderWindow::Get2DFlipModeX(LuaClassInstance region) const {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<bool>(region.fqName() + ".get2DFlipModeX");
 }
 
 bool RenderWindow::Get2DFlipModeY(LuaClassInstance region) const {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<bool>(region.fqName() + ".get2DFlipModeY");
 }
 
 void RenderWindow::Set2DFlipMode(LuaClassInstance region, bool flipX,
                                  bool flipY) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexec(region.fqName() + ".set2DFlipMode", flipX, flipY);
 }
 
 bool RenderWindow::GetUseMIP(LuaClassInstance region) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<bool>(region.fqName() + ".getUseMIP");
 }
 
 void RenderWindow::SetUseMIP(LuaClassInstance region, bool useMip) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->cexec(region.fqName() + ".setUseMIP", useMip);
 }
 
 UINTVECTOR2 RenderWindow::GetRegionMinCoord(LuaClassInstance region) const {
   /// @todo Remove raw pointer and replace with script call.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   RenderRegion* regPtr = region.getRawPointer<RenderRegion>(ss);
   return regPtr->minCoord;
 }
 
 UINTVECTOR2 RenderWindow::GetRegionMaxCoord(LuaClassInstance region) const {
   /// @todo Remove raw pointer and replace with script call.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   RenderRegion* regPtr = region.getRawPointer<RenderRegion>(ss);
   return regPtr->maxCoord;
 }
@@ -305,53 +305,53 @@ UINTVECTOR2 RenderWindow::GetRegionMaxCoord(LuaClassInstance region) const {
 void RenderWindow::SetRegionMinCoord(LuaClassInstance region,
                                      UINTVECTOR2 minCoord) {
   /// @todo Remove raw pointer and replace with script call.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   RenderRegion* regPtr = region.getRawPointer<RenderRegion>(ss);
   regPtr->minCoord = minCoord;
 }
 void RenderWindow::SetRegionMaxCoord(LuaClassInstance region,
                                      UINTVECTOR2 maxCoord) {
   /// @todo Remove raw pointer and replace with script call.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   RenderRegion* regPtr = region.getRawPointer<RenderRegion>(ss);
   regPtr->maxCoord = maxCoord;
 }
 
 tuvok::AbstrRenderer::ERendererTarget RenderWindow::GetRendererTarget() {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<tuvok::AbstrRenderer::ERendererTarget>(
       m_LuaAbstrRenderer.fqName() + ".getRendererTarget");
 }
 
 bool RenderWindow::GetClearViewEnabled() {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<bool>(
       m_LuaAbstrRenderer.fqName() + ".getClearViewEnabled");
 }
 
 LuaClassInstance RenderWindow::GetRendererDataset() {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<LuaClassInstance>(m_LuaAbstrRenderer.fqName() +
                                         ".getDataset");
 }
 
 void RenderWindow::SetTimeSlice(uint32_t timeSlice) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexec(m_LuaAbstrRenderer.fqName() + ".setTimeSlice", timeSlice);
 }
 
 void RenderWindow::ScheduleCompleteRedraw() {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->cexec(m_LuaAbstrRenderer.fqName() + ".scheduleCompleteRedraw");
 }
 
 bool RenderWindow::RendererCheckForRedraw() {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<bool>(m_LuaAbstrRenderer.fqName() + ".checkForRedraw");
 }
 
 FLOATVECTOR3 RenderWindow::GetBackgroundColor(int i) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<FLOATVECTOR3>(m_LuaAbstrRenderer.fqName() +
                                     ".getBackgroundColor", i);
 }
@@ -359,7 +359,7 @@ FLOATVECTOR3 RenderWindow::GetBackgroundColor(int i) {
 void RenderWindow::SetBackgroundColors(FLOATVECTOR3 vTopColor,
                                        FLOATVECTOR3 vBotColor)
 {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->cexec(m_LuaAbstrRenderer.fqName() + ".setBGColors",
             vTopColor, vBotColor);
 }
@@ -388,7 +388,7 @@ RenderWindow::GetRegionSplitter(INTVECTOR2 pos) const
 
 void RenderWindow::MousePressEvent(QMouseEvent *event)
 {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   activeRegion = GetRegionUnderCursor(m_viMousePos);
 
@@ -436,7 +436,7 @@ void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
 // ImageVis3D handler.
 void RenderWindow::MouseMoveEvent(QMouseEvent *event)
 {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   m_viMousePos = INTVECTOR2(event->pos().x(), event->pos().y());
 
@@ -570,7 +570,7 @@ void RenderWindow::WheelEvent(QWheelEvent *event) {
                     static_cast<int>(GetSliceDepth(renderRegion))+iZoom);
     size_t sliceDimension = size_t(GetRegionWindowMode(renderRegion));
 
-    tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
     LuaClassInstance dataset = GetRendererDataset();
     UINT64VECTOR3 domainSize = ss->cexecRet<UINT64VECTOR3>(
         dataset.fqName() + ".getDomainSize", (size_t)0, (size_t)0);
@@ -585,7 +585,7 @@ LuaClassInstance RenderWindow::GetRegionUnderCursor(INTVECTOR2 vPos) const {
   if (vPos.x < 0 || vPos.y < 0)
       return LuaClassInstance();
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   vPos.y = m_vWinDim.y - vPos.y;
   for (size_t i=0; i < GetActiveRenderRegions().size(); ++i) {
@@ -624,7 +624,7 @@ void RenderWindow::UpdateCursor(LuaClassInstance region,
 }
 
 void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string rn = m_LuaAbstrRenderer.fqName();
 
   LuaClassInstance selectedRegion = GetRegionUnderCursor(m_viMousePos);
@@ -838,7 +838,7 @@ static std::string view_mode(RenderWindow::EViewMode mode) {
 
 LuaClassInstance
 RenderWindow::GetFirst3DRegion() {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<LuaClassInstance>(GetLuaAbstrRenderer().fqName()
                                         + ".getFirst3DRenderRegion");
 }
@@ -853,7 +853,7 @@ RenderWindow::GetActiveRenderRegions() const {
 void RenderWindow::SetActiveRenderRegions(std::vector<LuaClassInstance> regions)
   const
 {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->cexec(GetLuaAbstrRenderer().fqName() + ".setRenderRegions",
             regions);
 }
@@ -908,7 +908,7 @@ RenderWindow::SetViewMode(const std::vector<LuaClassInstance> &newRenderRegions,
     }
     SetActiveRenderRegions(newRenderRegions);
 
-    tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+    shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
     LuaClassInstance firstRenRegion = GetActiveRenderRegions()[0];
     RenderRegion* regPtr = firstRenRegion.getRawPointer<RenderRegion>(ss);
 
@@ -948,7 +948,7 @@ void RenderWindow::Initialize() {
   // to the constructor (ensures we do not have to hit undo multiple times
   // in order to undo the creation of the render window).
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
     luaRenderRegions[i][0] = ss->cexecRet<LuaClassInstance>(
@@ -998,7 +998,7 @@ void RenderWindow::Initialize() {
 }
 
 void RenderWindow::Cleanup() {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   if (m_LuaAbstrRenderer.isValid(ss) == false || !m_bRenderSubsysOK)
     return;
 
@@ -1012,14 +1012,14 @@ void RenderWindow::Cleanup() {
 }
 
 void RenderWindow::CheckForRedraw() {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   if (m_LuaAbstrRenderer.isValid(ss) && RendererCheckForRedraw()) {
     UpdateWindow();
   }
 }
 
 AbstrRenderer::ERenderMode RenderWindow::GetRenderMode() const {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<AbstrRenderer::ERenderMode>(m_LuaAbstrRenderer.fqName()
                                                   + ".getRenderMode");
 }
@@ -1051,7 +1051,7 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate,
 bool RenderWindow::CaptureFrame(const std::string& strFilename,
                                 bool bPreserveTransparency)
 {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
 
   ss->setTempProvDisable(true);
 
@@ -1085,7 +1085,7 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
                                    bool bPreserveTransparency,
                                    std::string* strRealFilename)
 {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
 
   ss->setTempProvDisable(true);
@@ -1122,7 +1122,7 @@ bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
 
 void RenderWindow::SetTranslation(LuaClassInstance renderRegion,
                                   FLOATMATRIX4 accumulatedTranslation) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->setTempProvDisable(true);
   ss->cexec(renderRegion.fqName()+".setTranslation4x4",accumulatedTranslation);
@@ -1144,7 +1144,7 @@ void RenderWindow::SetTranslationDelta(LuaClassInstance renderRegion,
   newTranslation.m42 -= trans.y;
   newTranslation.m43 += trans.z;
 
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->setTempProvDisable(true);
   ss->cexec(renderRegion.fqName() + ".setTranslation4x4", newTranslation);
   ss->setTempProvDisable(false);
@@ -1173,7 +1173,7 @@ void RenderWindow::FinalizeRotation(LuaClassInstance region, bool bPropagate) {
 
   // We group the functions inside of SetProvRotationAndClip together so that
   // one undo command will undo them all.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->beginCommandGroup();
   SetProvRotationAndClip(region, GetRotation(region));
   ss->endCommandGroup();
@@ -1191,7 +1191,7 @@ void RenderWindow::FinalizeTranslation(LuaClassInstance region, bool bPropagate)
 {
   // Call our registered Lua function so that undo of both the clipping plane
   // and the rotation occur in one step.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->beginCommandGroup();
   SetProvTransAndClip(region, GetTranslation(region));
   ss->endCommandGroup();
@@ -1208,7 +1208,7 @@ void RenderWindow::FinalizeTranslation(LuaClassInstance region, bool bPropagate)
 void RenderWindow::SetRotation(LuaClassInstance region,
                                FLOATMATRIX4 newRotation) {
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string rn = m_LuaAbstrRenderer.fqName();
 
   // Temporarily disable provenance. We don't want to record every single
@@ -1228,7 +1228,7 @@ void RenderWindow::SetRotationDelta(LuaClassInstance region,
   const FLOATMATRIX4 newRotation = GetRotation(region) * rotDelta;
   string rn = m_LuaAbstrRenderer.fqName();
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->setTempProvDisable(true);
   ss->cexec(region.fqName() + ".setRotation4x4", newRotation);
   ss->setTempProvDisable(false);
@@ -1250,7 +1250,7 @@ void RenderWindow::SetRotationDelta(LuaClassInstance region,
 
 void RenderWindow::updateClipPlaneTransform(LuaClassInstance region)
 {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string renName = m_LuaAbstrRenderer.fqName();
 
   // Test whether the clipping plane is locked. If it is, then utilize the
@@ -1318,7 +1318,7 @@ void RenderWindow::SetPlaneAtClick(const ExtendedPlane& plane, bool propagate) {
 
 void RenderWindow::SetClipPlane(LuaClassInstance region,
                                 const ExtendedPlane &p) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   m_ClipPlane = p;
   ss->setTempProvDisable(true);
   ss->cexec(region.fqName() + ".setClipPlane", m_ClipPlane);
@@ -1419,7 +1419,7 @@ RenderWindow::GetCorrespondingRenderRegion(const RenderWindow* otherRW,
 void RenderWindow::CloneViewState(RenderWindow* other) {
   m_mAccumulatedClipTranslation = other->m_mAccumulatedClipTranslation;
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   for (int i=0; i < MAX_RENDER_REGIONS; ++i)
     for (int j=0; j < NUM_WINDOW_MODES; ++j) {
@@ -1438,13 +1438,13 @@ void RenderWindow::CloneViewState(RenderWindow* other) {
 void RenderWindow::CloneRendermode(RenderWindow* other) {
   SetRendermode(other->GetRenderMode());
 
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->cexec(m_LuaAbstrRenderer.fqName() + ".cloneRenderMode",
             other->m_LuaAbstrRenderer);
 }
 
 void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bPropagate) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->cexec(m_LuaAbstrRenderer.fqName() + ".setRenderMode", eRenderMode);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
@@ -1455,7 +1455,7 @@ void RenderWindow::SetRendermode(AbstrRenderer::ERenderMode eRenderMode, bool bP
 
 void RenderWindow::SetColors(FLOATVECTOR3 vTopColor, FLOATVECTOR3 vBotColor,
                              FLOATVECTOR4 vTextColor) {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string abstrRenName = GetLuaAbstrRenderer().fqName();
 
   /// @todo Composite these two calls into one lua function to ensure they occur
@@ -1466,7 +1466,7 @@ void RenderWindow::SetColors(FLOATVECTOR3 vTopColor, FLOATVECTOR3 vBotColor,
 
 void RenderWindow::SetUseLighting(bool bLighting, bool bPropagate) {
   /// @todo Have callback that will toggle the 'lighting' checkbox.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setLightingEnabled", bLighting);
   if (bPropagate){
@@ -1477,7 +1477,7 @@ void RenderWindow::SetUseLighting(bool bLighting, bool bPropagate) {
 }
 
 bool RenderWindow::GetUseLighting() const {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   return ss->cexecRet<bool>(rn + ".getLightingEnabled");
 }
@@ -1487,7 +1487,7 @@ void RenderWindow::SetSampleRateModifier(float fSampleRateModifier,
   /// @todo Prov: We need a set 'final' sample rate modifier. Otherwise, sample
   ///       rate modifier calls stack up in the undo/redo stacks.
   /// @todo Update sample rate slider from hook.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setSampleRateModifier", fSampleRateModifier);
   if (bPropagate){
@@ -1500,7 +1500,7 @@ void RenderWindow::SetSampleRateModifier(float fSampleRateModifier,
 void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
   /// @todo Provenance: Need final iso value instead of continuous change.
   /// @todo Update isovalue slider from hook.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setIsoValue", fIsoVal);
   if(bPropagate) {
@@ -1524,7 +1524,7 @@ void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
 }
 
 void RenderWindow::SetIsoValueRelative(float isoval, bool propagate) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setIsoValueRelative", isoval);
   if(propagate) {
@@ -1538,7 +1538,7 @@ void RenderWindow::SetCVIsoValue(float fIsoVal, bool bPropagate) {
   // CV = clear view
   /// @todo Provenance: Need final iso value instead of continuous change.
   /// @todo Update cv isovalue slider from hook.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setCVIsoValue", fIsoVal);
   if (bPropagate) {
@@ -1551,7 +1551,7 @@ void RenderWindow::SetCVIsoValue(float fIsoVal, bool bPropagate) {
 void RenderWindow::SetCVSize(float fSize, bool bPropagate) {
   /// @todo Provenance: Need final size value instead of continuous change.
   /// @todo Update slider from hook.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setCVSize", fSize);
   if (bPropagate){
@@ -1564,7 +1564,7 @@ void RenderWindow::SetCVSize(float fSize, bool bPropagate) {
 void RenderWindow::SetCVContextScale(float fScale, bool bPropagate) {
   /// @todo Provenance: Need final scale value instead of continuous change.
   /// @todo Update slider from hook.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setCVContextScale", fScale);
   if (bPropagate){
@@ -1577,7 +1577,7 @@ void RenderWindow::SetCVContextScale(float fScale, bool bPropagate) {
 void RenderWindow::SetCVBorderScale(float fScale, bool bPropagate) {
   /// @todo Provenance: Need final scale value instead of continuous change.
   /// @todo Update slider from hook.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setCVBorderScale", fScale);
   if (bPropagate){
@@ -1588,7 +1588,7 @@ void RenderWindow::SetCVBorderScale(float fScale, bool bPropagate) {
 }
 
 void RenderWindow::SetGlobalBBox(bool bRenderBBox, bool bPropagate) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setGlobalBBox", bRenderBBox);
   if (bPropagate){
@@ -1599,7 +1599,7 @@ void RenderWindow::SetGlobalBBox(bool bRenderBBox, bool bPropagate) {
 }
 
 void RenderWindow::SetLocalBBox(bool bRenderBBox, bool bPropagate) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setLocalBBox", bRenderBBox);
   if (bPropagate){
@@ -1610,7 +1610,7 @@ void RenderWindow::SetLocalBBox(bool bRenderBBox, bool bPropagate) {
 }
 void RenderWindow::SetClipPlaneEnabled(bool enable, bool bPropagate)
 {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->beginCommandGroup();
   if(enable) {
     ss->cexec(GetFirst3DRegion().fqName() + ".enableClipPlane", true);
@@ -1651,7 +1651,7 @@ void RenderWindow::LuaCallbackEnableClipPlane(bool enable)
 
 void RenderWindow::SetClipPlaneDisplayed(bool bDisp, bool bPropagate)
 {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".showClipPlane", bDisp, GetFirst3DRegion());
   if(bPropagate) {
@@ -1664,7 +1664,7 @@ void RenderWindow::SetClipPlaneDisplayed(bool bDisp, bool bPropagate)
 
 void RenderWindow::SetClipPlaneRelativeLock(bool bLock, bool bPropagate)
 {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
 
   // NOTE: Assuming first 3D render region.
   LuaClassInstance region = GetFirst3DRegion();
@@ -1704,7 +1704,7 @@ void RenderWindow::SetClipPlaneRelativeLock(bool bLock, bool bPropagate)
 }
 
 void RenderWindow::SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setIsosufaceColor", vIsoColor);
   if (bPropagate){
@@ -1715,7 +1715,7 @@ void RenderWindow::SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropag
 }
 
 void RenderWindow::SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setCVColor", vIsoColor);
   if (bPropagate){
@@ -1726,7 +1726,7 @@ void RenderWindow::SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
 }
 
 void RenderWindow::SetCV(bool bDoClearView, bool bPropagate) {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setCV", bDoClearView);
   if (bPropagate){
@@ -1740,7 +1740,7 @@ void RenderWindow::SetCVFocusPos(LuaClassInstance region,
                                  const INTVECTOR2& viMousePos,
                                  bool bPropagate) {
   /// @fixme Expose SetCVFocusPos through the scripting system.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   m_Renderer->SetCVFocusPos(*region.getRawPointer<RenderRegion>(ss), viMousePos);
   if (bPropagate) {
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
@@ -1781,13 +1781,13 @@ pair<double,double> RenderWindow::GetDynamicRange() const {
 }
 
 FLOATVECTOR3 RenderWindow::GetIsosufaceColor() const {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   return ss->cexecRet<FLOATVECTOR3>(rn + ".getIsosufaceColor");
 }
 
 FLOATVECTOR3 RenderWindow::GetCVColor() const {
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   return ss->cexecRet<FLOATVECTOR3>(rn + ".getCVColor");
 }
@@ -1797,7 +1797,7 @@ void RenderWindow::ResizeRenderer(int width, int height)
   m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
 
   /// @fixme Create a setMaxCoord function for the region.
-  tr1::shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   LuaClassInstance firstRenRegion = GetActiveRenderRegions()[0];
   RenderRegion* regPtr = firstRenRegion.getRawPointer<RenderRegion>(ss);
 
@@ -1876,7 +1876,7 @@ void RenderWindow::ResetRenderingParameters()
   FLOATMATRIX4 mIdentity;
   m_mAccumulatedClipTranslation = mIdentity;
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   for (int i=0; i < MAX_RENDER_REGIONS; ++i) {
     for (int j=0; j < NUM_WINDOW_MODES; ++j) {
@@ -1931,7 +1931,7 @@ void RenderWindow::SetProvTransformAndClip(tuvok::LuaClassInstance region,
   r4.m21 = m.m21; r4.m22 = m.m22; r4.m23 = m.m23;
   r4.m31 = m.m31; r4.m32 = m.m32; r4.m33 = m.m33;
 
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec(region.fqName() + ".setRotation4x4", r4);
   ss->cexec(region.fqName() + ".setTranslation4x4", t4);
   ss->cexec(region.fqName() + ".setClipPlane", m_ClipPlane);
@@ -1939,14 +1939,14 @@ void RenderWindow::SetProvTransformAndClip(tuvok::LuaClassInstance region,
 
 void RenderWindow::SetProvRotationAndClip(tuvok::LuaClassInstance region,
                                           FLOATMATRIX4 r) {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec(region.fqName() + ".setRotation4x4", r);
   ss->cexec(region.fqName() + ".setClipPlane", m_ClipPlane);
 }
 
 void RenderWindow::SetProvTransAndClip(tuvok::LuaClassInstance region,
                                        FLOATMATRIX4 t) {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec(region.fqName() + ".setTranslation4x4", t);
   ss->cexec(region.fqName() + ".setClipPlane", m_ClipPlane);
 }
@@ -1980,13 +1980,13 @@ void RenderWindow::LuaSetRotationAs4x4(FLOATMATRIX4 m) {
 
 void RenderWindow::watchSetRotation4x4(FLOATMATRIX4)
 {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->vPrint("Called Set rotation 4x4");
 }
 
 void RenderWindow::watchSetTrans4x4(FLOATMATRIX4)
 {
-  tr1::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->vPrint("Called Set trans 4x4");
 }
 
