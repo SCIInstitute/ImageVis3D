@@ -101,7 +101,7 @@ void QLightPreview::DrawSphere(QImage* sphereImage) {
         FLOATVECTOR3 reflection = fViewDir-(2.0f*vNormal*(vNormal^fViewDir));
 
         // compute specular and clamp to zero 
-        FLOATVECTOR3 specularColor = pow((reflection ^ -fLightDir),9) * m_cSpecular.xyz() * m_cSpecular.w;
+        FLOATVECTOR3 specularColor = pow((reflection ^ -fLightDir),9.0f) * m_cSpecular.xyz() * m_cSpecular.w;
         specularColor.x = (specularColor.x < 0) ? 0: specularColor.x;
         specularColor.y = (specularColor.y < 0) ? 0: specularColor.y;
         specularColor.z = (specularColor.z < 0) ? 0: specularColor.z;
