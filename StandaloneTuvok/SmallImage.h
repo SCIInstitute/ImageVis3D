@@ -1,10 +1,10 @@
 #ifndef SMALLIMAGE_H
 #define SMALLIMAGE_H
 
-#include <StdTuvokDefines.h>
-#include <Basics/Vectors.h>
+#include "StdTuvokDefines.h"
+#include <cstdint>
 #include <string>
-#include <Basics/3rdParty/boost/cstdint.hpp>
+#include "Basics/Vectors.h"
 
 typedef VECTOR3<boost::uint8_t> Color;
 
