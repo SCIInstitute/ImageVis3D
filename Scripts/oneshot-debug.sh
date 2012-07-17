@@ -7,7 +7,7 @@ VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 COVERAGE="-fprofile-arcs -ftest-coverage"
 CF="-g -Wall -Wextra -O0 -D_DEBUG ${COVERAGE}"
-CXF="-D_GLIBCXX_CONCEPT_CHECK -Werror ${COVERAGE}"
+CXF="-D_GLIBCXX_CONCEPT_CHECK -Werror ${COVERAGE} -std=c++0x"
 # Darwin's debug STL support is broken.
 if test `uname -s` != "Darwin"; then
   CXF="${CXF} -D_GLIBCXX_DEBUG"

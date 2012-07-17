@@ -7,7 +7,7 @@ VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 COVERAGE="-fprofile-arcs -ftest-coverage"
 CF="-Wall -Wextra -O2 ${COVERAGE}"
-CXF="-D_GLIBCXX_CONCEPT_CHECK -DQT_NODEBUG -Werror ${COVERAGE}"
+CXF="-D_GLIBCXX_CONCEPT_CHECK -DQT_NODEBUG -Werror ${COVERAGE} -std=c++0x"
 
 if test "$1" == "32" ; then
   CF="$CF -m32"
