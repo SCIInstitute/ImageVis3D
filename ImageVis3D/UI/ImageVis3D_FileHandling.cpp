@@ -214,7 +214,7 @@ void MainWindow::AddGeometry(std::string filename) {
 
   if(!m_pActiveRenderWin->GetRenderer()->SupportsMeshes()) {
       if(QMessageBox::Yes == 
-        QMessageBox::question(NULL, 
+        QMessageBox::question(nullptr, 
                          "Mesh feature not supported in this renderer",
                          "You can add a mesh to this dataset but you will "
                          "not be able to see it until you switch to a renderer "
@@ -406,7 +406,7 @@ bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction,
       m_pActiveRenderWin->GetRenderer()->GetMeshes().size() > 0) {
       m_pRedrawTimer->stop();
       if(QMessageBox::Yes == 
-        QMessageBox::question(NULL, 
+        QMessageBox::question(nullptr, 
                          "Mesh feature not supported in this renderer",
                          "This dataset contains mesh data but the current "
                          "renderer does not support rendering meshes. Mesh "
@@ -474,7 +474,7 @@ RenderWindow* MainWindow::LuaLoadDatasetInternal(vector<string> stdFiles,
   {
     m_MasterController.LuaScript()->vPrint("False returned from load dataset"
         "internal.");
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -582,11 +582,11 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
     pleaseWait.close();
   }
 
-  RenderWindow *renderWin = NULL;
+  RenderWindow *renderWin = nullptr;
   try {
     renderWin = CreateNewRenderWindow(filename);
 
-    if(renderWin == NULL) {
+    if(renderWin == nullptr) {
       T_ERROR("Renderwindow creation failed.  Bailing...");
       return false;
     }
@@ -597,13 +597,13 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
   } catch(tuvok::io::DSBricksOversized&) {
     WARNING("Bricks are too large.  Querying the user to see if we should "
             "rebrick the dataset.");
-    if(renderWin) { delete renderWin; renderWin = NULL; }
+    if(renderWin) { delete renderWin; renderWin = nullptr; }
     if(bNoUserInteraction) {
       T_ERROR("Dataset needs rebricking but ImageVis3D is not running interactively.");
       return false;
     }
     if(QMessageBox::Yes ==
-       QMessageBox::question(NULL, "Rebricking required",
+       QMessageBox::question(nullptr, "Rebricking required",
         "The bricking scheme in this dataset is not compatible with "
         "your current brick size settings.  Do you want to convert this "
         "dataset so that it can be loaded?  Note that this operation can "
@@ -732,7 +732,7 @@ void MainWindow::LoadDirectory() {
 
         RenderWindow *renderWin = CreateNewRenderWindow(targetFilename);
 
-        if(NULL == renderWin || !renderWin->IsRenderSubsysOK()) {
+        if(nullptr == renderWin || !renderWin->IsRenderSubsysOK()) {
           ShowCriticalDialog("Renderer Error",
                              "Unable to open the converted data set, "
                              "please check the error log for details "
@@ -1104,7 +1104,7 @@ void MainWindow::MergeDatasets() {
     }
 
     if (!m_bScriptMode) {
-      if (QMessageBox::No == QMessageBox::question(NULL, "Dataset Merger", "Do you want to load the merged data set now?", QMessageBox::Yes, QMessageBox::No)) {
+      if (QMessageBox::No == QMessageBox::question(nullptr, "Dataset Merger", "Do you want to load the merged data set now?", QMessageBox::Yes, QMessageBox::No)) {
         return;
       }
 
@@ -1149,7 +1149,7 @@ void MainWindow::CropData() {
     }
 
     bool bKeepOldData = (QMessageBox::Yes == 
-      QMessageBox::question(NULL, "Create Backup?", "Do you want to create a backup of the current dataset before cropping?", QMessageBox::Yes, QMessageBox::No));
+      QMessageBox::question(nullptr, "Create Backup?", "Do you want to create a backup of the current dataset before cropping?", QMessageBox::Yes, QMessageBox::No));
 
 
     m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
@@ -1177,7 +1177,7 @@ void MainWindow::CropData() {
     m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
 
     RenderWindow* current = m_pActiveRenderWin;
-    m_pActiveRenderWin = NULL; // set m_pActiveRenderWin to NULL so RenderWindowActive thinks it has changed
+    m_pActiveRenderWin = nullptr; // set m_pActiveRenderWin to nullptr so RenderWindowActive thinks it has changed
     RenderWindowActive(current);
 
     pleaseWait.close();

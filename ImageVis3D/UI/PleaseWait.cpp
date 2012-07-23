@@ -41,9 +41,9 @@
 PleaseWaitDialog::PleaseWaitDialog(QWidget* parent, Qt::WindowFlags flags,
                                    bool bHasCancelButton) :
   QDialog(parent, flags),
-  m_pMasterController(NULL),
-  m_pLabelOut(NULL),
-  m_ButtonCancel(NULL),
+  m_pMasterController(nullptr),
+  m_pLabelOut(nullptr),
+  m_ButtonCancel(nullptr),
   m_bCanceled(false)
 {
   setupUi(this);
@@ -89,7 +89,7 @@ void PleaseWaitDialog::DetachLabel() {
   if(m_pMasterController) {
     m_pMasterController->RemoveDebugOut(m_pLabelOut);
   }
-  m_pLabelOut = NULL;
+  m_pLabelOut = nullptr;
 }
 
 void PleaseWaitDialog::closeEvent(QCloseEvent *)

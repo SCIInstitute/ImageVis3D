@@ -673,7 +673,7 @@ void MainWindow::CloneCurrentView() {
   if (!m_pActiveRenderWin) return;
   RenderWindow *renderWin = CreateNewRenderWindow(m_pActiveRenderWin->GetDatasetName());
 
-  if(renderWin == NULL) {
+  if(renderWin == nullptr) {
     return;
   }
 
@@ -786,7 +786,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
 
   if(m_pActiveRenderWin != renderWin && !renderWin->IsRenderSubsysOK()) {
     T_ERROR("Could not initialize render window!");
-    return NULL;
+    return nullptr;
   } else {
     ApplySettings(renderWin);
   }
@@ -1223,9 +1223,9 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
   disconnect(sender->GetQtWidget());
 
-  m_1DTransferFunction->SetData(NULL, 10, NULL);
+  m_1DTransferFunction->SetData(nullptr, 10, nullptr);
   m_1DTransferFunction->update();
-  m_2DTransferFunction->SetData(NULL, NULL);
+  m_2DTransferFunction->SetData(nullptr, nullptr);
   m_2DTransferFunction->update();
 
   DisableAllTrans();
@@ -1238,7 +1238,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
   UpdateLockView();
   ResetTimestepUI();
 
-  m_pActiveRenderWin = NULL;
+  m_pActiveRenderWin = nullptr;
 }
 
 

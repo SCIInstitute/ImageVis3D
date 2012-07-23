@@ -55,7 +55,7 @@ QLightPreview::QLightPreview(QWidget *parent) :
   m_vLightDir(0.0f,0.0f,-1.0f),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
-  m_pCachedImage(NULL),
+  m_pCachedImage(nullptr),
   m_bBackdropCacheUptodate(false),
   m_bMousePressed(false)
 {
@@ -129,7 +129,7 @@ void QLightPreview::paintEvent(QPaintEvent *event) {
   if (!m_bBackdropCacheUptodate || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
 
     // delete the old pixmap an create a new one if the size has changed
-    if (m_pCachedImage == NULL || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
+    if (m_pCachedImage == nullptr || (unsigned int)height() != m_iCachedHeight || (unsigned int)width() != m_iCachedWidth) {
       delete m_pCachedImage;
       m_pCachedImage = new QImage(width(),height(),QImage::Format_ARGB32);
     }

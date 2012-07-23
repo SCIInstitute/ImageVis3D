@@ -175,27 +175,27 @@ bool MainWindow::Execute(const std::string& strCommand, const std::vector< std::
 }
 
 void MainWindow::SetStereoMode(unsigned int iMode) {
-  if (m_pActiveRenderWin == NULL || iMode >= (unsigned int)(AbstrRenderer::SM_INVALID) ) return;
+  if (m_pActiveRenderWin == nullptr || iMode >= (unsigned int)(AbstrRenderer::SM_INVALID) ) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::EStereoMode(iMode));
 }
 
 void MainWindow::SetStereoEyeDistance(float fEyeDist) {
-  if (m_pActiveRenderWin == NULL) return;
+  if (m_pActiveRenderWin == nullptr) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoEyeDist(fEyeDist);
 }
 
 void MainWindow::SetStereoFocalLength(float fLength) {
-  if (m_pActiveRenderWin == NULL) return;
+  if (m_pActiveRenderWin == nullptr) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoFocalLength(fLength);
 }
 
 void MainWindow::IncStereoEyeDistance(float fEyeDistDelta) {
-  if (m_pActiveRenderWin == NULL) return;
+  if (m_pActiveRenderWin == nullptr) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoEyeDist(m_pActiveRenderWin->GetRenderer()->GetStereoEyeDist() + fEyeDistDelta);
 }
 
 void MainWindow::IncStereoFocalLength(float fLengthDelta) {
-  if (m_pActiveRenderWin == NULL) return;
+  if (m_pActiveRenderWin == nullptr) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoFocalLength(m_pActiveRenderWin->GetRenderer()->GetStereoFocalLength() + fLengthDelta);
 }
 
@@ -211,11 +211,11 @@ bool MainWindow::RunScript(const std::string& strFilename) {
 
 
 void MainWindow::InitAFStereo() {
-  if (m_pActiveRenderWin == NULL) return;
+  if (m_pActiveRenderWin == nullptr) return;
   m_pActiveRenderWin->GetRenderer()->InitStereoFrame();
 }
 
 void MainWindow::ToggleAFStereo() {
-  if (m_pActiveRenderWin == NULL) return;
+  if (m_pActiveRenderWin == nullptr) return;
   m_pActiveRenderWin->GetRenderer()->ToggleStereoFrame();
 }

@@ -79,7 +79,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
                            const UINTVECTOR2& vDefaultSize) :
   m_strDataset(dataset),
   m_strID(""),
-  m_Renderer(NULL),
+  m_Renderer(nullptr),
   m_MasterController(masterController),
   m_bRenderSubsysOK(true),   // be optimistic :-)
   selectedRegionSplitter(REGION_SPLITTER_NONE),
@@ -222,7 +222,7 @@ RenderWindow::GetRegionData(LuaClassInstance renderRegion) const
   if (iter == regionDataMap.end()) {
     // This should never happen if the renderRegion belongs to *this.
     assert(false);
-    return NULL;
+    return nullptr;
   }
   return iter->second;
 }
@@ -1801,7 +1801,7 @@ void RenderWindow::ResizeRenderer(int width, int height)
   LuaClassInstance firstRenRegion = GetActiveRenderRegions()[0];
   RenderRegion* regPtr = firstRenRegion.getRawPointer<RenderRegion>(ss);
 
-  if (m_Renderer != NULL && m_bRenderSubsysOK) {
+  if (m_Renderer != nullptr && m_bRenderSubsysOK) {
     switch (GetViewMode()) {
       case VM_SINGLE :
         regPtr->maxCoord = m_vWinDim;
@@ -1827,13 +1827,13 @@ void RenderWindow::PaintRenderer()
     return;
   }
 
-  if (m_Renderer != NULL && m_bRenderSubsysOK) {
+  if (m_Renderer != nullptr && m_bRenderSubsysOK) {
     if (!m_Renderer->Paint()) {
       static bool bBugUseronlyOnce = true;
       if (bBugUseronlyOnce) {
 
         if (m_eRendererType == MasterController::OPENGL_2DSBVR) {
-          QMessageBox::critical(NULL, "Render error",
+          QMessageBox::critical(nullptr, "Render error",
                              "The render subsystem is unable to draw the volume"
                              "This normally means ImageVis3D does not support "
                              "your GPU. Please check the debug log "
@@ -1841,7 +1841,7 @@ void RenderWindow::PaintRenderer()
                              "errors, and/or use 'Help | Report an Issue' to "
                              "notify the ImageVis3D developers.");      
         } else {
-          QMessageBox::critical(NULL, "Render error",
+          QMessageBox::critical(nullptr, "Render error",
                              "The render subsystem is unable to draw the volume"
                              "This normally means that your driver is "
                              "reporting invalid information about your GPU."

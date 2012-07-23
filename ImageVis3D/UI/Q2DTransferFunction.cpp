@@ -55,14 +55,14 @@ using namespace std;
 
 Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWidget *parent) :
   QTransferFunction(masterController, parent),
-  m_pTrans(NULL),
+  m_pTrans(nullptr),
   m_iPaintmode(Q2DT_PAINT_NONE),
   m_iActiveSwatchIndex(-1),
   m_eTransferFunctionMode(TFM_EXPERT),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
-  m_pBackdropCache(NULL),
-  m_pHistImage(NULL),
+  m_pBackdropCache(nullptr),
+  m_pHistImage(nullptr),
 
   // border size, may be changed arbitrarily
   m_iSwatchBorderSize(3),
@@ -102,7 +102,7 @@ QSize Q2DTransferFunction::sizeHint() const
 
 void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunction2D* pTrans) {
   m_pTrans = pTrans;
-  if (m_pTrans == NULL) return;
+  if (m_pTrans == nullptr) return;
 
   // resize the histogram vector
   m_vHistogram.Resize(vHistogram->GetSize());
@@ -126,7 +126,7 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunctio
     m_vHistogram.SetLinear(i, (float(vHistogram->GetLinear(i)) - float(iMin)) / fDiff);
 
   // Upload the new TF to the GPU.
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
 
   // force the draw routine to recompute the backdrop cache
   m_bHistogramChanged = true;
@@ -136,7 +136,7 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunctio
 
 
 void Q2DTransferFunction::GenerateHistogramImage() {
-  if (m_pTrans == NULL) return;
+  if (m_pTrans == nullptr) return;
 
   // convert the histogram into an image
   // define the bitmap ...
@@ -165,7 +165,7 @@ void Q2DTransferFunction::GenerateHistogramImage() {
 }
 
 void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
-  if (m_pTrans == NULL) return;
+  if (m_pTrans == nullptr) return;
 
   if (m_bHistogramChanged) GenerateHistogramImage();
 
@@ -278,7 +278,7 @@ void Q2DTransferFunction::DrawPolyVertex(QPainter& painter, const INTVECTOR2& p,
 }
 
 void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
-  if (m_pTrans == NULL) return;
+  if (m_pTrans == nullptr) return;
 
   // if we start in simple mode we need to build the swatch type list in the first draw call
   if (m_vSimpleSwatchInfo.size() != m_pTrans->m_Swatches.size()) UpdateSwatchTypes();
@@ -416,7 +416,7 @@ void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
 }
 
 void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
-  if (m_pTrans == NULL) return;
+  if (m_pTrans == nullptr) return;
 
   QPen noBorderPen(Qt::NoPen);
   QPen circlePen(m_colorSwatchBorderCircle, m_iSwatchBorderSize, Qt::SolidLine);
@@ -724,7 +724,7 @@ int Q2DTransferFunction::PickSwatch(const FLOATVECTOR2& pickPos) const {
 }
 
 void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
-  if (m_pTrans == NULL) return;
+  if (m_pTrans == nullptr) return;
   // call superclass method
   QWidget::mousePressEvent(event);
 
@@ -766,7 +766,7 @@ void Q2DTransferFunction::wheelEvent(QWheelEvent *event) {
 
 
 void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
-  if (m_pTrans == NULL) return;
+  if (m_pTrans == nullptr) return;
   // call superclass method
   QWidget::mouseReleaseEvent(event);
 
@@ -789,7 +789,7 @@ void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
 
 void Q2DTransferFunction::ApplyFunction() {
   // send message to update the GLtexture
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
 }
 
 
@@ -810,7 +810,7 @@ void Q2DTransferFunction::RecomputeLowerPseudoTrisPoints(TFPolygon& currentSwatc
 }
 
 void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
-  if (m_pTrans == NULL) return;
+  if (m_pTrans == nullptr) return;
   // call superclass method
   QWidget::mouseMoveEvent(event);
 
@@ -1124,7 +1124,7 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
   // call superclass method
   QWidget::paintEvent(event);
 
-  if (m_pTrans == NULL) {
+  if (m_pTrans == nullptr) {
     QPainter painter(this);
     ClearToBlack(painter);
     return;
@@ -1185,7 +1185,7 @@ bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
     m_iActiveSwatchIndex = 0;
     m_bBackdropCacheUptodate = false;
     update();
-    m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+    m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
     emit SwatchChange();
     return true;
   } else return false;
@@ -1199,7 +1199,7 @@ bool Q2DTransferFunction::SaveToFile(const QString& strFilename) {
 
 void Q2DTransferFunction::Set1DTrans(const TransferFunction1D* p1DTrans) {
   m_pTrans->Update1DTrans(p1DTrans);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
   m_bBackdropCacheUptodate = false;
   update();
 }
@@ -1234,7 +1234,7 @@ void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
   m_pTrans->m_Swatches.push_back(newSwatch);
 
   m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
   emit SwatchChange();
 }
 
@@ -1259,7 +1259,7 @@ void Q2DTransferFunction::Transfer2DAddSwatch() {
   m_pTrans->m_Swatches.push_back(newSwatch);
 
   m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
   emit SwatchChange();
 }
 
@@ -1288,7 +1288,7 @@ void Q2DTransferFunction::Transfer2DAddRectangleSwatch() {
   UpdateSwatchTypes();
 
   m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
   emit SwatchChange();
 }
 
@@ -1337,7 +1337,7 @@ void Q2DTransferFunction::Transfer2DAddPseudoTrisSwatch() {
   UpdateSwatchTypes();
 
   m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
   emit SwatchChange();
 }
 
@@ -1347,7 +1347,7 @@ void Q2DTransferFunction::Transfer2DDeleteSwatch(){
     m_pTrans->m_Swatches.erase(m_pTrans->m_Swatches.begin()+m_iActiveSwatchIndex);
 
     m_iActiveSwatchIndex = min<int>(m_iActiveSwatchIndex, int(m_pTrans->m_Swatches.size()-1));
-    m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+    m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
     emit SwatchChange();
   }
 }
@@ -1359,7 +1359,7 @@ void Q2DTransferFunction::Transfer2DUpSwatch(){
     m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
 
     m_iActiveSwatchIndex--;
-    m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+    m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
     emit SwatchChange();
   }
 }
@@ -1371,7 +1371,7 @@ void Q2DTransferFunction::Transfer2DDownSwatch(){
     m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
 
     m_iActiveSwatchIndex++;
-    m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+    m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
     emit SwatchChange();
   }
 }
@@ -1381,7 +1381,7 @@ void Q2DTransferFunction::SetActiveGradientType(bool bRadial) {
      m_pTrans->m_Swatches.size()) {
        if (m_pTrans->m_Swatches[m_iActiveSwatchIndex].bRadial != bRadial) {
           m_pTrans->m_Swatches[m_iActiveSwatchIndex].bRadial = bRadial;
-          m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+          m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
           update();
        }
   }
@@ -1395,19 +1395,19 @@ void Q2DTransferFunction::AddGradient(GradientStop stop) {
     }
   }
   m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.push_back(stop);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
   update();
 }
 
 void Q2DTransferFunction::DeleteGradient(unsigned int i) {
   m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.erase(m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.begin()+i);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
   update();
 }
 
 void Q2DTransferFunction::SetGradient(unsigned int i, GradientStop stop) {
   m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops[i] = stop;
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(nullptr, m_pTrans);
   update();
 }
 

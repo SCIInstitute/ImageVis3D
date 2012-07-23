@@ -112,7 +112,7 @@ void RenderWindowDX::RenderSeparatingLines() {
 
 void RenderWindowDX::InitializeRenderer()
 {
-  if (m_Renderer == NULL)
+  if (m_Renderer == nullptr)
     m_bRenderSubsysOK = false;
   else
     m_bRenderSubsysOK = dynamic_cast<DXRenderer*>(m_Renderer)->Initialize();
@@ -120,7 +120,7 @@ void RenderWindowDX::InitializeRenderer()
   if (!m_bRenderSubsysOK) {
     m_Renderer->Cleanup();
     m_MasterController.ReleaseVolumeRenderer(m_Renderer);
-    m_Renderer = NULL;
+    m_Renderer = nullptr;
   }
 }
 
