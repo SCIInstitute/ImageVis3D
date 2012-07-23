@@ -4,7 +4,7 @@
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 CF="-ggdb3 -Wall -Wextra -O0 -D_DEBUG"
-CXF="-D_GLIBCXX_CONCEPT_CHECK -Werror -std=c++0x"
+CXF="-D_GLIBCXX_CONCEPT_CHECK -Werror"
 if test `uname -s` != "Darwin" ; then
   CXF="${CXF} -D_GLIBCXX_DEBUG"
 fi
