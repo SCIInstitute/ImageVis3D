@@ -50,7 +50,7 @@ FTPDialog::FTPDialog(const string& strSource, const string& strTargetServer, con
   m_strSource(strSource),
   m_strTargetServer(strTargetServer),
   m_strTargetPath(strTargetPath),
-  m_pFtp(nullptr)
+  m_pFtp(NULL)
 {
   setupUi(this);
 }
@@ -88,7 +88,7 @@ void FTPDialog::Start() {
   if (!m_pFile->open(QIODevice::ReadOnly)) {
     T_ERROR("Could not create '%s' file.", m_strSource.c_str());
     delete m_pFile;
-    m_pFile = nullptr;
+    m_pFile = NULL;
     emit TransferFailure();
     close();
     return;
@@ -105,7 +105,7 @@ void FTPDialog::ftpCommandFinished(int cmdId, bool error) {
               m_pFtp->errorString().toStdString().c_str());
       m_pFile->close();
       delete m_pFile;
-      m_pFile = nullptr;
+      m_pFile = NULL;
       emit TransferFailure();
       close();
       return;
@@ -119,7 +119,7 @@ void FTPDialog::ftpCommandFinished(int cmdId, bool error) {
       T_ERROR("Error putting data on the remote host.");
       m_pFile->close();
       delete m_pFile;
-      m_pFile = nullptr;
+      m_pFile = NULL;
       emit TransferFailure();
       close();
       return;
@@ -127,7 +127,7 @@ void FTPDialog::ftpCommandFinished(int cmdId, bool error) {
       MESSAGE("File transfer complete.");
       m_pFile->close();
       delete m_pFile;
-      m_pFile = nullptr;
+      m_pFile = NULL;
       emit TransferSuccess();
       close();
       return;
@@ -145,7 +145,7 @@ void FTPDialog::Disconnect()
   if (m_pFtp) {
     m_pFtp->abort();
     m_pFtp->deleteLater();
-    m_pFtp = nullptr;
+    m_pFtp = NULL;
   }
 }
 
@@ -153,7 +153,7 @@ void FTPDialog::AbortTransfer()
 {
   m_pFile->close();
   delete m_pFile;
-  m_pFile = nullptr;
+  m_pFile = NULL;
   Disconnect();
   emit TransferFailure();
   close();

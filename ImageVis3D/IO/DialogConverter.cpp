@@ -59,7 +59,7 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
 
   if (bNoUserInteraction) return false;
 
-  if (QMessageBox::No == QMessageBox::question(nullptr, "RAW Data Loader", "The file was not recognized by ImageVis3D's built-in readers and cannot be converted automatically. Do you want to specify the data set parameters manually?", QMessageBox::Yes, QMessageBox::No)) {
+  if (QMessageBox::No == QMessageBox::question(NULL, "RAW Data Loader", "The file was not recognized by ImageVis3D's built-in readers and cannot be converted automatically. Do you want to specify the data set parameters manually?", QMessageBox::Yes, QMessageBox::No)) {
     return false;
   }
   
@@ -78,9 +78,9 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
   // (RAWDialog). Since the user cannot interact with PleaseWaitDialog, we
   // are stuck in a modal state with no where to go.
   //
-  // Specifying nullptr circumvents this issue by making the dialog a
+  // Specifying NULL circumvents this issue by making the dialog a
   // "top-level widget" with no parent.
-  RAWDialog rawDialog(strSourceFilename, iSize, nullptr);
+  RAWDialog rawDialog(strSourceFilename, iSize, NULL);
 #else
   RAWDialog rawDialog(strSourceFilename, iSize, m_parent);
 #endif

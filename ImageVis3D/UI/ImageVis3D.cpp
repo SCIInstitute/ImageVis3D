@@ -72,7 +72,7 @@ MainWindow::MainWindow(MasterController& masterController,
            QWidget* parent /* = 0 */,
            Qt::WindowFlags flags /* = 0 */) :
   QMainWindow(parent, flags),
-  m_pRedrawTimer(nullptr),
+  m_pRedrawTimer(NULL),
   m_MasterController(masterController),
   m_strCurrentWorkspaceFilename(""),
   m_strTempDir("."),  // changed in the constructor
@@ -108,15 +108,15 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bShowWelcomeScreen(true),
   m_bInvWheel(true),
   m_bStayOpenAfterScriptEnd(false),
-  m_pTextout(nullptr),
-  m_pActiveRenderWin(nullptr),
-  m_pLastLoadedRenderWin(nullptr),
-  m_pHttp(nullptr),
-  m_pUpdateFile(nullptr),
+  m_pTextout(NULL),
+  m_pActiveRenderWin(NULL),
+  m_pLastLoadedRenderWin(NULL),
+  m_pHttp(NULL),
+  m_pUpdateFile(NULL),
   m_iHttpGetId(-1),
   m_bStartupCheck(false),
   m_bScriptMode(bScriptMode),
-  m_pFTPDialog(nullptr),
+  m_pFTPDialog(NULL),
   m_strFTPTempFile(""),
   m_bFTPDeleteSource(true),
   m_bFTPFinished(true),
@@ -202,7 +202,7 @@ MainWindow::~MainWindow()
     m_pUpdateFile->close();
     m_pUpdateFile->remove();
     delete m_pUpdateFile;
-    m_pUpdateFile = nullptr;
+    m_pUpdateFile = NULL;
   }
 
   delete m_pHttp;
@@ -249,7 +249,7 @@ void MainWindow::SetAndCheckRunningFlag() {
  if (iInstanceCounter) {
     if (bShowCrashDialog) {
       settings.setValue("SaneCounter", 0);
-      CrashDetDlg* d = nullptr;
+      CrashDetDlg* d = NULL;
       if (bWriteLogFile && SysTools::FileExists(string(strLogFileName.toAscii()))) {
         d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to submit the logfile?", false, this);
         if (d->exec() == QDialog::Accepted) {
@@ -436,17 +436,17 @@ void MainWindow::DisableAllTrans() {
 }
 
 void MainWindow::SetLighting(bool bLighting) {
-  if (m_pActiveRenderWin != nullptr) m_pActiveRenderWin->SetUseLighting(bLighting);
+  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetUseLighting(bLighting);
 }
 
 void MainWindow::ToggleLighting() {
-  if (m_pActiveRenderWin != nullptr) {
+  if (m_pActiveRenderWin != NULL) {
     m_pActiveRenderWin->SetUseLighting(!m_pActiveRenderWin->GetUseLighting());
   }
 }
 
 void MainWindow::SetSampleRate(int iValue) {
-  if (m_pActiveRenderWin != nullptr) m_pActiveRenderWin->SetSampleRateModifier(iValue/100.0f);
+  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetSampleRateModifier(iValue/100.0f);
   UpdateSampleRateLabel(iValue);
 }
 
@@ -463,7 +463,7 @@ void MainWindow::SetSampleRateSlider(int iValue) {
 
 // Script command to update isovalue.
 void MainWindow::SetIsoValue(float fValue) {
-  if (m_pActiveRenderWin != nullptr) {
+  if (m_pActiveRenderWin != NULL) {
     int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
     fValue = MathTools::Clamp(fValue, 0.0f, 1.0f);
     m_pActiveRenderWin->SetIsoValue(fValue * iMaxSize);
@@ -473,7 +473,7 @@ void MainWindow::SetIsoValue(float fValue) {
 
 // UI command to update isovalue.
 void MainWindow::SetIsoValue(int iValue) {
-  if (m_pActiveRenderWin != nullptr) {
+  if (m_pActiveRenderWin != NULL) {
     m_pActiveRenderWin->SetIsoValue(float(iValue));
     int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second-1);
     UpdateIsoValLabel(iValue, iMaxSize);
@@ -482,7 +482,7 @@ void MainWindow::SetIsoValue(int iValue) {
 
 // Script command to update focus isovalue
 void MainWindow::SetClearViewIsoValue(float fValue) {
-  if (m_pActiveRenderWin != nullptr) {
+  if (m_pActiveRenderWin != NULL) {
     int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second)-1;
     fValue = MathTools::Clamp(fValue, 0.0f, 1.0f);
     m_pActiveRenderWin->SetCVIsoValue(fValue * iMaxSize);
@@ -504,7 +504,7 @@ void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {
 
 void MainWindow::SetFocusIsoValue(int iValue) {
   int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second-1);
-  if (m_pActiveRenderWin != nullptr) {
+  if (m_pActiveRenderWin != NULL) {
     m_pActiveRenderWin->SetCVIsoValue(float(iValue));
   }
   UpdateFocusIsoValLabel(iValue, iMaxSize);
@@ -528,15 +528,15 @@ void MainWindow::SetBorderSizeValueSlider(int iValue) {
 }
 
 void MainWindow::SetFocusSize(int iValue) {
-  if (m_pActiveRenderWin != nullptr) m_pActiveRenderWin->SetCVSize(float(99-iValue)/9.9f);
+  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetCVSize(float(99-iValue)/9.9f);
 }
 
 void MainWindow::SetContextScale(int iValue) {
-  if (m_pActiveRenderWin != nullptr) m_pActiveRenderWin->SetCVContextScale(float(iValue)/10.0f);
+  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetCVContextScale(float(iValue)/10.0f);
 }
 
 void MainWindow::SetBorderSize(int iValue) {
-  if (m_pActiveRenderWin != nullptr) m_pActiveRenderWin->SetCVBorderScale(float(99-iValue));
+  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetCVBorderScale(float(99-iValue));
 }
 
 void MainWindow::UpdateFocusIsoValLabel(int iValue, int iMaxValue) {
@@ -557,7 +557,7 @@ void MainWindow::SetToggleLocalBBoxLabel(bool bRenderBBox)
 
 void MainWindow::ToggleGlobalBBox(bool bRenderBBox)
 {
-  if (m_pActiveRenderWin != nullptr) m_pActiveRenderWin->SetGlobalBBox(bRenderBBox);
+  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetGlobalBBox(bRenderBBox);
 }
 
 void MainWindow::SetToggleClipEnabledLabel(bool b) {
@@ -572,13 +572,13 @@ void MainWindow::SetToggleClipLockedLabel(bool b) {
 
 void MainWindow::ToggleLocalBBox(bool bRenderBBox)
 {
-  if (m_pActiveRenderWin != nullptr) m_pActiveRenderWin->SetLocalBBox(bRenderBBox);
+  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetLocalBBox(bRenderBBox);
 }
 
 void MainWindow::ToggleClipPlane(bool bClip)
 {
   RenderWindow *rw = m_pActiveRenderWin;
-  if(rw == nullptr) { return; }
+  if(rw == NULL) { return; }
 
   rw->SetClipPlaneEnabled(bClip);
 
@@ -602,7 +602,7 @@ void MainWindow::LuaCallbackToggleClipPlane(bool bClip)
 void MainWindow::ClipToggleShow(bool bShow)
 {
   RenderWindow *rw = m_pActiveRenderWin;
-  if(rw == nullptr) { return; }
+  if(rw == NULL) { return; }
 
   rw->SetClipPlaneDisplayed(bShow);
   m_bClipDisplay = bShow;
@@ -611,7 +611,7 @@ void MainWindow::ClipToggleShow(bool bShow)
 void MainWindow::ClipToggleLock(bool bLock)
 {
   RenderWindow *rw = m_pActiveRenderWin;
-  if(rw == nullptr) { return; }
+  if(rw == NULL) { return; }
 
   rw->SetClipPlaneRelativeLock(bLock);
   m_bClipLocked = bLock;
@@ -620,7 +620,7 @@ void MainWindow::ClipToggleLock(bool bLock)
 void MainWindow::SetTimestep(int t)
 {
   RenderWindow *rw = m_pActiveRenderWin;
-  if(rw == nullptr) { return; }
+  if(rw == NULL) { return; }
 
   rw->SetTimestep(static_cast<size_t>(t));
   int iMaxVal = static_cast<int>(
@@ -658,7 +658,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
   if (m_bAutoSaveGEO) SaveDefaultGeometry();
   if (m_bAutoSaveWSP) SaveDefaultWorkspace();
   m_MasterController.RemoveDebugOut(m_pDebugOut);
-  m_pDebugOut = nullptr;
+  m_pDebugOut = NULL;
   event->accept();
 }
 
@@ -752,23 +752,23 @@ QMdiSubWindow* MainWindow::ActiveSubWindow() {
     RenderWindow* subwindow = WidgetToRenderWin(w);
     if (subwindow == m_pActiveRenderWin) return mdiArea->subWindowList().at(i);
   }
-  return nullptr;
+  return NULL;
 }
 
 RenderWindow* MainWindow::ActiveRenderWin() {
   if (mdiArea->activeSubWindow())
     return WidgetToRenderWin(mdiArea->activeSubWindow()->widget());
   else
-    return nullptr;
+    return NULL;
 }
 
 
 RenderWindow* MainWindow::WidgetToRenderWin(QWidget* w) {
-  // Given Widget might actually be nullptr, in the case that window (GL)
+  // Given Widget might actually be NULL, in the case that window (GL)
   // initialization failed, but Qt got asked to process an interaction event
   // (e.g. a mouse move) before the `close' event.  MainWindow::CheckForRedraw
   // has the same issue; see the comment there for more info.
-  if (w == nullptr) { return nullptr; }
+  if (w == NULL) { return NULL; }
 
   if (w->objectName() == "RenderWindowGL") {
     RenderWindowGL* r = static_cast<RenderWindowGL*>(w);
@@ -780,7 +780,7 @@ RenderWindow* MainWindow::WidgetToRenderWin(QWidget* w) {
       return static_cast<RenderWindow*>(r);
   }
 #endif
-  return nullptr;
+  return NULL;
 }
 
 void MainWindow::PickLightColor() {
@@ -951,7 +951,7 @@ void MainWindow::RegisterLuaClasses() {
 }
 
 void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {
-  QMdiSubWindow* foundWindow = nullptr;
+  QMdiSubWindow* foundWindow = NULL;
   QList<QMdiSubWindow*> list = mdiArea->subWindowList();
 
   for (QList<QMdiSubWindow*>::iterator it = list.begin();

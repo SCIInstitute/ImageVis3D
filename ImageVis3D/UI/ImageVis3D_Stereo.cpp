@@ -64,17 +64,17 @@ void MainWindow::ToggleStereoRendering() {
 }
 
 void MainWindow::SetStereoEyeDistance() {
-  if (m_pActiveRenderWin == nullptr) return;
+  if (m_pActiveRenderWin == NULL) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoEyeDist(float(horizontalSlider_EyeDistance->value())/100.0);
 }
 
 void MainWindow::SetStereoFocalLength() {
-  if (m_pActiveRenderWin == nullptr) return;
+  if (m_pActiveRenderWin == NULL) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoFocalLength(float(horizontalSlider_FocalLength->value())/10.0);
 }
 
 void MainWindow::ToggleStereoMode() {
-  if (m_pActiveRenderWin == nullptr) return;
+  if (m_pActiveRenderWin == NULL) return;
   if (radioButton_RBStereo->isChecked()) 
     m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::SM_RB);
   else if (radioButton_ScanlineStereo->isChecked()) 
@@ -86,6 +86,6 @@ void MainWindow::ToggleStereoMode() {
 }
 
 void MainWindow::ToggleStereoEyeSwap() {
-  if (m_pActiveRenderWin == nullptr) return;
+  if (m_pActiveRenderWin == NULL) return;
   m_pActiveRenderWin->GetRenderer()->SetStereoEyeSwap(checkBox_EyeSwap->isChecked());
 }

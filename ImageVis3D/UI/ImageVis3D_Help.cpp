@@ -228,7 +228,7 @@ void MainWindow::DeleteUpdateFile() {
   if (m_pUpdateFile) {
     m_pUpdateFile->remove();
     delete m_pUpdateFile;
-    m_pUpdateFile = nullptr;
+    m_pUpdateFile = NULL;
   }
 }
 
@@ -398,7 +398,7 @@ bool readable(const std::string& f) {
 
 void MainWindow::OpenManual() {
 #ifdef DETECTED_OS_WINDOWS
-  ShellExecuteA(nullptr, "open", MANUAL_NAME, nullptr,nullptr,SW_SHOWDEFAULT);
+  ShellExecuteA(NULL, "open", MANUAL_NAME, NULL,NULL,SW_SHOWDEFAULT);
 #elif defined(DETECTED_OS_APPLE)
   string manualOpenCall = "open " + SysTools::GetFromResourceOnMac(MANUAL_NAME);
   system(manualOpenCall.c_str());

@@ -45,7 +45,7 @@ using namespace std;
 void MainWindow::UpdateLockView() {
   m_bUpdatingLockView = true;
   listWidget_Lock->clear();
-  if (m_pActiveRenderWin == nullptr) {
+  if (m_pActiveRenderWin == NULL) {
     label_LockWinowID->setVisible(false);
     return;
   }
@@ -64,7 +64,7 @@ void MainWindow::UpdateLockView() {
     QWidget* w = mdiArea->subWindowList().at(i)->widget();
     RenderWindow* renderWin = WidgetToRenderWin(w);
 
-    if (renderWin != nullptr && renderWin != m_pActiveRenderWin) {
+    if (renderWin != NULL && renderWin != m_pActiveRenderWin) {
       listWidget_Lock->addItem(renderWin->GetWindowID());
 
       // check if lock for this item is allready set
@@ -109,7 +109,7 @@ void MainWindow::ChangeLocks() {
   for (int i = 0;i<listWidget_Lock->count();i++) {
     if (listWidget_Lock->item(i)->isSelected()) {
       // get corresponding renderwindow
-      RenderWindow* otherWin = nullptr;
+      RenderWindow* otherWin = NULL;
       for (int j = 0;j<mdiArea->subWindowList().size();j++) {
          QWidget* w = mdiArea->subWindowList().at(j)->widget();
          RenderWindow* renderWin = WidgetToRenderWin(w);
@@ -118,7 +118,7 @@ void MainWindow::ChangeLocks() {
             break;
          }
       }
-      if (otherWin != nullptr) bAddedTransitiveLocks = SetLock(iLockType, m_pActiveRenderWin, otherWin);
+      if (otherWin != NULL) bAddedTransitiveLocks = SetLock(iLockType, m_pActiveRenderWin, otherWin);
     }
   }
   if (bAddedTransitiveLocks) UpdateLockView();
@@ -172,7 +172,7 @@ void MainWindow::RemoveAllLocks(RenderWindow* sender, size_t iLockType) {
   for (int j = 0;j<mdiArea->subWindowList().size();j++) {
     QWidget* w = mdiArea->subWindowList().at(j)->widget();
     RenderWindow* otherWin = WidgetToRenderWin(w);
-    if (otherWin == sender || otherWin == nullptr) continue;
+    if (otherWin == sender || otherWin == NULL) continue;
 
     for (size_t k = 0;k<otherWin->m_vpLocks[iLockType].size();) {
       if (otherWin->m_vpLocks[iLockType][k] == sender) {

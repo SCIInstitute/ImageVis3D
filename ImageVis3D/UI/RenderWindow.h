@@ -91,11 +91,11 @@ class RenderWindow
                       bool bPreserveTransparency);
     bool CaptureSequenceFrame(const std::string& strFilename,
                               bool bPreserveTransparency,
-                              std::string* strRealFilename=nullptr);
+                              std::string* strRealFilename=NULL);
     bool CaptureMIPFrame(const std::string& strFilename,
                          float fAngle, bool bOrtho, bool bFinalFrame,
                          bool bUseLOD, bool bPreserveTransparency,
-                         std::string* strRealFilename=nullptr);
+                         std::string* strRealFilename=NULL);
     void ToggleHQCaptureMode();
     void EnableHQCaptureMode(bool enable);
     void Translate(const FLOATMATRIX4& mTranslation,

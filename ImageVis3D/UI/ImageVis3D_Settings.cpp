@@ -83,7 +83,7 @@ void MainWindow::CheckSettings() {
 
 bool MainWindow::ShowSettings(bool bInitializeOnly) {
     QSettings settings;
-    SettingsDlg settingsDlg(m_pActiveRenderWin != nullptr, m_MasterController, this);
+    SettingsDlg settingsDlg(m_pActiveRenderWin != NULL, m_MasterController, this);
 
     settings.beginGroup("Memory");
     uint64_t iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
@@ -381,7 +381,7 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
 void MainWindow::ToggleLogFile() {
   if ( m_pTextout && string(m_strLogFileName.toAscii()) != m_pTextout->GetFileName()) {
     Controller::Instance().RemoveDebugOut(m_pTextout);
-    m_pTextout = nullptr;
+    m_pTextout = NULL;
   }
 
   if (m_bWriteLogFile) {

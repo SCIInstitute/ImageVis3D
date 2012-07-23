@@ -452,7 +452,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool IsLockedWith(size_t iLockType, RenderWindow* winA, RenderWindow* winB);
 
     bool CaptureFrame(const std::string& strTargetName);
-    bool CaptureSequence(const std::string& strTargetName, std::string* strRealFilename=nullptr);
+    bool CaptureSequence(const std::string& strTargetName, std::string* strRealFilename=NULL);
 
     void RotateCurrentViewX(double angle);
     void RotateCurrentViewY(double angle);

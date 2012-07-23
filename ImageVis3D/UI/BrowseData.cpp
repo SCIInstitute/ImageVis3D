@@ -96,7 +96,7 @@ bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
     m_vRadioButtons.push_back(pStackElement);
   }
 
-  if (pleaseWaitDialog != nullptr) pleaseWaitDialog->close();
+  if (pleaseWaitDialog != NULL) pleaseWaitDialog->close();
 
   return m_dirInfo.size() > 0;
 }

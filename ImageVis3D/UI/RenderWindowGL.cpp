@@ -175,9 +175,9 @@ void RenderWindowGL::InitializeRenderer()
       }
       ms_iMaxVolumeDims = iMaxVolumeDims;        
 
-      char *extensions = nullptr;
+      char *extensions = NULL;
       extensions = (char*)glGetString(GL_EXTENSIONS);
-      if (extensions != nullptr)  ms_glExtString = extensions;
+      if (extensions != NULL)  ms_glExtString = extensions;
 
       if (!bOpenGLSO12 && !bOpenGL3DT) { // according to spec 3D textures
                                          // are part of the OpenGl 1.2 core 
@@ -267,7 +267,7 @@ void RenderWindowGL::InitializeRenderer()
   }
 
   if (m_bRenderSubsysOK) { 
-    if (m_Renderer == nullptr)
+    if (m_Renderer == NULL)
       m_bRenderSubsysOK = false;
     else {
   #ifdef DETECTED_OS_LINUX
@@ -280,7 +280,7 @@ void RenderWindowGL::InitializeRenderer()
   if (!m_bRenderSubsysOK) {
     if (m_Renderer) m_Renderer->Cleanup();
     m_MasterController.ReleaseVolumeRenderer(m_Renderer);
-    m_Renderer = nullptr;
+    m_Renderer = NULL;
   }
 
   if (bFirstTime) { 

@@ -51,13 +51,13 @@ using namespace std;
 
 Q1DTransferFunction::Q1DTransferFunction(MasterController& masterController, QWidget *parent) :
   QTransferFunction(masterController, parent),
-  m_pTrans(nullptr),
+  m_pTrans(NULL),
   m_iPaintMode(PAINT_RED | PAINT_GREEN | PAINT_BLUE | PAINT_ALPHA),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
-  m_pBackdropCache(nullptr),
-  m_pPreviewBack(nullptr),
-  m_pPreviewColor(nullptr),
+  m_pBackdropCache(NULL),
+  m_pPreviewBack(NULL),
+  m_pPreviewColor(NULL),
   // borders, may be changed arbitrarily
   m_iLeftBorder(20),
   m_iBottomBorder(20),
@@ -100,7 +100,7 @@ void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
                                   unsigned int iMaxValue,
                                   TransferFunction1D* pTrans) {
   m_pTrans = pTrans;
-  if (m_pTrans == nullptr || vHistogram == nullptr) return;
+  if (m_pTrans == NULL || vHistogram == NULL) return;
 
   m_iMarkersX = std::max<unsigned int>(1,iMaxValue);
   while (m_iMarkersX > 100) m_iMarkersX /= 10;
@@ -186,7 +186,7 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
 
 void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 
-  if (m_pTrans == nullptr || m_vHistogram.GetSize() < 2) return;
+  if (m_pTrans == NULL || m_vHistogram.GetSize() < 2) return;
 
   // compute some grid dimensions
   unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
@@ -230,7 +230,7 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 }
 
 void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
-  if (m_pTrans == nullptr) return;
+  if (m_pTrans == NULL) return;
 
   // compute some grid dimensions
   unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
@@ -284,7 +284,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 }
 
 void Q1DTransferFunction::mousePressEvent(QMouseEvent *event) {
-  if (m_pTrans == nullptr) return;
+  if (m_pTrans == NULL) return;
 
   // call superclass method
   QWidget::mousePressEvent(event);
@@ -296,7 +296,7 @@ void Q1DTransferFunction::mousePressEvent(QMouseEvent *event) {
 }
 
 void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
-  if (m_pTrans == nullptr) return;
+  if (m_pTrans == NULL) return;
 
   // call superclass method
   QWidget::mouseReleaseEvent(event);
@@ -316,7 +316,7 @@ void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
-  if (m_pTrans == nullptr) return;
+  if (m_pTrans == NULL) return;
 
   // call superclass method
   QWidget::mouseMoveEvent(event);
@@ -419,7 +419,7 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 
 void Q1DTransferFunction::ApplyFunction() {
   // send message to update the GLtexture
-  m_MasterController.MemMan()->Changed1DTrans(nullptr, m_pTrans);
+  m_MasterController.MemMan()->Changed1DTrans(NULL, m_pTrans);
 }
 
 void Q1DTransferFunction::SetColor(bool bIsEnabled) {
@@ -480,7 +480,7 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
   // call superclass method
   QWidget::paintEvent(event);
 
-  if (m_pTrans == nullptr) {
+  if (m_pTrans == NULL) {
     QPainter painter(this);
     DrawCoordinateSystem(painter);
     return;
