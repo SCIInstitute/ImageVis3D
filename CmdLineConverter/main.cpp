@@ -236,8 +236,8 @@ int main(int argc, const char* argv[])
     for(std::vector<std::string>::const_iterator f = input.begin();
         f != input.end(); ++f) {
       std::string ext = SysTools::ToLowerCase(SysTools::GetExt(*f));
-      bool conv_vol = ioMan.GetConverterForExt(ext, false, true) != nullptr;
-      bool conv_geo = ioMan.GetGeoConverterForExt(ext, false, true) != nullptr;
+      bool conv_vol = ioMan.GetConverterForExt(ext, false, true) != NULL;
+      bool conv_geo = ioMan.GetGeoConverterForExt(ext, false, true) != NULL;
       if(conv_vol || conv_geo) { continue; }
 
       if(!conv_vol && !conv_geo) {
@@ -251,10 +251,10 @@ int main(int argc, const char* argv[])
   if (!strInFile.empty()) {
     string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
-    bool bIsVolExtOut = ioMan.GetConverterForExt(targetType, false, false) != nullptr;
-    bool bIsGeoExtOut = ioMan.GetGeoConverterForExt(targetType, false, false) != nullptr;
-    bool bIsVolExt1 = ioMan.GetConverterForExt(sourceType, false, false) != nullptr;
-    bool bIsGeoExt1 = ioMan.GetGeoConverterForExt(sourceType, false, false) != nullptr;
+    bool bIsVolExtOut = ioMan.GetConverterForExt(targetType, false, false) != NULL;
+    bool bIsGeoExtOut = ioMan.GetGeoConverterForExt(targetType, false, false) != NULL;
+    bool bIsVolExt1 = ioMan.GetConverterForExt(sourceType, false, false) != NULL;
+    bool bIsGeoExt1 = ioMan.GetGeoConverterForExt(sourceType, false, false) != NULL;
 
     if (!bIsVolExt1 && !bIsGeoExt1)  {
       std::cerr << "error: Unknown file type for '" << strInFile << "'\n";
@@ -380,8 +380,8 @@ int main(int argc, const char* argv[])
 
       string sourceType2 = SysTools::ToLowerCase(SysTools::GetExt(strInFile2));
 
-      bool bIsVolExt2 = ioMan.GetConverterForExt(sourceType2, false, true) != nullptr;
-      bool bIsGeoExt2 = ioMan.GetGeoConverterForExt(sourceType2, false, true) != nullptr;
+      bool bIsVolExt2 = ioMan.GetConverterForExt(sourceType2, false, true) != NULL;
+      bool bIsGeoExt2 = ioMan.GetGeoConverterForExt(sourceType2, false, true) != NULL;
 
       if (!bIsVolExt2 && !bIsGeoExt2)  {
         std::cerr << "error: Unknown file type for '" << strInFile2 << "'\n";
