@@ -23,6 +23,7 @@ gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
 for(d, gludirs) {
   if(exists($${d}/libGLU.a) && static) { LIBS -= -lGLU; LIBS += $${d}/libGLU.a }
 }
+unix:QMAKE_CXXFLAGS += -std=c++0x
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 

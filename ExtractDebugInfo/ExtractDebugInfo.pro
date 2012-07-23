@@ -21,6 +21,7 @@ for(d, gludirs) {
     LIBS += $${d}/libGLU.a
   }
 }
+unix:QMAKE_CXXFLAGS += -std=c++0x
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
 
