@@ -3,10 +3,17 @@
 #-D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
-CF="-ggdb3 -Wall -Wextra -O0 -D_DEBUG"
-CXF="-D_GLIBCXX_CONCEPT_CHECK -Werror"
+CF="-Wall -Wextra -O0 -D_DEBUG"
+CXF="-D_GLIBCXX_CONCEPT_CHECK"
+LF=""
+MKSPEC=""
 if test `uname -s` != "Darwin" ; then
-  CXF="${CXF} -D_GLIBCXX_DEBUG"
+  CF="${CF} -ggdb3 "
+  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror"
+else
+  CXF="${CXF} -D_GLIBCXX_DEBUG -std=c++0x -stdlib=libc++"
+  MKSPEC="-spec unsupported/macx-clang"
+  LF="QMAKE_LFLAGS=\"-stdlib=libc++\""
 fi
 if test -n "${QT_BIN}" ; then
     echo "Using custom qmake..."
@@ -17,6 +24,8 @@ fi
 for d in . ; do
   pushd ${d} &>/dev/null
     ${qm} \
+        ${MKSPEC} \
+        ${LF} \
         QMAKE_CONFIG+="debug" \
         CONFIG+="debug" \
         QMAKE_CFLAGS="${VIS} ${CF}" \
