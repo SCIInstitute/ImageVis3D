@@ -7,10 +7,21 @@ VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 COVERAGE="-fprofile-arcs -ftest-coverage"
 CF="-g -Wall -Wextra -O0 -D_DEBUG ${COVERAGE}"
-CXF="-D_GLIBCXX_CONCEPT_CHECK -Werror ${COVERAGE} -std=c++0x"
+CXF="-D_GLIBCXX_CONCEPT_CHECK ${COVERAGE} -std=c++0x"
+MKSPEC=""
+QLF=""
 # Darwin's debug STL support is broken.
 if test `uname -s` != "Darwin"; then
-  CXF="${CXF} -D_GLIBCXX_DEBUG"
+  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror"
+else
+  # We don't turn -Werror on because of warnings that deal 
+  # with generated code, and some unused template specialization
+  # warnings. 
+
+  # Add libc++ for mac.
+  CXF="${CXF} -stdlib=libc++"
+  QLF="${QLF} -stdlib=libc++"
+  MKSPEC="-spec unsupported/macx-clang"
 fi
 
 if test "$1" == "32" ; then
@@ -37,10 +48,11 @@ for d in $dirs ; do
   pushd ${d} &> /dev/null || exit 1
     ${qm} \
       -makefile \
+      ${MKSPEC} \
       CONFIG+="debug" \
       QMAKE_CFLAGS+="${VIS} ${CF}" \
       QMAKE_CXXFLAGS+="${VIS} ${INL} ${CF} ${CXF}" \
-      QMAKE_LFLAGS+="${VIS} ${COVERAGE}" \
+      QMAKE_LFLAGS+="${VIS} ${COVERAGE} ${QLF}" \
       -recursive || exit 1
   popd &> /dev/null
 done
