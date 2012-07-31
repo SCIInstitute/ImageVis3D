@@ -426,8 +426,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t
   if (!bIsDirectX10Capable) {
     if (iVolRenType == 2) iVolRenType = 0; else 
     if (iVolRenType == 3) iVolRenType = 1; else 
-    if (iVolRenType == 5) iVolRenType = 4; else 
-    if (iVolRenType == 6) iVolRenType = 5;
+    if (iVolRenType == 5) iVolRenType = 4;
   }
 
 
@@ -535,7 +534,8 @@ void SettingsDlg::WarnAPIMethodChange() {
 unsigned int SettingsDlg::GetVolrenType() const {
   if (radioButton_APIGL->isChecked()) {
     if (radioButton_SBVR->isChecked()) return 0;
-    if (radioButton_SBVR2D->isChecked()) return 4; else return 1;
+    if (radioButton_SBVR2D->isChecked()) return 4;
+    if (radioButton_TRaycast->isChecked()) return 6; else return 1;
   } else {
     if (radioButton_SBVR->isChecked()) return 2;
     if (radioButton_SBVR2D->isChecked()) return 6; else return 3;
