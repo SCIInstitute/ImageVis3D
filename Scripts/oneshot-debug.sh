@@ -7,7 +7,7 @@ VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 COVERAGE="-fprofile-arcs -ftest-coverage"
 CF="-g -Wall -Wextra -O0 -D_DEBUG ${COVERAGE}"
-CXF="-D_GLIBCXX_CONCEPT_CHECK ${COVERAGE} -std=c++0x"
+CXF="-D_GLIBCXX_CONCEPT_CHECK ${COVERAGE}"
 MKSPEC=""
 QLF=""
 # Darwin's debug STL support is broken.
@@ -17,11 +17,6 @@ else
   # We don't turn -Werror on because of warnings that deal 
   # with generated code, and some unused template specialization
   # warnings. 
-
-  # Add libc++ (requires 10.7 for command line tools that come
-  # with xcode 4.4)
-  CXF="${CXF} -stdlib=libc++"
-  QLF="${QLF} -stdlib=libc++"
   MKSPEC="-spec unsupported/macx-clang"
 fi
 

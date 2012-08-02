@@ -7,7 +7,7 @@ VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 COVERAGE="-fprofile-arcs -ftest-coverage"
 CF="-Wall -Wextra -O2 ${COVERAGE}"
-CXF="-D_GLIBCXX_CONCEPT_CHECK -DQT_NODEBUG ${COVERAGE} -std=c++0x"
+CXF="-D_GLIBCXX_CONCEPT_CHECK -DQT_NODEBUG ${COVERAGE}"
 QLF=""
 MKSPEC=""
 
@@ -34,11 +34,6 @@ else
   # We don't turn -Werror on because of warnings that deal 
   # with generated code, and some unused template specialization
   # warnings. 
-
-  # Add libc++ (requires 10.7 for command line tools that come
-  # with xcode 4.4)
-  CXF="${CXF} -stdlib=libc++"
-  QLF="${QLF} -stdlib=libc++"
   MKSPEC="-spec unsupported/macx-clang"
 fi
 echo "Configuring..."
