@@ -12,7 +12,6 @@ INCLUDEPATH      += ../Tuvok ../Tuvok/Basics/3rdParty ../Tuvok/Basics
 QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
 unix:LIBS        += -lz
-macx:LIBS        += -framework CoreFoundation
 win32:LIBS       += shlwapi.lib
 unix:!macx:LIBS  += -lGLU
 # Try to link to GLU statically.
@@ -26,6 +25,10 @@ for(d, gludirs) {
 unix:QMAKE_CXXFLAGS += -std=c++0x
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
+
+macx:QMAKE_CXXFLAGS += -mmacosx-version-min=10.7
+macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7
+macx:LIBS        += -framework CoreFoundation -mmacosx-version-min=10.7
 
 # Find the location of QtGui's prl file, and include it here so we can look at
 # the QMAKE_PRL_CONFIG variable.

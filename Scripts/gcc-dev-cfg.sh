@@ -11,9 +11,8 @@ if test `uname -s` != "Darwin" ; then
   CF="${CF} -ggdb3 "
   CXF="${CXF} -D_GLIBCXX_DEBUG -Werror"
 else
-  CF="${CF} -mmacosx-version-min=10.7"
-  CXF="${CXF} -D_GLIBCXX_DEBUG -std=c++0x -stdlib=libc++ -mmacosx-version-min=10.7"
-  LF="-stdlib=libc++ -mmacosx-version-min=10.7"
+  CXF="${CXF} -D_GLIBCXX_DEBUG -std=c++0x -stdlib=libc++"
+  LF="-stdlib=libc++"
   MKSPEC="-spec unsupported/macx-clang"
 fi
 if test -n "${QT_BIN}" ; then
