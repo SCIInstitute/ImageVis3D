@@ -11,9 +11,10 @@ if test `uname -s` != "Darwin" ; then
   CF="${CF} -ggdb3 "
   CXF="${CXF} -D_GLIBCXX_DEBUG -Werror"
 else
-  CXF="${CXF} -D_GLIBCXX_DEBUG -std=c++0x -stdlib=libc++"
+  CF="${CF} -mmacosx-version-min=10.7"
+  CXF="${CXF} -D_GLIBCXX_DEBUG -std=c++0x -stdlib=libc++ -mmacosx-version-min=10.7"
+  LF="-stdlib=libc++ -mmacosx-version-min=10.7"
   MKSPEC="-spec unsupported/macx-clang"
-  LF="QMAKE_LFLAGS=\"-stdlib=libc++\""
 fi
 if test -n "${QT_BIN}" ; then
     echo "Using custom qmake..."
@@ -25,13 +26,13 @@ for d in . ; do
   pushd ${d} &>/dev/null
     ${qm} \
         ${MKSPEC} \
-        ${LF} \
         QMAKE_CONFIG+="debug" \
         CONFIG+="debug" \
         QMAKE_CFLAGS="${VIS} ${CF}" \
         QMAKE_CXXFLAGS="${VIS} ${INL} ${CF} ${CXF}" \
         QMAKE_CFLAGS_RELEASE="-O0" \
         QMAKE_CXXFLAGS_RELEASE="-O0" \
+        QMAKE_LFLAGS="${LF}" \
         -recursive || exit 1
   popd &>/dev/null
 done

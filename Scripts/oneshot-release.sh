@@ -34,8 +34,12 @@ else
   # We don't turn -Werror on because of warnings that deal 
   # with generated code, and some unused template specialization
   # warnings. 
-  CXF="${CXF} -stdlib=libc++"
-  QLF="${QLF} -stdlib=libc++"
+
+  # Add libc++ (requires 10.7 for command line tools that come
+  # with xcode 4.4)
+  CF="${CF} -mmacosx-version-min=10.7"
+  CXF="${CXF} -stdlib=libc++ -mmacosx-version-min=10.7"
+  QLF="${QLF} -stdlib=libc++ -mmacosx-version-min=10.7"
   MKSPEC="-spec unsupported/macx-clang"
 fi
 echo "Configuring..."
