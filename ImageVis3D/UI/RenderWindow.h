@@ -420,10 +420,6 @@ class RenderWindow
     /// This saves the value at disabling time, so we can restore it when the
     /// clip plane is re-enabled.
     bool              m_SavedClipLocked;
-
-
-    void watchSetRotation4x4(FLOATMATRIX4 m);
-    void watchSetTrans4x4(FLOATMATRIX4 m);
 };
 
 #endif // RENDERWINDOW_H

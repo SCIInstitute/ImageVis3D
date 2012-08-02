@@ -1978,18 +1978,6 @@ void RenderWindow::LuaSetRotationAs4x4(FLOATMATRIX4 m) {
   SetProvRotationAndClip(GetFirst3DRegion(), m);
 }
 
-void RenderWindow::watchSetRotation4x4(FLOATMATRIX4)
-{
-  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-  ss->vPrint("Called Set rotation 4x4");
-}
-
-void RenderWindow::watchSetTrans4x4(FLOATMATRIX4)
-{
-  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-  ss->vPrint("Called Set trans 4x4");
-}
-
 void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
@@ -2055,13 +2043,6 @@ void RenderWindow::RegisterLuaFunctions(
   id = reg.function(&RenderWindow::LuaSetTranslationAs4x4,"setTranslationAs4x4",
                     "Sets translation for the first 3D "
                     "render region.", true);
-
-  /// Temporary debugging
-  string rname = me->GetFirst3DRegion().fqName();
-  string tmp = rname + ".setRotation4x4";
-  me->m_MemReg.strictHook(me, &RenderWindow::watchSetRotation4x4, tmp);
-  tmp = rname + ".setTranslation4x4";
-  me->m_MemReg.strictHook(me, &RenderWindow::watchSetTrans4x4, tmp);
 }
 
 
