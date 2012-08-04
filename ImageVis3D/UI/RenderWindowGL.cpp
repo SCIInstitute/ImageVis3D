@@ -116,6 +116,7 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
     return false;
   }
 
+  m_bRenderSubsysOK = true;
   return true;
 }
 
@@ -132,6 +133,9 @@ RenderWindowGL::~RenderWindowGL()
 
 void RenderWindowGL::InitializeRenderer()
 {
+  // something has already gone wrong
+  if (!m_bRenderSubsysOK) return;
+
   static bool bFirstTime = true;
   static bool bRenderSubSysOKFirstTime = true;
   m_bRenderSubsysOK = bRenderSubSysOKFirstTime;
