@@ -999,7 +999,7 @@ void RenderWindow::Initialize() {
 
 void RenderWindow::Cleanup() {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  if (m_LuaAbstrRenderer.isValid(ss) == false || !m_bRenderSubsysOK)
+  if (m_LuaAbstrRenderer.isValid(ss) == false)
     return;
 
   ss->cexec(m_LuaAbstrRenderer.fqName() + ".cleanup");

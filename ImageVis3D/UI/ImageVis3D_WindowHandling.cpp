@@ -771,6 +771,13 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
                                    m_glShareWidget, fmt, this, 0);
   #endif
 
+  if (!renderWin->IsRenderSubsysOK())
+  {
+    delete renderWin;
+    T_ERROR("Could not initialize render window!");
+    return NULL;
+  }
+
   connect(renderWin->GetQtWidget(), SIGNAL(WindowActive(RenderWindow*)),
           this, SLOT(RenderWindowActive(RenderWindow*)));
   connect(renderWin->GetQtWidget(), SIGNAL(WindowClosing(RenderWindow*)),
@@ -779,17 +786,13 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
           this, SLOT(RenderWindowViewChanged(int)));
   connect(renderWin->GetQtWidget(), SIGNAL(StereoDisabled()),
           this, SLOT(StereoDisabled()));
+
   mdiArea->addSubWindow(new MDIRenderWin(m_MasterController, renderWin));
   renderWin->InitializeContext();
 
   m_pLastLoadedRenderWin = renderWin;
 
-  if(m_pActiveRenderWin != renderWin && !renderWin->IsRenderSubsysOK()) {
-    T_ERROR("Could not initialize render window!");
-    return NULL;
-  } else {
-    ApplySettings(renderWin);
-  }
+  ApplySettings(renderWin);
 
   QCoreApplication::processEvents();
 
