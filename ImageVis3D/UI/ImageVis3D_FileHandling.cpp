@@ -472,7 +472,7 @@ RenderWindow* MainWindow::LuaLoadDatasetInternal(vector<string> stdFiles,
   }
   else
   {
-    m_MasterController.LuaScript()->vPrint("False returned from load dataset"
+    m_MasterController.LuaScript()->vPrint("False returned from load dataset "
         "internal.");
     return NULL;
   }
