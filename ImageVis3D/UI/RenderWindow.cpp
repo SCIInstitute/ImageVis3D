@@ -1268,7 +1268,7 @@ void RenderWindow::updateClipPlaneTransform(LuaClassInstance region)
     SetClipPlane(region, plane);
   } else {
     RegionData* regionData = GetRegionData(region);
-    FLOATMATRIX4 cs = regionData->toClipSpace;
+    FLOATMATRIX4 cs = regionData->toClipSpace.inverse();
     ExtendedPlane plane;
     plane.Transform(cs, false);
     SetClipPlane(region, plane);
@@ -1680,16 +1680,18 @@ void RenderWindow::SetClipPlaneRelativeLock(bool bLock, bool bPropagate)
   if (currentlyLocked == true && bLock == false)
   {
     // (clip space ->) object space -> world space
+    // Make clip plane relative to the world.
     FLOATMATRIX4 r = computeClipToVolToWorldTransform(region);
-    regionData->toClipSpace = r;
+    regionData->toClipSpace = r.inverse();
   }
   else if (currentlyLocked == false && bLock == true)
   {
     // Obtain a new clipping space transform relative to the world space
     // transformation of the render region's volume.
     FLOATMATRIX4 vx = getHomogeneousVolToWorldTrafo(region);
-    FLOATMATRIX4 tmp = regionData->toClipSpace * vx.inverse();
-    FLOATMATRIX4 newClipSpace = tmp.inverse();
+    // Make clip plane relative to the object: O * C^-1 (clip plane was
+    // relative to the world prior).
+    FLOATMATRIX4 newClipSpace = vx * regionData->toClipSpace;
     regionData->toClipSpace = newClipSpace;
   }
 
