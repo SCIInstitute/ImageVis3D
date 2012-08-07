@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=4.8.1
+VERSION=4.8.2
 PREFIX="${HOME}/sw"
 QTDIR="qt-everywhere-opensource-src-${VERSION}"
 echo "Removing old build..."
@@ -16,7 +16,7 @@ elif test -f ${tarball}.gz ; then
   tar zxf ${tarball}.gz
 else
   echo "${tarball}.gz not found; Downloading Qt..."
-  curl -kLO http://get.qt.nokia.com/qt/source/${tarball}.gz
+  curl -kLO http://releases.qt-project.org/qt4/source/${tarball}.gz
   tar zxf ${tarball}.gz
 fi
 pushd ${QTDIR} || exit 1
