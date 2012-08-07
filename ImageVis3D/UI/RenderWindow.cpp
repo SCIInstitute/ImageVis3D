@@ -1335,7 +1335,11 @@ void RenderWindow::SetClipRotationDelta(LuaClassInstance renderRegion,
                                         bool bSecondary)
 {
   RegionData* regionData = GetRegionData(renderRegion);
-  regionData->toClipSpace = regionData->toClipSpace * rotDelta.inverse();
+  // Transform the rotation into clipping space preserving transformation
+  // order: (R3^-1*R2^-1*R1^-1)^-1 = R1 * R2 * R3. This inversion is performed
+  // in computeClipToVolToWorldTransform to leave clipping space and enter 
+  // object space.
+  regionData->toClipSpace = rotDelta.inverse() * regionData->toClipSpace;
   updateClipPlaneTransform(renderRegion);
 
   if (bPropagate) {
