@@ -734,8 +734,8 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
         m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR ||
         m_eVolumeRendererType == MasterController::DIRECTX_TRAYCASTER) {
       renderWin = new RenderWindowDX(m_MasterController, m_eVolumeRendererType, dataset,
-                                       iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
-                                       m_bDisableBorder, this, 0);
+                                     iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
+                                     m_bDisableBorder, this, 0);
     } else {
       QGLFormat fmt;
       fmt.setRgba(true);
