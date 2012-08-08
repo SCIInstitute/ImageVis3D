@@ -250,6 +250,10 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
     default : penCurve.setColor(m_colorAlphaLine); break;
     }
 
+    // Make sure our tfqn is as wide as our histogram, since we'll be accessing
+    // every element in the histogram.
+    assert(m_pTrans->vColorData.size() >= m_vHistogram.GetSize());
+
     // define the polyline
     for (size_t i=0; i < pointList.size(); i++) {
       pointList[i] = QPointF(
