@@ -771,8 +771,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
                                    m_glShareWidget, fmt, this, 0);
   #endif
 
-  if (!renderWin->IsRenderSubsysOK())
-  {
+  if (m_pActiveRenderWin != renderWin && !renderWin->IsRenderSubsysOK()) {
     delete renderWin;
     T_ERROR("Could not initialize render window!");
     return NULL;
@@ -790,8 +789,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
   mdiArea->addSubWindow(new MDIRenderWin(m_MasterController, renderWin));
   renderWin->InitializeContext();
 
-  if (!renderWin->IsRenderSubsysOK())
-  {
+  if (m_pActiveRenderWin != renderWin && !renderWin->IsRenderSubsysOK()) {
     delete renderWin;
     T_ERROR("Could not initialize render window context!");
     return NULL;
