@@ -790,6 +790,13 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
   mdiArea->addSubWindow(new MDIRenderWin(m_MasterController, renderWin));
   renderWin->InitializeContext();
 
+  if (!renderWin->IsRenderSubsysOK())
+  {
+    delete renderWin;
+    T_ERROR("Could not initialize render window context!");
+    return NULL;
+  }
+
   m_pLastLoadedRenderWin = renderWin;
 
   ApplySettings(renderWin);
