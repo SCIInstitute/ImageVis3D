@@ -1850,8 +1850,11 @@ void RenderWindow::PaintRenderer()
     return;
   }
 
-  if (m_Renderer != NULL && m_bRenderSubsysOK) {
-    if (!m_Renderer->Paint()) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+
+  if (m_LuaAbstrRenderer.isValid(ss) && m_bRenderSubsysOK) {
+    if (!ss->cexecRet<bool>(rn + ".paint")) {
       static bool bBugUseronlyOnce = true;
       if (bBugUseronlyOnce) {
 
@@ -1873,7 +1876,7 @@ void RenderWindow::PaintRenderer()
         }
         bBugUseronlyOnce = false;
       }
-      T_ERROR("m_Renderer->Paint() call failed.");
+      T_ERROR("AbstrRenderer::Paint() call failed.");
     }
 
     if (GetQtWidget()->isActiveWindow()) {
