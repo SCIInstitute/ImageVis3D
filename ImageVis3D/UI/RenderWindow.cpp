@@ -335,6 +335,12 @@ LuaClassInstance RenderWindow::GetRendererDataset() const {
                                         ".getDataset");
 }
 
+LuaClassInstance RenderWindow::GetRendererTransferFunction1D() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<LuaClassInstance>(m_LuaAbstrRenderer.fqName() +
+                                        ".get1DTrans");
+}
+
 void RenderWindow::SetTimeSlice(uint32_t timeSlice) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexec(m_LuaAbstrRenderer.fqName() + ".setTimeSlice", timeSlice);
@@ -1785,10 +1791,14 @@ pair<double,double> RenderWindow::GetDynamicRange() const {
       dataset.fqName() + ".getRange");
 
   // Old UVFs lack a maxmin data block, && will say the min > the max.
-  if (range.first > range.second)
-    return make_pair(0,double(m_Renderer->Get1DTrans()->GetSize()));
-  else
+  if (range.first > range.second) {
+    LuaClassInstance tf1d = GetRendererTransferFunction1D();
+    return make_pair(0,
+                     double(ss->cexecRet<size_t>(tf1d.fqName() + ".getSize")));
+  }
+  else {
     return range;
+  }
 }
 
 FLOATVECTOR3 RenderWindow::GetIsosufaceColor() const {

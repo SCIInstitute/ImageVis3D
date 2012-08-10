@@ -234,6 +234,7 @@ class RenderWindow
     tuvok::AbstrRenderer::ERendererTarget GetRendererTarget();
     bool GetClearViewEnabled();
     tuvok::LuaClassInstance GetRendererDataset() const;
+    tuvok::LuaClassInstance GetRendererTransferFunction1D() const;
     void SetTimeSlice(uint32_t);
     void ScheduleCompleteRedraw();
     bool RendererCheckForRedraw();
