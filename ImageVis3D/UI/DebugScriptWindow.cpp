@@ -195,7 +195,7 @@ void DebugScriptWindow::setupUI()
             "-- data = Render window to animate.\n"
             "-- numFrames = Number of frames to capture during the animation.\n"
             "function doAnim (data, numFrames)\n"
-            "  local datasetPath = data.getDataset().path()\n"
+            "  local datasetPath = data.getDataset().fullpath()\n"
             "  local baseName = os.capture('basename ' .. datasetPath .. ' .uvf', false)\n"
             "  print('Using basename: ' .. baseName)\n"
             "  t = 0.0\n"
