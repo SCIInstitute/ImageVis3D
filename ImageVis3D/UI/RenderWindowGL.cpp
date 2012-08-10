@@ -135,6 +135,9 @@ void RenderWindowGL::InitializeRenderer()
   // something has already gone wrong
   if (!m_bRenderSubsysOK) return;
 
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string rn = m_LuaAbstrRenderer.fqName();
+
   static bool bFirstTime = true;
   static bool bRenderSubSysOKFirstTime = true;
   m_bRenderSubsysOK = bRenderSubSysOKFirstTime;
@@ -206,9 +209,11 @@ void RenderWindowGL::InitializeRenderer()
                   "2D texture stack based renderer. To avoid this "
                   "warning and to improve startup times please "
                   "switch to 2D slicing mode in the preferences.");
-          bool bUseOnlyPowerOfTwo = m_Renderer->GetUseOnlyPowerOfTwo();
-          bool bDownSampleTo8Bits = m_Renderer->GetDownSampleTo8Bits();
-          bool bDisableBorder = m_Renderer->GetDisableBorder();
+          bool bUseOnlyPowerOfTwo = 
+              ss->cexecRet<bool>(rn + ".getUseOnlyPowerOfTwo");
+          bool bDownSampleTo8Bits = 
+              ss->cexecRet<bool>(rn + ".getDownSampleTo8Bits");
+          bool bDisableBorder = ss->cexecRet<bool>(rn + ".getDisableBorder");
           
           // delete old renderer
           Cleanup();
@@ -216,6 +221,8 @@ void RenderWindowGL::InitializeRenderer()
           m_eRendererType = MasterController::OPENGL_2DSBVR;
           SetNewRenderer(bUseOnlyPowerOfTwo,bDownSampleTo8Bits,bDisableBorder);
           Initialize();
+
+          rn = m_LuaAbstrRenderer.fqName();
         }
       }
 
@@ -270,11 +277,11 @@ void RenderWindowGL::InitializeRenderer()
   }
 
   if (m_bRenderSubsysOK) { 
-    if (m_Renderer == NULL)
+    if (!m_LuaAbstrRenderer.isValid(ss))
       m_bRenderSubsysOK = false;
     else {
   #ifdef DETECTED_OS_LINUX
-      m_Renderer->AddShaderPath("/usr/share/imagevis3d/shaders");
+      ss->cexec(rn + "addShaderPath", "/usr/share/imagevis3d/shaders");
   #endif
       m_bRenderSubsysOK = m_Renderer->Initialize(GLContextID::Current(0));
     }
