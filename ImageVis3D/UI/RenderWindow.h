@@ -253,6 +253,11 @@ class RenderWindow
     void SetBackgroundColors(FLOATVECTOR3 vTopColor,
                              FLOATVECTOR3 vBotColor);
     void SetLODLimits(const UINTVECTOR2& vLODLimits);
+    uint64_t GetCurrentSubFrameCount();
+    uint32_t GetWorkingSubFrame();
+    uint32_t GetCurrentBrickCount();
+    uint32_t GetWorkingBrick();
+    uint64_t GetMinLODIndex();
     void SetRendererTarget(tuvok::AbstrRenderer::ERendererTarget targ);
 
   public: // public slots:

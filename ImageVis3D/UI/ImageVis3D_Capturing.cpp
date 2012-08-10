@@ -170,15 +170,14 @@ void MainWindow::CaptureRotation() {
         fAngle = float(i)/float(iNumImages) * 360.0f;
         m_pActiveRenderWin->SetCaptureRotationAngle(fAngle);
 
-        m_pActiveRenderWin->GetRenderer()->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
-        while(m_pActiveRenderWin->GetRenderer()->CheckForRedraw() &&
+        m_pActiveRenderWin->SetRendererTarget(AbstrRenderer::RT_CAPTURE);
+        while(m_pActiveRenderWin->RendererCheckForRedraw() &&
               !pleaseWait.Canceled()) {
-          const AbstrRenderer *ren = m_pActiveRenderWin->GetRenderer();
-          unsigned sframes = ren->GetCurrentSubFrameCount();
-          unsigned sframe = ren->GetWorkingSubFrame();
-          unsigned bricks =  ren->GetCurrentBrickCount();
-          unsigned brick =  ren->GetWorkingBrick();
-          unsigned lod = ren->GetMinLODIndex();
+          unsigned sframes = m_pActiveRenderWin->GetCurrentSubFrameCount();
+          unsigned sframe = m_pActiveRenderWin->GetWorkingSubFrame();
+          unsigned bricks =  m_pActiveRenderWin->GetCurrentBrickCount();
+          unsigned brick =  m_pActiveRenderWin->GetWorkingBrick();
+          unsigned lod = m_pActiveRenderWin->GetMinLODIndex();
           SetRenderProgressAnUpdateInfo(sframes, sframe, bricks, brick, lod,
                                         m_pActiveRenderWin);
           QCoreApplication::processEvents();
@@ -353,7 +352,7 @@ void MainWindow::CaptureRotation() {
     m_pRedrawTimer->start(IV3D_TIMER_INTERVAL);
     pleaseWait.close();
     pleaseWait.DetachLabel();
-    m_pActiveRenderWin->GetRenderer()->ScheduleCompleteRedraw();  // to make sure front and backbuffer are valid
+    m_pActiveRenderWin->ScheduleCompleteRedraw();  // to make sure front and backbuffer are valid
   }
 }
 

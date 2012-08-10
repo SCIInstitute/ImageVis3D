@@ -414,6 +414,41 @@ void RenderWindow::SetLODLimits(const UINTVECTOR2& vLODLimits) {
   ss->cexec(m_LuaAbstrRenderer.fqName() + ".setLODLimits", vLODLimits);
 }
 
+uint64_t RenderWindow::GetCurrentSubFrameCount() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return static_cast<unsigned int>(ss->cexecRet<uint64_t>(
+          rn + ".getCurrentSubFrameCount"));
+}
+
+uint32_t RenderWindow::GetWorkingSubFrame() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return static_cast<unsigned int>(ss->cexecRet<uint32_t>(
+          rn + ".getWorkingSubFrame"));
+}
+
+uint32_t RenderWindow::GetCurrentBrickCount() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return static_cast<unsigned int>(ss->cexecRet<uint32_t>(
+          rn + ".getCurrentBrickCount"));
+}
+
+uint32_t RenderWindow::GetWorkingBrick() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return static_cast<unsigned int>(ss->cexecRet<uint32_t>(
+          rn + ".getWorkingBrick"));
+}
+
+uint64_t RenderWindow::GetMinLODIndex() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return static_cast<unsigned int>(ss->cexecRet<uint64_t>(
+          rn + ".getMinLODIndex"));
+}
+
 bool RenderWindow::IsRendererValid() {
   return m_bRenderSubsysOK && m_LuaAbstrRenderer.isValid(
       m_MasterController.LuaScript());
@@ -1929,23 +1964,11 @@ void RenderWindow::PaintRenderer()
     }
 
     if (GetQtWidget()->isActiveWindow()) {
-      unsigned int iLevelCount = 
-          static_cast<unsigned int>(ss->cexecRet<uint64_t>(
-                  rn + ".getCurrentSubFrameCount"));
-      unsigned int iWorkingLevelCount = 
-          static_cast<unsigned int>(ss->cexecRet<uint32_t>(
-                  rn + ".getWorkingSubFrame"));
-
-      unsigned int iBrickCount = 
-          static_cast<unsigned int>(ss->cexecRet<uint32_t>(
-                  rn + ".getCurrentBrickCount"));
-      unsigned int iWorkingBrick = 
-          static_cast<unsigned int>(ss->cexecRet<uint32_t>(
-                  rn + ".getWorkingBrick"));
-
-      unsigned int iMinLODIndex = 
-          static_cast<unsigned int>(ss->cexecRet<uint64_t>(
-                  rn + ".getMinLODIndex"));
+      unsigned int iLevelCount = GetCurrentSubFrameCount();
+      unsigned int iWorkingLevelCount = GetWorkingSubFrame();
+      unsigned int iBrickCount = GetCurrentBrickCount();
+      unsigned int iWorkingBrick = GetWorkingBrick();
+      unsigned int iMinLODIndex = GetMinLODIndex();
 
       m_MainWindow->SetRenderProgressAnUpdateInfo(iLevelCount,
         iWorkingLevelCount, iBrickCount, iWorkingBrick, iMinLODIndex, this);
