@@ -300,12 +300,13 @@ void MainWindow::Transfer2DLoad() {
   QSettings settings;
   QString strLastDir;
 
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+
   // First try to grab the directory from the currently-opened file.
   if(m_pActiveRenderWin) {
-    const FileBackedDataset& ds = dynamic_cast<const FileBackedDataset&>(
-      m_pActiveRenderWin->GetRenderer()->GetDataset()
-    );
-    strLastDir = QString(SysTools::GetPath(ds.Filename()).c_str());
+    LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+    strLastDir = QString(SysTools::GetPath(
+            ss->cexecRet<string>(ds.fqName() + ".fullpath")).c_str());
   }
 
   // if that didn't work, fall back on our previously saved path.
@@ -335,14 +336,14 @@ void MainWindow::Transfer2DSave() {
   QString strLastDir="";
   std::string defaultFilename;
 
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+
   // First try to grab the directory from the currently-opened file.
   if(m_pActiveRenderWin) {
-    const FileBackedDataset& ds = dynamic_cast<const FileBackedDataset&>(
-      m_pActiveRenderWin->GetRenderer()->GetDataset()
-    );
-    strLastDir = QString(SysTools::GetPath(ds.Filename()).c_str());
-
-    defaultFilename = SysTools::ChangeExt(ds.Filename(), "2dt");
+    LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+    string dsFullpath = ss->cexecRet<string>(ds.fqName() + ".fullpath");
+    strLastDir = QString(SysTools::GetPath(dsFullpath).c_str());
+    defaultFilename = SysTools::ChangeExt(dsFullpath, "2dt");
   }
 
   // if that didn't work, fall back on our previously saved path.
