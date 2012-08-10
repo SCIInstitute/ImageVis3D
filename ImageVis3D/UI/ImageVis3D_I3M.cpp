@@ -179,7 +179,7 @@ void MainWindow::TransferToI3M() {
                "into the given directory.");
     }
 
-    const std::vector<Mesh*>& meshes = currentDataset->GetMeshes();
+    const std::vector<std::shared_ptr<Mesh> > meshes = currentDataset->GetMeshes();
     string filenameOnly = SysTools::RemoveExt(SysTools::GetFilename(currentDataset->Filename()));
     for (size_t i = 0;i<meshes.size();i++) {
       pleaseWait.SetText("Exporting Meshes ...");

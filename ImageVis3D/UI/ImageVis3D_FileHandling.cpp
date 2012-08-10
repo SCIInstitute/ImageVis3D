@@ -164,14 +164,16 @@ void MainWindow::ExportGeometry() {
 
 bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
   if (!m_pActiveRenderWin) return false;
-  const UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
-  if (!currentDataset) return false;
+  LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  if (!ds.isValid(ss)) return false;
 
   PleaseWaitDialog pleaseWait(this);
   pleaseWait.SetText("Exporting Mesh...");
   pleaseWait.AttachLabel(&m_MasterController);
 
-  const std::vector<Mesh*>& meshes = currentDataset->GetMeshes();
+  std::vector<shared_ptr<Mesh> > meshes = 
+      ss->cexecRet<std::vector<shared_ptr<Mesh> > >(ds.fqName() + "getMeshes");
   return m_MasterController.IOMan()->ExportMesh(meshes[i], strFilename);
 }
 

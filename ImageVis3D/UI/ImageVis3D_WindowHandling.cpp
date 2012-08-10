@@ -1013,7 +1013,7 @@ void MainWindow::ApplyMatrixMeshTransform(ScaleAndBiasDlg* sender) {
 
 void MainWindow::RestoreMeshTransform(ScaleAndBiasDlg* sender) {
   if (!m_pActiveRenderWin || !sender) return;
-  const Mesh* m = m_pActiveRenderWin->GetRenderer()->GetDataset().GetMeshes()[sender->m_index];
+  const shared_ptr<Mesh> m = m_pActiveRenderWin->GetRenderer()->GetDataset().GetMeshes()[sender->m_index];
   m_pActiveRenderWin->GetRenderer()->ReloadMesh(sender->m_index, m);
   m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
 }
