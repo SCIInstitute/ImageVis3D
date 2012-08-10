@@ -118,19 +118,24 @@ void RenderWindowDX::RenderSeparatingLines() {
 
 void RenderWindowDX::InitializeRenderer()
 {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string rn = m_LuaAbstrRenderer.fqName();
+
   if (!m_LuaAbstrRenderer.isValid(ss))
   {
     m_bRenderSubsysOK = false;
   }
   else
   {
-    m_bRenderSubsysOK = dynamic_cast<DXRenderer*>(m_Renderer)->Initialize();
+    m_bRenderSubsysOK = ss->cexecRet<bool>(rn + ".initializeDirectX");
   }
 
   if (!m_bRenderSubsysOK) {
-    m_Renderer->Cleanup();
-    m_MasterController.ReleaseVolumeRenderer(m_Renderer);
-    m_Renderer = NULL;
+    if (m_LuaAbstrRenderer.isValid(ss)) {
+      ss->cexec(rn + ".cleanup");
+    }
+    m_MasterController.ReleaseVolumeRenderer(m_LuaAbstrRenderer);
+    m_LuaAbstrRenderer.invalidate();
   }
 }
 
