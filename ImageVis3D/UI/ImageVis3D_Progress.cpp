@@ -102,7 +102,9 @@ void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
   if (pRenderWin && pRenderWin->IsRenderSubsysOK()) {
     LuaClassInstance ds = pRenderWin->GetRendererDataset();
     UINT64VECTOR3 vSize = 
-      ss->cexecRet<UINT64VECTOR3>(ds.fqName() + ".getDomainSize", iMinLODIndex);
+      ss->cexecRet<UINT64VECTOR3>(ds.fqName() + ".getDomainSize", 
+                                  static_cast<size_t>(iMinLODIndex), 
+                                  (size_t)0);
     QString strSize = tr("%1 x %2 x %3").arg(vSize.x).arg(vSize.y).arg(vSize.z);
     if (strSize != lineEdit_SizeForView->text()) {
       lineEdit_SizeForView->setText(strSize);
