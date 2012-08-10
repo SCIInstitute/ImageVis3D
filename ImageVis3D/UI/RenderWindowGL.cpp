@@ -283,14 +283,21 @@ void RenderWindowGL::InitializeRenderer()
   #ifdef DETECTED_OS_LINUX
       ss->cexec(rn + "addShaderPath", "/usr/share/imagevis3d/shaders");
   #endif
-      m_bRenderSubsysOK = m_Renderer->Initialize(GLContextID::Current(0));
+      // Lua scripting will handle the shared_ptr appropriately. The 
+      // initialize lua function has been marked as provenance exempt, and as
+      // such, a shared_ptr reference is not maintained inside of the
+      // provenance system.
+      m_bRenderSubsysOK = 
+          ss->cexecRet<bool>(rn + ".initialize", GLContextID::Current(0));
     }
   }
 
   if (!m_bRenderSubsysOK) {
-    if (m_Renderer) m_Renderer->Cleanup();
-    m_MasterController.ReleaseVolumeRenderer(m_Renderer);
-    m_Renderer = NULL;
+    if (m_LuaAbstrRenderer.isValid(ss)) {
+      ss->cexec(rn + ".cleanup");
+    }
+    m_MasterController.ReleaseVolumeRenderer(m_LuaAbstrRenderer);
+    m_LuaAbstrRenderer.invalidate();
   }
 
   if (bFirstTime) { 
