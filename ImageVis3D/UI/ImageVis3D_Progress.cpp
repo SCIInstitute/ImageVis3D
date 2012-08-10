@@ -97,20 +97,22 @@ void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
 
   }
 
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+
   if (pRenderWin && pRenderWin->IsRenderSubsysOK()) {
-    AbstrRenderer* ren = pRenderWin->GetRenderer();
-    Dataset& dataset = ren->GetDataset();
-    UINT64VECTOR3 vSize = dataset.GetDomainSize(iMinLODIndex);
+    LuaClassInstance ds = pRenderWin->GetRendererDataset();
+    UINT64VECTOR3 vSize = 
+      ss->cexecRet<UINT64VECTOR3>(ds.fqName() + ".getDomainSize", iMinLODIndex);
     QString strSize = tr("%1 x %2 x %3").arg(vSize.x).arg(vSize.y).arg(vSize.z);
     if (strSize != lineEdit_SizeForView->text()) {
       lineEdit_SizeForView->setText(strSize);
       lineEdit_SizeForView->update();
     }
 
-    QString strLODLevel = tr("%1").arg(pRenderWin->GetRenderer()->
-                                                   GetDataset().
-                                                   GetLODLevelCount() -
-                                                    iMinLODIndex);
+    uint64_t levelCount = 
+        ss->cexecRet<uint64_t>(ds.fqName() + ".getLODLevelCount");
+
+    QString strLODLevel = tr("%1").arg(levelCount - iMinLODIndex);
     if (strLODLevel != lineEdit_LODLevelForCurrentView->text()) {
       lineEdit_LODLevelForCurrentView->setText(strLODLevel);
       lineEdit_LODLevelForCurrentView->update();
