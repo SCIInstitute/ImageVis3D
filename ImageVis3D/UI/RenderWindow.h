@@ -258,6 +258,8 @@ class RenderWindow
     uint32_t GetCurrentBrickCount();
     uint32_t GetWorkingBrick();
     uint64_t GetMinLODIndex();
+    void SetDatasetIsInvalid(bool datasetIsInvalid);
+    void RemoveMeshData(size_t index);
     void SetRendererTarget(tuvok::AbstrRenderer::ERendererTarget targ);
 
   public: // public slots:

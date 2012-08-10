@@ -449,6 +449,18 @@ uint64_t RenderWindow::GetMinLODIndex() {
           rn + ".getMinLODIndex"));
 }
 
+void RenderWindow::SetDatasetIsInvalid(bool datasetIsInvalid) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setDatasetIsInvalid", datasetIsInvalid);
+}
+
+void RenderWindow::RemoveMeshData(size_t index) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".removeMeshData", index);
+}
+
 bool RenderWindow::IsRendererValid() {
   return m_bRenderSubsysOK && m_LuaAbstrRenderer.isValid(
       m_MasterController.LuaScript());

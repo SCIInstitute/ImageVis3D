@@ -60,6 +60,9 @@
 #include "MergeDlg.h"
 #include "PleaseWait.h"
 
+#include "LuaScripting/TuvokSpecific/LuaDatasetProxy.h"
+#include "LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
+
 using namespace std;
 using namespace tuvok;
 
@@ -166,7 +169,10 @@ bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
   if (!m_pActiveRenderWin) return false;
   LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  if (!ds.isValid(ss)) return false;
+  if (!ds.isValid(ss) || 
+      (ss->cexecRet<LuaDatasetProxy::DatasetType>(ds.fqName() + ".getDSType") !=
+       LuaDatasetProxy::UVF) )
+    return false;
 
   PleaseWaitDialog pleaseWait(this);
   pleaseWait.SetText("Exporting Mesh...");
@@ -179,9 +185,12 @@ bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
 
 void MainWindow::RemoveGeometry() {
   if (!m_pActiveRenderWin) return;
-  UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
-  if (!currentDataset) return;
-
+  LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  if (!ds.isValid(ss) || 
+      (ss->cexecRet<LuaDatasetProxy::DatasetType>(ds.fqName() + ".getDSType") !=
+       LuaDatasetProxy::UVF) )
+    return;
 
   PleaseWaitDialog pleaseWait(this);
   pleaseWait.SetText("Removing Mesh from UVF file...");
@@ -194,21 +203,21 @@ void MainWindow::RemoveGeometry() {
     return;
   }
 
-  m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
+  m_pActiveRenderWin->SetDatasetIsInvalid(true);
 
-  if (!currentDataset->RemoveMesh(size_t(iCurrent-1))) {
+  if (!ss->cexecRet<bool>(ds.fqName() + ".removeMesh", size_t(iCurrent-1))) {
     pleaseWait.close();
     ShowCriticalDialog("Mesh Removal Failed.",
              "Could not remove mesh from the UVF file, "
              "maybe the file is write protected? For details please "
              "check the debug log ('Help | Debug Window').");
   } else {
-    m_pActiveRenderWin->GetRenderer()->RemoveMeshData(size_t(iCurrent-1));
+    m_pActiveRenderWin->RemoveMeshData(size_t(iCurrent-1));
     UpdateExplorerView(true);
     pleaseWait.close();
   }
 
-    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
+  m_pActiveRenderWin->SetDatasetIsInvalid(false);
 }
 
 void MainWindow::AddGeometry(std::string filename) {
