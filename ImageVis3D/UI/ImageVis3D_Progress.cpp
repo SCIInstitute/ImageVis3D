@@ -122,8 +122,8 @@ void MainWindow::SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
 
 void MainWindow::MinLODLimitChanged() {
   if (m_pActiveRenderWin) {
-    m_pActiveRenderWin->GetRenderer()->SetLODLimits(UINTVECTOR2(horizontalSlider_minLODLimit->value(),
-                                                                horizontalSlider_maxLODLimit->value()));
+    m_pActiveRenderWin->SetLODLimits(UINTVECTOR2(horizontalSlider_minLODLimit->value(),
+                                                 horizontalSlider_maxLODLimit->value()));
     UpdateMinMaxLODLimitLabel();
   }
 }

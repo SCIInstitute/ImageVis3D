@@ -363,11 +363,15 @@ FLOATVECTOR3 RenderWindow::GetBackgroundColor(int i) {
 }
 
 void RenderWindow::SetBackgroundColors(FLOATVECTOR3 vTopColor,
-                                       FLOATVECTOR3 vBotColor)
-{
+                                       FLOATVECTOR3 vBotColor) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->cexec(m_LuaAbstrRenderer.fqName() + ".setBGColors",
             vTopColor, vBotColor);
+}
+
+void RenderWindow::SetLODLimits(const UINTVECTOR2& vLODLimits) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->cexec(m_LuaAbstrRenderer.fqName() + ".setLODLimits", vLODLimits);
 }
 
 RenderWindow::RegionSplitter

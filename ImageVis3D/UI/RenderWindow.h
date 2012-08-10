@@ -241,6 +241,7 @@ class RenderWindow
     FLOATVECTOR3 GetBackgroundColor(int i);
     void SetBackgroundColors(FLOATVECTOR3 vTopColor,
                              FLOATVECTOR3 vBotColor);
+    void SetLODLimits(const UINTVECTOR2& vLODLimits);
     void SetRendererTarget(tuvok::AbstrRenderer::ERendererTarget targ);
 
   public: // public slots:
