@@ -1819,10 +1819,12 @@ void RenderWindow::ResizeRenderer(int width, int height)
 
   /// @fixme Create a setMaxCoord function for the region.
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+
   LuaClassInstance firstRenRegion = GetActiveRenderRegions()[0];
   RenderRegion* regPtr = firstRenRegion.getRawPointer<RenderRegion>(ss);
 
-  if (m_Renderer != NULL && m_bRenderSubsysOK) {
+  if (m_LuaAbstrRenderer.isValid(ss) && m_bRenderSubsysOK) {
     switch (GetViewMode()) {
       case VM_SINGLE :
         regPtr->maxCoord = m_vWinDim;
@@ -1833,7 +1835,7 @@ void RenderWindow::ResizeRenderer(int width, int height)
       default: break; //nothing to do...
     };
 
-    m_Renderer->Resize(UINTVECTOR2(width, height));
+    ss->cexec(rn + ".resize", UINTVECTOR2(width, height));
     SetupArcBall();
     std::ostringstream wsize;
     wsize << m_vWinDim[0] << " " << m_vWinDim[1] << std::ends;
