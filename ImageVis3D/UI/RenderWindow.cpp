@@ -1880,13 +1880,23 @@ void RenderWindow::PaintRenderer()
     }
 
     if (GetQtWidget()->isActiveWindow()) {
-      unsigned int iLevelCount        = m_Renderer->GetCurrentSubFrameCount();
-      unsigned int iWorkingLevelCount = m_Renderer->GetWorkingSubFrame();
+      unsigned int iLevelCount = 
+          static_cast<unsigned int>(ss->cexecRet<uint64_t>(
+                  rn + ".getCurrentSubFrameCount"));
+      unsigned int iWorkingLevelCount = 
+          static_cast<unsigned int>(ss->cexecRet<uint32_t>(
+                  rn + ".getWorkingSubFrame"));
 
-      unsigned int iBrickCount        = m_Renderer->GetCurrentBrickCount();
-      unsigned int iWorkingBrick      = m_Renderer->GetWorkingBrick();
+      unsigned int iBrickCount = 
+          static_cast<unsigned int>(ss->cexecRet<uint32_t>(
+                  rn + ".getCurrentBrickCount"));
+      unsigned int iWorkingBrick = 
+          static_cast<unsigned int>(ss->cexecRet<uint32_t>(
+                  rn + ".getWorkingBrick"));
 
-      unsigned int iMinLODIndex       = m_Renderer->GetMinLODIndex();
+      unsigned int iMinLODIndex = 
+          static_cast<unsigned int>(ss->cexecRet<uint64_t>(
+                  rn + ".getMinLODIndex"));
 
       m_MainWindow->SetRenderProgressAnUpdateInfo(iLevelCount,
         iWorkingLevelCount, iBrickCount, iWorkingBrick, iMinLODIndex, this);
