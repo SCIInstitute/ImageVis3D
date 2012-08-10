@@ -74,13 +74,19 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
       bDisableBorder, false, false);
   m_Renderer = m_LuaAbstrRenderer.getRawPointer<AbstrRenderer>(ss);
 
+  string rn = m_LuaAbstrRenderer.fqName();
+
   // so far we are not rendering anything previous to this renderer 
   // so we can disable the depth-buffer to offscreen copy operations
-  m_Renderer->SetConsiderPreviousDepthbuffer(false);
+  ss->cexec(rn + ".setConsiderPrevDepthBuffer", false);
 
-  if (m_Renderer) {
-    ((DXRenderer*)m_Renderer)->SetWinID(parent->winId());  // hand over the handle of the window we are sitting in not the widget inside the window
-    if (m_Renderer->LoadDataset(m_strDataset.toStdString())) {
+  if (m_LuaAbstrRenderer.isValid(ss)) {
+    // hand over the handle of the window we are sitting in not the widget 
+    // inside the window
+    // setWinID is a function that has been specifically registered by
+    // DXRenderer. HWND type is handled as a special case (see DXRenderer.h).
+    ss->cexec(rn + ".setWinID", parent->winId());
+    if (!ss->cexecRet<bool>(rn + ".loadDataset", m_strDataset.toStdString())) {
       InitializeRenderer();
       Initialize();
 
@@ -112,10 +118,14 @@ void RenderWindowDX::RenderSeparatingLines() {
 
 void RenderWindowDX::InitializeRenderer()
 {
-  if (m_Renderer == NULL)
+  if (!m_LuaAbstrRenderer.isValid(ss))
+  {
     m_bRenderSubsysOK = false;
+  }
   else
+  {
     m_bRenderSubsysOK = dynamic_cast<DXRenderer*>(m_Renderer)->Initialize();
+  }
 
   if (!m_bRenderSubsysOK) {
     m_Renderer->Cleanup();
