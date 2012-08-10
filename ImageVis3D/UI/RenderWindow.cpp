@@ -1747,7 +1747,8 @@ void RenderWindow::SetCVFocusPos(LuaClassInstance region,
                                  bool bPropagate) {
   /// @fixme Expose SetCVFocusPos through the scripting system.
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  m_Renderer->SetCVFocusPos(*region.getRawPointer<RenderRegion>(ss), viMousePos);
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setCVFocusPos", region, viMousePos);
   if (bPropagate) {
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCVFocusPos(region, viMousePos, false);
