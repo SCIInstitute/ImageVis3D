@@ -623,9 +623,10 @@ void MainWindow::SetTimestep(int t)
   if(rw == NULL) { return; }
 
   rw->SetTimestep(static_cast<size_t>(t));
+  LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
   int iMaxVal = static_cast<int>(
-    m_pActiveRenderWin->GetRenderer()->GetDataset().GetNumberOfTimesteps()
-  );
+      m_MasterController.LuaScript()->cexecRet<uint64_t>(ds.fqName() + 
+                                                     ".getNumberOfTimesteps"));
   UpdateTimestepLabel(int(t), iMaxVal);
 }
 
@@ -828,7 +829,7 @@ void MainWindow::PickLightColor() {
       return;
 
     m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular,vLightDir);
-    m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse,
+    m_pActiveRenderWin->SetLightColors(cAmbient, cDiffuse,
                                                  cSpecular, vLightDir);
   }
 }
@@ -842,8 +843,8 @@ void MainWindow::LightMoved() {
   FLOATVECTOR4 cSpecular = m_pQLightPreview->GetSpecular();
   FLOATVECTOR3 vLightDir = m_pQLightPreview->GetLightDir();
 
-  m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse,
-                                               cSpecular, vLightDir);
+  m_pActiveRenderWin->SetLightColors(cAmbient, cDiffuse,
+                                     cSpecular, vLightDir);
 }
 
 void MainWindow::ChangeLightColors() {
@@ -859,21 +860,21 @@ void MainWindow::ChangeLightColors() {
   cSpecular[3] = horizontalSlider_specularIntensity->value()/100.0f;
 
   m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular,vLightDir);
-  m_pActiveRenderWin->GetRenderer()->SetColors(cAmbient, cDiffuse,
-                                               cSpecular, vLightDir);
+  m_pActiveRenderWin->SetLightColors(cAmbient, cDiffuse,
+                                     cSpecular, vLightDir);
 }
 
 void MainWindow::SetTagVolume() {
   if (!m_pActiveRenderWin) return;
   if (checkBox_TagVolume->isChecked())
-    m_pActiveRenderWin->GetRenderer()->SetInterpolant(tuvok::NearestNeighbor);
+    m_pActiveRenderWin->SetInterpolant(tuvok::NearestNeighbor);
   else
-    m_pActiveRenderWin->GetRenderer()->SetInterpolant(tuvok::Linear);
+    m_pActiveRenderWin->SetInterpolant(tuvok::Linear);
 }
 
 void MainWindow::UpdateInterpolant() {
   if (!m_pActiveRenderWin) return;
-  checkBox_TagVolume->setChecked( m_pActiveRenderWin->GetRenderer()->GetInterpolant() == tuvok::NearestNeighbor);
+  checkBox_TagVolume->setChecked( m_pActiveRenderWin->GetInterpolant() == tuvok::NearestNeighbor);
 }
 
 void MainWindow::UpdateTFScaleSliders() {
@@ -889,11 +890,11 @@ void MainWindow::UpdateColorWidget() {
   FLOATVECTOR4 cSpecular(1,1,1,1);
   FLOATVECTOR3 vLightDir(0,0,-1);
 
-  if (m_pActiveRenderWin && m_pActiveRenderWin->GetRenderer()) {
-    cAmbient  = m_pActiveRenderWin->GetRenderer()->GetAmbient();
-    cDiffuse  = m_pActiveRenderWin->GetRenderer()->GetDiffuse();
-    cSpecular = m_pActiveRenderWin->GetRenderer()->GetSpecular();
-    vLightDir = m_pActiveRenderWin->GetRenderer()->GetLightDir();
+  if (m_pActiveRenderWin && m_pActiveRenderWin->IsRendererValid()) {
+    cAmbient  = m_pActiveRenderWin->GetAmbient();
+    cDiffuse  = m_pActiveRenderWin->GetDiffuse();
+    cSpecular = m_pActiveRenderWin->GetSpecular();
+    vLightDir = m_pActiveRenderWin->GetLightDir();
   }
 
   m_pQLightPreview->SetData(cAmbient,cDiffuse,cSpecular,vLightDir);

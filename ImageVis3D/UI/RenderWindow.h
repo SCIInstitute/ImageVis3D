@@ -73,6 +73,7 @@ class RenderWindow
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
     tuvok::AbstrRenderer* GetRenderer() {return m_Renderer;}
+    bool IsRendererValid();
     void CheckForRedraw();
     void SetRendermode(tuvok::AbstrRenderer::ERenderMode eRenderMode,
                        bool bPropagate=true);
@@ -80,6 +81,16 @@ class RenderWindow
 
     void SetColors(FLOATVECTOR3 vTopColor, FLOATVECTOR3 vBotColor,
                    FLOATVECTOR4 vTextColor);
+    void SetLightColors(const FLOATVECTOR4& ambient,
+                        const FLOATVECTOR4& diffuse,
+                        const FLOATVECTOR4& specular,
+                        const FLOATVECTOR3& lightDir);
+    FLOATVECTOR4 GetAmbient();
+    FLOATVECTOR4 GetDiffuse();
+    FLOATVECTOR4 GetSpecular();
+    FLOATVECTOR3 GetLightDir();
+    void SetInterpolant(tuvok::Interpolant interp);
+    tuvok::Interpolant GetInterpolant();
     virtual void SetBlendPrecision(tuvok::AbstrRenderer::EBlendPrecision
                                      eBlendPrecisionMode);
     void SetPerfMeasures(unsigned int iMinFramerate,

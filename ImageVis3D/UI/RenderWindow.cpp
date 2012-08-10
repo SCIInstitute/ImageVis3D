@@ -369,9 +369,54 @@ void RenderWindow::SetBackgroundColors(FLOATVECTOR3 vTopColor,
             vTopColor, vBotColor);
 }
 
+void RenderWindow::SetLightColors(const FLOATVECTOR4& ambient,
+                                  const FLOATVECTOR4& diffuse,
+                                  const FLOATVECTOR4& specular,
+                                  const FLOATVECTOR3& lightDir) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->cexec(m_LuaAbstrRenderer.fqName() + ".setLightColors",
+            ambient, diffuse, specular, lightDir);
+}
+
+FLOATVECTOR4 RenderWindow::GetAmbient() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<FLOATVECTOR4>(m_LuaAbstrRenderer.fqName()+".getAmbient");
+}
+
+FLOATVECTOR4 RenderWindow::GetDiffuse() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<FLOATVECTOR4>(m_LuaAbstrRenderer.fqName()+".getDiffuse");
+}
+
+FLOATVECTOR4 RenderWindow::GetSpecular() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<FLOATVECTOR4>(m_LuaAbstrRenderer.fqName()+".getSpecular");
+}
+
+FLOATVECTOR3 RenderWindow::GetLightDir() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<FLOATVECTOR3>(m_LuaAbstrRenderer.fqName()+".getLightDir");
+}
+
+void RenderWindow::SetInterpolant(Interpolant interp) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->cexec(m_LuaAbstrRenderer.fqName() + ".setInterpolant", interp);
+}
+
+Interpolant RenderWindow::GetInterpolant() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<Interpolant>(m_LuaAbstrRenderer.fqName() 
+                                   + ".getInterpolant");
+}
+
 void RenderWindow::SetLODLimits(const UINTVECTOR2& vLODLimits) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->cexec(m_LuaAbstrRenderer.fqName() + ".setLODLimits", vLODLimits);
+}
+
+bool RenderWindow::IsRendererValid() {
+  return m_bRenderSubsysOK && m_LuaAbstrRenderer.isValid(
+      m_MasterController.LuaScript());
 }
 
 RenderWindow::RegionSplitter
