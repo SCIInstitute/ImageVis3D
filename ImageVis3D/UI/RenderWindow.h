@@ -233,7 +233,7 @@ class RenderWindow
     FLOATMATRIX4 GetTranslation(tuvok::LuaClassInstance region);
     tuvok::AbstrRenderer::ERendererTarget GetRendererTarget();
     bool GetClearViewEnabled();
-    tuvok::LuaClassInstance GetRendererDataset();
+    tuvok::LuaClassInstance GetRendererDataset() const;
     void SetTimeSlice(uint32_t);
     void ScheduleCompleteRedraw();
     bool RendererCheckForRedraw();

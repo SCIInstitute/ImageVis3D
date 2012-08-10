@@ -329,7 +329,7 @@ bool RenderWindow::GetClearViewEnabled() {
       m_LuaAbstrRenderer.fqName() + ".getClearViewEnabled");
 }
 
-LuaClassInstance RenderWindow::GetRendererDataset() {
+LuaClassInstance RenderWindow::GetRendererDataset() const {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<LuaClassInstance>(m_LuaAbstrRenderer.fqName() +
                                         ".getDataset");
@@ -1745,7 +1745,6 @@ void RenderWindow::SetCV(bool bDoClearView, bool bPropagate) {
 void RenderWindow::SetCVFocusPos(LuaClassInstance region,
                                  const INTVECTOR2& viMousePos,
                                  bool bPropagate) {
-  /// @fixme Expose SetCVFocusPos through the scripting system.
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setCVFocusPos", region, viMousePos);
@@ -1758,7 +1757,9 @@ void RenderWindow::SetCVFocusPos(LuaClassInstance region,
 
 void RenderWindow::SetTimestep(size_t t, bool propagate)
 {
-  m_Renderer->Timestep(t);
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setTimestep", t);
   if(propagate) {
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetTimestep(t, false);
@@ -1778,7 +1779,10 @@ void RenderWindow::SetAbsoluteViewLock(bool bAbsoluteViewLock) {
 }
 
 pair<double,double> RenderWindow::GetDynamicRange() const {
-  pair<double,double> range = m_Renderer->GetDataset().GetRange();
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  LuaClassInstance dataset = GetRendererDataset();
+  pair<double,double> range = ss->cexecRet<pair<double,double> >(
+      dataset.fqName() + ".getRange");
 
   // Old UVFs lack a maxmin data block, && will say the min > the max.
   if (range.first > range.second)
