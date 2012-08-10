@@ -95,11 +95,6 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
 bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo, 
                                     bool bDownSampleTo8Bits,
                                     bool bDisableBorder) {
-//  m_Renderer = m_MasterController.RequestNewVolumeRenderer(
-//                  m_eRendererType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
-//                  bDisableBorder, m_bNoRCClipplanes, false
-//               );
-
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   m_LuaAbstrRenderer = ss->cexecRet<LuaClassInstance>(
       "tuvok.renderer.new",
@@ -107,11 +102,15 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
       bDisableBorder, m_bNoRCClipplanes, false);
   m_Renderer = m_LuaAbstrRenderer.getRawPointer<AbstrRenderer>(ss);
 
+  string rn = m_LuaAbstrRenderer.fqName();
+
   // so far we are not rendering anything previous to this renderer 
   // so we can disable the depth-buffer to offscreen copy operations
-  m_Renderer->SetConsiderPreviousDepthbuffer(false);
+  ss->cexec(rn + ".setConsiderPrevDepthBuffer", false);
 
-  if (!m_Renderer->LoadDataset(m_strDataset.toStdString())) {
+  /// @todo Check to see whether undo/redo breaks because of this lua call.
+  ///       Might need to disable provenance for the call.
+  if (!ss->cexecRet<bool>(rn + ".loadDataset", m_strDataset.toStdString())) {
     m_bRenderSubsysOK = false;
     return false;
   }
