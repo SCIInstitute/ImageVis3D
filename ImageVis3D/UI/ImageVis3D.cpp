@@ -64,6 +64,8 @@
 #include "../Tuvok/Basics/MathTools.h"
 #include "../IO/DialogConverter.h"
 
+#include "LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
+
 using namespace std;
 
 

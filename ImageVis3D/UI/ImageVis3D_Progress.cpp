@@ -37,6 +37,7 @@
 
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
+#include "LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 
 using namespace std;
 
