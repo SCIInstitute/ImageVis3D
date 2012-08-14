@@ -86,8 +86,15 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     SettingsDlg settingsDlg(m_pActiveRenderWin != NULL, m_MasterController, this);
 
     settings.beginGroup("Memory");
-    uint64_t iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
-    uint64_t iMaxCPU = std::min<uint64_t>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+    uint64_t iMaxGPUmb = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
+    uint64_t iMaxCPUmb = std::min<uint64_t>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+    // All GPU and CPU memory settings are in megabytes. Hack to resolve 64-bit
+    // QSettings serialization issues on Mac OS X.
+    // QVariant was being set correctly, but when serialized through QSettings,
+    // QVariant would lose its type ulonglong (5) destroying the 4 higher order
+    // bytes in the process.
+    uint64_t iMaxGPU = iMaxGPUmb * 1000000;
+    uint64_t iMaxCPU = iMaxCPUmb * 1000000;
 
     bool bOverrideDetMax = settings.value("OverrideDetectedMaxima", false).toBool();
     unsigned int iOverMaxCPU = settings.value("OverriddenCPUMax", 0).toUInt();
@@ -179,8 +186,13 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
       // save settings
       settings.beginGroup("Memory");
-      settings.setValue("MaxGPUMem", static_cast<qulonglong>(settingsDlg.GetGPUMem()));
-      settings.setValue("MaxCPUMem", static_cast<qulonglong>(settingsDlg.GetCPUMem()));
+      // We add 500000 to round the value to the nearest megabyte.
+      // If this is not done, it appears that we lose 1 MB when reopening the
+      // preferences dialog after making modifications to the memory allocations
+      settings.setValue("MaxGPUMem", static_cast<qulonglong>(
+              (settingsDlg.GetGPUMem() + 500000) / 1000000));
+      settings.setValue("MaxCPUMem", static_cast<qulonglong>(
+              (settingsDlg.GetCPUMem() + 500000) / 1000000));
 
       settings.setValue("OverrideDetectedMaxima", settingsDlg.OverrideMaxMem());
       settings.setValue("OverriddenCPUMax", settingsDlg.GetMaxCPUMem());
@@ -325,9 +337,11 @@ void MainWindow::ApplySettings() {
   settings.endGroup();
 
   settings.beginGroup("Memory");
-  uint64_t iMaxCPU = std::min<uint64_t>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
-  uint64_t iMaxGPU = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
+  uint64_t iMaxCPUmb = std::min<uint64_t>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+  uint64_t iMaxGPUmb = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
   m_strTempDir = std::string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
+  uint64_t iMaxCPU = iMaxCPUmb * 1000000; // IEEE MB standard
+  uint64_t iMaxGPU = iMaxGPUmb * 1000000;
 
   uint64_t iMaxBrickSizeLog = MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize());
   uint64_t iMaxBrickSize = MathTools::Pow2((uint64_t)settings.value("MaxBricksize",  static_cast<qulonglong>(iMaxBrickSizeLog)).toUInt());
