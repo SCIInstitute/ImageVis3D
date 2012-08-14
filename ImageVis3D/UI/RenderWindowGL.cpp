@@ -281,7 +281,7 @@ void RenderWindowGL::InitializeRenderer()
       m_bRenderSubsysOK = false;
     else {
   #ifdef DETECTED_OS_LINUX
-      ss->cexec(rn + "addShaderPath", "/usr/share/imagevis3d/shaders");
+      ss->cexec(rn + ".addShaderPath", "/usr/share/imagevis3d/shaders");
   #endif
       // Lua scripting will handle the shared_ptr appropriately. The 
       // initialize lua function has been marked as provenance exempt, and as
