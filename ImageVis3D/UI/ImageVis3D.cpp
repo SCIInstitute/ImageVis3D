@@ -123,7 +123,8 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bFTPDeleteSource(true),
   m_bFTPFinished(true),
   m_bClipDisplay(true),
-  m_bClipLocked(false)
+  m_bClipLocked(false),
+  m_bIgnoreLoadDatasetFailure(false)
 {
   RegisterCalls(m_MasterController.ScriptEngine());
   RegisterLuaClasses();

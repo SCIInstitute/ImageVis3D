@@ -108,7 +108,10 @@ void MainWindow::LoadDataset() {
                      "notify the ImageVis3D developers.";
     try {
       if(!LoadDataset(files)) {
-        ShowCriticalDialog("Render window initialization failed.", rwe);
+        if(m_bIgnoreLoadDatasetFailure == false) {
+          ShowCriticalDialog("Render window initialization failed.", rwe);
+        }
+        m_bIgnoreLoadDatasetFailure = false;
       }
     } catch(const tuvok::Exception& e) {
       if(strlen(e.what()) > 0) {
@@ -325,13 +328,16 @@ void MainWindow::AddGeometry() {
 void MainWindow::LoadDataset(std::string strFilename) {
   try {
     if(!LoadDataset(QStringList(strFilename.c_str())) != 0) {
-      ShowCriticalDialog("Render window initialization failed.",
-        "Could not open a render window!  This normally "
-        "means ImageVis3D does not support your GPU.  Please"
-        " check the debug log ('Help | Debug Window') for "
-        "errors, and/or use 'Help | Report an Issue' to "
-        "notify the ImageVis3D developers."
-      );
+      if(m_bIgnoreLoadDatasetFailure == false) {
+        ShowCriticalDialog("Render window initialization failed.",
+          "Could not open a render window!  This normally "
+          "means ImageVis3D does not support your GPU.  Please"
+          " check the debug log ('Help | Debug Window') for "
+          "errors, and/or use 'Help | Report an Issue' to "
+          "notify the ImageVis3D developers."
+        );
+      }
+      m_bIgnoreLoadDatasetFailure = false;
     }
   } catch(const tuvok::io::DSParseFailed& ds) {
     std::ostringstream err;
@@ -620,7 +626,39 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
         "dataset so that it can be loaded?  Note that this operation can "
         "take as long as originally converting the data took!",
         QMessageBox::Yes, QMessageBox::No)) {
+      // m_bIgnoreLoadDatasetFailure is an ugly hack, but I can't see any other
+      // *good* options.
+      // 
+      // An alternative to m_bIgnoreLoadDatasetFailure is to throw a custom 
+      // exception which would include bNoUserInteraction's value, and catch  
+      // the exception in MainWindow::LoadDataset(std::string strFilename). 
+      // (and MainWindow::LoadDataset(), and MainWindow::OpenRecentFile).
+      // We would perform the rebricking upon catching the exception.
+      // This method seemed equally hacky so I opted for the smallest code 
+      // footprint and inserted this boolean flag. Also, we can use the flag
+      // when the user specifies 'no' on the dialog.
+      // It doesn't make much sense to tell the user that we failed to
+      // load the RenderWindow because they told us to not load it =P.
+      //
+      // The problem: if we reach here, we were in the process of creating
+      // a series of Lua classes to support a render window. Since we are no
+      // longer creating a viable render window (renderWin was deleted, and 
+      // RebrickDataset is creating new set of render windows), lua needs to be 
+      // notified and clean up any supporting classes.
+      //
+      // The only way to notify Lua is to do 1 of 2 things:
+      // 1) Return false from this function (behaving as if the requested 
+      //    dataset failed to load -- which it did).
+      // 2) Throw an exception and let lua capture and rethrow it.
+      //
+      // I opted for #1.
       RebrickDataset(filename, targetFilename, bNoUserInteraction);
+      m_bIgnoreLoadDatasetFailure = true;
+      return false;
+    }
+    else
+    {
+      m_bIgnoreLoadDatasetFailure = true;
       return false;
     }
   }

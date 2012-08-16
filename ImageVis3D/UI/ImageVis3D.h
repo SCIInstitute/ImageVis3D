@@ -544,6 +544,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool m_bClipDisplay;
     bool m_bClipLocked;
 
+    bool m_bIgnoreLoadDatasetFailure;
+
     friend class MergeDlg;
 };
 
