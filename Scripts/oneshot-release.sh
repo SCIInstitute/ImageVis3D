@@ -5,7 +5,11 @@
 IV3D_BUILD_TYPE="release"
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
-COVERAGE="-fprofile-arcs -ftest-coverage"
+if test `uname` != "Darwin" ; then
+  COVERAGE="-fprofile-arcs -ftest-coverage"
+else
+  COVERAGE=""
+fi
 CF="-Wall -Wextra -O2 ${COVERAGE}"
 CXF="-D_GLIBCXX_CONCEPT_CHECK -DQT_NODEBUG ${COVERAGE}"
 QLF=""
