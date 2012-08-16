@@ -505,7 +505,7 @@ void MainWindow::UpdateIsoValLabel(int iValue, int iMaxValue) {
 
 
 void MainWindow::SetFocusIsoValue(int iValue) {
-  int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second-1);
+  int iMaxSize = int(m_pActiveRenderWin->GetDynamicRange().second);
   if (m_pActiveRenderWin != NULL) {
     m_pActiveRenderWin->SetCVIsoValue(float(iValue));
   }

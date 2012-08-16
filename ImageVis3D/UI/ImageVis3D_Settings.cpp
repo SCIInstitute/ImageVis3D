@@ -258,11 +258,10 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
 
       // as the "avoid compositing" setting may enable/disable the ability to do clearview
       // we must doublecheck the state of the controls
-      if (m_pActiveRenderWin) ToggleClearViewControls(int(m_pActiveRenderWin->GetDynamicRange().second)-1);
+      if (m_pActiveRenderWin) ToggleClearViewControls(int(m_pActiveRenderWin->GetDynamicRange().second));
 
       return true;
     } else return false;
-
 }
 
 void MainWindow::ApplySettings() {
