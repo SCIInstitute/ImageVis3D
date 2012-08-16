@@ -635,21 +635,22 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
       // (and MainWindow::LoadDataset(), and MainWindow::OpenRecentFile).
       // We would perform the rebricking upon catching the exception.
       // This method seemed equally hacky so I opted for the smallest code 
-      // footprint and inserted this boolean flag. Also, we can use the flag
-      // when the user specifies 'no' on the dialog.
+      // footprint and inserted this boolean flag.
+      //
+      // Also, we can use the flag when the user specifies 'no' on the dialog.
       // It doesn't make much sense to tell the user that we failed to
       // load the RenderWindow because they told us to not load it =P.
       //
       // The problem: if we reach here, we were in the process of creating
       // a series of Lua classes to support a render window. Since we are no
       // longer creating a viable render window (renderWin was deleted, and 
-      // RebrickDataset is creating new set of render windows), lua needs to be 
+      // RebrickDataset is creating a new render window), lua needs to be 
       // notified and clean up any supporting classes.
       //
       // The only way to notify Lua is to do 1 of 2 things:
       // 1) Return false from this function (behaving as if the requested 
       //    dataset failed to load -- which it did).
-      // 2) Throw an exception and let lua capture and rethrow it.
+      // 2) Or throw an exception and let lua capture and rethrow it.
       //
       // I opted for #1.
       RebrickDataset(filename, targetFilename, bNoUserInteraction);
