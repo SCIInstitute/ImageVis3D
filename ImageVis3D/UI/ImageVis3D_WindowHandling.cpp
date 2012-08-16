@@ -1287,8 +1287,7 @@ void MainWindow::OpenRecentFile(){
   if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
     if (action) {
       if (!LoadDataset(QStringList(action->data().toString()))) {
-        if (m_bIgnoreLoadDatasetFailure == false)
-        {
+        if (m_bIgnoreLoadDatasetFailure == false) {
           ShowCriticalDialog("Render window initialization failed.",
                        "Could not open a render window!  This normally "
                        "means ImageVis3D does not support your GPU.  Please"

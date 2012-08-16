@@ -655,9 +655,7 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
       RebrickDataset(filename, targetFilename, bNoUserInteraction);
       m_bIgnoreLoadDatasetFailure = true;
       return false;
-    }
-    else
-    {
+    } else {
       m_bIgnoreLoadDatasetFailure = true;
       return false;
     }
