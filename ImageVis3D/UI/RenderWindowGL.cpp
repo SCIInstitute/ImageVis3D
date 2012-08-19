@@ -157,19 +157,22 @@ void RenderWindowGL::InitializeRenderer()
       ms_gpuVendorString = s.str();
       MESSAGE("Starting up GL!  Running on a %s", ms_gpuVendorString.c_str());
 
-      bool bOpenGLSO12     = atof((const char*)version) >= 1.2;
-      bool bOpenGLSO20     = atof((const char*)version) >= 2.0;
-      bool bOpenGLSO       = glewGetExtension("GL_ARB_shader_objects");
-      bool bOpenGLSL       = glewGetExtension("GL_ARB_shading_language_100");
-      bool bOpenGL3DT      = glewGetExtension("GL_EXT_texture3D");
-      bool bOpenGLFBO      = glewGetExtension("GL_EXT_framebuffer_object");
+      const bool bOpenGLSO12     = atof((const char*)version) >= 1.2;
+      const bool bOpenGLSO20     = atof((const char*)version) >= 2.0;
+      const bool bOpenGLSO       = glewGetExtension("GL_ARB_shader_objects");
+      const bool bOpenGLSL       = glewGetExtension("GL_ARB_shading_language_100");
+      const bool bOpenGL3DT      = glewGetExtension("GL_EXT_texture3D");
+      const bool bOpenGLFBO      = glewGetExtension("GL_EXT_framebuffer_object");
 
       // for image_load_store
-      bool bOpenGL42       = atof((const char*)version) >= 4.2;
-      bool bOpenGLILS_EXT  = glewGetExtension("GL_EXT_shader_image_load_store");
-      bool bOpenGLILS_ARB  = glewGetExtension("GL_ARB_shader_image_load_store");
+      const bool bOpenGL42       = atof((const char*)version) >= 4.2;
+      const bool bOpenGLILS_EXT  = glewGetExtension("GL_EXT_shader_image_load_store");
+      const bool bOpenGLILS_ARB  = glewGetExtension("GL_ARB_shader_image_load_store");
 
       ms_bImageLoadStoreInDriver = bOpenGL42 || bOpenGLILS_EXT || bOpenGLILS_ARB;
+
+      const bool bOpenGLCD_ARB  = glewGetExtension("GL_ARB_conservative_depth");
+      ms_bConservativeDepthInDriver = bOpenGL42 || bOpenGLCD_ARB;
 
       GLint iMaxVolumeDims;
       if (bOpenGLSO12 || bOpenGL3DT ) {
@@ -246,6 +249,12 @@ void RenderWindowGL::InitializeRenderer()
           MESSAGE("Maximum supported texture size: %u "
                   "(required by IO subsystem: %llu)", ms_iMaxVolumeDims,
                   m_MasterController.IOMan()->GetMaxBrickSize());
+        }
+
+        if (ms_bImageLoadStoreInDriver) {
+          MESSAGE("Image Load/Store supported by driver.");
+        } else {
+          MESSAGE("Image Load/Store not supported by driver, octree raycaster disabed.");
         }
 
         if (ms_bImageLoadStoreInDriver) {

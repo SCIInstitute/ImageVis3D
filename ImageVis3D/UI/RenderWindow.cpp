@@ -69,6 +69,7 @@ std::string RenderWindow::ms_gpuVendorString = "";
 uint32_t RenderWindow::ms_iMaxVolumeDims = 0;
 bool RenderWindow::ms_b3DTexInDriver = false;
 bool RenderWindow::ms_bImageLoadStoreInDriver = false;
+bool RenderWindow::ms_bConservativeDepthInDriver = false;
 
 RenderWindow::RenderWindow(MasterController& masterController,
                            MasterController::EVolumeRendererType eType,
