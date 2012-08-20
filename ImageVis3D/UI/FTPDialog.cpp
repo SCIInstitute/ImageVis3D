@@ -70,6 +70,7 @@ void FTPDialog::Start() {
                   SLOT(ftpCommandFinished(int, bool)));
   connect(m_pFtp, SIGNAL(dataTransferProgress(qint64, qint64)), this,
                   SLOT(updateDataTransferProgress(qint64, qint64)));
+  connect(m_pFtp, SIGNAL(done(bool)), this, SLOT(finished(bool)));
 
   label_TransferDesc->setText(tr("Connecting to %1...").arg(m_strTargetServer.c_str()));
 
@@ -101,6 +102,8 @@ void FTPDialog::Start() {
     return;
   }
 
+  MESSAGE("putting '%s' to '%s'", m_strSource.c_str(),
+          m_strTargetPath.c_str());
   m_pFtp->put(m_pFile, m_strTargetPath.c_str());
 }
 
@@ -119,26 +122,6 @@ void FTPDialog::ftpCommandFinished(int cmdId, bool error) {
     }
     label_TransferDesc->setText(tr("Uploading %1...").arg(SysTools::GetFilename(m_strSource).c_str()));
     return;
-  }
-
-  if (cmdId == QFtp::Put) {
-    if (error) {
-      T_ERROR("Error putting data on the remote host.");
-      m_pFile->close();
-      delete m_pFile;
-      m_pFile = NULL;
-      emit TransferFailure();
-      close();
-      return;
-    } else {
-      MESSAGE("File transfer complete.");
-      m_pFile->close();
-      delete m_pFile;
-      m_pFile = NULL;
-      emit TransferSuccess();
-      close();
-      return;
-    }
   }
 }
 
@@ -164,4 +147,25 @@ void FTPDialog::AbortTransfer()
   Disconnect();
   emit TransferFailure();
   close();
+}
+
+void FTPDialog::finished(bool error)
+{
+  if (error) {
+    T_ERROR("Error putting data on the remote host.");
+    m_pFile->close();
+    delete m_pFile;
+    m_pFile = NULL;
+    emit TransferFailure();
+    close();
+    return;
+  } else {
+    MESSAGE("File transfer complete.");
+    m_pFile->close();
+    delete m_pFile;
+    m_pFile = NULL;
+    emit TransferSuccess();
+    close();
+    return;
+  }
 }

@@ -60,6 +60,7 @@ class FTPDialog : public QDialog, protected Ui_FTPDialog
      void ftpCommandFinished(int commandId, bool error);
      void updateDataTransferProgress(qint64 readBytes, qint64 totalBytes);
      void AbortTransfer();
+     void finished(bool);
 
   signals:
      void TransferFailure();
