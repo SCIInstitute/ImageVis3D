@@ -30,8 +30,8 @@
 ; This is for debug installations.
 [Setup]
 AppName=ImageVis3D
-AppVerName=ImageVis3D 2.1.0
-AppVersion=2.1.0
+AppVerName=ImageVis3D 2.1.1
+AppVersion=2.1.1
 AppPublisher=SCI Institute
 AppPublisherURL=http://software.sci.utah.edu/
 AppSupportURL=http://software.sci.utah.edu/

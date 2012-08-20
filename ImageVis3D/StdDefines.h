@@ -46,7 +46,7 @@
 #define IV3D_PATCH 1
 
 #define IV3D_VERSION "2.1.1"
-#define IV3D_VERSION_TYPE "Developer Build"
+#define IV3D_VERSION_TYPE "Release"
 
 #define MANUAL_NAME  "ImageVis3D.pdf"
 #define HELP_URL  "http://www.sci.utah.edu/images/docs/imagevis3d.pdf"
