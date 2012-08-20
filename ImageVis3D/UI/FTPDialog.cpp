@@ -45,7 +45,9 @@
 
 using namespace std;
 
-FTPDialog::FTPDialog(const string& strSource, const string& strTargetServer, const string& strTargetPath, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
+FTPDialog::FTPDialog(const string& strSource, const string& strTargetServer,
+                     const string& strTargetPath, QWidget* parent /* = 0 */,
+                     Qt::WindowFlags flags /* = 0 */) :
   QDialog(parent, flags),
   m_strSource(strSource),
   m_strTargetServer(strTargetServer),
@@ -64,29 +66,34 @@ void FTPDialog::Start() {
   show();
 
   m_pFtp = new QFtp(this);
-  connect(m_pFtp, SIGNAL(commandFinished(int, bool)), this, SLOT(ftpCommandFinished(int, bool)));
-  connect(m_pFtp, SIGNAL(dataTransferProgress(qint64, qint64)), this, SLOT(updateDataTransferProgress(qint64, qint64)));
+  connect(m_pFtp, SIGNAL(commandFinished(int, bool)), this,
+                  SLOT(ftpCommandFinished(int, bool)));
+  connect(m_pFtp, SIGNAL(dataTransferProgress(qint64, qint64)), this,
+                  SLOT(updateDataTransferProgress(qint64, qint64)));
 
   label_TransferDesc->setText(tr("Connecting to %1...").arg(m_strTargetServer.c_str()));
 
   QUrl url(m_strTargetServer.c_str());
   if (!url.isValid() || url.scheme().toLower() != QLatin1String("ftp")) {
-     m_pFtp->connectToHost(m_strTargetServer.c_str(), 21);
-     m_pFtp->login();
+    m_pFtp->connectToHost(m_strTargetServer.c_str(), 21);
+    m_pFtp->login();
   } else {
-     m_pFtp->connectToHost(url.host(), url.port(21));
+    m_pFtp->connectToHost(url.host(), url.port(21));
 
-     if (!url.userName().isEmpty())
-         m_pFtp->login(QUrl::fromPercentEncoding(url.userName().toLatin1()), url.password());
-     else
-         m_pFtp->login();
-     if (!url.path().isEmpty())
-         m_pFtp->cd(url.path());
+    if (!url.userName().isEmpty()) {
+      m_pFtp->login(QUrl::fromPercentEncoding(url.userName().toLatin1()),
+                    url.password());
+    } else {
+      m_pFtp->login();
+    }
+    if (!url.path().isEmpty()) {
+      m_pFtp->cd(url.path());
+    }
   }
 
   m_pFile = new QFile(m_strSource.c_str());
   if (!m_pFile->open(QIODevice::ReadOnly)) {
-    T_ERROR("Could not create '%s' file.", m_strSource.c_str());
+    T_ERROR("Could not read '%s' file.", m_strSource.c_str());
     delete m_pFile;
     m_pFile = NULL;
     emit TransferFailure();
