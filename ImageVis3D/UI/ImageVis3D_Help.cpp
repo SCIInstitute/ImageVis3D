@@ -352,14 +352,14 @@ std::string MainWindow::GenUniqueName(const std::string& strPrefix, const std::s
   return string(tr("%1_%2_%3.%4").arg(strPrefix.c_str()).arg(QTime::currentTime().toString()).arg(QDate::currentDate().toString()).arg(strExt.c_str()).toAscii());
 }
 
-bool MainWindow::FtpTransfer(string strSource, string strDest, bool bDeleteSource) {
+bool MainWindow::FtpTransfer(string strSource, string strDest,
+                             bool bDeleteSource) {
   if (!m_bFTPFinished) return false;
   m_bFTPFinished = true;
   m_strFTPTempFile = strSource;
 
   if (m_pFTPDialog) {
-    disconnect(m_pFTPDialog, SIGNAL(TransferFailure()), this, SLOT(FtpFail()));
-    disconnect(m_pFTPDialog, SIGNAL(TransferSuccess()), this, SLOT(FtpSuccess()));
+    disconnect(m_pFTPDialog, 0,0,0);
     delete m_pFTPDialog;
   }
 
