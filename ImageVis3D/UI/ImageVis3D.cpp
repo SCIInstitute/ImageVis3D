@@ -209,7 +209,6 @@ MainWindow::~MainWindow()
   }
 
   delete m_pHttp;
-  delete m_pFTPDialog;
   m_pRedrawTimer->stop();
   delete m_pRedrawTimer;
 
