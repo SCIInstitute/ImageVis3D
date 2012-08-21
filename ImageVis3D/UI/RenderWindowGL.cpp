@@ -164,13 +164,11 @@ void RenderWindowGL::InitializeRenderer()
       const bool bOpenGL3DT      = glewGetExtension("GL_EXT_texture3D");
       const bool bOpenGLFBO      = glewGetExtension("GL_EXT_framebuffer_object");
 
-      // for image_load_store
+      // for the new renderer
       const bool bOpenGL42       = atof((const char*)version) >= 4.2;
       const bool bOpenGLILS_EXT  = glewGetExtension("GL_EXT_shader_image_load_store");
       const bool bOpenGLILS_ARB  = glewGetExtension("GL_ARB_shader_image_load_store");
-
       ms_bImageLoadStoreInDriver = bOpenGL42 || bOpenGLILS_EXT || bOpenGLILS_ARB;
-
       const bool bOpenGLCD_ARB  = glewGetExtension("GL_ARB_conservative_depth");
       ms_bConservativeDepthInDriver = bOpenGL42 || bOpenGLCD_ARB;
 
