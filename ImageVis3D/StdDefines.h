@@ -42,11 +42,11 @@
 #include "../Tuvok/StdTuvokDefines.h"
 
 #define IV3D_MAJOR 2
-#define IV3D_MINOR 1
-#define IV3D_PATCH 1
+#define IV3D_MINOR 2
+#define IV3D_PATCH 0
 
-#define IV3D_VERSION "2.1.1"
-#define IV3D_VERSION_TYPE "Release"
+#define IV3D_VERSION "2.2.0"
+#define IV3D_VERSION_TYPE "Developer Build"
 
 #define MANUAL_NAME  "ImageVis3D.pdf"
 #define HELP_URL  "http://www.sci.utah.edu/images/docs/imagevis3d.pdf"
