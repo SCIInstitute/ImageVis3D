@@ -39,7 +39,7 @@
 
 using namespace std;
 
-ScaleAndBiasDlg::ScaleAndBiasDlg(tuvok::RenderMesh* mesh,
+ScaleAndBiasDlg::ScaleAndBiasDlg(shared_ptr<tuvok::RenderMesh> mesh,
                                  size_t index,
                                  const FLOATVECTOR3& vmin, 
                                  const FLOATVECTOR3& vmax,

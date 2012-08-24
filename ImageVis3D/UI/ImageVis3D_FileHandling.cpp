@@ -411,20 +411,20 @@ bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction,
                                           QStringList files) {
   if (bNoUserInteraction) {
     if (m_pActiveRenderWin && 
-      !m_pActiveRenderWin->GetRenderer()->SupportsMeshes() &&
-      m_pActiveRenderWin->GetRenderer()->GetMeshes().size() > 0) {
+      !m_pActiveRenderWin->SupportsMeshes() &&
+      m_pActiveRenderWin->GetRendererMeshes().size() > 0) {
         WARNING("This dataset contains mesh data but the current "
                 "renderer does not supports rendering meshes. Mesh "
                 "rendering is disabled until you switch to a renderer "
                 "that supports this feature e.g. the 3D slice "
                 "based volume renderer.");
-        m_pActiveRenderWin->GetRenderer()->GetMeshes().clear();
+        m_pActiveRenderWin->ClearRendererMeshes();
         UpdateExplorerView(true);
     }
   } else {
     if (m_pActiveRenderWin && 
-      !m_pActiveRenderWin->GetRenderer()->SupportsMeshes() &&
-      m_pActiveRenderWin->GetRenderer()->GetMeshes().size() > 0) {
+      !m_pActiveRenderWin->SupportsMeshes() &&
+      m_pActiveRenderWin->GetRendererMeshes().size() > 0) {
       m_pRedrawTimer->stop();
       if(QMessageBox::Yes == 
         QMessageBox::question(NULL, 
@@ -444,7 +444,7 @@ bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction,
         m_pRedrawTimer->start(IV3D_TIMER_INTERVAL);
         return true;
       } else {
-        m_pActiveRenderWin->GetRenderer()->GetMeshes().clear();
+        m_pActiveRenderWin->ClearRendererMeshes();
         UpdateExplorerView(true);
       }
       m_pRedrawTimer->start(IV3D_TIMER_INTERVAL);

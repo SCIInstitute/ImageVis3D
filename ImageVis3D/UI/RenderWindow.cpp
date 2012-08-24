@@ -485,6 +485,18 @@ bool RenderWindow::ScanForNewMeshes() {
   ss->cexec(rn + ".scanForNewMeshes");
 }
 
+vector<shared_ptr<RenderMesh> > RenderWindow::GetRendererMeshes() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<vector<shared_ptr<RenderMesh> > >(rn + ".getMeshes");
+}
+
+void RenderWindow::ClearRendererMeshes() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".clearMeshes");
+}
+
 RenderWindow::RegionSplitter
 RenderWindow::GetRegionSplitter(INTVECTOR2 pos) const
 {

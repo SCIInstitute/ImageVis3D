@@ -267,6 +267,8 @@ class RenderWindow
     bool SupportsClearView();
     bool SupportsMeshes();
     bool ScanForNewMeshes();
+    std::vector<std::shared_ptr<tuvok::RenderMesh> > GetRendererMeshes();
+    void ClearRendererMeshes();
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();

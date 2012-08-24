@@ -49,7 +49,7 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
 {
   Q_OBJECT
   public:
-    ScaleAndBiasDlg(tuvok::RenderMesh* mesh,
+    ScaleAndBiasDlg(std::shared_ptr<tuvok::RenderMesh> mesh,
                     size_t index,
                     const FLOATVECTOR3& vmin, 
                     const FLOATVECTOR3& vmax,
@@ -64,7 +64,7 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
     void SetExpertTransform(const FLOATMATRIX4& m);
 
     size_t m_index;
-    tuvok::RenderMesh* m_pMesh;
+    std::shared_ptr<tuvok::RenderMesh> m_pMesh;
 
   protected slots:
     void ScaleIsotropic();

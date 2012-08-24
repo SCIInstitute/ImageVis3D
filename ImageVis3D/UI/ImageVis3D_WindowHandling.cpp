@@ -939,7 +939,7 @@ void MainWindow::ToggleMesh() {
   int iCurrent = listWidget_DatasetComponents->currentRow();
   if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
-  RenderMesh* mesh = (RenderMesh*)m_pActiveRenderWin->GetRenderer()->GetMeshes()[iCurrent-1];
+  shared_ptr<RenderMesh> mesh = m_pActiveRenderWin->GetRendererMeshes()[iCurrent-1];
   mesh->SetActive(checkBox_ComponenEnable->isChecked());
   m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
   ToggleClearViewControls();
@@ -952,8 +952,7 @@ void MainWindow::SetMeshDefOpacity() {
   int iCurrent = listWidget_DatasetComponents->currentRow();
   if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
-  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
-  RenderMesh* mesh = (RenderMesh*)renderer->GetMeshes()[iCurrent-1];
+  shared_ptr<RenderMesh> mesh = m_pActiveRenderWin->GetRendererMeshes()[iCurrent-1];
   
   FLOATVECTOR4 meshcolor = mesh->GetDefaultColor();
 
@@ -972,10 +971,10 @@ void MainWindow::SetMeshScaleAndBias() {
   int iCurrent = listWidget_DatasetComponents->currentRow();
   if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
-  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
-  RenderMesh* mesh = (RenderMesh*)renderer->GetMeshes()[iCurrent-1];
+  shared_ptr<RenderMesh> mesh = m_pActiveRenderWin->GetRendererMeshes()[iCurrent-1];
 
   FLOATVECTOR3 vCenter, vExtend;
+  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
   renderer->GetVolumeAABB(vCenter, vExtend);
 
   ScaleAndBiasDlg sbd(mesh,iCurrent-1,
@@ -1027,7 +1026,7 @@ void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {
   pleaseWait.SetText("Saving transformation to UVF file...");
   pleaseWait.AttachLabel(&m_MasterController);
 
-  const FLOATMATRIX4& m = m_pActiveRenderWin->GetRenderer()->GetMeshes()[sender->m_index]->GetTransformFromOriginal();
+  const FLOATMATRIX4& m = m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->GetTransformFromOriginal();
 
   m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
 
@@ -1038,7 +1037,7 @@ void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {
              "maybe the file is write protected? For details please "
              "check the debug log ('Help | Debug Window').");
   } else {
-    m_pActiveRenderWin->GetRenderer()->GetMeshes()[sender->m_index]->DeleteTransformFromOriginal();
+    m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->DeleteTransformFromOriginal();
     pleaseWait.close();
   }
 
@@ -1051,8 +1050,7 @@ void MainWindow::SetMeshDefColor() {
   int iCurrent = listWidget_DatasetComponents->currentRow();
   if (iCurrent < 1 || iCurrent >= listWidget_DatasetComponents->count()) return;
 
-  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
-  RenderMesh* mesh = (RenderMesh*)renderer->GetMeshes()[iCurrent-1];
+  shared_ptr<RenderMesh> mesh = m_pActiveRenderWin->GetRendererMeshes()[iCurrent-1];
   
   FLOATVECTOR4 meshcolor = mesh->GetDefaultColor();
 
@@ -1069,6 +1067,7 @@ void MainWindow::SetMeshDefColor() {
     meshcolor.y = color.green()/255.0f;
     meshcolor.z = color.blue()/255.0f;
     mesh->SetDefaultColor(meshcolor);
+    AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
     renderer->Schedule3DWindowRedraws();
   }
 }
@@ -1083,10 +1082,12 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     QString voldesc = tr("Volume (%1)").arg(renderer->GetDataset().Name());
     listWidget_DatasetComponents->addItem(voldesc);
 
+    size_t meshListSize = m_pActiveRenderWin->GetRendererMeshes().size();
     for (size_t i = 0;
-         i<renderer->GetMeshes().size();
+         i<meshListSize;
          i++) {
-      const RenderMesh* mesh = (const RenderMesh*)renderer->GetMeshes()[i];
+      shared_ptr<const RenderMesh> mesh = 
+          m_pActiveRenderWin->GetRendererMeshes()[i];
       QString meshdesc = tr("%1 (%2)").arg(mesh->GetMeshType() == Mesh::MT_TRIANGLES ? "Triangle Mesh" : "Lines").arg(mesh->Name().c_str());
       listWidget_DatasetComponents->addItem(meshdesc);
     }
@@ -1114,7 +1115,8 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     page_Geometry->setVisible(true);   
     stackedWidget_componentInfo->setCurrentIndex(1);
 
-    const RenderMesh* mesh = (const RenderMesh*)renderer->GetMeshes()[iCurrent-1];
+    shared_ptr<const RenderMesh> mesh = 
+        m_pActiveRenderWin->GetRendererMeshes()[iCurrent-1];
 
     size_t iVerticesPerPoly = mesh->GetVerticesPerPoly();
 
