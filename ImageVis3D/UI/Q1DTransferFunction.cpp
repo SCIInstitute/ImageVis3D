@@ -45,6 +45,7 @@
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/MathTools.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTransferFun1DProxy.h"
 
 using namespace std;
 
@@ -52,6 +53,7 @@ using namespace std;
 Q1DTransferFunction::Q1DTransferFunction(MasterController& masterController, QWidget *parent) :
   QTransferFunction(masterController, parent),
   m_pTrans(NULL),
+  m_trans(),
   m_iPaintMode(PAINT_RED | PAINT_GREEN | PAINT_BLUE | PAINT_ALPHA),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
@@ -98,9 +100,16 @@ void Q1DTransferFunction::PreparePreviewData() {
 
 void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
                                   unsigned int iMaxValue,
-                                  TransferFunction1D* pTrans) {
-  m_pTrans = pTrans;
-  if (m_pTrans == NULL || vHistogram == NULL) return;
+                                  LuaClassInstance trans) {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if (trans.isValid(ss) == false || vHistogram == NULL) return;
+
+  m_trans = trans;
+
+  // Hack that will go away once this class is fully converted using Lua calls.
+  LuaTransferFun1DProxy* tfProxy = 
+      trans.getRawPointer<LuaTransferFun1DProxy>(ss);
+  m_pTrans = tfProxy->get1DTransferFunction();
 
   m_iMarkersX = std::max<unsigned int>(1,iMaxValue);
   while (m_iMarkersX > 100) m_iMarkersX /= 10;
@@ -186,7 +195,8 @@ void Q1DTransferFunction::DrawCoordinateSystem(QPainter& painter) {
 
 void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 
-  if (m_pTrans == NULL || m_vHistogram.GetSize() < 2) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false 
+      || m_vHistogram.GetSize() < 2) return;
 
   // compute some grid dimensions
   unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
@@ -230,7 +240,7 @@ void Q1DTransferFunction::DrawHistogram(QPainter& painter) {
 }
 
 void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
-  if (m_pTrans == NULL) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
 
   // compute some grid dimensions
   unsigned int iGridWidth  = width()-(m_iLeftBorder+m_iRightBorder)-3;
@@ -239,6 +249,12 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
   // draw the tranfer function as one larger polyline
   std::vector<QPointF> pointList(m_vHistogram.GetSize());
   QPen penCurve(m_colorBorder, 1, Qt::SolidLine);
+
+  // Retrieve color data from Lua script class.
+  std::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<vector<FLOATVECTOR4> > cdata = 
+      ss->cexecRet<shared_ptr<vector<FLOATVECTOR4> > >(
+          m_trans.fqName() + ".getColorData");
 
   // for every component
   for (unsigned int j=0; j < 4; j++) {
@@ -252,13 +268,13 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 
     // Make sure our tfqn is as wide as our histogram, since we'll be accessing
     // every element in the histogram.
-    assert(m_pTrans->vColorData.size() >= m_vHistogram.GetSize());
+    assert(cdata->size() >= m_vHistogram.GetSize());
 
     // define the polyline
     for (size_t i=0; i < pointList.size(); i++) {
       pointList[i] = QPointF(
           m_iLeftBorder + 1 + float(iGridWidth) * i / (pointList.size() - 1),
-          m_iTopBorder + iGridHeight - std::max(0.0f,std::min(m_pTrans->vColorData[i][j],1.0f)) * iGridHeight
+          m_iTopBorder + iGridHeight - std::max(0.0f,std::min((*cdata)[i][j],1.0f)) * iGridHeight
       );
     }
 
@@ -271,10 +287,10 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
   // draw preview bar
   for (unsigned int x = 0;x<m_vHistogram.GetSize();x++) {
 
-    float r = std::max(0.0f,std::min(m_pTrans->vColorData[x][0],1.0f));
-    float g = std::max(0.0f,std::min(m_pTrans->vColorData[x][1],1.0f));
-    float b = std::max(0.0f,std::min(m_pTrans->vColorData[x][2],1.0f));
-    float a = std::max(0.0f,std::min(m_pTrans->vColorData[x][3],1.0f));
+    float r = std::max(0.0f,std::min((*cdata)[x][0],1.0f));
+    float g = std::max(0.0f,std::min((*cdata)[x][1],1.0f));
+    float b = std::max(0.0f,std::min((*cdata)[x][2],1.0f));
+    float a = std::max(0.0f,std::min((*cdata)[x][3],1.0f));
 
     m_pPreviewColor->setPixel(x,0,qRgba(int(r*255),int(g*255),int(b*255),int(a*255)));
   }
@@ -341,6 +357,12 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
   float fValue = (float(m_iTopBorder)+float(iGridHeight)-float(event->y()))/float(iGridHeight);
   fValue    = std::min<float>(1.0f, std::max<float>(0.0f,fValue));
 
+  // Retrieve color data from Lua script class.
+  std::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<vector<FLOATVECTOR4> > cdata = 
+      ss->cexecRet<shared_ptr<vector<FLOATVECTOR4> > >(
+          m_trans.fqName() + ".getColorData");
+
   if (m_bMouseLeft) {
     // find out the range to change
     if (m_iLastIndex == -1) {
@@ -372,28 +394,28 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
     if (m_iPaintMode & PAINT_RED) {
       float _fValueMin = fValueMin;
       for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-        m_pTrans->vColorData[iIndex][0] = _fValueMin;
+        (*cdata)[iIndex][0] = _fValueMin;
         _fValueMin += fValueInc;
       }
     }
     if (m_iPaintMode & PAINT_GREEN) {
       float _fValueMin = fValueMin;
       for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-        m_pTrans->vColorData[iIndex][1] = _fValueMin;
+        (*cdata)[iIndex][1] = _fValueMin;
         _fValueMin += fValueInc;
       }
     }
     if (m_iPaintMode & PAINT_BLUE) {
       float _fValueMin = fValueMin;
       for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-        m_pTrans->vColorData[iIndex][2] = _fValueMin;
+        (*cdata)[iIndex][2] = _fValueMin;
         _fValueMin += fValueInc;
       }
     }
     if (m_iPaintMode & PAINT_ALPHA) {
       float _fValueMin = fValueMin;
       for (int iIndex = iIndexMin;iIndex<=iIndexMax;++iIndex) {
-        m_pTrans->vColorData[iIndex][3] = _fValueMin;
+        (*cdata)[iIndex][3] = _fValueMin;
         _fValueMin += fValueInc;
       }
     }
@@ -545,11 +567,17 @@ bool Q1DTransferFunction::AddFromFile(const QString& strFilename) {
     iSize = m_pTrans->GetSize();
   } else return false;
 
+  // Retrieve color data from Lua script class.
+  std::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<vector<FLOATVECTOR4> > cdata = 
+      ss->cexecRet<shared_ptr<vector<FLOATVECTOR4> > >(
+          m_trans.fqName() + ".getColorData");
+
   TransferFunction1D other(iSize);
   if( other.Load(strFilename.toStdString(), iSize) ) {
 
     for (size_t i = 0;i<iSize;i++)
-      m_pTrans->vColorData[i] += other.vColorData[i];
+      (*cdata)[i] += other.GetColor(i);
 
     PreparePreviewData();
     update();
@@ -566,11 +594,17 @@ bool Q1DTransferFunction::SubtractFromFile(const QString& strFilename) {
     iSize = m_pTrans->GetSize();
   } else return false;
 
+  // Retrieve color data from Lua script class.
+  std::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<vector<FLOATVECTOR4> > cdata = 
+      ss->cexecRet<shared_ptr<vector<FLOATVECTOR4> > >(
+          m_trans.fqName() + ".getColorData");
+
   TransferFunction1D other(iSize);
   if( other.Load(strFilename.toStdString(), iSize) ) {
 
     for (size_t i = 0;i<iSize;i++)
-      m_pTrans->vColorData[i] -= other.vColorData[i];
+      (*cdata)[i] -= other.GetColor(i);
 
     PreparePreviewData();
     update();

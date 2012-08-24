@@ -957,14 +957,18 @@ void MainWindow::ExportImageStack() {
     settings.setValue("Folders/ExportImageStack", QFileInfo(fileName).absoluteDir().path());
     string targetFileName = string(fileName.toAscii());
 
-    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataset().GetLODLevelCount())-1;
+    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+    LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+    int iMaxLODLevel = static_cast<int>(
+        ss->cexecRet<uint64_t>(ds.fqName() + ".getLODLevelCount") ) - 1;
 
     int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       int iMinLODLevel = 0;
       vector<QString> vDesc;
       for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
-        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataset().GetDomainSize(i));
+        UINTVECTOR3 vLODSize = UINTVECTOR3( ss->cexecRet<UINT64VECTOR3>(
+                ds.fqName() + ".getDomainSize", size_t(i), size_t(0)) );
         QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
         vDesc.push_back(qstrDesc);
       }

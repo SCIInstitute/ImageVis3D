@@ -829,10 +829,14 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   MESSAGE("Getting 1D Transfer Function.");
 
 
-  std::pair<double,double> range = ren->GetDataset().GetRange();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  LuaClassInstance ds = sender->GetRendererDataset();
+  std::pair<double,double> range = 
+      ss->cexecRet<std::pair<double,double> >(ds.fqName() + ".getRange");
+  LuaClassInstance tf1d = sender->GetRendererTransferFunction1D();
   m_1DTransferFunction->SetData(&ren->GetDataset().Get1DHistogram(),
                                 static_cast<unsigned int>(range.second-range.first),
-                                ren->Get1DTrans());
+                                tf1d);
   m_1DTransferFunction->update();
   MESSAGE("Getting 2D Transfer Function.");
   m_2DTransferFunction->SetData(&ren->GetDataset().Get2DHistogram(),
@@ -1233,7 +1237,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
   disconnect(sender->GetQtWidget());
 
-  m_1DTransferFunction->SetData(NULL, 10, NULL);
+  m_1DTransferFunction->SetData(NULL, 10, LuaClassInstance());
   m_1DTransferFunction->update();
   m_2DTransferFunction->SetData(NULL, NULL);
   m_2DTransferFunction->update();

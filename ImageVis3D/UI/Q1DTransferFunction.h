@@ -55,7 +55,7 @@ public:
   virtual ~Q1DTransferFunction(void);
 
   void SetData(const Histogram1D* vHistogram,
-               unsigned int iMaxValue, TransferFunction1D* Trans);
+               unsigned int iMaxValue, LuaClassInstance Trans);
 
   const TransferFunction1D* GetTrans() {return m_pTrans;}
 
@@ -81,6 +81,7 @@ protected:
 private:
   NormalizedHistogram1D m_vHistogram;
   TransferFunction1D* m_pTrans;
+  LuaClassInstance m_trans;
   unsigned int m_iPaintMode;
 
   // cached image of the backdrop
