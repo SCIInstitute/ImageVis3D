@@ -399,6 +399,9 @@ class RenderWindow
     bool MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate, bool translate,
                      tuvok::LuaClassInstance region);
 
+    void MoveViewer(const FLOATVECTOR3& direction);
+    void RotateViewer(const INTVECTOR2& viMouseDelta);
+
     void SetRotation(tuvok::LuaClassInstance region,
                      FLOATMATRIX4 newRotation);
     void SetTranslation(tuvok::LuaClassInstance region,
@@ -434,11 +437,14 @@ class RenderWindow
     float             m_1DHistScale;
     float             m_2DHistScale;
 
+    INTVECTOR2        initialLeftClickPos;
     INTVECTOR2        initialClickPos;
     INTVECTOR2        m_viMousePos;
     FLOATMATRIX4      m_mCaptureStartRotation;
     bool              m_bAbsoluteViewLock;
     bool              m_bInvWheel;
+    bool              m_bFirstPersonMode;
+    float             m_fFirstPersonSpeed;
     tuvok::AbstrRenderer::ERendererTarget m_RTModeBeforeCapture;
 
     FLOATMATRIX4      m_mAccumulatedClipTranslation;

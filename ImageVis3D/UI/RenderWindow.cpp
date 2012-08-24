@@ -71,6 +71,8 @@ bool RenderWindow::ms_b3DTexInDriver = false;
 bool RenderWindow::ms_bImageLoadStoreInDriver = false;
 bool RenderWindow::ms_bConservativeDepthInDriver = false;
 
+static const float s_fFirstPersonSpeed = 0.001f;
+
 RenderWindow::RenderWindow(MasterController& masterController,
                            MasterController::EVolumeRendererType eType,
                            const QString& dataset,
@@ -98,10 +100,13 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_iTimeSliceMSecsInActive(100),
   m_1DHistScale(0.25f),
   m_2DHistScale(0.75f),
+  initialLeftClickPos(0,0),
   initialClickPos(0,0),
   m_viMousePos(0,0),
   m_bAbsoluteViewLock(true),
   m_bInvWheel(false),
+  m_bFirstPersonMode(false),
+  m_fFirstPersonSpeed(s_fFirstPersonSpeed),
   m_RTModeBeforeCapture(AbstrRenderer::RT_INVALID_MODE),
   m_SavedClipLocked(true)
 {
@@ -536,10 +541,16 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
     if (IsRegion3D(activeRegion) ) {
       SetPlaneAtClick(m_ClipPlane);
 
-      if (event->button() == Qt::RightButton)
+      if (event->button() == Qt::RightButton) {
         initialClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+      }
 
       if (event->button() == Qt::LeftButton) {
+        if (m_bFirstPersonMode) 
+          QApplication::setOverrideCursor( QCursor(Qt::BlankCursor) );
+
+        initialLeftClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+
         RegionData *regionData = GetRegionData(activeRegion);
         regionData->clipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
         if ( !(event->modifiers() & Qt::ControlModifier) ) {
@@ -565,6 +576,8 @@ void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
       FinalizeTranslation(activeRegion, true);
   }
 
+  QApplication::restoreOverrideCursor();
+
   selectedRegionSplitter = REGION_SPLITTER_NONE;
 
   LuaClassInstance region = GetRegionUnderCursor(m_viMousePos);
@@ -575,6 +588,7 @@ void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
 // ImageVis3D handler.
 void RenderWindow::MouseMoveEvent(QMouseEvent *event)
 {
+
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   m_viMousePos = INTVECTOR2(event->pos().x(), event->pos().y());
@@ -594,16 +608,29 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
 
   // mouse is over the 3D window
   if (region.isValid(m_MasterController.LuaScript()) && IsRegion3D(region)) {
-    bool bPerformUpdate = false;
+    if (m_bFirstPersonMode) {
+      if (event->buttons() & Qt::LeftButton) {
+        RotateViewer(m_viMousePos-initialLeftClickPos);
 
-    if(clip) {
-      bPerformUpdate = MouseMoveClip(m_viMousePos, rotate, translate, region);
+        QPoint globalPos = GetQtWidget()->mapToGlobal( GetQtWidget()->geometry().center()) ;
+        QCursor::setPos ( globalPos.x(), globalPos.y() );
+       
+        initialLeftClickPos = INTVECTOR2(GetQtWidget()->geometry().center().x(),
+                                         GetQtWidget()->geometry().center().y());
+      }
+      UpdateWindow();
     } else {
-      bPerformUpdate = MouseMove3D(m_viMousePos, clearview, rotate, translate,
-                                   region);
-    }
+      bool bPerformUpdate = false;
 
-    if (bPerformUpdate) UpdateWindow();
+      if(clip) {
+        bPerformUpdate = MouseMoveClip(m_viMousePos, rotate, translate, region);
+      } else {
+        bPerformUpdate = MouseMove3D(m_viMousePos, clearview, rotate, translate,
+                                      region);
+      }
+
+      if (bPerformUpdate) UpdateWindow();
+    }
   } else if ( (selectedRegionSplitter != REGION_SPLITTER_NONE) &&
             (event->buttons() & (Qt::LeftButton|Qt::RightButton)) ) {
     FLOATVECTOR2 frac = FLOATVECTOR2(m_viMousePos) / FLOATVECTOR2(m_vWinDim);
@@ -684,40 +711,45 @@ bool RenderWindow::MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate,
 }
 
 void RenderWindow::WheelEvent(QWheelEvent *event) {
-  LuaClassInstance renderRegion = GetRegionUnderCursor(m_viMousePos);
-  if (renderRegion.isValid(m_MasterController.LuaScript()) == false)
-    return;
+  if (m_bFirstPersonMode) {
+    float wheel = event->delta()/100000.0f;
+    m_fFirstPersonSpeed = std::max(0.0f,m_fFirstPersonSpeed+wheel);
+  } else {
+    LuaClassInstance renderRegion = GetRegionUnderCursor(m_viMousePos);
+    if (renderRegion.isValid(m_MasterController.LuaScript()) == false)
+      return;
 
-  // mouse is over the 3D window
-  if (IsRegion3D(renderRegion)) {
-    float fZoom = ((m_bInvWheel) ? -1 : 1) * event->delta()/1000.0f;
-    MESSAGE("mousewheel click, delta/zoom: %d/%f", event->delta(), fZoom);
+    // mouse is over the 3D window
+    if (IsRegion3D(renderRegion)) {
+      float fZoom = ((m_bInvWheel) ? -1 : 1) * event->delta()/1000.0f;
+      MESSAGE("mousewheel click, delta/zoom: %d/%f", event->delta(), fZoom);
 
-    // User can hold control to modify only the clip plane.  Note however that
-    // if the plane is locked to the volume, we'll end up translating the plane
-    // regardless of whether or not control is held.
-    if(event->modifiers() & Qt::ControlModifier) {
-      SetClipTranslationDelta(renderRegion,
-                              FLOATVECTOR3(fZoom/10.f, fZoom/10.f, 0.f), true, true);
-    } else {
-      SetTranslationDelta(renderRegion, FLOATVECTOR3(0,0,fZoom), true);
+      // User can hold control to modify only the clip plane.  Note however that
+      // if the plane is locked to the volume, we'll end up translating the plane
+      // regardless of whether or not control is held.
+      if(event->modifiers() & Qt::ControlModifier) {
+        SetClipTranslationDelta(renderRegion,
+                                FLOATVECTOR3(fZoom/10.f, fZoom/10.f, 0.f), true, true);
+      } else {
+        SetTranslationDelta(renderRegion, FLOATVECTOR3(0,0,fZoom), true);
+      }
+    } else if (IsRegion2D(renderRegion))   {
+      int iZoom = event->delta() > 0 ? 1 : event->delta() < 0 ? -1 : 0;
+      int iNewSliceDepth =
+        std::max<int>(0,
+                      static_cast<int>(GetSliceDepth(renderRegion))+iZoom);
+      size_t sliceDimension = size_t(GetRegionWindowMode(renderRegion));
+
+      shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+      LuaClassInstance dataset = GetRendererDataset();
+      UINT64VECTOR3 domainSize = ss->cexecRet<UINT64VECTOR3>(
+          dataset.fqName() + ".getDomainSize", (size_t)0, (size_t)0);
+      iNewSliceDepth =
+        std::min<int>(iNewSliceDepth, domainSize[sliceDimension]-1);
+      SetSliceDepth(renderRegion, uint64_t(iNewSliceDepth));
     }
-  } else if (IsRegion2D(renderRegion))   {
-    int iZoom = event->delta() > 0 ? 1 : event->delta() < 0 ? -1 : 0;
-    int iNewSliceDepth =
-      std::max<int>(0,
-                    static_cast<int>(GetSliceDepth(renderRegion))+iZoom);
-    size_t sliceDimension = size_t(GetRegionWindowMode(renderRegion));
-
-    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-    LuaClassInstance dataset = GetRendererDataset();
-    UINT64VECTOR3 domainSize = ss->cexecRet<UINT64VECTOR3>(
-        dataset.fqName() + ".getDomainSize", (size_t)0, (size_t)0);
-    iNewSliceDepth =
-      std::min<int>(iNewSliceDepth, domainSize[sliceDimension]-1);
-    SetSliceDepth(renderRegion, uint64_t(iNewSliceDepth));
+    UpdateWindow();
   }
-  UpdateWindow();
 }
 
 LuaClassInstance RenderWindow::GetRegionUnderCursor(INTVECTOR2 vPos) const {
@@ -762,6 +794,62 @@ void RenderWindow::UpdateCursor(LuaClassInstance region,
   }
 }
 
+
+void RenderWindow::RotateViewer(const INTVECTOR2& viMouseDelta) {
+   
+  const int screen = QApplication::desktop()->screenNumber(m_MainWindow);
+  const QRect availableRect(QApplication::desktop()->availableGeometry(screen));
+
+  const FLOATVECTOR2 vfMouseDelta(viMouseDelta.x/float(availableRect.width()), 
+                                  viMouseDelta.y/float(availableRect.height()));
+
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string an = GetLuaAbstrRenderer().fqName();
+
+  FLOATVECTOR3 viewDir =
+      ss->cexecRet<FLOATVECTOR3>(an + ".getViewDir");
+
+  FLOATVECTOR3 upVec =
+      ss->cexecRet<FLOATVECTOR3>(an + ".getUpDir");
+
+  FLOATVECTOR3 left = upVec % viewDir;
+
+  FLOATMATRIX4 matRotationX, matRotationY;
+  matRotationY.RotationAxis(left.normalized(),  -vfMouseDelta.y*8.0f);
+  matRotationX.RotationAxis(upVec.normalized(), -vfMouseDelta.x*8.0f);
+
+  viewDir =  matRotationX * viewDir * matRotationY;
+  upVec   = upVec   * matRotationY;
+
+  ss->cexec(an + ".setViewDir", viewDir);
+  ss->cexec(an + ".setUpDir", upVec);
+  UpdateWindow();
+}
+
+void RenderWindow::MoveViewer(const FLOATVECTOR3& direction) {
+
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  string an = GetLuaAbstrRenderer().fqName();
+
+  const FLOATVECTOR3 up =
+      ss->cexecRet<FLOATVECTOR3>(an + ".getUpDir");
+  const FLOATVECTOR3 view =
+      ss->cexecRet<FLOATVECTOR3>(an + ".getViewDir");
+  const FLOATVECTOR3 left = up % view;
+      
+  FLOATVECTOR3 oldPos =
+      ss->cexecRet<FLOATVECTOR3>(an + ".getViewPos");
+
+  FLOATVECTOR3 scaledDir = direction*m_fFirstPersonSpeed;
+
+  oldPos = oldPos + scaledDir.x * left
+                  + scaledDir.y * up
+                  + scaledDir.z * view;
+
+  ss->cexec(an + ".setViewPos", oldPos);
+  UpdateWindow();
+}
+
 void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string rn = m_LuaAbstrRenderer.fqName();
@@ -772,7 +860,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
 
   switch (event->key()) {
     case Qt::Key_F :
-      ToggleFullscreen();
+      m_bFirstPersonMode = !m_bFirstPersonMode;
       break;
     case Qt::Key_C :
       ss->cexec(rn + ".setCoordinateArrowsEnabled",
@@ -846,6 +934,26 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
                                       !regionData->arcBall.GetUseTranslation());
       }
     }
+      break;
+    case Qt::Key_Left : 
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        MoveViewer(FLOATVECTOR3(1,0,0));
+      }
+      break;
+    case Qt::Key_Up : 
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        MoveViewer(FLOATVECTOR3(0,0,1));
+      }
+      break;
+    case Qt::Key_Right : 
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        MoveViewer(FLOATVECTOR3(-1,0,0));
+      }
+      break;
+    case Qt::Key_Down : 
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        MoveViewer(FLOATVECTOR3(0,0,-1));
+      }
       break;
     case Qt::Key_PageDown : case Qt::Key_PageUp :
       if (   selectedRegion.isValid(ss)
@@ -2047,8 +2155,16 @@ void RenderWindow::ResetRenderingParameters()
       SetClipPlane(region, ExtendedPlane());
     }
   }
+
   SetWindowFraction2x2(FLOATVECTOR2(0.5f, 0.5f));
-  ss->cexec(m_LuaAbstrRenderer.fqName() + ".transfer3DRotationToMIP");
+
+  string an = GetLuaAbstrRenderer().fqName();
+  ss->cexec(an + ".resetUpDir");
+  ss->cexec(an + ".resetViewDir");
+  ss->cexec(an + ".resetViewPos");
+  ss->cexec(an + ".transfer3DRotationToMIP");
+
+  m_fFirstPersonSpeed = s_fFirstPersonSpeed;
 }
 
 
@@ -2202,5 +2318,3 @@ void RenderWindow::RegisterLuaFunctions(
                     "Sets translation for the first 3D "
                     "render region.", true);
 }
-
-
