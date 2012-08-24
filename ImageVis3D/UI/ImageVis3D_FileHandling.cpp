@@ -670,9 +670,12 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
   if (CheckForMeshCapabilities(bNoUserInteraction, files)) return true;
 
   if(renderWin) {
-    AbstrRenderer* ren = renderWin->GetRenderer();
-    const Dataset& ds = ren->GetDataset();
-    UINT64VECTOR3 dom_sz = ds.GetDomainSize(0);
+    LuaClassInstance ds = renderWin->GetRendererDataset();
+    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+    UINT64VECTOR3 dom_sz = ss->cexecRet<UINT64VECTOR3>(ds.fqName() + 
+                                                       ".getDomainSize", 
+                                                       size_t(0), 
+                                                       size_t(0));
     // Disable lighting for 2D datasets (images).
     if(dom_sz[2] == 1) {
       checkBox_Lighting->setChecked(false);
@@ -815,12 +818,12 @@ bool MainWindow::ExportDataset(uint32_t iLODLevel, std::string targetFileName) {
   pleaseWait.SetText("Exporting, please wait  ...");
   pleaseWait.AttachLabel(&m_MasterController);
 
-  const UVFDataset *ds = dynamic_cast<UVFDataset*>(
-    &(m_pActiveRenderWin->GetRenderer()->GetDataset())
-  );
-  bool bResult = m_MasterController.IOMan()->ExportDataset(
-                            ds, iLODLevel, targetFileName,
-                            m_strTempDir);
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  bool bResult = ss->cexecRet<bool>("tuvok.io.exportDataset",
+                                    m_pActiveRenderWin->GetRendererDataset(), 
+                                    static_cast<uint64_t>(iLODLevel), 
+                                    targetFileName,
+                                    m_strTempDir);
 
   pleaseWait.close();
 
@@ -872,18 +875,18 @@ void MainWindow::ExportDataset() {
     string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()),
                                                     ext);
 
-    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()
-                                             ->GetDataset()
-                                              .GetLODLevelCount())-1;
+    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript(); 
+    LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+    int iMaxLODLevel = static_cast<int>(
+        ss->cexecRet<uint64_t>(ds.fqName() + ".getLODLevelCount")) - 1;
 
     int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       int iMinLODLevel = 0;
       vector<QString> vDesc;
       for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
-        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()
-                                                             ->GetDataset()
-                                                              .GetDomainSize(i));
+        UINTVECTOR3 vLODSize = UINTVECTOR3(ss->cexecRet<UINT64VECTOR3>(
+                ds.fqName() + ".getDomainSize", size_t(i), size_t(0)));
         QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
         vDesc.push_back(qstrDesc);
       }
@@ -920,17 +923,15 @@ bool MainWindow::ExportIsosurface(uint32_t iLODLevel, string targetFileName) {
     pleaseWait.AttachLabel(&m_MasterController);
 
     int iValue = horizontalSlider_Isovalue->value();
-    const UVFDataset *ds = dynamic_cast<UVFDataset*>(
-      &(m_pActiveRenderWin->GetRenderer()->GetDataset())
-    );
 
     FLOATVECTOR4 color(m_pActiveRenderWin->GetIsosufaceColor(),1.0f);
 
-
-    bool bResult = m_MasterController.IOMan()->ExtractIsosurface(
-                      ds, iLODLevel, iValue, color,
-                      targetFileName, m_strTempDir
-                   );
+    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+    bool bResult = ss->cexecRet<bool>("tuvok.io.extractIsosurface",
+                                      m_pActiveRenderWin->GetRendererDataset(), 
+                                      static_cast<uint64_t>(iLODLevel), 
+                                      static_cast<double>(iValue), color,
+                                      targetFileName, m_strTempDir);
     pleaseWait.close();
 
     return bResult;

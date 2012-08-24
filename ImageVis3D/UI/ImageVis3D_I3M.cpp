@@ -41,7 +41,7 @@
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/IO/uvfDataset.h"
-
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaDatasetProxy.h"
 
 #include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
@@ -81,30 +81,37 @@ string MainWindow::ConvertTF(const string& strSource1DTFilename,
   return strTarget1DTFilename;
 }
 
-string MainWindow::ConvertDataToI3M(const UVFDataset* currentDataset,
+string MainWindow::ConvertDataToI3M(LuaClassInstance currentDataset,
                                     const string& strTargetDir,
                                     PleaseWaitDialog& pleaseWait,
                                     bool bOverrideExisting) {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if (ss->cexecRet<LuaDatasetProxy::DatasetType>(
+          currentDataset.fqName() + ".getDSType") != LuaDatasetProxy::UVF) {
+    T_ERROR("MainWindow::ConvertDataToI3M can only accept UVF datasets.");
+    return false;
+  }
 
-
-  pleaseWait.SetText("Converting:"+
-                     QString(currentDataset->Filename().c_str()));
+  string dsFilename = ss->cexecRet<string>(currentDataset.fqName() + 
+                                           ".fullpath");
+  pleaseWait.SetText("Converting:" + QString(dsFilename.c_str()));
 
   // UVF to I3M
 
   // first, find the smalest LOD with every dimension
   // larger or equal to 128 (if possible)
-  int iLODLevel = int(currentDataset->GetLODLevelCount())-1;
+  int iLODLevel = static_cast<int>(
+      ss->cexecRet<uint64_t>(currentDataset.fqName() + "getLODLevelCount")) - 1;
   for (;iLODLevel>0;iLODLevel--) {
-    UINTVECTOR3 vLODSize = UINTVECTOR3(
-                                currentDataset->GetDomainSize(iLODLevel)
-                           );
+    UINTVECTOR3 vLODSize = UINTVECTOR3(ss->cexecRet<UINT64VECTOR3>(
+            currentDataset.fqName() + ".getDomainSize", 
+              static_cast<size_t>(iLODLevel), size_t(0)));
     if (vLODSize.x >= 128 &&
         vLODSize.y >= 128 &&
         vLODSize.z >= 128) break;
   }
 
-  string filenameOnly = SysTools::GetFilename(currentDataset->Filename());
+  string filenameOnly = SysTools::GetFilename(dsFilename);
   string strTargetFilename = strTargetDir+"/"+
                              SysTools::ChangeExt(filenameOnly,"i3m");
 
@@ -114,10 +121,12 @@ string MainWindow::ConvertDataToI3M(const UVFDataset* currentDataset,
                                                     );
   }
 
-  if (!Controller::Instance().IOMan()->ExportDataset(currentDataset, 
-                                                     iLODLevel, 
-                                                     strTargetFilename, 
-                                                     m_strTempDir)) {
+  if (!ss->cexecRet<bool>("tuvok.io.exportDataset",
+                          currentDataset, 
+                          static_cast<uint64_t>(iLODLevel), 
+                          strTargetFilename,
+                          m_strTempDir))
+  {
     return "";
   }
 
@@ -129,6 +138,7 @@ void MainWindow::TransferToI3M() {
   if (!m_pActiveRenderWin) return;
 
   const UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
+  LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
 
   if (currentDataset) {
     QSettings settings;
@@ -150,7 +160,7 @@ void MainWindow::TransferToI3M() {
     pleaseWait.SetText("Preparing data  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
-    string targetFile = ConvertDataToI3M(currentDataset,strTargetDir,
+    string targetFile = ConvertDataToI3M(ds,strTargetDir,
                                          pleaseWait, true);
 
     if (targetFile == "") {

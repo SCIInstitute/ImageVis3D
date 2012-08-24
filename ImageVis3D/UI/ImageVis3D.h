@@ -484,7 +484,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
                           const UVFDataset* currentDataset,
                           PleaseWaitDialog& pleaseWait);
 
-    std::string ConvertDataToI3M(const UVFDataset* currentDataset,
+    std::string ConvertDataToI3M(LuaClassInstance currentDataset,
                                  const std::string& strTargetDir,
                                  PleaseWaitDialog& pleaseWait,
                                  bool bOverrideExisting);
