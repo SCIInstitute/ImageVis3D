@@ -52,8 +52,6 @@ using namespace std;
 
 Q1DTransferFunction::Q1DTransferFunction(MasterController& masterController, QWidget *parent) :
   QTransferFunction(masterController, parent),
-  m_pTrans(NULL),
-  m_trans(),
   m_iPaintMode(PAINT_RED | PAINT_GREEN | PAINT_BLUE | PAINT_ALPHA),
   m_iCachedHeight(0),
   m_iCachedWidth(0),
@@ -105,11 +103,6 @@ void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
   if (trans.isValid(ss) == false || vHistogram == NULL) return;
 
   m_trans = trans;
-
-  // Hack that will go away once this class is fully converted using Lua calls.
-  LuaTransferFun1DProxy* tfProxy = 
-      trans.getRawPointer<LuaTransferFun1DProxy>(ss);
-  m_pTrans = tfProxy->get1DTransferFunction();
 
   m_iMarkersX = std::max<unsigned int>(1,iMaxValue);
   while (m_iMarkersX > 100) m_iMarkersX /= 10;
@@ -458,7 +451,8 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 
 void Q1DTransferFunction::ApplyFunction() {
   // send message to update the GLtexture
-  m_MasterController.MemMan()->Changed1DTrans(NULL, m_pTrans);
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->cexec("tuvok.gpu.changed1DTrans", LuaClassInstance(), m_trans);
 }
 
 void Q1DTransferFunction::SetColor(bool bIsEnabled) {

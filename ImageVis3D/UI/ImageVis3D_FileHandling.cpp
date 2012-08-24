@@ -62,6 +62,7 @@
 
 #include "LuaScripting/TuvokSpecific/LuaDatasetProxy.h"
 #include "LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
+#include "LuaScripting/TuvokSpecific/LuaTransferFun1DProxy.h"
 
 using namespace std;
 using namespace tuvok;
@@ -1007,7 +1008,14 @@ bool MainWindow::ExportImageStack(uint32_t iLODLevel, std::string targetFileName
 
     FLOATVECTOR4 color(m_pActiveRenderWin->GetIsosufaceColor(),1.0f);
 
-    bool bResult = m_MasterController.IOMan()->ExtractImageStack( ds, m_1DTransferFunction->GetTrans(), iLODLevel,  targetFileName, m_strTempDir, bAllDirs);
+    // Hack that will go away once this class is fully converted using Lua calls.
+    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+    LuaClassInstance inst = m_1DTransferFunction->GetTrans();
+    LuaTransferFun1DProxy* tfProxy = 
+        inst.getRawPointer<LuaTransferFun1DProxy>(ss);
+    TransferFunction1D* tempTrans = tfProxy->get1DTransferFunction();
+
+    bool bResult = m_MasterController.IOMan()->ExtractImageStack( ds, tempTrans, iLODLevel,  targetFileName, m_strTempDir, bAllDirs);
     pleaseWait.close();
 
     return bResult;

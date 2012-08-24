@@ -57,7 +57,7 @@ public:
   void SetData(const Histogram1D* vHistogram,
                unsigned int iMaxValue, LuaClassInstance Trans);
 
-  const TransferFunction1D* GetTrans() {return m_pTrans;}
+  const LuaClassInstance GetTrans() {return m_trans;}
 
   void SetPaintMode(paintMode iPaintMode) {
     if (iPaintMode < PAINT_UNDEF) m_iPaintMode = iPaintMode;
@@ -80,7 +80,6 @@ protected:
 
 private:
   NormalizedHistogram1D m_vHistogram;
-  TransferFunction1D* m_pTrans;
   LuaClassInstance m_trans;
   unsigned int m_iPaintMode;
 

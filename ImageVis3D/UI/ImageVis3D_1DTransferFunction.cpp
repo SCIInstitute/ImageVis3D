@@ -52,6 +52,7 @@
 #include <string>
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/IO/FileBackedDataset.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTransferFun1DProxy.h"
 
 using namespace std;
 
@@ -231,7 +232,14 @@ void MainWindow::Transfer1DSave() {
 }
 
 void MainWindow::Transfer1DCopyTo2DTrans() {
-  m_2DTransferFunction->Set1DTrans(m_1DTransferFunction->GetTrans());
+  // Hack that will go away once this class is fully converted using Lua calls.
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  LuaClassInstance inst = m_1DTransferFunction->GetTrans();
+  LuaTransferFun1DProxy* tfProxy = 
+      inst.getRawPointer<LuaTransferFun1DProxy>(ss);
+  TransferFunction1D* tempTrans = tfProxy->get1DTransferFunction();
+
+  m_2DTransferFunction->Set1DTrans(tempTrans);
 }
 
 
