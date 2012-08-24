@@ -37,6 +37,8 @@
 #ifndef SCALEANDBIASDLG_H
 #define SCALEANDBIASDLG_H
 
+#include <memory>
+
 #include "UI/AutoGen/ui_ScaleAndBiasDlg.h"
 #include <StdDefines.h>
 #include "../Tuvok/Basics/Vectors.h"
