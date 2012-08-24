@@ -41,6 +41,7 @@
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/IO/uvfDataset.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaDatasetProxy.h"
 
 #include <QtGui/QFileDialog>
@@ -89,7 +90,7 @@ string MainWindow::ConvertDataToI3M(LuaClassInstance currentDataset,
   if (ss->cexecRet<LuaDatasetProxy::DatasetType>(
           currentDataset.fqName() + ".getDSType") != LuaDatasetProxy::UVF) {
     T_ERROR("MainWindow::ConvertDataToI3M can only accept UVF datasets.");
-    return false;
+    return "";
   }
 
   string dsFilename = ss->cexecRet<string>(currentDataset.fqName() + 
