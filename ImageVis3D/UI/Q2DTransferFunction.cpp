@@ -42,6 +42,7 @@
 
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTransferFun1DProxy.h"
 
 #ifdef max
   #undef max
@@ -1197,7 +1198,13 @@ bool Q2DTransferFunction::SaveToFile(const QString& strFilename) {
 }
 
 
-void Q2DTransferFunction::Set1DTrans(const TransferFunction1D* p1DTrans) {
+void Q2DTransferFunction::Set1DTrans(LuaClassInstance inst) {
+  // Hack that will go away once this class is fully converted using Lua calls.
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  LuaTransferFun1DProxy* tfProxy = 
+      inst.getRawPointer<LuaTransferFun1DProxy>(ss);
+  TransferFunction1D* p1DTrans = tfProxy->get1DTransferFunction();
+
   m_pTrans->Update1DTrans(p1DTrans);
   m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
   m_bBackdropCacheUptodate = false;

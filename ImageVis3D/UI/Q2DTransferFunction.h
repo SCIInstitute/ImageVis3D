@@ -104,7 +104,7 @@ public:
   void SetData(const Histogram2D* vHistogram, TransferFunction2D* pTrans);
   void SetPaintmode(unsigned int iPaintmode) {
     if (iPaintmode < Q2DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
-  void Set1DTrans(const TransferFunction1D* p1DTrans);
+  void Set1DTrans(LuaClassInstance p1DTrans);
 
   QSize minimumSizeHint() const;
   QSize sizeHint() const;

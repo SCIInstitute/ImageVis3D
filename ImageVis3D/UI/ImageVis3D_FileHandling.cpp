@@ -1002,20 +1002,14 @@ bool MainWindow::ExportImageStack(uint32_t iLODLevel, std::string targetFileName
     pleaseWait.SetText("Exporting image stack, please wait  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
-    const UVFDataset *ds = dynamic_cast<UVFDataset*>(
-      &(m_pActiveRenderWin->GetRenderer()->GetDataset())
-    );
-
     FLOATVECTOR4 color(m_pActiveRenderWin->GetIsosufaceColor(),1.0f);
 
-    // Hack that will go away once this class is fully converted using Lua calls.
     shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-    LuaClassInstance inst = m_1DTransferFunction->GetTrans();
-    LuaTransferFun1DProxy* tfProxy = 
-        inst.getRawPointer<LuaTransferFun1DProxy>(ss);
-    TransferFunction1D* tempTrans = tfProxy->get1DTransferFunction();
-
-    bool bResult = m_MasterController.IOMan()->ExtractImageStack( ds, tempTrans, iLODLevel,  targetFileName, m_strTempDir, bAllDirs);
+    LuaClassInstance tf = m_1DTransferFunction->GetTrans();
+    bool bResult = ss->cexecRet<bool>("tuvok.io.extractImageStack", 
+                                      m_pActiveRenderWin->GetRendererDataset(),
+                                      tf, static_cast<uint64_t>(iLODLevel), 
+                                      targetFileName, m_strTempDir, bAllDirs);
     pleaseWait.close();
 
     return bResult;
