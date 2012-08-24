@@ -226,7 +226,7 @@ void MainWindow::RemoveGeometry() {
 void MainWindow::AddGeometry(std::string filename) {
   if (!m_pActiveRenderWin) return;
 
-  if(!m_pActiveRenderWin->GetRenderer()->SupportsMeshes()) {
+  if(!m_pActiveRenderWin->SupportsMeshes()) {
       if(QMessageBox::Yes == 
         QMessageBox::question(NULL, 
                          "Mesh feature not supported in this renderer",
@@ -246,8 +246,11 @@ void MainWindow::AddGeometry(std::string filename) {
   }
 
 
-  UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
-  if (!currentDataset) {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+  LuaDatasetProxy::DatasetType type = 
+      ss->cexecRet<LuaDatasetProxy::DatasetType>(ds.fqName() + ".getDSType");
+  if (type != LuaDatasetProxy::UVF) {
     ShowCriticalDialog("Mesh Import Failed.",
                  "Mesh Integration only supported for UVF datasets.");
     return;
@@ -280,9 +283,10 @@ void MainWindow::AddGeometry(std::string filename) {
 
   pleaseWait.SetText("Integrating Mesh into volume file, please wait  ...");
 
-  m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
+  m_pActiveRenderWin->SetDatasetIsInvalid(true);
 
-  if (!currentDataset->AppendMesh(*m)) {
+  shared_ptr<const Mesh> constMeshPtr = m;
+  if (!ss->cexecRet<bool>(ds.fqName() + ".appendMesh", constMeshPtr)) {
     pleaseWait.close();
     ShowCriticalDialog("Mesh Import Failed.",
                  "Could not integrate the mesh into this UVF file. "
@@ -290,12 +294,12 @@ void MainWindow::AddGeometry(std::string filename) {
                  "('Help | Debug Window').");
   } else {
     pleaseWait.SetText("Creating render resources, please wait  ...");
-    m_pActiveRenderWin->GetRenderer()->ScanForNewMeshes();
+    m_pActiveRenderWin->ScanForNewMeshes();
     pleaseWait.close();
     UpdateExplorerView(true);
   }
 
-  m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
+  m_pActiveRenderWin->SetDatasetIsInvalid(false);
 }
 
 void MainWindow::AddGeometry() {

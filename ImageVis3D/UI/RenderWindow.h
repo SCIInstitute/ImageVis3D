@@ -264,6 +264,9 @@ class RenderWindow
     void SetDatasetIsInvalid(bool datasetIsInvalid);
     void RemoveMeshData(size_t index);
     void SetRendererTarget(tuvok::AbstrRenderer::ERendererTarget targ);
+    bool SupportsClearView();
+    bool SupportsMeshes();
+    bool ScanForNewMeshes();
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();

@@ -467,6 +467,24 @@ bool RenderWindow::IsRendererValid() {
       m_MasterController.LuaScript());
 }
 
+bool RenderWindow::SupportsClearView() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".supportsClearView");
+}
+
+bool RenderWindow::SupportsMeshes() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".supportsMeshes");
+}
+
+bool RenderWindow::ScanForNewMeshes() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".scanForNewMeshes");
+}
+
 RenderWindow::RegionSplitter
 RenderWindow::GetRegionSplitter(INTVECTOR2 pos) const
 {
@@ -1611,14 +1629,15 @@ void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
   string rn = m_LuaAbstrRenderer.fqName();
   ss->cexec(rn + ".setIsoValue", fIsoVal);
   if(bPropagate) {
-    /// @todo we actually want to do this in Lua, not C++ code...
-    const tuvok::Dataset& ds = this->GetRenderer()->GetDataset();
-    std::pair<double,double> range = ds.GetRange();
+    LuaClassInstance dataset = GetRendererDataset();
+    pair<double,double> range = ss->cexecRet<pair<double,double> >(
+        dataset.fqName() + ".getRange");
     // we might not have a valid range (old UVFs, color data).  In that case,
     // use the bit width.
     if(range.second <= range.first) {
       range.first = 0.0;
-      double width = static_cast<double>(ds.GetBitWidth());
+      double width = static_cast<double>(ss->cexecRet<uint64_t>(
+              dataset.fqName() + ".getBitWidth"));
       range.second = std::pow(2.0, width);
     }
     float isoval = MathTools::lerp<double,float>(fIsoVal,
