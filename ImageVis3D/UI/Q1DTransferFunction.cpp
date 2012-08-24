@@ -304,7 +304,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 }
 
 void Q1DTransferFunction::mousePressEvent(QMouseEvent *event) {
-  if (m_pTrans == NULL) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
 
   // call superclass method
   QWidget::mousePressEvent(event);
@@ -316,7 +316,7 @@ void Q1DTransferFunction::mousePressEvent(QMouseEvent *event) {
 }
 
 void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
-  if (m_pTrans == NULL) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
 
   // call superclass method
   QWidget::mouseReleaseEvent(event);
@@ -336,7 +336,7 @@ void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
-  if (m_pTrans == NULL) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
 
   // call superclass method
   QWidget::mouseMoveEvent(event);
@@ -430,10 +430,23 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
       bool bShiftPressed = ( event->modifiers() & Qt::ShiftModifier);
 
       // set "step" function
-      if (m_iPaintMode & PAINT_RED)   m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,0, bShiftPressed);
-      if (m_iPaintMode & PAINT_GREEN) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,1, bShiftPressed);
-      if (m_iPaintMode & PAINT_BLUE)  m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,2, bShiftPressed);
-      if (m_iPaintMode & PAINT_ALPHA) m_pTrans->SetStdFunction(float(iCurrentIndex)/float(m_pTrans->GetSize()), fValue,3, bShiftPressed);
+      size_t cdataSize = cdata->size();
+      if (m_iPaintMode & PAINT_RED)   
+        ss->cexec(m_trans.fqName() + ".setStdFunction", 
+                  float(iCurrentIndex)/float(cdataSize), fValue, 
+                  float(0), bShiftPressed);
+      if (m_iPaintMode & PAINT_GREEN)
+        ss->cexec(m_trans.fqName() + ".setStdFunction", 
+                  float(iCurrentIndex)/float(cdataSize), fValue, 
+                  float(1), bShiftPressed);
+      if (m_iPaintMode & PAINT_BLUE)
+        ss->cexec(m_trans.fqName() + ".setStdFunction", 
+                  float(iCurrentIndex)/float(cdataSize), fValue, 
+                  float(2), bShiftPressed);
+      if (m_iPaintMode & PAINT_ALPHA)
+        ss->cexec(m_trans.fqName() + ".setStdFunction", 
+                  float(iCurrentIndex)/float(cdataSize), fValue, 
+                  float(3), bShiftPressed);
 
       // redraw this widget
       update();
@@ -506,7 +519,7 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
   // call superclass method
   QWidget::paintEvent(event);
 
-  if (m_pTrans == NULL) {
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) {
     QPainter painter(this);
     DrawCoordinateSystem(painter);
     return;
@@ -549,11 +562,13 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
   // hand the load call over to the TransferFunction1D class
   size_t iSize = 0;
-  if(m_pTrans) {
-    iSize = m_pTrans->GetSize();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if (m_trans.isValid(m_MasterController.LuaScript())) {
+    iSize = ss->cexecRet<size_t>(m_trans.fqName() + ".getSize");
   }
 
-  if( m_pTrans->Load(strFilename.toStdString(), iSize) ) {
+  if (ss->cexecRet<bool>(m_trans.fqName() + ".loadFromFileWithSize", 
+                         strFilename.toStdString(), iSize)) {
     PreparePreviewData();
     update();
     ApplyFunction();
@@ -563,12 +578,12 @@ bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
 
 bool Q1DTransferFunction::AddFromFile(const QString& strFilename) {
   size_t iSize = 0;
-  if(m_pTrans) {
-    iSize = m_pTrans->GetSize();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if (m_trans.isValid(ss)) {
+    iSize = ss->cexecRet<size_t>(m_trans.fqName() + ".getSize");
   } else return false;
 
   // Retrieve color data from Lua script class.
-  std::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   shared_ptr<vector<FLOATVECTOR4> > cdata = 
       ss->cexecRet<shared_ptr<vector<FLOATVECTOR4> > >(
           m_trans.fqName() + ".getColorData");
@@ -590,12 +605,12 @@ bool Q1DTransferFunction::AddFromFile(const QString& strFilename) {
 
 bool Q1DTransferFunction::SubtractFromFile(const QString& strFilename) {
   size_t iSize = 0;
-  if(m_pTrans) {
-    iSize = m_pTrans->GetSize();
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if (m_trans.isValid(ss)) {
+    iSize = ss->cexecRet<size_t>(m_trans.fqName() + ".getSize");
   } else return false;
 
   // Retrieve color data from Lua script class.
-  std::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   shared_ptr<vector<FLOATVECTOR4> > cdata = 
       ss->cexecRet<shared_ptr<vector<FLOATVECTOR4> > >(
           m_trans.fqName() + ".getColorData");
@@ -617,5 +632,7 @@ bool Q1DTransferFunction::SubtractFromFile(const QString& strFilename) {
 
 bool Q1DTransferFunction::SaveToFile(const QString& strFilename) {
   // hand the save call over to the TransferFunction1D class
-  return m_pTrans->Save(strFilename.toStdString());
+  std::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  return ss->cexecRet<bool>(m_trans.fqName() + ".save", 
+                            strFilename.toStdString());
 }
