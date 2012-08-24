@@ -427,19 +427,19 @@ void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
       if (m_iPaintMode & PAINT_RED)   
         ss->cexec(m_trans.fqName() + ".setStdFunction", 
                   float(iCurrentIndex)/float(cdataSize), fValue, 
-                  float(0), bShiftPressed);
+                  0, bShiftPressed);
       if (m_iPaintMode & PAINT_GREEN)
         ss->cexec(m_trans.fqName() + ".setStdFunction", 
                   float(iCurrentIndex)/float(cdataSize), fValue, 
-                  float(1), bShiftPressed);
+                  1, bShiftPressed);
       if (m_iPaintMode & PAINT_BLUE)
         ss->cexec(m_trans.fqName() + ".setStdFunction", 
                   float(iCurrentIndex)/float(cdataSize), fValue, 
-                  float(2), bShiftPressed);
+                  2, bShiftPressed);
       if (m_iPaintMode & PAINT_ALPHA)
         ss->cexec(m_trans.fqName() + ".setStdFunction", 
                   float(iCurrentIndex)/float(cdataSize), fValue, 
-                  float(3), bShiftPressed);
+                  3, bShiftPressed);
 
       // redraw this widget
       update();

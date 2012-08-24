@@ -42,7 +42,9 @@
 
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaTransferFun1DProxy.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTransferFun2DProxy.h"
 
 #ifdef max
   #undef max
@@ -101,8 +103,15 @@ QSize Q2DTransferFunction::sizeHint() const
   return QSize(400, 400);
 }
 
-void Q2DTransferFunction::SetData(const Histogram2D* vHistogram, TransferFunction2D* pTrans) {
-  m_pTrans = pTrans;
+void Q2DTransferFunction::SetData(const Histogram2D* vHistogram,
+                                  LuaClassInstance tf2d) {
+  m_trans = tf2d;
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  if (m_trans.isValid(ss) == false) return;
+
+  // Temporary hack until we are able to remove m_pTrans completely.
+  LuaTransferFun2DProxy* prox = tf2d.getRawPointer<LuaTransferFun2DProxy>(ss);
+  m_pTrans = prox->get2DTransferFunction();
   if (m_pTrans == NULL) return;
 
   // resize the histogram vector

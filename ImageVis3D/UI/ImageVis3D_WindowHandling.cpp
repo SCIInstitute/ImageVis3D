@@ -839,8 +839,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
                                 tf1d);
   m_1DTransferFunction->update();
   MESSAGE("Getting 2D Transfer Function.");
-  m_2DTransferFunction->SetData(&ren->GetDataset().Get2DHistogram(),
-                                ren->Get2DTrans());
+  LuaClassInstance tf2d = sender->GetRendererTransferFunction2D();
+  m_2DTransferFunction->SetData(&ren->GetDataset().Get2DHistogram(), tf2d);
   m_2DTransferFunction->update();
 
   MESSAGE("Getting other Renderwindow parameters.");
@@ -1239,7 +1239,7 @@ void MainWindow::RenderWindowClosing(RenderWindow* sender) {
 
   m_1DTransferFunction->SetData(NULL, 10, LuaClassInstance());
   m_1DTransferFunction->update();
-  m_2DTransferFunction->SetData(NULL, NULL);
+  m_2DTransferFunction->SetData(NULL, LuaClassInstance());
   m_2DTransferFunction->update();
 
   DisableAllTrans();

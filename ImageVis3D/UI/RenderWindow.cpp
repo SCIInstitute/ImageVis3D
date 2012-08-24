@@ -342,6 +342,12 @@ LuaClassInstance RenderWindow::GetRendererTransferFunction1D() const {
                                         ".get1DTrans");
 }
 
+LuaClassInstance RenderWindow::GetRendererTransferFunction2D() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<LuaClassInstance>(m_LuaAbstrRenderer.fqName() +
+                                        ".get2DTrans");
+}
+
 void RenderWindow::SetTimeSlice(uint32_t timeSlice) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexec(m_LuaAbstrRenderer.fqName() + ".setTimeSlice", timeSlice);
@@ -482,7 +488,7 @@ bool RenderWindow::SupportsMeshes() {
 bool RenderWindow::ScanForNewMeshes() {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
-  ss->cexec(rn + ".scanForNewMeshes");
+  return ss->cexecRet<bool>(rn + ".scanForNewMeshes");
 }
 
 vector<shared_ptr<RenderMesh> > RenderWindow::GetRendererMeshes() {
