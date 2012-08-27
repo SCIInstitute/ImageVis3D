@@ -859,6 +859,10 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
   /// @todo Add keyboard shortcuts dialog.
 
   switch (event->key()) {
+    case Qt::Key_D :
+      ss->cexec(rn + ".setDebugView", 
+                !ss->cexecRet<bool>(rn + ".getDebugView"));
+      break;
     case Qt::Key_F :
       m_bFirstPersonMode = !m_bFirstPersonMode;
       break;
