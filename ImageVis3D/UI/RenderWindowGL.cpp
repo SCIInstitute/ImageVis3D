@@ -242,7 +242,7 @@ void RenderWindowGL::InitializeRenderer()
                << "Adjusting settings!";
           WARNING("%s", warn.str().c_str());
 
-          m_MasterController.IOMan()->SetMaxBrickSize(ms_iMaxVolumeDims);
+          m_MasterController.IOMan()->SetMaxBrickSize(ms_iMaxVolumeDims, m_MasterController.IOMan()->GetBuilderBrickSize());
         } else {
           MESSAGE("Maximum supported texture size: %u "
                   "(required by IO subsystem: %llu)", ms_iMaxVolumeDims,

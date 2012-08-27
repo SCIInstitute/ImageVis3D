@@ -103,6 +103,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     int           GetLogoPos() const;
 
     unsigned int  GetMaxBrickSize() const;
+    unsigned int  GetBuilderBrickSize() const;
+    bool GetMedianFilter() const;
 
     void Data2Form(bool bIsDirectX10Capable,
                    uint64_t iMaxCPU, uint64_t iMaxGPU,
@@ -141,7 +143,9 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    const QString& strLogo,
                    int iLogoPos,
                    unsigned int iMaxBrickSize,
+                   unsigned int iBuilderBrickSize,
                    unsigned int iMaxMaxBrickSize,
+                   bool bMedianFilter,
                    bool expFeatures);
 
   protected slots:
@@ -162,6 +166,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void PickLogFile();
     void SelectTempDir();
     void MaxBSChanged(int iValue);
+    void BuilderBSChanged(int iValue);
     void ToggleExperimentalFeatures();
 
   private:

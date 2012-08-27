@@ -109,6 +109,11 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("MaxMaxBricksize", iMaxMaxBrickSize);
     }
   
+
+    unsigned int iBuilderBrickSize = settings.value("BuilderBrickSize", static_cast<qulonglong>(7)).toUInt();
+    bool bUseMedian = settings.value("UseMedian", false).toBool();
+   
+
     settings.endGroup();
     
 
@@ -181,7 +186,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
                           iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
                           bDisableBorder, bNoRCClipplanes,
                           vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos,
-                          iMaxBrickSize, iMaxMaxBrickSize, expFeatures);
+                          iMaxBrickSize, iBuilderBrickSize, iMaxMaxBrickSize, bUseMedian, expFeatures);
 
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
       // save settings
@@ -201,6 +206,10 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
 
       settings.setValue("TempDir", settingsDlg.GetTempDir().c_str());
       settings.setValue("MaxBricksize", static_cast<qulonglong>(settingsDlg.GetMaxBrickSize()));
+
+      settings.setValue("BuilderBrickSize", static_cast<qulonglong>(settingsDlg.GetBuilderBrickSize()));
+      settings.setValue("UseMedian", settingsDlg.GetMedianFilter());
+
       settings.endGroup();
 
       settings.beginGroup("Performance");
@@ -346,6 +355,10 @@ void MainWindow::ApplySettings() {
   uint64_t iMaxBrickSize = MathTools::Pow2((uint64_t)settings.value("MaxBricksize",  static_cast<qulonglong>(iMaxBrickSizeLog)).toUInt());
   iMaxBrickSizeLog = MathTools::Log2(iMaxBrickSize);
 
+  uint64_t iBuilderBrickSize = MathTools::Pow2((uint64_t)settings.value("BuilderBrickSize", 7).toUInt());
+  bool bUseMedian = settings.value("UseMedian", false).toBool();
+
+
   // sanity check: make sure a RGBA float brick would fit into the specified memory
   uint64_t _iMaxBrickSizeLog = iMaxBrickSizeLog;
   while (iMaxBrickSizeLog > 1 && iMaxBrickSize*iMaxBrickSize*iMaxBrickSize*4*sizeof(float) > iMaxCPU) {
@@ -358,10 +371,15 @@ void MainWindow::ApplySettings() {
   }
 
 
-  if (!m_MasterController.IOMan()->SetMaxBrickSize(iMaxBrickSize)) {
+  if (!m_MasterController.IOMan()->SetMaxBrickSize(iMaxBrickSize, iBuilderBrickSize)) {
     WARNING("Invalid MaxBrickSize read from configuration, ignoring value. Please check the configuration in the settings dialog.");
   }
+
+  m_MasterController.IOMan()->SetUseMedianFilter(bUseMedian);
+
   settings.endGroup();
+
+
 
   // Apply window settings
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {

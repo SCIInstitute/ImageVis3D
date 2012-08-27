@@ -366,7 +366,9 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t
                             const FLOATVECTOR4& vTextColor,
                             const QString& strLogo, int iLogoPos,
                             unsigned int iMaxBrickSize,
+                            unsigned int iBuilderBrickSize,
                             unsigned int iMaxMaxBrickSize,
+                            bool bMedianFilter,
                             bool expFeatures) {
   m_bInit = true;
 
@@ -383,8 +385,16 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t
   horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
   lineEdit_TempDir->setText(tempDir.c_str());
-  horizontalSlider_BS->setValue(iMaxBrickSize);
-  horizontalSlider_BS->setMaximum(iMaxMaxBrickSize);
+  horizontalSlider_BSMax->setMaximum(iMaxMaxBrickSize);
+  horizontalSlider_BSMax->setValue(iMaxBrickSize);
+  MaxBSChanged(iMaxBrickSize);
+
+  horizontalSlider_BSBuilder->setMaximum(iMaxMaxBrickSize);
+  horizontalSlider_BSBuilder->setValue(iBuilderBrickSize);
+  BuilderBSChanged(iBuilderBrickSize);
+
+  radioButton_Mean->setChecked(!bMedianFilter);
+  radioButton_Median->setChecked(bMedianFilter);
 
   checkBoxQuickload->setChecked(bQuickopen);
   horizontalSlider_MinFramerate->setValue(iMinFramerate);
@@ -531,6 +541,11 @@ void SettingsDlg::WarnAPIMethodChange() {
   }
 }
 
+bool SettingsDlg::GetMedianFilter() const {
+  return radioButton_Median->isChecked();
+}
+
+
 unsigned int SettingsDlg::GetVolrenType() const {
   if (radioButton_APIGL->isChecked()) {
     if (radioButton_SBVR->isChecked()) return 0;
@@ -569,15 +584,30 @@ int SettingsDlg::GetLogoPos() const {
   return 3;
 }
 
-
 void SettingsDlg::MaxBSChanged(int iValue) {
   QString str = tr("%1^3").arg(MathTools::Pow2(uint32_t(iValue)));
+  if (iValue < horizontalSlider_BSBuilder->value()) {
+    horizontalSlider_BSBuilder->setValue(iValue);
+    BuilderBSChanged(iValue);
+  }
+  label_BSMaxUnit->setText(str);
+}
 
-  label_BS->setText(str);
+void SettingsDlg::BuilderBSChanged(int iValue) {
+  QString str = tr("%1^3").arg(MathTools::Pow2(uint32_t(iValue)));
+  if (horizontalSlider_BSMax->value() < iValue) {
+    horizontalSlider_BSMax->setValue(iValue);
+    MaxBSChanged(iValue);
+  }
+  label_BSBuilderUnit->setText(str);
 }
 
 unsigned int SettingsDlg::GetMaxBrickSize() const {
-  return horizontalSlider_BS->value();
+  return horizontalSlider_BSMax->value();
+}
+
+unsigned int SettingsDlg::GetBuilderBrickSize() const {
+  return horizontalSlider_BSBuilder->value();
 }
 
 void SettingsDlg::PickLogFile() {
@@ -686,8 +716,10 @@ void SettingsDlg::ToggleExperimentalFeatures() {
 
   if(GetExperimentalFeatures()) {
     radioButton_TRaycast->setVisible(true);
+    groupBox_Filter->setVisible(true);
   } else {
     radioButton_TRaycast->setVisible(false);
+    groupBox_Filter->setVisible(false);
     if (radioButton_TRaycast->isChecked()) 
       radioButton_Raycast->setChecked(true);
   }
