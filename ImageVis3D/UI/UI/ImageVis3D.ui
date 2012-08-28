@@ -3408,7 +3408,7 @@
               <item>
                <widget class="QLabel" name="label_SamplingRate">
                 <property name="text">
-                 <string>Sampling:</string>
+                 <string>Sampling Rate (100%):</string>
                 </property>
                </widget>
               </item>
@@ -3431,6 +3431,32 @@
                 </property>
                </widget>
               </item>
+               <item>
+                 <widget class="QLabel" name="label_FoV">
+                   <property name="text">
+                     <string>Field of View (50°):</string>
+                   </property>
+                 </widget>
+               </item>
+               <item>
+                 <widget class="QSlider" name="horizontalSlider_FoV">
+                   <property name="toolTip">
+                     <string>Field of View.  Specify the angle/field of view of the virtual camera.</string>
+                   </property>
+                   <property name="minimum">
+                     <number>1</number>
+                   </property>
+                   <property name="maximum">
+                     <number>179</number>
+                   </property>
+                   <property name="value">
+                     <number>50</number>
+                   </property>
+                   <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                   </property>
+                 </widget>
+               </item>
              </layout>
             </widget>
            </item>
@@ -5747,7 +5773,23 @@
     </hint>
    </hints>
   </connection>
-  <connection>
+   <connection>
+     <sender>horizontalSlider_FoV</sender>
+     <signal>valueChanged(int)</signal>
+     <receiver>MainWindow</receiver>
+     <slot>SetFoV(int)</slot>
+     <hints>
+       <hint type="sourcelabel">
+         <x>1297</x>
+         <y>896</y>
+       </hint>
+       <hint type="destinationlabel">
+         <x>1142</x>
+         <y>902</y>
+       </hint>
+     </hints>
+   </connection>
+   <connection>
    <sender>pushButton_ApplyUpdate</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
@@ -7427,6 +7469,7 @@
   <slot>Transfer2DDeleteGradient()</slot>
   <slot>Transfer2DChooseGradientColor()</slot>
   <slot>Transfer2DChooseGradientOpacity()</slot>
+  <slot>SetFoV()</slot>
   <slot>Transfer2DUpdateGradientBox()</slot>
   <slot>Transfer2DSave()</slot>
   <slot>Transfer2DLoad()</slot>

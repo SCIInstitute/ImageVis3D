@@ -870,6 +870,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
   checkBox_Lighting->setChecked(ren->GetUseLighting());
   SetSampleRateSlider(int(ren->GetSampleRateModifier()*100));
+  SetFoVSlider(int(ren->GetFoV()));
   int iRange = int(m_pActiveRenderWin->GetDynamicRange().second);
   SetIsoValueSlider(int(ren->GetIsoValue()), iRange);
 

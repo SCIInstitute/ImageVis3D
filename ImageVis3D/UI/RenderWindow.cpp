@@ -1752,6 +1752,18 @@ void RenderWindow::SetSampleRateModifier(float fSampleRateModifier,
   }
 }
 
+void RenderWindow::SetFoV(float fFoV, bool bPropagate) {
+  /// @todo Update FoV slider from hook.
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setFoV", fFoV);
+  if (bPropagate){
+    for (size_t i = 0;i<m_vpLocks[1].size();i++) {
+      m_vpLocks[1][i]->SetFoV(fFoV, false);
+    }
+  }
+}
+
 void RenderWindow::SetIsoValue(float fIsoVal, bool bPropagate) {
   /// @todo Provenance: Need final iso value instead of continuous change.
   /// @todo Update isovalue slider from hook.

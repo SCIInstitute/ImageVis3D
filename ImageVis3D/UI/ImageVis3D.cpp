@@ -454,13 +454,29 @@ void MainWindow::SetSampleRate(int iValue) {
 
 void MainWindow::UpdateSampleRateLabel(int iValue) {
   QString desc;
-  desc = tr("Sampling Rate (%1%)").arg(iValue);
+  desc = tr("Sampling Rate (%1%):").arg(iValue);
   label_SamplingRate->setText(desc);
 }
 
 void MainWindow::SetSampleRateSlider(int iValue) {
   horizontalSlider_Sampling->setValue(iValue);
   UpdateSampleRateLabel(iValue);
+}
+
+void MainWindow::SetFoV(int iValue) {
+  if (m_pActiveRenderWin != NULL) m_pActiveRenderWin->SetFoV(iValue);
+  UpdateFoVLabel(iValue);
+}
+
+void MainWindow::SetFoVSlider(int iValue) {
+  horizontalSlider_FoV->setValue(iValue);
+  UpdateFoVLabel(iValue);
+}
+
+void MainWindow::UpdateFoVLabel(int iValue) {
+  QString desc;
+  desc = tr("Field of View (%1°):").arg(iValue);
+  label_FoV->setText(desc);
 }
 
 // Script command to update isovalue.

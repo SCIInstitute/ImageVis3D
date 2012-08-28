@@ -247,6 +247,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void Collapse2DWidgets();
     void Expand2DWidgets();
     void SetSampleRate(int iValue);
+    void SetFoV(int iValue);
+    void SetFoVSlider(int iValue);
     void SetIsoValue(float fValue);
     void SetIsoValue(int iValue);
     void SetClearViewIsoValue(float fValue);
@@ -427,6 +429,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void ApplySettings(RenderWindow* renderWin);
     void SetSampleRateSlider(int iValue);
     void UpdateSampleRateLabel(int iValue);
+    void UpdateFoVLabel(int iValue);
     void SetIsoValueSlider(int iValue, int iMaxValue);
     void UpdateIsoValLabel(int iValue, int iMaxValue);
     void SetToggleGlobalBBoxLabel(bool bRenderBBox);
