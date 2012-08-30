@@ -112,6 +112,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
 
     unsigned int iBuilderBrickSize = settings.value("BuilderBrickSize", static_cast<qulonglong>(7)).toUInt();
     bool bUseMedian = settings.value("UseMedian", false).toBool();
+    bool bClampToEdge = settings.value("ClampToEdge", false).toBool();
    
 
     settings.endGroup();
@@ -186,7 +187,8 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
                           iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
                           bDisableBorder, bNoRCClipplanes,
                           vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos,
-                          iMaxBrickSize, iBuilderBrickSize, iMaxMaxBrickSize, bUseMedian, expFeatures);
+                          iMaxBrickSize, iBuilderBrickSize, iMaxMaxBrickSize, bUseMedian,
+                          bClampToEdge, expFeatures);
 
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
       // save settings
@@ -209,6 +211,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
 
       settings.setValue("BuilderBrickSize", static_cast<qulonglong>(settingsDlg.GetBuilderBrickSize()));
       settings.setValue("UseMedian", settingsDlg.GetMedianFilter());
+      settings.setValue("ClampToEdge", settingsDlg.GetClampToEdge());
 
       settings.endGroup();
 
@@ -357,6 +360,7 @@ void MainWindow::ApplySettings() {
 
   uint64_t iBuilderBrickSize = MathTools::Pow2((uint64_t)settings.value("BuilderBrickSize", 7).toUInt());
   bool bUseMedian = settings.value("UseMedian", false).toBool();
+  bool bClampToEdge = settings.value("ClampToEdge", false).toBool();
 
 
   // sanity check: make sure a RGBA float brick would fit into the specified memory
@@ -376,6 +380,7 @@ void MainWindow::ApplySettings() {
   }
 
   m_MasterController.IOMan()->SetUseMedianFilter(bUseMedian);
+  m_MasterController.IOMan()->SetClampToEdge(bClampToEdge);  
 
   settings.endGroup();
 

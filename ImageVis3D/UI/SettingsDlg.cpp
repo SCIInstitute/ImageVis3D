@@ -369,6 +369,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t
                             unsigned int iBuilderBrickSize,
                             unsigned int iMaxMaxBrickSize,
                             bool bMedianFilter,
+                            bool bClampToEdge,
                             bool expFeatures) {
   m_bInit = true;
 
@@ -395,6 +396,8 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t
 
   radioButton_Mean->setChecked(!bMedianFilter);
   radioButton_Median->setChecked(bMedianFilter);
+  radioButton_Border0->setChecked(!bClampToEdge);
+  radioButton_BorderClamp->setChecked(bClampToEdge);
 
   checkBoxQuickload->setChecked(bQuickopen);
   horizontalSlider_MinFramerate->setValue(iMinFramerate);
@@ -541,8 +544,13 @@ void SettingsDlg::WarnAPIMethodChange() {
   }
 }
 
+
 bool SettingsDlg::GetMedianFilter() const {
   return radioButton_Median->isChecked();
+}
+
+bool SettingsDlg::GetClampToEdge() const {
+  return radioButton_BorderClamp->isChecked();
 }
 
 
