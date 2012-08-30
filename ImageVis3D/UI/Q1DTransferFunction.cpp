@@ -241,7 +241,12 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 
   // draw the tranfer function as one larger polyline
   std::vector<QPointF> pointList(m_vHistogram.GetSize());
-  QPen penCurve(m_colorBorder, 1, Qt::SolidLine);
+  QPen penCurve(m_colorBorder, 2, Qt::CustomDashLine);
+
+  QVector<qreal> dashes;
+  qreal space = 4;
+  dashes << 1 << space;
+  penCurve.setDashPattern(dashes);
 
   // Retrieve color data from Lua script class.
   std::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
@@ -253,10 +258,18 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
   for (unsigned int j=0; j < 4; j++) {
     // select the color
     switch (j) {
-    case 0  : penCurve.setColor(m_colorRedLine);   break;
-    case 1  : penCurve.setColor(m_colorGreenLine); break;
-    case 2  : penCurve.setColor(m_colorBlueLine);  break;
-    default : penCurve.setColor(m_colorAlphaLine); break;
+      case 0  : penCurve.setColor(m_colorRedLine);  
+                penCurve.setDashOffset(0.0);
+                break;
+      case 1  : penCurve.setColor(m_colorGreenLine); 
+                penCurve.setDashOffset(1.0);
+                break;
+      case 2  : penCurve.setColor(m_colorBlueLine);  
+                penCurve.setDashOffset(2.0);
+                break;
+      default : penCurve.setColor(m_colorAlphaLine); 
+                penCurve.setDashOffset(3.0);
+                break;
     }
 
     // Make sure our tfqn is as wide as our histogram, since we'll be accessing
