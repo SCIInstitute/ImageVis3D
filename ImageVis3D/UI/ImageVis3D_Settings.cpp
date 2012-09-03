@@ -308,10 +308,6 @@ void MainWindow::ApplySettings() {
                                      m_MasterController.ExperimentalFeatures()).toBool();
   m_MasterController.ExperimentalFeatures(experimental);
 
-
-  toolButton_CropData->setVisible(experimental);
-
-
   settings.endGroup();
 
   actionTransfer_to_ImageVis3D_Mobile_Device->setVisible(m_bI3MFeatures);
