@@ -38,6 +38,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <cmath>
 
 #include <tclap/CmdLine.h>
 
@@ -70,6 +71,84 @@ using namespace tuvok;
   #endif
 #endif
 
+double radius(double x, double y, double z)
+{
+  return std::sqrt(x*x + y*y + z*z);
+}
+
+double phi(double x, double y)
+{
+  return std::atan2(y, x);
+}
+
+double theta(double x, double y, double z)
+{
+  return std::atan2(std::sqrt(x*x + y*y), z);
+}
+
+double PowerX(double x, double y, double z, double cx, int n, double power)
+{
+  return cx + power*std::sin(phi(x,y)*n)*std::cos(theta(x,y,z)*n);
+}
+
+double PowerY(double x, double y, double z, double cy, int n, double power)
+{
+  return cy + power*std::sin(phi(x,y)*n)*std::sin(theta(x,y,z)*n);
+}
+
+double PowerZ(double x, double y, double cz, int n, double power)
+{
+  return cz + power*std::cos(phi(x,y)*n);
+}
+
+double ComputeMandelbulb(const double sx, const double sy, const double sz, const uint32_t n, const uint32_t iMaxIterations, const double fBailout) {
+
+  double fx = sx;
+  double fy = sy;
+  double fz = sz;
+  double r = radius(fx, fy, fz);
+
+  for (uint32_t i = 0; i < iMaxIterations; i++) {
+
+    const double fPower = std::pow(r, static_cast<double>(n));
+
+    const double fx_ = PowerX(fx, fy, fz, sx, n, fPower);
+    const double fy_ = PowerY(fx, fy, fz, sy, n, fPower);
+    const double fz_ = PowerZ(fx, fy    , sz, n, fPower);
+
+    fx = fx_;
+    fy = fy_;
+    fz = fz_;
+
+    if ((r = radius(fx, fy, fz)) > fBailout)
+      return static_cast<double>(i) / iMaxIterations;
+  }
+
+  return 1.0;
+}
+
+template<typename T, bool bMandelbulb> void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
+  T* source = new T[size_t(vSize.x)];
+
+  for (uint64_t z = 0;z<vSize.z;z++) {
+    MESSAGE("Computing %.3f%%", (double)z/vSize.z);
+    for (uint64_t y = 0;y<vSize.y;y++) {
+      for (uint64_t x = 0;x<vSize.x;x++) {
+        if (bMandelbulb)
+          source[x] = static_cast<T>(ComputeMandelbulb(3.0 * static_cast<double>(x)/(vSize.x-1) - 1.5,
+                                                       3.0 * static_cast<double>(y)/(vSize.y-1) - 1.5,
+                                                       3.0 * static_cast<double>(z)/(vSize.z-1) - 1.5,
+                                                       8, 10, 4.0) * std::numeric_limits<T>::max());
+        else
+          source[x] = static_cast<T>(std::max(0.0f,(0.5f-(0.5f-FLOATVECTOR3(float(x),float(y),float(z))/FLOATVECTOR3(vSize)).length())*std::numeric_limits<T>::max()*2));
+      }
+      pDummyData->WriteRAW((uint8_t*)source, vSize.x*sizeof(T));
+    }
+  }
+
+  delete [] source;
+}
+
 int main(int argc, char* argv[])
 {
   HRConsoleOut* debugOut = new HRConsoleOut();
@@ -98,6 +177,7 @@ int main(int argc, char* argv[])
   bool bVerify;
   bool bShow1dhist;
   bool bShow2dhist;
+  bool bMandelbulb;
   bool bShowData;
   bool bUseToCBlock;
 
@@ -111,6 +191,7 @@ int main(int argc, char* argv[])
     TCLAP::SwitchArg hist2d("2", "2dhist", "output the 2D histogram", false);
     TCLAP::SwitchArg create("c", "create", "create instead of read a UVF",
                             false);
+    TCLAP::SwitchArg mandelbulb("m", "mandelbulb", "compute mandelbulb fractal instead of simple sphere", false);
     TCLAP::SwitchArg output_data("d", "data", "display data at finest"
                                  " resolution", false);
     std::string uint = "unsigned integer";
@@ -132,6 +213,7 @@ int main(int argc, char* argv[])
     cmd.add(hist1d);
     cmd.add(hist2d);
     cmd.add(create);
+    cmd.add(mandelbulb);
     cmd.add(sizeX);
     cmd.add(sizeY);
     cmd.add(sizeZ);
@@ -153,6 +235,7 @@ int main(int argc, char* argv[])
     bVerify = !noverify.getValue();
     bShow1dhist = hist1d.getValue();
     bShow2dhist = hist2d.getValue();
+    bMandelbulb = mandelbulb.getValue();
     bShowData = output_data.getValue();
     bUseToCBlock = !use_rdb.getValue();
   } catch(const TCLAP::ArgException& e) {
@@ -185,32 +268,18 @@ int main(int argc, char* argv[])
     }
 
     switch (iBitSize) {
-      case 8 : {
-                  uint8_t* source = new uint8_t[size_t(vSize.x)];
-                  for (uint64_t z = 0;z<vSize.z;z++) {
-                    for (uint64_t y = 0;y<vSize.y;y++) {
-                      for (uint64_t x = 0;x<vSize.x;x++) {
-                        source[x] = static_cast<unsigned char>(std::max(0.0f,(0.5f-(0.5f-FLOATVECTOR3(float(x),float(y),float(z))/FLOATVECTOR3(vSize)).length())*512.0f));
-                      }
-                      dummyData->WriteRAW(source, vSize.x);
-                    }
-                  }
-                  delete [] source;
-                  break;
-                }
-      case 16 :{
-                  uint16_t* source = new uint16_t[size_t(vSize.x)];
-                  for (uint64_t z = 0;z<vSize.z;z++) {
-                    for (uint64_t y = 0;y<vSize.y;y++) {
-                      for (uint64_t x = 0;x<vSize.x;x++) {
-                        source[x] = static_cast<unsigned short>(std::max(0.0f,(0.5f-(0.5f-FLOATVECTOR3(float(x),float(y),float(z))/FLOATVECTOR3(vSize)).length())*131072.0f));
-                      }
-                      dummyData->WriteRAW((uint8_t*)source, vSize.x*2);
-                    }
-                  }
-                  delete [] source;
-                  break;
-                }
+      case 8 :
+        if (bMandelbulb)
+          GenerateVolumeData<uint8_t, true>(vSize, dummyData);
+        else
+          GenerateVolumeData<uint8_t, false>(vSize, dummyData);
+        break;
+      case 16 :
+        if (bMandelbulb)
+          GenerateVolumeData<uint16_t, true>(vSize, dummyData);
+        else
+          GenerateVolumeData<uint16_t, false>(vSize, dummyData);
+        break;
       default:
         T_ERROR("Invalid bitsize");
         return EXIT_FAILURE;
