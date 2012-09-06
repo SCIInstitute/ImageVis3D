@@ -1,14 +1,14 @@
 #!/bin/sh
 # Script to build everything we can in a single invocation, using
-# a set of options which is appropriate for creating debug builds.
+# a set of options which is appropriate for creating release builds.
 
 IV3D_BUILD_TYPE="release"
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 COVERAGE=""
-CF="-Wall -Wextra -O2 ${COVERAGE}"
+CF="-Wall -Wextra -O2 ${COVERAGE} -fopenmp"
 CXF="-D_GLIBCXX_CONCEPT_CHECK -DQT_NODEBUG ${COVERAGE}"
-QLF=""
+QLF="-fopenmp"
 MKSPEC=""
 
 if test "$1" == "32" ; then
