@@ -189,7 +189,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalOptions>/U"_SECURE_SCL" /D"_SECURE_SCL=0" %(AdditionalOptions)</AdditionalOptions>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>../Tuvok;../Tuvok/3rdParty;../Tuvok/3rdParty/GLEW;../Tuvok/Basics;../Tuvok/Basics/3rdParty;../Tuvok/Basics;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok/IO/exception;../Tuvok/IO/expressions;.;$(QTDIR32)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -200,6 +200,8 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Winmm.lib;ws2_32.lib;Imm32.lib;Tuvok.lib;opengl32.lib;shlwapi.lib;QtOpenGL.lib;QtGui.lib;QtCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -238,7 +240,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">
     <ClCompile>
       <AdditionalOptions>/U"_SECURE_SCL" /D"_SECURE_SCL=0" %(AdditionalOptions)</AdditionalOptions>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>../Tuvok;../Tuvok/3rdParty;../Tuvok/3rdParty/GLEW;../Tuvok/Basics;../Tuvok/Basics/3rdParty;../Tuvok/Basics;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok/IO/exception;../Tuvok/IO/expressions;.;$(QTDIR32)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -249,6 +251,8 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Winmm.lib;ws2_32.lib;Imm32.lib;Tuvok.lib;opengl32.lib;shlwapi.lib;QtOpenGL.lib;QtGui.lib;QtCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -293,7 +297,7 @@
     </Midl>
     <ClCompile>
       <AdditionalOptions>/U"_SECURE_SCL" /D"_SECURE_SCL=0" %(AdditionalOptions)</AdditionalOptions>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>../Tuvok;../Tuvok/3rdParty;../Tuvok/3rdParty/GLEW;../Tuvok/Basics;../Tuvok/Basics/3rdParty;../Tuvok/Basics;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok/IO/exception;../Tuvok/IO/expressions;.;$(QTDIR64)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -304,6 +308,8 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalDependencies>Winmm.lib;ws2_32.lib;Imm32.lib;Tuvok.lib;opengl32.lib;shlwapi.lib;QtOpenGL.lib;QtGui.lib;QtCore.lib;QtNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
