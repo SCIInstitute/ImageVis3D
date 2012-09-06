@@ -20,6 +20,7 @@ unix:!macx:LIBS  += -lGLU
 macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
 macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7
 macx:LIBS        += -stdlib=libc++ -framework CoreFoundation -mmacosx-version-min=10.7
+QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
 # Try to link to GLU statically.
 gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
 for(d, gludirs) {
