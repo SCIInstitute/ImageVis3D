@@ -131,14 +131,15 @@ template<typename T, bool bMandelbulb> void GenerateVolumeData(UINT64VECTOR3 vSi
   T* source = new T[size_t(vSize.x)];
 
   for (uint64_t z = 0;z<vSize.z;z++) {
-    MESSAGE("Computing %.3f%%", (double)z/vSize.z);
-    for (uint64_t y = 0;y<vSize.y;y++) {
+    MESSAGE("Generating Data %.3f%%", 100.0*(double)z/vSize.z);
+#pragma omp parallel for 
+    for (int64_t y = 0;y<int64_t(vSize.y);y++) {
       for (uint64_t x = 0;x<vSize.x;x++) {
         if (bMandelbulb)
           source[x] = static_cast<T>(ComputeMandelbulb(3.0 * static_cast<double>(x)/(vSize.x-1) - 1.5,
                                                        3.0 * static_cast<double>(y)/(vSize.y-1) - 1.5,
                                                        3.0 * static_cast<double>(z)/(vSize.z-1) - 1.5,
-                                                       8, 10, 4.0) * std::numeric_limits<T>::max());
+                                                       8, std::numeric_limits<T>::max(), 4.0) * std::numeric_limits<T>::max());
         else
           source[x] = static_cast<T>(std::max(0.0f,(0.5f-(0.5f-FLOATVECTOR3(float(x),float(y),float(z))/FLOATVECTOR3(vSize)).length())*std::numeric_limits<T>::max()*2));
       }
