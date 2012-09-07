@@ -205,6 +205,7 @@ int main(int argc, char* argv[])
   bool bMandelbulb;
   bool bShowData;
   bool bUseToCBlock;
+  bool bKeepRaw;
 
   try {
     TCLAP::CmdLine cmd("UVF diagnostic tool");
@@ -232,6 +233,7 @@ int main(int argc, char* argv[])
                                   "in any dimension, for a created volume",
                                   false, static_cast<size_t>(256), uint);
     TCLAP::SwitchArg use_rdb("r", "rdb", "use older raster data block", false);
+    TCLAP::SwitchArg keep_raw("k", "keep", "keep intermediate raw file during test data generation", false);
 
     cmd.add(inputs);
     cmd.add(noverify);
@@ -239,6 +241,7 @@ int main(int argc, char* argv[])
     cmd.add(hist2d);
     cmd.add(create);
     cmd.add(mandelbulb);
+    cmd.add(keep_raw);
     cmd.add(sizeX);
     cmd.add(sizeY);
     cmd.add(sizeZ);
@@ -263,6 +266,7 @@ int main(int argc, char* argv[])
     bMandelbulb = mandelbulb.getValue();
     bShowData = output_data.getValue();
     bUseToCBlock = !use_rdb.getValue();
+    bKeepRaw = keep_raw.getValue();
   } catch(const TCLAP::ArgException& e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << "\n";
     return EXIT_FAILURE;
@@ -286,7 +290,7 @@ int main(int argc, char* argv[])
   if (bCreateFile) {
 
     const bool bGenerateUVF = SysTools::ToLowerCase(SysTools::GetExt(strUVFName)) == "uvf";
-    std::string rawFilename =  bGenerateUVF ? (SysTools::GetPath(strUVFName) + "rawData.raw") : strUVFName;
+    std::string rawFilename =  bGenerateUVF ? SysTools::ChangeExt(strUVFName,"raw") : strUVFName;
 
     MESSAGE("Generating dummy data");
 
@@ -444,7 +448,7 @@ int main(int argc, char* argv[])
       pTestVolume = testRasterVolume;
     }
     
-    dummyData->Delete();
+    if (!bKeepRaw) dummyData->Delete();
 
     if (!uvfFile.AddDataBlock(pTestVolume)) {
       T_ERROR("AddDataBlock failed!");
