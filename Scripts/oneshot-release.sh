@@ -6,9 +6,9 @@ IV3D_BUILD_TYPE="release"
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 COVERAGE=""
-CF="-Wall -Wextra -O2 ${COVERAGE} -fopenmp"
+CF="-Wall -Wextra -O2 ${COVERAGE}"
 CXF="-D_GLIBCXX_CONCEPT_CHECK -DQT_NODEBUG ${COVERAGE}"
-QLF="-fopenmp"
+QLF=""
 MKSPEC=""
 
 if test "$1" == "32" ; then
@@ -30,6 +30,8 @@ dirs="."
 if test `uname` != "Darwin" ; then
   dirs="$dirs Tuvok/IO/test"
   CXF="${CXF} -Werror"
+  CF="${CF} -fopenmp"
+  QLF="${QLF} -fopenmp"
 else
   # We don't turn -Werror on because of warnings that deal 
   # with generated code, and some unused template specialization
