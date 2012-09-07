@@ -89,24 +89,24 @@ double theta(double x, double y, double z)
 
 double PowerX(double x, double y, double z, double cx, int n, double power)
 {
-  return cx + power*std::sin(phi(x,y)*n)*std::cos(theta(x,y,z)*n);
+  return cx + power*std::sin(theta(x,y,z)*n)*std::cos(phi(x,y)*n);
 }
 
 double PowerY(double x, double y, double z, double cy, int n, double power)
 {
-  return cy + power*std::sin(phi(x,y)*n)*std::sin(theta(x,y,z)*n);
+  return cy + power*std::sin(theta(x,y,z)*n)*std::sin(phi(x,y)*n);
 }
 
-double PowerZ(double x, double y, double cz, int n, double power)
+double PowerZ(double x, double y, double z, double cz, int n, double power)
 {
-  return cz + power*std::cos(phi(x,y)*n);
+  return cz + power*std::cos(theta(x,y,z)*n);
 }
 
 double ComputeMandelbulb(const double sx, const double sy, const double sz, const uint32_t n, const uint32_t iMaxIterations, const double fBailout) {
 
-  double fx = sx;
-  double fy = sy;
-  double fz = sz;
+  double fx = 0;
+  double fy = 0;
+  double fz = 0;
   double r = radius(fx, fy, fz);
 
   for (uint32_t i = 0; i < iMaxIterations; i++) {
@@ -115,7 +115,7 @@ double ComputeMandelbulb(const double sx, const double sy, const double sz, cons
 
     const double fx_ = PowerX(fx, fy, fz, sx, n, fPower);
     const double fy_ = PowerY(fx, fy, fz, sy, n, fPower);
-    const double fz_ = PowerZ(fx, fy    , sz, n, fPower);
+    const double fz_ = PowerZ(fx, fy, fz, sz, n, fPower);
 
     fx = fx_;
     fy = fy_;
@@ -146,7 +146,7 @@ template<typename T, bool bMandelbulb> void GenerateVolumeData(UINT64VECTOR3 vSi
       MESSAGE("Generating Data %.3f%% completed (Elapsed Time %i:%02i:%02i)", 100.0*(double)z/vSize.z, int(hours), int(mins), int(secs));
     } else 
     if (z > vSize.z/2) {
-      miliSecs = miliSecsHalfWay*2-miliSecs;
+      miliSecs = std::max<uint64_t>(0, miliSecsHalfWay*2-miliSecs);
       const uint64_t secs  = (miliSecs/1000)%60;
       const uint64_t mins  = (miliSecs/60000)%60;
       const uint64_t hours = (miliSecs/3600000);
