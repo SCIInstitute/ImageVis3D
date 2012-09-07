@@ -45,6 +45,7 @@
 #include "../Tuvok/StdTuvokDefines.h"
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/Basics/Timer.h"
 #include "../CmdLineConverter/DebugOut/HRConsoleOut.h"
 
 #include "../Tuvok/IO/IOManager.h"
@@ -128,12 +129,35 @@ double ComputeMandelbulb(const double sx, const double sy, const double sz, cons
 }
 
 template<typename T, bool bMandelbulb> void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
+  Timer timer;
   T* source = new T[size_t(vSize.x)];
+  
+  timer.Start();
+
+  uint64_t miliSecsHalfWay=0;
 
   for (uint64_t z = 0;z<vSize.z;z++) {
-    MESSAGE("Generating Data %.3f%%", 100.0*(double)z/vSize.z);
+    uint64_t miliSecs = uint64_t(timer.Elapsed());
+
+    if (z < vSize.z/2) {
+      const uint64_t secs  = (miliSecs/1000)%60;
+      const uint64_t mins  = (miliSecs/60000)%60;
+      const uint64_t hours = (miliSecs/3600000);
+      MESSAGE("Generating Data %.3f%% completed (Elapsed Time %i:%02i:%02i)", 100.0*(double)z/vSize.z, int(hours), int(mins), int(secs));
+    } else 
+    if (z > vSize.z/2) {
+      miliSecs = miliSecsHalfWay*2-miliSecs;
+      const uint64_t secs  = (miliSecs/1000)%60;
+      const uint64_t mins  = (miliSecs/60000)%60;
+      const uint64_t hours = (miliSecs/3600000);
+      MESSAGE("Generating Data %.3f%% completed (Remaining Time %i:%02i:%02i)", 100.0*(double)z/vSize.z, int(hours), int(mins), int(secs));
+    }
+    else {
+      miliSecsHalfWay = miliSecs;
+    }
+
     for (uint64_t y = 0;y<vSize.y;y++) {
-#pragma omp parallel for 
+      #pragma omp parallel for 
       for (int64_t x = 0;x<int64_t(vSize.x);x++) {
         if (bMandelbulb)
           source[x] = static_cast<T>(ComputeMandelbulb(3.0 * static_cast<double>(x)/(vSize.x-1) - 1.5,
@@ -184,7 +208,7 @@ int main(int argc, char* argv[])
 
   try {
     TCLAP::CmdLine cmd("UVF diagnostic tool");
-    TCLAP::MultiArg<std::string> inputs("i", "input", "input file.",
+    TCLAP::MultiArg<std::string> inputs("f", "file", "input/output file.",
                                         true, "filename");
     TCLAP::SwitchArg noverify("n", "noverify", "disable the checksum test",
                               false);
@@ -260,11 +284,15 @@ int main(int argc, char* argv[])
   UVF uvfFile(wstrUVFName);
 
   if (bCreateFile) {
+
+    const bool bGenerateUVF = SysTools::ToLowerCase(SysTools::GetExt(strUVFName)) == "uvf";
+    std::string rawFilename =  bGenerateUVF ? (SysTools::GetPath(strUVFName) + "rawData.raw") : strUVFName;
+
     MESSAGE("Generating dummy data");
 
-    LargeRAWFile_ptr dummyData = LargeRAWFile_ptr(new LargeRAWFile("./dummyData.raw"));
+    LargeRAWFile_ptr dummyData = LargeRAWFile_ptr(new LargeRAWFile(rawFilename));
     if (!dummyData->Create(vSize.volume()*iBitSize/8)) {
-      T_ERROR("Failed to create ./dummyData.raw file");
+      T_ERROR("Failed to create %s file.", rawFilename.c_str());
       return EXIT_FAILURE;
     }
 
@@ -286,6 +314,8 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
     dummyData->Close();
+
+    if (!bGenerateUVF) return EXIT_SUCCESS;
 
 
     MESSAGE("Preparing creation of UVF file %s", strUVFName.c_str());
@@ -316,7 +346,7 @@ int main(int argc, char* argv[])
       tocBlock->strBlockID = "Test TOC Volume 1";
       tocBlock->ulCompressionScheme = UVFTables::COS_NONE;
 
-      bool bResult = tocBlock->FlatDataToBrickedLOD("./dummyData.raw",
+      bool bResult = tocBlock->FlatDataToBrickedLOD(rawFilename,
         "./tempFile.tmp", iBitSize == 8 ? ExtendedOctree::CT_UINT8
                                         : ExtendedOctree::CT_UINT16,
         1, vSize, DOUBLEVECTOR3(1,1,1), UINT64VECTOR3(iBrickSize,iBrickSize,iBrickSize),
