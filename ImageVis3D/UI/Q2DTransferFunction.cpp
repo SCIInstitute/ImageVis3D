@@ -677,8 +677,11 @@ bool Q2DTransferFunction::PointInPolygon(const FLOATVECTOR2& point, const TFPoly
 
 int Q2DTransferFunction::PickEdge(const FLOATVECTOR2& pickPos, int& iEdgeIndex) const {
   FLOATVECTOR2 pixelPickPos = FLOATVECTOR2(Normalized2Screen(pickPos));
-  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
-    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
+
+  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  for (vector<TFPolygon>::const_iterator it = swatches->begin(); 
+       it != swatches->end(); ++it) {
+    const TFPolygon& currentSwatch = *it;
 
     for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
       FLOATVECTOR2 A = FLOATVECTOR2(Normalized2Screen(currentSwatch.pPoints[j]));
@@ -697,7 +700,7 @@ int Q2DTransferFunction::PickEdge(const FLOATVECTOR2& pickPos, int& iEdgeIndex) 
 
       if (fDist <= max<float>(m_iSwatchBorderSize,4.0f)) {  // give the user at least four pixel to pick
         iEdgeIndex = int(j);
-        return int(i);
+        return static_cast<int>(std::distance(swatches->begin(), it));
       }
     }
 
@@ -706,8 +709,10 @@ int Q2DTransferFunction::PickEdge(const FLOATVECTOR2& pickPos, int& iEdgeIndex) 
 }
 
 int Q2DTransferFunction::PickGradient(const FLOATVECTOR2& pickPos) const {
-  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
-    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
+  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  for (vector<TFPolygon>::const_iterator it = swatches->begin(); 
+       it != swatches->end(); ++it) {
+    const TFPolygon& currentSwatch = *it;
 
     // only consider 3 stop gradients
     if (currentSwatch.pGradientStops.size() != 3) continue;
@@ -716,22 +721,26 @@ int Q2DTransferFunction::PickGradient(const FLOATVECTOR2& pickPos) const {
                      currentSwatch.pGradientCoords[1]*currentSwatch.pGradientStops[1].first;
     INTVECTOR2 vPixelDist = Normalized2Screen(pickPos)-Normalized2Screen(A);
     if ( sqrt( float(vPixelDist.x*vPixelDist.x+vPixelDist.y*vPixelDist.y)) <= m_iSwatchBorderSize*3) {
-      return int(i);
+      return static_cast<int>(std::distance(swatches->begin(), it));
     }
   }
   return -1;
 }
 
 int Q2DTransferFunction::PickVertex(const FLOATVECTOR2& pickPos, int& iVertexIndex) const {
-  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
-    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
+  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  for (vector<TFPolygon>::const_iterator it = swatches->begin(); 
+       it != swatches->end(); ++it) {
+    const TFPolygon& currentSwatch = *it;
 
-    for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
-      FLOATVECTOR2 A = currentSwatch.pPoints[j];
+    for (vector<FLOATVECTOR2>::const_iterator itPnt = currentSwatch.pPoints.begin();
+         itPnt != currentSwatch.pPoints.end(); ++itPnt) {
+      FLOATVECTOR2 A = *itPnt;
       INTVECTOR2 vPixelDist = Normalized2Screen(pickPos)-Normalized2Screen(A);
       if ( sqrt( float(vPixelDist.x*vPixelDist.x+vPixelDist.y*vPixelDist.y)) <= m_iSwatchBorderSize*3) {
-        iVertexIndex = int(j);
-        return int(i);
+        iVertexIndex = static_cast<int>(
+            std::distance(currentSwatch.pPoints.begin(), itPnt));
+        return static_cast<int>(std::distance(swatches->begin(), it));
       }
     }
   }
@@ -1545,7 +1554,7 @@ GradientStop Q2DTransferFunction::GetGradient(unsigned int i) {
 }
 
 
-shared_ptr<const vector<TFPolygon> > Q2DTransferFunction::GetSwatches() {
+shared_ptr<const vector<TFPolygon> > Q2DTransferFunction::GetSwatches() const {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   shared_ptr<const vector<TFPolygon> > swatches = 
       ss->cexecRet<shared_ptr<const vector<TFPolygon> > >(m_trans.fqName() +
