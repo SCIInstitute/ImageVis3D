@@ -1226,7 +1226,7 @@ void MainWindow::SetRescaleFactors() {
   vfRescaleFactors.x = std::max<float>(0.001f,doubleSpinBox_RescaleX->value());
   vfRescaleFactors.y = std::max<float>(0.001f,doubleSpinBox_RescaleY->value());
   vfRescaleFactors.z = std::max<float>(0.001f,doubleSpinBox_RescaleZ->value());
-  m_pActiveRenderWin->GetRenderer()->SetRescaleFactors(vfRescaleFactors);
+  m_pActiveRenderWin->SetRendererRescaleFactors(vfRescaleFactors);
 }
 
 
@@ -1532,7 +1532,10 @@ void MainWindow::ShowWelcomeScreen() {
 void MainWindow::DisplayMetadata() {
 
   if (m_pActiveRenderWin)  {
-    const vector< pair <string, string > >& metadata = m_pActiveRenderWin->GetRenderer()->GetDataset().GetMetadata();
+    shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+    LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+    const vector< pair <string, string > >& metadata = 
+        ss->cexecRet<vector<pair <string, string> >>(ds.fqName() + ".getMetadata");
 
     if (metadata.size() > 0) {
       m_pMetadataDialog->setWindowIcon(windowIcon());

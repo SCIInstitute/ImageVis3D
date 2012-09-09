@@ -1041,14 +1041,20 @@ void MainWindow::ExportIsosurface() {
       return;
     }
 
-    int iMaxLODLevel = int(m_pActiveRenderWin->GetRenderer()->GetDataset().GetLODLevelCount())-1;
+    shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+    LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+    
+    int iMaxLODLevel = int(ss->cexecRet<uint64_t>(ds.fqName() + ".getLODLevelCount"))-1;
 
     int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       int iMinLODLevel = 0;
       vector<QString> vDesc;
       for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
-        UINTVECTOR3 vLODSize = UINTVECTOR3(m_pActiveRenderWin->GetRenderer()->GetDataset().GetDomainSize(i));
+        UINTVECTOR3 vLODSize = UINTVECTOR3(
+            ss->cexecRet<UINT64VECTOR3>(ds.fqName() + ".getDomainSize",
+                                        static_cast<size_t>(i),
+                                        static_cast<size_t>(0)));
         QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
         vDesc.push_back(qstrDesc);
       }
@@ -1175,25 +1181,29 @@ void MainWindow::MergeDatasets() {
 
 void MainWindow::SaveAspectRatioToUVF() {
   if (m_pActiveRenderWin) {
-    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
+    m_pActiveRenderWin->SetDatasetIsInvalid(true);
 
     PleaseWaitDialog pleaseWait(this);
     pleaseWait.SetText("Writing rescale factors to file...");
     pleaseWait.AttachLabel(&m_MasterController);
 
-    if (!m_pActiveRenderWin->GetRenderer()->GetDataset().SaveRescaleFactors()) {
+    shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+    LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+
+    if (!ss->cexecRet<bool>(ds.fqName() + ".saveRescaleFactors")) {
       if (!m_bScriptMode) {
         QMessageBox::warning(this, "File Error", "Unable to save rescale factors to file.", QMessageBox::Ok);
       }
     }
 
-    DOUBLEVECTOR3 vfRescaleFactors =  m_pActiveRenderWin->GetRenderer()->GetRescaleFactors();
+    DOUBLEVECTOR3 vfRescaleFactors = 
+        ss->cexecRet<DOUBLEVECTOR3>(ds.fqName() + ".getRescaleFactors");
     doubleSpinBox_RescaleX->setValue(vfRescaleFactors.x);
     doubleSpinBox_RescaleY->setValue(vfRescaleFactors.y);
     doubleSpinBox_RescaleZ->setValue(vfRescaleFactors.z);
 
     pleaseWait.close();
-    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
+    m_pActiveRenderWin->SetDatasetIsInvalid(false);
   }
 }
 
@@ -1202,7 +1212,7 @@ void MainWindow::CropData() {
   if (m_pActiveRenderWin) {
 
     // todo fix this by copying the meshes from the old dataset to the new one
-    if (!m_pActiveRenderWin->GetRenderer()->GetDataset().GetMeshes().empty()) {
+    if (!m_pActiveRenderWin->GetRendererMeshes().empty()) {
       QMessageBox::warning(this, "File Error", "Cropping datasets that contain meshes is not supported at the moment.", QMessageBox::Ok);
       return;
     }
@@ -1211,21 +1221,21 @@ void MainWindow::CropData() {
       QMessageBox::question(NULL, "Create Backup?", "Do you want to create a backup of the current dataset before cropping?", QMessageBox::Yes, QMessageBox::No));
 
 
-    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
+    m_pActiveRenderWin->SetDatasetIsInvalid(true);
 
     PleaseWaitDialog pleaseWait(this);
     pleaseWait.SetText("Cropping dataset");
     pleaseWait.AttachLabel(&m_MasterController);
 
     LuaClassInstance first3DRegion = m_pActiveRenderWin->GetFirst3DRegion();
-    ExtendedPlane p = m_pActiveRenderWin->GetRenderer()->GetClipPlane();
+    ExtendedPlane p = m_pActiveRenderWin->GetRendererClipPlane();
     FLOATMATRIX4 trans = m_pActiveRenderWin->GetRotation(first3DRegion) *
                          m_pActiveRenderWin->GetTranslation(first3DRegion);
 
     // get rid of the viewing transformation in the plane
     p.Transform(trans.inverse(),false);
 
-    if (!m_pActiveRenderWin->GetRenderer()->CropDataset(m_strTempDir,bKeepOldData)) {
+    if (!m_pActiveRenderWin->RendererCropDataset(m_strTempDir,bKeepOldData)) {
       if (!m_bScriptMode) {
         QMessageBox::warning(this, "File Error", "Unable to crop dataset, is the file write protected?", QMessageBox::Ok);
       }
@@ -1233,7 +1243,7 @@ void MainWindow::CropData() {
       ToggleClipPlane(false);
 
     }
-    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
+    m_pActiveRenderWin->SetDatasetIsInvalid(false);
 
     RenderWindow* current = m_pActiveRenderWin;
     m_pActiveRenderWin = NULL; // set m_pActiveRenderWin to NULL so RenderWindowActive thinks it has changed

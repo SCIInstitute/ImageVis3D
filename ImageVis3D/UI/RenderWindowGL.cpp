@@ -337,8 +337,8 @@ void RenderWindowGL::PaintOverlays() {
 
 
 void RenderWindowGL::RenderSeparatingLines() {
-  GetRenderer()->SyncStateManager();
-  GetRenderer()->FixedFunctionality();
+  RendererSyncStateManager();
+  RendererFixedFunctionality();
 
   glDisable(GL_BLEND);
   glDisable(GL_DEPTH_TEST);
@@ -370,6 +370,6 @@ void RenderWindowGL::RenderSeparatingLines() {
   glMatrixMode(GL_MODELVIEW);
   glPopMatrix();
 
-  GetRenderer()->SyncStateManager();
+  RendererSyncStateManager();
 }
 

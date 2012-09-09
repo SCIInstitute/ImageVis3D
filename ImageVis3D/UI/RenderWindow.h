@@ -72,7 +72,6 @@ class RenderWindow
     QString GetWindowID() const {return m_strID;}
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
-    tuvok::AbstrRenderer* GetRenderer() {return m_Renderer;}
     bool IsRendererValid();
     void CheckForRedraw();
     void SetRendermode(tuvok::AbstrRenderer::ERenderMode eRenderMode,
@@ -286,6 +285,7 @@ class RenderWindow
     float GetRendererFoV() const;
     float GetRendererIsoValue() const;
     DOUBLEVECTOR3 GetRendererRescaleFactors() const;
+    void SetRendererRescaleFactors(DOUBLEVECTOR3 scale);
     bool GetRendererGlobalBBox() const;
     bool GetRendererLocalBBox() const;
     bool GetRendererClipPlaneEnabled() const;
@@ -298,6 +298,18 @@ class RenderWindow
     void RendererReloadMesh(size_t index, const std::shared_ptr<tuvok::Mesh> m);
     FLOATVECTOR3 GetRendererVolumeAABBExtents();
     FLOATVECTOR3 GetRendererVolumeAABBCenter();
+    ExtendedPlane GetRendererClipPlane();
+    bool RendererCropDataset(const std::string& strTempDir, 
+                             bool bKeepOldData);
+    void SetRendererStereoEnabled(bool stereo);
+    void SetRendererStereoEyeDist(float fStereoEyeDist);
+    void SetRendererStereoFocalLength(float fStereoFocalLength);
+    void SetRendererStereoEyeSwap(bool eyeSwap);
+    void SetRendererStereoMode(tuvok::AbstrRenderer::EStereoMode mode);
+    void RendererInitStereoFrame();
+    void RendererToggleStereoFrame();
+    void RendererSyncStateManager();
+    void RendererFixedFunctionality();
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();

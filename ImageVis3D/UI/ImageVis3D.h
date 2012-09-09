@@ -484,7 +484,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
     std::string ConvertTF(const std::string& strSource1DTFilename,
                           const std::string& strTargetDir,
-                          const UVFDataset* currentDataset,
+                          const std::string& strTargetFullFilename,
                           PleaseWaitDialog& pleaseWait);
 
     std::string ConvertDataToI3M(LuaClassInstance currentDataset,

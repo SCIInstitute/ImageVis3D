@@ -598,6 +598,12 @@ DOUBLEVECTOR3  RenderWindow::GetRendererRescaleFactors() const {
   return ss->cexecRet<DOUBLEVECTOR3>(rn + ".getRescaleFactors");
 }
 
+void RenderWindow::SetRendererRescaleFactors(DOUBLEVECTOR3 scale) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setRescaleFactors", scale);
+}
+
 bool RenderWindow::GetRendererGlobalBBox() const {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
@@ -668,6 +674,73 @@ FLOATVECTOR3 RenderWindow::GetRendererVolumeAABBCenter() {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   return ss->cexecRet<FLOATVECTOR3>(rn + ".getVolumeAABBExtents");
+}
+
+ExtendedPlane RenderWindow::GetRendererClipPlane() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<ExtendedPlane>(rn + ".getClipPlane");
+}
+
+bool RenderWindow::RendererCropDataset(const std::string& strTempDir, 
+                                       bool bKeepOldData) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".cropDataset", strTempDir, bKeepOldData);
+}
+
+void RenderWindow::SetRendererStereoEnabled(bool stereo) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setStereoEnabled", stereo);
+}
+
+void RenderWindow::SetRendererStereoEyeDist(float fStereoEyeDist) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setStereoEyeDist", fStereoEyeDist);
+}
+
+void RenderWindow::SetRendererStereoFocalLength(float fStereoFocalLength) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setStereoFocalLength", fStereoFocalLength);
+}
+
+void RenderWindow::SetRendererStereoEyeSwap(bool eyeSwap) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setStereoEyeSwap", eyeSwap);
+}
+
+void RenderWindow::SetRendererStereoMode(AbstrRenderer::EStereoMode mode) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".setStereoMode", mode);
+}
+
+void RenderWindow::RendererInitStereoFrame() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".initStereoFrame");
+}
+
+void RenderWindow::RendererToggleStereoFrame() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".toggleStereoFrame");
+}
+
+void RenderWindow::RendererSyncStateManager() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".syncStateManager");
+}
+
+void RenderWindow::RendererFixedFunctionality() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".fixedFunctionality");
 }
 
 RenderWindow::RegionSplitter

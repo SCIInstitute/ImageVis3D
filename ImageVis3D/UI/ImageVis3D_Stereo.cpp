@@ -57,7 +57,7 @@ void MainWindow::ToggleStereoRendering() {
         return;
       }
     }
-    m_pActiveRenderWin->GetRenderer()->SetStereo(checkBox_Stereo->isChecked());
+    m_pActiveRenderWin->SetRendererStereoEnabled(checkBox_Stereo->isChecked());
   } else {
     checkBox_Stereo->setChecked(false);
   }
@@ -65,27 +65,27 @@ void MainWindow::ToggleStereoRendering() {
 
 void MainWindow::SetStereoEyeDistance() {
   if (m_pActiveRenderWin == NULL) return;
-  m_pActiveRenderWin->GetRenderer()->SetStereoEyeDist(float(horizontalSlider_EyeDistance->value())/100.0);
+  m_pActiveRenderWin->SetRendererStereoEyeDist(float(horizontalSlider_EyeDistance->value())/100.0);
 }
 
 void MainWindow::SetStereoFocalLength() {
   if (m_pActiveRenderWin == NULL) return;
-  m_pActiveRenderWin->GetRenderer()->SetStereoFocalLength(float(horizontalSlider_FocalLength->value())/10.0);
+  m_pActiveRenderWin->SetRendererStereoFocalLength(float(horizontalSlider_FocalLength->value())/10.0);
 }
 
 void MainWindow::ToggleStereoMode() {
   if (m_pActiveRenderWin == NULL) return;
   if (radioButton_RBStereo->isChecked()) 
-    m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::SM_RB);
+    m_pActiveRenderWin->SetRendererStereoMode(AbstrRenderer::SM_RB);
   else if (radioButton_ScanlineStereo->isChecked()) 
-    m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::SM_SCANLINE);
+    m_pActiveRenderWin->SetRendererStereoMode(AbstrRenderer::SM_SCANLINE);
   else if (radioButton_SideBySide->isChecked()) 
-    m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::SM_SBS);
+    m_pActiveRenderWin->SetRendererStereoMode(AbstrRenderer::SM_SBS);
   else 
-    m_pActiveRenderWin->GetRenderer()->SetStereoMode(AbstrRenderer::SM_AF);
+    m_pActiveRenderWin->SetRendererStereoMode(AbstrRenderer::SM_AF);
 }
 
 void MainWindow::ToggleStereoEyeSwap() {
   if (m_pActiveRenderWin == NULL) return;
-  m_pActiveRenderWin->GetRenderer()->SetStereoEyeSwap(checkBox_EyeSwap->isChecked());
+  m_pActiveRenderWin->SetRendererStereoEyeSwap(checkBox_EyeSwap->isChecked());
 }

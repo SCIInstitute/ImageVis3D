@@ -55,13 +55,13 @@ using namespace std;
 
 string MainWindow::ConvertTF(const string& strSource1DTFilename,
                              const string& strTargetDir, 
-                             const UVFDataset* currentDataset,
+                             const string& strTargetFullFilename,
                              PleaseWaitDialog& pleaseWait) {
 
   pleaseWait.SetText("Converting transfer function, please wait  ...");
 
   string filenameOnly = SysTools::ChangeExt(
-      SysTools::GetFilename(currentDataset->Filename()),"i3m.1dt"
+      SysTools::GetFilename(strTargetFullFilename),"i3m.1dt"
       );
 
   string strTarget1DTFilename = strTargetDir+"/"+filenameOnly;
@@ -138,10 +138,10 @@ string MainWindow::ConvertDataToI3M(LuaClassInstance currentDataset,
 void MainWindow::TransferToI3M() {
   if (!m_pActiveRenderWin) return;
 
-  const UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
-
-  if (currentDataset) {
+  if (ss->cexecRet<LuaDatasetProxy::DatasetType>(
+          ds.fqName() + ".getDSType") == LuaDatasetProxy::UVF) {
     QSettings settings;
     QString strLastDir = settings.value("Folders/I3DMServer",
                                         ".").toString();
@@ -176,7 +176,8 @@ void MainWindow::TransferToI3M() {
 
     string strTemp1DTFilename = m_strTempDir + "i3mexport.1dt";
     m_1DTransferFunction->SaveToFile(QString(strTemp1DTFilename.c_str()));
-    targetFile = ConvertTF(strTemp1DTFilename, strTargetDir, currentDataset,
+    targetFile = ConvertTF(strTemp1DTFilename, strTargetDir, 
+                           ss->cexecRet<string>(ds.fqName() + ".fullpath"),
                            pleaseWait);
     remove(strTemp1DTFilename.c_str());
 
@@ -190,8 +191,12 @@ void MainWindow::TransferToI3M() {
                "into the given directory.");
     }
 
-    const std::vector<std::shared_ptr<Mesh> > meshes = currentDataset->GetMeshes();
-    string filenameOnly = SysTools::RemoveExt(SysTools::GetFilename(currentDataset->Filename()));
+    ;
+    const std::vector<std::shared_ptr<Mesh> > meshes = 
+        ss->cexecRet<std::vector<std::shared_ptr<Mesh> > >(
+            ds.fqName() + ".getMeshes");
+    string filenameOnly = SysTools::RemoveExt(SysTools::GetFilename(
+            ss->cexecRet<string>(ds.fqName() + ".fullpath")));
     for (size_t i = 0;i<meshes.size();i++) {
       pleaseWait.SetText("Exporting Meshes ...");
       stringstream sstream;

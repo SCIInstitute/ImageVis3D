@@ -398,7 +398,7 @@ void MainWindow::ApplySettings() {
 void MainWindow::ApplySettings(RenderWindow* renderWin) {
   QSettings settings;
 
-  if (!renderWin || !renderWin->GetRenderer()) return;
+  if (!renderWin || !renderWin->IsRendererValid()) return;
 
   renderWin->SetColors(m_vBackgroundColors[0],
                        m_vBackgroundColors[1], m_vTextColor);
