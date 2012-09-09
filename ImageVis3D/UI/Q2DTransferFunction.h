@@ -110,37 +110,17 @@ public:
   QSize sizeHint() const;
 
   int GetActiveSwatchIndex() {
-    return m_iActiveSwatchIndex;}
-  size_t GetSwatchCount() {
-    return (m_pTrans) ? m_pTrans->m_Swatches.size() : 0;}
-  size_t GetSwatchSize(unsigned int i) {
-    return m_pTrans->m_Swatches[i].pPoints.size();}
-
-  bool GetActiveGradientType() {
-    if(!m_pTrans || static_cast<size_t>(m_iActiveSwatchIndex) >=
-       m_pTrans->m_Swatches.size()) {
-      return false;
-    }
-    return m_pTrans->m_Swatches[m_iActiveSwatchIndex].bRadial;
+    return m_iActiveSwatchIndex;
   }
+  size_t GetSwatchCount();
+  size_t GetSwatchSize(unsigned int i);
 
+  bool GetActiveGradientType();
   void SetActiveGradientType(bool bRadial);
 
-  size_t GetGradientCount() {
-    if(!m_pTrans || static_cast<size_t>(m_iActiveSwatchIndex) >=
-       m_pTrans->m_Swatches.size()) {
-      return 0;
-    }
-    return m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.size();
-  }
-  GradientStop GetGradient(unsigned int i) {
-    if(!m_pTrans || static_cast<size_t>(m_iActiveSwatchIndex) >=
-       m_pTrans->m_Swatches.size()) {
-      // need to return something invalid.
-      return GradientStop(0.0f, FLOATVECTOR4(0,0,0,0));
-    }
-    return m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops[i];
-  }
+  size_t GetGradientCount();
+  GradientStop GetGradient(unsigned int i);
+
   void AddGradient(GradientStop stop);
   void DeleteGradient(unsigned int i);
   void SetGradient(unsigned int i, GradientStop stop);

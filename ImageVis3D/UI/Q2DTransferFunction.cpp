@@ -1480,3 +1480,55 @@ std::string Q2DTransferFunction::GetSwatchDesciption() const {
     return "";
   }
 }
+
+size_t Q2DTransferFunction::GetSwatchCount() {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if (m_trans.isValid(ss)) {
+    return ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount");
+  } else {
+    return 0;
+  }
+}
+
+size_t Q2DTransferFunction::GetSwatchSize(unsigned int i) {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if (m_trans.isValid(ss)) {
+    return ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetNumPoints", 
+                                static_cast<size_t>(i));
+  } else {
+    return 0;
+  }
+}
+
+bool Q2DTransferFunction::GetActiveGradientType() {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if ( !m_trans.isValid(ss)
+      || static_cast<size_t>(m_iActiveSwatchIndex) >= GetSwatchCount()) {
+    return false;
+  }
+  return ss->cexecRet<bool>(m_trans.fqName() + ".swatchIsRadial", 
+                            static_cast<size_t>(m_iActiveSwatchIndex));
+}
+
+size_t Q2DTransferFunction::GetGradientCount() {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if ( !m_trans.isValid(ss)
+      || static_cast<size_t>(m_iActiveSwatchIndex) >= GetSwatchCount()) {
+    return 0;
+  }
+ return ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetGradientCount", 
+                             static_cast<size_t>(m_iActiveSwatchIndex));
+}
+
+GradientStop Q2DTransferFunction::GetGradient(unsigned int i) {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if ( !m_trans.isValid(ss)
+      || static_cast<size_t>(m_iActiveSwatchIndex) >= GetSwatchCount()) {
+    // need to return something invalid.
+    return GradientStop(0.0f, FLOATVECTOR4(0,0,0,0));
+  }
+  return ss->cexecRet<GradientStop>(m_trans.fqName() + ".swatchGetGradient", 
+                                    static_cast<size_t>(m_iActiveSwatchIndex),
+                                    static_cast<size_t>(i));
+}
+
