@@ -139,7 +139,7 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram,
     m_vHistogram.SetLinear(i, (float(vHistogram->GetLinear(i)) - float(iMin)) / fDiff);
 
   // Upload the new TF to the GPU.
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
 
   // force the draw routine to recompute the backdrop cache
   m_bHistogramChanged = true;
@@ -802,7 +802,7 @@ void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
 
 void Q2DTransferFunction::ApplyFunction() {
   // send message to update the GLtexture
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
 }
 
 
@@ -1198,7 +1198,7 @@ bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
     m_iActiveSwatchIndex = 0;
     m_bBackdropCacheUptodate = false;
     update();
-    m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+    m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
     emit SwatchChange();
     return true;
   } else return false;
@@ -1218,7 +1218,7 @@ void Q2DTransferFunction::Set1DTrans(LuaClassInstance inst) {
   TransferFunction1D* p1DTrans = tfProxy->get1DTransferFunction();
 
   m_pTrans->Update1DTrans(p1DTrans);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
   m_bBackdropCacheUptodate = false;
   update();
 }
@@ -1253,7 +1253,7 @@ void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
   m_pTrans->m_Swatches.push_back(newSwatch);
 
   m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
   emit SwatchChange();
 }
 
@@ -1278,7 +1278,7 @@ void Q2DTransferFunction::Transfer2DAddSwatch() {
   m_pTrans->m_Swatches.push_back(newSwatch);
 
   m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
   emit SwatchChange();
 }
 
@@ -1307,7 +1307,7 @@ void Q2DTransferFunction::Transfer2DAddRectangleSwatch() {
   UpdateSwatchTypes();
 
   m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
   emit SwatchChange();
 }
 
@@ -1356,7 +1356,7 @@ void Q2DTransferFunction::Transfer2DAddPseudoTrisSwatch() {
   UpdateSwatchTypes();
 
   m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
   emit SwatchChange();
 }
 
@@ -1366,7 +1366,7 @@ void Q2DTransferFunction::Transfer2DDeleteSwatch(){
     m_pTrans->m_Swatches.erase(m_pTrans->m_Swatches.begin()+m_iActiveSwatchIndex);
 
     m_iActiveSwatchIndex = min<int>(m_iActiveSwatchIndex, int(m_pTrans->m_Swatches.size()-1));
-    m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+    m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
     emit SwatchChange();
   }
 }
@@ -1378,7 +1378,7 @@ void Q2DTransferFunction::Transfer2DUpSwatch(){
     m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
 
     m_iActiveSwatchIndex--;
-    m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+    m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
     emit SwatchChange();
   }
 }
@@ -1390,7 +1390,7 @@ void Q2DTransferFunction::Transfer2DDownSwatch(){
     m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
 
     m_iActiveSwatchIndex++;
-    m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+    m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
     emit SwatchChange();
   }
 }
@@ -1400,7 +1400,7 @@ void Q2DTransferFunction::SetActiveGradientType(bool bRadial) {
      m_pTrans->m_Swatches.size()) {
        if (m_pTrans->m_Swatches[m_iActiveSwatchIndex].bRadial != bRadial) {
           m_pTrans->m_Swatches[m_iActiveSwatchIndex].bRadial = bRadial;
-          m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+          m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
           update();
        }
   }
@@ -1414,19 +1414,19 @@ void Q2DTransferFunction::AddGradient(GradientStop stop) {
     }
   }
   m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.push_back(stop);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
   update();
 }
 
 void Q2DTransferFunction::DeleteGradient(unsigned int i) {
   m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.erase(m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.begin()+i);
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
   update();
 }
 
 void Q2DTransferFunction::SetGradient(unsigned int i, GradientStop stop) {
   m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops[i] = stop;
-  m_MasterController.MemMan()->Changed2DTrans(NULL, m_pTrans);
+  m_MasterController.MemMan()->Changed2DTrans(LuaClassInstance(), m_trans);
   update();
 }
 
