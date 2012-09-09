@@ -60,7 +60,6 @@ class TextfileOut;
 #include <UI/SettingsDlg.h>
 #include <UI/Welcome.h>
 #include <UI/MetadataDlg.h>
-#include "../Tuvok/IO/uvfDataset.h"
 #include "DebugScriptWindow.h"
 
 #include "../Tuvok/LuaScripting/LuaScripting.h"

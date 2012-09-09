@@ -2233,7 +2233,7 @@ void RenderWindow::SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
 void RenderWindow::SetCV(bool bDoClearView, bool bPropagate) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
-  ss->cexec(rn + ".setCV", bDoClearView);
+  ss->cexec(rn + ".setClearViewEnabled", bDoClearView);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
       m_vpLocks[1][i]->SetCV(bDoClearView, false);

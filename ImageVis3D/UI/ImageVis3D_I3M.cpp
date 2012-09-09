@@ -39,8 +39,6 @@
 
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Controller/Controller.h"
-#include "../Tuvok/IO/IOManager.h"
-#include "../Tuvok/IO/uvfDataset.h"
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaDatasetProxy.h"
 
@@ -205,7 +203,7 @@ void MainWindow::TransferToI3M() {
       else
         sstream << strTargetDir << "/" << filenameOnly << ".g3d";
 
-      m_MasterController.IOMan()->ExportMesh(meshes[i], sstream.str());
+      ss->cexec("tuvok.io.exportMesh", meshes[i], sstream.str());
     }
   } else {
     QMessageBox errorMessage;
