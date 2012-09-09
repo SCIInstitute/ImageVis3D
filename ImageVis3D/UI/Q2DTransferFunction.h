@@ -231,6 +231,9 @@ private:
 
   void DrawPolygonWithCool3DishBorder(QPainter& painter, std::vector<QPoint>& pointList, QPen& borderPen, QPen& borderPenHighlight);
 
+  // Lua helper functions
+  std::shared_ptr<const std::vector<TFPolygon> > GetSwatches();
+
   // For simple mode
   SimpleSwatchInfo ClassifySwatch(TFPolygon& polygon) const;
   void ComputeGradientForPseudoTris(TFPolygon& swatch, const FLOATVECTOR4& color);

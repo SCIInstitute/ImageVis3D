@@ -313,10 +313,12 @@ void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
 
   QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
 
+  // Obtain swatch vector from Lua.
+  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
 
   // render swatches
   for (size_t i = 0;i<GetSwatchCount();i++) {
-    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
+    const TFPolygon& currentSwatch = (*swatches)[i];
 
     std::vector<QPoint> pointList(currentSwatch.pPoints.size());
     for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
@@ -429,7 +431,7 @@ void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
 }
 
 void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
-  if (m_pTrans == NULL) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
 
   QPen noBorderPen(Qt::NoPen);
   QPen circlePen(m_colorSwatchBorderCircle, m_iSwatchBorderSize, Qt::SolidLine);
@@ -441,9 +443,11 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 
   QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
 
+  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+
   // render swatches
-  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
-    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
+  for (size_t i = 0;i<GetSwatchCount();i++) {
+    const TFPolygon& currentSwatch = (*swatches)[i];
 
     std::vector<QPoint> pointList(currentSwatch.pPoints.size());
     for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
@@ -509,10 +513,13 @@ void Q2DTransferFunction::DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mo
   m_vMousePressPos = vMousePressPos;
   m_mouseButton = mouseButton;
 
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+
   if (m_eTransferFunctionMode == TFM_EXPERT) {
 
-    if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex<int(m_pTrans->m_pvSwatches->size())) {
-      TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex];
+    shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+    if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex<int(GetSwatchCount())) {
+      const TFPolygon& currentSwatch = (*swatches)[m_iActiveSwatchIndex];
 
       // left mouse drags points around
       if (mouseButton == Qt::LeftButton) {
@@ -570,7 +577,9 @@ void Q2DTransferFunction::DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mo
           if (currentSwatch.pPoints.size() > 3) {
             INTVECTOR2 vPixelDist = Normalized2Offscreen(vfP)-Normalized2Offscreen(A);
             if ( sqrt( float(vPixelDist.x*vPixelDist.x+vPixelDist.y*vPixelDist.y)) <= m_iSwatchBorderSize*3) {
-              currentSwatch.pPoints.erase(currentSwatch.pPoints.begin()+j);
+              ss->cexec(m_trans.fqName() + ".swatchErasePoint", 
+                        static_cast<size_t>(m_iActiveSwatchIndex),
+                        static_cast<size_t>(j));
               iInsertIndex = -1;
               emit SwatchChange();
               break;
@@ -599,7 +608,10 @@ void Q2DTransferFunction::DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mo
         }
 
         if (iInsertIndex >= 0) {
-          currentSwatch.pPoints.insert(currentSwatch.pPoints.begin()+iInsertIndex, vfInserCoord);
+          ss->cexec(m_trans.fqName() + ".swatchInsertPoint",
+                    static_cast<size_t>(m_iActiveSwatchIndex),
+                    static_cast<size_t>(iInsertIndex),
+                    vfInserCoord);
           emit SwatchChange();
         }
       }
@@ -1532,3 +1544,11 @@ GradientStop Q2DTransferFunction::GetGradient(unsigned int i) {
                                     static_cast<size_t>(i));
 }
 
+
+shared_ptr<const vector<TFPolygon> > Q2DTransferFunction::GetSwatches() {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<const vector<TFPolygon> > swatches = 
+      ss->cexecRet<shared_ptr<const vector<TFPolygon> > >(m_trans.fqName() +
+                                                          ".swatchGet");
+  return swatches;
+}
