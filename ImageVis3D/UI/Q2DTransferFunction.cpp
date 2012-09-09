@@ -149,7 +149,7 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram,
 
 
 void Q2DTransferFunction::GenerateHistogramImage() {
-  if (m_pTrans == NULL) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
 
   // convert the histogram into an image
   // define the bitmap ...
@@ -178,7 +178,7 @@ void Q2DTransferFunction::GenerateHistogramImage() {
 }
 
 void Q2DTransferFunction::DrawHistogram(QPainter& painter) {
-  if (m_pTrans == NULL) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
 
   if (m_bHistogramChanged) GenerateHistogramImage();
 
@@ -291,10 +291,10 @@ void Q2DTransferFunction::DrawPolyVertex(QPainter& painter, const INTVECTOR2& p,
 }
 
 void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
-  if (m_pTrans == NULL) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
 
   // if we start in simple mode we need to build the swatch type list in the first draw call
-  if (m_vSimpleSwatchInfo.size() != m_pTrans->m_Swatches.size()) UpdateSwatchTypes();
+  if (m_vSimpleSwatchInfo.size() != GetSwatchCount()) UpdateSwatchTypes();
 
   painter.setRenderHint(painter.Antialiasing, true);
 //  painter.translate(+0.5, +0.5);  /// \todo check if we need this
@@ -315,8 +315,8 @@ void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
 
 
   // render swatches
-  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
-    TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
+  for (size_t i = 0;i<GetSwatchCount();i++) {
+    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
 
     std::vector<QPoint> pointList(currentSwatch.pPoints.size());
     for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
@@ -442,8 +442,8 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
   QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
 
   // render swatches
-  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
-    TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
+  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
+    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
 
     std::vector<QPoint> pointList(currentSwatch.pPoints.size());
     for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
@@ -511,8 +511,8 @@ void Q2DTransferFunction::DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mo
 
   if (m_eTransferFunctionMode == TFM_EXPERT) {
 
-    if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex<int(m_pTrans->m_Swatches.size())) {
-      TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+    if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex<int(m_pTrans->m_pvSwatches->size())) {
+      TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex];
 
       // left mouse drags points around
       if (mouseButton == Qt::LeftButton) {
@@ -665,8 +665,8 @@ bool Q2DTransferFunction::PointInPolygon(const FLOATVECTOR2& point, const TFPoly
 
 int Q2DTransferFunction::PickEdge(const FLOATVECTOR2& pickPos, int& iEdgeIndex) const {
   FLOATVECTOR2 pixelPickPos = FLOATVECTOR2(Normalized2Screen(pickPos));
-  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
-    TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
+  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
+    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
 
     for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
       FLOATVECTOR2 A = FLOATVECTOR2(Normalized2Screen(currentSwatch.pPoints[j]));
@@ -694,8 +694,8 @@ int Q2DTransferFunction::PickEdge(const FLOATVECTOR2& pickPos, int& iEdgeIndex) 
 }
 
 int Q2DTransferFunction::PickGradient(const FLOATVECTOR2& pickPos) const {
-  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
-    TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
+  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
+    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
 
     // only consider 3 stop gradients
     if (currentSwatch.pGradientStops.size() != 3) continue;
@@ -711,8 +711,8 @@ int Q2DTransferFunction::PickGradient(const FLOATVECTOR2& pickPos) const {
 }
 
 int Q2DTransferFunction::PickVertex(const FLOATVECTOR2& pickPos, int& iVertexIndex) const {
-  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
-    TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
+  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
+    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
 
     for (size_t j = 0;j<currentSwatch.pPoints.size();j++) {
       FLOATVECTOR2 A = currentSwatch.pPoints[j];
@@ -727,8 +727,8 @@ int Q2DTransferFunction::PickVertex(const FLOATVECTOR2& pickPos, int& iVertexInd
 }
 
 int Q2DTransferFunction::PickSwatch(const FLOATVECTOR2& pickPos) const {
-  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
-    TFPolygon& currentSwatch = m_pTrans->m_Swatches[i];
+  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
+    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
     if (PointInPolygon(pickPos, currentSwatch)) {
       return int(i);
     }
@@ -868,7 +868,7 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 
     if (m_eTransferFunctionMode == TFM_EXPERT) {
 
-      TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+      TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex];
 
       if (m_bDraggingAll)  {
         switch (m_eDragMode) {
@@ -918,7 +918,7 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
       }
     } else {
       if (m_iActiveSwatchIndex < 0) return;
-      TFPolygon& currentSwatch = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
+      TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex];
 
       switch (m_eSimpleDragMode) {
         case SDM_NONE:
@@ -1226,7 +1226,7 @@ void Q2DTransferFunction::Set1DTrans(LuaClassInstance inst) {
 }
 
 void Q2DTransferFunction::Transfer2DSetActiveSwatch(const int iActiveSwatch) {
-  if (iActiveSwatch == -1 && m_pTrans && m_pTrans->m_Swatches.size() > 0) return;
+  if (iActiveSwatch == -1 && m_pTrans && m_pTrans->m_pvSwatches->size() > 0) return;
   m_iActiveSwatchIndex = iActiveSwatch;
   update();
 }
@@ -1252,9 +1252,9 @@ void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
   newSwatch.pGradientStops.push_back(g2);
   newSwatch.pGradientStops.push_back(g3);
 
-  m_pTrans->m_Swatches.push_back(newSwatch);
+  m_pTrans->m_pvSwatches->push_back(newSwatch);
 
-  m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
+  m_iActiveSwatchIndex = int(m_pTrans->m_pvSwatches->size()-1);
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   emit SwatchChange();
@@ -1278,9 +1278,9 @@ void Q2DTransferFunction::Transfer2DAddSwatch() {
   newSwatch.pGradientStops.push_back(g2);
   newSwatch.pGradientStops.push_back(g3);
 
-  m_pTrans->m_Swatches.push_back(newSwatch);
+  m_pTrans->m_pvSwatches->push_back(newSwatch);
 
-  m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
+  m_iActiveSwatchIndex = int(m_pTrans->m_pvSwatches->size()-1);
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   emit SwatchChange();
@@ -1306,11 +1306,11 @@ void Q2DTransferFunction::Transfer2DAddRectangleSwatch() {
   newSwatch.pGradientStops.push_back(g2);
   newSwatch.pGradientStops.push_back(g3);
 
-  m_pTrans->m_Swatches.push_back(newSwatch);
+  m_pTrans->m_pvSwatches->push_back(newSwatch);
 
   UpdateSwatchTypes();
 
-  m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
+  m_iActiveSwatchIndex = int(m_pTrans->m_pvSwatches->size()-1);
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   emit SwatchChange();
@@ -1357,10 +1357,10 @@ void Q2DTransferFunction::Transfer2DAddPseudoTrisSwatch() {
   newSwatch.pPoints.push_back(p3);
   ComputeGradientForPseudoTris(newSwatch, FLOATVECTOR4(rand()/float(RAND_MAX),rand()/float(RAND_MAX),rand()/float(RAND_MAX),1));
 
-  m_pTrans->m_Swatches.push_back(newSwatch);
+  m_pTrans->m_pvSwatches->push_back(newSwatch);
   UpdateSwatchTypes();
 
-  m_iActiveSwatchIndex = int(m_pTrans->m_Swatches.size()-1);
+  m_iActiveSwatchIndex = int(m_pTrans->m_pvSwatches->size()-1);
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   emit SwatchChange();
@@ -1369,9 +1369,9 @@ void Q2DTransferFunction::Transfer2DAddPseudoTrisSwatch() {
 
 void Q2DTransferFunction::Transfer2DDeleteSwatch(){
   if (m_iActiveSwatchIndex != -1) {
-    m_pTrans->m_Swatches.erase(m_pTrans->m_Swatches.begin()+m_iActiveSwatchIndex);
+    m_pTrans->m_pvSwatches->erase(m_pTrans->m_pvSwatches->begin()+m_iActiveSwatchIndex);
 
-    m_iActiveSwatchIndex = min<int>(m_iActiveSwatchIndex, int(m_pTrans->m_Swatches.size()-1));
+    m_iActiveSwatchIndex = min<int>(m_iActiveSwatchIndex, int(m_pTrans->m_pvSwatches->size()-1));
     shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
     ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
     emit SwatchChange();
@@ -1380,9 +1380,9 @@ void Q2DTransferFunction::Transfer2DDeleteSwatch(){
 
 void Q2DTransferFunction::Transfer2DUpSwatch(){
   if (m_iActiveSwatchIndex > 0) {
-    TFPolygon tmp = m_pTrans->m_Swatches[m_iActiveSwatchIndex-1];
-    m_pTrans->m_Swatches[m_iActiveSwatchIndex-1] = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
-    m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
+    TFPolygon tmp = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex-1];
+    (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex-1] = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex];
+    (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex] = tmp;
 
     m_iActiveSwatchIndex--;
     shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
@@ -1392,10 +1392,10 @@ void Q2DTransferFunction::Transfer2DUpSwatch(){
 }
 
 void Q2DTransferFunction::Transfer2DDownSwatch(){
-  if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex < int(m_pTrans->m_Swatches.size()-1)) {
-    TFPolygon tmp = m_pTrans->m_Swatches[m_iActiveSwatchIndex+1];
-    m_pTrans->m_Swatches[m_iActiveSwatchIndex+1] = m_pTrans->m_Swatches[m_iActiveSwatchIndex];
-    m_pTrans->m_Swatches[m_iActiveSwatchIndex] = tmp;
+  if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex < int(m_pTrans->m_pvSwatches->size()-1)) {
+    TFPolygon tmp = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex+1];
+    (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex+1] = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex];
+    (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex] = tmp;
 
     m_iActiveSwatchIndex++;
     shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
@@ -1406,9 +1406,9 @@ void Q2DTransferFunction::Transfer2DDownSwatch(){
 
 void Q2DTransferFunction::SetActiveGradientType(bool bRadial) {
   if(static_cast<size_t>(m_iActiveSwatchIndex) <
-     m_pTrans->m_Swatches.size()) {
-       if (m_pTrans->m_Swatches[m_iActiveSwatchIndex].bRadial != bRadial) {
-          m_pTrans->m_Swatches[m_iActiveSwatchIndex].bRadial = bRadial;
+     m_pTrans->m_pvSwatches->size()) {
+       if ((*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].bRadial != bRadial) {
+          (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].bRadial = bRadial;
           shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
           ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
           update();
@@ -1417,27 +1417,27 @@ void Q2DTransferFunction::SetActiveGradientType(bool bRadial) {
 }
 
 void Q2DTransferFunction::AddGradient(GradientStop stop) {
-  for (std::vector< GradientStop >::iterator i = m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.begin();i<m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.end();i++) {
+  for (std::vector< GradientStop >::iterator i = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.begin();i<(*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.end();i++) {
     if (i->first > stop.first) {
-      m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.insert(i, stop);
+      (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.insert(i, stop);
       return;
     }
   }
-  m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.push_back(stop);
+  (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.push_back(stop);
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   update();
 }
 
 void Q2DTransferFunction::DeleteGradient(unsigned int i) {
-  m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.erase(m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops.begin()+i);
+  (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.erase((*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.begin()+i);
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   update();
 }
 
 void Q2DTransferFunction::SetGradient(unsigned int i, GradientStop stop) {
-  m_pTrans->m_Swatches[m_iActiveSwatchIndex].pGradientStops[i] = stop;
+  (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops[i] = stop;
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   update();
@@ -1446,7 +1446,7 @@ void Q2DTransferFunction::SetGradient(unsigned int i, GradientStop stop) {
 
 void Q2DTransferFunction::UpdateSwatchType(size_t i) {
   std::string desc = m_vSimpleSwatchInfo[i].m_strDesc;
-  m_vSimpleSwatchInfo[i] = ClassifySwatch(m_pTrans->m_Swatches[i]);
+  m_vSimpleSwatchInfo[i] = ClassifySwatch((*m_pTrans->m_pvSwatches)[i]);
 
   if (desc != m_vSimpleSwatchInfo[i].m_strDesc) emit SwatchTypeChange(int(i));
 }
@@ -1456,8 +1456,8 @@ void Q2DTransferFunction::UpdateSwatchTypes() {
   if (!m_pTrans) return;
 
   m_vSimpleSwatchInfo.clear();
-  m_vSimpleSwatchInfo.resize(m_pTrans->m_Swatches.size());
-  for (size_t i = 0;i<m_pTrans->m_Swatches.size();i++) {
+  m_vSimpleSwatchInfo.resize(m_pTrans->m_pvSwatches->size());
+  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
     UpdateSwatchType(i);
   }
 }
