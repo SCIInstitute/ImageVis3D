@@ -58,7 +58,6 @@ using namespace std;
 
 Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWidget *parent) :
   QTransferFunction(masterController, parent),
-  m_pTrans(NULL),
   m_iPaintmode(Q2DT_PAINT_NONE),
   m_iActiveSwatchIndex(-1),
   m_eTransferFunctionMode(TFM_EXPERT),
@@ -108,14 +107,8 @@ void Q2DTransferFunction::SetData(const Histogram2D* vHistogram,
   m_trans = tf2d;
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   if (m_trans.isValid(ss) == false) {
-    m_pTrans = NULL;
     return;
   }
-
-  // Temporary hack until we are able to remove m_pTrans completely.
-  LuaTransferFun2DProxy* prox = tf2d.getRawPointer<LuaTransferFun2DProxy>(ss);
-  m_pTrans = prox->get2DTransferFunction();
-  if (m_pTrans == NULL) return;
 
   // resize the histogram vector
   m_vHistogram.Resize(vHistogram->GetSize());
@@ -1148,20 +1141,31 @@ void Q2DTransferFunction::Draw1DTrans(QPainter& painter) {
   QRectF imageRect(0, 0,
                   painter.viewport().width(), painter.viewport().height());
 
-  QRectF source(m_vZoomWindow.x * m_pTrans->Get1DTransImage().width(),
-                m_vZoomWindow.y * m_pTrans->Get1DTransImage().height(),
-                m_vZoomWindow.z * m_pTrans->Get1DTransImage().width(),
-                m_vZoomWindow.w * m_pTrans->Get1DTransImage().height());
-  painter.drawImage(imageRect,m_pTrans->Get1DTransImage(), source);
+  // This hack exists because IO has a dependency on QT.
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  LuaTransferFun2DProxy* prox = m_trans.getRawPointer<LuaTransferFun2DProxy>(ss);
+  TransferFunction2D* hackTF2D = prox->get2DTransferFunction();
+  if (hackTF2D == NULL) return;
+
+  QRectF source(m_vZoomWindow.x * hackTF2D->Get1DTransImage().width(),
+                m_vZoomWindow.y * hackTF2D->Get1DTransImage().height(),
+                m_vZoomWindow.z * hackTF2D->Get1DTransImage().width(),
+                m_vZoomWindow.w * hackTF2D->Get1DTransImage().height());
+  painter.drawImage(imageRect,hackTF2D->Get1DTransImage(), source);
 }
 
 
-void Q2DTransferFunction::ComputeCachedImageSize(uint32_t &w , uint32_t &h) const {
+void
+Q2DTransferFunction::ComputeCachedImageSize(uint32_t &w , uint32_t &h) const {
   // find an image size that has the same aspect ratio as the histogram
   // but is no smaller than the widget
 
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  VECTOR2<size_t> rendererSize = ss->cexecRet<VECTOR2<size_t> >(
+      m_trans.fqName() + ".getRenderSize");
+
   w = uint32_t(width());
-  float fRatio = float(m_pTrans->GetRenderSize().x) / float(m_pTrans->GetRenderSize().y);
+  float fRatio = float(rendererSize.x) / float(rendererSize.y);
   h = static_cast<uint32_t>(w / fRatio);
 
   if (h > uint32_t(height())) {
@@ -1174,7 +1178,7 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
   // call superclass method
   QWidget::paintEvent(event);
 
-  if (m_pTrans == NULL) {
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) {
     QPainter painter(this);
     ClearToBlack(painter);
     return;
@@ -1231,11 +1235,14 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 
 bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
   // hand the load call over to the TransferFunction1D class
-  if( m_pTrans->Load(strFilename.toStdString(), m_pTrans->GetSize() ) ) {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  VECTOR2<size_t> transSize = ss->cexecRet<VECTOR2<size_t> >(m_trans.fqName() +
+                                                             ".getSize");
+  if (ss->cexecRet<bool>(m_trans.fqName() + ".loadWithSize", 
+                         strFilename.toStdString(), transSize)) {
     m_iActiveSwatchIndex = 0;
     m_bBackdropCacheUptodate = false;
     update();
-    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
     ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
     emit SwatchChange();
     return true;
@@ -1244,31 +1251,32 @@ bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
 
 bool Q2DTransferFunction::SaveToFile(const QString& strFilename) {
   // hand the save call over to the TransferFunction1D class
-  return m_pTrans->Save(strFilename.toStdString());
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  return ss->cexecRet<bool>(m_trans.fqName() + ".save", 
+                            strFilename.toStdString());
 }
 
 
 void Q2DTransferFunction::Set1DTrans(LuaClassInstance inst) {
-  // Hack that will go away once this class is fully converted using Lua calls.
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-  LuaTransferFun1DProxy* tfProxy = 
-      inst.getRawPointer<LuaTransferFun1DProxy>(ss);
-  TransferFunction1D* p1DTrans = tfProxy->get1DTransferFunction();
-
-  m_pTrans->Update1DTrans(p1DTrans);
+  ss->cexec(m_trans.fqName() + ".update1DTrans", inst);
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   m_bBackdropCacheUptodate = false;
   update();
 }
 
 void Q2DTransferFunction::Transfer2DSetActiveSwatch(const int iActiveSwatch) {
-  if (iActiveSwatch == -1 && m_pTrans && m_pTrans->m_pvSwatches->size() > 0) return;
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  if (iActiveSwatch == -1 && m_trans.isValid(ss) && 
+      ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount") > 0) return;
   m_iActiveSwatchIndex = iActiveSwatch;
   update();
 }
 
 void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
   TFPolygon newSwatch;
+
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
 
   FLOATVECTOR2 vPoint(m_vZoomWindow.x + 0.8f*m_vZoomWindow.z, m_vZoomWindow.y + 0.8f*m_vZoomWindow.w);
   FLOATVECTOR2 vCenter(m_vZoomWindow.x + 0.5f*m_vZoomWindow.z, m_vZoomWindow.y + 0.5f*m_vZoomWindow.w);
@@ -1288,10 +1296,10 @@ void Q2DTransferFunction::Transfer2DAddCircleSwatch() {
   newSwatch.pGradientStops.push_back(g2);
   newSwatch.pGradientStops.push_back(g3);
 
-  m_pTrans->m_pvSwatches->push_back(newSwatch);
+  ss->cexec(m_trans.fqName() + ".swatchPushBack", newSwatch);
 
-  m_iActiveSwatchIndex = int(m_pTrans->m_pvSwatches->size()-1);
-  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  m_iActiveSwatchIndex = static_cast<int>(
+      ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount")-1);
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   emit SwatchChange();
 }
@@ -1314,10 +1322,11 @@ void Q2DTransferFunction::Transfer2DAddSwatch() {
   newSwatch.pGradientStops.push_back(g2);
   newSwatch.pGradientStops.push_back(g3);
 
-  m_pTrans->m_pvSwatches->push_back(newSwatch);
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->cexec(m_trans.fqName() + ".swatchPushBack", newSwatch);
 
-  m_iActiveSwatchIndex = int(m_pTrans->m_pvSwatches->size()-1);
-  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  m_iActiveSwatchIndex = static_cast<int>(
+      ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount")-1);
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   emit SwatchChange();
 }
@@ -1342,12 +1351,12 @@ void Q2DTransferFunction::Transfer2DAddRectangleSwatch() {
   newSwatch.pGradientStops.push_back(g2);
   newSwatch.pGradientStops.push_back(g3);
 
-  m_pTrans->m_pvSwatches->push_back(newSwatch);
-
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->cexec(m_trans.fqName() + ".swatchPushBack", newSwatch);
   UpdateSwatchTypes();
 
-  m_iActiveSwatchIndex = int(m_pTrans->m_pvSwatches->size()-1);
-  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  m_iActiveSwatchIndex = static_cast<int>(
+      ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount")-1);
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   emit SwatchChange();
 }
@@ -1393,11 +1402,12 @@ void Q2DTransferFunction::Transfer2DAddPseudoTrisSwatch() {
   newSwatch.pPoints.push_back(p3);
   ComputeGradientForPseudoTris(newSwatch, FLOATVECTOR4(rand()/float(RAND_MAX),rand()/float(RAND_MAX),rand()/float(RAND_MAX),1));
 
-  m_pTrans->m_pvSwatches->push_back(newSwatch);
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->cexec(m_trans.fqName() + ".swatchPushBack", newSwatch);
   UpdateSwatchTypes();
 
-  m_iActiveSwatchIndex = int(m_pTrans->m_pvSwatches->size()-1);
-  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  m_iActiveSwatchIndex = static_cast<int>(
+      ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount")-1);
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   emit SwatchChange();
 }
@@ -1405,10 +1415,13 @@ void Q2DTransferFunction::Transfer2DAddPseudoTrisSwatch() {
 
 void Q2DTransferFunction::Transfer2DDeleteSwatch(){
   if (m_iActiveSwatchIndex != -1) {
-    m_pTrans->m_pvSwatches->erase(m_pTrans->m_pvSwatches->begin()+m_iActiveSwatchIndex);
+    shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+    ss->cexec(m_trans.fqName() + ".swatchErase", 
+              static_cast<size_t>(m_iActiveSwatchIndex));
 
-    m_iActiveSwatchIndex = min<int>(m_iActiveSwatchIndex, int(m_pTrans->m_pvSwatches->size()-1));
-    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+    int lastSwatchIndex = static_cast<int>(
+        ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount")-1);
+    m_iActiveSwatchIndex = min<int>(m_iActiveSwatchIndex, lastSwatchIndex);
     ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
     emit SwatchChange();
   }
@@ -1416,84 +1429,133 @@ void Q2DTransferFunction::Transfer2DDeleteSwatch(){
 
 void Q2DTransferFunction::Transfer2DUpSwatch(){
   if (m_iActiveSwatchIndex > 0) {
-    TFPolygon tmp = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex-1];
-    (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex-1] = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex];
-    (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex] = tmp;
+    shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+    shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+    TFPolygon tmp = (*swatches)[m_iActiveSwatchIndex-1];
+
+    ss->cexec(m_trans.fqName() + ".swatchUpdate", 
+              static_cast<size_t>(m_iActiveSwatchIndex-1),
+              (*swatches)[m_iActiveSwatchIndex]);
+    ss->cexec(m_trans.fqName() + ".swatchUpdate",
+              static_cast<size_t>(m_iActiveSwatchIndex),
+              tmp);
 
     m_iActiveSwatchIndex--;
-    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
     ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
     emit SwatchChange();
   }
 }
 
 void Q2DTransferFunction::Transfer2DDownSwatch(){
-  if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex < int(m_pTrans->m_pvSwatches->size()-1)) {
-    TFPolygon tmp = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex+1];
-    (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex+1] = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex];
-    (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex] = tmp;
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  int lastSwatchIndex = static_cast<int>(
+      ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount")-1);
+  if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex < lastSwatchIndex) {
+    shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+    TFPolygon tmp = (*swatches)[m_iActiveSwatchIndex+1];
+
+    ss->cexec(m_trans.fqName() + ".swatchUpdate", 
+              static_cast<size_t>(m_iActiveSwatchIndex+1),
+              (*swatches)[m_iActiveSwatchIndex]);
+    ss->cexec(m_trans.fqName() + ".swatchUpdate",
+              static_cast<size_t>(m_iActiveSwatchIndex),
+              tmp);
 
     m_iActiveSwatchIndex++;
-    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
     ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
     emit SwatchChange();
   }
 }
 
 void Q2DTransferFunction::SetActiveGradientType(bool bRadial) {
-  if(static_cast<size_t>(m_iActiveSwatchIndex) <
-     m_pTrans->m_pvSwatches->size()) {
-       if ((*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].bRadial != bRadial) {
-          (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].bRadial = bRadial;
-          shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-          ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
-          update();
-       }
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  size_t swatchCount = 
+      ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount");
+  if (static_cast<size_t>(m_iActiveSwatchIndex) < swatchCount) {
+    if (ss->cexecRet<bool>(m_trans.fqName() + ".swatchIsRadial", 
+                           static_cast<size_t>(m_iActiveSwatchIndex)) 
+        != bRadial) {
+      ss->cexec(m_trans.fqName() + ".swatchSetRadial", bRadial);
+      ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
+      update();
+    }
   }
 }
 
 void Q2DTransferFunction::AddGradient(GradientStop stop) {
-  for (std::vector< GradientStop >::iterator i = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.begin();i<(*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.end();i++) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  const TFPolygon& currentSwatch = (*swatches)[m_iActiveSwatchIndex];
+  for (std::vector< GradientStop >::const_iterator i = 
+       currentSwatch.pGradientStops.begin();
+       i<currentSwatch.pGradientStops.end();
+       i++) {
     if (i->first > stop.first) {
-      (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.insert(i, stop);
+      // Do not proceed iteration after making this Lua call. If the 
+      // pGradientStops vector resized itself, our iterator is invalid.
+      ss->cexec(m_trans.fqName() + ".swatchInsertGradient", 
+               static_cast<size_t>(m_iActiveSwatchIndex),
+               static_cast<size_t>(
+                   std::distance(currentSwatch.pGradientStops.begin(), i)), 
+               stop);
+      // We have modified the transfer function, make sure to display the 
+      // results...
+      ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
+      update();
       return;
     }
   }
-  (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.push_back(stop);
-  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->cexec(m_trans.fqName() + ".swatchPushBackGradient",
+            static_cast<size_t>(m_iActiveSwatchIndex),
+            stop);
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   update();
 }
 
 void Q2DTransferFunction::DeleteGradient(unsigned int i) {
-  (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.erase((*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops.begin()+i);
-  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->cexec(m_trans.fqName() + ".swatchEraseGradient",
+            static_cast<size_t>(m_iActiveSwatchIndex),
+            static_cast<size_t>(i));
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   update();
 }
 
 void Q2DTransferFunction::SetGradient(unsigned int i, GradientStop stop) {
-  (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex].pGradientStops[i] = stop;
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->cexec(m_trans.fqName() + ".swatchUpdateGradient",
+            static_cast<size_t>(m_iActiveSwatchIndex),
+            static_cast<size_t>(i),
+            stop);
   ss->cexec("tuvok.gpu.changed2DTrans", LuaClassInstance(), m_trans);
   update();
 }
 
 
 void Q2DTransferFunction::UpdateSwatchType(size_t i) {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   std::string desc = m_vSimpleSwatchInfo[i].m_strDesc;
-  m_vSimpleSwatchInfo[i] = ClassifySwatch((*m_pTrans->m_pvSwatches)[i]);
+
+  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  TFPolygon tmp = (*swatches)[i];
+  m_vSimpleSwatchInfo[i] = ClassifySwatch(tmp);
+  // Tmp might have been mutated by ClassifySwatch, so we need to inform
+  // TransferFunction2D that it happened.
+  ss->cexec(m_trans.fqName() + ".swatchUpdate", i, tmp);
 
   if (desc != m_vSimpleSwatchInfo[i].m_strDesc) emit SwatchTypeChange(int(i));
 }
 
 
 void Q2DTransferFunction::UpdateSwatchTypes() {
-  if (!m_pTrans) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  size_t swatchCount = 
+      ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount");
 
   m_vSimpleSwatchInfo.clear();
-  m_vSimpleSwatchInfo.resize(m_pTrans->m_pvSwatches->size());
-  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
+  m_vSimpleSwatchInfo.resize(swatchCount);
+  for (size_t i = 0;i<swatchCount;i++) {
     UpdateSwatchType(i);
   }
 }

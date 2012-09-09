@@ -164,7 +164,6 @@ protected:
 private:
   // states
   NormalizedHistogram2D    m_vHistogram;
-  TransferFunction2D*      m_pTrans;
   LuaClassInstance         m_trans;
   unsigned int             m_iPaintmode;
   int                      m_iActiveSwatchIndex;
