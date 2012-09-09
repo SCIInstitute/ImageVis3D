@@ -12,9 +12,14 @@ if test `uname -s` != "Darwin" ; then
   CXF="${CXF} -D_GLIBCXX_DEBUG -Werror"
 else
   ALLWARN=""
-  #ALLWARN="-Weverything"
-  CF="${CF} ${ALLWARN}"
-  CXF="${CXF} -D_GLIBCXX_DEBUG ${ALLWARN}"
+  #ALLWARN='-Werror -Wno-padded -Wno-weak-vtables -Weverything'
+  # -Wno-#warnings: Temporarily disable #warnings until a new release of QT is issued.
+  # -Wno-padded: Don't care about 'adding bytes' to ensure byte alignment.
+  # -Wno-weak-vtables: We have several classes which do not have out-of-line virtual
+  #                    method definitions (resulting in the vtable being emitted in
+  #                    every translation unit). Examples: Exception (
+  CF="${CF}"
+  CXF="${CXF} ${ALLWARN}"
   MKSPEC="-spec unsupported/macx-clang"
 fi
 if test -n "${QT_BIN}" ; then
