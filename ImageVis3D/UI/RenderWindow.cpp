@@ -335,6 +335,36 @@ bool RenderWindow::GetClearViewEnabled() {
       m_LuaAbstrRenderer.fqName() + ".getClearViewEnabled");
 }
 
+string RenderWindow::GetRendererClearViewDisabledReason() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<string>(
+      m_LuaAbstrRenderer.fqName() + ".getClearViewDisabledReason");
+}
+
+float RenderWindow::GetRendererClearViewIsoValue() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<float>(
+      m_LuaAbstrRenderer.fqName() + ".getCVIsoValue");
+}
+
+float RenderWindow::GetRendererClearViewSize() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<float>(
+      m_LuaAbstrRenderer.fqName() + ".getCVSize");
+}
+
+float RenderWindow::GetRendererClearViewContextScale() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<float>(
+      m_LuaAbstrRenderer.fqName() + ".getCVContextScale");
+}
+
+float RenderWindow::GetRendererClearViewBorderScale() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  return ss->cexecRet<float>(
+      m_LuaAbstrRenderer.fqName() + ".getCVBorderScale");
+}
+
 LuaClassInstance RenderWindow::GetRendererDataset() const {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   return ss->cexecRet<LuaClassInstance>(m_LuaAbstrRenderer.fqName() +

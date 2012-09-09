@@ -1029,15 +1029,21 @@ void MainWindow::ApplyMatrixMeshTransform(ScaleAndBiasDlg* sender) {
 
 void MainWindow::RestoreMeshTransform(ScaleAndBiasDlg* sender) {
   if (!m_pActiveRenderWin || !sender) return;
-  const shared_ptr<Mesh> m = m_pActiveRenderWin->GetRenderer()->GetDataset().GetMeshes()[sender->m_index];
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+  vector<shared_ptr<Mesh> > meshes = ss->cexecRet<vector<shared_ptr<Mesh> > >(
+      ds.fqName() + ".getMeshes");
+  const shared_ptr<Mesh> m = meshes[sender->m_index];
   m_pActiveRenderWin->RendererReloadMesh(sender->m_index, m);
   m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
 }
 
 void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {
   if (!m_pActiveRenderWin || !sender) return;
-  UVFDataset* currentDataset = dynamic_cast<UVFDataset*>(&(m_pActiveRenderWin->GetRenderer()->GetDataset()));
-  if (!currentDataset) return;
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+  if (ss->cexecRet<LuaDatasetProxy::DatasetType>(
+          ds.fqName() + ".getDSType") != LuaDatasetProxy::UVF) return;
 
   PleaseWaitDialog pleaseWait(this);
   pleaseWait.SetText("Saving transformation to UVF file...");
@@ -1045,9 +1051,10 @@ void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {
 
   const FLOATMATRIX4& m = m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->GetTransformFromOriginal();
 
-  m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(true);
+  m_pActiveRenderWin->SetDatasetIsInvalid(true);
 
-  if (!currentDataset->GeometryTransformToFile(size_t(sender->m_index),m)) {
+  if (!ss->cexecRet<bool>(ds.fqName() + ".geomTransformToFile", 
+                          static_cast<size_t>(sender->m_index), m)) {
     pleaseWait.close();
     ShowCriticalDialog("Transform Save Failed.",
              "Could not save geometry transform to the UVF file, "
@@ -1058,7 +1065,7 @@ void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {
     pleaseWait.close();
   }
 
-    m_pActiveRenderWin->GetRenderer()->SetDatasetIsInvalid(false);
+  m_pActiveRenderWin->SetDatasetIsInvalid(false);
 }
 
 void MainWindow::SetMeshDefColor() {
@@ -1084,19 +1091,21 @@ void MainWindow::SetMeshDefColor() {
     meshcolor.y = color.green()/255.0f;
     meshcolor.z = color.blue()/255.0f;
     mesh->SetDefaultColor(meshcolor);
-    AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
-    renderer->Schedule3DWindowRedraws();
+    m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
   }
 }
 
 void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
   if (!m_pActiveRenderWin) return;
 
-  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
   if (bRepopulateListBox) {
     listWidget_DatasetComponents->clear();
     
-    QString voldesc = tr("Volume (%1)").arg(renderer->GetDataset().Name());
+    shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+    LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
+    
+    QString voldesc = tr("Volume (%1)").arg(
+        ss->cexecRet<const char*>(ds.fqName() + ".name"));
     listWidget_DatasetComponents->addItem(voldesc);
 
     size_t meshListSize = m_pActiveRenderWin->GetRendererMeshes().size();
@@ -1179,32 +1188,36 @@ void MainWindow::UpdateMinMaxLODLimitLabel() {
 void MainWindow::ToggleClearViewControls() {
   if (!m_pActiveRenderWin) return;
 
-  if (m_pActiveRenderWin->GetRenderer()->SupportsClearView()) {
+  if (m_pActiveRenderWin->SupportsClearView()) {
     checkBox_ClearView->setVisible(true);
     frame_ClearView->setVisible(true);
-    checkBox_ClearView->setChecked(m_pActiveRenderWin->GetRenderer()->GetCV());
+    checkBox_ClearView->setChecked(m_pActiveRenderWin->GetClearViewEnabled());
     label_CVDisableReason->setVisible(false);
   } else {
     checkBox_ClearView->setChecked(false);
     checkBox_ClearView->setVisible(false);
     frame_ClearView->setVisible(false);
 
-    QString reason = tr("ClearView is disabled because %1").arg(m_pActiveRenderWin->GetRenderer()->ClearViewDisableReason().c_str());
+    QString reason = tr("ClearView is disabled because %1").arg(
+        m_pActiveRenderWin->GetRendererClearViewDisabledReason().c_str());
     label_CVDisableReason->setText(reason);
     label_CVDisableReason->setVisible(true);
     label_CVDisableReason->setWordWrap(true);
-    m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+    m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
   }
 }
 
 void MainWindow::ToggleClearViewControls(int iRange) {
   ToggleClearViewControls();
-  AbstrRenderer * const ren = m_pActiveRenderWin->GetRenderer();
 
-  SetFocusIsoValueSlider(int(ren->GetCVIsoValue()), iRange);
-  SetFocusSizeValueSlider(99-int(ren->GetCVSize()*9.9f));
-  SetContextScaleValueSlider(int(ren->GetCVContextScale()*10.0f));
-  SetBorderSizeValueSlider(int(99-ren->GetCVBorderScale()));
+  SetFocusIsoValueSlider(
+      int(m_pActiveRenderWin->GetRendererClearViewIsoValue()), iRange);
+  SetFocusSizeValueSlider(
+      99-int(m_pActiveRenderWin->GetRendererClearViewSize()*9.9f));
+  SetContextScaleValueSlider(
+      int(m_pActiveRenderWin->GetRendererClearViewContextScale()*10.0f));
+  SetBorderSizeValueSlider(
+      int(99-m_pActiveRenderWin->GetRendererClearViewBorderScale()));
 }
 
 void MainWindow::SetRescaleFactors() {

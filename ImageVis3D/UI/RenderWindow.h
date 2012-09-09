@@ -248,6 +248,11 @@ class RenderWindow
     FLOATMATRIX4 GetTranslation(tuvok::LuaClassInstance region);
     tuvok::AbstrRenderer::ERendererTarget GetRendererTarget();
     bool GetClearViewEnabled();
+    std::string GetRendererClearViewDisabledReason();
+    float GetRendererClearViewIsoValue();
+    float GetRendererClearViewSize();
+    float GetRendererClearViewContextScale();
+    float GetRendererClearViewBorderScale();
     tuvok::LuaClassInstance GetRendererDataset() const;
     tuvok::LuaClassInstance GetRendererTransferFunction1D() const;
     tuvok::LuaClassInstance GetRendererTransferFunction2D() const;
