@@ -271,6 +271,7 @@ class RenderWindow
     bool ScanForNewMeshes();
     std::vector<std::shared_ptr<tuvok::RenderMesh> > GetRendererMeshes();
     void ClearRendererMeshes();
+    UINTVECTOR2 GetRendererSize() const;
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();

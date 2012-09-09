@@ -96,11 +96,13 @@ void Q1DTransferFunction::PreparePreviewData() {
   m_bBackdropCacheUptodate = false;
 }
 
-void Q1DTransferFunction::SetData(const Histogram1D* vHistogram,
+void Q1DTransferFunction::SetData(shared_ptr<const Histogram1D> vHistogram,
                                   unsigned int iMaxValue,
                                   LuaClassInstance trans) {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-  if (trans.isValid(ss) == false || vHistogram == NULL) return;
+  // There has got to be a better way of checking if a shared_ptr is valid...
+  // We can't use nullptr yet because of our octagon ci machine.
+  if (trans.isValid(ss) == false || vHistogram == 0) return;
 
   m_trans = trans;
 

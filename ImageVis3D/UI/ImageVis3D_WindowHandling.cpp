@@ -642,8 +642,9 @@ bool MainWindow::ApplyWorkspace() {
 
 
 void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   if (ActiveSubWindow()) {
-    UINTVECTOR2 renderSize = m_pActiveRenderWin->GetRenderer()->GetSize();
+    UINTVECTOR2 renderSize = m_pActiveRenderWin->GetRendererSize();
     UINTVECTOR2 windowSize(ActiveSubWindow()->size().width(), 
                            ActiveSubWindow()->size().height());
 
@@ -651,7 +652,8 @@ void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
     ActiveSubWindow()->resize(iSizeX+winDecoSize.x, iSizeY+winDecoSize.y);
   } else {
     if (mdiArea->activeSubWindow()) {
-      UINTVECTOR2 renderSize = WidgetToRenderWin(mdiArea->activeSubWindow()->widget())->GetRenderer()->GetSize();
+      UINTVECTOR2 renderSize = 
+          WidgetToRenderWin(mdiArea->activeSubWindow()->widget())->GetRendererSize();
       UINTVECTOR2 windowSize(mdiArea->activeSubWindow()->size().width(), 
                              mdiArea->activeSubWindow()->size().height());
 
@@ -834,13 +836,13 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   std::pair<double,double> range = 
       ss->cexecRet<std::pair<double,double> >(ds.fqName() + ".getRange");
   LuaClassInstance tf1d = sender->GetRendererTransferFunction1D();
-  m_1DTransferFunction->SetData(&ren->GetDataset().Get1DHistogram(),
+  m_1DTransferFunction->SetData(ren->GetDataset().Get1DHistogram(),
                                 static_cast<unsigned int>(range.second-range.first),
                                 tf1d);
   m_1DTransferFunction->update();
   MESSAGE("Getting 2D Transfer Function.");
   LuaClassInstance tf2d = sender->GetRendererTransferFunction2D();
-  m_2DTransferFunction->SetData(&ren->GetDataset().Get2DHistogram(), tf2d);
+  m_2DTransferFunction->SetData(ren->GetDataset().Get2DHistogram(), tf2d);
   m_2DTransferFunction->update();
 
   MESSAGE("Getting other Renderwindow parameters.");

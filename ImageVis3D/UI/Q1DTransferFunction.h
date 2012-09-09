@@ -54,7 +54,7 @@ public:
   Q1DTransferFunction(MasterController& masterController, QWidget *parent=0);
   virtual ~Q1DTransferFunction(void);
 
-  void SetData(const Histogram1D* vHistogram,
+  void SetData(std::shared_ptr<const Histogram1D> vHistogram,
                unsigned int iMaxValue, LuaClassInstance Trans);
 
   const LuaClassInstance GetTrans() {return m_trans;}

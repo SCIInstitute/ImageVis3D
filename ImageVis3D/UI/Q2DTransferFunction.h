@@ -101,7 +101,8 @@ class Q2DTransferFunction : public QTransferFunction
 public:
   Q2DTransferFunction(MasterController& masterController, QWidget *parent=0);
   virtual ~Q2DTransferFunction(void);
-  void SetData(const Histogram2D* vHistogram, LuaClassInstance trans);
+  void SetData(std::shared_ptr<const Histogram2D> vHistogram, 
+               LuaClassInstance trans);
   void SetPaintmode(unsigned int iPaintmode) {
     if (iPaintmode < Q2DT_PAINT_UNDEF) m_iPaintmode = iPaintmode;};
   void Set1DTrans(LuaClassInstance p1DTrans);

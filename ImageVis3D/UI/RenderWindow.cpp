@@ -508,6 +508,12 @@ void RenderWindow::ClearRendererMeshes() {
   ss->cexec(rn + ".clearMeshes");
 }
 
+UINTVECTOR2 RenderWindow::GetRendererSize() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<UINTVECTOR2>(rn + ".getSize");
+}
+
 RenderWindow::RegionSplitter
 RenderWindow::GetRegionSplitter(INTVECTOR2 pos) const
 {

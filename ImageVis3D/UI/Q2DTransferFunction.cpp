@@ -102,7 +102,7 @@ QSize Q2DTransferFunction::sizeHint() const
   return QSize(400, 400);
 }
 
-void Q2DTransferFunction::SetData(const Histogram2D* vHistogram,
+void Q2DTransferFunction::SetData(shared_ptr<const Histogram2D> vHistogram,
                                   LuaClassInstance tf2d) {
   m_trans = tf2d;
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
