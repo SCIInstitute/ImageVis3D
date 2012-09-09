@@ -748,17 +748,19 @@ int Q2DTransferFunction::PickVertex(const FLOATVECTOR2& pickPos, int& iVertexInd
 }
 
 int Q2DTransferFunction::PickSwatch(const FLOATVECTOR2& pickPos) const {
-  for (size_t i = 0;i<m_pTrans->m_pvSwatches->size();i++) {
-    TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[i];
+  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  for (vector<TFPolygon>::const_iterator it = swatches->begin(); 
+       it != swatches->end(); ++it) {
+    const TFPolygon& currentSwatch = *it;
     if (PointInPolygon(pickPos, currentSwatch)) {
-      return int(i);
+      return static_cast<int>(std::distance(swatches->begin(), it));
     }
   }
   return -1;
 }
 
 void Q2DTransferFunction::mousePressEvent(QMouseEvent *event) {
-  if (m_pTrans == NULL) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
   // call superclass method
   QWidget::mousePressEvent(event);
 
@@ -800,7 +802,7 @@ void Q2DTransferFunction::wheelEvent(QWheelEvent *event) {
 
 
 void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
-  if (m_pTrans == NULL) return;
+  if (m_trans.isValid(m_MasterController.LuaScript()) == false) return;
   // call superclass method
   QWidget::mouseReleaseEvent(event);
 
@@ -845,7 +847,8 @@ void Q2DTransferFunction::RecomputeLowerPseudoTrisPoints(TFPolygon& currentSwatc
 }
 
 void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
-  if (m_pTrans == NULL) return;
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  if (m_trans.isValid(ss) == false) return;
   // call superclass method
   QWidget::mouseMoveEvent(event);
 
@@ -889,7 +892,12 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
 
     if (m_eTransferFunctionMode == TFM_EXPERT) {
 
-      TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex];
+      // current swatch will be used as a staging area for the Lua scripting
+      // system. When we are done modifying the current swatch, we will call
+      // swatchUpdate. This will allow us to record the update for provenance 
+      // purposes.
+      shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+      TFPolygon currentSwatch = (*swatches)[m_iActiveSwatchIndex];
 
       if (m_bDraggingAll)  {
         switch (m_eDragMode) {
@@ -937,9 +945,13 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
           currentSwatch.pGradientCoords[m_iGradSelIndex] += vfDelta;
         }
       }
+
+      ss->cexec(m_trans.fqName() + ".swatchUpdate", 
+                static_cast<size_t>(m_iActiveSwatchIndex), currentSwatch);
     } else {
       if (m_iActiveSwatchIndex < 0) return;
-      TFPolygon& currentSwatch = (*m_pTrans->m_pvSwatches)[m_iActiveSwatchIndex];
+      shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+      TFPolygon currentSwatch = (*swatches)[m_iActiveSwatchIndex];
 
       switch (m_eSimpleDragMode) {
         case SDM_NONE:
@@ -1063,6 +1075,9 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
           }
         } break;
       }
+
+      ss->cexec(m_trans.fqName() + ".swatchUpdate", 
+                static_cast<size_t>(m_iActiveSwatchIndex), currentSwatch);
     }
 
     m_vMousePressPos = vMouseCurrentPos;
