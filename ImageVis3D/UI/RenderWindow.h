@@ -272,6 +272,23 @@ class RenderWindow
     std::vector<std::shared_ptr<tuvok::RenderMesh> > GetRendererMeshes();
     void ClearRendererMeshes();
     UINTVECTOR2 GetRendererSize() const;
+    bool GetRendererStereoEnabled() const;
+    float GetRendererStereoEyeDist() const;
+    float GetRendererStereoFocalLength() const;
+    bool GetRendererStereoEyeSwap() const;
+    tuvok::AbstrRenderer::EStereoMode GetRendererStereoMode() const;
+    float GetRendererSampleRateModifier() const;
+    float GetRendererFoV() const;
+    float GetRendererIsoValue() const;
+    DOUBLEVECTOR3 GetRendererRescaleFactors() const;
+    bool GetRendererGlobalBBox() const;
+    bool GetRendererLocalBBox() const;
+    bool GetRendererClipPlaneEnabled() const;
+    bool GetRendererClipPlaneLocked() const;
+    bool GetRendererClipPlaneShown() const;
+    bool GetRendererCanDoClipPlane() const;
+    size_t GetRendererTimestep() const;
+    UINTVECTOR2  GetRendererLODLimits() const;
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();

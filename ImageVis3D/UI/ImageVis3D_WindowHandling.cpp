@@ -53,6 +53,8 @@
 
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/LuaScripting/LuaScripting.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 
 #include "ImageVis3D.h"
 #include "MDIRenderWin.h"
@@ -826,23 +828,27 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
     if (w) w->close();
     return;
   }
-  AbstrRenderer *const ren = sender->GetRenderer();
 
   MESSAGE("Getting 1D Transfer Function.");
-
-
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   LuaClassInstance ds = sender->GetRendererDataset();
   std::pair<double,double> range = 
       ss->cexecRet<std::pair<double,double> >(ds.fqName() + ".getRange");
+  shared_ptr<const Histogram1D> hist1D = 
+      ss->cexecRet<shared_ptr<const Histogram1D> >(
+          ds.fqName() + ".get1DHistogram");
   LuaClassInstance tf1d = sender->GetRendererTransferFunction1D();
-  m_1DTransferFunction->SetData(ren->GetDataset().Get1DHistogram(),
+  m_1DTransferFunction->SetData(hist1D,
                                 static_cast<unsigned int>(range.second-range.first),
                                 tf1d);
   m_1DTransferFunction->update();
+
   MESSAGE("Getting 2D Transfer Function.");
+  shared_ptr<const Histogram2D> hist2D = 
+      ss->cexecRet<shared_ptr<const Histogram2D> >(
+          ds.fqName() + ".get2DHistogram");
   LuaClassInstance tf2d = sender->GetRendererTransferFunction2D();
-  m_2DTransferFunction->SetData(ren->GetDataset().Get2DHistogram(), tf2d);
+  m_2DTransferFunction->SetData(hist2D, tf2d);
   m_2DTransferFunction->update();
 
   MESSAGE("Getting other Renderwindow parameters.");
@@ -860,33 +866,33 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   }
 
   EnableStereoWidgets();
-  checkBox_Stereo->setChecked(ren->GetStereo());
-  horizontalSlider_EyeDistance->setValue(int(ren->GetStereoEyeDist()*100));
-  horizontalSlider_FocalLength->setValue(int(ren->GetStereoFocalLength()*10));
-  checkBox_EyeSwap->setChecked(ren->GetStereoEyeSwap());
+  checkBox_Stereo->setChecked(sender->GetRendererStereoEnabled());
+  horizontalSlider_EyeDistance->setValue(int(sender->GetRendererStereoEyeDist()*100));
+  horizontalSlider_FocalLength->setValue(int(sender->GetRendererStereoFocalLength()*10));
+  checkBox_EyeSwap->setChecked(sender->GetRendererStereoEyeSwap());
 
-  switch (ren->GetStereoMode()) {
+  switch (sender->GetRendererStereoMode()) {
     case AbstrRenderer::SM_RB : radioButton_RBStereo->setChecked(true); break;
     default                   : radioButton_ScanlineStereo->setChecked(true); break;
   }
 
-  checkBox_Lighting->setChecked(ren->GetUseLighting());
-  SetSampleRateSlider(int(ren->GetSampleRateModifier()*100));
-  SetFoVSlider(int(ren->GetFoV()));
+  checkBox_Lighting->setChecked(sender->GetUseLighting());
+  SetSampleRateSlider(int(sender->GetRendererSampleRateModifier()*100));
+  SetFoVSlider(int(sender->GetRendererFoV()));
   int iRange = int(m_pActiveRenderWin->GetDynamicRange().second);
-  SetIsoValueSlider(int(ren->GetIsoValue()), iRange);
+  SetIsoValueSlider(int(sender->GetRendererIsoValue()), iRange);
 
-  DOUBLEVECTOR3 vfRescaleFactors = ren->GetRescaleFactors();
+  DOUBLEVECTOR3 vfRescaleFactors = sender->GetRendererRescaleFactors();
   doubleSpinBox_RescaleX->setValue(vfRescaleFactors.x);
   doubleSpinBox_RescaleY->setValue(vfRescaleFactors.y);
   doubleSpinBox_RescaleZ->setValue(vfRescaleFactors.z);
 
-  SetToggleGlobalBBoxLabel(ren->GetGlobalBBox());
-  SetToggleLocalBBoxLabel(ren->GetLocalBBox());
+  SetToggleGlobalBBoxLabel(sender->GetRendererGlobalBBox());
+  SetToggleLocalBBoxLabel(sender->GetRendererLocalBBox());
 
-  SetToggleClipEnabledLabel(ren->ClipPlaneEnabled());
-  SetToggleClipShownLabel(ren->ClipPlaneShown());
-  SetToggleClipLockedLabel(ren->ClipPlaneLocked());
+  SetToggleClipEnabledLabel(sender->GetRendererClipPlaneEnabled());
+  SetToggleClipShownLabel(sender->GetRendererClipPlaneShown());
+  SetToggleClipLockedLabel(sender->GetRendererClipPlaneLocked());
 
   ClearProgressViewAndInfo();
 
@@ -895,14 +901,20 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
 
   UpdateExplorerView(true);
-  groupBox_ClipPlane->setVisible(ren->CanDoClipPlane());
+  groupBox_ClipPlane->setVisible(sender->GetRendererCanDoClipPlane());
 
   lineEdit_DatasetName->setText(QFileInfo(m_pActiveRenderWin->
                                           GetDatasetName()).fileName());
-  UINT64VECTOR3 vSize = ren->GetDataset().GetDomainSize();
-  uint64_t iBitWidth = ren->GetDataset().GetBitWidth();
 
-  pair<double, double> pRange = ren->GetDataset().GetRange();
+  UINT64VECTOR3 vSize = ss->cexecRet<UINT64VECTOR3>(
+          ds.fqName() + ".getDomainSize", size_t(0), size_t(0));
+  uint64_t iBitWidth = ss->cexecRet<uint64_t>(ds.fqName() + ".getBitWidth");
+  pair<double, double> pRange = ss->cexecRet<pair<double, double> >(
+      ds.fqName() + ".getRange");
+  uint64_t numDSTimesteps = ss->cexecRet<uint64_t>(ds.fqName() 
+                                                   + ".getNumberOfTimesteps");
+  uint64_t lodLevelCount = ss->cexecRet<uint64_t>(ds.fqName()
+                                                  + ".getLODLevelCount");
 
   QString strSize = tr("%1 x %2 x %3 (%4bit)").arg(vSize.x).
                                                arg(vSize.y).
@@ -913,20 +925,20 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
                                              arg(uint64_t(pRange.second));
   }
   // -1: slider is 0 based, but label is not.
-  SetTimestepSlider(static_cast<int>(ren->Timestep()),
-                    ren->GetDataset().GetNumberOfTimesteps()-1);
-  UpdateTimestepLabel(static_cast<int>(ren->Timestep()),
-                      ren->GetDataset().GetNumberOfTimesteps());
+  SetTimestepSlider(static_cast<int>(sender->GetRendererTimestep()),
+                    numDSTimesteps-1);
+  UpdateTimestepLabel(static_cast<int>(sender->GetRendererTimestep()),
+                      numDSTimesteps);
 
   lineEdit_MaxSize->setText(strSize);
-  uint64_t iLevelCount = ren->GetDataset().GetLODLevelCount();
+  uint64_t iLevelCount = lodLevelCount;
   QString strLevelCount = tr("%1").arg(iLevelCount);
   lineEdit_MaxLODLevels->setText(strLevelCount);
 
   horizontalSlider_maxLODLimit->setMaximum(iLevelCount-1);
   horizontalSlider_minLODLimit->setMaximum(iLevelCount-1);
 
-  UINTVECTOR2 iLODLimits = ren->GetLODLimits();
+  UINTVECTOR2 iLODLimits = sender->GetRendererLODLimits();
 
   horizontalSlider_minLODLimit->setValue(iLODLimits.x);
   horizontalSlider_maxLODLimit->setValue(iLODLimits.y);

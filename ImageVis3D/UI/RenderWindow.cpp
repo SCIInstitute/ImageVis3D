@@ -514,6 +514,108 @@ UINTVECTOR2 RenderWindow::GetRendererSize() const {
   return ss->cexecRet<UINTVECTOR2>(rn + ".getSize");
 }
 
+bool RenderWindow::GetRendererStereoEnabled() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".getStereoEnabled");
+}
+
+float RenderWindow::GetRendererStereoEyeDist() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<float>(rn + ".getStereoEyeDist");
+}
+
+float RenderWindow::GetRendererStereoFocalLength() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<float>(rn + ".getStereoFocalLength");
+}
+
+bool RenderWindow::GetRendererStereoEyeSwap() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".getStereoEyeSwap");
+}
+
+AbstrRenderer::EStereoMode RenderWindow::GetRendererStereoMode() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<AbstrRenderer::EStereoMode >(rn + ".getStereoMode");
+}
+
+float RenderWindow::GetRendererSampleRateModifier() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<float>(rn + ".getSampleRateModifier");
+}
+
+float RenderWindow::GetRendererFoV() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<float>(rn + ".getFoV");
+}
+
+float RenderWindow::GetRendererIsoValue() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<float>(rn + ".getIsoValue");
+}
+
+DOUBLEVECTOR3  RenderWindow::GetRendererRescaleFactors() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<DOUBLEVECTOR3>(rn + ".getRescaleFactors");
+}
+
+bool RenderWindow::GetRendererGlobalBBox() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".getGlobalBBox");
+}
+
+bool RenderWindow::GetRendererLocalBBox() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".getLocalBBox");
+}
+
+bool RenderWindow::GetRendererClipPlaneEnabled() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".isClipPlaneEnabled");
+}
+
+bool RenderWindow::GetRendererClipPlaneLocked() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".isClipPlaneLocked");
+}
+
+bool RenderWindow::GetRendererClipPlaneShown() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".isClipPlaneShown");
+}
+
+bool RenderWindow::GetRendererCanDoClipPlane() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<bool>(rn + ".canDoClipPlane");
+}
+
+size_t RenderWindow::GetRendererTimestep() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<size_t>(rn + ".getTimestep");
+}
+
+UINTVECTOR2 RenderWindow::GetRendererLODLimits() const {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<UINTVECTOR2>(rn + ".getLODLimits");
+}
+
 RenderWindow::RegionSplitter
 RenderWindow::GetRegionSplitter(INTVECTOR2 pos) const
 {
