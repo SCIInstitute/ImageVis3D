@@ -960,7 +960,7 @@ void MainWindow::ToggleMesh() {
 
   shared_ptr<RenderMesh> mesh = m_pActiveRenderWin->GetRendererMeshes()[iCurrent-1];
   mesh->SetActive(checkBox_ComponenEnable->isChecked());
-  m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+  m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
   ToggleClearViewControls();
 }
 
@@ -980,7 +980,7 @@ void MainWindow::SetMeshDefOpacity() {
   if (fSlideVal != meshcolor.w) {
     meshcolor.w = fSlideVal;
     mesh->SetDefaultColor(meshcolor);
-    m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+    m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
   }
 }
 
@@ -993,8 +993,8 @@ void MainWindow::SetMeshScaleAndBias() {
   shared_ptr<RenderMesh> mesh = m_pActiveRenderWin->GetRendererMeshes()[iCurrent-1];
 
   FLOATVECTOR3 vCenter, vExtend;
-  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
-  renderer->GetVolumeAABB(vCenter, vExtend);
+  vCenter = m_pActiveRenderWin->GetRendererVolumeAABBCenter();
+  vExtend = m_pActiveRenderWin->GetRendererVolumeAABBExtents();
 
   ScaleAndBiasDlg sbd(mesh,iCurrent-1,
                       vCenter-0.5f*vExtend,
@@ -1015,25 +1015,23 @@ void MainWindow::SetMeshScaleAndBias() {
 
 void MainWindow::ApplMeshTransform(ScaleAndBiasDlg* sender) {
   if (!m_pActiveRenderWin || !sender) return;
-  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
 
   sender->m_pMesh->ScaleAndBias(sender->scaleVec, sender->biasVec);
-  renderer->Schedule3DWindowRedraws();
+  m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
 }
 
 void MainWindow::ApplyMatrixMeshTransform(ScaleAndBiasDlg* sender) {
   if (!m_pActiveRenderWin || !sender) return;
-  AbstrRenderer* renderer = m_pActiveRenderWin->GetRenderer();
 
   sender->m_pMesh->Transform(sender->GetExpertTransform());
-  renderer->Schedule3DWindowRedraws();
+  m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
 }
 
 void MainWindow::RestoreMeshTransform(ScaleAndBiasDlg* sender) {
   if (!m_pActiveRenderWin || !sender) return;
   const shared_ptr<Mesh> m = m_pActiveRenderWin->GetRenderer()->GetDataset().GetMeshes()[sender->m_index];
-  m_pActiveRenderWin->GetRenderer()->ReloadMesh(sender->m_index, m);
-  m_pActiveRenderWin->GetRenderer()->Schedule3DWindowRedraws();
+  m_pActiveRenderWin->RendererReloadMesh(sender->m_index, m);
+  m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
 }
 
 void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {

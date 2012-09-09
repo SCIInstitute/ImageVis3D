@@ -490,10 +490,10 @@ bool RenderWindow::SupportsMeshes() {
   return ss->cexecRet<bool>(rn + ".supportsMeshes");
 }
 
-bool RenderWindow::ScanForNewMeshes() {
+void RenderWindow::ScanForNewMeshes() {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
-  return ss->cexecRet<bool>(rn + ".scanForNewMeshes");
+  ss->cexec(rn + ".scanForNewMeshes");
 }
 
 vector<shared_ptr<RenderMesh> > RenderWindow::GetRendererMeshes() {
@@ -614,6 +614,30 @@ UINTVECTOR2 RenderWindow::GetRendererLODLimits() const {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
   return ss->cexecRet<UINTVECTOR2>(rn + ".getLODLimits");
+}
+
+void RenderWindow::RendererSchedule3DWindowRedraws() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".schedule3DWindowRedraws");
+}
+
+void RenderWindow::RendererReloadMesh(size_t index, const shared_ptr<Mesh> m) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  ss->cexec(rn + ".reloadMesh", index, m);
+}
+
+FLOATVECTOR3 RenderWindow::GetRendererVolumeAABBExtents() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<FLOATVECTOR3>(rn + ".getVolumeAABBCenter");
+}
+
+FLOATVECTOR3 RenderWindow::GetRendererVolumeAABBCenter() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string rn = m_LuaAbstrRenderer.fqName();
+  return ss->cexecRet<FLOATVECTOR3>(rn + ".getVolumeAABBExtents");
 }
 
 RenderWindow::RegionSplitter

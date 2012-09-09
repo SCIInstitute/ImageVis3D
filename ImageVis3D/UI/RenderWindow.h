@@ -268,7 +268,7 @@ class RenderWindow
     void SetRendererTarget(tuvok::AbstrRenderer::ERendererTarget targ);
     bool SupportsClearView();
     bool SupportsMeshes();
-    bool ScanForNewMeshes();
+    void ScanForNewMeshes();
     std::vector<std::shared_ptr<tuvok::RenderMesh> > GetRendererMeshes();
     void ClearRendererMeshes();
     UINTVECTOR2 GetRendererSize() const;
@@ -289,6 +289,10 @@ class RenderWindow
     bool GetRendererCanDoClipPlane() const;
     size_t GetRendererTimestep() const;
     UINTVECTOR2  GetRendererLODLimits() const;
+    void RendererSchedule3DWindowRedraws();
+    void RendererReloadMesh(size_t index, const std::shared_ptr<tuvok::Mesh> m);
+    FLOATVECTOR3 GetRendererVolumeAABBExtents();
+    FLOATVECTOR3 GetRendererVolumeAABBCenter();
 
   public: // public slots:
     virtual void ToggleRenderWindowView2x2();
