@@ -139,6 +139,7 @@ int main(int argc, const char* argv[])
   double fScale = 0.0;
   double fBias = 0.0;
   bool debug;
+  uint32_t bricksize = 64;
 
   try {
     TCLAP::CmdLine cmd("uvf converter");
@@ -158,6 +159,9 @@ int main(int argc, const char* argv[])
     TCLAP::ValueArg<double> scale("s", "scale",
                                   "(merging) scaling value for second file",
                                   false, 0.0, "floating point number");
+    TCLAP::ValueArg<uint32_t> opt_bricksize("c", "bricksize",
+                                        "set maximum brick size (64)", false,
+                                        64, "positive integer");
     TCLAP::SwitchArg dbg("g", "debug", "Enable debugging mode", false);
     TCLAP::SwitchArg experim("", "experimental",
                              "Enable experimental features", false);
@@ -166,6 +170,7 @@ int main(int argc, const char* argv[])
     cmd.add(output);
     cmd.add(bias);
     cmd.add(scale);
+    cmd.add(opt_bricksize);
     cmd.add(expr);
     cmd.add(dbg);
     cmd.add(experim);
@@ -185,6 +190,7 @@ int main(int argc, const char* argv[])
     strOutFile = output.getValue();
     fBias = bias.getValue();
     fScale = scale.getValue();
+    bricksize = opt_bricksize.getValue();
 
     if(expr.isSet()) {
       expression = expr.getValue();
@@ -301,7 +307,6 @@ int main(int argc, const char* argv[])
       }
     }
 
-
     if (strInFile2.empty()) {
       if (bIsVolExt1) {
         if (targetType == "uvf" && sourceType == "uvf") {
@@ -315,7 +320,7 @@ int main(int argc, const char* argv[])
 
           // HACK: use the output file's dir as temp dir
           if (ioMan.ConvertDataset(strInFile, tmpFile,
-                                   SysTools::GetPath(tmpFile))) {
+                                   SysTools::GetPath(tmpFile), bricksize)) {
             cout << endl << "Success." << endl << endl;
           } else {
             cout << endl << "Extraction failed!" << endl << endl;
@@ -325,7 +330,7 @@ int main(int argc, const char* argv[])
           cout << "Step 2. Writing new UVF file" << endl;
           // HACK: use the output file's dir as temp dir
           if (ioMan.ConvertDataset(tmpFile, strOutFile,
-                                   SysTools::GetPath(strOutFile))) {
+                                   SysTools::GetPath(strOutFile), bricksize)) {
             if(std::remove(tmpFile.c_str()) == -1) {
              cout << endl << "Conversion succeeded but "
                   << " could not delete tmp file " << tmpFile << "\n\n";
@@ -347,7 +352,7 @@ int main(int argc, const char* argv[])
                << strInFile << " to " << strOutFile << "\n\n";
           // HACK: use the output file's dir as temp dir
           if (ioMan.ConvertDataset(strInFile, strOutFile,
-                                   SysTools::GetPath(strOutFile))) {
+                                   SysTools::GetPath(strOutFile), bricksize)) {
             cout << "\nSuccess.\n\n";
             return EXIT_SUCCESS;
           } else {
@@ -457,7 +462,8 @@ int main(int argc, const char* argv[])
     int iFailCount = 0;
     for (size_t i = 0;i<dirinfo.size();i++) {
       if (ioMan.ConvertDataset(&*dirinfo[i], vStrFilenames[i],
-                               SysTools::GetPath(vStrFilenames[i]))) {
+                               SysTools::GetPath(vStrFilenames[i]),
+                               bricksize)) {
         cout << "\nSuccess.\n\n";
       } else {
         cout << "\nConversion failed!\n\n";
