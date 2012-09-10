@@ -54,7 +54,9 @@ contains(QMAKE_PRL_CONFIG, shared) {
 }
 
 # Input
-HEADERS += ../CmdLineConverter/DebugOut/HRConsoleOut.h
+HEADERS += ../CmdLineConverter/DebugOut/HRConsoleOut.h \
+           DataSource.h \
+           BlockInfo.h
 
 
 SOURCES += ../CmdLineConverter/DebugOut/HRConsoleOut.cpp \

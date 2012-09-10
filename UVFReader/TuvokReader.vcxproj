@@ -385,6 +385,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CmdLineConverter\DebugOut\HRConsoleOut.h" />
+    <ClInclude Include="BlockInfo.h" />
+    <ClInclude Include="DataSource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UVFReader.pro" />
