@@ -40,9 +40,7 @@ else
 fi
 
 dirs="."
-if test `uname` != "Darwin" ; then
-  dirs="$dirs Tuvok/IO/test"
-fi
+dirs="$dirs Tuvok/IO/test"
 echo "Configuring..."
 for d in $dirs ; do
   pushd ${d} &> /dev/null || exit 1
@@ -66,12 +64,9 @@ fi
 echo "BUILDING Tuvok..."
 make --no-print-directory ${MAKE_OPTIONS} || exit 1
 
-# Darwin's compiler is broken w.r.t. tr1, our IO tests won't work.
-if test `uname -s` != "Darwin" ; then
-  pushd Tuvok/IO/test &> /dev/null || exit 1
-    make --no-print-directory ${MAKE_OPTIONS} || exit 1
-  popd &> /dev/null
-fi
+pushd Tuvok/IO/test &> /dev/null || exit 1
+  make --no-print-directory ${MAKE_OPTIONS} || exit 1
+popd &> /dev/null
 
 echo "Bundling..."
 if test `uname -s` = "Darwin" ; then
