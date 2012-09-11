@@ -7,8 +7,6 @@ REM  QMAKE_CFLAGS+=%w32_cf% ^
 REM  QMAKE_CXXFLAGS+=%w32_cf% ^
 REM  -recursive ^
 REM  ImageVis3d.pro
-REM hardcoding vs2010 express for now =(
-REM set bld="C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\VCExpress.exe"
 
 set bld="msbuild"
 IF "%1"=="x64" (
