@@ -10,7 +10,8 @@ IF "%1"=="x64" (
     ImageVis3D-2010.sln ^
     /nologo ^
     /p:Configuration="Release (with DirectX)",Platform=x64 ^
-    /t:Rebuild
+    /t:Rebuild ^
+    /m:2
 ) ELSE (
   REM Handle 32 bit compilation
   call "%VS100COMNTOOLS%\..\..\VC\vcvarsall.bat"
@@ -18,7 +19,8 @@ IF "%1"=="x64" (
     ImageVis3D-2010.sln ^
     /nologo ^
     /p:Configuration="Release (with DirectX)",Platform=Win32 ^
-    /t:Rebuild
+    /t:Rebuild ^
+    /m:2
 )
 
 pushd Tuvok\IO\test
