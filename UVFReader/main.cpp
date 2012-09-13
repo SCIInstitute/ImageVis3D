@@ -44,6 +44,7 @@ int main(int argc, char* argv[])
   uint32_t iBitSize = 8;
   uint32_t iBrickSize = DEFAULT_BRICKSIZE;
   bool bCreateFile;
+  bool bZlib;
   bool bVerify;
   bool bShow1dhist;
   bool bShow2dhist;
@@ -61,6 +62,8 @@ int main(int argc, char* argv[])
     TCLAP::SwitchArg hist1d("1", "1dhist", "output the 1D histogram", false);
     TCLAP::SwitchArg hist2d("2", "2dhist", "output the 2D histogram", false);
     TCLAP::SwitchArg create("c", "create", "create instead of read a UVF",
+                            false);
+    TCLAP::SwitchArg zlib("o", "compress", "create a zlib compressed UVF",
                             false);
     TCLAP::SwitchArg mandelbulb("m", "mandelbulb", "compute mandelbulb "
                                      "fractal instead of simple sphere", false);
@@ -87,6 +90,7 @@ int main(int argc, char* argv[])
     cmd.add(hist1d);
     cmd.add(hist2d);
     cmd.add(create);
+    cmd.add(zlib);
     cmd.add(mandelbulb);
     cmd.add(keep_raw);
     cmd.add(sizeX);
@@ -107,6 +111,7 @@ int main(int argc, char* argv[])
     iBrickSize = static_cast<uint32_t>(bsize.getValue());
 
     bCreateFile = create.getValue();
+    bZlib = zlib.getValue();
     bVerify = !noverify.getValue();
     bShow1dhist = hist1d.getValue();
     bShow2dhist = hist2d.getValue();
@@ -131,9 +136,15 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
+  if (bZlib && !bUseToCBlock) {
+    cerr << endl << "Brick compression is not available with the "
+                    "old file format (-r switch)" << endl;
+    return EXIT_FAILURE;
+  }
+
   if (bCreateFile) {
     if (!CreateUVFFile(strUVFName, vSize, iBitSize, bMandelbulb, iBrickSize,
-                       bUseToCBlock, bKeepRaw))
+                       bUseToCBlock, bKeepRaw, bZlib))
       return EXIT_FAILURE;
   } else {
     if (!DisplayUVFInfo(strUVFName, bVerify, bShowData, bShow1dhist, 

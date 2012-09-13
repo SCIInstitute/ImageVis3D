@@ -95,9 +95,8 @@ double ComputeMandelbulb(const double sx, const double sy,
 template<typename T, bool bMandelbulb> 
 void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
   Timer timer;
-  T* source = new T[size_t(vSize.x)];
-  
   timer.Start();
+  T* source = new T[size_t(vSize.x)];
 
   uint64_t miliSecsHalfWay=0;
 
@@ -158,7 +157,7 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
 
 bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize, 
                    uint32_t iBitSize, bool bMandelbulb, uint32_t iBrickSize,
-                   bool bUseToCBlock, bool bKeepRaw) {  
+                   bool bUseToCBlock, bool bKeepRaw, bool bCompress) {  
   wstring wstrUVFName(strUVFName.begin(), strUVFName.end());
   UVF uvfFile(wstrUVFName);
 
@@ -175,6 +174,8 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
     return false;
   }
 
+  Timer generationTimer;
+  generationTimer.Start();
   switch (iBitSize) {
     case 8 :
       if (bMandelbulb)
@@ -193,9 +194,13 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
       return false;
   }
   dummyData->Close();
+  
+  uint64_t genMiliSecs = uint64_t(generationTimer.Elapsed());
 
-  if (!bGenerateUVF) return EXIT_SUCCESS;
+  if (!bGenerateUVF) return EXIT_FAILURE;
 
+  Timer uvfTimer;
+  uvfTimer.Start();
 
   MESSAGE("Preparing creation of UVF file %s", strUVFName.c_str());
 
@@ -222,6 +227,7 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
   std::shared_ptr<TOCBlock> tocBlock(new TOCBlock());
 
   if (bUseToCBlock)  {
+    MESSAGE("Buidling hirarchy ...");
     tocBlock->strBlockID = "Test TOC Volume 1";
     tocBlock->ulCompressionScheme = UVFTables::COS_NONE;
 
@@ -232,7 +238,8 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
       UINT64VECTOR3(iBrickSize,iBrickSize,iBrickSize),
       DEFAULT_BRICKOVERLAP, false, false,
       1024*1024*1024, MaxMinData,
-      &tuvok::Controller::Debug::Out()
+      &tuvok::Controller::Debug::Out(),
+      (bCompress) ? CT_ZLIB : CT_NONE
     );
 
     if (!bResult) {
@@ -411,7 +418,19 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
   MESSAGE("Computing checksum...");
   uvfFile.Close();
 
-  MESSAGE("Successfully created UVF file %s", strUVFName.c_str());
+  uint64_t uvfMiliSecs = uint64_t(uvfTimer.Elapsed());
+  const uint64_t uvfSecs  = (uvfMiliSecs/1000)%60;
+  const uint64_t uvfMins  = (uvfMiliSecs/60000)%60;
+  const uint64_t uvfHours = (uvfMiliSecs/3600000);
+
+  const uint64_t genSecs  = (genMiliSecs/1000)%60;
+  const uint64_t genMins  = (genMiliSecs/60000)%60;
+  const uint64_t genHours = (genMiliSecs/3600000);
+
+  MESSAGE("Successfully created UVF file %s (generator time: %i:%02i:%02i  "
+                                            "UVF time: %i:%02i:%02i)",
+          strUVFName.c_str(), int(genHours), int(genMins), int(genSecs),
+          int(uvfHours), int(uvfMins), int(uvfSecs));
   return true;
 }
 
