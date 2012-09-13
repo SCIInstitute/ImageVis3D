@@ -128,12 +128,12 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
       for (int64_t x = 0;x<int64_t(vSize.x);x++) {
         if (bMandelbulb)
           source[x] = 
-            static_cast<T>(ComputeMandelbulb(3.0 * static_cast<double>(x)/
-                                                   (vSize.x-1) - 1.5,
-                                             3.0 * static_cast<double>(y)/
-                                                   (vSize.y-1) - 1.5,
-                                             3.0 * static_cast<double>(z)/
-                                                   (vSize.z-1) - 1.5,
+            static_cast<T>(ComputeMandelbulb(2.25 * static_cast<double>(x)/
+                                                   (vSize.x-1) - 1.125,
+                                             2.25 * static_cast<double>(y)/
+                                                   (vSize.y-1) - 1.125,
+                                             2.25 * static_cast<double>(z)/
+                                                   (vSize.z-1) - 1.125,
                                              8, 
                                              std::numeric_limits<T>::max(),
                                              4.0) 
