@@ -126,19 +126,20 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
     for (uint64_t y = 0;y<vSize.y;y++) {
       #pragma omp parallel for 
       for (int64_t x = 0;x<int64_t(vSize.x);x++) {
-        if (bMandelbulb)
+        if (bMandelbulb) {
+          const double bulbSize = 2.25;
           source[x] = 
-            static_cast<T>(ComputeMandelbulb(2.25 * static_cast<double>(x)/
-                                                   (vSize.x-1) - 1.125,
-                                             2.25 * static_cast<double>(y)/
-                                                   (vSize.y-1) - 1.125,
-                                             2.25 * static_cast<double>(z)/
-                                                   (vSize.z-1) - 1.125,
+            static_cast<T>(ComputeMandelbulb(bulbSize * static_cast<double>(x)/
+                                                   (vSize.x-1) - bulbSize/2.0,
+                                             bulbSize * static_cast<double>(y)/
+                                                   (vSize.y-1) - bulbSize/2.0,
+                                             bulbSize * static_cast<double>(z)/
+                                                   (vSize.z-1) - bulbSize/2.0,
                                              8, 
-                                             std::numeric_limits<T>::max(),
-                                             4.0) 
+                                             20,
+                                             100.0) 
                                                * std::numeric_limits<T>::max());
-        else
+        } else {
           source[x] = 
            static_cast<T>(std::max(0.0f,
                                    (0.5f-(0.5f-FLOATVECTOR3(float(x),
@@ -146,6 +147,7 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
                                                             float(z))/
                                               FLOATVECTOR3(vSize)).length())*
                                               std::numeric_limits<T>::max()*2));
+        }
       }
       pDummyData->WriteRAW((uint8_t*)source, vSize.x*sizeof(T));
     }
