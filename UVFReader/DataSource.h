@@ -135,7 +135,7 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
                                              bulbSize * static_cast<double>(z)/
                                                    (vSize.z-1) - bulbSize/2.0,
                                              8, 
-                                             20,
+                                             std::numeric_limits<T>::max()-1,
                                              100.0) 
                                                * std::numeric_limits<T>::max());
         } else {
