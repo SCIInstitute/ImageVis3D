@@ -10,7 +10,7 @@
 
 #include "../Tuvok/StdTuvokDefines.h"
 #include "../Tuvok/Controller/Controller.h"
-#include "../Tuvok/Basics/Timer.h"
+#include "../Tuvok/Basics/ProgressTimer.h"
 #include "../Tuvok/Basics/Vectors.h"
 #include "../Tuvok/Basics/LargeRAWFile.h"
 #include "../Tuvok/Basics/SysTools.h"
@@ -94,33 +94,14 @@ double ComputeMandelbulb(const double sx, const double sy,
 
 template<typename T, bool bMandelbulb> 
 void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
-  Timer timer;
+  ProgressTimer timer;
   timer.Start();
   T* source = new T[size_t(vSize.x)];
 
-  uint64_t miliSecsHalfWay=0;
-
   for (uint64_t z = 0;z<vSize.z;z++) {
-    uint64_t miliSecs = uint64_t(timer.Elapsed());
-
-    if (z < vSize.z/2) {
-      const uint64_t secs  = (miliSecs/1000)%60;
-      const uint64_t mins  = (miliSecs/60000)%60;
-      const uint64_t hours = (miliSecs/3600000);
-      MESSAGE("Generating Data %.3f%% completed (Elapsed Time %i:%02i:%02i)",
-              100.0*(double)z/vSize.z, int(hours), int(mins), int(secs));
-    } else 
-    if (z > vSize.z/2) {
-      miliSecs = std::max<uint64_t>(0, miliSecsHalfWay*2-miliSecs);
-      const uint64_t secs  = (miliSecs/1000)%60;
-      const uint64_t mins  = (miliSecs/60000)%60;
-      const uint64_t hours = (miliSecs/3600000);
-      MESSAGE("Generating Data %.3f%% completed (Remaining Time %i:%02i:%02i)", 
-               100.0*(double)z/vSize.z, int(hours), int(mins), int(secs));
-    }
-    else {
-      miliSecsHalfWay = miliSecs;
-    }
+    const double completed = (double)z/vSize.z;
+    MESSAGE("Generating Data %.3f%% completed (%s)",
+            100.0*completed, timer.GetProgressMessage(completed).c_str());
 
     for (uint64_t y = 0;y<vSize.y;y++) {
       #pragma omp parallel for 
