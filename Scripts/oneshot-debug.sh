@@ -13,23 +13,25 @@ fi
 CF="-g -Wall -Wextra -O0 -D_DEBUG ${COVERAGE}"
 CXF="-D_GLIBCXX_CONCEPT_CHECK ${COVERAGE}"
 MKSPEC=""
-QLF=""
+LDFLAGS="${COVERAGE}"
+
+if test "$1" == "32" ; then
+  CF="${CF} -m32"
+  CXF="${CXF} -m32"
+  LDFLAGS="${LDFLAGS} -m32"
+fi
+
 # Darwin's debug STL support is broken.
+# Ditto: OpenMP
 if test `uname -s` != "Darwin"; then
-  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror"
+  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror -fopenmp"
+  LDFLAGS="${LDFLAGS} -fopenmp"
 else
   # We don't turn -Werror on because of warnings that deal 
   # with generated code, and some unused template specialization
   # warnings. 
   MKSPEC="-spec unsupported/macx-clang"
 fi
-
-if test "$1" == "32" ; then
-  CF="$CF -m32"
-  COVERAGE="$COVERAGE -m32"
-fi
-
-LDFLAGS="${COVERAGE}"
 
 # Users can set the QT_BIN env var to point at a different Qt implementation.
 if test -n "${QT_BIN}" ; then
@@ -50,7 +52,7 @@ for d in $dirs ; do
       CONFIG+="debug" \
       QMAKE_CFLAGS+="${VIS} ${CF}" \
       QMAKE_CXXFLAGS+="${VIS} ${INL} ${CF} ${CXF}" \
-      QMAKE_LFLAGS+="${VIS} ${COVERAGE} ${QLF}" \
+      QMAKE_LFLAGS+="${VIS} ${LDFLAGS}" \
       -recursive || exit 1
   popd &> /dev/null
 done

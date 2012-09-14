@@ -4,8 +4,8 @@
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 CF="-Wall -Wextra -O0 -D_DEBUG"
-CXF="-D_GLIBCXX_CONCEPT_CHECK"
-LF=""
+CXF="-D_GLIBCXX_CONCEPT_CHECK -fopenmp"
+LF="-fopenmp"
 MKSPEC=""
 if test `uname -s` != "Darwin" ; then
   CF="${CF} -ggdb3 "
