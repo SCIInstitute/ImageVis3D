@@ -140,6 +140,7 @@ int main(int argc, const char* argv[])
   double fBias = 0.0;
   bool debug;
   uint32_t bricksize = 64;
+  const uint32_t brickoverlap = 2;
 
   try {
     TCLAP::CmdLine cmd("uvf converter");
@@ -320,7 +321,8 @@ int main(int argc, const char* argv[])
 
           // HACK: use the output file's dir as temp dir
           if (ioMan.ConvertDataset(strInFile, tmpFile,
-                                   SysTools::GetPath(tmpFile), bricksize)) {
+                                   SysTools::GetPath(tmpFile), true,
+                                   bricksize, brickoverlap)) {
             cout << endl << "Success." << endl << endl;
           } else {
             cout << endl << "Extraction failed!" << endl << endl;
@@ -330,7 +332,8 @@ int main(int argc, const char* argv[])
           cout << "Step 2. Writing new UVF file" << endl;
           // HACK: use the output file's dir as temp dir
           if (ioMan.ConvertDataset(tmpFile, strOutFile,
-                                   SysTools::GetPath(strOutFile), bricksize)) {
+                                   SysTools::GetPath(strOutFile), true,
+                                   bricksize, brickoverlap)) {
             if(std::remove(tmpFile.c_str()) == -1) {
              cout << endl << "Conversion succeeded but "
                   << " could not delete tmp file " << tmpFile << "\n\n";
@@ -352,7 +355,8 @@ int main(int argc, const char* argv[])
                << strInFile << " to " << strOutFile << "\n\n";
           // HACK: use the output file's dir as temp dir
           if (ioMan.ConvertDataset(strInFile, strOutFile,
-                                   SysTools::GetPath(strOutFile), bricksize)) {
+                                   SysTools::GetPath(strOutFile), true,
+                                   bricksize, brickoverlap)) {
             cout << "\nSuccess.\n\n";
             return EXIT_SUCCESS;
           } else {
@@ -462,8 +466,8 @@ int main(int argc, const char* argv[])
     int iFailCount = 0;
     for (size_t i = 0;i<dirinfo.size();i++) {
       if (ioMan.ConvertDataset(&*dirinfo[i], vStrFilenames[i],
-                               SysTools::GetPath(vStrFilenames[i]),
-                               bricksize)) {
+                               SysTools::GetPath(vStrFilenames[i]), true,
+                               bricksize, brickoverlap)) {
         cout << "\nSuccess.\n\n";
       } else {
         cout << "\nConversion failed!\n\n";
