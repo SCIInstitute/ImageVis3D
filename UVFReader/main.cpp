@@ -43,6 +43,8 @@ int main(int argc, char* argv[])
   uint32_t iSizeZ = 300;
   uint32_t iBitSize = 8;
   uint32_t iBrickSize = DEFAULT_BRICKSIZE;
+  uint32_t iIter = 0;
+  uint32_t iMem = 1;
   bool bCreateFile;
   bool bZlib;
   bool bVerify;
@@ -70,6 +72,12 @@ int main(int argc, char* argv[])
     TCLAP::SwitchArg output_data("d", "data", "display data at finest"
                                  " resolution", false);
     std::string uint = "unsigned integer";
+    TCLAP::ValueArg<uint32_t> iter("i", "iterations", "number of iterations "
+                                   "for fractal compuation", false, 
+                                   static_cast<uint32_t>(0), uint);
+    TCLAP::ValueArg<uint32_t> mem("e", "memory", "gigabytes of memory "
+                                   "to be used for UVF creation", false, 
+                                   static_cast<uint32_t>(1), uint);
     TCLAP::ValueArg<size_t> sizeX("x", "sizeX", "width of created volume",
                                   false, static_cast<size_t>(100), uint);
     TCLAP::ValueArg<size_t> sizeY("y", "sizeY", "height of created volume",
@@ -92,6 +100,8 @@ int main(int argc, char* argv[])
     cmd.add(create);
     cmd.add(zlib);
     cmd.add(mandelbulb);
+    cmd.add(mem);
+    cmd.add(iter);
     cmd.add(keep_raw);
     cmd.add(sizeX);
     cmd.add(sizeY);
@@ -109,6 +119,8 @@ int main(int argc, char* argv[])
     iSizeZ = static_cast<uint32_t>(sizeZ.getValue());
     iBitSize = static_cast<uint32_t>(bits.getValue());
     iBrickSize = static_cast<uint32_t>(bsize.getValue());
+    iIter = static_cast<uint32_t>(iter.getValue());
+    iMem = static_cast<uint32_t>(mem.getValue());
 
     bCreateFile = create.getValue();
     bZlib = zlib.getValue();
@@ -142,9 +154,15 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
+  if (iIter && (!bCreateFile || !bMandelbulb)) {
+    cerr << endl << "Iteration count only valid when computing a mandelbuld "
+                    "fractal in file creation mode" << endl;
+    return EXIT_FAILURE;
+  }
+
   if (bCreateFile) {
-    if (!CreateUVFFile(strUVFName, vSize, iBitSize, bMandelbulb, iBrickSize,
-                       bUseToCBlock, bKeepRaw, bZlib))
+    if (!CreateUVFFile(strUVFName, vSize, iBitSize, bMandelbulb, iIter,
+                       bUseToCBlock, bKeepRaw, bZlib, iMem, iBrickSize))
       return EXIT_FAILURE;
   } else {
     if (!DisplayUVFInfo(strUVFName, bVerify, bShowData, bShow1dhist, 

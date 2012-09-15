@@ -93,10 +93,14 @@ double ComputeMandelbulb(const double sx, const double sy,
 }
 
 template<typename T, bool bMandelbulb> 
-void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
+void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData,
+                        uint32_t iIterations) {
   ProgressTimer timer;
   timer.Start();
   T* source = new T[size_t(vSize.x)];
+
+  if (iIterations == 0)
+    iIterations = std::numeric_limits<T>::max()-1;
 
   for (uint64_t z = 0;z<vSize.z;z++) {
     const double completed = (double)z/vSize.z;
@@ -116,7 +120,7 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
                                              bulbSize * static_cast<double>(z)/
                                                    (vSize.z-1) - bulbSize/2.0,
                                              8, 
-                                             std::numeric_limits<T>::max()-1,
+                                             iIterations,
                                              100.0) 
                                                * std::numeric_limits<T>::max());
         } else {
@@ -137,8 +141,9 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData) {
 }
 
 bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize, 
-                   uint32_t iBitSize, bool bMandelbulb, uint32_t iBrickSize,
-                   bool bUseToCBlock, bool bKeepRaw, bool bCompress) {  
+                   uint32_t iBitSize, bool bMandelbulb, uint32_t iIterations,
+                   bool bUseToCBlock, bool bKeepRaw, bool bCompress,
+                    uint32_t iUVFMemory, uint32_t iBrickSize) {
   wstring wstrUVFName(strUVFName.begin(), strUVFName.end());
   UVF uvfFile(wstrUVFName);
 
@@ -160,15 +165,15 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
   switch (iBitSize) {
     case 8 :
       if (bMandelbulb)
-        GenerateVolumeData<uint8_t, true>(vSize, dummyData);
+        GenerateVolumeData<uint8_t, true>(vSize, dummyData, iIterations);
       else
-        GenerateVolumeData<uint8_t, false>(vSize, dummyData);
+        GenerateVolumeData<uint8_t, false>(vSize, dummyData, iIterations);
       break;
     case 16 :
       if (bMandelbulb)
-        GenerateVolumeData<uint16_t, true>(vSize, dummyData);
+        GenerateVolumeData<uint16_t, true>(vSize, dummyData, iIterations);
       else
-        GenerateVolumeData<uint16_t, false>(vSize, dummyData);
+        GenerateVolumeData<uint16_t, false>(vSize, dummyData, iIterations);
       break;
     default:
       T_ERROR("Invalid bitsize");
@@ -218,7 +223,7 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
       1, vSize, DOUBLEVECTOR3(1,1,1),
       UINT64VECTOR3(iBrickSize,iBrickSize,iBrickSize),
       DEFAULT_BRICKOVERLAP, false, false,
-      1024*1024*1024, MaxMinData,
+      1024*1024*1024*iUVFMemory, MaxMinData,
       &tuvok::Controller::Debug::Out(),
       (bCompress) ? CT_ZLIB : CT_NONE
     );
