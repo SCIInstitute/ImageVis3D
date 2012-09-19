@@ -47,6 +47,7 @@
 
 #include "../Tuvok/LuaScripting/LuaScripting.h"
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaIOManagerProxy.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 
 using namespace std;
 
