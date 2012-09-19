@@ -81,8 +81,9 @@ void MainWindow::LoadDataset() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/LoadDataset", ".").toString();
 
-  QString dialogString = m_MasterController.IOMan()->
-                                            GetLoadDialogString().c_str();
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  QString dialogString = 
+      ss->cexecRet<string>("tuvok.io.getLoadDialogString").c_str();
 
   QStringList files;
   if(m_MasterController.ExperimentalFeatures()) {
@@ -135,10 +136,11 @@ void MainWindow::ExportGeometry() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/ExportMesh", ".").toString();
 
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   QString fileName =
     QFileDialog::getSaveFileName(this, "Export Current Mesh to File",
          strLastDir,
-         m_MasterController.IOMan()->GetGeoExportDialogString().c_str(),
+         ss->cexecRet<string>("tuvok.io.getGeoExportDialogString").c_str(),
          &selectedFilter, options);
 
   if (!fileName.isEmpty()) {
@@ -146,8 +148,13 @@ void MainWindow::ExportGeometry() {
     string targetFileName = string(fileName.toAscii());
 
     // still a valid filename ext ?
-    if (!m_MasterController.IOMan()->GetGeoConverterForExt(SysTools::ToLowerCase(SysTools::GetExt(string(fileName.toAscii()))),true,false)) {
-      ShowCriticalDialog("Extension Error", "Unable to determine the file type from the file extension.");
+    if (ss->cexecRet<bool>("tuvok.io.hasConverterForExt", 
+                           SysTools::ToLowerCase(SysTools::GetExt(
+                                   string(fileName.toAscii()))),
+                           true, false) == false) {
+      ShowCriticalDialog("Extension Error", 
+                         "Unable to determine the file type "
+                         "from the file extension.");
       return;
     }
 
@@ -184,7 +191,7 @@ bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
 
   std::vector<shared_ptr<Mesh> > meshes = 
       ss->cexecRet<std::vector<shared_ptr<Mesh> > >(ds.fqName() + "getMeshes");
-  return m_MasterController.IOMan()->ExportMesh(meshes[i], strFilename);
+  return ss->cexecRet<bool>("tuvok.io.exportMesh", meshes[i], strFilename);
 }
 
 void MainWindow::RemoveGeometry() {
@@ -264,7 +271,7 @@ void MainWindow::AddGeometry(std::string filename) {
 
   std::shared_ptr<Mesh> m;
   try {
-    m = m_MasterController.IOMan()->LoadMesh(filename);
+    m = ss->cexecRet<std::shared_ptr<Mesh> >("tuvok.io.loadMesh", filename);
   } catch (const tuvok::io::DSOpenFailed& err) {
     WARNING("Conversion failed! %s", err.what());
   }
@@ -312,8 +319,9 @@ void MainWindow::AddGeometry() {
   QSettings settings;
   QString selFilter;
 
-  QString dialogString = m_MasterController.IOMan()->
-                                            GetLoadGeoDialogString().c_str();
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  QString dialogString = 
+      ss->cexecRet<string>("tuvok.io.getLoadGeoDialogString").c_str();
 
   QString strLastDir = settings.value("Folders/AddTriGeo", ".").toString();
 
@@ -534,18 +542,20 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
   // or if we need to convert the files.
   // If we were given multiple files, we don't need to do any work; we *know*
   // that needs to be converted.
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   bool needs_conversion = true;
   if(files.size() == 1) {
     // check to see if we need to convert this file to a supported format.
 
-    const IOManager& mgr = *(m_MasterController.IOMan());
-    if(!mgr.NeedsConversion(files[0].toStdString())) {
+    if(!ss->cexecRet<bool>("tuvok.io.needsConversion",files[0].toStdString())) {
       needs_conversion = false;
 
       // It might also be the case that the checksum is bad && we need to
       // report an error, but we don't bother with the checksum if they've
       // asked us not to in the preferences.
-      if(!m_bQuickopen && false == mgr.Verify(files[0].toStdString())) {
+      if(!m_bQuickopen && 
+         false == ss->cexecRet<bool>("tuvok.io.verify", files[0].toStdString()))
+      {
         QString strText = tr("File %1 appears to be a broken UVF file: "
                              "the header looks ok, "
                              "but the checksum does not match.").arg(files[0]);
@@ -694,6 +704,7 @@ bool MainWindow::RebrickDataset(QString filename, QString targetFilename,
   QSettings settings;
   QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
 
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   QFileDialog::Options options;
 #ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
@@ -722,9 +733,14 @@ bool MainWindow::RebrickDataset(QString filename, QString targetFilename,
         pleaseWait.SetText("Rebricking, please wait  ...");
         pleaseWait.AttachLabel(&m_MasterController);
 
-        if (!m_MasterController.IOMan()->ReBrickDataset(string(filename.toAscii()), string(rebrickedFilename.toAscii()), m_strTempDir)) {
+        if (!ss->cexecRet<bool>("tuvok.io.rebrickDataset", 
+                                string(filename.toAscii()), 
+                                string(rebrickedFilename.toAscii()),
+                                m_strTempDir, false)) {
           ShowCriticalDialog("Error during rebricking.",
-                             "The system was unable to rebrick the data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
+                             "The system was unable to rebrick the data set, "
+                             "please check the error log for details (Menu -> "
+                             "\"Help\" -> \"Debug Window\").");
           return false;
         } else {
           pleaseWait.hide();
@@ -842,7 +858,9 @@ void MainWindow::ExportDataset() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/ExportDataset", ".").toString();
 
-  QString dialogString = m_MasterController.IOMan()->GetExportDialogString().c_str();
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  QString dialogString =
+      ss->cexecRet<string>("tuvok.io.getExportDialogString").c_str();
 
   std::string ext;
   QString fileName;
@@ -948,10 +966,11 @@ void MainWindow::ExportImageStack() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/ExportImageStack", ".").toString();
 
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   QString fileName =
     QFileDialog::getSaveFileName(this, "Export Current Dataset to a Set of Images",
          strLastDir,
-         m_MasterController.IOMan()->GetImageExportDialogString().c_str(),
+         ss->cexecRet<string>("tuvok.io.getImageExportDialogString").c_str(),
          &selectedFilter, options);
 
   if (!fileName.isEmpty()) {
@@ -1025,10 +1044,11 @@ void MainWindow::ExportIsosurface() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/ExportIso", ".").toString();
 
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   QString fileName =
     QFileDialog::getSaveFileName(this, "Export Current Isosurface to Mesh",
          strLastDir,
-         m_MasterController.IOMan()->GetGeoExportDialogString().c_str(),
+         ss->cexecRet<string>("tuvok.io.getGeoExportDialogString").c_str(),
          &selectedFilter, options);
 
   if (!fileName.isEmpty()) {
@@ -1036,14 +1056,17 @@ void MainWindow::ExportIsosurface() {
     string targetFileName = string(fileName.toAscii());
 
     // still a valid filename ext ?
-    if (!m_MasterController.IOMan()->GetGeoConverterForExt(SysTools::ToLowerCase(SysTools::GetExt(string(fileName.toAscii()))),true,false)) {
-      ShowCriticalDialog("Extension Error", "Unable to determine the file type from the file extension.");
+    if (!ss->cexecRet<bool>("tuvok.io.hasGeoConverterForExt", 
+                            SysTools::ToLowerCase(SysTools::GetExt(
+                                    string(fileName.toAscii()))),
+                            true,false)) {
+      ShowCriticalDialog("Extension Error", 
+                         "Unable to determine the file type "
+                         "from the file extension.");
       return;
     }
 
-    shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
-    
     int iMaxLODLevel = int(ss->cexecRet<uint64_t>(ds.fqName() + ".getLODLevelCount"))-1;
 
     int iLODLevel = 0;
@@ -1072,8 +1095,10 @@ void MainWindow::ExportIsosurface() {
     }
 
     // if the choosen format supports import then ask the users if they want to re-import the mesh
-    AbstrGeoConverter* c = m_MasterController.IOMan()->GetGeoConverterForExt(SysTools::GetExt(targetFileName),false,true);
-    if (c) {
+    bool hasConverter = ss->cexecRet<bool>("tuvok.io.hasGeoConverterForExt",
+                                           SysTools::GetExt(targetFileName),
+                                           false,true);
+    if (hasConverter) {
      if(QMessageBox::Yes ==
        QMessageBox::question(this, "Add Mesh to Project",
         "Do you want to integrate load the surface a part of this project?",
@@ -1118,7 +1143,10 @@ void MainWindow::MergeDatasets() {
     QSettings settings;
     QString strLastDir = settings.value("Folders/MergedOutput", ".").toString();
 
-    QString dialogString = tr("%1%2").arg(m_MasterController.IOMan()->GetExportDialogString().c_str()).arg("Universal Volume Format (*.uvf);;");
+    shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+    QString dialogString = tr("%1%2")
+        .arg(ss->cexecRet<string>("tuvok.io.getExportDialogString").c_str())
+        .arg("Universal Volume Format (*.uvf);;");
 
     QString fileName =
       QFileDialog::getSaveFileName(this, "Merged Dataset",
@@ -1138,11 +1166,11 @@ void MainWindow::MergeDatasets() {
       PleaseWaitDialog pleaseWait(this);
       pleaseWait.SetText("Merging ...");
       pleaseWait.AttachLabel(&m_MasterController);
-      const IOManager& iom = *(m_MasterController.IOMan());
       if (m.UseCustomExpr()) {
         try {
-          iom.EvaluateExpression(m.GetCustomExpr().c_str(), strFilenames,
-                                 stdFile);
+          ss->cexec("tuvok.io.evaluateExpression", 
+                    m.GetCustomExpr().c_str(),
+                    strFilenames, stdFile);
         }
         catch (tuvok::Exception& e) {
           std::string errMsg = "Unable to merge the selected data sets, make "
@@ -1156,8 +1184,9 @@ void MainWindow::MergeDatasets() {
           return;
         }
       } else {
-        if(!iom.MergeDatasets(strFilenames, vScales, vBiases, stdFile,
-							                m_strTempDir, m.UseMax())) {
+        if(!ss->cexecRet<bool>("tuvok.io.mergeDatasets",
+                               strFilenames, vScales, vBiases, stdFile,
+                               m_strTempDir, m.UseMax())) {
           ShowCriticalDialog("Data set Merge Error",
                              "Unable to merge the selected data sets, make "
                              "sure that the size and type of the data sets "
