@@ -4,12 +4,13 @@
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 CF="-Wall -Wextra -O0 -D_DEBUG"
-CXF="-D_GLIBCXX_CONCEPT_CHECK -fopenmp"
-LF="-fopenmp"
+CXF="-D_GLIBCXX_CONCEPT_CHECK"
+LF=""
 MKSPEC=""
 if test `uname -s` != "Darwin" ; then
   CF="${CF} -ggdb3 "
-  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror"
+  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror -fopenmp"
+  LF="${LF} -fopenmp"
 else
   ALLWARN=""
   #ALLWARN='-Werror -Wno-padded -Wno-weak-vtables -Weverything'
