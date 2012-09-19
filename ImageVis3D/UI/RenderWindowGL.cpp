@@ -233,20 +233,22 @@ void RenderWindowGL::InitializeRenderer()
         // support 3D textures, as long as they are 0^3 or smaller.  Yeah.
         // All such cards (that we've seen) work fine.  It's a common use
         // case, so we'll skip the warning for now.  -- tjf, Nov 18 2009
-        if (ms_iMaxVolumeDims > 0 && ms_iMaxVolumeDims < m_MasterController.IOMan()->GetMaxBrickSize()) {
-
+        ;
+        if (ms_iMaxVolumeDims > 0 && 
+            ms_iMaxVolumeDims < ss->cexecRet<uint64_t>("tuvok.io.getMaxBrickSize")) {
           std::ostringstream warn;
           warn << "Maximum supported texture size (" << ms_iMaxVolumeDims << ") "
                << "is smaller than the current setting ("
-               << m_MasterController.IOMan()->GetMaxBrickSize() << "). "
+               << ss->cexecRet<uint64_t>("tuvok.io.getMaxBrickSize") << "). "
                << "Adjusting settings!";
           WARNING("%s", warn.str().c_str());
 
-          m_MasterController.IOMan()->SetMaxBrickSize(ms_iMaxVolumeDims, m_MasterController.IOMan()->GetBuilderBrickSize());
+          ss->cexec("tuvok.io.setMaxBrickSize", ms_iMaxVolumeDims,
+                    ss->cexecRet<uint64_t>("tuvok.io.getBuilderBrickSize"));
         } else {
           MESSAGE("Maximum supported texture size: %u "
                   "(required by IO subsystem: %llu)", ms_iMaxVolumeDims,
-                  m_MasterController.IOMan()->GetMaxBrickSize());
+                  ss->cexecRet<uint64_t>("tuvok.io.getMaxBrickSize"));
         }
 
         if (ms_bImageLoadStoreInDriver) {
