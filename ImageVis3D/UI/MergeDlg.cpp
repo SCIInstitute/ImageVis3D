@@ -44,7 +44,9 @@
 
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/IO/AbstrConverter.h"
-#include "../Tuvok/IO/IOManager.h"
+
+#include "../Tuvok/LuaScripting/LuaScripting.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaIOManagerProxy.h"
 
 using namespace std;
 
@@ -70,8 +72,13 @@ void MergeDlg::AnalyzeCurrentDataset() {
     pleaseWait.SetText("Analyzing dataset ...");
     pleaseWait.AttachLabel(&m_pMainWindow->m_MasterController);
 
-    RangeInfo info;
-    if (m_pMainWindow->m_MasterController.IOMan()->AnalyzeDataset(m_vDataSetList[iCurrent]->m_strFilename, info, m_pMainWindow->GetTempDir())) {
+    shared_ptr<LuaScripting> ss(m_pMainWindow->m_MasterController.LuaScript());
+
+    string filename = m_vDataSetList[iCurrent]->m_strFilename;
+    tuple<bool, RangeInfo> analyzeRes = ss->cexecRet<tuple<bool, RangeInfo> >(
+        "tuvok.io.analyzeDataset", filename, m_pMainWindow->GetTempDir());
+    if (true == std::get<0>(analyzeRes)) {
+      RangeInfo info = std::get<1>(analyzeRes);
       m_vDataSetList[iCurrent]->m_vAspect = info.m_vAspect;
       m_vDataSetList[iCurrent]->m_vDomainSize = info.m_vDomainSize;
       m_vDataSetList[iCurrent]->m_iComponentSize = info.m_iComponentSize;
@@ -81,7 +88,8 @@ void MergeDlg::AnalyzeCurrentDataset() {
       m_vDataSetList[iCurrent]->m_iRange = info.m_iRange;
       m_vDataSetList[iCurrent]->m_uiRange = info.m_uiRange;
     } else {
-      m_pMainWindow->ShowWarningDialog("Analysis Error", "Unable to Analyze the dataset");
+      m_pMainWindow->ShowWarningDialog("Analysis Error",
+                                       "Unable to Analyze the dataset");
       m_vDataSetList[iCurrent]->m_bAnalyzed = false;
     }
     pleaseWait.close();
@@ -140,7 +148,9 @@ void MergeDlg::AddDataset() {
   QSettings settings;
   QString strLastDir = settings.value("Folders/MergeInput", ".").toString();
 
-  QString dialogString = m_pMainWindow->m_MasterController.IOMan()->GetLoadDialogString().c_str();
+  shared_ptr<LuaScripting> ss(m_pMainWindow->m_MasterController.LuaScript());
+  QString dialogString =
+      ss->cexecRet<string>("tuvok.io.getLoadDialogString").c_str();
   QString fileName = QFileDialog::getOpenFileName(this,
                "Add Dataset", strLastDir,
                dialogString,&selectedFilter, options);

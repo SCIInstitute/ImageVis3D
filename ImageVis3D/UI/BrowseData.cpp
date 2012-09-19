@@ -39,7 +39,8 @@
 
 #include <QtCore/QFileInfo>
 #include "AutoGen/ui_SettingsDlg.h"
-#include "../Tuvok/IO/IOManager.h"
+
+#include "../Tuvok/LuaScripting/LuaScripting.h"
 
 using namespace std;
 
@@ -82,7 +83,9 @@ void BrowseData::SetBrightness(int iScale) {
 
 bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 {
-  m_dirInfo = m_MasterController.IOMan()->ScanDirectory(m_strDir.toStdString());
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  m_dirInfo = ss->cexecRet<vector<shared_ptr<FileStackInfo> > >(
+      "tuvok.io.scanDirectory", m_strDir.toStdString());
 
   m_vRadioButtons.clear();
 

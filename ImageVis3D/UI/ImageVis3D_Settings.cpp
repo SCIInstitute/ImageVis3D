@@ -45,7 +45,6 @@
 #include "../Tuvok/Controller/Controller.h"
 
 #include "ImageVis3D.h"
-#include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/MathTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
@@ -85,6 +84,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     QSettings settings;
     SettingsDlg settingsDlg(m_pActiveRenderWin != NULL, m_MasterController, this);
 
+    shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
     settings.beginGroup("Memory");
     uint64_t iMaxGPUmb = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
     uint64_t iMaxCPUmb = std::min<uint64_t>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
@@ -101,7 +101,9 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     unsigned int iOverMaxGPU = settings.value("OverriddenGPUMax", 0).toUInt();
 
     string strTempDir(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
-    unsigned int iMaxBrickSize = settings.value("MaxBricksize", static_cast<qulonglong>(MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize()))).toUInt();
+    unsigned int iMaxBrickSize = settings.value(
+        "MaxBricksize", static_cast<qulonglong>(MathTools::Log2(
+                ss->cexecRet<uint64_t>("tuvok.io.getMaxBrickSize")))).toUInt();
     unsigned int iMaxMaxBrickSize = settings.value("MaxMaxBricksize", 14).toUInt();
     
     if (RenderWindow::GetMax3DTexDims()) { // as OpenGL specs are only available if we already opened a window this valu may be invalid (0)
@@ -279,6 +281,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
 void MainWindow::ApplySettings() {
   QSettings settings;
 
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   // Read settings
   settings.beginGroup("Performance");
   m_bQuickopen     = settings.value("Quickopen", m_bQuickopen).toBool();
@@ -350,7 +353,7 @@ void MainWindow::ApplySettings() {
   uint64_t iMaxCPU = iMaxCPUmb * 1000000; // IEEE MB standard
   uint64_t iMaxGPU = iMaxGPUmb * 1000000;
 
-  uint64_t iMaxBrickSizeLog = MathTools::Log2(m_MasterController.IOMan()->GetMaxBrickSize());
+  uint64_t iMaxBrickSizeLog = MathTools::Log2(ss->cexecRet<uint64_t>("tuvok.io.getMaxBrickSize"));
   uint64_t iMaxBrickSize = MathTools::Pow2((uint64_t)settings.value("MaxBricksize",  static_cast<qulonglong>(iMaxBrickSizeLog)).toUInt());
   iMaxBrickSizeLog = MathTools::Log2(iMaxBrickSize);
 
@@ -371,12 +374,12 @@ void MainWindow::ApplySettings() {
   }
 
 
-  if (!m_MasterController.IOMan()->SetMaxBrickSize(iMaxBrickSize, iBuilderBrickSize)) {
+  if (!ss->cexecRet<bool>("tuvok.io.setMaxBrickSize", iMaxBrickSize, iBuilderBrickSize)) {
     WARNING("Invalid MaxBrickSize read from configuration, ignoring value. Please check the configuration in the settings dialog.");
   }
 
-  m_MasterController.IOMan()->SetUseMedianFilter(bUseMedian);
-  m_MasterController.IOMan()->SetClampToEdge(bClampToEdge);  
+  ss->cexec("tuvok.io.setUseMedianFilter", bUseMedian);
+  ss->cexec("tuvok.io.setClampToEdge", bClampToEdge);
 
   settings.endGroup();
 

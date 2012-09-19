@@ -60,7 +60,6 @@
 #include <string>
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/SysTools.h"
-#include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/Basics/MathTools.h"
 #include "../IO/DialogConverter.h"
 
@@ -156,7 +155,10 @@ MainWindow::MainWindow(MasterController& masterController,
   this->show();
   SetAndCheckRunningFlag();
 
-  masterController.IOMan()->RegisterFinalConverter(new DialogConverter(this));
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript()); 
+  ss->cexec("tuvok.io.registerFinalConverter",
+      dynamic_pointer_cast<AbstrConverter>(shared_ptr<DialogConverter>(
+          new DialogConverter(this))));
 
   UpdateMRUActions();
   UpdateWSMRUActions();
