@@ -51,7 +51,6 @@
 #include "Basics/Mesh.h"
 #include "Basics/SysTools.h"
 #include "Controller/Controller.h"
-#include "IO/IOManager.h"
 #include "IO/TuvokIOError.h"
 #include "IO/uvfDataset.h"
 
@@ -589,9 +588,9 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
     pleaseWait.AttachLabel(&m_MasterController);
 
     try {
-      m_MasterController.IOMan()->ConvertDataset(stdfiles,
-        std::string(targetFilename.toAscii()), m_strTempDir, bNoUserInteraction
-      );
+      ss->cexec("tuvok.io.convertDataset", stdfiles, 
+                std::string(targetFilename.toAscii()), m_strTempDir, 
+                bNoUserInteraction, false);
       filename = targetFilename;
     } catch(const tuvok::io::IOException& e) {
       // create a (hopefully) useful error message
@@ -789,11 +788,11 @@ void MainWindow::LoadDirectory() {
         // label was detached when the dialog was closed by BrowseData
         pleaseWait.AttachLabel(&m_MasterController);
 
-        /// @todo FIXME rewrite this ConvertDataset to take a shared_ptr
-        /// instead of a raw pointer.
-        if (!m_MasterController.IOMan()->ConvertDataset(
-          &*browseDataDialog.GetStackInfo(), targetFilename.toStdString(),
-          m_strTempDir)) {
+        shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+        if (!ss->cexecRet<bool>("tuvok.io.convertDatasetWithStack",
+                                browseDataDialog.GetStackInfo(),
+                                targetFilename.toStdString(),
+                                m_strTempDir, false)) {
           QString strText =
             tr("Unable to convert file stack from directory "
                "%1 into %2.").arg(directoryName).arg(targetFilename);
