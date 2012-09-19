@@ -52,7 +52,6 @@
 #include "ImageVis3D.h"
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GL/GLFrameCapture.h"
-#include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/Renderer/GL/GLInclude.h"
 #include "../Tuvok/Renderer/GL/GLRenderer.h"
 #include "../Tuvok/Renderer/ContextIdentification.h"

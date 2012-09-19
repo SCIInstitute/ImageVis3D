@@ -64,6 +64,7 @@ class TextfileOut;
 
 #include "../Tuvok/LuaScripting/LuaScripting.h"
 #include "../Tuvok/LuaScripting/LuaClassRegistration.h"
+#include "../Tuvok/LuaScripting/LuaMemberReg.h"
 
 class QDragEnterEvent;
 class QDropEvent;
@@ -547,6 +548,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     bool m_bClipLocked;
 
     bool m_bIgnoreLoadDatasetFailure;
+
+    tuvok::LuaMemberReg       m_MemReg;
 
     friend class MergeDlg;
 };

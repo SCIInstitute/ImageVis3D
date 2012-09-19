@@ -124,7 +124,8 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bFTPFinished(true),
   m_bClipDisplay(true),
   m_bClipLocked(false),
-  m_bIgnoreLoadDatasetFailure(false)
+  m_bIgnoreLoadDatasetFailure(false),
+  m_MemReg(m_MasterController.LuaScript())
 {
   RegisterCalls(m_MasterController.ScriptEngine());
   RegisterLuaClasses();
@@ -941,32 +942,47 @@ static void CallQTProcessEvents()
 }
 
 void MainWindow::RegisterLuaClasses() {
-  m_MasterController.LuaScript()->registerClass<RenderWindow>(
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string prefix = "iv3d.";
+
+  ss->registerClass<RenderWindow>(
       this, &MainWindow::LuaCreateNewWindow,
-      "iv3d.renderer", "Constructs a new render window",
+      prefix + "renderer", "Constructs a new render window",
       LuaClassRegCallback<RenderWindow>::Type(
           &RenderWindow::RegisterLuaFunctions));
 
-  m_MasterController.LuaScript()->registerClass<RenderWindow>(
-      this, &MainWindow::LuaLoadDatasetInternal, "iv3d.rendererWithParams",
+  ss->registerClass<RenderWindow>(
+      this, &MainWindow::LuaLoadDatasetInternal, 
+      prefix + "rendererWithParams",
       "Open a render window the additional parameters and a list of files.",
       LuaClassRegCallback<RenderWindow>::Type(
-                &RenderWindow::RegisterLuaFunctions)
-      );
+                &RenderWindow::RegisterLuaFunctions));
 
   // And some lua functions...
 
   // We need to expose QApplication::processEvents() because we are running
   // in the GUI thread... This is useful for scripts that take a long time to
   // run and need the UI to update.
-  m_MasterController.LuaScript()->registerFunction(
+  ss->registerFunction(
       &CallQTProcessEvents,
-      "iv3d.processUI",
+      prefix + "processUI",
       "Calls QT's QApplication::processEvents(). If you have a long running "
       "script and want the UI to update while the script is running, you will "
       "need to call this periodically. This is necessary because Tuvok runs on "
       "the GUI's thread instead of on its own thread.",
       false);
+
+  m_MemReg.registerFunction(this, &MainWindow::ListSupportedImages, 
+                            prefix + "listSupportedImages",
+                            "Lists supported images.", false);
+
+  m_MemReg.registerFunction(this, &MainWindow::ListSupportedVolumes, 
+                            prefix + "listSupportedVolumes",
+                            "Lists supported volumes.", false);
+
+  m_MemReg.registerFunction(this, &MainWindow::ListSupportedGeometry, 
+                            prefix + "listSupportedGeometry",
+                            "Lists supported geometry.", false);
 }
 
 void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {

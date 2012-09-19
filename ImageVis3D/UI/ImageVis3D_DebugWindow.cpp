@@ -39,7 +39,7 @@
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
-#include "../Tuvok/IO/IOManager.h"
+#include "../Tuvok/IO/IOManager.h" // Needed for tConverterFormat.
 #include "../Tuvok/Scripting/Scripting.h"
 #include "ImageVis3D.h"
 #include <QtGui/QImageReader>
@@ -116,20 +116,27 @@ void MainWindow::ShowGPUInfo(bool bWithExtensions) {
 
 
 void MainWindow::ListSupportedImages() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   m_MasterController.DebugOut()->printf("Supported image formats are:");
+  ss->cexec("print", "Supported image formats are:");
+
   QList<QByteArray> listImageFormats = QImageReader::supportedImageFormats();
   for (int i = 0;i<listImageFormats.size();i++) {
     QByteArray imageFormat = listImageFormats[i];
     QString qStrImageFormat(imageFormat);
     string strImageFormat = "  " + qStrImageFormat.toStdString();
     m_MasterController.DebugOut()->printf(strImageFormat.c_str());
+    ss->cexec("print", strImageFormat);
   }
 }
 
 void MainWindow::ListSupportedVolumes() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   m_MasterController.DebugOut()->printf("Supported Volume formats are:");
+  ss->cexec("print", "Supported volume formats are:");
 
-  std::vector<tConverterFormat> conv = m_MasterController.IOMan()->GetFormatList();
+  std::vector<tConverterFormat> conv =
+      ss->cexecRet<std::vector<tConverterFormat> >("tuvok.io.getFormatList");
 
   for (size_t i=0; i < conv.size(); i++) {
     string strVolumeFormats = "  " + std::get<0>(conv[i]) + " " + std::get<1>(conv[i]);
@@ -138,15 +145,19 @@ void MainWindow::ListSupportedVolumes() {
     if (!std::get<3>(conv[i])) 
       strVolumeFormats += " (Writeonly)";
     m_MasterController.DebugOut()->printf(strVolumeFormats.c_str());
+    ss->cexec("print", strVolumeFormats);
   }
 
 }
 
 
 void MainWindow::ListSupportedGeometry() {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   m_MasterController.DebugOut()->printf("Supported Geometry formats are:");
+  ss->cexec("print", "Supported geometry formats are:");
 
-  std::vector<tConverterFormat> conv = m_MasterController.IOMan()->GetGeoFormatList();
+  std::vector<tConverterFormat> conv =
+      ss->cexecRet<std::vector<tConverterFormat> >("tuvok.io.getGeoFormatList");
 
   for (size_t i=0; i < conv.size(); i++) {
     string strGeoFormats = "  " + std::get<0>(conv[i]) + " " + std::get<1>(conv[i]);
@@ -155,6 +166,7 @@ void MainWindow::ListSupportedGeometry() {
     if (!std::get<3>(conv[i])) 
       strGeoFormats += " (Writeonly)";
     m_MasterController.DebugOut()->printf(strGeoFormats.c_str());
+    ss->cexec("print", strGeoFormats);
   }
 }
 
