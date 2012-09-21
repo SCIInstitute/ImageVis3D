@@ -6,8 +6,8 @@ IV3D_BUILD_TYPE="release"
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 COVERAGE=""
-CF="-Wall -Wextra -O2 ${COVERAGE}"
-CXF="-D_GLIBCXX_CONCEPT_CHECK -DQT_NODEBUG ${COVERAGE}"
+CF="-Wall -Wextra -O2 -fstack-protector ${COVERAGE}"
+CXF="-D_GLIBCXX_CONCEPT_CHECK -fstack-protector -DQT_NODEBUG ${COVERAGE}"
 QLF=""
 MKSPEC=""
 
@@ -29,8 +29,8 @@ fi
 dirs="."
 if test `uname` != "Darwin" ; then
   dirs="$dirs Tuvok/IO/test"
-  CXF="${CXF} -Werror"
-  CF="${CF} -fopenmp"
+  CXF="${CXF} -Werror --param ssp-buffer-size=4"
+  CF="${CF} -fopenmp --param ssp-buffer-size=4"
   QLF="${QLF} -fopenmp"
 else
   # We don't turn -Werror on because of warnings that deal 

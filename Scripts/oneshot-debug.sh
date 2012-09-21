@@ -10,8 +10,8 @@ if test `uname -s` != "Darwin"; then
 else
   COVERAGE=""
 fi
-CF="-g -Wall -Wextra -O0 -D_DEBUG ${COVERAGE}"
-CXF="-D_GLIBCXX_CONCEPT_CHECK ${COVERAGE}"
+CF="-g -Wall -Wextra -O0 -D_DEBUG -fstack-protector ${COVERAGE}"
+CXF="-D_GLIBCXX_CONCEPT_CHECK -fstack-protector ${COVERAGE}"
 MKSPEC=""
 LDFLAGS="${COVERAGE}"
 
@@ -24,8 +24,8 @@ fi
 # Darwin's debug STL support is broken.
 # Ditto: OpenMP
 if test `uname -s` != "Darwin"; then
-  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror -fopenmp"
-  LDFLAGS="${LDFLAGS} -fopenmp"
+  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror -fopenmp --param ssp-buffer-size=4"
+  LDFLAGS="${LDFLAGS} -fopenmp --param ssp-buffer-size=4"
 else
   # We don't turn -Werror on because of warnings that deal 
   # with generated code, and some unused template specialization

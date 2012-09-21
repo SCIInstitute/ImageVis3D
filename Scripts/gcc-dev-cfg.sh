@@ -3,13 +3,13 @@
 #-D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
-CF="-Wall -Wextra -O0 -D_DEBUG"
-CXF="-D_GLIBCXX_CONCEPT_CHECK"
+CF="-Wall -Wextra -O0 -D_DEBUG -fstack-protector"
+CXF="-D_GLIBCXX_CONCEPT_CHECK -fstack-protector"
 LF=""
 MKSPEC=""
 if test `uname -s` != "Darwin" ; then
-  CF="${CF} -ggdb3 "
-  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror -fopenmp"
+  CF="${CF} -ggdb3 --param ssp-buffer-size=4"
+  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror -fopenmp --param ssp-buffer-size=4"
   LF="${LF} -fopenmp"
 else
   ALLWARN=""
