@@ -2592,4 +2592,5 @@ void RenderWindow::RegisterLuaFunctions(
                     "turn lighting on and off", true);
   id = reg.function(&RenderWindow::LuaLoad1DTFqn, "tfqn1d",
                     "load a new (1D) transfer function", true);
+  reg.function(&RenderWindow::UpdateWindow, "paint", "forces paint", false);
 }
