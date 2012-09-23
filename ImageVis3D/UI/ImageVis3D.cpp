@@ -67,6 +67,25 @@
 
 using namespace std;
 
+static FLOATMATRIX4 RotateX(float angle) {
+  FLOATMATRIX4 matRot;
+  matRot.RotationX(3.141592653589793238462643383*angle/180.0);
+  return matRot;
+}
+static FLOATMATRIX4 RotateY(float angle) {
+  FLOATMATRIX4 matRot;
+  matRot.RotationY(3.141592653589793238462643383*angle/180.0);
+  return matRot;
+}
+static FLOATMATRIX4 RotateZ(float angle) {
+  FLOATMATRIX4 matRot;
+  matRot.RotationZ(3.141592653589793238462643383*angle/180.0);
+  return matRot;
+}
+static FLOATMATRIX4 MulMatrices(const FLOATMATRIX4& a,
+                                const FLOATMATRIX4& b) {
+  return a * b;
+}
 
 MainWindow::MainWindow(MasterController& masterController,
            bool bScriptMode, /* = false */
@@ -985,6 +1004,15 @@ void MainWindow::RegisterLuaClasses() {
   m_MemReg.registerFunction(this, &MainWindow::ListSupportedGeometry, 
                             prefix + "listSupportedGeometry",
                             "Lists supported geometry.", false);
+  std::shared_ptr<LuaScripting> reg = m_MasterController.LuaScript();
+
+  reg->registerFunction(&RotateX, "matrix.rotateX",
+                        "Sets rotation to be around X, n degrees.", false);
+  reg->registerFunction(&RotateY, "matrix.rotateY",
+                        "Sets rotation to be around Y, n degrees.", false);
+  reg->registerFunction(&RotateZ, "matrix.rotateZ",
+                        "Sets rotation to be around Z, n degrees.", false);
+  reg->registerFunction(&MulMatrices, "matrix.multiply", "", false);
 }
 
 void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {
