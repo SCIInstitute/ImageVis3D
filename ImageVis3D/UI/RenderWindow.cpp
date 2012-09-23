@@ -2503,12 +2503,15 @@ void RenderWindow::LuaSetRotationAs4x4(FLOATMATRIX4 m) {
 }
 
 void RenderWindow::LuaResizeWindow(const UINTVECTOR2& newSize) {
-    UINTVECTOR2 renderSize = GetRendererSize();
-    UINTVECTOR2 windowSize(GetQtWidget()->size().width(), 
-                           GetQtWidget()->size().height());
+  UINTVECTOR2 renderSize = GetRendererSize();
+  UINTVECTOR2 windowSize(GetQtWidget()->size().width(), 
+                         GetQtWidget()->size().height());
 
-    UINTVECTOR2 winDecoSize = windowSize-renderSize;
-    GetQtWidget()->resize(newSize.x+winDecoSize.x, newSize.y+winDecoSize.y);
+  UINTVECTOR2 winDecoSize = windowSize-renderSize;
+  QMdiSubWindow* w = dynamic_cast<QMdiSubWindow*>(GetQtWidget()->parent());
+  if(w) {
+    w->resize(newSize.x+winDecoSize.x, newSize.y+winDecoSize.y);
+  }
 }
 
 void RenderWindow::LuaSetLighting(bool enabled) {
