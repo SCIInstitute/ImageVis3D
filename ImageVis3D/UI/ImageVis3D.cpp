@@ -993,6 +993,10 @@ void MainWindow::RegisterLuaClasses() {
       "the GUI's thread instead of on its own thread.",
       false);
 
+  m_MemReg.registerFunction(this, &MainWindow::LuaResizeActiveWindow, 
+                            prefix + "resizeActiveWindow",
+                            "Resizes the active window.", true);
+
   m_MemReg.registerFunction(this, &MainWindow::ListSupportedImages, 
                             prefix + "listSupportedImages",
                             "Lists supported images.", false);
