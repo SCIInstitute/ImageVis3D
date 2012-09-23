@@ -722,6 +722,10 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
 }
 
 
+void MainWindow::LuaResizeActiveWindow(const UINTVECTOR2& newSize) {
+  ResizeCurrentView(newSize.x, newSize.y);
+}
+
 RenderWindow* MainWindow::LuaCreateNewWindow(std::string dataset) {
   std::vector<std::string> fileList;
   fileList.push_back(dataset);

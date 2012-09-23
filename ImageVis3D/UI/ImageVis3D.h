@@ -109,6 +109,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     /// Member function constructor for RenderWindowGL.
     RenderWindow* LuaCreateNewWindow(std::string dataset);
 
+    void LuaResizeActiveWindow(const UINTVECTOR2& newSize);
+
     void closeMDISubWindowWithWidget(QWidget* widget);
 
     // Lua callback functions (called from Lua when actions are undone/redone).
