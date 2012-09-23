@@ -471,6 +471,9 @@ class RenderWindow
         tuvok::LuaClassInstance region);
     FLOATMATRIX4 getHomogeneousVolToWorldTrafo(tuvok::LuaClassInstance region);
 
+    // lua call for setting lighting, just statically sets 2nd argument.
+    void LuaSetLighting(bool enabled);
+
   private:
 
     unsigned int      m_iTimeSliceMSecsActive;

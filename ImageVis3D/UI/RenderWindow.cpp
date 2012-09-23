@@ -2511,6 +2511,9 @@ void RenderWindow::LuaResizeWindow(const UINTVECTOR2& newSize) {
     GetQtWidget()->resize(newSize.x+winDecoSize.x, newSize.y+winDecoSize.y);
 }
 
+void RenderWindow::LuaSetLighting(bool enabled) {
+  this->SetUseLighting(enabled);
+}
 void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
@@ -2577,4 +2580,6 @@ void RenderWindow::RegisterLuaFunctions(
                     "render region.", true);
   id = reg.function(&RenderWindow::LuaResizeWindow,"resize",
                     "Resize this render window.", true);
+  id = reg.function(&RenderWindow::LuaSetLighting, "lighting",
+                    "turn lighting on and off", true);
 }
