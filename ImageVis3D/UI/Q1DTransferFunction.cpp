@@ -568,7 +568,11 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
   DrawFunctionPlots(painter);
 }
 
-bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
+bool Q1DTransferFunction::QLoadFromFile(const QString& strFilename) {
+  return this->LoadFromFile(strFilename.toStdString());
+}
+
+bool Q1DTransferFunction::LoadFromFile(const std::string& strFilename) {
   // hand the load call over to the TransferFunction1D class
   size_t iSize = 0;
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
@@ -577,7 +581,7 @@ bool Q1DTransferFunction::LoadFromFile(const QString& strFilename) {
   }
 
   if (ss->cexecRet<bool>(m_trans.fqName() + ".loadFromFileWithSize", 
-                         strFilename.toStdString(), iSize)) {
+                         strFilename, iSize)) {
     PreparePreviewData();
     update();
     ApplyFunction();

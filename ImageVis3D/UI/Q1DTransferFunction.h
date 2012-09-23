@@ -64,14 +64,16 @@ public:
   }
 
   virtual void ApplyFunction();
+  bool LoadFromFile(const std::string&);
 
 public slots:
-  bool LoadFromFile(const QString& strFilename);
+  bool QLoadFromFile(const QString& strFilename);
   bool SaveToFile(const QString& strFilename);
   bool AddFromFile(const QString& strFilename);
   bool SubtractFromFile(const QString& strFilename);
 
 protected:
+
   virtual void paintEvent(QPaintEvent *event);
   virtual void mouseMoveEvent(QMouseEvent *event);
   virtual void mousePressEvent(QMouseEvent *event);

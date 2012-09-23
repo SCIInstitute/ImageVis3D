@@ -185,7 +185,7 @@ void MainWindow::Transfer1DLoad() {
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/Transfer1DLoad", QFileInfo(fileName).absoluteDir().path());
-    m_1DTransferFunction->LoadFromFile(fileName);
+    m_1DTransferFunction->QLoadFromFile(fileName);
   }
 }
 
@@ -281,7 +281,7 @@ void MainWindow::Transfer1DSetFromLib() {
   if (comboBox_1DTFLib->currentIndex() >= 0 && comboBox_1DTFLib->currentIndex() < comboBox_1DTFLib->count()) {
     QFile file(comboBox_1DTFLib->itemData(comboBox_1DTFLib->currentIndex()).toString());
     if (file.exists())
-      m_1DTransferFunction->LoadFromFile(file.fileName());
+      m_1DTransferFunction->QLoadFromFile(file.fileName());
   }
 }
 
