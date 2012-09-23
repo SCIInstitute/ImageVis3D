@@ -455,6 +455,7 @@ class RenderWindow
     void LuaSetTranslation(VECTOR3<float> m);
     void LuaSetTranslationAs4x4(FLOATMATRIX4 m);
     void LuaSetRotationAs4x4(FLOATMATRIX4 m);
+    void LuaResizeWindow(const UINTVECTOR2& newSize);
 
     /// Returns the Lua Renderer. This is used instead of inheriting the methods
     /// from the renderer, because, for the most part, the user won't care about

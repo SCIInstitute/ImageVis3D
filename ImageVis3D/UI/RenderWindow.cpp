@@ -2502,6 +2502,15 @@ void RenderWindow::LuaSetRotationAs4x4(FLOATMATRIX4 m) {
   SetProvRotationAndClip(GetFirst3DRegion(), m);
 }
 
+void RenderWindow::LuaResizeWindow(const UINTVECTOR2& newSize) {
+    UINTVECTOR2 renderSize = GetRendererSize();
+    UINTVECTOR2 windowSize(GetQtWidget()->size().width(), 
+                           GetQtWidget()->size().height());
+
+    UINTVECTOR2 winDecoSize = windowSize-renderSize;
+    GetQtWidget()->resize(newSize.x+winDecoSize.x, newSize.y+winDecoSize.y);
+}
+
 void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
@@ -2566,4 +2575,6 @@ void RenderWindow::RegisterLuaFunctions(
   id = reg.function(&RenderWindow::LuaSetTranslationAs4x4,"setTranslationAs4x4",
                     "Sets translation for the first 3D "
                     "render region.", true);
+  id = reg.function(&RenderWindow::LuaResizeWindow,"resize",
+                    "Resize this render window.", true);
 }
