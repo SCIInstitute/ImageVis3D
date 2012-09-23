@@ -1008,6 +1008,7 @@ void MainWindow::RegisterLuaClasses() {
   m_MemReg.registerFunction(this, &MainWindow::ListSupportedGeometry, 
                             prefix + "listSupportedGeometry",
                             "Lists supported geometry.", false);
+
   std::shared_ptr<LuaScripting> reg = m_MasterController.LuaScript();
 
   reg->registerFunction(&RotateX, "matrix.rotateX",

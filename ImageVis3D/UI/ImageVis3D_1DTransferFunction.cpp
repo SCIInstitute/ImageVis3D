@@ -189,6 +189,9 @@ void MainWindow::Transfer1DLoad() {
   }
 }
 
+void MainWindow::LoadTransferFunction1D(const std::string& tf) {
+  m_1DTransferFunction->LoadFromFile(tf);
+}
 
 void MainWindow::Transfer1DSave() {
   QSettings settings;

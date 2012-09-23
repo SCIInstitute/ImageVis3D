@@ -116,6 +116,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     // Lua callback functions (called from Lua when actions are undone/redone).
     void LuaCallbackToggleClipPlane(bool bClip);
 
+    // directly loads the TFqn; used for Lua scripting.
+    void LoadTransferFunction1D(const std::string& tf);
+
   public slots:
     void SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
                                        unsigned int iCurrentCount,

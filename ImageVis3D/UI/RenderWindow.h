@@ -456,6 +456,8 @@ class RenderWindow
     void LuaSetTranslationAs4x4(FLOATMATRIX4 m);
     void LuaSetRotationAs4x4(FLOATMATRIX4 m);
     void LuaResizeWindow(const UINTVECTOR2& newSize);
+    void LuaSetLighting(bool enabled);
+    void LuaLoad1DTFqn(const std::string&);
 
     /// Returns the Lua Renderer. This is used instead of inheriting the methods
     /// from the renderer, because, for the most part, the user won't care about
@@ -470,9 +472,6 @@ class RenderWindow
     FLOATMATRIX4 computeClipToVolToWorldTransform(
         tuvok::LuaClassInstance region);
     FLOATMATRIX4 getHomogeneousVolToWorldTrafo(tuvok::LuaClassInstance region);
-
-    // lua call for setting lighting, just statically sets 2nd argument.
-    void LuaSetLighting(bool enabled);
 
   private:
 

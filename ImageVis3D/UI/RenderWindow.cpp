@@ -2514,6 +2514,11 @@ void RenderWindow::LuaResizeWindow(const UINTVECTOR2& newSize) {
 void RenderWindow::LuaSetLighting(bool enabled) {
   this->SetUseLighting(enabled);
 }
+
+void RenderWindow::LuaLoad1DTFqn(const std::string& tf) {
+  this->m_MainWindow->LoadTransferFunction1D(tf);
+}
+
 void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
@@ -2582,4 +2587,6 @@ void RenderWindow::RegisterLuaFunctions(
                     "Resize this render window.", true);
   id = reg.function(&RenderWindow::LuaSetLighting, "lighting",
                     "turn lighting on and off", true);
+  id = reg.function(&RenderWindow::LuaLoad1DTFqn, "tfqn1d",
+                    "load a new (1D) transfer function", true);
 }
