@@ -1693,7 +1693,6 @@ void RenderWindow::FinalizeTranslation(LuaClassInstance region, bool bPropagate)
 
 void RenderWindow::SetRotation(LuaClassInstance region,
                                FLOATMATRIX4 newRotation) {
-
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string rn = m_LuaAbstrRenderer.fqName();
 
@@ -2506,7 +2505,6 @@ void RenderWindow::LuaSetRotationAs4x4(FLOATMATRIX4 m) {
 void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
-
   ss->vPrint("Registering render window functions.");
 
   me->m_LuaThisClass = reg.getLuaInstance();

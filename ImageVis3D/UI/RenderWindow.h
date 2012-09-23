@@ -171,7 +171,7 @@ class RenderWindow
                        bool bPropagate=true);
     void SetTimestep(size_t, bool=true);
 
-    // @return the range of the currently loaded dataset
+    /// @return the range of the currently loaded dataset
     std::pair<double,double> GetDynamicRange() const;
     FLOATVECTOR3 GetIsosufaceColor() const;
     FLOATVECTOR3 GetCVColor() const;
