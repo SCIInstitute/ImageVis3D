@@ -1579,13 +1579,7 @@ bool RenderWindow::CaptureSubframe(const std::string& strFilename) {
 
   bool bPreserveTransparency = true;
   GLFrameCapture f;
-  FLOATVECTOR3 color[2] = {GetBackgroundColor(0),
-                           GetBackgroundColor(1)};
-  FLOATVECTOR3 black[2] = {FLOATVECTOR3(0,0,0), FLOATVECTOR3(0,0,0)};
-  if (bPreserveTransparency) SetBackgroundColors(black[0],black[1]);
-
   bool rv = f.CaptureSingleFrame(strFilename, bPreserveTransparency);
-  if (bPreserveTransparency) SetBackgroundColors(color[0],color[1]);
 
   ss->setTempProvDisable(false);
 
