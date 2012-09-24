@@ -277,20 +277,30 @@ void DebugScriptWindow::setupUI()
 //-----------------------------------------------------------------------------
 std::string getLongestPrefix( const std::vector<std::string>& strs)
 {
-   std::vector<std::string>::const_iterator vsi = strs.begin();
-   int maxCharactersCommon = static_cast<int>(vsi->length());
-   std::string compareString = *vsi ;
-   for ( vsi = strs.begin() + 1 ; vsi != strs.end() ; vsi++ )
-   {
-      std::pair<std::string::const_iterator , std::string::const_iterator> p =
-          std::mismatch( compareString.begin() , compareString.end() ,
-                         vsi->begin() ) ;
-      if (( p.first - compareString.begin() ) < maxCharactersCommon )
-        maxCharactersCommon = p.first - compareString.begin() ;
-   }
-   //std::string::size_type found = compareString.rfind( separator , maxCharactersCommon ) ;
-   //return compareString.substr( 0 , found ) ;
-   return compareString.substr(0, (size_t)maxCharactersCommon);
+  std::vector<std::string>::const_iterator vsi = strs.begin();
+  int maxCharactersCommon = static_cast<int>(vsi->length());
+  std::string compareString = *vsi ;
+  for ( vsi = strs.begin() + 1 ; vsi != strs.end() ; vsi++ )
+  {
+    // Avoid mismatch iterating passed the end of the second iterator.
+    // Complexity for size should be constant (std::distance(begin(), end()).
+    if (compareString.size() <= vsi->size())
+    {
+      std::pair<std::string::const_iterator, std::string::const_iterator> p =
+          std::mismatch(compareString.begin(), compareString.end(),
+                        vsi->begin());
+      if ((p.first - compareString.begin()) < maxCharactersCommon)
+        maxCharactersCommon = p.first - compareString.begin();
+    }
+    else
+    {
+      std::pair<std::string::const_iterator, std::string::const_iterator> p =
+          std::mismatch(vsi->begin(), vsi->end(), compareString.begin());
+      if ((p.first - vsi->begin()) < maxCharactersCommon)
+        maxCharactersCommon = p.first - vsi->begin();
+    }
+  }
+  return compareString.substr(0, (size_t)maxCharactersCommon);
 }
 
 //-----------------------------------------------------------------------------
