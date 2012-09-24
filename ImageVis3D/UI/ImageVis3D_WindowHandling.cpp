@@ -1224,6 +1224,10 @@ void MainWindow::ToggleClearViewControls(int iRange) {
       int(99-m_pActiveRenderWin->GetRendererClearViewBorderScale()));
 }
 
+void MainWindow::SetStayOpen(bool bStayOpenAfterScriptEnd) {
+  m_bStayOpenAfterScriptEnd = bStayOpenAfterScriptEnd;
+}
+
 void MainWindow::SetRescaleFactors() {
   if (!m_pActiveRenderWin) return;
   DOUBLEVECTOR3 vfRescaleFactors;

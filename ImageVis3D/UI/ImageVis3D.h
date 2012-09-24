@@ -268,6 +268,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void UpdateTimestepLabel(int iValue, int iMaxValue);
     void ResetTimestepUI();
 
+    void SetStayOpen(bool bStayOpenAfterScriptEnd);
     void SetRescaleFactors();
     virtual void closeEvent(QCloseEvent *event);
 
