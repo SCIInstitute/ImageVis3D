@@ -82,6 +82,16 @@ static FLOATMATRIX4 RotateZ(float angle) {
   matRot.RotationZ(3.141592653589793238462643383*angle/180.0);
   return matRot;
 }
+static FLOATMATRIX4 Translate(float x, float y, float z) {
+  FLOATMATRIX4 matTrans;
+  matTrans.Translation(x, y, z);
+  return matTrans;
+}
+static FLOATMATRIX4 Identity() {
+  FLOATMATRIX4 matIdent;
+  return matIdent;
+}
+
 static FLOATMATRIX4 MulMatrices(const FLOATMATRIX4& a,
                                 const FLOATMATRIX4& b) {
   return a * b;
@@ -1017,6 +1027,10 @@ void MainWindow::RegisterLuaClasses() {
                         "Sets rotation to be around Y, n degrees.", false);
   reg->registerFunction(&RotateZ, "matrix.rotateZ",
                         "Sets rotation to be around Z, n degrees.", false);
+  reg->registerFunction(&Translate, "matrix.translate",
+                        "Sets translation vector.", false);
+  reg->registerFunction(&Identity, "matrix.identity",
+                        "Sets identity.", false);
   reg->registerFunction(&MulMatrices, "matrix.multiply", "", false);
 }
 

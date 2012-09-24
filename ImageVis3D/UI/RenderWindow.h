@@ -439,8 +439,10 @@ class RenderWindow
     bool MouseMove3D(INTVECTOR2 pos, bool clearview, bool rotate, bool translate,
                      tuvok::LuaClassInstance region);
 
-    void MoveViewer(const FLOATVECTOR3& direction);
-    void RotateViewer(const INTVECTOR2& viMouseDelta);
+    void MoveViewerWithMouse(const FLOATVECTOR3& vDirection);
+    void MoveViewer(const FLOATVECTOR3& vDirection);
+    void RotateViewerWithMouse(const INTVECTOR2& viMouseDelta);
+    void RotateViewer(const FLOATVECTOR2& vfAngles);
 
     void SetRotation(tuvok::LuaClassInstance region,
                      FLOATMATRIX4 newRotation);

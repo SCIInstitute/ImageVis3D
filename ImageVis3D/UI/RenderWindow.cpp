@@ -845,7 +845,7 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
   if (region.isValid(m_MasterController.LuaScript()) && IsRegion3D(region)) {
     if (m_bFirstPersonMode) {
       if (event->buttons() & Qt::LeftButton) {
-        RotateViewer(m_viMousePos-initialLeftClickPos);
+        RotateViewerWithMouse(m_viMousePos-initialLeftClickPos);
 
         QPoint globalPos = GetQtWidget()->mapToGlobal( GetQtWidget()->geometry().center()) ;
         QCursor::setPos ( globalPos.x(), globalPos.y() );
@@ -1030,7 +1030,7 @@ void RenderWindow::UpdateCursor(LuaClassInstance region,
 }
 
 
-void RenderWindow::RotateViewer(const INTVECTOR2& viMouseDelta) {
+void RenderWindow::RotateViewerWithMouse(const INTVECTOR2& viMouseDelta) {
    
   const int screen = QApplication::desktop()->screenNumber(m_MainWindow);
   const QRect availableRect(QApplication::desktop()->availableGeometry(screen));
@@ -1038,20 +1038,25 @@ void RenderWindow::RotateViewer(const INTVECTOR2& viMouseDelta) {
   const FLOATVECTOR2 vfMouseDelta(viMouseDelta.x/float(availableRect.width()), 
                                   viMouseDelta.y/float(availableRect.height()));
 
+  RotateViewer(FLOATVECTOR2(-vfMouseDelta.x*450.f, -vfMouseDelta.y*450.f));
+}
+
+
+void RenderWindow::RotateViewer(const FLOATVECTOR2& vfAngles) {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string an = GetLuaAbstrRenderer().fqName();
 
   FLOATVECTOR3 viewDir =
-      ss->cexecRet<FLOATVECTOR3>(an + ".getViewDir");
+    ss->cexecRet<FLOATVECTOR3>(an + ".getViewDir");
 
   FLOATVECTOR3 upVec =
-      ss->cexecRet<FLOATVECTOR3>(an + ".getUpDir");
+    ss->cexecRet<FLOATVECTOR3>(an + ".getUpDir");
 
   FLOATVECTOR3 left = upVec % viewDir;
 
   FLOATMATRIX4 matRotationX, matRotationY;
-  matRotationY.RotationAxis(left.normalized(),  -vfMouseDelta.y*8.0f);
-  matRotationX.RotationAxis(upVec.normalized(), -vfMouseDelta.x*8.0f);
+  matRotationX.RotationAxis(upVec.normalized(), (vfAngles.x * M_PI) / 180.0);
+  matRotationY.RotationAxis(left.normalized(),  (vfAngles.y * M_PI) / 180.0);
 
   viewDir =  matRotationX * viewDir * matRotationY;
   upVec   = upVec   * matRotationY;
@@ -1061,7 +1066,12 @@ void RenderWindow::RotateViewer(const INTVECTOR2& viMouseDelta) {
   UpdateWindow();
 }
 
-void RenderWindow::MoveViewer(const FLOATVECTOR3& direction) {
+
+void RenderWindow::MoveViewerWithMouse(const FLOATVECTOR3& vDirection) {
+  MoveViewer(vDirection*m_fFirstPersonSpeed);
+}
+
+void RenderWindow::MoveViewer(const FLOATVECTOR3& vDirection) {
 
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string an = GetLuaAbstrRenderer().fqName();
@@ -1075,11 +1085,9 @@ void RenderWindow::MoveViewer(const FLOATVECTOR3& direction) {
   FLOATVECTOR3 oldPos =
       ss->cexecRet<FLOATVECTOR3>(an + ".getViewPos");
 
-  FLOATVECTOR3 scaledDir = direction*m_fFirstPersonSpeed;
-
-  oldPos = oldPos + scaledDir.x * left
-                  + scaledDir.y * up
-                  + scaledDir.z * view;
+  oldPos = oldPos + vDirection.x * left
+                  + vDirection.y * up
+                  + vDirection.z * view;
 
   ss->cexec(an + ".setViewPos", oldPos);
   UpdateWindow();
@@ -1176,22 +1184,22 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       break;
     case Qt::Key_Left : 
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        MoveViewer(FLOATVECTOR3(1,0,0));
+        MoveViewerWithMouse(FLOATVECTOR3(1,0,0));
       }
       break;
     case Qt::Key_Up : 
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        MoveViewer(FLOATVECTOR3(0,0,1));
+        MoveViewerWithMouse(FLOATVECTOR3(0,0,1));
       }
       break;
     case Qt::Key_Right : 
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        MoveViewer(FLOATVECTOR3(-1,0,0));
+        MoveViewerWithMouse(FLOATVECTOR3(-1,0,0));
       }
       break;
     case Qt::Key_Down : 
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        MoveViewer(FLOATVECTOR3(0,0,-1));
+        MoveViewerWithMouse(FLOATVECTOR3(0,0,-1));
       }
       break;
     case Qt::Key_PageDown : case Qt::Key_PageUp :
@@ -2593,4 +2601,10 @@ void RenderWindow::RegisterLuaFunctions(
   id = reg.function(&RenderWindow::LuaLoad1DTFqn, "tfqn1d",
                     "load a new (1D) transfer function", true);
   reg.function(&RenderWindow::UpdateWindow, "paint", "forces paint", false);
+
+  reg.function(&RenderWindow::RotateViewer, "rotateViewer",
+               "Rotates the viewer in x and y viewing direction", true);  
+  reg.function(&RenderWindow::MoveViewer, "moveViewer",
+               "Moves the viewer in the viewing coordinate frame", true);
+
 }
