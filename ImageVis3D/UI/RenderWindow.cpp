@@ -1573,6 +1573,25 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
   return rv;
 }
 
+bool RenderWindow::CaptureSubframe(const std::string& strFilename) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  ss->setTempProvDisable(true);
+
+  bool bPreserveTransparency = true;
+  GLFrameCapture f;
+  FLOATVECTOR3 color[2] = {GetBackgroundColor(0),
+                           GetBackgroundColor(1)};
+  FLOATVECTOR3 black[2] = {FLOATVECTOR3(0,0,0), FLOATVECTOR3(0,0,0)};
+  if (bPreserveTransparency) SetBackgroundColors(black[0],black[1]);
+
+  bool rv = f.CaptureSingleFrame(strFilename, bPreserveTransparency);
+  if (bPreserveTransparency) SetBackgroundColors(color[0],color[1]);
+
+  ss->setTempProvDisable(false);
+
+  return rv;
+}
+
 
 bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
                                    bool bOrtho, bool bFinalFrame, bool bUseLOD,
@@ -2607,4 +2626,7 @@ void RenderWindow::RegisterLuaFunctions(
   reg.function(&RenderWindow::MoveViewer, "moveViewer",
                "Moves the viewer in the viewing coordinate frame", true);
 
+  id = reg.function(&RenderWindow::CaptureSubframe, "captureSubframe",
+                    "captures whatever's in the buffer now", true);
+  ss->addParamInfo(id, 0, "filename", "Filename to save it in");
 }

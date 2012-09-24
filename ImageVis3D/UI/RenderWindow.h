@@ -99,6 +99,8 @@ class RenderWindow
                          unsigned int iActiveTS, unsigned int iInactiveTS);
     bool CaptureFrame(const std::string& strFilename,
                       bool bPreserveTransparency);
+    // just copies whatever's in the buffer w/o caring if it's done.
+    bool CaptureSubframe(const std::string& strFilename);
     bool CaptureSequenceFrame(const std::string& strFilename,
                               bool bPreserveTransparency,
                               std::string* strRealFilename=NULL);
