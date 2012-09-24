@@ -381,7 +381,7 @@ void MainWindow::ApplySettings() {
 
   ss->cexec("tuvok.io.setUseMedianFilter", bUseMedian);
   ss->cexec("tuvok.io.setClampToEdge", bClampToEdge);
-  ss->cexec("tuvok.io.setUVFCompreesion", iCompression);
+  ss->cexec("tuvok.io.setUVFCompression", iCompression);
 
   settings.endGroup();
 
