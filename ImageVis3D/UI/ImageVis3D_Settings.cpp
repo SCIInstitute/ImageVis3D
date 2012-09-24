@@ -115,10 +115,9 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     unsigned int iBuilderBrickSize = settings.value("BuilderBrickSize", static_cast<qulonglong>(7)).toUInt();
     bool bUseMedian = settings.value("UseMedian", false).toBool();
     bool bClampToEdge = settings.value("ClampToEdge", false).toBool();
-   
+    uint32_t iCompression = settings.value("Compression", 1).toUInt();
 
     settings.endGroup();
-    
 
     settings.beginGroup("Performance");
     bool bQuickopen = settings.value("Quickopen", m_bQuickopen).toBool();
@@ -190,7 +189,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
                           bDisableBorder, bNoRCClipplanes,
                           vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos,
                           iMaxBrickSize, iBuilderBrickSize, iMaxMaxBrickSize, bUseMedian,
-                          bClampToEdge, expFeatures);
+                          bClampToEdge, iCompression, expFeatures);
 
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
       // save settings
@@ -209,11 +208,12 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
 
 
       settings.setValue("TempDir", settingsDlg.GetTempDir().c_str());
-      settings.setValue("MaxBricksize", static_cast<qulonglong>(settingsDlg.GetMaxBrickSize()));
 
+      settings.setValue("MaxBricksize", static_cast<qulonglong>(settingsDlg.GetMaxBrickSize()));
       settings.setValue("BuilderBrickSize", static_cast<qulonglong>(settingsDlg.GetBuilderBrickSize()));
       settings.setValue("UseMedian", settingsDlg.GetMedianFilter());
       settings.setValue("ClampToEdge", settingsDlg.GetClampToEdge());
+      settings.setValue("Compression", settingsDlg.GetCompression());
 
       settings.endGroup();
 
@@ -287,7 +287,7 @@ void MainWindow::ApplySettings() {
   m_bQuickopen     = settings.value("Quickopen", m_bQuickopen).toBool();
   m_iMinFramerate  = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
   m_iLODDelay      = settings.value("LODDelay", m_iLODDelay).toUInt();
-  m_bRenderLowResIntermediateResults   = settings.value("UseAllMeans", m_bRenderLowResIntermediateResults).toBool();
+  m_bRenderLowResIntermediateResults = settings.value("UseAllMeans", m_bRenderLowResIntermediateResults).toBool();
   m_iActiveTS      = settings.value("ActiveTS", m_iActiveTS).toUInt();
   m_iInactiveTS    = settings.value("InactiveTS", m_iInactiveTS).toUInt();
   m_bWriteLogFile  = settings.value("WriteLogFile", m_bWriteLogFile).toBool();
@@ -360,6 +360,7 @@ void MainWindow::ApplySettings() {
   uint64_t iBuilderBrickSize = MathTools::Pow2((uint64_t)settings.value("BuilderBrickSize", 7).toUInt());
   bool bUseMedian = settings.value("UseMedian", false).toBool();
   bool bClampToEdge = settings.value("ClampToEdge", false).toBool();
+  uint32_t iCompression = settings.value("Compression", 1).toUInt();
 
 
   // sanity check: make sure a RGBA float brick would fit into the specified memory
@@ -380,9 +381,9 @@ void MainWindow::ApplySettings() {
 
   ss->cexec("tuvok.io.setUseMedianFilter", bUseMedian);
   ss->cexec("tuvok.io.setClampToEdge", bClampToEdge);
+  ss->cexec("tuvok.io.setUVFCompreesion", iCompression);
 
   settings.endGroup();
-
 
 
   // Apply window settings

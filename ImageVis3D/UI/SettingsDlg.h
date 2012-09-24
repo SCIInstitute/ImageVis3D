@@ -106,6 +106,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     unsigned int  GetBuilderBrickSize() const;
     bool GetMedianFilter() const;
     bool GetClampToEdge() const;
+    uint32_t GetCompression() const;
 
     void Data2Form(bool bIsDirectX10Capable,
                    uint64_t iMaxCPU, uint64_t iMaxGPU,
@@ -148,6 +149,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    unsigned int iMaxMaxBrickSize,
                    bool bMedianFilter,
                    bool bClampToEdge,
+                   uint32_t iCompression,
                    bool expFeatures);
 
   protected slots:

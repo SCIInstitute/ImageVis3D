@@ -350,16 +350,27 @@ void SettingsDlg::SetLogoLabel() {
   }
 }
 
-void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t iMaxGPU, bool bIgnoreMax,
-                            unsigned int iUserMaxCPUMB, unsigned int iUserMaxGPUMB, const std::string& tempDir,
-                            bool bQuickopen, unsigned int iMinFramerate, bool bRenderLowResIntermediateResults, unsigned int iLODDelay,
+void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, 
+                            uint64_t iMaxGPU, bool bIgnoreMax,
+                            unsigned int iUserMaxCPUMB, 
+                            unsigned int iUserMaxGPUMB, 
+                            const std::string& tempDir,
+                            bool bQuickopen, unsigned int iMinFramerate, 
+                            bool bRenderLowResIntermediateResults, 
+                            unsigned int iLODDelay,
                             unsigned int iActiveTS, unsigned int iInactiveTS,
-                            bool bWriteLogFile, bool bShowCrashDialog, const std::string& strLogFileName, uint32_t iLogLevel,
+                            bool bWriteLogFile, bool bShowCrashDialog,
+                            const std::string& strLogFileName, 
+                            uint32_t iLogLevel,
                             bool bShowVersionInTitle,
-                            bool bAutoSaveGEO, bool bAutoSaveWSP, bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
-                            bool bCheckForUpdatesOnStartUp, bool bCheckForDevBuilds, bool bShowWelcomeScreen,
+                            bool bAutoSaveGEO, bool bAutoSaveWSP, 
+                            bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
+                            bool bCheckForUpdatesOnStartUp, 
+                            bool bCheckForDevBuilds, bool bShowWelcomeScreen,
                             bool bInvWheel, bool bI3MFeatures,
-                            unsigned int iVolRenType, unsigned int iBlendPrecision, bool bPowerOfTwo, bool bDownSampleTo8Bits,
+                            unsigned int iVolRenType, 
+                            unsigned int iBlendPrecision, bool bPowerOfTwo, 
+                            bool bDownSampleTo8Bits,
                             bool bDisableBorder, bool bNoRCClipplanes,
                             const FLOATVECTOR3& vBackColor1,
                             const FLOATVECTOR3& vBackColor2,
@@ -370,6 +381,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t
                             unsigned int iMaxMaxBrickSize,
                             bool bMedianFilter,
                             bool bClampToEdge,
+                            uint32_t iCompression,
                             bool expFeatures) {
   m_bInit = true;
 
@@ -399,6 +411,15 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t
   radioButton_Border0->setChecked(!bClampToEdge);
   radioButton_BorderClamp->setChecked(bClampToEdge);
 
+  switch (iCompression) {
+    default : radioButton_noCompression->setChecked(true);
+              radioButton_zlibCompression->setChecked(false);
+              break;
+    case 1 : radioButton_noCompression->setChecked(false);
+             radioButton_zlibCompression->setChecked(true);
+             break;
+  }
+
   checkBoxQuickload->setChecked(bQuickopen);
   horizontalSlider_MinFramerate->setValue(iMinFramerate);
   checkBox_useAllMeans->setChecked(bRenderLowResIntermediateResults);
@@ -423,9 +444,16 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU, uint64_t
   checkBox_I3MFeatures->setChecked(bI3MFeatures);
   checkBox_ExperimentalFeatures->setChecked(expFeatures);
 
-  m_cBackColor1 = QColor(int(vBackColor1.x*255), int(vBackColor1.y*255),int(vBackColor1.z*255));
-  m_cBackColor2 = QColor(int(vBackColor2.x*255), int(vBackColor2.y*255),int(vBackColor2.z*255));
-  m_cTextColor  = QColor(int(vTextColor.x*255), int(vTextColor.y*255),int(vTextColor.z*255),int(vTextColor.w*255));
+  m_cBackColor1 = QColor(int(vBackColor1.x*255),
+                         int(vBackColor1.y*255),
+                         int(vBackColor1.z*255));
+  m_cBackColor2 = QColor(int(vBackColor2.x*255),
+                         int(vBackColor2.y*255),
+                         int(vBackColor2.z*255));
+  m_cTextColor  = QColor(int(vTextColor.x*255),
+                         int(vTextColor.y*255),
+                         int(vTextColor.z*255),
+                         int(vTextColor.w*255));
 
   switch (iBlendPrecision) {
     case 2    : radioButton_Prec32Bit->setChecked(true); break;
@@ -551,6 +579,14 @@ bool SettingsDlg::GetMedianFilter() const {
 
 bool SettingsDlg::GetClampToEdge() const {
   return radioButton_BorderClamp->isChecked();
+}
+
+uint32_t SettingsDlg::GetCompression() const {
+  if (radioButton_noCompression->isChecked()) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 

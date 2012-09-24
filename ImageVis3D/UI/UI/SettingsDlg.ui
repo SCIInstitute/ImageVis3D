@@ -341,7 +341,7 @@
      </widget>
      <widget class="QWidget" name="tab">
       <attribute name="title">
-       <string>Bricking</string>
+       <string>UVF File Parameters</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_12">
        <item>
@@ -513,6 +513,45 @@
           </item>
           <item>
            <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_Compression">
+         <property name="title">
+          <string>Compression</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <item>
+           <widget class="QRadioButton" name="radioButton_noCompression">
+            <property name="text">
+             <string>No Compression</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButton_zlibCompression">
+            <property name="text">
+             <string>zlib Compression</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_4">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
