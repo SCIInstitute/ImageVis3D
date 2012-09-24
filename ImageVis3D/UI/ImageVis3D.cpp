@@ -91,6 +91,11 @@ static FLOATMATRIX4 Identity() {
   FLOATMATRIX4 matIdent;
   return matIdent;
 }
+std::string VecToString(const FLOATVECTOR3& v) {
+  std::ostringstream s;
+  s << "{ " << v.x << ", " << v.y << ", " << v.z << "}";
+  return s.str();
+}
 
 static FLOATMATRIX4 MulMatrices(const FLOATMATRIX4& a,
                                 const FLOATMATRIX4& b) {
@@ -1037,6 +1042,8 @@ void MainWindow::RegisterLuaClasses() {
   reg->registerFunction(&Identity, "matrix.identity",
                         "Sets identity.", false);
   reg->registerFunction(&MulMatrices, "matrix.multiply", "", false);
+  reg->registerFunction(&VecToString, "strvec", "converts vec to string",
+                        false);
 }
 
 void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {
