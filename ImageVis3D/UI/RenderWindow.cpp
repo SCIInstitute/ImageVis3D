@@ -2454,9 +2454,9 @@ void RenderWindow::SetProvTransformAndClip(tuvok::LuaClassInstance region,
                                            FLOATMATRIX4 m){
   // Extract the translational component from the matrix.
   FLOATMATRIX4 t4;
-  t4.m14 = m.m14;
-  t4.m24 = m.m24;
-  t4.m34 = m.m34;
+  t4.m41 = m.m41;
+  t4.m42 = m.m42;
+  t4.m43 = m.m43;
 
   FLOATMATRIX4 r4;
   r4.m11 = m.m11; r4.m12 = m.m12; r4.m13 = m.m13;
@@ -2496,9 +2496,9 @@ void RenderWindow::LuaSetRotation(FLOATMATRIX3 m) {
 }
 void RenderWindow::LuaSetTranslation(VECTOR3<float> v) {
   FLOATMATRIX4 t4;
-  t4.m14 = v.x;
-  t4.m24 = v.y;
-  t4.m34 = v.z;
+  t4.m41 = v.x;
+  t4.m42 = v.y;
+  t4.m43 = v.z;
   SetProvTransAndClip(GetFirst3DRegion(), t4);
 }
 
