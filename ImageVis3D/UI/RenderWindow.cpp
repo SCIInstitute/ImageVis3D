@@ -1197,9 +1197,19 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
         MoveViewerWithMouse(FLOATVECTOR3(-1,0,0));
       }
       break;
-    case Qt::Key_Down : 
+    case Qt::Key_Down :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
         MoveViewerWithMouse(FLOATVECTOR3(0,0,-1));
+      }
+      break;
+    case Qt::Key_Minus : 
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        MoveViewerWithMouse(FLOATVECTOR3(0,1,0));
+      }
+      break;
+    case Qt::Key_Plus :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        MoveViewerWithMouse(FLOATVECTOR3(0,-1,0));
       }
       break;
     case Qt::Key_PageDown : case Qt::Key_PageUp :
