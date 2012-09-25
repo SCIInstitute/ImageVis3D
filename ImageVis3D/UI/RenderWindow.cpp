@@ -1586,7 +1586,7 @@ bool RenderWindow::CaptureSubframe(const std::string& strFilename) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->setTempProvDisable(true);
 
-  bool bPreserveTransparency = true;
+  bool bPreserveTransparency = false;
   GLFrameCapture f;
   bool rv = f.CaptureSingleFrame(strFilename, bPreserveTransparency);
 
