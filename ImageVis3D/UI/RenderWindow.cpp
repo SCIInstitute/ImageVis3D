@@ -1103,8 +1103,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
 
   switch (event->key()) {
     case Qt::Key_D :
-      ss->cexec(rn + ".setDebugView", 
-                !ss->cexecRet<bool>(rn + ".getDebugView"));
+      ss->cexec(rn + ".cycleDebugViews");
       break;
     case Qt::Key_F :
       m_bFirstPersonMode = !m_bFirstPersonMode;
