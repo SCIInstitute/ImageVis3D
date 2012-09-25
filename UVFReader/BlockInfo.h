@@ -42,7 +42,10 @@ void PrintToCBlockInfo(const TOCBlock* b) {
   }
 
   cout << "      Volume Information: " << endl
-        << "        Level of detail: " << b->GetLoDCount() << endl;
+        << "        Level of detail: " << b->GetLoDCount() << endl
+        << "        Max Bricksize: (" << b->GetMaxBricksize().x << " x "
+                                      << b->GetMaxBricksize().y << " x "
+                                      << b->GetMaxBricksize().z << ")" << endl;
   for (uint64_t i=0;i<b->GetLoDCount();++i) {
     cout << "          Level " << i << " size:" << b->GetLODDomainSize(i).x <<
                                             "x" << b->GetLODDomainSize(i).y <<
