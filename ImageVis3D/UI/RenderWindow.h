@@ -462,6 +462,7 @@ class RenderWindow
     void LuaResizeWindow(const UINTVECTOR2& newSize);
     void LuaSetLighting(bool enabled);
     void LuaLoad1DTFqn(const std::string&);
+    void LuaLoad2DTFqn(const std::string&);
 
     /// Returns the Lua Renderer. This is used instead of inheriting the methods
     /// from the renderer, because, for the most part, the user won't care about

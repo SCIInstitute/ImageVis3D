@@ -330,6 +330,9 @@ void MainWindow::Transfer2DLoad() {
   }
 }
 
+void MainWindow::LoadTransferFunction2D(const std::string& tf) {
+  m_2DTransferFunction->LoadFromFile(QString(tf.c_str()));
+}
 
 void MainWindow::Transfer2DSave() {
   QSettings settings;

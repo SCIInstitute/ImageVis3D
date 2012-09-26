@@ -118,6 +118,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
     // directly loads the TFqn; used for Lua scripting.
     void LoadTransferFunction1D(const std::string& tf);
+    void LoadTransferFunction2D(const std::string& tf);
 
   public slots:
     void SetRenderProgressAnUpdateInfo(unsigned int iLODCount,

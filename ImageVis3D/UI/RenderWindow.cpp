@@ -1211,6 +1211,26 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
         MoveViewerWithMouse(FLOATVECTOR3(0,-1,0));
       }
       break;
+    case Qt::Key_NumLock :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        // initialize key frame capture mode in script window:
+/*
+        data = iv3d.renderer.new(filename)
+        data.lighting(false)
+          data.resize({960, 540})
+          --mat = matrix.rotateX(100)
+          --data.setTransform(mat)
+          rw = data.getRawRenderer()
+          i=0
+          io.output("KeyFrames0.txt")
+
+          function writeKeyFrameToFile()
+            io.write("points[" .. i .. "] = {eye={x="..rw.getViewPos()[1]..", y="..rw.getViewPos()[2]..", z="..rw.getViewPos()[3].."}, ref={x="..rw.getViewDir()[1]..", y="..rw.getViewDir()[2]..", z="..rw.getViewDir()[3].."}, vup={x="..rw.getUpDir()[1]..", y="..rw.getUpDir()[2]..", z="..rw.getUpDir()[3].."}, t=ti};ti=ti+inc\n");i=i+1;io.flush()
+          end
+*/
+        ss->exec("writeKeyFrameToFile()");
+      }
+      break;
     case Qt::Key_PageDown : case Qt::Key_PageUp :
       if (   selectedRegion.isValid(ss)
           && IsRegion2D(selectedRegion)) {
@@ -2552,6 +2572,10 @@ void RenderWindow::LuaLoad1DTFqn(const std::string& tf) {
   this->m_MainWindow->LoadTransferFunction1D(tf);
 }
 
+void RenderWindow::LuaLoad2DTFqn(const std::string& tf) {
+  this->m_MainWindow->LoadTransferFunction2D(tf);
+}
+
 void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
@@ -2622,6 +2646,8 @@ void RenderWindow::RegisterLuaFunctions(
                     "turn lighting on and off", true);
   id = reg.function(&RenderWindow::LuaLoad1DTFqn, "tfqn1d",
                     "load a new (1D) transfer function", true);
+  id = reg.function(&RenderWindow::LuaLoad2DTFqn, "tfqn2d",
+                    "load a new (2D) transfer function", true);
   reg.function(&RenderWindow::UpdateWindow, "paint", "forces paint", false);
 
   reg.function(&RenderWindow::RotateViewer, "rotateViewer",
