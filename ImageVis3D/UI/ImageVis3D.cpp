@@ -977,6 +977,16 @@ static void CallQTProcessEvents()
   QApplication::processEvents();
 }
 
+void MainWindow::LuaSetIsoValueFloat(float fValue)
+{
+  SetIsoValue(fValue);
+}
+
+void MainWindow::LuaSetIsoValueInteger(int iValue)
+{
+  SetIsoValue(iValue);
+}
+
 void MainWindow::RegisterLuaClasses() {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string prefix = "iv3d.";
@@ -1028,6 +1038,26 @@ void MainWindow::RegisterLuaClasses() {
                             prefix + "setStayOpen",
                             "Stay open after script ended "
                             "passed in via command line.", false);
+
+  m_MemReg.registerFunction(this, &MainWindow::Use1DTrans, 
+                            prefix + "use1DTFMode",
+                            "Enable 1D transfer function mode.", false);
+
+  m_MemReg.registerFunction(this, &MainWindow::Use2DTrans, 
+                            prefix + "use2DTFMode",
+                            "Enable 2D transfer function mode.", false);
+
+  m_MemReg.registerFunction(this, &MainWindow::UseIso, 
+                            prefix + "useIsoMode",
+                            "Enable iso-surface rendering mode.", false);
+
+  m_MemReg.registerFunction(this, &MainWindow::LuaSetIsoValueFloat, 
+                            prefix + "setIsoValueFloat",
+                            "Set threshold value for iso-surface rendering in the range [0.0, 1.0].", false);
+
+  m_MemReg.registerFunction(this, &MainWindow::LuaSetIsoValueInteger, 
+                            prefix + "setIsoValueInteger",
+                            "Set threshold value for iso-surface rendering as integer.", false);
 
   std::shared_ptr<LuaScripting> reg = m_MasterController.LuaScript();
 

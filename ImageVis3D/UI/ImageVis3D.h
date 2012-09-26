@@ -486,6 +486,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void UpdateTFScaleSliders();
     void UpdateInterpolant();
     void UpdateColorWidget();
+
+    void LuaSetIsoValueFloat(float fValue);
+    void LuaSetIsoValueInteger(int iValue);
     
     void RegisterLuaClasses();
 
