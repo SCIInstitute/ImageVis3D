@@ -634,12 +634,6 @@ bool RenderWindow::GetRendererClipPlaneShown() const {
   return ss->cexecRet<bool>(rn + ".isClipPlaneShown");
 }
 
-bool RenderWindow::GetRendererCanDoClipPlane() const {
-  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  string rn = m_LuaAbstrRenderer.fqName();
-  return ss->cexecRet<bool>(rn + ".canDoClipPlane");
-}
-
 size_t RenderWindow::GetRendererTimestep() const {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();

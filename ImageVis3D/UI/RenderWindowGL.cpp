@@ -70,14 +70,12 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
                                bool bUseOnlyPowerOfTwo,
                                bool bDownSampleTo8Bits,
                                bool bDisableBorder,
-                               bool bNoRCClipplanes,
                                QGLWidget* glShareWidget,
                                const QGLFormat& fmt,
                                QWidget* parent,
                                Qt::WindowFlags flags) :
   QGLWidget(fmt, parent, glShareWidget, flags),
-  RenderWindow(masterController, eType, dataset, iCounter, parent),
-  m_bNoRCClipplanes(bNoRCClipplanes)
+  RenderWindow(masterController, eType, dataset, iCounter, parent)
 {
   if(!SetNewRenderer( bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder))
     return;
@@ -98,7 +96,7 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
   m_LuaAbstrRenderer = ss->cexecRet<LuaClassInstance>(
       "tuvok.renderer.new",
       m_eRendererType, bUseOnlyPowerOfTwo, bDownSampleTo8Bits,
-      bDisableBorder, m_bNoRCClipplanes, false);
+      bDisableBorder, false);
   m_Renderer = m_LuaAbstrRenderer.getRawPointer<AbstrRenderer>(ss);
 
   string rn = m_LuaAbstrRenderer.fqName();

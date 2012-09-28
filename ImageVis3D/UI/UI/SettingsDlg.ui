@@ -1286,24 +1286,17 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="2" column="1">
            <widget class="QCheckBox" name="checkBox_DownSampleTo8Bits">
             <property name="text">
              <string>Use only 8Bit volume textures</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="0" column="2">
            <widget class="QCheckBox" name="checkBox_DisableBorder">
             <property name="text">
              <string>Disable Border</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QCheckBox" name="checkBox_NoRCClipplanes">
-            <property name="text">
-             <string>Disable clip planes in Raycaster</string>
             </property>
            </widget>
           </item>
@@ -1851,22 +1844,6 @@
     <hint type="destinationlabel">
      <x>1</x>
      <y>453</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox_NoRCClipplanes</sender>
-   <signal>clicked()</signal>
-   <receiver>SettingsDlg</receiver>
-   <slot>WarnAPIMethodChange()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>91</x>
-     <y>70</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>357</x>
-     <y>265</y>
     </hint>
    </hints>
   </connection>

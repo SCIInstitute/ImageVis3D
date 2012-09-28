@@ -371,7 +371,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
                             unsigned int iVolRenType, 
                             unsigned int iBlendPrecision, bool bPowerOfTwo, 
                             bool bDownSampleTo8Bits,
-                            bool bDisableBorder, bool bNoRCClipplanes,
+                            bool bDisableBorder,
                             const FLOATVECTOR3& vBackColor1,
                             const FLOATVECTOR3& vBackColor2,
                             const FLOATVECTOR4& vTextColor,
@@ -515,7 +515,6 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
   checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
   checkBox_DisableBorder->setChecked(bDisableBorder);
   checkBox_DownSampleTo8Bits->setChecked(bDownSampleTo8Bits);
-  checkBox_NoRCClipplanes->setChecked(bNoRCClipplanes);
 
   QString strStyle =
   tr("QPushButton { background: rgb(%1, %2, %3); color: rgb(%4, %5, %6) }").arg(m_cBackColor1.red())
@@ -611,10 +610,6 @@ bool SettingsDlg::GetDownSampleTo8Bits() const {
 
 bool SettingsDlg::GetDisableBorder() const {
   return checkBox_DisableBorder->isChecked();
-}
-
-bool SettingsDlg::GetNoRCClipplanes() const {
-  return checkBox_NoRCClipplanes->isChecked();
 }
 
 QString SettingsDlg::GetLogoFilename() const {

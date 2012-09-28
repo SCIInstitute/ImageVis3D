@@ -138,7 +138,6 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bPowerOfTwo,
                    bool bDownSampleTo8Bits,
                    bool bDisableBorder,
-                   bool bNoRCClipplanes,
                    const FLOATVECTOR3& vBackColor1,
                    const FLOATVECTOR3& vBackColor2,
                    const FLOATVECTOR4& vTextColor,

@@ -750,7 +750,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
       fmt.setAlpha(true);
       renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset,
                                      iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
-                                     m_bDisableBorder, m_bNoRCClipplanes,
+                                     m_bDisableBorder,
                                      m_glShareWidget, fmt, this, 0);
     }
   #else
@@ -775,7 +775,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
     fmt.setRgba(true);
     renderWin = new RenderWindowGL(m_MasterController, m_eVolumeRendererType, dataset,
                                    iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
-                                   m_bDisableBorder, m_bNoRCClipplanes,
+                                   m_bDisableBorder,
                                    m_glShareWidget, fmt, this, 0);
   #endif
 
@@ -905,7 +905,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
 
   UpdateExplorerView(true);
-  groupBox_ClipPlane->setVisible(sender->GetRendererCanDoClipPlane());
+//  groupBox_ClipPlane->setVisible(sender->GetRendererCanDoClipPlane());
 
   lineEdit_DatasetName->setText(QFileInfo(m_pActiveRenderWin->
                                           GetDatasetName()).fileName());

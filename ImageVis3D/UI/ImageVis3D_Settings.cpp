@@ -155,7 +155,6 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
     bool bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
     bool bDisableBorder = settings.value("DisableBorder", m_bDisableBorder).toBool();
-    bool bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
 
     FLOATVECTOR3 vBackColor1(settings.value("Background1R", 0.0).toDouble(),
                             settings.value("Background1G", 0.0).toDouble(),
@@ -186,7 +185,7 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
                           bCheckForUpdatesOnStartUp, bCheckForDevBuilds, bShowWelcomeScreen,
                           bInvWheel, bI3MFeatures,
                           iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
-                          bDisableBorder, bNoRCClipplanes,
+                          bDisableBorder, 
                           vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos,
                           iMaxBrickSize, iBuilderBrickSize, iMaxMaxBrickSize, bUseMedian,
                           bClampToEdge, iCompression, expFeatures);
@@ -252,7 +251,6 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
       settings.setValue("PowerOfTwo", settingsDlg.GetUseOnlyPowerOfTwo());
       settings.setValue("DownSampleTo8Bits", settingsDlg.GetDownSampleTo8Bits());
       settings.setValue("DisableBorder", settingsDlg.GetDisableBorder());
-      settings.setValue("NoRCClipplanes", settingsDlg.GetNoRCClipplanes());
       settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
       settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
       settings.setValue("Background1B", settingsDlg.GetBackgroundColor1().z);
@@ -321,7 +319,6 @@ void MainWindow::ApplySettings() {
   m_bPowerOfTwo = settings.value("PowerOfTwo", m_bPowerOfTwo).toBool();
   m_bDownSampleTo8Bits = settings.value("DownSampleTo8Bits", m_bDownSampleTo8Bits).toBool();
   m_bDisableBorder = settings.value("DisableBorder", m_bDisableBorder).toBool();
-  m_bNoRCClipplanes = settings.value("NoRCClipplanes", m_bNoRCClipplanes).toBool();
 
   m_vBackgroundColors[0] = FLOATVECTOR3(
     settings.value("Background1R", 0.0).toDouble(),

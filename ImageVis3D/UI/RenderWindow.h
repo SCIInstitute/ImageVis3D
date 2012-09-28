@@ -293,7 +293,6 @@ class RenderWindow
     bool GetRendererClipPlaneEnabled() const;
     bool GetRendererClipPlaneLocked() const;
     bool GetRendererClipPlaneShown() const;
-    bool GetRendererCanDoClipPlane() const;
     size_t GetRendererTimestep() const;
     UINTVECTOR2  GetRendererLODLimits() const;
     void RendererSchedule3DWindowRedraws();
