@@ -37,9 +37,6 @@
 
 #include "../Tuvok/StdTuvokDefines.h"
 
-#ifdef DEBUG_PROVENANCE
-#include <iostream>
-#endif
 #include "../Tuvok/IO/Tuvok_QtPlugins.h"
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -78,12 +75,6 @@
 
 using namespace tuvok;
 
-#ifdef DEBUG_PROVENANCE
-static void provenance(const std::string s, const std::string,
-                       const std::string) {
-  std::cout << "provenance: " << s << std::endl;
-}
-#endif
 
 int main(int argc, char* argv[])
 {
@@ -137,9 +128,6 @@ int main(int argc, char* argv[])
 
     Controller::Instance().AddDebugOut(dbgOut);
   }
-#ifdef DEBUG_PROVENANCE
-  Controller::Instance().RegisterProvenanceCB(provenance);
-#endif
   MainWindow mainWindow(Controller::Instance(), strScriptFile!="", 0,
                         Qt::Window);
 

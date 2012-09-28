@@ -812,8 +812,6 @@ void Q2DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   if(m_eExecutionMode == ONRELEASE) {
     ApplyFunction();
   }
-
-  Controller::Instance().Provenance("2dtf", "set_tf_2d");
 }
 
 void Q2DTransferFunction::ApplyFunction() {

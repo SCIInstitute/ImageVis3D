@@ -339,8 +339,6 @@ void Q1DTransferFunction::mouseReleaseEvent(QMouseEvent *event) {
   if(m_eExecutionMode == ONRELEASE) {
     ApplyFunction();
   }
-
-  Controller::Instance().Provenance("1dtf", "set_tf_1d");
 }
 
 void Q1DTransferFunction::mouseMoveEvent(QMouseEvent *event) {

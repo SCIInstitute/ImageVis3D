@@ -1350,15 +1350,6 @@ void RenderWindow::UpdateWindowFraction() {
                     UINTVECTOR2(m_vWinDim.x, horizontalSplit-halfWidth));
 }
 
-static std::string view_mode(RenderWindow::EViewMode mode) {
-  switch(mode) {
-    case RenderWindow::VM_SINGLE: return "single"; break;
-    case RenderWindow::VM_TWOBYTWO: return "two-by-two"; break;
-    case RenderWindow::VM_INVALID: /* fall-through */
-    default: return "invalid"; break;
-  }
-}
-
 LuaClassInstance
 RenderWindow::GetFirst3DRegion() {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
@@ -1456,9 +1447,6 @@ RenderWindow::SetViewMode(const std::vector<LuaClassInstance> &newRenderRegions,
   ScheduleCompleteRedraw();
   UpdateWindow();
   EmitRenderWindowViewChanged(int(GetViewMode()));
-
-  Controller::Instance().Provenance("vmode", "viewmode",
-                                    view_mode(eViewMode));
 }
 
 void RenderWindow::Initialize() {
@@ -1668,8 +1656,6 @@ void RenderWindow::SetTranslation(LuaClassInstance renderRegion,
   regionData->arcBall.SetTranslation(accumulatedTranslation);
 
   updateClipPlaneTransform(renderRegion);
-
-  Controller::Instance().Provenance("translation", "translate");
 }
 
 void RenderWindow::SetTranslationDelta(LuaClassInstance renderRegion,
@@ -2381,7 +2367,6 @@ void RenderWindow::ResizeRenderer(int width, int height)
     SetupArcBall();
     std::ostringstream wsize;
     wsize << m_vWinDim[0] << " " << m_vWinDim[1] << std::ends;
-    Controller::Instance().Provenance("window", "resize", wsize.str());
   }
 }
 
