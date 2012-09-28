@@ -40,7 +40,6 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include "../Tuvok/IO/IOManager.h" // Needed for tConverterFormat.
-#include "../Tuvok/Scripting/Scripting.h"
 #include "ImageVis3D.h"
 #include <QtGui/QImageReader>
 
@@ -233,24 +232,4 @@ void MainWindow::GetDebugViewMask() {
   checkBox_ShowDebugWarnings->setChecked(bShowWarnings);
   checkBox_ShowDebugMessages->setChecked(bShowMessages);
   checkBox_ShowDebugOther->setChecked(bShowOther);
-}
-
-void MainWindow::ParseAndExecuteDebugCommand() {
-  bool bTemp = GetDebugOut()->ShowMessages();
-  GetDebugOut()->SetShowMessages(true);
-
-  m_MasterController.ScriptEngine()->ParseLine(lineEdit_DebugCommand->text().toStdString());
-
-  if (GetDebugOut()) {
-    GetDebugOut()->SetShowMessages(bTemp);
-  } else {
-    // we executed a command - such as "quit" - that caused imagevis
-    // to close so all the widgets are invalid and nothing is left to be done
-    return;
-  }
-
-  if (listWidget_DebugOut->count() > 0)
-    listWidget_DebugOut->setCurrentRow(listWidget_DebugOut->count()-1);
-
-  lineEdit_DebugCommand->clear();
 }

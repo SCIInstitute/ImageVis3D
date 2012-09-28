@@ -245,9 +245,6 @@
     <ClCompile Include="UI\ImageVis3D_Progress.cpp">
       <Filter>UI\Implemented Files\MainWindow</Filter>
     </ClCompile>
-    <ClCompile Include="UI\ImageVis3D_Scripting.cpp">
-      <Filter>UI\Implemented Files\MainWindow</Filter>
-    </ClCompile>
     <ClCompile Include="UI\ImageVis3D_Settings.cpp">
       <Filter>UI\Implemented Files\MainWindow</Filter>
     </ClCompile>

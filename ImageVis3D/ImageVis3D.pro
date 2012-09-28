@@ -9,7 +9,7 @@ UI_DIR            = UI/AutoGen
 MOC_DIR           = UI/AutoGen
 incpath           = . ../Tuvok/Basics ../Tuvok/Controller ../Tuvok/DebugOut
 incpath          += ../Tuvok/IO ../Tuvok/IO/exception ../Tuvok/Renderer
-incpath          += ../Tuvok/Scripting ../Tuvok
+incpath          += ../Tuvok
 incpath          += DebugOut UI UI/AutoGen
 incpath          += ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW
 DEPENDPATH       += $$incpath
@@ -155,7 +155,6 @@ SOURCES += UI/BrowseData.cpp \
            UI/ImageVis3D_Settings.cpp \
            UI/ImageVis3D_Locking.cpp \
            UI/ImageVis3D_Stereo.cpp \
-           UI/ImageVis3D_Scripting.cpp \
            UI/ImageVis3D_Help.cpp \
            UI/ImageVis3D_I3M.cpp \
            UI/PleaseWait.cpp \

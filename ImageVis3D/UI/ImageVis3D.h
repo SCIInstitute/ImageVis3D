@@ -78,8 +78,7 @@ class ScaleAndBiasDlg;
 
 static const int IV3D_TIMER_INTERVAL = 20; // in milliseconds
 
-class MainWindow : public QMainWindow, protected Ui_MainWindow,
-                   public Scriptable
+class MainWindow : public QMainWindow, protected Ui_MainWindow
 {
   Q_OBJECT
 
@@ -93,11 +92,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
 
     QTOut* GetDebugOut() {return m_pDebugOut;}
 
-    // Scriptable implementation
-    virtual void RegisterCalls(Scripting* pScriptEngine);
-    virtual bool Execute(const std::string& strCommand, const std::vector< std::string >& strParams, std::string& strMessage);
-
-    bool RunScript(const std::string& strFilename);
     bool StayOpen() const {return m_bStayOpenAfterScriptEnd;}
     /// Starts the internal timer, used for checking if we should continue
     /// rendering.
@@ -241,7 +235,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void ListSupportedVolumes();
     void ListSupportedGeometry();
     void ClearDebugWin();
-    void ParseAndExecuteDebugCommand();
     void SetDebugViewMask();
 
     void CheckForRedraw();
@@ -299,8 +292,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void ToggleStereoEyeSwap();
     void SetStereoEyeDistance();
     void SetStereoFocalLength();
-    void InitAFStereo();
-    void ToggleAFStereo();
 
     void Show1DTrans();
     void Show2DTrans();
@@ -551,8 +542,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow,
     void SetStereoMode(unsigned int iMode);
     void SetStereoFocalLength(float fLength);
     void SetStereoEyeDistance(float fEyeDist);
-    void IncStereoFocalLength(float fLengthDelta);
-    void IncStereoEyeDistance(float fEyeDistDelta);
 
     bool m_bClipDisplay;
     bool m_bClipLocked;

@@ -131,13 +131,6 @@ int main(int argc, char* argv[])
   MainWindow mainWindow(Controller::Instance(), strScriptFile!="", 0,
                         Qt::Window);
 
-  if (strScriptFile != "") {
-    bool bScriptResult =  mainWindow.RunScript(strScriptFile);
-    if (!mainWindow.StayOpen()) {
-      mainWindow.close();
-      return (bScriptResult) ? 0 : 1;
-    }
-  }
 #ifdef DETECTED_OS_LINUX
   // else: only do this check in interactive mode.
   else {

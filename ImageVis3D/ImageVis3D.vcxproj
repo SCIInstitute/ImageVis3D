@@ -521,7 +521,6 @@
     <ClCompile Include="UI\ImageVis3D_I3M.cpp" />
     <ClCompile Include="UI\ImageVis3D_Locking.cpp" />
     <ClCompile Include="UI\ImageVis3D_Progress.cpp" />
-    <ClCompile Include="UI\ImageVis3D_Scripting.cpp" />
     <ClCompile Include="UI\ImageVis3D_Settings.cpp" />
     <ClCompile Include="UI\ImageVis3D_Stereo.cpp" />
     <ClCompile Include="UI\ImageVis3D_WindowHandling.cpp" />

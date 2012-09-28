@@ -160,7 +160,6 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bIgnoreLoadDatasetFailure(false),
   m_MemReg(m_MasterController.LuaScript())
 {
-  RegisterCalls(m_MasterController.ScriptEngine());
   RegisterLuaClasses();
 
   QCoreApplication::setOrganizationName("Scientific Computing and Imaging Institute, University of Utah");
