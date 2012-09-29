@@ -7,6 +7,8 @@
 
 #include "DataSource.h"
 #include "BlockInfo.h"
+#include "Basics/SystemInfo.h"
+
 
 using namespace boost;
 using namespace std;
@@ -26,7 +28,10 @@ int main(int argc, char* argv[])
   debugOut->SetClearOldMessage(true);
 
   Controller::Instance().AddDebugOut(debugOut);
-  MESSAGE(" "); // get rid of "connected to this debug out" message
+  Controller::Instance().SetMaxCPUMem(0.8f);
+
+  uint64_t mem = Controller::Instance().SysInfo()->GetMaxUsableCPUMem();
+  MESSAGE("Using %u MB RAM", unsigned(mem/1024/1024));
   cout << endl;
 
   #ifdef _WIN32
