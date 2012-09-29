@@ -29,10 +29,7 @@ int main(int argc, char* argv[])
 
   Controller::Instance().AddDebugOut(debugOut);
   Controller::Instance().SetMaxCPUMem(0.8f);
-
-  uint64_t mem = Controller::Instance().SysInfo()->GetMaxUsableCPUMem();
-  MESSAGE("Using %u MB RAM", unsigned(mem/1024/1024));
-  cout << endl;
+  MESSAGE(""); cout << endl;
 
   #ifdef _WIN32
     // Enable run-time memory check for debug builds.
@@ -49,7 +46,7 @@ int main(int argc, char* argv[])
   uint32_t iBitSize = 8;
   uint32_t iBrickSize = DEFAULT_BRICKSIZE;
   uint32_t iIter = 0;
-  uint32_t iMem = 1;
+  uint32_t iMem = 0;
   bool bCreateFile;
   bool bZlib;
   bool bVerify;
@@ -61,7 +58,7 @@ int main(int argc, char* argv[])
   bool bKeepRaw;
 
   try {
-    TCLAP::CmdLine cmd("UVF diagnostic tool");
+    TCLAP::CmdLine cmd("UVF diagnostic and demo data generation tool");
     TCLAP::MultiArg<std::string> inputs("f", "file", "input/output file.",
                                         true, "filename");
     TCLAP::SwitchArg noverify("n", "noverify", "disable the checksum test",
@@ -82,7 +79,7 @@ int main(int argc, char* argv[])
                                    static_cast<uint32_t>(0), uint);
     TCLAP::ValueArg<uint32_t> mem("e", "memory", "gigabytes of memory "
                                    "to be used for UVF creation", false, 
-                                   static_cast<uint32_t>(1), uint);
+                                   static_cast<uint32_t>(0), uint);
     TCLAP::ValueArg<size_t> sizeX("x", "sizeX", "width of created volume",
                                   false, static_cast<size_t>(100), uint);
     TCLAP::ValueArg<size_t> sizeY("y", "sizeY", "height of created volume",
@@ -166,6 +163,12 @@ int main(int argc, char* argv[])
   }
 
   if (bCreateFile) {
+
+    if (iMem == 0)
+     iMem = uint32_t(Controller::Instance().SysInfo()->GetMaxUsableCPUMem()/1024/1024);
+    MESSAGE("Using up to %u MB RAM", iMem);
+    cout << endl;
+
     if (!CreateUVFFile(strUVFName, vSize, iBitSize, bMandelbulb, iIter,
                        bUseToCBlock, bKeepRaw, bZlib, iMem, iBrickSize))
       return EXIT_FAILURE;
