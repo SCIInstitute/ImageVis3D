@@ -9,7 +9,6 @@
 #include "BlockInfo.h"
 #include "Basics/SystemInfo.h"
 
-
 using namespace boost;
 using namespace std;
 using namespace tuvok;
@@ -165,8 +164,8 @@ int main(int argc, char* argv[])
   if (bCreateFile) {
 
     if (iMem == 0)
-     iMem = uint32_t(Controller::Instance().SysInfo()->GetMaxUsableCPUMem()/1024/1024);
-    MESSAGE("Using up to %u MB RAM", iMem);
+     iMem = uint32_t(Controller::Instance().SysInfo()->GetMaxUsableCPUMem()/1024/1024/1024);
+    MESSAGE("Using up to %u GB RAM", iMem);
     cout << endl;
 
     if (!CreateUVFFile(strUVFName, vSize, iBitSize, bMandelbulb, iIter,
