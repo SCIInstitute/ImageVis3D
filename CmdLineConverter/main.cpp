@@ -50,6 +50,7 @@
 #include "DebugOut/HRConsoleOut.h"
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/SysTools.h"
+#include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/IO/AbstrConverter.h"
 #include "../Tuvok/IO/AbstrGeoConverter.h"
 #include "../Tuvok/IO/DirectoryParser.h"
@@ -213,6 +214,13 @@ int main(int argc, const char* argv[])
   }
 
   Controller::Instance().AddDebugOut(debugOut);
+  Controller::Instance().SetMaxCPUMem(0.8f);
+  uint32_t mem = uint32_t(Controller::Instance().SysInfo()->GetMaxUsableCPUMem()/1024/1024);
+  MESSAGE("Using up to %u MB RAM", mem);
+  cout << endl;
+
+
+
   IOManager ioMan;
 
   // If they gave us an expression, evaluate that.  Otherwise we're doing a
