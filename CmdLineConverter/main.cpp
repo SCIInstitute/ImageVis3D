@@ -219,8 +219,6 @@ int main(int argc, const char* argv[])
   MESSAGE("Using up to %u MB RAM", mem);
   cout << endl;
 
-
-
   IOManager ioMan;
 
   // If they gave us an expression, evaluate that.  Otherwise we're doing a
