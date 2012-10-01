@@ -1091,3 +1091,30 @@ void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {
   }
 }
 
+static std::string readfile(const std::string& filename) {
+  std::ifstream ifs(filename.c_str(), std::ios::in);
+  ifs >> noskipws;
+  return std::string(
+    (std::istream_iterator<char>(ifs)),
+    (std::istream_iterator<char>())
+  );
+}
+
+bool MainWindow::RunLuaScript(const std::string& strFilename) {
+  shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+  ss->setExpectedExceptionFlag(true);
+  try {
+    ss->exec(readfile(strFilename));
+  } catch(const tuvok::LuaError& e) {
+    T_ERROR("Lua error executing script: %s", e.what());
+    return false;
+  } catch(const std::exception& e) {
+    T_ERROR("Error executing script: %s", e.what());
+    return false;
+  } catch(...) {
+    T_ERROR("Unknown error executing script!");
+    return false;
+  }
+  ss->setExpectedExceptionFlag(false);
+  return true;
+}

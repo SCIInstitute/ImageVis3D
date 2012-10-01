@@ -114,6 +114,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void LoadTransferFunction1D(const std::string& tf);
     void LoadTransferFunction2D(const std::string& tf);
 
+    bool RunLuaScript(const std::string& strFilename);
+
   public slots:
     void SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
                                        unsigned int iCurrentCount,
@@ -479,7 +481,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void LuaSetIsoValueFloat(float fValue);
     void LuaSetIsoValueInteger(int iValue);
-    
+
     void RegisterLuaClasses();
 
     std::string ConvertTF(const std::string& strSource1DTFilename,
