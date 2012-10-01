@@ -1198,7 +1198,7 @@
              <item>
               <widget class="QRadioButton" name="radioButton_TRaycast">
                <property name="text">
-                <string>Tree Raycaster</string>
+                <string>Grid Leaper</string>
                </property>
               </widget>
              </item>

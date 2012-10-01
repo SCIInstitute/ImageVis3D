@@ -740,7 +740,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
     if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR ||
         m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER ||
         m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR ||
-        m_eVolumeRendererType == MasterController::DIRECTX_TRAYCASTER) {
+        m_eVolumeRendererType == MasterController::DIRECTX_GRIDLEAPER) {
       renderWin = new RenderWindowDX(m_MasterController, m_eVolumeRendererType, dataset,
                                      iCounter++, m_bPowerOfTwo, m_bDownSampleTo8Bits,
                                      m_bDisableBorder, this, 0);
@@ -757,7 +757,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
     if (m_eVolumeRendererType == MasterController::DIRECTX_SBVR ||
         m_eVolumeRendererType == MasterController::DIRECTX_RAYCASTER ||
         m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR ||
-        m_eVolumeRendererType == MasterController::DIRECTX_TRAYCASTER) {
+        m_eVolumeRendererType == MasterController::DIRECTX_GRIDLEAPER) {
       ShowInformationDialog( "No DirectX Support", "The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
       m_MasterController.DebugOut()->Message("MainWindow::CreateNewRenderWindow","The system was unable to open a DirectX 10 render window, falling back to OpenGL. Please check your settings.");
 
@@ -768,7 +768,7 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
       else if (m_eVolumeRendererType == MasterController::DIRECTX_2DSBVR)
         m_eVolumeRendererType = MasterController::OPENGL_2DSBVR;
       else
-        m_eVolumeRendererType = MasterController::OPENGL_TRAYCASTER;
+        m_eVolumeRendererType = MasterController::OPENGL_GRIDLEAPER;
     }
     QGLFormat fmt;
     fmt.setAlpha(true);
