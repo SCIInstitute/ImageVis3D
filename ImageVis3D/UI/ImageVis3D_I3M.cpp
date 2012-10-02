@@ -190,8 +190,8 @@ void MainWindow::TransferToI3M() {
     }
 
     ;
-    const std::vector<std::shared_ptr<Mesh> > meshes = 
-        ss->cexecRet<std::vector<std::shared_ptr<Mesh> > >(
+    const std::vector<std::shared_ptr<Mesh>> meshes = 
+        ss->cexecRet<std::vector<std::shared_ptr<Mesh>>>(
             ds.fqName() + ".getMeshes");
     string filenameOnly = SysTools::RemoveExt(SysTools::GetFilename(
             ss->cexecRet<string>(ds.fqName() + ".fullpath")));

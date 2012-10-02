@@ -252,7 +252,7 @@ void Q1DTransferFunction::DrawFunctionPlots(QPainter& painter) {
 
   // Retrieve color data from Lua script class.
   std::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-  shared_ptr<vector<FLOATVECTOR4> > cdata = 
+  shared_ptr<vector<FLOATVECTOR4>> cdata = 
       ss->cexecRet<shared_ptr<vector<FLOATVECTOR4> > >(
           m_trans.fqName() + ".getColorData");
 

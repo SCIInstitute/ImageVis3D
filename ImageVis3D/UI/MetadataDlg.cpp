@@ -51,7 +51,7 @@ void MetadataDlg::SetFilename(const QString& strFilename) {
   TextLabel_Metadata->setText("Metadata for " + strFilename);
 }
 
-void MetadataDlg::SetMetadata(const std::vector< std::pair < std::string, std::string > >& metadata) {
+void MetadataDlg::SetMetadata(const std::vector<std::pair<std::string, std::string>>& metadata) {
   listWidget_metadata->clear();
 
   for (size_t i = 0;i<metadata.size();i++) {

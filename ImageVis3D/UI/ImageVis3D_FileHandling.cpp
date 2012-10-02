@@ -188,8 +188,8 @@ bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
   pleaseWait.SetText("Exporting Mesh...");
   pleaseWait.AttachLabel(&m_MasterController);
 
-  std::vector<shared_ptr<Mesh> > meshes = 
-      ss->cexecRet<std::vector<shared_ptr<Mesh> > >(ds.fqName() + "getMeshes");
+  std::vector<shared_ptr<Mesh>> meshes =
+      ss->cexecRet<std::vector<shared_ptr<Mesh>>>(ds.fqName() + "getMeshes");
   return ss->cexecRet<bool>("tuvok.io.exportMesh", meshes[i], strFilename);
 }
 
@@ -270,7 +270,7 @@ void MainWindow::AddGeometry(std::string filename) {
 
   std::shared_ptr<Mesh> m;
   try {
-    m = ss->cexecRet<std::shared_ptr<Mesh> >("tuvok.io.loadMesh", filename);
+    m = ss->cexecRet<std::shared_ptr<Mesh>>("tuvok.io.loadMesh", filename);
   } catch (const tuvok::io::DSOpenFailed& err) {
     WARNING("Conversion failed! %s", err.what());
   }

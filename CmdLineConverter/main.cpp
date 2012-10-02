@@ -453,7 +453,7 @@ int main(int argc, const char* argv[])
     cout << "\nRunning in directory mode.\nConverting "
          << strInDir << " to " << strOutFile << "\n\n";
 
-    vector<std::shared_ptr<FileStackInfo> > dirinfo =
+    vector<std::shared_ptr<FileStackInfo>> dirinfo =
       ioMan.ScanDirectory(strInDir);
 
     vector<string> vStrFilenames(dirinfo.size());

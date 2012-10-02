@@ -307,7 +307,7 @@ void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
   QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
 
   // Obtain swatch vector from Lua.
-  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
 
   // render swatches
   for (size_t i = 0;i<GetSwatchCount();i++) {
@@ -436,7 +436,7 @@ void Q2DTransferFunction::DrawSwatches(QPainter& painter) {
 
   QBrush solidBrush = QBrush(m_colorSwatchBorderCircle, Qt::SolidPattern);
 
-  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
 
   // render swatches
   for (size_t i = 0;i<GetSwatchCount();i++) {
@@ -510,7 +510,7 @@ void Q2DTransferFunction::DragInit(INTVECTOR2 vMousePressPos, Qt::MouseButton mo
 
   if (m_eTransferFunctionMode == TFM_EXPERT) {
 
-    shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+    shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
     if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex<int(GetSwatchCount())) {
       const TFPolygon& currentSwatch = (*swatches)[m_iActiveSwatchIndex];
 
@@ -671,7 +671,7 @@ bool Q2DTransferFunction::PointInPolygon(const FLOATVECTOR2& point, const TFPoly
 int Q2DTransferFunction::PickEdge(const FLOATVECTOR2& pickPos, int& iEdgeIndex) const {
   FLOATVECTOR2 pixelPickPos = FLOATVECTOR2(Normalized2Screen(pickPos));
 
-  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
   for (vector<TFPolygon>::const_iterator it = swatches->begin(); 
        it != swatches->end(); ++it) {
     const TFPolygon& currentSwatch = *it;
@@ -702,7 +702,7 @@ int Q2DTransferFunction::PickEdge(const FLOATVECTOR2& pickPos, int& iEdgeIndex) 
 }
 
 int Q2DTransferFunction::PickGradient(const FLOATVECTOR2& pickPos) const {
-  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
   for (vector<TFPolygon>::const_iterator it = swatches->begin(); 
        it != swatches->end(); ++it) {
     const TFPolygon& currentSwatch = *it;
@@ -721,7 +721,7 @@ int Q2DTransferFunction::PickGradient(const FLOATVECTOR2& pickPos) const {
 }
 
 int Q2DTransferFunction::PickVertex(const FLOATVECTOR2& pickPos, int& iVertexIndex) const {
-  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
   for (vector<TFPolygon>::const_iterator it = swatches->begin(); 
        it != swatches->end(); ++it) {
     const TFPolygon& currentSwatch = *it;
@@ -741,7 +741,7 @@ int Q2DTransferFunction::PickVertex(const FLOATVECTOR2& pickPos, int& iVertexInd
 }
 
 int Q2DTransferFunction::PickSwatch(const FLOATVECTOR2& pickPos) const {
-  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
   for (vector<TFPolygon>::const_iterator it = swatches->begin(); 
        it != swatches->end(); ++it) {
     const TFPolygon& currentSwatch = *it;
@@ -887,7 +887,7 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
       // system. When we are done modifying the current swatch, we will call
       // swatchUpdate. This will allow us to record the update for provenance 
       // purposes.
-      shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+      shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
       TFPolygon currentSwatch = (*swatches)[m_iActiveSwatchIndex];
 
       if (m_bDraggingAll)  {
@@ -941,7 +941,7 @@ void Q2DTransferFunction::mouseMoveEvent(QMouseEvent *event) {
                 static_cast<size_t>(m_iActiveSwatchIndex), currentSwatch);
     } else {
       if (m_iActiveSwatchIndex < 0) return;
-      shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+      shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
       TFPolygon currentSwatch = (*swatches)[m_iActiveSwatchIndex];
 
       switch (m_eSimpleDragMode) {
@@ -1159,7 +1159,7 @@ Q2DTransferFunction::ComputeCachedImageSize(uint32_t &w , uint32_t &h) const {
   // but is no smaller than the widget
 
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  VECTOR2<size_t> rendererSize = ss->cexecRet<VECTOR2<size_t> >(
+  VECTOR2<size_t> rendererSize = ss->cexecRet<VECTOR2<size_t>>(
       m_trans.fqName() + ".getRenderSize");
 
   w = uint32_t(width());
@@ -1234,8 +1234,8 @@ void Q2DTransferFunction::paintEvent(QPaintEvent *event) {
 bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
   // hand the load call over to the TransferFunction1D class
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-  VECTOR2<size_t> transSize = ss->cexecRet<VECTOR2<size_t> >(m_trans.fqName() +
-                                                             ".getSize");
+  VECTOR2<size_t> transSize = ss->cexecRet<VECTOR2<size_t>>(m_trans.fqName() +
+                                                            ".getSize");
   if (ss->cexecRet<bool>(m_trans.fqName() + ".loadWithSize", 
                          strFilename.toStdString(), transSize)) {
     m_iActiveSwatchIndex = 0;
@@ -1428,7 +1428,7 @@ void Q2DTransferFunction::Transfer2DDeleteSwatch(){
 void Q2DTransferFunction::Transfer2DUpSwatch(){
   if (m_iActiveSwatchIndex > 0) {
     shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-    shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+    shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
     TFPolygon tmp = (*swatches)[m_iActiveSwatchIndex-1];
 
     ss->cexec(m_trans.fqName() + ".swatchUpdate", 
@@ -1449,7 +1449,7 @@ void Q2DTransferFunction::Transfer2DDownSwatch(){
   int lastSwatchIndex = static_cast<int>(
       ss->cexecRet<size_t>(m_trans.fqName() + ".swatchGetCount")-1);
   if (m_iActiveSwatchIndex >= 0 && m_iActiveSwatchIndex < lastSwatchIndex) {
-    shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+    shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
     TFPolygon tmp = (*swatches)[m_iActiveSwatchIndex+1];
 
     ss->cexec(m_trans.fqName() + ".swatchUpdate", 
@@ -1482,7 +1482,7 @@ void Q2DTransferFunction::SetActiveGradientType(bool bRadial) {
 
 void Q2DTransferFunction::AddGradient(GradientStop stop) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
   const TFPolygon& currentSwatch = (*swatches)[m_iActiveSwatchIndex];
   for (std::vector< GradientStop >::const_iterator i = 
        currentSwatch.pGradientStops.begin();
@@ -1534,7 +1534,7 @@ void Q2DTransferFunction::UpdateSwatchType(size_t i) {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   std::string desc = m_vSimpleSwatchInfo[i].m_strDesc;
 
-  shared_ptr<const vector<TFPolygon> > swatches = GetSwatches();
+  shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
   TFPolygon tmp = (*swatches)[i];
   m_vSimpleSwatchInfo[i] = ClassifySwatch(tmp);
   // Tmp might have been mutated by ClassifySwatch, so we need to inform
@@ -1629,10 +1629,10 @@ GradientStop Q2DTransferFunction::GetGradient(unsigned int i) {
 }
 
 
-shared_ptr<const vector<TFPolygon> > Q2DTransferFunction::GetSwatches() const {
+shared_ptr<const vector<TFPolygon>> Q2DTransferFunction::GetSwatches() const {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-  shared_ptr<const vector<TFPolygon> > swatches = 
-      ss->cexecRet<shared_ptr<const vector<TFPolygon> > >(m_trans.fqName() +
-                                                          ".swatchGet");
+  shared_ptr<const vector<TFPolygon>> swatches = 
+      ss->cexecRet<shared_ptr<const vector<TFPolygon>>>(m_trans.fqName() +
+                                                        ".swatchGet");
   return swatches;
 }

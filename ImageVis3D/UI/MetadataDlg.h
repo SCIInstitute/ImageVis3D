@@ -50,7 +50,7 @@ class MetadataDlg : public QDialog, protected Ui_MetadataDlg
     virtual ~MetadataDlg();
 
     void SetFilename(const QString& strFilename);
-    void SetMetadata(const std::vector< std::pair < std::string, std::string > >& metadata);
+    void SetMetadata(const std::vector<std::pair<std::string, std::string>>& metadata);
 
 };
 

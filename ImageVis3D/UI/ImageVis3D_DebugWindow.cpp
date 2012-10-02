@@ -135,7 +135,7 @@ void MainWindow::ListSupportedVolumes() {
   ss->cexec("print", "Supported volume formats are:");
 
   std::vector<tConverterFormat> conv =
-      ss->cexecRet<std::vector<tConverterFormat> >("tuvok.io.getFormatList");
+      ss->cexecRet<std::vector<tConverterFormat>>("tuvok.io.getFormatList");
 
   for (size_t i=0; i < conv.size(); i++) {
     string strVolumeFormats = "  " + std::get<0>(conv[i]) + " " + std::get<1>(conv[i]);
@@ -156,7 +156,7 @@ void MainWindow::ListSupportedGeometry() {
   ss->cexec("print", "Supported geometry formats are:");
 
   std::vector<tConverterFormat> conv =
-      ss->cexecRet<std::vector<tConverterFormat> >("tuvok.io.getGeoFormatList");
+      ss->cexecRet<std::vector<tConverterFormat>>("tuvok.io.getGeoFormatList");
 
   for (size_t i=0; i < conv.size(); i++) {
     string strGeoFormats = "  " + std::get<0>(conv[i]) + " " + std::get<1>(conv[i]);

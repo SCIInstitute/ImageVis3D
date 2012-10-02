@@ -84,7 +84,7 @@ void BrowseData::SetBrightness(int iScale) {
 bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  m_dirInfo = ss->cexecRet<vector<shared_ptr<FileStackInfo> > >(
+  m_dirInfo = ss->cexecRet<vector<shared_ptr<FileStackInfo>>>(
       "tuvok.io.scanDirectory", m_strDir.toStdString());
 
   m_vRadioButtons.clear();

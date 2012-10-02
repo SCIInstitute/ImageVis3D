@@ -62,14 +62,14 @@ class BrowseData : public QDialog, protected Ui_BrowseData
     virtual void SetBrightness(int iScale);
 
   private:
-    MasterController&                                 m_MasterController;
-    bool                                              m_bDataFound;
-    QString                                           m_strDir;
-    std::vector<QDataRadioButton*>                    m_vRadioButtons;
-    std::vector<std::shared_ptr<FileStackInfo> > m_dirInfo;
-    size_t                                            m_iSelected;
+    MasterController&                           m_MasterController;
+    bool                                        m_bDataFound;
+    QString                                     m_strDir;
+    std::vector<QDataRadioButton*>              m_vRadioButtons;
+    std::vector<std::shared_ptr<FileStackInfo>> m_dirInfo;
+    size_t                                      m_iSelected;
 
     bool FillTable(QDialog* pleaseWaitDialog);
-    virtual void showEvent ( QShowEvent * event );
+    virtual void showEvent (QShowEvent* event);
 };
 #endif // BROWSEDATA_H

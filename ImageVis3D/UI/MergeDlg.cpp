@@ -76,7 +76,7 @@ void MergeDlg::AnalyzeCurrentDataset() {
     shared_ptr<LuaScripting> ss(m_pMainWindow->m_MasterController.LuaScript());
 
     string filename = m_vDataSetList[iCurrent]->m_strFilename;
-    tuple<bool, RangeInfo> analyzeRes = ss->cexecRet<tuple<bool, RangeInfo> >(
+    tuple<bool, RangeInfo> analyzeRes = ss->cexecRet<tuple<bool, RangeInfo>>(
         "tuvok.io.analyzeDataset", filename, m_pMainWindow->GetTempDir());
     if (true == std::get<0>(analyzeRes)) {
       RangeInfo info = std::get<1>(analyzeRes);

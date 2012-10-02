@@ -837,9 +837,9 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   LuaClassInstance ds = sender->GetRendererDataset();
   std::pair<double,double> range = 
-      ss->cexecRet<std::pair<double,double> >(ds.fqName() + ".getRange");
+      ss->cexecRet<std::pair<double,double>>(ds.fqName() + ".getRange");
   shared_ptr<const Histogram1D> hist1D = 
-      ss->cexecRet<shared_ptr<const Histogram1D> >(
+      ss->cexecRet<shared_ptr<const Histogram1D>>(
           ds.fqName() + ".get1DHistogram");
   LuaClassInstance tf1d = sender->GetRendererTransferFunction1D();
   m_1DTransferFunction->SetData(hist1D,
@@ -849,7 +849,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
 
   MESSAGE("Getting 2D Transfer Function.");
   shared_ptr<const Histogram2D> hist2D = 
-      ss->cexecRet<shared_ptr<const Histogram2D> >(
+      ss->cexecRet<shared_ptr<const Histogram2D>>(
           ds.fqName() + ".get2DHistogram");
   LuaClassInstance tf2d = sender->GetRendererTransferFunction2D();
   m_2DTransferFunction->SetData(hist2D, tf2d);
@@ -913,7 +913,7 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   UINT64VECTOR3 vSize = ss->cexecRet<UINT64VECTOR3>(
           ds.fqName() + ".getDomainSize", size_t(0), size_t(0));
   uint64_t iBitWidth = ss->cexecRet<uint64_t>(ds.fqName() + ".getBitWidth");
-  pair<double, double> pRange = ss->cexecRet<pair<double, double> >(
+  pair<double, double> pRange = ss->cexecRet<pair<double, double>>(
       ds.fqName() + ".getRange");
   uint64_t numDSTimesteps = ss->cexecRet<uint64_t>(ds.fqName() 
                                                    + ".getNumberOfTimesteps");
@@ -1035,7 +1035,7 @@ void MainWindow::RestoreMeshTransform(ScaleAndBiasDlg* sender) {
   if (!m_pActiveRenderWin || !sender) return;
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
-  vector<shared_ptr<Mesh> > meshes = ss->cexecRet<vector<shared_ptr<Mesh> > >(
+  vector<shared_ptr<Mesh>> meshes = ss->cexecRet<vector<shared_ptr<Mesh>>>(
       ds.fqName() + ".getMeshes");
   const shared_ptr<Mesh> m = meshes[sender->m_index];
   m_pActiveRenderWin->RendererReloadMesh(sender->m_index, m);
@@ -1542,8 +1542,8 @@ void MainWindow::DisplayMetadata() {
   if (m_pActiveRenderWin)  {
     shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
-    const vector< pair <string, string > >& metadata = 
-        ss->cexecRet<vector<pair <string, string> >>(ds.fqName() + ".getMetadata");
+    const vector<pair<string, string>>& metadata = 
+        ss->cexecRet<vector<pair<string, string>>>(ds.fqName() + ".getMetadata");
 
     if (metadata.size() > 0) {
       m_pMetadataDialog->setWindowIcon(windowIcon());
