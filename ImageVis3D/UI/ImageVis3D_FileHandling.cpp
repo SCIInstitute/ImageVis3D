@@ -722,8 +722,8 @@ bool MainWindow::RebrickDataset(QString filename, QString targetFilename,
 
       if (rebrickedFilename == filename) {
         ShowCriticalDialog("Input Error",
-                           "Rebricking can not be performed in place"
-                           ", please select another file.");
+                           "Rebricking can not be performed in place, "
+                           "please select another file.");
       } else {
         settings.setValue("Folders/GetConvFilename",
                           QFileInfo(rebrickedFilename).absoluteDir().path());
@@ -732,10 +732,10 @@ bool MainWindow::RebrickDataset(QString filename, QString targetFilename,
         pleaseWait.SetText("Rebricking, please wait  ...");
         pleaseWait.AttachLabel(&m_MasterController);
 
-        if (!ss->cexecRet<bool>("tuvok.io.rebrickDataset", 
-                                string(filename.toAscii()), 
-                                string(rebrickedFilename.toAscii()),
-                                m_strTempDir, false)) {
+        if(!ss->cexecRet<bool>("tuvok.io.rebrickDataset",
+                               string(filename.toAscii()),
+                               string(rebrickedFilename.toAscii()),
+                               m_strTempDir)) {
           ShowCriticalDialog("Error during rebricking.",
                              "The system was unable to rebrick the data set, "
                              "please check the error log for details (Menu -> "
