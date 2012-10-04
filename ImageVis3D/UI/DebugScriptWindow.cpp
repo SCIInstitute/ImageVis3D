@@ -138,6 +138,9 @@ void DebugScriptWindow::setupUI()
       editContents->setLayout(editLayout);
 
       mScriptTextEdit = new QTextEdit();
+      QFont font("Monospace");
+      font.setStyleHint(QFont::TypeWriter);
+      mScriptTextEdit->setCurrentFont(font);
       editLayout->addWidget(mScriptTextEdit);
 
       // Combo box combined with execute button.
