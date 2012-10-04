@@ -404,7 +404,13 @@ void DebugScriptWindow::execClicked()
 void DebugScriptWindow::oneLineEditOnReturnPressed()
 {
   QString qs = mScriptOneLineEdit->text();
-  execLua(qs.toStdString());
+  // Test to see if the user typed help. If they did, rename it to: 
+  // helpAllFunctions().
+  // help(...) has replaced the info function.
+  if (qs.compare("help", Qt::CaseInsensitive) == 0)
+    execLua("helpAllFunctions()");
+  else
+    execLua(qs.toStdString());
   mSavedInput.push_back(qs.toStdString());
   mSavedInputPos = static_cast<int>(mSavedInput.size()) - 1;
   mScriptOneLineEdit->setText(QString::fromUtf8(""));
@@ -430,18 +436,6 @@ void DebugScriptWindow::execLua(const std::string& cmd)
     std::string error = "Lua Error: ";
     error += e.what();
     hook_logError(error);
-
-    // Check to see if we want to tell the user to add the parenthesis at the
-    // end of the function.
-    std::string extraInfoWarn("attempt to call a string value");
-    if (extraInfoWarn.compare(e.what()) == 0)
-    {
-      hook_logError("  Note: Fixing this error might be as simple as adding "
-                    "parenthesis '()' to the end of your command.");
-      hook_logError("  Lua will not execute functions unless they are qualified"
-                    " by the suffix '()'");
-      hook_logError("  Try help()");
-    }
   }
   catch (std::exception& e)
   {
