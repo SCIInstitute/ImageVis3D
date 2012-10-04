@@ -84,13 +84,10 @@ void DebugScriptWindow::setupUI()
   mMainLayout->setContentsMargins(9, 9, 9, 9);
   mMainLayout->setObjectName(QString::fromUtf8("verticalLayout"));
 
-  mTabWidget = new QTabWidget;
-  mMainLayout->addWidget(mTabWidget);
-
   // Script debug implementation.
   {
     QWidget* scriptTabContents = new QWidget();
-    mTabWidget->addTab(scriptTabContents, QString::fromUtf8("script"));
+    mMainLayout->addWidget(scriptTabContents);
 
     QHBoxLayout* scriptLayout = new QHBoxLayout(scriptTabContents);
     scriptTabContents->setLayout(scriptLayout);
@@ -272,12 +269,6 @@ void DebugScriptWindow::setupUI()
                          SLOT(execClicked()));
       }
     }
-  }
-
-  // Debug output from the program.
-  {
-    QWidget* debugTabContents = new QWidget();
-    mTabWidget->addTab(debugTabContents, QString::fromUtf8("debug"));
   }
 }
 

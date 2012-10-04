@@ -76,7 +76,6 @@ private:
   void hook_logError(std::string error);
 
   QVBoxLayout*  mMainLayout;
-  QTabWidget*   mTabWidget;
   QComboBox*    mScriptExamplesBox;
   QPushButton*  mExecButton;
   QListWidget*  mListWidget;
