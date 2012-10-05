@@ -41,8 +41,10 @@ man=$(manual)
 import=$(import_data_manual)
 pushd ${PREFIX}/Contents/Resources
   rm -f ImageVis3D.pdf
+  echo "Downloading manual from: ${man}"
   curl -skLO "${man}"
   mv $(basename "${man}") ImageVis3D.pdf
+  echo "Downloading import data manual from: ${import}"
   curl -skLO "${import}"
 popd
 
