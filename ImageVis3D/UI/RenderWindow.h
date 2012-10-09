@@ -443,7 +443,7 @@ class RenderWindow
     void MoveViewerWithMouse(const FLOATVECTOR3& vDirection);
     void MoveViewer(const FLOATVECTOR3& vDirection);
     void RotateViewerWithMouse(const INTVECTOR2& viMouseDelta);
-    void RotateViewer(const FLOATVECTOR2& vfAngles);
+    void RotateViewer(const FLOATVECTOR3& vfAnglesInDegree);
 
     void SetRotation(tuvok::LuaClassInstance region,
                      FLOATMATRIX4 newRotation);

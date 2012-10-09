@@ -1032,11 +1032,11 @@ void RenderWindow::RotateViewerWithMouse(const INTVECTOR2& viMouseDelta) {
   const FLOATVECTOR2 vfMouseDelta(viMouseDelta.x/float(availableRect.width()), 
                                   viMouseDelta.y/float(availableRect.height()));
 
-  RotateViewer(FLOATVECTOR2(-vfMouseDelta.x*450.f, -vfMouseDelta.y*450.f));
+  RotateViewer(FLOATVECTOR3(-vfMouseDelta.x*450.f, -vfMouseDelta.y*450.f, 0.f));
 }
 
 
-void RenderWindow::RotateViewer(const FLOATVECTOR2& vfAngles) {
+void RenderWindow::RotateViewer(const FLOATVECTOR3& vfAngles) {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string an = GetLuaAbstrRenderer().fqName();
 
@@ -1048,12 +1048,13 @@ void RenderWindow::RotateViewer(const FLOATVECTOR2& vfAngles) {
 
   FLOATVECTOR3 left = upVec % viewDir;
 
-  FLOATMATRIX4 matRotationX, matRotationY;
-  matRotationX.RotationAxis(upVec.normalized(), (vfAngles.x * M_PI) / 180.0);
-  matRotationY.RotationAxis(left.normalized(),  (vfAngles.y * M_PI) / 180.0);
+  FLOATMATRIX4 matRotationX, matRotationY, matRotationZ;
+  matRotationX.RotationAxis(upVec.normalized(),   (vfAngles.x * M_PI) / 180.0);
+  matRotationY.RotationAxis(left.normalized(),    (vfAngles.y * M_PI) / 180.0);
+  matRotationZ.RotationAxis(viewDir.normalized(), (vfAngles.z * M_PI) / 180.0);
 
-  viewDir =  matRotationX * viewDir * matRotationY;
-  upVec   = upVec   * matRotationY;
+  viewDir = matRotationX * viewDir * matRotationY;
+  upVec   = matRotationZ * upVec * matRotationY;
 
   ss->cexec(an + ".setViewDir", viewDir);
   ss->cexec(an + ".setUpDir", upVec);
@@ -1203,6 +1204,38 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
     case Qt::Key_Plus :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
         MoveViewerWithMouse(FLOATVECTOR3(0,-1,0));
+      }
+      break;
+    //case Qt::Key_Slash :
+    case Qt::Key_7 :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        RotateViewer(FLOATVECTOR3(0,0,0.5)); // roll left
+      }
+      break;
+    //case Qt::Key_Asterisk :
+    case Qt::Key_9 :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        RotateViewer(FLOATVECTOR3(0,0,-0.5)); // roll right
+      }
+      break;
+    case Qt::Key_4 :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        RotateViewer(FLOATVECTOR3(0.5,0,0)); // pitch left
+      }
+      break;
+    case Qt::Key_6 :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        RotateViewer(FLOATVECTOR3(-0.5,0,0)); // pitch right
+      }
+      break;
+    case Qt::Key_8 :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        RotateViewer(FLOATVECTOR3(0,0.5,0)); // yaw up
+      }
+      break;
+    case Qt::Key_5 :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        RotateViewer(FLOATVECTOR3(0,-0.5,0)); // yaw down
       }
       break;
     case Qt::Key_NumLock :
