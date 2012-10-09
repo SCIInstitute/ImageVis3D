@@ -1238,7 +1238,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
         RotateViewer(FLOATVECTOR3(0,-0.5,0)); // yaw down
       }
       break;
-    case Qt::Key_NumLock :
+    case Qt::Key_0 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
         // initialize key frame capture mode in script window:
 /*
@@ -1252,7 +1252,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
         io.output("KeyFrames.txt")
 
         function writeKeyFrameToFile()
-          io.write("points[" .. i .. "] = {eye={x="..rw.getViewPos()[1]..", y="..rw.getViewPos()[2]..", z="..rw.getViewPos()[3].."}, ref={x="..rw.getViewDir()[1]..", y="..rw.getViewDir()[2]..", z="..rw.getViewDir()[3].."}, vup={x="..rw.getUpDir()[1]..", y="..rw.getUpDir()[2]..", z="..rw.getUpDir()[3].."} }");i=i+1;io.flush()
+          io.write("points[" .. i .. "] = {eye={x="..rw.getViewPos()[1]..", y="..rw.getViewPos()[2]..", z="..rw.getViewPos()[3].."}, ref={x="..rw.getViewDir()[1]..", y="..rw.getViewDir()[2]..", z="..rw.getViewDir()[3].."}, vup={x="..rw.getUpDir()[1]..", y="..rw.getUpDir()[2]..", z="..rw.getUpDir()[3].."}}");i=i+1;io.flush()
         end
 */
         ss->exec("writeKeyFrameToFile()");
