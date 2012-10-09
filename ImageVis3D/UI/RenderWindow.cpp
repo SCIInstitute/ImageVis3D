@@ -1209,13 +1209,13 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
     //case Qt::Key_Slash :
     case Qt::Key_7 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        RotateViewer(FLOATVECTOR3(0,0,0.5)); // roll left
+        RotateViewer(FLOATVECTOR3(0,0,-0.5)); // roll left
       }
       break;
     //case Qt::Key_Asterisk :
     case Qt::Key_9 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        RotateViewer(FLOATVECTOR3(0,0,-0.5)); // roll right
+        RotateViewer(FLOATVECTOR3(0,0,0.5)); // roll right
       }
       break;
     case Qt::Key_4 :
