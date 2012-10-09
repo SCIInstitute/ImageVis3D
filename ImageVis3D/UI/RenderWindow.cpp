@@ -1211,16 +1211,16 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
 /*
         data = iv3d.renderer.new(filename)
         data.lighting(false)
-          data.resize({960, 540})
-          --mat = matrix.rotateX(100)
-          --data.setTransform(mat)
-          rw = data.getRawRenderer()
-          i=0
-          io.output("KeyFrames0.txt")
+        data.resize({960, 540})
+        --mat = matrix.rotateX(100)
+        --data.setTransform(mat)
+        rw = data.getRawRenderer()
+        i=1
+        io.output("KeyFrames.txt")
 
-          function writeKeyFrameToFile()
-            io.write("points[" .. i .. "] = {eye={x="..rw.getViewPos()[1]..", y="..rw.getViewPos()[2]..", z="..rw.getViewPos()[3].."}, ref={x="..rw.getViewDir()[1]..", y="..rw.getViewDir()[2]..", z="..rw.getViewDir()[3].."}, vup={x="..rw.getUpDir()[1]..", y="..rw.getUpDir()[2]..", z="..rw.getUpDir()[3].."}, t=ti};ti=ti+inc\n");i=i+1;io.flush()
-          end
+        function writeKeyFrameToFile()
+          io.write("points[" .. i .. "] = {eye={x="..rw.getViewPos()[1]..", y="..rw.getViewPos()[2]..", z="..rw.getViewPos()[3].."}, ref={x="..rw.getViewDir()[1]..", y="..rw.getViewDir()[2]..", z="..rw.getViewDir()[3].."}, vup={x="..rw.getUpDir()[1]..", y="..rw.getUpDir()[2]..", z="..rw.getUpDir()[3].."} }");i=i+1;io.flush()
+        end
 */
         ss->exec("writeKeyFrameToFile()");
       }
