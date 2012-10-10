@@ -1223,7 +1223,7 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
       break;
     case Qt::Key_6 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        RotateViewer(FLOATVECTOR3(1,0,0)); // pitch right
+        RotateViewer(FLOATVECTOR3(-1,0,0)); // pitch right
       }
       break;
     case Qt::Key_8 :
