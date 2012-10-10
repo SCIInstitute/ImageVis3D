@@ -1196,66 +1196,115 @@ void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
         MoveViewerWithMouse(FLOATVECTOR3(0,0,-1));
       }
       break;
-    case Qt::Key_Minus : 
+    case Qt::Key_Home : 
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
         MoveViewerWithMouse(FLOATVECTOR3(0,1,0));
       }
       break;
-    case Qt::Key_Plus :
+    case Qt::Key_End :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
         MoveViewerWithMouse(FLOATVECTOR3(0,-1,0));
       }
       break;
-    //case Qt::Key_Slash :
     case Qt::Key_7 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        RotateViewer(FLOATVECTOR3(0,0,-0.5)); // roll left
+        RotateViewer(FLOATVECTOR3(0,0,-1)); // roll left
       }
       break;
-    //case Qt::Key_Asterisk :
     case Qt::Key_9 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        RotateViewer(FLOATVECTOR3(0,0,0.5)); // roll right
+        RotateViewer(FLOATVECTOR3(0,0,1)); // roll right
       }
       break;
     case Qt::Key_4 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        RotateViewer(FLOATVECTOR3(0.5,0,0)); // pitch left
+        RotateViewer(FLOATVECTOR3(1,0,0)); // pitch left
       }
       break;
     case Qt::Key_6 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        RotateViewer(FLOATVECTOR3(-0.5,0,0)); // pitch right
+        RotateViewer(FLOATVECTOR3(1,0,0)); // pitch right
       }
       break;
     case Qt::Key_8 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        RotateViewer(FLOATVECTOR3(0,0.5,0)); // yaw up
+        RotateViewer(FLOATVECTOR3(0,1,0)); // yaw up
       }
       break;
     case Qt::Key_5 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        RotateViewer(FLOATVECTOR3(0,-0.5,0)); // yaw down
+        RotateViewer(FLOATVECTOR3(0,-1,0)); // yaw down
       }
       break;
     case Qt::Key_0 :
       if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
-        // initialize key frame capture mode in script window:
-/*
-        data = iv3d.renderer.new(filename)
-        data.lighting(false)
-        data.resize({960, 540})
-        --mat = matrix.rotateX(100)
-        --data.setTransform(mat)
-        rw = data.getRawRenderer()
-        i=1
-        io.output("KeyFrames.txt")
-
-        function writeKeyFrameToFile()
-          io.write("points[" .. i .. "] = {eye={x="..rw.getViewPos()[1]..", y="..rw.getViewPos()[2]..", z="..rw.getViewPos()[3].."}, ref={x="..rw.getViewDir()[1]..", y="..rw.getViewDir()[2]..", z="..rw.getViewDir()[3].."}, vup={x="..rw.getUpDir()[1]..", y="..rw.getUpDir()[2]..", z="..rw.getUpDir()[3].."}}");i=i+1;io.flush()
-        end
-*/
-        ss->exec("writeKeyFrameToFile()");
+        try {
+          ss->exec("key0Pressed()");
+        } catch (const tuvok::LuaError&) {}
+      }
+      break;
+    case Qt::Key_1 :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        try {
+          ss->exec("key1Pressed()");
+        } catch (const tuvok::LuaError&) {}
+      }
+      break;
+    case Qt::Key_2 :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        try {
+          ss->exec("key2Pressed()");
+        } catch (const tuvok::LuaError&) {}
+      }
+      break;
+    case Qt::Key_3 :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        try {
+          ss->exec("key3Pressed()");
+        } catch (const tuvok::LuaError&) {}
+      }
+      break;
+    case Qt::Key_Slash :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        try {
+          ss->exec("keySlashPressed()");
+        } catch (const tuvok::LuaError&) {}
+      }
+      break;
+    case Qt::Key_Asterisk :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        try {
+          ss->exec("keyAsteriskPressed()");
+        } catch (const tuvok::LuaError&) {}
+      }
+      break;
+    case Qt::Key_Minus :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        try {
+          ss->exec("keyMinusPressed()");
+        } catch (const tuvok::LuaError&) {}
+      }
+      break;
+    case Qt::Key_Plus :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        try {
+          ss->exec("keyPlusPressed()");
+        } catch (const tuvok::LuaError&) {}
+      }
+      break;
+    case Qt::Key_Comma :
+    case Qt::Key_Period :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        try {
+          ss->exec("keyCommaOrPeriodPressed()");
+        } catch (const tuvok::LuaError&) {}
+      }
+      break;
+    case Qt::Key_Enter :
+      if (m_bFirstPersonMode && selectedRegion.isValid(ss) && IsRegion3D(selectedRegion)) {
+        try {
+          ss->exec("keyEnterPressed()");
+        } catch (const tuvok::LuaError&) {}
       }
       break;
     case Qt::Key_PageDown : case Qt::Key_PageUp :
