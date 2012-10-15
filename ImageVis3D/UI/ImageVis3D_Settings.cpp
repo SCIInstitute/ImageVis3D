@@ -334,6 +334,10 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
     }
 }
 
+#ifdef DETECTED_OS_WINDOWS
+double log2(double x) { return log(float(x)) / log(2.f); }
+#endif
+
 bool MainWindow::ShowBasicSettings(bool initOnly ) {
   QSettings set;
   PerformanceLevel lvl = static_cast<PerformanceLevel>(
