@@ -770,6 +770,12 @@ RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
       else
         m_eVolumeRendererType = MasterController::OPENGL_GRIDLEAPER;
     }
+    // if they're using the basic configuration, choose a renderer for them.
+    // We can't just choose this here because we need to query some OGL
+    // parameters to figure this out.
+    if(m_bAdvancedSettings == false) {
+      m_eVolumeRendererType = MasterController::OPENGL_CHOOSE;
+    }
     QGLFormat fmt;
     fmt.setAlpha(true);
     fmt.setRgba(true);

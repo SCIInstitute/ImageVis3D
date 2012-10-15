@@ -192,14 +192,17 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
     bool bOverrideDetMax = settings.value("OverrideDetectedMaxima", false).toBool();
     unsigned int iOverMaxCPU = settings.value("OverriddenCPUMax", 0).toUInt();
     unsigned int iOverMaxGPU = settings.value("OverriddenGPUMax", 0).toUInt();
+    settings.endGroup();
 
     string strTempDir(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
     unsigned int iMaxBrickSize = settings.value(
         "MaxBricksize", static_cast<qulonglong>(MathTools::Log2(
                 ss->cexecRet<uint64_t>("tuvok.io.getMaxBrickSize")))).toUInt();
     unsigned int iMaxMaxBrickSize = settings.value("MaxMaxBricksize", 14).toUInt();
-    
-    if (RenderWindow::GetMax3DTexDims()) { // as OpenGL specs are only available if we already opened a window this valu may be invalid (0)
+
+    // since OpenGL specs are only available if we've already opened a
+    // window, this value may be invalid (0)
+    if (RenderWindow::GetMax3DTexDims()) {
       iMaxMaxBrickSize = MathTools::Log2(RenderWindow::GetMax3DTexDims());
       settings.setValue("MaxMaxBricksize", iMaxMaxBrickSize);
     }

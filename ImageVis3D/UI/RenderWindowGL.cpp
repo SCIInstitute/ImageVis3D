@@ -36,6 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "../Tuvok/StdTuvokDefines.h"
+#include <cstring>
 #include <sstream>
 #include <3rdParty/GLEW/GL/glew.h>
 #if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
@@ -77,7 +78,7 @@ RenderWindowGL::RenderWindowGL(MasterController& masterController,
   QGLWidget(fmt, parent, glShareWidget, flags),
   RenderWindow(masterController, eType, dataset, iCounter, parent)
 {
-  if(!SetNewRenderer( bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder))
+  if(!SetNewRenderer(bUseOnlyPowerOfTwo, bDownSampleTo8Bits, bDisableBorder))
     return;
 
   setObjectName("RenderWindowGL");  // this is used by WidgetToRenderWin() to detect the type
@@ -127,6 +128,66 @@ RenderWindowGL::~RenderWindowGL()
   m_MainWindow->closeMDISubWindowWithWidget(this);
 }
 
+static bool contains(const char* haystack, const char* needle) {
+  assert(needle);
+  for(const char* h = haystack; *h; ++h) {
+    const char* n;
+    for(n = needle; *h && *n; ++n) {
+      if(tolower(*h) != tolower(*n)) {
+        break;
+      }
+      ++h;
+    }
+    // did we run off the end of needle?  then we just found it.
+    if(*n == '\0') { return true; }
+  }
+  // if we got here... nope, it's not there.
+  return false;
+}
+
+// Identify which renderer we should use based on OpenGL parameters.
+static MasterController::EVolumeRendererType choose_renderer() {
+  const GLubyte *version=glGetString(GL_VERSION);
+  GLint iMaxVolumeDims;
+  glGetIntegerv(GL_MAX_TEXTURE_SIZE, &iMaxVolumeDims);
+  // Use the grid leaper if we can.. But only on windows.
+#ifdef DETECTED_OS_WINDOWS
+  const bool OpenGLILS_EXT = glewGetExtension("GL_EXT_shader_image_load_store");
+  const bool OpenGLILS_ARB = glewGetExtension("GL_ARB_shader_image_load_store");
+  const bool OpenGL42      = atof((const char*)version) >= 4.2;
+  const bool nvidia = contains(version, "nvidia");
+  if((OpenGL42 || OpenGLILS_EXT || OpenGLILS_ARB) && iMaxVolumeDims >= 1024 &&
+     nvidia) {
+    return MasterController::OPENGL_GRIDLEAPER;
+  }
+#endif
+  // give them the 2D SBVR if they can't support 3D textures.
+  // .... and also if they have an intel card.  All intel cards report they
+  // support 3D textures, but that path is really broken.
+  const bool OpenGL3DT = glewGetExtension("GL_EXT_texture3D");
+  if(contains(reinterpret_cast<const char*>(version), "intel") || !OpenGL3DT) {
+    return MasterController::OPENGL_2DSBVR;
+  }
+
+  return MasterController::OPENGL_SBVR;
+}
+
+static std::string renderer_name(MasterController::EVolumeRendererType ren) {
+  switch(ren) {
+    case MasterController::OPENGL_2DSBVR: return "OGL 2D SBVR";
+    case MasterController::OPENGL_SBVR: return "OGL 3D SBVR";
+    case MasterController::OPENGL_RAYCASTER: return "OGL Raycaster";
+    case MasterController::OPENGL_GRIDLEAPER: return "OGL GridLeaper";
+    case MasterController::DIRECTX_2DSBVR: return "DX 2D SBVR";
+    case MasterController::DIRECTX_SBVR: return "DX 3D SBVR";
+    case MasterController::DIRECTX_RAYCASTER: return "DX Raycaster";
+    case MasterController::DIRECTX_GRIDLEAPER: return "DX GridLeaper";
+    case MasterController::OPENGL_CHOOSE: return "OGL System's Choice";
+    case MasterController::RENDERER_LAST: return "Invalid!";
+  }
+  return "Invalid";
+}
+
 void RenderWindowGL::InitializeRenderer()
 {
   // something has already gone wrong
@@ -170,7 +231,7 @@ void RenderWindowGL::InitializeRenderer()
       ms_bConservativeDepthInDriver = bOpenGL42 || bOpenGLCD_ARB;
 
       GLint iMaxVolumeDims;
-      if (bOpenGLSO12 || bOpenGL3DT ) {
+      if (bOpenGLSO12 || bOpenGL3DT) {
         glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE_EXT, &iMaxVolumeDims);
         ms_b3DTexInDriver = true;
       } else {
@@ -182,6 +243,17 @@ void RenderWindowGL::InitializeRenderer()
       char *extensions = NULL;
       extensions = (char*)glGetString(GL_EXTENSIONS);
       if (extensions != NULL)  ms_glExtString = extensions;
+
+      // replace the renderer if they wanted us to figure it out for them.
+      if(m_eRendererType == MasterController::OPENGL_CHOOSE) {
+        m_eRendererType = choose_renderer();
+        MESSAGE("Chose '%s' renderer!", renderer_name(m_eRendererType).c_str());
+        Cleanup(); // delete old renderer
+        SetNewRenderer(true, false, false);
+        Initialize();
+
+        rn = m_LuaAbstrRenderer.fqName();
+      }
 
       if (!bOpenGLSO12 && !bOpenGL3DT) { // according to spec 3D textures
                                          // are part of the OpenGl 1.2 core 
@@ -225,12 +297,10 @@ void RenderWindowGL::InitializeRenderer()
       }
 
       if (bOpenGLFBO && (bOpenGLSO20 || bOpenGLSL)) {
-
         // A small but still significant subset of cards report that they
         // support 3D textures, as long as they are 0^3 or smaller.  Yeah.
         // All such cards (that we've seen) work fine.  It's a common use
         // case, so we'll skip the warning for now.  -- tjf, Nov 18 2009
-        ;
         if (ms_iMaxVolumeDims > 0 && 
             ms_iMaxVolumeDims < ss->cexecRet<uint64_t>("tuvok.io.getMaxBrickSize")) {
           std::ostringstream warn;
@@ -251,15 +321,9 @@ void RenderWindowGL::InitializeRenderer()
         if (ms_bImageLoadStoreInDriver) {
           MESSAGE("Image Load/Store supported by driver.");
         } else {
-          MESSAGE("Image Load/Store not supported by driver, octree raycaster disabed.");
+          MESSAGE("Image Load/Store not supported by driver, "
+                  "octree raycaster disabed.");
         }
-
-        if (ms_bImageLoadStoreInDriver) {
-          MESSAGE("Image Load/Store supported by driver.");
-        } else {
-          MESSAGE("Image Load/Store not supported by driver, octree raycaster disabed.");
-        }
-
 
         m_bRenderSubsysOK = true;
       } else {

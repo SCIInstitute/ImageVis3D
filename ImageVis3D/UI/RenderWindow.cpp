@@ -2460,7 +2460,6 @@ void RenderWindow::PaintRenderer()
     if (!ss->cexecRet<bool>(rn + ".paint")) {
       static bool bBugUseronlyOnce = true;
       if (bBugUseronlyOnce) {
-
         if (m_eRendererType == MasterController::OPENGL_2DSBVR) {
           QMessageBox::critical(NULL, "Render error",
                              "The render subsystem is unable to draw the volume"
