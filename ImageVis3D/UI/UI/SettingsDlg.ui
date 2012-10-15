@@ -17,7 +17,7 @@
    <enum>Qt::DefaultContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>ImageVis3D Settings</string>
+   <string>ImageVis3D Settings (Advanced)</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
@@ -29,7 +29,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabMem">
       <attribute name="title">
@@ -240,6 +240,12 @@
        </item>
        <item>
         <widget class="QLabel" name="label_Warning32Bit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="font">
           <font>
            <weight>75</weight>
@@ -1450,17 +1456,37 @@
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="locale">
-      <locale language="English" country="UnitedStates"/>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="hLayoutButtons" stretch="0,1">
+     <item>
+      <widget class="QPushButton" name="btnBasic">
+       <property name="toolTip">
+        <string>Switch back to the basic settings dialog.</string>
+       </property>
+       <property name="text">
+        <string>Basic Settings</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="locale">
+        <locale language="English" country="UnitedStates"/>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -1473,8 +1499,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>329</x>
-     <y>472</y>
+     <x>456</x>
+     <y>541</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -1489,8 +1515,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>379</x>
-     <y>472</y>
+     <x>506</x>
+     <y>541</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -1509,8 +1535,8 @@
      <y>81</y>
     </hint>
     <hint type="destinationlabel">
-     <x>468</x>
-     <y>63</y>
+     <x>610</x>
+     <y>102</y>
     </hint>
    </hints>
   </connection>
@@ -1521,12 +1547,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>411</x>
-     <y>106</y>
+     <x>535</x>
+     <y>137</y>
     </hint>
     <hint type="destinationlabel">
-     <x>468</x>
-     <y>88</y>
+     <x>610</x>
+     <y>137</y>
     </hint>
    </hints>
   </connection>
@@ -1537,8 +1563,8 @@
    <slot>SelectBackColor1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>68</x>
-     <y>74</y>
+     <x>299</x>
+     <y>323</y>
     </hint>
     <hint type="destinationlabel">
      <x>319</x>
@@ -1553,8 +1579,8 @@
    <slot>SelectBackColor2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>91</x>
-     <y>74</y>
+     <x>525</x>
+     <y>323</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1569,8 +1595,8 @@
    <slot>SelectTextColor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>68</x>
-     <y>67</y>
+     <x>299</x>
+     <y>357</y>
     </hint>
     <hint type="destinationlabel">
      <x>278</x>
@@ -1585,8 +1611,8 @@
    <slot>SetTextOpacity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>91</x>
-     <y>67</y>
+     <x>525</x>
+     <y>358</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1601,8 +1627,8 @@
    <slot>SetMaxMemCheck()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>411</x>
-     <y>106</y>
+     <x>535</x>
+     <y>137</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1617,8 +1643,8 @@
    <slot>LODDelayChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>61</y>
+     <x>221</x>
+     <y>232</y>
     </hint>
     <hint type="destinationlabel">
      <x>119</x>
@@ -1633,8 +1659,8 @@
    <slot>MinFramerateChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>68</y>
+     <x>230</x>
+     <y>167</y>
     </hint>
     <hint type="destinationlabel">
      <x>209</x>
@@ -1649,8 +1675,8 @@
    <slot>ActTSChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>58</y>
+     <x>221</x>
+     <y>269</y>
     </hint>
     <hint type="destinationlabel">
      <x>160</x>
@@ -1665,8 +1691,8 @@
    <slot>InactTSChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>54</y>
+     <x>221</x>
+     <y>306</y>
     </hint>
     <hint type="destinationlabel">
      <x>11</x>
@@ -1681,8 +1707,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>63</y>
+     <x>368</x>
+     <y>96</y>
     </hint>
     <hint type="destinationlabel">
      <x>20</x>
@@ -1697,8 +1723,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>43</x>
-     <y>63</y>
+     <x>253</x>
+     <y>96</y>
     </hint>
     <hint type="destinationlabel">
      <x>35</x>
@@ -1713,8 +1739,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>31</x>
-     <y>63</y>
+     <x>60</x>
+     <y>96</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -1729,8 +1755,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>78</x>
-     <y>63</y>
+     <x>536</x>
+     <y>96</y>
     </hint>
     <hint type="destinationlabel">
      <x>92</x>
@@ -1745,8 +1771,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>90</x>
-     <y>63</y>
+     <x>638</x>
+     <y>96</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1761,8 +1787,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>70</y>
+     <x>85</x>
+     <y>226</y>
     </hint>
     <hint type="destinationlabel">
      <x>159</x>
@@ -1777,8 +1803,8 @@
    <slot>RemoveLogo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>46</x>
-     <y>76</y>
+     <x>75</x>
+     <y>484</y>
     </hint>
     <hint type="destinationlabel">
      <x>26</x>
@@ -1793,8 +1819,8 @@
    <slot>SelectLogo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>46</x>
-     <y>72</y>
+     <x>75</x>
+     <y>451</y>
     </hint>
     <hint type="destinationlabel">
      <x>351</x>
@@ -1809,8 +1835,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>63</y>
+     <x>85</x>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel">
      <x>349</x>
@@ -1825,8 +1851,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>91</x>
-     <y>63</y>
+     <x>424</x>
+     <y>226</y>
     </hint>
     <hint type="destinationlabel">
      <x>354</x>
@@ -1841,8 +1867,8 @@
    <slot>PickLogFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>91</x>
-     <y>67</y>
+     <x>639</x>
+     <y>403</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
@@ -1857,8 +1883,8 @@
    <slot>SelectTempDir()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>488</x>
-     <y>331</y>
+     <x>639</x>
+     <y>406</y>
     </hint>
     <hint type="destinationlabel">
      <x>358</x>
@@ -1873,8 +1899,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>37</x>
-     <y>63</y>
+     <x>146</x>
+     <y>96</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>
@@ -1889,12 +1915,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>72</x>
-     <y>119</y>
+     <x>100</x>
+     <y>167</y>
     </hint>
     <hint type="destinationlabel">
-     <x>162</x>
-     <y>114</y>
+     <x>342</x>
+     <y>170</y>
     </hint>
    </hints>
   </connection>
@@ -1905,8 +1931,8 @@
    <slot>MemMaxChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>188</x>
-     <y>123</y>
+     <x>301</x>
+     <y>170</y>
     </hint>
     <hint type="destinationlabel">
      <x>490</x>
@@ -1921,8 +1947,8 @@
    <slot>MemMaxChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>292</x>
-     <y>113</y>
+     <x>448</x>
+     <y>170</y>
     </hint>
     <hint type="destinationlabel">
      <x>490</x>
@@ -1937,8 +1963,8 @@
    <slot>OverrideMaxToggled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>64</x>
-     <y>126</y>
+     <x>92</x>
+     <y>167</y>
     </hint>
     <hint type="destinationlabel">
      <x>487</x>
@@ -1953,8 +1979,8 @@
    <slot>ToggleExperimentalFeatures()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>48</y>
+     <x>85</x>
+     <y>207</y>
     </hint>
     <hint type="destinationlabel">
      <x>7</x>
@@ -1969,12 +1995,12 @@
    <slot>MaxBSChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>251</x>
-     <y>68</y>
+     <x>352</x>
+     <y>102</y>
     </hint>
     <hint type="destinationlabel">
      <x>425</x>
-     <y>-1</y>
+     <y>0</y>
     </hint>
    </hints>
   </connection>
@@ -1985,12 +2011,28 @@
    <slot>BuilderBSChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>156</x>
-     <y>92</y>
+     <x>239</x>
+     <y>137</y>
     </hint>
     <hint type="destinationlabel">
      <x>516</x>
      <y>16</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnBasic</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>SwitchToBasic()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>65</x>
+     <y>528</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>275</y>
     </hint>
    </hints>
   </connection>
@@ -2015,5 +2057,6 @@
   <slot>MemMaxChanged()</slot>
   <slot>OverrideMaxToggled(bool)</slot>
   <slot>ToggleExperimentalFeatures()</slot>
+  <slot>SwitchToBasic()</slot>
  </slots>
 </ui>

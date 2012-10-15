@@ -98,6 +98,7 @@ contains(QMAKE_PRL_CONFIG, shared) {
 # Input
 HEADERS += StdDefines.h \
            UI/SettingsDlg.h \
+           UI/BasicSettingsDlg.h \
            UI/BrowseData.h \
            UI/ImageVis3D.h \
            UI/PleaseWait.h \
@@ -173,6 +174,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/QLightPreview.cpp \          
            UI/RenderWindowGL.cpp \
            UI/RenderWindow.cpp \
+           UI/BasicSettingsDlg.cpp \
            UI/SettingsDlg.cpp \
            UI/RAWDialog.cpp \
            UI/MIPRotDialog.cpp \           

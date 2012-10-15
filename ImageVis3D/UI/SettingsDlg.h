@@ -107,6 +107,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool GetMedianFilter() const;
     bool GetClampToEdge() const;
     uint32_t GetCompression() const;
+    bool GetUseBasicSettings() const;
 
     void Data2Form(bool bIsDirectX10Capable,
                    uint64_t iMaxCPU, uint64_t iMaxGPU,
@@ -171,6 +172,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void MaxBSChanged(int iValue);
     void BuilderBSChanged(int iValue);
     void ToggleExperimentalFeatures();
+    void SwitchToBasic();
 
   private:
     MasterController& m_MasterController;
@@ -181,6 +183,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool              m_bInit;
     int               m_InitialGPUMemMax;
     bool              m_bWarnAPIChange;
+    bool              m_bBasic;
 
     void setupUi(QDialog *SettingsDlg);
     void SetLogoLabel();

@@ -240,8 +240,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetDebugViewMask();
 
     void CheckForRedraw();
-    bool ShowSettings() {return ShowSettings(false);}
-    bool ShowSettings(bool bInitializeOnly);
+    bool ShowAdvancedSettings(bool bInitializeOnly);
+    bool ShowBasicSettings(bool initOnly);
+    bool ShowSettings(bool initOnly=false);
     void SetLighting(bool bLighting);
     void ToggleLighting();
 
@@ -357,6 +358,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     bool                                      m_bDownSampleTo8Bits;
     bool                                      m_bDisableBorder;
     bool                                      m_bI3MFeatures;
+    bool                                      m_bAdvancedSettings;
     bool                                      m_bAutoSaveGEO;
     bool                                      m_bAutoSaveWSP;
     MasterController::EVolumeRendererType     m_eVolumeRendererType;
@@ -426,6 +428,23 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void CheckSettings();
     void ApplySettings();
     void ApplySettings(RenderWindow* renderWin);
+    void SaveSettings(
+      uint64_t CPUMem, uint64_t maxCPU, uint64_t GPUMem,
+      uint64_t maxGPU, bool ignoreMax,
+      const std::string& tempDir,
+      bool checksum, unsigned framerate, bool lowResSubframes, unsigned LODDelay,
+      unsigned activeTS, unsigned inactiveTS, bool writeLog, bool showCrashDialog,
+      const std::string& logFile, uint32_t logLevel, bool showVersion,
+      bool autoSaveGeo, bool autoSaveWSP, bool autoLockCloned, bool absoluteLocks,
+      bool checkForUpdates,
+      bool checkForDevBuilds, bool showWelcome, bool invertWheel, bool i3mFeatures,
+      unsigned volRenType, unsigned blendPrecision, bool powerTwo,
+      bool downsampleTo8, bool disableBorder, const FLOATVECTOR3& backColor1,
+      const FLOATVECTOR3& backColor2, const FLOATVECTOR4& textColor,
+      const QString& logo, int logoPosition, unsigned maxBrickSize,
+      unsigned builderBrickSize, bool medianFilter, bool clampToEdge,
+      uint32_t compression, bool experimentalFeatures, bool advancedSettings
+    );
     void SetSampleRateSlider(int iValue);
     void UpdateSampleRateLabel(int iValue);
     void UpdateFoVLabel(int iValue);

@@ -45,9 +45,11 @@
 #include "../Tuvok/Controller/Controller.h"
 
 #include "ImageVis3D.h"
-#include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/MathTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
+#include "../Tuvok/Basics/SysTools.h"
+#include "SettingsDlg.h"
+#include "BasicSettingsDlg.h"
 
 using namespace std;
 
@@ -80,14 +82,105 @@ void MainWindow::CheckSettings() {
   }
 }
 
-bool MainWindow::ShowSettings(bool bInitializeOnly) {
+void MainWindow::SaveSettings(
+  uint64_t CPUMem, uint64_t maxCPU, uint64_t GPUMem,
+  uint64_t maxGPU, bool ignoreMax,
+  const std::string& tempDir,
+  bool checksum, unsigned framerate, bool lowResSubframes, unsigned LODDelay,
+  unsigned activeTS, unsigned inactiveTS, bool writeLog, bool showCrashDialog,
+  const std::string& logFile, uint32_t logLevel, bool showVersion,
+  bool autoSaveGeo, bool autoSaveWSP, bool autoLockCloned, bool absoluteLocks,
+  bool checkForUpdates,
+  bool checkForDevBuilds, bool showWelcome, bool invertWheel, bool i3mFeatures,
+  unsigned volRenType, unsigned blendPrecision, bool powerTwo,
+  bool downsampleTo8, bool disableBorder, const FLOATVECTOR3& backColor1,
+  const FLOATVECTOR3& backColor2, const FLOATVECTOR4& textColor,
+  const QString& logo, int logoPosition, unsigned maxBrickSize,
+  unsigned builderBrickSize, bool medianFilter, bool clampToEdge,
+  uint32_t compression, bool experimentalFeatures, bool advancedSettings
+) {
+  QSettings settings;
+  settings.beginGroup("Memory"); {
+    settings.setValue("MaxGPUMem", static_cast<qulonglong>(GPUMem));
+    settings.setValue("MaxCPUMem", static_cast<qulonglong>(CPUMem));
+
+    settings.setValue("OverrideDetectedMaxima", ignoreMax);
+    settings.setValue("OverriddenCPUMax", static_cast<qulonglong>(maxCPU));
+    settings.setValue("OverriddenGPUMax", static_cast<qulonglong>(maxGPU));
+
+    settings.setValue("TempDir", QString(tempDir.c_str()));
+
+    settings.setValue("MaxBricksize", maxBrickSize);
+    settings.setValue("BuilderBrickSize", builderBrickSize);
+    settings.setValue("UseMedian", medianFilter);
+    settings.setValue("ClampToEdge", clampToEdge);
+    settings.setValue("Compression", compression);
+  } settings.endGroup();
+
+  settings.beginGroup("Performance"); {
+    settings.setValue("Quickopen", checksum);
+    settings.setValue("MinFrameRate", framerate);
+    settings.setValue("UseAllMeans", lowResSubframes);
+    settings.setValue("LODDelay", LODDelay);
+    settings.setValue("ActiveTS", activeTS);
+    settings.setValue("InactiveTS", inactiveTS);
+    settings.setValue("WriteLogFile", writeLog);
+    settings.setValue("ShowCrashDialog", showCrashDialog);
+    settings.setValue("LogFileName", QString(logFile.c_str()));
+    settings.setValue("LogLevel", logLevel);
+  } settings.endGroup();
+
+  settings.beginGroup("UI"); {
+    settings.setValue("VersionInTitle", showVersion);
+    settings.setValue("AutoSaveGEO", autoSaveGeo);
+    settings.setValue("AutoSaveWSP", autoSaveWSP);
+    settings.setValue("AutoLockClonedWindow", autoLockCloned);
+    settings.setValue("AbsoluteViewLocks", absoluteLocks);
+
+    settings.setValue("CheckForUpdatesOnStartUp", checkForUpdates);
+    settings.setValue("CheckForDevBuilds", checkForDevBuilds);
+    settings.setValue("ShowWelcomeScreen", showWelcome);
+    settings.setValue("InvertMouseWheel", invertWheel);
+    settings.setValue("I3MFeatures", i3mFeatures);
+    settings.setValue("ExperimentalFeatures", experimentalFeatures);
+  } settings.endGroup();
+
+  settings.beginGroup("Renderer"); {
+    settings.setValue("RendererType", volRenType);
+    settings.setValue("BlendPrecisionMode", blendPrecision);
+    settings.setValue("PowerOfTwo", powerTwo);
+    settings.setValue("DownSampleTo8Bits", downsampleTo8);
+    settings.setValue("DisableBorder", disableBorder);
+    settings.setValue("Background1R", backColor1.x);
+    settings.setValue("Background1G", backColor1.y);
+    settings.setValue("Background1B", backColor1.z);
+    settings.setValue("Background2R", backColor2.x);
+    settings.setValue("Background2G", backColor2.y);
+    settings.setValue("Background2B", backColor2.z);
+    settings.setValue("TextR", textColor.x);
+    settings.setValue("TextG", textColor.y);
+    settings.setValue("TextB", textColor.z);
+    settings.setValue("TextA", textColor.w);
+    settings.setValue("LogoFilename", logo);
+    settings.setValue("LogoPosition", logoPosition);
+  } settings.endGroup();
+
+  settings.setValue("AdvancedSettings", advancedSettings);
+}
+
+bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
     QSettings settings;
     SettingsDlg settingsDlg(m_pActiveRenderWin != NULL, m_MasterController, this);
 
     shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
     settings.beginGroup("Memory");
-    uint64_t iMaxGPUmb = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
-    uint64_t iMaxCPUmb = std::min<uint64_t>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
+    uint64_t iMaxGPUmb = settings.value("MaxGPUMem",
+      static_cast<qulonglong>(UINT64_INVALID)
+    ).toULongLong();
+    uint64_t iMaxCPUmb = std::min<uint64_t>(settings.value("MaxCPUMem",
+      static_cast<qulonglong>(UINT64_INVALID)).toULongLong(),
+      m_MasterController.SysInfo()->GetCPUMemSize()
+    );
     // All GPU and CPU memory settings are in megabytes. Hack to resolve 64-bit
     // QSettings serialization issues on Mac OS X.
     // QVariant was being set correctly, but when serialized through QSettings,
@@ -116,7 +209,6 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bUseMedian = settings.value("UseMedian", false).toBool();
     bool bClampToEdge = settings.value("ClampToEdge", false).toBool();
     uint32_t iCompression = settings.value("Compression", 1).toUInt();
-
     settings.endGroup();
 
     settings.beginGroup("Performance");
@@ -176,104 +268,148 @@ bool MainWindow::ShowSettings(bool bInitializeOnly) {
     bool bIsDirectX10Capable = m_MasterController.SysInfo()->IsDirectX10Capable();
 
     // hand data to form
-    settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU, bOverrideDetMax,
-                          iOverMaxCPU, iOverMaxGPU, strTempDir,
-                          bQuickopen, iMinFramerate, bRenderLowResIntermediateResults, iLODDelay, iActiveTS, iInactiveTS,
-                          bWriteLogFile, bShowCrashDialog, string(strLogFileName.toAscii()), iLogLevel,
-                          bShowVersionInTitle,
-                          bAutoSaveGEO, bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
-                          bCheckForUpdatesOnStartUp, bCheckForDevBuilds, bShowWelcomeScreen,
-                          bInvWheel, bI3MFeatures,
-                          iVolRenType, iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
-                          bDisableBorder, 
-                          vBackColor1, vBackColor2, vTextColor, strLogoFilename, iLogoPos,
-                          iMaxBrickSize, iBuilderBrickSize, iMaxMaxBrickSize, bUseMedian,
-                          bClampToEdge, iCompression, expFeatures);
+    settingsDlg.Data2Form(bIsDirectX10Capable, iMaxCPU, iMaxGPU,
+      bOverrideDetMax, iOverMaxCPU, iOverMaxGPU, strTempDir,
+      bQuickopen, iMinFramerate, bRenderLowResIntermediateResults,
+      iLODDelay, iActiveTS, iInactiveTS, bWriteLogFile,
+      bShowCrashDialog, string(strLogFileName.toAscii()),
+      iLogLevel, bShowVersionInTitle, bAutoSaveGEO,
+      bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
+      bCheckForUpdatesOnStartUp, bCheckForDevBuilds,
+      bShowWelcomeScreen, bInvWheel, bI3MFeatures, iVolRenType,
+      iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
+      bDisableBorder, vBackColor1, vBackColor2, vTextColor,
+      strLogoFilename, iLogoPos, iMaxBrickSize, iBuilderBrickSize,
+      iMaxMaxBrickSize, bUseMedian, bClampToEdge, iCompression,
+      expFeatures
+    );
 
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
-      // save settings
-      settings.beginGroup("Memory");
-      // We add 500000 to round the value to the nearest megabyte.
-      // If this is not done, it appears that we lose 1 MB when reopening the
-      // preferences dialog after making modifications to the memory allocations
-      settings.setValue("MaxGPUMem", static_cast<qulonglong>(
-              (settingsDlg.GetGPUMem() + 500000) / 1000000));
-      settings.setValue("MaxCPUMem", static_cast<qulonglong>(
-              (settingsDlg.GetCPUMem() + 500000) / 1000000));
-
-      settings.setValue("OverrideDetectedMaxima", settingsDlg.OverrideMaxMem());
-      settings.setValue("OverriddenCPUMax", settingsDlg.GetMaxCPUMem());
-      settings.setValue("OverriddenGPUMax", settingsDlg.GetMaxGPUMem());
-
-
-      settings.setValue("TempDir", settingsDlg.GetTempDir().c_str());
-
-      settings.setValue("MaxBricksize", static_cast<qulonglong>(settingsDlg.GetMaxBrickSize()));
-      settings.setValue("BuilderBrickSize", static_cast<qulonglong>(settingsDlg.GetBuilderBrickSize()));
-      settings.setValue("UseMedian", settingsDlg.GetMedianFilter());
-      settings.setValue("ClampToEdge", settingsDlg.GetClampToEdge());
-      settings.setValue("Compression", settingsDlg.GetCompression());
-
-      settings.endGroup();
-
-      settings.beginGroup("Performance");
-      settings.setValue("Quickopen", settingsDlg.GetQuickopen());
-      settings.setValue("MinFrameRate", settingsDlg.GetMinFramerate());
-      settings.setValue("UseAllMeans", settingsDlg.GetUseAllMeans());
-      settings.setValue("LODDelay", settingsDlg.GetLODDelay());
-      settings.setValue("ActiveTS", settingsDlg.GetActiveTS());
-      settings.setValue("InactiveTS", settingsDlg.GetInactiveTS());
-      settings.setValue("WriteLogFile", settingsDlg.GetWriteLogFile());
-      settings.setValue("ShowCrashDialog", settingsDlg.GetShowCrashDialog());
-      settings.setValue("LogFileName", settingsDlg.GetLogFileName().c_str());
-      settings.setValue("LogLevel", (unsigned int)settingsDlg.GetLogLevel());
-      settings.endGroup();
-
-      settings.beginGroup("UI");
-      settings.setValue("VersionInTitle", settingsDlg.GetShowVersionInTitle());
-      settings.setValue("AutoSaveGEO", settingsDlg.GetAutoSaveGEO());
-      settings.setValue("AutoSaveWSP", settingsDlg.GetAutoSaveWSP());
-      settings.setValue("AutoLockClonedWindow", settingsDlg.GetAutoLockClonedWindow());
-      settings.setValue("AbsoluteViewLocks", settingsDlg.GetAbsoluteViewLocks());
-
-      settings.setValue("CheckForUpdatesOnStartUp", settingsDlg.GetCheckForUpdatesOnStartUp());
-      settings.setValue("CheckForDevBuilds", settingsDlg.GetCheckForDevBuilds());
-      settings.setValue("ShowWelcomeScreen", settingsDlg.GetShowWelcomeScreen());
-      settings.setValue("InvertMouseWheel", settingsDlg.GetInvertWheel());
-      settings.setValue("I3MFeatures", settingsDlg.GetI3MFeatures());
-      settings.setValue("ExperimentalFeatures",
-                        settingsDlg.GetExperimentalFeatures());
-      settings.endGroup();
-
-      settings.beginGroup("Renderer");
-      settings.setValue("RendererType", settingsDlg.GetVolrenType());
-      settings.setValue("BlendPrecisionMode", settingsDlg.GetBlendPrecisionMode());
-      settings.setValue("PowerOfTwo", settingsDlg.GetUseOnlyPowerOfTwo());
-      settings.setValue("DownSampleTo8Bits", settingsDlg.GetDownSampleTo8Bits());
-      settings.setValue("DisableBorder", settingsDlg.GetDisableBorder());
-      settings.setValue("Background1R", settingsDlg.GetBackgroundColor1().x);
-      settings.setValue("Background1G", settingsDlg.GetBackgroundColor1().y);
-      settings.setValue("Background1B", settingsDlg.GetBackgroundColor1().z);
-      settings.setValue("Background2R", settingsDlg.GetBackgroundColor2().x);
-      settings.setValue("Background2G", settingsDlg.GetBackgroundColor2().y);
-      settings.setValue("Background2B", settingsDlg.GetBackgroundColor2().z);
-      settings.setValue("TextR", settingsDlg.GetTextColor().x);
-      settings.setValue("TextG", settingsDlg.GetTextColor().y);
-      settings.setValue("TextB", settingsDlg.GetTextColor().z);
-      settings.setValue("TextA", settingsDlg.GetTextColor().w);
-      settings.setValue("LogoFilename", settingsDlg.GetLogoFilename());
-      settings.setValue("LogoPosition", settingsDlg.GetLogoPos());
-
-      settings.endGroup();
-
-      ApplySettings();
-
-      // as the "avoid compositing" setting may enable/disable the ability to do clearview
-      // we must doublecheck the state of the controls
-      if (m_pActiveRenderWin) ToggleClearViewControls(int(m_pActiveRenderWin->GetDynamicRange().second));
+      this->SaveSettings(
+        // We add 500000 to round the value to the nearest megabyte.
+        // If this is not done, it appears that we lose 1 MB when
+        // reopening the preferences dialog after making modifications
+        // to the memory allocations
+        ((settingsDlg.GetCPUMem() + 500000) / 1000000),
+        settingsDlg.GetMaxCPUMem(),
+        ((settingsDlg.GetGPUMem() + 500000) / 1000000),
+        settingsDlg.GetMaxGPUMem(),
+        settingsDlg.OverrideMaxMem(),
+        settingsDlg.GetTempDir(),
+        settingsDlg.GetQuickopen(), settingsDlg.GetMinFramerate(),
+        settingsDlg.GetUseAllMeans(), settingsDlg.GetLODDelay(),
+        settingsDlg.GetActiveTS(), settingsDlg.GetInactiveTS(),
+        settingsDlg.GetWriteLogFile(), settingsDlg.GetShowCrashDialog(),
+        settingsDlg.GetLogFileName(), (uint32_t)settingsDlg.GetLogLevel(),
+        settingsDlg.GetShowVersionInTitle(), settingsDlg.GetAutoSaveGEO(),
+        settingsDlg.GetAutoSaveWSP(), settingsDlg.GetAutoLockClonedWindow(),
+        settingsDlg.GetAbsoluteViewLocks(),
+        settingsDlg.GetCheckForUpdatesOnStartUp(),
+        settingsDlg.GetCheckForDevBuilds(), settingsDlg.GetShowWelcomeScreen(),
+        settingsDlg.GetInvertWheel(), settingsDlg.GetI3MFeatures(),
+        settingsDlg.GetVolrenType(), settingsDlg.GetBlendPrecisionMode(),
+        settingsDlg.GetUseOnlyPowerOfTwo(), settingsDlg.GetDownSampleTo8Bits(),
+        settingsDlg.GetDisableBorder(), settingsDlg.GetBackgroundColor1(),
+        settingsDlg.GetBackgroundColor2(), settingsDlg.GetTextColor(),
+        settingsDlg.GetLogoFilename(), settingsDlg.GetLogoPos(),
+        settingsDlg.GetMaxBrickSize(), settingsDlg.GetBuilderBrickSize(),
+        settingsDlg.GetMedianFilter(), settingsDlg.GetClampToEdge(),
+        settingsDlg.GetCompression(), settingsDlg.GetExperimentalFeatures(),
+        true
+      );
 
       return true;
-    } else return false;
+    } else {
+      if(settingsDlg.GetUseBasicSettings()) {
+        // then use the advanced setting instead.
+        m_bAdvancedSettings = false;
+        settings.setValue("AdvancedSettings", false);
+        return ShowBasicSettings(bInitializeOnly);
+      }
+      return false;
+    }
+}
+
+bool MainWindow::ShowBasicSettings(bool initOnly ) {
+  QSettings set;
+  PerformanceLevel lvl = static_cast<PerformanceLevel>(
+    set.value("BasicSettingsLevel", 0).toInt()
+  );
+  BasicSettingsDlg bsd(m_MasterController, lvl, this);
+  // to detect "i want to go to advanced mode", the dialog is actually
+  // rejected---we only have two options to work with---and then a boolean must
+  // be queried.
+  int result = bsd.exec();
+  if(result == QDialog::Rejected && bsd.GetUseAdvancedSettings()) {
+    // then use the advanced setting instead.
+    m_bAdvancedSettings = true;
+    set.setValue("AdvancedSettings", true);
+    return ShowAdvancedSettings(initOnly);
+  }
+  if(result == QDialog::Accepted) {
+    // ... apply settings.
+    MESSAGE("Applying performance level %u",
+            static_cast<unsigned>(bsd.GetPerformanceLevel()));
+    set.setValue("BasicSettingsLevel", int(bsd.GetPerformanceLevel()));
+    const SystemInfo& sinfo = *(m_MasterController.SysInfo());
+    uint64_t cpumem = sinfo.GetCPUMemSize() / (1024*1024);
+    uint64_t gpumem = sinfo.GetGPUMemSize() / (1024*1024);
+    std::string tempDir;
+    if(!SysTools::GetTempDirectory(tempDir)) {
+      SysTools::GetHomeDirectory(tempDir);
+    }
+    const bool showCrashDlg = true; // always true for 'basic' settings mode.
+    const bool i3mfeatures = false; // always for 'basic' settings mode.
+    const FLOATVECTOR3 black(0,0,0);
+    const FLOATVECTOR3 darkblue(0,0,0.2);
+    const FLOATVECTOR3 white(1,1,1);
+    switch(bsd.GetPerformanceLevel()) {
+      case MAX_RESPONSIVENESS:
+        this->SaveSettings(static_cast<uint64_t>(ceil(cpumem * 0.75)), cpumem,
+                           static_cast<uint64_t>(ceil(gpumem * 0.40)), gpumem,
+                           false, tempDir, false,
+                           60, true, 1500, 150, 70, false, showCrashDlg,
+                           tempDir+"imagevis3d.log", 1, true, true, true,
+                           true, false, true, false, true, true, i3mfeatures,
+                           MasterController::OPENGL_2DSBVR, 0, true, false,
+                           false, black, darkblue,
+                           white, "", 0, unsigned(log2(256)),
+                           unsigned(log2(128)), true, false, 1, false, false);
+        break;
+      case MIDDLE_1:
+        this->SaveSettings(static_cast<uint64_t>(ceil(cpumem * 0.77)), cpumem,
+                           static_cast<uint64_t>(ceil(gpumem * 0.60)), gpumem,
+                           false, tempDir, false,
+                           30, true, 1500, 200, 80, false, showCrashDlg,
+                           tempDir+"imagevis3d.log", 1, true, true, true,
+                           true, false, true, false, true, true, i3mfeatures,
+                           MasterController::OPENGL_SBVR, 2, true, false,
+                           false, black, darkblue,
+                           white, "", 0, unsigned(log2(256)),
+                           unsigned(log2(128)), true, false, 1, false, false);
+      case MAX_PERFORMANCE:
+        this->SaveSettings(static_cast<uint64_t>(ceil(cpumem * 0.9)), cpumem,
+                           static_cast<uint64_t>(ceil(gpumem * 0.75)), gpumem,
+                           false, tempDir, false,
+                           10, false, 1000, 500, 100, false, showCrashDlg,
+                           tempDir+"imagevis3d.log", 0, true, true, true,
+                           true, false, true, false, true, true, i3mfeatures,
+                           MasterController::OPENGL_SBVR, 2, true, false,
+                           false, black, darkblue,
+                           white, "", 0, unsigned(log2(256)),
+                           unsigned(log2(128)), true, false, 1, false, false);
+        break;
+    }
+  }
+  return true;
+}
+
+bool MainWindow::ShowSettings(bool initOnly) {
+  if(m_bAdvancedSettings) {
+    return ShowAdvancedSettings(initOnly);
+  } else {
+    return ShowBasicSettings(initOnly);
+  }
 }
 
 void MainWindow::ApplySettings() {
@@ -281,6 +417,8 @@ void MainWindow::ApplySettings() {
 
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   // Read settings
+  m_bAdvancedSettings =
+    settings.value("AdvancedSettings", m_bAdvancedSettings).toBool();
   settings.beginGroup("Performance");
   m_bQuickopen     = settings.value("Quickopen", m_bQuickopen).toBool();
   m_iMinFramerate  = settings.value("MinFrameRate", m_iMinFramerate).toUInt();
@@ -358,7 +496,7 @@ void MainWindow::ApplySettings() {
   bool bUseMedian = settings.value("UseMedian", false).toBool();
   bool bClampToEdge = settings.value("ClampToEdge", false).toBool();
   uint32_t iCompression = settings.value("Compression", 1).toUInt();
-
+  settings.endGroup();
 
   // sanity check: make sure a RGBA float brick would fit into the specified memory
   uint64_t _iMaxBrickSizeLog = iMaxBrickSizeLog;
@@ -380,9 +518,6 @@ void MainWindow::ApplySettings() {
   ss->cexec("tuvok.io.setClampToEdge", bClampToEdge);
   ss->cexec("tuvok.io.setUVFCompression", iCompression);
 
-  settings.endGroup();
-
-
   // Apply window settings
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {
     QWidget* w = mdiArea->subWindowList().at(i)->widget();
@@ -394,6 +529,10 @@ void MainWindow::ApplySettings() {
   m_MasterController.SysInfo()->SetMaxUsableGPUMem(iMaxGPU);
   m_MasterController.MemMan()->MemSizesChanged();
   ToggleLogFile();
+
+  // as the "avoid compositing" setting may enable/disable the ability to do clearview
+  // we must doublecheck the state of the controls
+  if (m_pActiveRenderWin) ToggleClearViewControls(int(m_pActiveRenderWin->GetDynamicRange().second));
 }
 
 void MainWindow::ApplySettings(RenderWindow* renderWin) {

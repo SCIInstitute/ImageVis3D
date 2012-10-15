@@ -53,7 +53,8 @@ SettingsDlg::SettingsDlg(bool bWarnAPIChange, MasterController& MasterController
   m_MasterController(MasterController),
   m_bInit(true),
   m_InitialGPUMemMax(0),
-  m_bWarnAPIChange(bWarnAPIChange)
+  m_bWarnAPIChange(bWarnAPIChange),
+  m_bBasic(false)
 {
   setupUi(this);
 }
@@ -63,8 +64,6 @@ SettingsDlg::~SettingsDlg(void)
 }
 
 void SettingsDlg::setupUi(QDialog *SettingsDlg) {
-
-
   Ui_SettingsDlg::setupUi(SettingsDlg);
 
   frame_ignoreMax->setVisible(false);
@@ -588,6 +587,9 @@ uint32_t SettingsDlg::GetCompression() const {
   }
 }
 
+bool SettingsDlg::GetUseBasicSettings() const {
+  return m_bBasic;
+}
 
 unsigned int SettingsDlg::GetVolrenType() const {
   if (radioButton_APIGL->isChecked()) {
@@ -762,5 +764,9 @@ void SettingsDlg::ToggleExperimentalFeatures() {
     if (radioButton_TRaycast->isChecked()) 
       radioButton_Raycast->setChecked(true);
   }
+}
 
+void SettingsDlg::SwitchToBasic() {
+  m_bBasic = true;
+  this->reject();
 }
