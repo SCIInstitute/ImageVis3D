@@ -155,7 +155,8 @@ static MasterController::EVolumeRendererType choose_renderer() {
   const bool OpenGLILS_EXT = glewGetExtension("GL_EXT_shader_image_load_store");
   const bool OpenGLILS_ARB = glewGetExtension("GL_ARB_shader_image_load_store");
   const bool OpenGL42      = atof((const char*)version) >= 4.2;
-  const bool nvidia = contains(version, "nvidia");
+  const bool nvidia = contains(reinterpret_cast<const char*>(version),
+                               "nvidia");
   if((OpenGL42 || OpenGLILS_EXT || OpenGLILS_ARB) && iMaxVolumeDims >= 1024 &&
      nvidia) {
     return MasterController::OPENGL_GRIDLEAPER;
