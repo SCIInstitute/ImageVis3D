@@ -35,6 +35,7 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
+#include <cmath>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtGui/QMessageBox>
