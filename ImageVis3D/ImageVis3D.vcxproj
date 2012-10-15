@@ -487,6 +487,7 @@
     <ClCompile Include="UI\AutoGen\moc_Welcome.cpp" />
     <ClCompile Include="..\Build\rcc\qrc_ImageVis3D.cpp" />
     <ClCompile Include="UI\AboutDlg.cpp" />
+    <ClCompile Include="UI\BasicSettingsDlg.cpp" />
     <ClCompile Include="UI\BrowseData.cpp" />
     <ClCompile Include="UI\BugRepDlg.cpp" />
     <ClCompile Include="UI\CrashDetDlg.cpp" />
@@ -980,6 +981,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)AutoGen\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
+    <ClInclude Include="UI\BasicSettingsDlg.h" />
     <ClInclude Include="UI\MDIRenderWin.h" />
     <ClInclude Include="UI\QDataRadioButton.h" />
     <CustomBuild Include="UI\QLightPreview.h">
