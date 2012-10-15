@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>521</width>
-    <height>482</height>
+    <width>669</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -29,7 +29,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabMem">
       <attribute name="title">
@@ -536,14 +536,14 @@
           <item>
            <widget class="QRadioButton" name="radioButton_noCompression">
             <property name="text">
-             <string>No Compression</string>
+             <string>None</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QRadioButton" name="radioButton_zlibCompression">
             <property name="text">
-             <string>zlib Compression</string>
+             <string>zlib</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -681,6 +681,9 @@
            <widget class="QCheckBox" name="checkBox_useAllMeans">
             <property name="text">
              <string>Also reduce screen resolution and sampling rate if needed</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
