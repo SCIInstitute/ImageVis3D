@@ -369,7 +369,7 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
     const bool showCrashDlg = true; // always true for 'basic' settings mode.
     const bool i3mfeatures = false; // always for 'basic' settings mode.
     const FLOATVECTOR3 black(0,0,0);
-    const FLOATVECTOR3 darkblue(0,0,0.2);
+    const FLOATVECTOR3 darkblue(0,0,0.2f);
     const FLOATVECTOR3 white(1,1,1);
     switch(bsd.GetPerformanceLevel()) {
       case MAX_RESPONSIVENESS:
