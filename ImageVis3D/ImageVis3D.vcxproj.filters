@@ -80,6 +80,9 @@
     <ClCompile Include="UI\AutoGen\moc_AboutDlg.cpp">
       <Filter>UI\Automatically Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="UI\AutoGen\moc_BasicSettingsDlg.cpp">
+      <Filter>UI\Automatically Generated Files</Filter>
+    </ClCompile>
     <ClCompile Include="UI\AutoGen\moc_BrowseData.cpp">
       <Filter>UI\Automatically Generated Files</Filter>
     </ClCompile>

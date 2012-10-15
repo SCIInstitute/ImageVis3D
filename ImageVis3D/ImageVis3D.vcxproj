@@ -458,6 +458,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UI\AutoGen\moc_AboutDlg.cpp" />
+    <ClCompile Include="UI\AutoGen\moc_BasicSettingsDlg.cpp" />
     <ClCompile Include="UI\AutoGen\moc_BrowseData.cpp" />
     <ClCompile Include="UI\AutoGen\moc_BugRepDlg.cpp" />
     <ClCompile Include="UI\AutoGen\moc_CrashDetDlg.cpp" />
