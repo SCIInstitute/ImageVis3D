@@ -348,9 +348,6 @@
     <ClInclude Include="UI\MDIRenderWin.h">
       <Filter>UI\Implemented Files</Filter>
     </ClInclude>
-    <ClInclude Include="UI\BasicSettingsDlg.h">
-      <Filter>UI\Implemented Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <UI Include="UI\UI\About.ui">
@@ -475,6 +472,9 @@
       <Filter>UI\Implemented Files\MainWindow</Filter>
     </CustomBuild>
     <CustomBuild Include="UI\DebugScriptWindow.h">
+      <Filter>UI\Implemented Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="UI\BasicSettingsDlg.h">
       <Filter>UI\Implemented Files</Filter>
     </CustomBuild>
   </ItemGroup>
