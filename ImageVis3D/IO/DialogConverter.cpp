@@ -54,7 +54,7 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
                                    uint64_t& iHeaderSkip, uint64_t& iComponentSize, uint64_t& iComponentCount, 
                                    bool& bConvertEndianess, bool& bSigned, bool& bIsFloat, UINT64VECTOR3& vVolumeSize,
                                    FLOATVECTOR3& vVolumeAspect, std::string& strTitle,
-                                   UVFTables::ElementSemanticTable& eType, std::string& strIntermediateFile,
+                                   std::string& strIntermediateFile,
                                    bool& bDeleteIntermediateFile) {
 
   if (bNoUserInteraction) return false;
@@ -89,7 +89,6 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
     if (rawDialog.ComputeExpectedSize() > iSize) return false;
 
     strTitle = "Raw data";
-    eType             = UVFTables::ES_UNDEFINED;
     iComponentCount = 1; 
     vVolumeSize    = rawDialog.GetSize();
     vVolumeAspect  = rawDialog.GetAspectRatio();

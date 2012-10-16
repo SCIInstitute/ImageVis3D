@@ -54,7 +54,7 @@ public:
                             uint64_t& iHeaderSkip, uint64_t& iComponentSize, uint64_t& iComponentCount, 
                             bool& bConvertEndianess, bool& bSigned, bool& bIsFloat, UINT64VECTOR3& vVolumeSize,
                             FLOATVECTOR3& vVolumeAspect, std::string& strTitle,
-                            UVFTables::ElementSemanticTable& eType, std::string& strIntermediateFile,
+                            std::string& strIntermediateFile,
                             bool& bDeleteIntermediateFile);
 
 protected:
