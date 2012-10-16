@@ -411,9 +411,6 @@
     <CustomBuild Include="UI\AboutDlg.h">
       <Filter>UI\Implemented Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="UI\BasicSettingsDlg.h">
-      <Filter>UI\Implemented Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="UI\BrowseData.h">
       <Filter>UI\Implemented Files</Filter>
     </CustomBuild>
