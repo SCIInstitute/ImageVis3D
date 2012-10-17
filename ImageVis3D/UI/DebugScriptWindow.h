@@ -59,6 +59,7 @@ protected slots:
   void oneLineEditOnReturnPressed();
   void oneLineEditOnEdited(const QString&);
   void exampComboIndexChanged(int index);
+  void fixFont();
 
 protected:
 
@@ -92,5 +93,4 @@ private:
 
 
 };
-
 #endif /* DEBUGSCRIPTWINDOW_H_ */

@@ -270,6 +270,7 @@ void DebugScriptWindow::setupUI()
       }
     }
   }
+  connect(mScriptTextEdit, SIGNAL(textChanged()), this, SLOT(fixFont()));
 }
 
 //-----------------------------------------------------------------------------
@@ -398,6 +399,9 @@ void DebugScriptWindow::execClicked()
 {
   QString qs = mScriptTextEdit->document()->toPlainText();
   execLua(qs.toStdString());
+  QFont font("Monospace");
+  font.setStyleHint(QFont::TypeWriter);
+  mScriptTextEdit->setCurrentFont(font);
 }
 
 //-----------------------------------------------------------------------------
@@ -454,7 +458,16 @@ void DebugScriptWindow::execLua(const std::string& cmd)
 void DebugScriptWindow::exampComboIndexChanged(int index)
 {
   QVariant text = mScriptExamplesBox->itemData(index);
+  QFont font("Monospace");
+  font.setStyleHint(QFont::TypeWriter);
+  mScriptTextEdit->setCurrentFont(font);
   mScriptTextEdit->setText(text.toString());
+}
+
+void DebugScriptWindow::fixFont() {
+  QFont font("Monospace");
+  font.setStyleHint(QFont::TypeWriter);
+  mScriptTextEdit->setCurrentFont(font);
 }
 
 //-----------------------------------------------------------------------------
