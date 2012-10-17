@@ -193,7 +193,6 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
     bool bOverrideDetMax = settings.value("OverrideDetectedMaxima", false).toBool();
     unsigned int iOverMaxCPU = settings.value("OverriddenCPUMax", 0).toUInt();
     unsigned int iOverMaxGPU = settings.value("OverriddenGPUMax", 0).toUInt();
-    settings.endGroup();
 
     string strTempDir(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
     unsigned int iMaxBrickSize = settings.value(
