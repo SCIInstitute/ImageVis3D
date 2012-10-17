@@ -166,6 +166,8 @@ void MainWindow::SaveSettings(
     settings.setValue("LogoPosition", logoPosition);
   } settings.endGroup();
 
+  ApplySettings();
+
   settings.setValue("AdvancedSettings", advancedSettings);
 }
 
