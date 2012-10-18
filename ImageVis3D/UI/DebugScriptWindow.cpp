@@ -48,7 +48,7 @@
 //-----------------------------------------------------------------------------
 DebugScriptWindow::DebugScriptWindow(tuvok::MasterController& controller,
                                      QWidget* parent)
-: QDockWidget("Debug / Scripting Window", parent)
+: QDockWidget("Scripting Window", parent)
 , mSavedInputPos(0)
 , mController(controller)
 , mMemReg(controller.LuaScript())
