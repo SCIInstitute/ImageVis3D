@@ -687,10 +687,12 @@ void MainWindow::CloneCurrentView() {
   if (m_bAutoLockClonedWindow)
     for (size_t i = 0;i<RenderWindow::ms_iLockCount;i++) SetLock(i, renderWin, m_pActiveRenderWin);
 
-  QMdiSubWindow * pActiveWin = mdiArea->activeSubWindow(); // as "show" toggles the active renderwin we need to remeber it
+  QMdiSubWindow* pActiveWin = mdiArea->activeSubWindow(); // as "show" toggles the active renderwin we need to remeber it
   renderWin->GetQtWidget()->show();
   RenderWindowActive(renderWin);
-  mdiArea->activeSubWindow()->resize(pActiveWin->size().width(), pActiveWin->size().height());
+  mdiArea->activeSubWindow()->resize(pActiveWin->size().width(),
+                                     pActiveWin->size().height());
+  SetTagVolume();
 
   CheckForMeshCapabilities(true);
 }
