@@ -44,10 +44,7 @@ pushd Tuvok\IO\test
 popd
 
 REM download documentation
-set manual="http://www.sci.utah.edu/images/docs/imagevis3d.pdf"
-set mdata="http://ci.sci.utah.edu:8011/devbuilds/GettingDataIntoImageVis3D.pdf"
-wget --no-check-certificate -q %manual%
-wget --no-check-certificate -q %mdata%
+powershell -file Scripts\dl.ps1
 
 REM bundle it
 IF "%1"=="x64" (
