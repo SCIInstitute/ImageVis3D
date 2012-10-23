@@ -29,8 +29,8 @@
 ; "iscc.exe" from Inno Setup 5.
 [Setup]
 AppName=ImageVis3D
-AppVerName=ImageVis3D 2.2.0
-AppVersion=2.2.0
+AppVerName=ImageVis3D 3.0.0
+AppVersion=3.0.0
 AppPublisher=SCI Institute
 AppPublisherURL=http://software.sci.utah.edu/
 AppSupportURL=http://software.sci.utah.edu/

@@ -41,11 +41,11 @@
 
 #include "../Tuvok/StdTuvokDefines.h"
 
-#define IV3D_MAJOR 2
-#define IV3D_MINOR 2
+#define IV3D_MAJOR 3
+#define IV3D_MINOR 0
 #define IV3D_PATCH 0
 
-#define IV3D_VERSION "2.2.0"
+#define IV3D_VERSION "3.0.0"
 #define IV3D_VERSION_TYPE "Release"
 
 #define MANUAL_NAME  "ImageVis3D.pdf"
