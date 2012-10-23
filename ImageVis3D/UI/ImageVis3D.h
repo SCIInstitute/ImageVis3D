@@ -351,7 +351,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     WelcomeDialog*                            m_pWelcomeDialog;
     MetadataDlg*                              m_pMetadataDialog;
-    DebugScriptWindow*                        m_pDebugScriptWindow;
+    //DebugScriptWindow*                        m_pDebugScriptWindow;
 
     unsigned int                              m_iBlendPrecisionMode;
     bool                                      m_bPowerOfTwo;
