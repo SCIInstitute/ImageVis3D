@@ -166,7 +166,7 @@ class RenderWindow
     void SetClipPlaneEnabled(bool, bool bPropagate = true);
     void SetClipPlaneDisplayed(bool, bool bPropagate = true);
     void SetClipPlaneRelativeLock(bool, bool bPropagate = true);
-    void SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
+    void SetIsosurfaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCVColor(const FLOATVECTOR3& vIsoColor, bool bPropagate=true);
     void SetCV(bool bDoClearView, bool bPropagate=true);
     void SetCVFocusPos(tuvok::LuaClassInstance region, const INTVECTOR2& vMousePos,
@@ -175,7 +175,7 @@ class RenderWindow
 
     /// @return the range of the currently loaded dataset
     std::pair<double,double> GetDynamicRange() const;
-    FLOATVECTOR3 GetIsosufaceColor() const;
+    FLOATVECTOR3 GetIsosurfaceColor() const;
     FLOATVECTOR3 GetCVColor() const;
 
     static const std::string& GetVendorString() {return ms_gpuVendorString;}

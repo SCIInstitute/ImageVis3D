@@ -720,7 +720,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::ChooseIsoColor()
 {
   if (m_pActiveRenderWin)  {
-    FLOATVECTOR3 vIsoColor = m_pActiveRenderWin->GetIsosufaceColor();
+    FLOATVECTOR3 vIsoColor = m_pActiveRenderWin->GetIsosurfaceColor();
     QColor color = QColorDialog::getColor(qRgba(int(vIsoColor.x*255),
                                                 int(vIsoColor.y*255),
                                                 int(vIsoColor.z*255),
@@ -729,7 +729,7 @@ void MainWindow::ChooseIsoColor()
     if (color.isValid()) {
 
       vIsoColor = FLOATVECTOR3(color.red() / 255.0f, color.green() / 255.0f, color.blue() / 255.0f);
-      m_pActiveRenderWin->SetIsosufaceColor(vIsoColor);
+      m_pActiveRenderWin->SetIsosurfaceColor(vIsoColor);
     }
   }
 }

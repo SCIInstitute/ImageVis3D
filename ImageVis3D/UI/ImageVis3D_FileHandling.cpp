@@ -942,7 +942,7 @@ bool MainWindow::ExportIsosurface(uint32_t iLODLevel, string targetFileName) {
 
     int iValue = horizontalSlider_Isovalue->value();
 
-    FLOATVECTOR4 color(m_pActiveRenderWin->GetIsosufaceColor(),1.0f);
+    FLOATVECTOR4 color(m_pActiveRenderWin->GetIsosurfaceColor(),1.0f);
 
     shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
     bool bResult = ss->cexecRet<bool>("tuvok.io.extractIsosurface",
@@ -1020,7 +1020,7 @@ bool MainWindow::ExportImageStack(uint32_t iLODLevel, std::string targetFileName
     pleaseWait.SetText("Exporting image stack, please wait  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
-    FLOATVECTOR4 color(m_pActiveRenderWin->GetIsosufaceColor(),1.0f);
+    FLOATVECTOR4 color(m_pActiveRenderWin->GetIsosurfaceColor(),1.0f);
 
     shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
     LuaClassInstance tf = m_1DTransferFunction->GetTrans();

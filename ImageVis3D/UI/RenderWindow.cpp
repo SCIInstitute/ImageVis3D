@@ -2319,13 +2319,13 @@ void RenderWindow::SetClipPlaneRelativeLock(bool bLock, bool bPropagate)
   }
 }
 
-void RenderWindow::SetIsosufaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
+void RenderWindow::SetIsosurfaceColor(const FLOATVECTOR3& vIsoColor, bool bPropagate) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
-  ss->cexec(rn + ".setIsosufaceColor", vIsoColor);
+  ss->cexec(rn + ".setIsosurfaceColor", vIsoColor);
   if (bPropagate){
     for (size_t i = 0;i<m_vpLocks[1].size();i++) {
-      m_vpLocks[1][i]->SetIsosufaceColor(vIsoColor, false);
+      m_vpLocks[1][i]->SetIsosurfaceColor(vIsoColor, false);
     }
   }
 }
@@ -2405,10 +2405,10 @@ pair<double,double> RenderWindow::GetDynamicRange() const {
   }
 }
 
-FLOATVECTOR3 RenderWindow::GetIsosufaceColor() const {
+FLOATVECTOR3 RenderWindow::GetIsosurfaceColor() const {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
-  return ss->cexecRet<FLOATVECTOR3>(rn + ".getIsosufaceColor");
+  return ss->cexecRet<FLOATVECTOR3>(rn + ".getIsosurfaceColor");
 }
 
 FLOATVECTOR3 RenderWindow::GetCVColor() const {
