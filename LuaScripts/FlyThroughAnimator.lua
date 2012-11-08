@@ -24,17 +24,24 @@ iv3d.setStayOpen(true)
 
 inputDir = 'S:/Share/Datasets/Octrees/ImageVis/'
 
---filename = inputDir ..'PacVis2012/Bonsai-256x256x256-8bit-32.uvf'
-filename = inputDir ..'PacVis2012/Mandelbulb-4096x4096x4096-8bit-64.uvf'
+--filename = inputDir ..'mandelbulb1024-20s-bs32-8.uvf'
+--filename = inputDir ..'mandelbulb2048-20s-bs32-8.uvf'
+--filename = inputDir ..'mandelbulb4096-20s-bs32-8.uvf'
+--filename = inputDir ..'mandelbulb8192-20s-bs32-8.uvf'
+filename = inputDir ..'mandelbulb16384-20s-bs64-8.uvf'
 
 data = iv3d.renderer.new(filename)
-data.lighting(false)
-data.resize({1920, 1080})
+--data.lighting(false)
+--data.resize({1920, 1080})
+--data.resize({960, 540})
+data.resize({480, 270})
 
 rw = data.getRawRenderer()
 rw.setBGColors({0, 0, 255}, {0, 255, 255})
 --rw.setBGColors({255, 255, 255}, {255, 255, 255})
 --rw.setBGColors({0, 0, 0}, {0, 0, 0})
+
+region = rw.getFirst3DRenderRegion()
 
 -- key point capturing **************************************************************************************
 
@@ -57,6 +64,10 @@ end
 
 function cameraToString(cam)
 	return "{eye={x=".. cam.eye.x ..", y=".. cam.eye.y ..", z=".. cam.eye.z .."}, ref={x=".. cam.ref.x ..", y=".. cam.ref.y ..", z=".. cam.ref.z .."}, vup={x=".. cam.vup.x ..", y=".. cam.vup.y ..", z=".. cam.vup.z .."}}"
+end
+
+function matrixToString(mat)
+  return "{{"..mat[1][1]..", "..mat[1][2]..", "..mat[1][3]..", "..mat[1][4].."}, {"..mat[2][1]..", "..mat[2][2]..", "..mat[2][3]..", "..mat[2][4].."}, {"..mat[3][1]..", "..mat[3][2]..", "..mat[3][3]..", "..mat[3][4].."}, {"..mat[4][1]..", "..mat[4][2]..", "..mat[4][3]..", "..mat[4][4].."}}"
 end
 
 function insertKeyFrame(index)
@@ -111,8 +122,29 @@ function writeKeyFramesToFile(filename)
 		return false
 	end
 	io.output(filename)
+
+  -- would be very useful if we could read those values into a matrix easily
+  --io.write("translation = ".. matrixToString(region.getTranslation4x4()) .."\n")
+  --io.write("rotation = "..    matrixToString(region.getRotation4x4()) .."\n")
+
+  local t = region.getTranslation4x4()
+  io.write("local t=matrix.identity()\n")
+  io.write("t[1][1]="..t[1][1].."; t[1][2]="..t[1][2].."; t[1][3]="..t[1][3].."; t[1][4]="..t[1][4].."\n");
+  io.write("t[2][1]="..t[2][1].."; t[2][2]="..t[2][2].."; t[2][3]="..t[2][3].."; t[2][4]="..t[2][4].."\n");
+  io.write("t[3][1]="..t[3][1].."; t[3][2]="..t[3][2].."; t[3][3]="..t[3][3].."; t[3][4]="..t[3][4].."\n");
+  io.write("t[4][1]="..t[4][1].."; t[4][2]="..t[4][2].."; t[4][3]="..t[4][3].."; t[4][4]="..t[4][4].."\n");
+  io.write("region.setTranslation4x4(t)\n");
+  local r = region.getRotation4x4()
+  io.write("local r=matrix.identity()\n")
+  io.write("r[1][1]="..r[1][1].."; r[1][2]="..r[1][2].."; r[1][3]="..r[1][3].."; r[1][4]="..r[1][4].."\n");
+  io.write("r[2][1]="..r[2][1].."; r[2][2]="..r[2][2].."; r[2][3]="..r[2][3].."; r[2][4]="..r[2][4].."\n");
+  io.write("r[3][1]="..r[3][1].."; r[3][2]="..r[3][2].."; r[3][3]="..r[3][3].."; r[3][4]="..r[3][4].."\n");
+  io.write("r[4][1]="..r[4][1].."; r[4][2]="..r[4][2].."; r[4][3]="..r[4][3].."; r[4][4]="..r[4][4].."\n");
+  io.write("region.setRotation4x4(r)\n");
+
+  io.write("keyPoints = {}\n")
 	for i = 1, #keyPoints do
-		io.write("points[".. i .."] = ".. cameraToString(keyPoints[i]) .."\n")
+		io.write("keyPoints[".. i .."] = ".. cameraToString(keyPoints[i]) .."\n")
 	end
   io.flush()
   io.close()
@@ -356,13 +388,14 @@ function keySlashPressed()
 end
 
 -- parameters for the animation preview
-loopAnimation = false
-animation = {}  -- prepared key points
-lookup = {}     -- arc length lookup table
-indexHint = 1   -- (currently not used)
-distance = 0    -- total arc length for the whole animation path
-delta = 0.005   -- distance that should be traveled on keyPlusPressed()/keyMinusPressed()
-s = 0           -- current arc length
+loopAnimation = false -- do we want a looped animation preview?
+animation = {}        -- prepared key points
+lookup = {}           -- arc length lookup table
+indexHint = 1         -- (currently not used)
+distance = 0          -- total arc length for the whole animation path (will be computed)
+delta = 0.000         -- distance that should be traveled on keyPlusPressed()/keyMinusPressed() (good starting value is 0.005)
+frameCount = 20       -- used frame count if delta is set to zero
+s = 0                 -- current arc length
 
 function keyAsteriskPressed()
 	--print("keyAsteriskPressed()")
@@ -382,7 +415,6 @@ function keyAsteriskPressed()
 
 	lookup = sampleArcLength(animation, 100000)
 	distance = lookup[#lookup].distance
-  local frameCount = 100
   if delta == 0 then
     delta = distance / frameCount
   else
