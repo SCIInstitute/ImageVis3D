@@ -28,7 +28,10 @@ inputDir = 'S:/Share/Datasets/Octrees/ImageVis/'
 --filename = inputDir ..'mandelbulb2048-20s-bs32-8.uvf'
 --filename = inputDir ..'mandelbulb4096-20s-bs32-8.uvf'
 --filename = inputDir ..'mandelbulb8192-20s-bs32-8.uvf'
-filename = inputDir ..'mandelbulb16384-20s-bs64-8.uvf'
+--filename = inputDir ..'mandelbulb16384-20s-bs64-8.uvf'
+--filename = inputDir ..'RichtmyerMeshkov-2048x2048x1920-8bit-64.uvf'
+--filename = inputDir ..'VisualHuman-512x512x1884-16bit-32-median-clamp-zlib.uvf'
+filename = inputDir ..'wholebody-32.uvf'
 
 data = iv3d.renderer.new(filename)
 --data.lighting(false)
@@ -117,11 +120,7 @@ function printKeyFrames()
 end
 
 function writeKeyFramesToFile(filename)
-	if #keyPoints == 0 then
-		print("There are no captured key frames to write to file")
-		return false
-	end
-	io.output(filename)
+  io.output(filename)
 
   -- would be very useful if we could read those values into a matrix easily
   --io.write("translation = ".. matrixToString(region.getTranslation4x4()) .."\n")
@@ -141,6 +140,11 @@ function writeKeyFramesToFile(filename)
   io.write("r[3][1]="..r[3][1].."; r[3][2]="..r[3][2].."; r[3][3]="..r[3][3].."; r[3][4]="..r[3][4].."\n");
   io.write("r[4][1]="..r[4][1].."; r[4][2]="..r[4][2].."; r[4][3]="..r[4][3].."; r[4][4]="..r[4][4].."\n");
   io.write("region.setRotation4x4(r)\n");
+
+	if #keyPoints == 0 then
+		print("There are no captured key frames but dataset transformation parameters were written to file: "..filename)
+		return true
+	end
 
   io.write("keyPoints = {}\n")
 	for i = 1, #keyPoints do
