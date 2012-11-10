@@ -472,8 +472,8 @@ int main(int argc, const char* argv[])
     int iFailCount = 0;
     for (size_t i = 0;i<dirinfo.size();i++) {
       if (ioMan.ConvertDataset(&*dirinfo[i], vStrFilenames[i],
-                               SysTools::GetPath(vStrFilenames[i]), true,
-                               bricksize, brickoverlap)) {
+                               SysTools::GetPath(vStrFilenames[i]),
+                               bricksize, brickoverlap, false)) {
         cout << "\nSuccess.\n\n";
       } else {
         cout << "\nConversion failed!\n\n";
