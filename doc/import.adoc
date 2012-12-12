@@ -1,3 +1,4 @@
+// a2x: --dblatex-opts "-P latex.output.revhistory=0"
 Getting Data into ImageVis3D
 ============================
 The ImageVis3D Team <iv3d-users@sci.utah.edu>
