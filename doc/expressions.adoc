@@ -1,0 +1,166 @@
+// a2x: --dblatex-opts "-P latex.output.revhistory=0"
+ImageVis3D Expression Language
+==============================
+
+== Introduction
+
+While the visualization of single-channel data in many cases suffices
+to identify and understand some features in data, many acquisition and
+simulation processes inherently generate multi-channel data, and the
+simultaneous visualization of these channels may be the only way to
+extract the needed information.  Loading up each channel side-by-side
+may be one way to effect this, however it is sometimes necessary to
+visualize multiple fields in a single viewport.
+
+Unfortunately the volume visualization techniques which ImageVis3D
+implements---volume rendering and isosurfacing---are specified in terms
+of a single channel.  One can extend these concepts into multiple
+channels by making some simple choices, however this extension is
+always specific to the goals of a particular research pipeline and
+the data available.  For example, while your task might be to simply
+see one channel mapped to green and another mapped to red, another
+research group might want to only see areas where both channels exceed
+a combined threshold.
+
+ImageVis3D does not (yet) provide a way to dynamically configure these
+kinds of mappings.  However, what it does supply is a language by which
+you can specify the combination of multiple data volumes into a single
+scalar volume.  You can then visualize that volume in the standard
+way---by using ImageVis3D's transfer function editors, for example.
+
+This document describes how to use that expression language.
+
+== Requirements
+
+Before we get into the details, it is important to note a few
+restrictions of the system as it exists in ImageVis3D right now.
+
+=== Registration
+
+The most important restriction is that these data must be _registered_,
+or rather that they exist in the same space.  This is generally true
+if the channels arise from unique measurements of the same underlying
+data.  This restriction is imposed because ImageVis3D assumes the data
+live in the same space: the top-left of the first channel is the same
+physical location as the top-left of the fifth channel, for example.
+
+If your data are not already registered, you will need to perform a
+registration _a priori_.  Unfortunately information and tools on this
+process are not provided here.
+
+=== Limited View
+
+The second major restriction is that the combination of many data sets
+can only merge data from the corresponding voxels of other data sets;
+it cannot examine neighboring voxels, for example.  This means it is
+impossible to, for example, implement a Gaussian smoothing pass of the
+data while it is processed.
+
+If you need such functionality, we currently recommend you perform such
+a pass over the data before it is input into ImageVis3D.
+
+== Using It
+
+. *Convert data to UVF*.  Presumably you are already familiar with this
+process, as you're already using ImageVis3D!  If not, please see the
+user manual at http://www.imagevis3d.org[ImageVis3D.org]
+. *Open the expression dialog in ImageVis3D*.  You can find this under
+the +File+ menu.
+. *Add Data Sets*.  Use the button on the right to add any number of
+data sets.
+. *Select +Use a Custom Expression+* near the top.  Then enter the
+expression you want in the box.  Note the entries of the +v+ olume array
+are ordered as they are in the list below.
+
+=== Valid Expressions
+
+The expression language is meant to mimic those from modern programming
+languages.  The simplest way to figure it out is to just type in
+anything that you might put in on the right hand side of an `equals'
+sign in your favorite program language.
+
+To be more exact, the language supports:
+
+ * The standard binary operators (<, >, +, -, /, *).
+ * The unary operator -.
+ * The conditional `if-else' operator (`expression ? expression : expression')
+ * Compound expression operators (&&, ||).
+ * `volume' tatements which reference the input data (+v+).
+
+The most important component are `v` olume statements.  The language
+provides an implicit array, `v`, which are the volumes you provide as
+input.  The indices correspond to the order you defined in the GUI,
+starting at 0, and are denoted using the bracket operator `[]`. Thus,
+`v[0]` corresponds to the first volume you defined.
+
+Most operators behave as they do in a programming language.  The
+binary operators need a subexpression on either side, and the simplest
+expression is just a constant value.  So, for example, `5 < 2` is a
+valid expression, but since `2` is a subexpression, this can utilize
+any of the above rules.  Thus, `5 < (2 * v[0])` is also a valid
+expression.
+
+Compound operators exist to link subexpressions together.  The
+subexpression `(v[0] < 64) || (v[0] > 192)` is true when the datum in
+question is less than 64 *or* above 192.  The subexpression `(v[0] <
+64) && (v[0] > 192)` is true when the datum is less than 64 *and* above
+192.  Of course, in the latter case, this is never true and therefore
+the expression is always false.
+
+The unary operator `-` negates the value immediately to its right.
+
+The conditional 'if-else' operator is perhaps the most interesting.
+This expression is composed of 3 sub-expressions: `expr1 ? expr2 :
+expr3`.  The system evaluates `expr1`, and if it is true, the value of
+the overall expression is `expr2`.  If `expr1` is false, then the value
+of the overall expression is `expr3`.
+
+The language computes the indicated expression for every voxel of the
+input data independently in an unspecified order.
+
+=== Command Line Interface
+
+Expressions are also available from the command line via the
++uvfconvert+ program.  Basic operation of this program is to, for
+example, batch-convert a data set into UVF format:
+
+`uvfconvert -i /path/to/data.nhdr -o /path/to/converted.uvf`
+
+However, one can also give the program the +-e+ option to indicate that
+it should compute an expression instead.  In this case the input data
+should be in UVF format already.  So, for example, to convert two data
+sets and compute a new expression between them:
+
+ uvfconvert -i /path/to/data.nhdr -o /path/to/data.uvf
+ uvfconvert -i /path/to/weights.nhdr -o /path/to/weights.uvf
+ uvfconvert -i /path/to/weights.uvf -i /path/to/data.uvf -e "v[0] * v[1]" -o /path/to/weighted-data.uvf
+
+== Examples
+
+Here are some examples of expressions which might be useful for you:
+
+* add two volumes together: `v[0] + v[1]`.  There is an implicitly
+defined array `v` which references the volumes which are provided.  The
+array indexing begins at 0 and proceeds up to the number of volumes
+given: this corresponds either to the list of volumes provided in the
+UI, or the files given by subsequent `-i` options in the command line
+interface.
+
+* Creating a segmentation based on thresholding: `v[0] < 42 ? 1 : 0`.
+This compares each data value to the number 42; if the voxel is less
+than 42, then we set the mask.  Otherwise, we clear it.
+
+* combining a segmentation with volume data: `v[0] ? v[1] : 0`.  This
+checks `v[0]` for "truth", which implicitly means "is not 0."  Thus,
+this expression checks the value of the first volume; if it is nonzero,
+then the resultant datum is the corresponding value from the *second*
+volume.  If it *is* 0, then we also set it to 0 in the output volume.
+Therefore, this expression is equivalent to the expression: `v[0] ?
+v[1] : v[0]`.
+
+//* visualizing multiple features/signals together
+//  * with signal interference
+//  * separating out signals
+
+//. good idea to have both data in the same source width; maybe
+//  interpolate data first to make sure this is true
