@@ -100,7 +100,7 @@ string MainWindow::ConvertDataToI3M(LuaClassInstance currentDataset,
   // first, find the smalest LOD with every dimension
   // larger or equal to 128 (if possible)
   int iLODLevel = static_cast<int>(
-      ss->cexecRet<uint64_t>(currentDataset.fqName() + "getLODLevelCount")) - 1;
+      ss->cexecRet<uint64_t>(currentDataset.fqName() + ".getLODLevelCount")) - 1;
   for (;iLODLevel>0;iLODLevel--) {
     UINTVECTOR3 vLODSize = UINTVECTOR3(ss->cexecRet<UINT64VECTOR3>(
             currentDataset.fqName() + ".getDomainSize", 
