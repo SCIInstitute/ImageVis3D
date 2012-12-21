@@ -884,8 +884,10 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   checkBox_EyeSwap->setChecked(sender->GetRendererStereoEyeSwap());
 
   switch (sender->GetRendererStereoMode()) {
-    case AbstrRenderer::SM_RB : radioButton_RBStereo->setChecked(true); break;
-    default                   : radioButton_ScanlineStereo->setChecked(true); break;
+    case AbstrRenderer::SM_RB       : radioButton_RBStereo->setChecked(true); break;
+    case AbstrRenderer::SM_SCANLINE : radioButton_ScanlineStereo->setChecked(true); break;
+    case AbstrRenderer::SM_SBS      : radioButton_SideBySide->setChecked(true); break;
+    default                         : radioButton_AlterFrame->setChecked(true); break;
   }
 
   checkBox_Lighting->setChecked(sender->GetUseLighting());
