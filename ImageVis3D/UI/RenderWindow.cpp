@@ -60,7 +60,6 @@
 #include "../Tuvok/Renderer/GL/GLTargetBinder.h"
 #include "../Tuvok/LuaScripting/LuaScripting.h"
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
-#include "Basics/tr1.h"
 
 using namespace std;
 using namespace tuvok;
@@ -217,14 +216,9 @@ void RenderWindow::SetCaptureRotationAngle(float fAngle) {
 RenderWindow::RegionData*
 RenderWindow::GetRegionData(LuaClassInstance renderRegion) const
 {
-#ifdef TR1_NOT_CONST_CORRECT
-  RenderWindow *cthis = const_cast<RenderWindow*>(this);
-  RegionDataMap::const_iterator iter = cthis->regionDataMap.find(
-      renderRegion.getGlobalInstID());
-#else
   RegionDataMap::const_iterator iter = regionDataMap.find(
       renderRegion.getGlobalInstID());
-#endif
+
   if (iter == regionDataMap.end()) {
     // This should never happen if the renderRegion belongs to *this.
     assert(false);
