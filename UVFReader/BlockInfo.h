@@ -351,7 +351,7 @@ bool DisplayUVFInfo(std::string strUVFName, bool bVerify, bool bShowData,
   }
 
   for(uint64_t i = 0; i<uvfFile.GetDataBlockCount(); i++) {
-    const DataBlock* b = uvfFile.GetDataBlock(i);
+    const DataBlock* b = uvfFile.GetDataBlock(i).get();
     PrintGeneralBlockInfo(b, i);
     switch (b->GetBlockSemantic()) {
       case UVFTables::BS_TOC_BLOCK:
