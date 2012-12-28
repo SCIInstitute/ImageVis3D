@@ -25,12 +25,12 @@
    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
    DEALINGS IN THE SOFTWARE.
 */
+#include <iostream>
 #include <stdexcept>
-#include <CGLCurrent.h>
-#include <CGLTypes.h>
-#include <OpenGL.h>
+#include <OpenGL/CGLCurrent.h>
+#include <OpenGL/CGLTypes.h>
+#include <OpenGL/OpenGL.h>
 #include "cgl-context.h"
-#include "Controller/Controller.h"
 
 namespace tuvok {
 
@@ -58,13 +58,13 @@ TvkCGLContext::TvkCGLContext(uint32_t, uint32_t, uint8_t color_bits,
   CGLError glerr;
   glerr = CGLChoosePixelFormat(attribs, &ci->pix, &nscreens);
   if(glerr != kCGLNoError) {
-    T_ERROR("CGL pixel format error: %d", static_cast<int>(glerr));
+    std::cerr << "CGL pixel format error: %d" << static_cast<int>(glerr);
     throw std::runtime_error("CGL error.");
   }
 
   glerr = CGLCreateContext(ci->pix, NULL, &ci->ctx);
   if(glerr != kCGLNoError) {
-    T_ERROR("CGL ctx creation error: %d", static_cast<int>(glerr));
+    std::cerr << "CGL ctx creation error: %d" << static_cast<int>(glerr);
     throw std::runtime_error("CGL error.");
   }
 }

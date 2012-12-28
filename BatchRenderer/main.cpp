@@ -29,17 +29,16 @@
 /// Simple batch renderer using Tuvok.
 /// This file is dead simple as most of the logic resides in Lua files.
 
-//#include "StdTuvokDefines.h"
 #include <cstdlib>
 #include <iostream>
 
-#include <GL/glew.h>
+#include <GLEW/GL/glew.h>
 #include <tclap/CmdLine.h>
 
 #include "LuaScripting/LuaScripting.h"
 #include "LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 
-#include "context.h"
+#include "batchContext.h"
 
 using namespace std;
 using namespace tuvok;
@@ -64,52 +63,23 @@ int main(int argc, const char* argv[])
     return EXIT_FAILURE;
   }
 
-  try {
+  try
+  {
     // Create a new context.
-    std::auto_ptr<TvkContext> ctx(TvkContext::Create(640,480, 32,24,8, true));
-    if(!ctx->isValid() || ctx->makeCurrent() == false) {
-      T_ERROR("Could not utilize context.");
+    std::auto_ptr<BatchContext> ctx(BatchContext::Create(640,480, 32,24,8, true));
+    if(!ctx->isValid() || ctx->makeCurrent() == false) 
+    {
+      std::cerr << "Could not utilize context.";
       return EXIT_FAILURE;
     }
-    Controller::Instance().DebugOut()->SetOutput(true,true,true,true);
 
-    // Convert the data into a UVF.
-    std::string uvf_file;
-    uvf_file = SysTools::RemoveExt(filename) + ".uvf";
-    const std::string tmpdir = "/tmp/";
-    const bool quantize8 = false;
-    Controller::Instance().IOMan()->ConvertDataset(
-      filename, uvf_file, tmpdir, true, 256, 4, quantize8
-    );
-
-//    AbstrRenderer* ren;
-//    ren = Controller::Instance().RequestNewVolumeRenderer(
-//      MasterController::OPENGL_SBVR, false, false, false, false, false
-//    );
-    std::shared_ptr<LuaScripting> ss = Controller::Instance().LuaScript();
-    LuaClassInstance luaRen = ss->cexecRet<LuaClassInstance>(
-        "tuvok.renderer.new",
-        int(MasterController::OPENGL_SBVR), false, false, false, false, false);
-    ss->cexec(luaRen.fqName() + ".loadDataset", uvf_file);
-    ss->cexec(luaRen.fqName() + ".addShaderPath", "../../Shaders");
-    ss->cexec(luaRen.fqName() + ".initialize", GLContext::Current(0));
-    ss->cexec(luaRen.fqName() + ".resize", UINTVECTOR2(640,480));
-    ss->cexec(luaRen.fqName() + ".setRendererTarget",AbstrRenderer::RT_HEADLESS);
-    ss->cexec(luaRen.fqName() + ".paint");
-
-    AbstrRenderer* ren = luaRen.getRawPointer<AbstrRenderer>(ss);
-    GLRenderer* glren = dynamic_cast<GLRenderer*>(ren);
-    GLFBOTex* fbo = glren->GetLastFBO();
-    GLTargetBinder bind(&Controller::Instance());
-
-    GLFrameCapture fc;
-    fc.CaptureSingleFrame("test.png", fbo);
-
-    ss->cexec(luaRen.fqName() + ".cleanup");
-    Controller::Instance().ReleaseVolumeRenderer(ren);
-  } catch(const std::exception& e) {
+    // Tuvok specific code is in a separate file.
+  } 
+  catch(const std::exception& e)
+  {
     std::cerr << "Exception: " << e.what() << "\n";
     return EXIT_FAILURE;
   }
 
 }
+

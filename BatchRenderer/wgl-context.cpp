@@ -27,13 +27,12 @@
 */
 
 /**
-  \file    context.cpp
+  \file    wgl-context.cpp
   \author  Tom Fogal
            SCI Institute
            University of Utah
-  \brief   Establishes an OpenGL context.
+  \brief   Establishes an OpenGL context on windows.
 */
-#include "StdTuvokDefines.h"
 #ifdef DETECTED_OS_WINDOWS
 # include <windows.h>
 # include <GL/glew.h>

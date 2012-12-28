@@ -29,13 +29,15 @@
 #define TUVOK_AGL_CONTEXT_H
 
 #include <memory>
-#include "context.h"
+#include "batchContext.h"
 
-namespace tuvok {
+namespace tuvok
+{
 
 struct cinfo;
 
-class TvkAGLContext : public TvkContext {
+class TvkAGLContext : public BatchContext 
+{
   public:
     TvkAGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
                   uint8_t depth_bits, uint8_t stencil_bits,

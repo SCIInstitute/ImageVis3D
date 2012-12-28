@@ -29,13 +29,13 @@
 #define TUVOK_CGL_CONTEXT_H
 
 #include <memory>
-#include "context.h"
+#include "batchContext.h"
 
 namespace tuvok {
 
 struct cinfo;
 
-class TvkCGLContext : public TvkContext {
+class TvkCGLContext : public BatchContext {
   public:
     TvkCGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
                   uint8_t depth_bits, uint8_t stencil_bits,

@@ -25,15 +25,18 @@
    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
    DEALINGS IN THE SOFTWARE.
 */
+#include <iostream>
+
 #include <stdexcept>
 #include <AGL/agl.h>
 #include <AGL/aglRenderers.h>
 #include "agl-context.h"
-#include "Controller/Controller.h"
 
-namespace tuvok {
+namespace tuvok 
+{
 
-struct cinfo {
+struct cinfo 
+{
   AGLContext ctx;
 };
 
@@ -64,20 +67,30 @@ TvkAGLContext::TvkAGLContext(uint32_t, uint32_t, uint8_t color_bits,
   pix = aglCreatePixelFormat(attribs);
   ci->ctx = aglCreateContext(pix, NULL);
   if(ci->ctx == NULL) {
-    T_ERROR("agl context creation error: %d", static_cast<int>(aglGetError()));
+    std::cerr << "agl context creation error: " << static_cast<int>(aglGetError());
     throw std::runtime_error("agl context creation error.");
   }
   aglDestroyPixelFormat(pix);
 }
 
-TvkAGLContext::~TvkAGLContext() {
+TvkAGLContext::~TvkAGLContext() 
+{
   aglDestroyContext(ci->ctx);
 }
 
-bool TvkAGLContext::isValid() const { return ci->ctx != NULL; }
-bool TvkAGLContext::makeCurrent() {
+bool TvkAGLContext::isValid() const 
+{ 
+  return ci->ctx != NULL; 
+}
+
+bool TvkAGLContext::makeCurrent() 
+{
   return aglSetCurrentContext(ci->ctx) == GL_TRUE;
 }
-bool TvkAGLContext::swapBuffers() { aglSwapBuffers(ci->ctx); return true; }
+
+bool TvkAGLContext::swapBuffers() 
+{
+  aglSwapBuffers(ci->ctx); return true; 
+}
 
 }

@@ -30,7 +30,7 @@
 
 #include "StdTuvokDefines.h"
 #include <memory>
-#include "context.h"
+#include "batchContext.h"
 
 namespace tuvok {
   struct xinfo;

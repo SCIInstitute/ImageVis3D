@@ -25,17 +25,26 @@
    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
    DEALINGS IN THE SOFTWARE.
 */
+
+/**
+  \file    wgl-context.cpp
+  \author  Tom Fogal
+           SCI Institute
+           University of Utah
+  \brief   Establishes an OpenGL context on windows.
+*/
+
 #ifndef TUVOK_WGL_CONTEXT_H
 #define TUVOK_WGL_CONTEXT_H
 
 #include <memory>
-#include "context.h"
+#include "batchContext.h"
 
 namespace tuvok {
 
 struct winfo;
 
-class TvkWGLContext : public TvkContext {
+class TvkWGLContext : public BatchContext {
   public:
     TvkWGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
                   uint8_t depth_bits, uint8_t stencil_bits,

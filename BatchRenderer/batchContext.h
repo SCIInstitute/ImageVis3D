@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    context.cpp
+  \file    batchContext.cpp
   \author  Tom Fogal
            SCI Institute
            University of Utah
@@ -40,26 +40,31 @@
 #include <cstdint>
 #include <exception>
 
-namespace batch {
+namespace tuvok
+{
 
-class Context {
+class BatchContext
+{
   public:
-    virtual ~Context();
-    // Virtual coonstructor for appropriate kind of context.
-    static Context* Create(uint32_t width, uint32_t height,
+    /// This virtual constructor will create the appropriate context based
+    /// on the current operating system.
+    static BatchContext* Create(uint32_t width, uint32_t height,
                               uint8_t color_bits=32, uint8_t depth_bits=24,
                               uint8_t stencil_bits=8, bool double_buffer=true,
                               bool visible=false);
+    virtual ~BatchContext();
 
     virtual bool isValid() const=0;
     virtual bool makeCurrent()=0;
     virtual bool swapBuffers()=0;
 };
 
-class NoAvailableContext : public std::exception {
+class NoAvailableContext : public std::exception
+{
   public:
     virtual ~NoAvailableContext() throw() {}
-    virtual const char* what() const throw() {
+    virtual const char* what() const throw()
+    {
       return "No context was available to utilize.";
     }
 };
