@@ -73,6 +73,8 @@ int main(int argc, const char* argv[])
       return EXIT_FAILURE;
     }
 
+    // Test rendering to a context.
+
     // Tuvok specific code is in a separate file.
   } 
   catch(const std::exception& e)

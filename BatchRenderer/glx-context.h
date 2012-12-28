@@ -35,7 +35,7 @@
 namespace tuvok {
   struct xinfo;
 
-  class TvkGLXContext: public TvkContext {
+  class TvkGLXContext: public BatchContext {
     public:
       TvkGLXContext(uint32_t w, uint32_t h, uint8_t color_bits,
                     uint8_t depth_bits, uint8_t stencil_bits,
