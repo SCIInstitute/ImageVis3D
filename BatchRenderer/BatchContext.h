@@ -37,26 +37,32 @@
 #ifndef BATCH_RENDERER_CONTEXT_H
 #define BATCH_RENDERER_CONTEXT_H
 
-#include <cstdint>
 #include <exception>
+
+#include "Renderer/Context.h"       // Tuvok specific
 
 namespace tuvok
 {
 
-class BatchContext
+class BatchContext : public Context // Tuvok specific
 {
-  public:
-    /// This virtual constructor will create the appropriate context based
-    /// on the current operating system.
-    static BatchContext* Create(uint32_t width, uint32_t height,
+public:
+  /// This virtual constructor will create the appropriate context based
+  /// on the current operating system.
+  static BatchContext* Create(uint32_t width, uint32_t height,
                               uint8_t color_bits=32, uint8_t depth_bits=24,
                               uint8_t stencil_bits=8, bool double_buffer=true,
                               bool visible=false);
-    virtual ~BatchContext();
+  virtual ~BatchContext() {}
 
-    virtual bool isValid() const=0;
-    virtual bool makeCurrent()=0;
-    virtual bool swapBuffers()=0;
+  virtual bool isValid() const=0;
+  virtual bool makeCurrent()=0;
+  virtual bool swapBuffers()=0;
+
+protected:
+
+  BatchContext();
+
 };
 
 class NoAvailableContext : public std::exception

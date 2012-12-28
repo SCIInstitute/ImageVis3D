@@ -29,27 +29,27 @@
 #define TUVOK_AGL_CONTEXT_H
 
 #include <memory>
-#include "batchContext.h"
+#include "BatchContext.h"
 
 namespace tuvok
 {
 
-struct cinfo;
+struct AGLContextInfo;
 
-class TvkAGLContext : public BatchContext 
+class AGLBatchContext : public BatchContext 
 {
-  public:
-    TvkAGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
-                  uint8_t depth_bits, uint8_t stencil_bits,
-                  bool double_buffer, bool visible);
-    virtual ~TvkAGLContext();
+public:
+  AGLBatchContext(uint32_t w, uint32_t h, uint8_t color_bits,
+             uint8_t depth_bits, uint8_t stencil_bits,
+             bool double_buffer, bool visible);
+  virtual ~AGLBatchContext();
 
-    bool isValid() const;
-    bool makeCurrent();
-    bool swapBuffers();
+  bool isValid() const;
+  bool makeCurrent();
+  bool swapBuffers();
 
-  private:
-    std::shared_ptr<struct cinfo> ci;
+private:
+  std::shared_ptr<AGLContextInfo> mContextInfo;
 };
 
 }

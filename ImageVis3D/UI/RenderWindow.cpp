@@ -2713,3 +2713,4 @@ void RenderWindow::RegisterLuaFunctions(
                     "captures whatever's in the buffer now", true);
   ss->addParamInfo(id, 0, "filename", "Filename to save it in");
 }
+

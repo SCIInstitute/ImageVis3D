@@ -28,27 +28,31 @@
 #ifndef TUVOK_GLX_CONTEXT_H
 #define TUVOK_GLX_CONTEXT_H
 
-#include "StdTuvokDefines.h"
 #include <memory>
-#include "batchContext.h"
+#include "BatchContext.h"
 
-namespace tuvok {
-  struct xinfo;
+namespace tuvok
+{
 
-  class TvkGLXContext: public BatchContext {
-    public:
-      TvkGLXContext(uint32_t w, uint32_t h, uint8_t color_bits,
-                    uint8_t depth_bits, uint8_t stencil_bits,
-                    bool double_buffer,
-                    bool visible);
-      virtual ~TvkGLXContext();
+struct xinfo;
 
-      bool isValid() const;
-      bool makeCurrent();
-      bool swapBuffers();
+class GLXContext: public BatchContext
+{
+public:
+  GLXContext(uint32_t w, uint32_t h, uint8_t color_bits,
+             uint8_t depth_bits, uint8_t stencil_bits,
+             bool double_buffer,
+             bool visible);
+  virtual ~GLXContext();
 
-    private:
-      std::shared_ptr<struct xinfo> xi;
-  };
+  bool isValid() const;
+  bool makeCurrent();
+  bool swapBuffers();
+
+private:
+  std::shared_ptr<struct xinfo> xi;
+};
+
 }
+
 #endif /* TUVOK_GLX_CONTEXT_H */

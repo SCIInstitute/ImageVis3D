@@ -39,44 +39,61 @@
 
 #include <GLEW/GL/glew.h>
 
-#include "batchContext.h"
+#include "Renderer/GL/GLStateManager.h"
+#include "BatchContext.h"
 
-#include "agl-context.h"
-#include "cgl-context.h"
-#include "glx-context.h"
-#include "wgl-context.h"
+#include "AGLContext.h"
+#include "CGLContext.h"
+#include "GLXContext.h"
+#include "WGLContext.h"
+#include "NSContext.h"
 
 namespace tuvok
 {
 
-BatchContext::~BatchContext() { }
+BatchContext::BatchContext() :
+    Context(0)    // Tuvok specific
+{
+  ctx = nullptr;  // Tuvok specific
+}
 
 BatchContext* BatchContext::Create(uint32_t width, uint32_t height,
-                               uint8_t color_bits, uint8_t depth_bits,
-                               uint8_t stencil_bits, bool double_buffer,
-                               bool visible)
+                                   uint8_t color_bits, uint8_t depth_bits,
+                                   uint8_t stencil_bits, bool double_buffer,
+                                   bool visible)
 {
-  BatchContext* ctx;
+  BatchContext* bctx;
 #ifdef DETECTED_OS_WINDOWS
-  ctx = new TvkWGLContext(width, height, color_bits, depth_bits, stencil_bits,
-                          double_buffer, visible);
+  bctx = new WGLContext(width, height, color_bits, depth_bits, stencil_bits,
+                       double_buffer, visible);
 #elif defined(DETECTED_OS_APPLE) && defined(USE_CGL)
-  ctx = new TvkCGLContext(width, height, color_bits, depth_bits, stencil_bits,
-                          double_buffer, visible);
+  bctx = new CGLContext(width, height, color_bits, depth_bits, stencil_bits,
+                       double_buffer, visible);
 #elif defined(DETECTED_OS_APPLE)
-  ctx = new TvkAGLContext(width, height, color_bits, depth_bits, stencil_bits,
-                          double_buffer, visible);
+  bctx = new NSContext(width, height, color_bits, depth_bits, stencil_bits,
+                      double_buffer, visible);
 #else
-  ctx = new TvkGLXContext(width, height, color_bits, depth_bits, stencil_bits,
-                          double_buffer, visible);
+  bctx = new GLXContext(width, height, color_bits, depth_bits, stencil_bits,
+                       double_buffer, visible);
 #endif
+  if (bctx->makeCurrent() == false)
+    std::cerr << "Unable to make context current!" << std::endl;
+
   GLenum glerr = glewInit();
   if (GLEW_OK != glerr) 
   {
-    std::cerr << "Error initializing GLEW: %s" << glewGetErrorString(glerr) << "\n";
+    std::cerr << "Error initializing GLEW: " << glewGetErrorString(glerr) << "\n";
     throw std::runtime_error("could not initialize GLEW.");
   }
-  return ctx;
+
+  // Tuvok specific
+  bctx->m_pState = std::shared_ptr<StateManager>(new GLStateManager());
+
+  // Tuvok specific (this is really bad, but no one uses the pointer to the
+  // context anyways...).
+  bctx->ctx = (const void*)bctx;
+
+  return bctx;
 }
 
 }

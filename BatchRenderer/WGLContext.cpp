@@ -27,7 +27,7 @@
 */
 
 /**
-  \file    wgl-context.cpp
+  \file    WGLContext.cpp
   \author  Tom Fogal
            SCI Institute
            University of Utah
@@ -40,20 +40,22 @@
 #else
 # include <GL/glxew.h>
 #endif
-#include "Controller/Controller.h"
 
-#include "wgl-context.h"
+#include "WGLContext.h"
 #include <sstream>
 
-namespace tuvok {
+namespace tuvok
+{
 
-struct winfo {
+struct winfo
+{
   HDC deviceContext;
   HGLRC renderingContext;
   HWND window;
 };
 
-static void outputLastError() {
+static void outputLastError()
+{
   DWORD lastError = GetLastError();
   LPVOID msgBuffer;
   FormatMessageW(
@@ -69,7 +71,7 @@ static void outputLastError() {
   LocalFree(msgBuffer);
 }
 
-TvkWGLContext::TvkWGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
+WGLContext::WGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
                              uint8_t depth_bits, uint8_t stencil_bits,
                              bool double_buffer, bool visible) :
   wi(new struct winfo())
@@ -81,7 +83,8 @@ TvkWGLContext::TvkWGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
      !(color_bits==8 || color_bits==16 || color_bits==24 || color_bits==32) ||
      !(depth_bits==8 || depth_bits==16 || depth_bits==24 || depth_bits==32 ||
        depth_bits==0) ||
-     !(stencil_bits == 0 || stencil_bits == 8)) {
+     !(stencil_bits == 0 || stencil_bits == 8))
+  {
     T_ERROR("Invalid parameters passed to constructor.");
     throw NoAvailableContext();
   }
@@ -95,14 +98,18 @@ TvkWGLContext::TvkWGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
     outputLastError();
     return;
   }
-  if(visible) {
+  if(visible)
+  {
     ShowWindow(wi->window, SW_SHOW);
-  } else {
+  } 
+  else
+  {
     ShowWindow(wi->window, SW_HIDE);
   }
 
   wi->deviceContext = GetDC(wi->window);
-  if(!wi->deviceContext) {
+  if(!wi->deviceContext)
+  {
     // GetDC doesn't SetLastError, but this still works anyway...
     outputLastError();
     DestroyWindow(wi->window);
@@ -160,26 +167,31 @@ TvkWGLContext::TvkWGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
     throw NoAvailableContext();
   }
 
-  if (double_buffer && !(pfdResult.dwFlags & PFD_DOUBLEBUFFER)) {
+  if (double_buffer && !(pfdResult.dwFlags & PFD_DOUBLEBUFFER))
+  {
     WARNING("No double buffer support!");
   }
 
   std::ostringstream ss;
-  if (pfdResult.cColorBits != color_bits) {
+  if (pfdResult.cColorBits != color_bits) 
+  {
     ss << "Color bits requested: " << color_bits << ", actual color bits: "
        << pfdResult.cColorBits << "\n";
   }
-  if (pfdResult.cDepthBits != depth_bits) {
+  if (pfdResult.cDepthBits != depth_bits) 
+  {
     ss << "Depth bits requested " << depth_bits << ", actual depth bits: "
        << pfdResult.cDepthBits << "\n";
   }
-  if (pfdResult.cStencilBits != stencil_bits) {
+  if (pfdResult.cStencilBits != stencil_bits) 
+  {
     ss << "Stencil bits requested " << stencil_bits << ", actual stencil bits:"
        << pfdResult.cStencilBits << "\n";
   }
   MESSAGE("%s", ss.str().c_str());
 
-  if (!SetPixelFormat(wi->deviceContext, pixelFormat, &pfd)) {
+  if (!SetPixelFormat(wi->deviceContext, pixelFormat, &pfd)) 
+  {
     outputLastError();
     ReleaseDC(wi->window, wi->deviceContext);
     DestroyWindow(wi->window);
@@ -188,7 +200,8 @@ TvkWGLContext::TvkWGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
 
   wi->renderingContext = wglCreateContext(wi->deviceContext);
 
-  if (!wi->renderingContext) {
+  if (!wi->renderingContext) 
+  {
     outputLastError();
     ReleaseDC(wi->window, wi->deviceContext);
     DestroyWindow(wi->window);
@@ -197,33 +210,35 @@ TvkWGLContext::TvkWGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
   makeCurrent();
 }
 
-TvkWGLContext::~TvkWGLContext()
+WGLContext::~WGLContext()
 {
   wglDeleteContext(wi->renderingContext);
   ReleaseDC(wi->window, wi->deviceContext);
   DestroyWindow(wi->window);
 }
 
-bool TvkWGLContext::isValid() const
+bool WGLContext::isValid() const
 {
   // Object would not be created otherwise (throw in constructor)
   return true;
 }
 
-bool TvkWGLContext::makeCurrent()
+bool WGLContext::makeCurrent()
 {
-  if(!wglMakeCurrent(wi->deviceContext, wi->renderingContext)) {
+  if(!wglMakeCurrent(wi->deviceContext, wi->renderingContext)) 
+  {
     outputLastError();
     return false;
   }
   return true;
 }
 
-bool TvkWGLContext::swapBuffers()
+bool WGLContext::swapBuffers()
 {
   if(!isValid()) { return false; }
 
-  if(!SwapBuffers(wi->deviceContext)) {
+  if(!SwapBuffers(wi->deviceContext)) 
+  {
     outputLastError();
     return false;
   }

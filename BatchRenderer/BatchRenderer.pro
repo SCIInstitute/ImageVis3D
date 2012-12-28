@@ -7,17 +7,23 @@ QMAKE_LIBDIR       += ../Tuvok/Build ../Tuvok/IO/expressions
 QT                 += opengl
 LIBS               += -lTuvok -ltuvokexpr -lz
 
+# Operating system definitions now in the makefile instead of
+# a header file.
+unix:!macx  { DEFINES += "DETECTED_OS_LINUX" }
+macx        { DEFINES += "DETECTED_OS_APPLE" }
+win32       { DEFINES += "DETECTED_OS_WINDOWS" }
+
 ####
 # General unix configuration (including Mac OS X).
 ####
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing -g -std=c++0x 
 unix:QMAKE_CFLAGS   += -fno-strict-aliasing -g
-unix:LIBS           += -lGL -lX11
 
 ####
-# Non-Mac OS X Unix configuration
+# Non-OSX Unix configuration
 ####
-unix:!macx:LIBS    += -lGLU
+# Note: Do NOT specific the GL linker flag (-lGL) on Mac!
+unix:!macx:LIBS    += -lGL -lX11 -lGLU
 # Try to link to GLU statically.
 gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
 for(d, gludirs) {
@@ -30,12 +36,13 @@ for(d, gludirs) {
 ####
 # Mac OS X configuration
 ####
-macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
-macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7
-macx:LIBS        += -stdlib=libc++ -framework CoreFoundation -framework OpenGL -mmacosx-version-min=10.7
-macx:CONFIG      -= app_bundle
-macx:INCLUDEPATH += /usr/X11R6/include
-macx:QMAKE_LIBDIR+= /usr/X11R6/lib
+macx:QMAKE_CXXFLAGS         += -mmacosx-version-min=10.7 -stdlib=libc++
+macx:QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.7 -std=c++0x -stdlib=libc++
+macx:QMAKE_CFLAGS           += -mmacosx-version-min=10.7
+macx:LIBS                   += -mmacosx-version-min=10.7 -stdlib=libc++ -framework Cocoa -framework OpenGL
+macx:CONFIG                 -= app_bundle
+macx:INCLUDEPATH            += /usr/X11R6/include
+macx:QMAKE_LIBDIR           += /usr/X11R6/lib
 
 ### Should we link Qt statically or as a shared lib?
 # Find the location of QtCore`s prl file, and include it here so we can look at
@@ -61,14 +68,18 @@ contains(QMAKE_PRL_CONFIG, shared) {
 
 SOURCES += \
   main.cpp \
-  batchContext.cpp
+  BatchContext.cpp \
+  TuvokLuaScriptExec.cpp
 
-unix:!macx  { SOURCES += glx-context.cpp }
-macx        { SOURCES += cgl-context.cpp agl-context.cpp }
-win32       { SOURCES += wgl-context.cpp }
+
+unix:!macx  { SOURCES += GLXContext.cpp }
+macx        { SOURCES += CGLContext.cpp AGLContext.cpp }
+macx        { OBJECTIVE_SOURCES += NSContext.mm }
+win32       { SOURCES += WGLContext.cpp }
 
 HEADERS += \
-  batchContext.h \
-  cgl-context.h \
-  glx-context.h \
-  wgl-context.h
+  BatchContext.h \
+  CGLContext.h \
+  GLXContext.h \
+  WGLContext.h \
+  TuvokLuaScriptExec.h

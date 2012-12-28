@@ -25,27 +25,31 @@
    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
    DEALINGS IN THE SOFTWARE.
 */
+
 #include <iostream>
 #include <stdexcept>
 #include <OpenGL/CGLCurrent.h>
 #include <OpenGL/CGLTypes.h>
 #include <OpenGL/OpenGL.h>
-#include "cgl-context.h"
+#include <OpenGL/gl.h>
+#include "CGLContext.h"
 
-namespace tuvok {
+namespace tuvok
+{
 
-struct cinfo {
-  CGLPixelFormatObj pix;
+struct CGLContextInfo
+{
   CGLContextObj ctx;
 };
 
-TvkCGLContext::TvkCGLContext(uint32_t, uint32_t, uint8_t color_bits,
+CGLContext::CGLContext(uint32_t, uint32_t, uint8_t color_bits,
                              uint8_t depth_bits, uint8_t stencil_bits,
                              bool double_buffer, bool) :
-  ci(new struct cinfo())
+  ci(new struct CGLContextInfo())
 {
-  ci->pix = NULL; ci->ctx = NULL;
   CGLPixelFormatAttribute attribs[] = {
+    kCGLPFAAccelerated,
+    kCGLPFANoRecovery,          // Do not fall back to software.
     kCGLPFAColorSize, static_cast<CGLPixelFormatAttribute>(color_bits),
     kCGLPFAAlphaSize, static_cast<CGLPixelFormatAttribute>(8),
     kCGLPFADepthSize, static_cast<CGLPixelFormatAttribute>(depth_bits),
@@ -54,31 +58,46 @@ TvkCGLContext::TvkCGLContext(uint32_t, uint32_t, uint8_t color_bits,
                     static_cast<CGLPixelFormatAttribute>(0),
     static_cast<CGLPixelFormatAttribute>(NULL)
   };
+
   int nscreens;
-  CGLError glerr;
-  glerr = CGLChoosePixelFormat(attribs, &ci->pix, &nscreens);
-  if(glerr != kCGLNoError) {
-    std::cerr << "CGL pixel format error: %d" << static_cast<int>(glerr);
+  CGLPixelFormatObj pix;
+  CGLError glerr = CGLChoosePixelFormat(attribs, &pix, &nscreens);
+  if (glerr != kCGLNoError)
+  {
+    std::cerr << "CGL pixel format error: " << static_cast<int>(glerr);
     throw std::runtime_error("CGL error.");
   }
 
-  glerr = CGLCreateContext(ci->pix, NULL, &ci->ctx);
-  if(glerr != kCGLNoError) {
+  glerr = CGLCreateContext(pix, NULL, &ci->ctx);
+  if (glerr != kCGLNoError)
+  {
     std::cerr << "CGL ctx creation error: %d" << static_cast<int>(glerr);
     throw std::runtime_error("CGL error.");
   }
+  CGLDestroyPixelFormat(pix);
 }
 
-TvkCGLContext::~TvkCGLContext() {
+//------------------------------------------------------------------------------
+CGLContext::~CGLContext()
+{
   CGLReleaseContext(ci->ctx);
-  CGLReleasePixelFormat(ci->pix);
 }
 
-bool TvkCGLContext::isValid() const { return ci->ctx != NULL; }
-bool TvkCGLContext::makeCurrent() {
+//------------------------------------------------------------------------------
+bool CGLContext::isValid() const
+{
+  return ci->ctx != NULL;
+}
+
+//------------------------------------------------------------------------------
+bool CGLContext::makeCurrent()
+{
   return CGLSetCurrentContext(ci->ctx) == kCGLNoError;
 }
-bool TvkCGLContext::swapBuffers() {
+
+//------------------------------------------------------------------------------
+bool CGLContext::swapBuffers()
+{
   return CGLFlushDrawable(ci->ctx) == kCGLNoError;
 }
 

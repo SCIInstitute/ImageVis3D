@@ -29,25 +29,25 @@
 #define TUVOK_CGL_CONTEXT_H
 
 #include <memory>
-#include "batchContext.h"
+#include "BatchContext.h"
 
 namespace tuvok {
 
-struct cinfo;
+struct CGLContextInfo;
 
-class TvkCGLContext : public BatchContext {
+class CGLContext : public BatchContext {
   public:
-    TvkCGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
+    CGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
                   uint8_t depth_bits, uint8_t stencil_bits,
                   bool double_buffer, bool visible);
-    virtual ~TvkCGLContext();
+    virtual ~CGLContext();
 
     bool isValid() const;
     bool makeCurrent();
     bool swapBuffers();
 
   private:
-    std::shared_ptr<struct cinfo> ci;
+    std::shared_ptr<struct CGLContextInfo> ci;
 };
 
 }

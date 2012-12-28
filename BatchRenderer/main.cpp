@@ -32,16 +32,38 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <GLEW/GL/glew.h>
-#include <tclap/CmdLine.h>
+#include "GLEW/GL/glew.h"
+#include "tclap/CmdLine.h"
 
 #include "LuaScripting/LuaScripting.h"
 #include "LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
+#include "Controller/Controller.h"
+#include "Controller/MasterController.h"
 
-#include "batchContext.h"
+#include "BatchContext.h"
+#include "TuvokLuaScriptExec.h"
 
 using namespace std;
 using namespace tuvok;
+
+std::shared_ptr<BatchContext> createContext(uint32_t width, uint32_t height,
+                                            int32_t color_bits,
+                                            int32_t depth_bits,
+                                            int32_t stencil_bits,
+                                            bool double_buffer, bool visible)
+{
+  // Create a new context.
+  std::shared_ptr<BatchContext> ctx(
+      BatchContext::Create(width,height, color_bits,depth_bits,stencil_bits, 
+                           double_buffer,visible));
+  if(!ctx->isValid() || ctx->makeCurrent() == false) 
+  {
+    std::cerr << "Could not utilize context.";
+    return std::shared_ptr<BatchContext>();
+  }
+
+  return ctx;
+}
 
 int main(int argc, const char* argv[])
 {
@@ -65,23 +87,19 @@ int main(int argc, const char* argv[])
 
   try
   {
-    // Create a new context.
-    std::auto_ptr<BatchContext> ctx(BatchContext::Create(640,480, 32,24,8, true));
-    if(!ctx->isValid() || ctx->makeCurrent() == false) 
-    {
-      std::cerr << "Could not utilize context.";
-      return EXIT_FAILURE;
-    }
+    // Register function that can be used to create a context in Lua.
+    std::shared_ptr<LuaScripting> ss = Controller::Instance().LuaScript();
+    /// \todo Investigate why we can't use lambdas in function regisrtation.
+    ss->registerFunction(createContext, "tuvok.createContext",
+                         "Creates a rendering context and returns it.", false);
 
-    // Test rendering to a context.
-
-    // Tuvok specific code is in a separate file.
+    TuvokLuaScriptExec luaExec;
+    luaExec.execFile(filename);
   } 
   catch(const std::exception& e)
   {
     std::cerr << "Exception: " << e.what() << "\n";
     return EXIT_FAILURE;
   }
-
 }
 

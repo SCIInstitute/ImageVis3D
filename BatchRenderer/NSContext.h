@@ -3,7 +3,7 @@
 
    The MIT License
 
-   Copyright (c) 2010 Scientific Computing and Imaging Institute,
+   Copyright (c) 2012 Scientific Computing and Imaging Institute,
    University of Utah.
 
 
@@ -26,41 +26,38 @@
    DEALINGS IN THE SOFTWARE.
 */
 
-/**
-  \file    WGLContext.cpp
-  \author  Tom Fogal
-           SCI Institute
-           University of Utah
-  \brief   Establishes an OpenGL context on windows.
-*/
+/// \author James Hughes
+/// \date   December 2012
 
-#ifndef TUVOK_WGL_CONTEXT_H
-#define TUVOK_WGL_CONTEXT_H
+#ifndef BATCHRENDERER_NSCONTEXT_H
+#define BATCHRENDERER_NSCONTEXT_H
 
 #include <memory>
 #include "BatchContext.h"
 
-namespace tuvok 
+namespace tuvok
 {
 
-struct winfo;
+struct NSContextInfo;
 
-class WGLContext : public BatchContext
+/// Uses Objective-C to obtain a context.
+class NSContext : public BatchContext
 {
-  public:
-    WGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
-                  uint8_t depth_bits, uint8_t stencil_bits,
-                  bool double_buffer, bool visible);
-    virtual ~WGLContext();
+public:
+  NSContext(uint32_t w, uint32_t h, uint8_t colorBits,
+            uint8_t depthBits, uint8_t stencilBits,
+            bool doubleBuffer, bool visible);
+  virtual ~NSContext();
 
-    bool isValid() const;
-    bool makeCurrent();
-    bool swapBuffers();
+  bool isValid() const;
+  bool makeCurrent();
+  bool swapBuffers();
 
-  private:
-    std::shared_ptr<struct winfo> wi;
+private:
+
+  std::shared_ptr<NSContextInfo>  mCI;
 };
 
-}
+} // namespace tuvok
 
-#endif /* TUVOK_WGL_CONTEXT_H */
+#endif 

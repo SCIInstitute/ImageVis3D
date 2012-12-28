@@ -3,7 +3,7 @@
 
    The MIT License
 
-   Copyright (c) 2010 Scientific Computing and Imaging Institute,
+   Copyright (c) 2012 Scientific Computing and Imaging Institute,
    University of Utah.
 
 
@@ -26,41 +26,34 @@
    DEALINGS IN THE SOFTWARE.
 */
 
-/**
-  \file    WGLContext.cpp
-  \author  Tom Fogal
-           SCI Institute
-           University of Utah
-  \brief   Establishes an OpenGL context on windows.
-*/
+/// \author James Hughes
+/// \date   November 2012
 
-#ifndef TUVOK_WGL_CONTEXT_H
-#define TUVOK_WGL_CONTEXT_H
+#ifndef BATCHRENDERER_TUVOKLUASCRIPTEXEC_H
+#define BATCHRENDERER_TUVOKLUASCRIPTEXEC_H
 
 #include <memory>
+#include <string>
+#include "LuaScripting/LuaScripting.h"
 #include "BatchContext.h"
 
-namespace tuvok 
+namespace tuvok
 {
 
-struct winfo;
-
-class WGLContext : public BatchContext
+/// Simple class to execute a Lua script given a rendering context.
+class TuvokLuaScriptExec
 {
-  public:
-    WGLContext(uint32_t w, uint32_t h, uint8_t color_bits,
-                  uint8_t depth_bits, uint8_t stencil_bits,
-                  bool double_buffer, bool visible);
-    virtual ~WGLContext();
+public:
+  TuvokLuaScriptExec();
+  virtual ~TuvokLuaScriptExec();
 
-    bool isValid() const;
-    bool makeCurrent();
-    bool swapBuffers();
+  /// Executes the file given by the parameter 'filename'.
+  void execFile(const std::string filename);
 
-  private:
-    std::shared_ptr<struct winfo> wi;
+private:
+
 };
 
-}
+} // namespace tuvok
 
-#endif /* TUVOK_WGL_CONTEXT_H */
+#endif 
