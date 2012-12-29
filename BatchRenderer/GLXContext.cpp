@@ -28,7 +28,7 @@
 #include <stdexcept>
 #include <GL/glxew.h>
 
-#include "GLXBatchContext.h"
+#include "GLXContext.h"
 #include "Controller/Controller.h"
 
 namespace tuvok {
