@@ -73,13 +73,14 @@ SOURCES += \
 
 
 unix:!macx  { SOURCES += GLXContext.cpp }
-macx        { SOURCES += CGLContext.cpp AGLContext.cpp }
+macx        { SOURCES += CGLContext.cpp }
 macx        { OBJECTIVE_SOURCES += NSContext.mm }
 win32       { SOURCES += WGLContext.cpp }
 
 HEADERS += \
   BatchContext.h \
   CGLContext.h \
+  NSContext.h \
   GLXContext.h \
   WGLContext.h \
   TuvokLuaScriptExec.h
