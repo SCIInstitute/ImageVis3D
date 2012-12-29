@@ -56,26 +56,6 @@ void TuvokLuaScriptExec::execFile(const std::string filename)
 {
   std::shared_ptr<LuaScripting> ss = Controller::Instance().LuaScript();
 
-  // Read entire file into fileContent.
-  std::string fileContent;
-  try
-  {
-    std::ifstream t(filename);
-    std::string str;
-
-    t.seekg(0, std::ios::end);   
-    str.reserve(t.tellg());
-    t.seekg(0, std::ios::beg);
-
-    fileContent.assign((std::istreambuf_iterator<char>(t)),
-                       std::istreambuf_iterator<char>());
-  }
-  catch (std::ifstream::failure e)
-  {
-    std::cerr << "Error reading file " << filename;
-    return;
-  }
-
   // Execute entire file in Lua.
   try
   {
@@ -90,7 +70,6 @@ void TuvokLuaScriptExec::execFile(const std::string filename)
   }
   catch (...)
   {
-    std::cerr << "Error";
     // If an exception occurred in Lua, the description will be fairly verbose.
     throw;
   }

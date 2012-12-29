@@ -42,7 +42,6 @@
 #include "Renderer/GL/GLStateManager.h"
 #include "BatchContext.h"
 
-#include "AGLContext.h"
 #include "CGLContext.h"
 #include "GLXContext.h"
 #include "WGLContext.h"

@@ -52,7 +52,6 @@ std::shared_ptr<BatchContext> createContext(uint32_t width, uint32_t height,
                                             int32_t stencil_bits,
                                             bool double_buffer, bool visible)
 {
-  // Create a new context.
   std::shared_ptr<BatchContext> ctx(
       BatchContext::Create(width,height, color_bits,depth_bits,stencil_bits, 
                            double_buffer,visible));
@@ -67,7 +66,7 @@ std::shared_ptr<BatchContext> createContext(uint32_t width, uint32_t height,
 
 int main(int argc, const char* argv[])
 {
-  // Read Lua filename from the first program argument in the 
+  // Read Lua filename from the first program argument
   std::string filename;
   try
   {
@@ -87,7 +86,7 @@ int main(int argc, const char* argv[])
 
   try
   {
-    // Register function that can be used to create a context in Lua.
+    // Register context creation function
     std::shared_ptr<LuaScripting> ss = Controller::Instance().LuaScript();
     /// \todo Investigate why we can't use lambdas in function regisrtation.
     ss->registerFunction(createContext, "tuvok.createContext",
