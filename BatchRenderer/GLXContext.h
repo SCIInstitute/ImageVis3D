@@ -36,14 +36,14 @@ namespace tuvok
 
 struct xinfo;
 
-class GLXContext: public BatchContext
+class GLXBatchContext: public BatchContext
 {
 public:
-  GLXContext(uint32_t w, uint32_t h, uint8_t color_bits,
+  GLXBatchContext(uint32_t w, uint32_t h, uint8_t color_bits,
              uint8_t depth_bits, uint8_t stencil_bits,
              bool double_buffer,
              bool visible);
-  virtual ~GLXContext();
+  virtual ~GLXBatchContext();
 
   bool isValid() const;
   bool makeCurrent();

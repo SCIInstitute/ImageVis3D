@@ -73,8 +73,8 @@ BatchContext* BatchContext::Create(uint32_t width, uint32_t height,
   bctx = new NSContext(width, height, color_bits, depth_bits, stencil_bits,
                       double_buffer, visible);
 #else
-  bctx = new GLXContext(width, height, color_bits, depth_bits, stencil_bits,
-                       double_buffer, visible);
+  bctx = new GLXBatchContext(width, height, color_bits, depth_bits, stencil_bits,
+                             double_buffer, visible);
 #endif
   if (bctx->makeCurrent() == false)
     std::cerr << "Unable to make context current!" << std::endl;

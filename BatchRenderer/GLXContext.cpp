@@ -28,7 +28,7 @@
 #include <stdexcept>
 #include <GL/glxew.h>
 
-#include "GLXContext.h"
+#include "GLXBatchContext.h"
 #include "Controller/Controller.h"
 
 namespace tuvok {
@@ -45,7 +45,7 @@ static struct xinfo x_connect(uint32_t, uint32_t, bool, bool);
 static XVisualInfo* find_visual(Display*, bool);
 static void glx_init(Display*, XVisualInfo*, GLXContext&);
 
-GLXContext::GLXContext(uint32_t w, uint32_t h, uint8_t,
+GLXBatchContext::GLXBatchContext(uint32_t w, uint32_t h, uint8_t,
                              uint8_t, uint8_t,
                              bool double_buffer,
                              bool visible) :
@@ -66,7 +66,7 @@ GLXContext::GLXContext(uint32_t w, uint32_t h, uint8_t,
   MESSAGE("Current context: %p", glXGetCurrentContext());
 }
 
-GLXContext::~GLXContext()
+GLXBatchContext::~GLXBatchContext()
 {
   glXDestroyContext(xi->display, xi->ctx);
   XDestroyWindow(xi->display, xi->win);
@@ -75,12 +75,12 @@ GLXContext::~GLXContext()
   xi.reset();
 }
 
-bool GLXContext::isValid() const
+bool GLXBatchContext::isValid() const
 {
   return this->xi->display != NULL && this->xi->ctx != NULL;
 }
 
-bool GLXContext::makeCurrent()
+bool GLXBatchContext::makeCurrent()
 {
   if(glXMakeCurrent(this->xi->display, this->xi->win, this->xi->ctx) != True) {
     T_ERROR("Could not make context current!");
@@ -89,7 +89,7 @@ bool GLXContext::makeCurrent()
   return true;
 }
 
-bool GLXContext::swapBuffers()
+bool GLXBatchContext::swapBuffers()
 {
   glXSwapBuffers(this->xi->display, this->xi->win);
   // SwapBuffers generates an X error if it fails.
