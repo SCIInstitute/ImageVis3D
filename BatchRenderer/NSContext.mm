@@ -49,9 +49,9 @@ struct NSContextInfo
 
 //------------------------------------------------------------------------------
 NSContext::NSContext(
-    uint32_t w, uint32_t h, uint8_t colorBits,
-    uint8_t depthBits, uint8_t stencilBits,
-    bool doubleBuffer, bool visible) :
+    uint32_t, uint32_t, uint8_t colorBits,
+    uint8_t depthBits, uint8_t,
+    bool doubleBuffer, bool) :
     mCI(new NSContextInfo)
 {
   // On screen doesn't matter, we will be using an FBO anyways.
@@ -100,6 +100,7 @@ bool NSContext::makeCurrent()
 //------------------------------------------------------------------------------
 bool NSContext::swapBuffers()
 {
+  return false;
 }
 
 } // end namespace tuvok
