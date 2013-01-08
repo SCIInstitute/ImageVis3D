@@ -3,8 +3,9 @@
 #-D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
-CF="-Wall -Wextra -O0 -D_DEBUG -fstack-protector"
-CXF="-D_GLIBCXX_CONCEPT_CHECK -fstack-protector"
+DEBUG="-Wall -Wextra -D_DEBUG -O0"
+CF="${DEBUG} -fstack-protector"
+CXF="${DEBUG} -D_GLIBCXX_CONCEPT_CHECK -fstack-protector"
 LF=""
 MKSPEC=""
 if test `uname -s` != "Darwin" ; then
@@ -36,11 +37,11 @@ for d in . ; do
         ${MKSPEC} \
         QMAKE_CONFIG="debug" \
         CONFIG="debug" \
-        QMAKE_CFLAGS="${VIS} ${CF}" \
-        QMAKE_CXXFLAGS="${VIS} ${INL} ${CF} ${CXF}" \
+        QMAKE_CFLAGS+="${VIS} ${CF}" \
+        QMAKE_CXXFLAGS+="${VIS} ${INL} ${CF} ${CXF}" \
         QMAKE_CFLAGS_RELEASE="-O0" \
         QMAKE_CXXFLAGS_RELEASE="-O0" \
-        QMAKE_LFLAGS="${LF}" \
+        QMAKE_LFLAGS+="${LF}" \
         -recursive || exit 1
   popd &>/dev/null
 done
