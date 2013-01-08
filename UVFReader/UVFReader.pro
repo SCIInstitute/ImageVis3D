@@ -16,7 +16,7 @@ INCLUDEPATH      += ../Tuvok/Basics
 QMAKE_LIBDIR     += ../Tuvok/Build
 QMAKE_LIBDIR     += ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
-unix:LIBS        += -lz -lGL
+unix:LIBS        += -lz
 win32:LIBS       += shlwapi.lib
 QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
 unix:QMAKE_CXXFLAGS += -std=c++0x
@@ -36,6 +36,7 @@ if(!found) {
   # not mac: GLU comes in the GL framework.
   unix:!macx:LIBS += -lGLU
 }
+unix:!macx:LIBS += -lGL
 
 macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
 macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7

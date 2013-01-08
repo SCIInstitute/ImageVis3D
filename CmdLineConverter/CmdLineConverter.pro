@@ -15,7 +15,7 @@ DEPENDPATH       += $$incpath
 INCLUDEPATH      += $$incpath
 QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS             += -lTuvok -ltuvokexpr
-unix:LIBS        += -lz -lGL
+unix:LIBS        += -lz
 win32:LIBS       += shlwapi.lib
 macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
 macx:QMAKE_CFLAGS   += -mmacosx-version-min=10.7
@@ -35,6 +35,7 @@ if(!found) {
   # not mac: GLU comes in the GL framework.
   unix:!macx:LIBS += -lGLU
 }
+unix:!macx:LIBS += -lGL
 
 # Find the location of QtGui's prl file, and include it here so we can look at
 # the QMAKE_PRL_CONFIG variable.
