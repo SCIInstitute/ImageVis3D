@@ -20,19 +20,21 @@ QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
 unix:LIBS        += -lz
 win32:LIBS       += shlwapi.lib
-unix:!macx:LIBS  += -lGLU
 macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
 macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7
 macx:LIBS        += -stdlib=libc++ -framework CoreFoundation -mmacosx-version-min=10.7
 QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
-# Try to link to GLU statically.
+
+# Try to link to GLU statically, sometimes the shared lib isn't there.
 gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
+found = false
 for(d, gludirs) {
   if(exists($${d}/libGLU.a) && static) {
-    LIBS -= -lGLU;
     LIBS += $${d}/libGLU.a
+    found = true
   }
 }
+if(!found) { unix:!macx:LIBS += -lGLU }
 
 # Find the location of QtGui's prl file, and include it here so we can look at
 # the QMAKE_PRL_CONFIG variable.
@@ -55,14 +57,7 @@ contains(QMAKE_PRL_CONFIG, shared) {
 } else {
   QTPLUGIN += qgif qjpeg qtiff
 }
-# Try to link to GLU statically.
-gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
-for(d, gludirs) {
-  if(exists($${d}/libGLU.a) && static) {
-    LIBS -= -lGLU;
-    LIBS += $${d}/libGLU.a
-  }
-}
+
 RESOURCES         = ImageVis3D.qrc
 RC_FILE 	  = Resources/ImageVis3D.rc
 QMAKE_INFO_PLIST  = ../IV3D.plist
