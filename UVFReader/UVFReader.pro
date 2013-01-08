@@ -1,31 +1,41 @@
 TEMPLATE          = app
 win32:TEMPLATE    = vcapp
-CONFIG           += exceptions largefile rtti static stl warn_on
+CONFIG           += exceptions largefile qt rtti static stl warn_on
 CONFIG           -= app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/UVFReader
 unix:TARGET       = Build/uvf
 QT               += opengl
 DEPENDPATH       += .
-INCLUDEPATH      += . ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW
-INCLUDEPATH      += ../Tuvok ../Tuvok/Basics/3rdParty ../Tuvok/Basics
-QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
+INCLUDEPATH      += .
+INCLUDEPATH      += ../Tuvok/IO/3rdParty/boost
+INCLUDEPATH      += ../Tuvok/3rdParty/GLEW
+INCLUDEPATH      += ../Tuvok
+INCLUDEPATH      += ../Tuvok/Basics/3rdParty
+INCLUDEPATH      += ../Tuvok/Basics
+QMAKE_LIBDIR     += ../Tuvok/Build
+QMAKE_LIBDIR     += ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
-unix:LIBS        += -lz
+unix:LIBS        += -lz -lGL
 win32:LIBS       += shlwapi.lib
-unix:!macx:LIBS  += -lGLU
 QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
-# Try to link to GLU statically.
-gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
-for(d, gludirs) {
-  if(exists($${d}/libGLU.a) && static) {
-    LIBS -= -lGLU;
-    LIBS += $${d}/libGLU.a
-  }
-}
 unix:QMAKE_CXXFLAGS += -std=c++0x
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
+
+# Try to link to GLU statically.
+gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
+found=false
+for(d, gludirs) {
+  if(exists($${d}/libGLU.a)) {
+    LIBS += $${d}/libGLU.a
+    found=true
+  }
+}
+if(!found) {
+  # not mac: GLU comes in the GL framework.
+  unix:!macx:LIBS += -lGLU
+}
 
 macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
 macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7
