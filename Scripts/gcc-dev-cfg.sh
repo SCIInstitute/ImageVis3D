@@ -34,8 +34,8 @@ for d in . ; do
   pushd ${d} &>/dev/null
     ${qm} \
         ${MKSPEC} \
-        QMAKE_CONFIG+="debug" \
-        CONFIG+="debug" \
+        QMAKE_CONFIG="debug" \
+        CONFIG="debug" \
         QMAKE_CFLAGS="${VIS} ${CF}" \
         QMAKE_CXXFLAGS="${VIS} ${INL} ${CF} ${CXF}" \
         QMAKE_CFLAGS_RELEASE="-O0" \
