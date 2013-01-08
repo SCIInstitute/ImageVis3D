@@ -41,10 +41,6 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <QtGui/QApplication>
-#ifndef TUVOK_NO_QT
-  #include <QtGui/QImageReader>
-#endif
 #include <tclap/CmdLine.h>
 
 #include "DebugOut/HRConsoleOut.h"
