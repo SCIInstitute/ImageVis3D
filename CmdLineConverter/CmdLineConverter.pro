@@ -7,6 +7,7 @@ TARGET            = Build/UVFConverter
 unix:TARGET       = Build/uvfconvert
 QT                = core gui opengl
 incpath           = ../Tuvok/3rdParty/GLEW
+incpath          += ../Tuvok/IO/3rdParty/boost/
 incpath          += ../Tuvok/IO/exception
 incpath          += ../Tuvok/Basics
 incpath          += ../Tuvok/Basics/3rdParty
