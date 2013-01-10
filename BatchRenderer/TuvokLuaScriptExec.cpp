@@ -31,6 +31,7 @@
 
 #include <string>
 #include <fstream>
+#include <iostream>
 #include <streambuf>
 
 #include "TuvokLuaScriptExec.h"
