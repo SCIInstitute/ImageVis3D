@@ -986,6 +986,14 @@ void MainWindow::LuaSetIsoValueInteger(int iValue)
   SetIsoValue(iValue);
 }
 
+void MainWindow::LuaMoveProgramWindow(const INTVECTOR2& pos) {
+  move(pos.x, pos.y);
+}
+
+void MainWindow::LuaResizeProgramWindow(const UINTVECTOR2& size) {
+  resize(size.x, size.y);
+}
+
 void MainWindow::RegisterLuaClasses() {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string prefix = "iv3d.";
@@ -1016,6 +1024,19 @@ void MainWindow::RegisterLuaClasses() {
       "need to call this periodically. This is necessary because Tuvok runs on "
       "the GUI's thread instead of on its own thread.",
       false);
+
+  m_MemReg.registerFunction(
+    this, &MainWindow::LuaMoveProgramWindow, prefix + "move",
+    "Moves the main window to position (x, y).", true);
+
+  m_MemReg.registerFunction(
+    this, &MainWindow::LuaResizeProgramWindow, prefix +  "resize",
+    "Resizes the main window to size (w, h).", true);
+
+  m_MemReg.registerFunction(this, &MainWindow::LuaPlaceActiveWindow, 
+                            prefix + "placeActiveWindow",
+                            "Moves the active window to specific coordinates.",
+                            true);
 
   m_MemReg.registerFunction(this, &MainWindow::LuaResizeActiveWindow, 
                             prefix + "resizeActiveWindow",
@@ -1059,6 +1080,7 @@ void MainWindow::RegisterLuaClasses() {
                             "Set threshold value for iso-surface rendering as integer.", false);
 
   std::shared_ptr<LuaScripting> reg = m_MasterController.LuaScript();
+
 
   reg->registerFunction(&RotateX, "matrix.rotateX",
                         "Sets rotation to be around X, n degrees.", false);
@@ -1119,3 +1141,4 @@ bool MainWindow::RunLuaScript(const std::string& strFilename) {
   ss->setExpectedExceptionFlag(false);
   return true;
 }
+

@@ -643,6 +643,17 @@ bool MainWindow::ApplyWorkspace() {
 // ******************************************
 
 
+void MainWindow::PlaceCurrentView(int iPosX, int iPosY) {
+  shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  if (ActiveSubWindow()) {
+    ActiveSubWindow()->move(iPosX, iPosY);
+  } else {
+    if (mdiArea->activeSubWindow()) {
+      mdiArea->activeSubWindow()->move(iPosX, iPosY);
+    }
+  }
+}
+
 void MainWindow::ResizeCurrentView(int iSizeX, int iSizeY) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   if (ActiveSubWindow()) {
@@ -723,6 +734,10 @@ bool MainWindow::CheckRenderwindowFitness(RenderWindow *renderWin, bool bIfNotOk
   return false;
 }
 
+
+void MainWindow::LuaPlaceActiveWindow(const UINTVECTOR2& position) {
+  PlaceCurrentView(position.x, position.y);
+}
 
 void MainWindow::LuaResizeActiveWindow(const UINTVECTOR2& newSize) {
   ResizeCurrentView(newSize.x, newSize.y);

@@ -105,6 +105,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void LuaResizeActiveWindow(const UINTVECTOR2& newSize);
 
+    void LuaPlaceActiveWindow(const UINTVECTOR2& position);
+
     void closeMDISubWindowWithWidget(QWidget* widget);
 
     // Lua callback functions (called from Lua when actions are undone/redone).
@@ -145,6 +147,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void RemoveGeometry();
     void CloseCurrentView();
     void ResizeCurrentView(int iSizeX, int iSizeY);
+    void PlaceCurrentView(int iPosX, int iPosY);
     void CloneCurrentView();
     void CheckForUpdates();
     void OnlineHelp();
@@ -500,6 +503,9 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void LuaSetIsoValueFloat(float fValue);
     void LuaSetIsoValueInteger(int iValue);
+
+    void LuaMoveProgramWindow(const INTVECTOR2& pos);
+    void LuaResizeProgramWindow(const UINTVECTOR2& size);
 
     void RegisterLuaClasses();
 
