@@ -114,8 +114,8 @@ void MainWindow::LoadDataset() {
         }
         m_bIgnoreLoadDatasetFailure = false;
       }
-    } catch(const tuvok::Exception& e) {
-      if(strlen(e.what()) > 0) {
+    } catch(const std::exception& e) {
+      if(e.what() != NULL) {
         ShowCriticalDialog("Could not load data set!", e.what());
       } else {
         ShowCriticalDialog("Render window initialization failed.", rwe);
