@@ -3,7 +3,7 @@
 #-D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
-DEBUG="-Wall -Wextra -D_DEBUG -O0"
+DEBUG="-Wall -Wextra -D_DEBUG -O0 -g"
 CF="${DEBUG} -fstack-protector"
 CXF="${DEBUG} -D_GLIBCXX_CONCEPT_CHECK -fstack-protector"
 LF=""
