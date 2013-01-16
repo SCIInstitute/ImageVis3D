@@ -1218,10 +1218,21 @@ void MainWindow::SaveAspectRatioToUVF() {
     shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
 
-    if (!ss->cexecRet<bool>(ds.fqName() + ".saveRescaleFactors")) {
-      if (!m_bScriptMode) {
-        QMessageBox::warning(this, "File Error", "Unable to save rescale factors to file.", QMessageBox::Ok);
+    try {
+      if (!ss->cexecRet<bool>(ds.fqName() + ".saveRescaleFactors")) {
+        if (!m_bScriptMode) {
+          QMessageBox::warning(this, "File Error", "Unable to save rescale factors to file.", QMessageBox::Ok);
+        }
       }
+    }
+    catch (std::exception& e) {
+      std::string errMsg = "Unable to save scale factors to UVF file.";
+      if (strlen(e.what()) > 0) {
+        errMsg += "  Error: ";
+        errMsg += e.what();
+      }
+      QMessageBox::warning(this, "Scale Factor Save Error", errMsg.c_str(), 
+                           QMessageBox::Ok);
     }
 
     DOUBLEVECTOR3 vfRescaleFactors = 
