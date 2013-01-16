@@ -53,6 +53,7 @@ DebugScriptWindow::DebugScriptWindow(tuvok::MasterController& controller,
 , mController(controller)
 , mMemReg(controller.LuaScript())
 , mLua(controller.LuaScript())
+, mInFixFont(false)
 {
   setupUI();
   hookLuaFunctions();
@@ -465,9 +466,14 @@ void DebugScriptWindow::exampComboIndexChanged(int index)
 }
 
 void DebugScriptWindow::fixFont() {
-  QFont font("Monospace");
-  font.setStyleHint(QFont::TypeWriter);
-  mScriptTextEdit->setCurrentFont(font);
+  if (!mInFixFont)
+  {
+    mInFixFont = true;
+    QFont font("Monospace");
+    font.setStyleHint(QFont::TypeWriter);
+    mScriptTextEdit->setCurrentFont(font);
+    mInFixFont = false;
+  }
 }
 
 //-----------------------------------------------------------------------------

@@ -87,9 +87,11 @@ private:
   std::vector<std::string>  mSavedInput;
   int                       mSavedInputPos;
 
-  tuvok::MasterController&                    mController;
-  tuvok::LuaMemberReg                         mMemReg;
+  tuvok::MasterController&               mController;
+  tuvok::LuaMemberReg                    mMemReg;
   std::shared_ptr<tuvok::LuaScripting>   mLua;
+
+  bool                                  mInFixFont;
 
 
 };
