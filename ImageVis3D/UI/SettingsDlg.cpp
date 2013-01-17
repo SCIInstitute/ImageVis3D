@@ -381,7 +381,8 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
                             bool bMedianFilter,
                             bool bClampToEdge,
                             uint32_t iCompression,
-                            bool expFeatures) {
+                            bool expFeatures,
+                            uint32_t iLayout) {
   m_bInit = true;
 
   checkBox_OverrideMax->setChecked(bIgnoreMax);
@@ -417,6 +418,17 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
     case 1 : radioButton_noCompression->setChecked(false);
              radioButton_zlibCompression->setChecked(true);
              break;
+  }
+
+  radioButton_scanlineLayout->setChecked(false);
+  radioButton_mortonLayout->setChecked(false);
+  radioButton_hilbertLayout->setChecked(false);
+  radioButton_randomLayout->setChecked(false);
+  switch (iLayout) {
+    default : radioButton_scanlineLayout->setChecked(true); break;
+    case 1 : radioButton_mortonLayout->setChecked(true); break;
+    case 2 : radioButton_hilbertLayout->setChecked(true); break;
+    case 3 : radioButton_randomLayout->setChecked(true); break;
   }
 
   checkBoxQuickload->setChecked(bQuickopen);
@@ -584,6 +596,20 @@ uint32_t SettingsDlg::GetCompression() const {
     return 0;
   } else {
     return 1;
+  }
+}
+
+uint32_t SettingsDlg::GetLayout() const {
+  if (radioButton_scanlineLayout->isChecked()) {
+    return 0;
+  } else if (radioButton_mortonLayout->isChecked()) {
+    return 1;
+  } else if (radioButton_hilbertLayout->isChecked()) {
+    return 2;
+  } else if (radioButton_randomLayout->isChecked()) {
+    return 3;
+  } else {
+    return 0;
   }
 }
 

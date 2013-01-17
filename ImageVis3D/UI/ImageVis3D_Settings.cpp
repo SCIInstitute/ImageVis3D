@@ -98,7 +98,8 @@ void MainWindow::SaveSettings(
   const FLOATVECTOR3& backColor2, const FLOATVECTOR4& textColor,
   const QString& logo, int logoPosition, unsigned maxBrickSize,
   unsigned builderBrickSize, bool medianFilter, bool clampToEdge,
-  uint32_t compression, bool experimentalFeatures, bool advancedSettings
+  uint32_t compression, bool experimentalFeatures, bool advancedSettings,
+  uint32_t layout
 ) {
   QSettings settings;
   settings.beginGroup("Memory"); {
@@ -116,6 +117,7 @@ void MainWindow::SaveSettings(
     settings.setValue("UseMedian", medianFilter);
     settings.setValue("ClampToEdge", clampToEdge);
     settings.setValue("Compression", compression);
+    settings.setValue("Layout", layout);
   } settings.endGroup();
 
   settings.beginGroup("Performance"); {
@@ -214,6 +216,7 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
     bool bUseMedian = settings.value("UseMedian", false).toBool();
     bool bClampToEdge = settings.value("ClampToEdge", false).toBool();
     uint32_t iCompression = settings.value("Compression", 1).toUInt();
+    uint32_t iLayout = settings.value("Layout", 0).toUInt();
     settings.endGroup();
 
     settings.beginGroup("Performance");
@@ -286,7 +289,7 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
       bDisableBorder, vBackColor1, vBackColor2, vTextColor,
       strLogoFilename, iLogoPos, iMaxBrickSize, iBuilderBrickSize,
       iMaxMaxBrickSize, bUseMedian, bClampToEdge, iCompression,
-      expFeatures
+      expFeatures, iLayout
     );
 
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
@@ -320,7 +323,7 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
         settingsDlg.GetMaxBrickSize(), settingsDlg.GetBuilderBrickSize(),
         settingsDlg.GetMedianFilter(), settingsDlg.GetClampToEdge(),
         settingsDlg.GetCompression(), settingsDlg.GetExperimentalFeatures(),
-        true
+        true, settingsDlg.GetLayout()
       );
 
       return true;
@@ -383,7 +386,8 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
                            MasterController::OPENGL_2DSBVR, 0, true, false,
                            false, black, darkblue,
                            white, "", 0, unsigned(log2(256)),
-                           unsigned(log2(128)), true, false, 1, false, false);
+                           unsigned(log2(128)), true, false, 1, false, false, 0);
+        // TODO: If some other layout proofs to be faster, use the fastest here!
         break;
       case MIDDLE_1:
         this->SaveSettings(static_cast<uint64_t>(ceil(cpumem * 0.77)), cpumem,
@@ -395,7 +399,9 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
                            MasterController::OPENGL_SBVR, 2, true, false,
                            false, black, darkblue,
                            white, "", 0, unsigned(log2(256)),
-                           unsigned(log2(128)), true, false, 1, false, false);
+                           unsigned(log2(128)), true, false, 1, false, false, 0);
+        // TODO: If some other layout proofs to be faster, use the fastest here!
+        break;
       case MAX_PERFORMANCE:
         this->SaveSettings(static_cast<uint64_t>(ceil(cpumem * 0.9)), cpumem,
                            static_cast<uint64_t>(ceil(gpumem * 0.75)), gpumem,
@@ -406,7 +412,8 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
                            MasterController::OPENGL_SBVR, 2, true, false,
                            false, black, darkblue,
                            white, "", 0, unsigned(log2(256)),
-                           unsigned(log2(128)), true, false, 1, false, false);
+                           unsigned(log2(128)), true, false, 1, false, false, 0);
+        // TODO: If some other layout proofs to be faster, use the fastest here!
         break;
     }
   }
@@ -505,6 +512,7 @@ void MainWindow::ApplySettings() {
   bool bUseMedian = settings.value("UseMedian", false).toBool();
   bool bClampToEdge = settings.value("ClampToEdge", false).toBool();
   uint32_t iCompression = settings.value("Compression", 1).toUInt();
+  uint32_t iLayout = settings.value("Layout", 0).toUInt();
   settings.endGroup();
 
   // sanity check: make sure a RGBA float brick would fit into the specified memory
@@ -526,6 +534,7 @@ void MainWindow::ApplySettings() {
   ss->cexec("tuvok.io.setUseMedianFilter", bUseMedian);
   ss->cexec("tuvok.io.setClampToEdge", bClampToEdge);
   ss->cexec("tuvok.io.setUVFCompression", iCompression);
+  ss->cexec("tuvok.io.setUVFLayout", iLayout);
 
   // Apply window settings
   for (int i = 0;i<mdiArea->subWindowList().size();i++) {

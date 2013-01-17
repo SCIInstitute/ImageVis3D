@@ -143,7 +143,7 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData,
 bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize, 
                    uint32_t iBitSize, bool bMandelbulb, uint32_t iIterations,
                    bool bUseToCBlock, bool bKeepRaw, bool bCompress,
-                    uint32_t iUVFMemory, uint32_t iBrickSize) {
+                   uint32_t iUVFMemory, uint32_t iBrickSize, uint32_t iLayout) {
   wstring wstrUVFName(strUVFName.begin(), strUVFName.end());
   UVF uvfFile(wstrUVFName);
 
@@ -210,7 +210,7 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
   std::shared_ptr<RasterDataBlock> testRasterVolume(
     new RasterDataBlock()
   );
-  std::shared_ptr<TOCBlock> tocBlock(new TOCBlock());
+  std::shared_ptr<TOCBlock> tocBlock(new TOCBlock(UVF::ms_ulReaderVersion));
 
   if (bUseToCBlock)  {
     MESSAGE("Buidling hirarchy ...");
@@ -225,7 +225,8 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
       DEFAULT_BRICKOVERLAP, false, false,
       1024*1024*1024*iUVFMemory, MaxMinData,
       &tuvok::Controller::Debug::Out(),
-      (bCompress) ? CT_ZLIB : CT_NONE
+      (bCompress) ? CT_ZLIB : CT_NONE,
+      static_cast<LAYOUT_TYPE>(iLayout)
     );
 
     if (!bResult) {

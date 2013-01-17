@@ -46,6 +46,7 @@ int main(int argc, char* argv[])
   uint32_t iBrickSize = DEFAULT_BRICKSIZE;
   uint32_t iIter = 0;
   uint32_t iMem = 0;
+  uint32_t iBrickLayout = 0; // 0 is default scanline layout
   bool bCreateFile;
   bool bZlib;
   bool bVerify;
@@ -90,6 +91,10 @@ int main(int argc, char* argv[])
     TCLAP::ValueArg<size_t> bsize("s", "bricksize", "maximum width, "
                                   "in any dimension, for a created volume",
                                   false, static_cast<size_t>(256), uint);
+    TCLAP::ValueArg<size_t> blayout("l", "bricklayout", "brick layout "
+                                  "on disk 0: scanline, 1: morton, 2: hilbert"
+                                  ", 3: random order",
+                                  false, static_cast<size_t>(0), uint);
     TCLAP::SwitchArg use_rdb("r", "rdb", "use older raster data block", false);
     TCLAP::SwitchArg keep_raw("k", "keep", "keep intermediate raw file "
                                           "during test data generation", false);
@@ -109,6 +114,7 @@ int main(int argc, char* argv[])
     cmd.add(sizeZ);
     cmd.add(bits);
     cmd.add(bsize);
+    cmd.add(blayout);
     cmd.add(use_rdb);
     cmd.add(output_data);
     cmd.parse(argc, argv);
@@ -122,6 +128,7 @@ int main(int argc, char* argv[])
     iBrickSize = static_cast<uint32_t>(bsize.getValue());
     iIter = static_cast<uint32_t>(iter.getValue());
     iMem = static_cast<uint32_t>(mem.getValue());
+    iBrickLayout = static_cast<uint32_t>(blayout.getValue());
 
     bCreateFile = create.getValue();
     bZlib = zlib.getValue();
@@ -169,7 +176,8 @@ int main(int argc, char* argv[])
     cout << endl;
 
     if (!CreateUVFFile(strUVFName, vSize, iBitSize, bMandelbulb, iIter,
-                       bUseToCBlock, bKeepRaw, bZlib, iMem, iBrickSize))
+                       bUseToCBlock, bKeepRaw, bZlib, iMem, iBrickSize,
+                       iBrickLayout))
       return EXIT_FAILURE;
   } else {
     if (!DisplayUVFInfo(strUVFName, bVerify, bShowData, bShow1dhist, 

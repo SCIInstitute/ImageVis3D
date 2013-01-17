@@ -137,6 +137,7 @@ int main(int argc, const char* argv[])
   double fBias = 0.0;
   bool debug;
   uint32_t bricksize = 64;
+  uint32_t bricklayout = 0;
   const uint32_t brickoverlap = 2;
 
   try {
@@ -160,6 +161,10 @@ int main(int argc, const char* argv[])
     TCLAP::ValueArg<uint32_t> opt_bricksize("c", "bricksize",
                                         "set maximum brick size (64)", false,
                                         64, "positive integer");
+    TCLAP::ValueArg<uint32_t> opt_bricklayout("l", "bricklayout", "brick layout"
+                                      " on disk 0: scanline, 1: morton, 2: "
+                                      "hilbert, 3: random order", false, 0,
+                                      "positive integer");
     TCLAP::SwitchArg dbg("g", "debug", "Enable debugging mode", false);
     TCLAP::SwitchArg experim("", "experimental",
                              "Enable experimental features", false);
@@ -169,6 +174,7 @@ int main(int argc, const char* argv[])
     cmd.add(bias);
     cmd.add(scale);
     cmd.add(opt_bricksize);
+    cmd.add(opt_bricklayout);
     cmd.add(expr);
     cmd.add(dbg);
     cmd.add(experim);
@@ -189,6 +195,7 @@ int main(int argc, const char* argv[])
     fBias = bias.getValue();
     fScale = scale.getValue();
     bricksize = opt_bricksize.getValue();
+    bricklayout = opt_bricklayout.getValue();
 
     if(expr.isSet()) {
       expression = expr.getValue();
@@ -216,6 +223,7 @@ int main(int argc, const char* argv[])
   cout << endl;
 
   IOManager ioMan;
+  ioMan.SetLayout(bricklayout);
 
   // If they gave us an expression, evaluate that.  Otherwise we're doing a
   // normal conversion.

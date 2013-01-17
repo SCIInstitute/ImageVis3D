@@ -91,8 +91,10 @@ void MainWindow::ShowAbout()
   qstrTitle = tr("ImageVis3D %1").arg(IV3D_VERSION);
 #endif
   qstrText += tr("This is the award winning ImageVis3D volume rendering system %1 %2, using the Tuvok render engine "
-                 "%3 %4 %5. Copyright 2008-2010 by the Scientific Computing "
-                 "and Imaging (SCI) Institute.")
+                 "%3 %4 %5. Copyright 2008-2013 by the Scientific Computing "
+                 "and Imaging (SCI) Institute, and the Interactive Visualization "
+                 "and Data Analysis Group.\n\n"
+                 "Hilbert Curve implementation copyright 1998, Rice University.")
                     .arg(IV3D_VERSION)
                     .arg(IV3D_VERSION_TYPE)
                     .arg(TUVOK_VERSION)

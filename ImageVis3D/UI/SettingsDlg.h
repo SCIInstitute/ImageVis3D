@@ -107,6 +107,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool GetMedianFilter() const;
     bool GetClampToEdge() const;
     uint32_t GetCompression() const;
+    uint32_t GetLayout() const;
     bool GetUseBasicSettings() const;
 
     void Data2Form(bool bIsDirectX10Capable,
@@ -150,7 +151,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bMedianFilter,
                    bool bClampToEdge,
                    uint32_t iCompression,
-                   bool expFeatures);
+                   bool expFeatures,
+                   uint32_t iLayout);
 
   protected slots:
     void MemMaxChanged();
