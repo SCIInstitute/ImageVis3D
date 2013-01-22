@@ -142,8 +142,9 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData,
 
 bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize, 
                    uint32_t iBitSize, bool bMandelbulb, uint32_t iIterations,
-                   bool bUseToCBlock, bool bKeepRaw, bool bCompress,
-                   uint32_t iUVFMemory, uint32_t iBrickSize, uint32_t iLayout) {
+                   bool bUseToCBlock, bool bKeepRaw, uint32_t iCompression,
+                   uint32_t iUVFMemory, uint32_t iBrickSize, uint32_t iLayout,
+                   uint32_t iCompressionLevel) {
   wstring wstrUVFName(strUVFName.begin(), strUVFName.end());
   UVF uvfFile(wstrUVFName);
 
@@ -225,7 +226,8 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
       DEFAULT_BRICKOVERLAP, false, false,
       1024*1024*1024*iUVFMemory, MaxMinData,
       &tuvok::Controller::Debug::Out(),
-      (bCompress) ? CT_ZLIB : CT_NONE,
+      static_cast<COMPRESSION_TYPE>(iCompression),
+      iCompressionLevel,
       static_cast<LAYOUT_TYPE>(iLayout)
     );
 

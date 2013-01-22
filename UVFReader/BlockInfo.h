@@ -59,7 +59,7 @@ void PrintToCBlockInfo(const TOCBlock* b) {
 
     uint64_t iCompressionNone = 0;
     uint64_t iCompressionZLIB = 0;
-    uint64_t iCompressionJPEG = 0;
+    uint64_t iCompressionLZMA = 0;
     uint64_t iCompressionOther = 0;
 
     for (uint64_t bz=0;bz<brickCount.z;++bz) {
@@ -70,7 +70,7 @@ void PrintToCBlockInfo(const TOCBlock* b) {
           switch (te.m_eCompression) {
             case CT_NONE : iCompressionNone++; break;
             case CT_ZLIB : iCompressionZLIB++; break;
-            case CT_JPEG : iCompressionJPEG++; break;
+            case CT_LZMA : iCompressionLZMA++; break;
             default : iCompressionOther++; break;
           }
         }
@@ -79,7 +79,7 @@ void PrintToCBlockInfo(const TOCBlock* b) {
     cout << " (";
     if (iCompressionNone) cout << " Uncompressed:" << iCompressionNone;
     if (iCompressionZLIB) cout <<" ZLIB:" << iCompressionZLIB;
-    if (iCompressionJPEG) cout <<" JPEG:" << iCompressionJPEG; 
+    if (iCompressionLZMA) cout <<" LZMA:" << iCompressionLZMA; 
     if (iCompressionOther) cout <<" Other:" << iCompressionOther;
     cout << " )" << endl;
 

@@ -549,10 +549,17 @@
           <item>
            <widget class="QRadioButton" name="radioButton_zlibCompression">
             <property name="text">
-             <string>zlib</string>
+             <string>Zlib</string>
             </property>
             <property name="checked">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButton_lzmaCompression">
+            <property name="text">
+             <string>LZMA</string>
             </property>
            </widget>
           </item>

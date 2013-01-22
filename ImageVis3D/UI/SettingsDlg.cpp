@@ -411,13 +411,13 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
   radioButton_Border0->setChecked(!bClampToEdge);
   radioButton_BorderClamp->setChecked(bClampToEdge);
 
+  radioButton_noCompression->setChecked(false);
+  radioButton_zlibCompression->setChecked(false);
+  radioButton_lzmaCompression->setChecked(false);
   switch (iCompression) {
-    default : radioButton_noCompression->setChecked(true);
-              radioButton_zlibCompression->setChecked(false);
-              break;
-    case 1 : radioButton_noCompression->setChecked(false);
-             radioButton_zlibCompression->setChecked(true);
-             break;
+    default : radioButton_noCompression->setChecked(true); break;
+    case 1 : radioButton_zlibCompression->setChecked(true); break;
+    case 2 : radioButton_lzmaCompression->setChecked(true); break;
   }
 
   radioButton_scanlineLayout->setChecked(false);
@@ -594,8 +594,12 @@ bool SettingsDlg::GetClampToEdge() const {
 uint32_t SettingsDlg::GetCompression() const {
   if (radioButton_noCompression->isChecked()) {
     return 0;
-  } else {
+  } else if (radioButton_zlibCompression->isChecked()) {
     return 1;
+  } else if (radioButton_lzmaCompression->isChecked()) {
+    return 2;
+  } else {
+    return 1; // default value
   }
 }
 
@@ -609,7 +613,7 @@ uint32_t SettingsDlg::GetLayout() const {
   } else if (radioButton_randomLayout->isChecked()) {
     return 3;
   } else {
-    return 0;
+    return 0; // default value
   }
 }
 

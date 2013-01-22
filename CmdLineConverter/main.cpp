@@ -137,8 +137,11 @@ int main(int argc, const char* argv[])
   double fBias = 0.0;
   bool debug;
   uint32_t bricksize = 64;
-  uint32_t bricklayout = 0;
+  uint32_t bricklayout = 0; // 0 is default scanline layout
   const uint32_t brickoverlap = 2;
+  uint32_t compression = 1; // 1 is default zlib compression
+  uint32_t level = 4; // generic compression level used by LZMA (0..9)
+
 
   try {
     TCLAP::CmdLine cmd("uvf converter");
@@ -165,6 +168,13 @@ int main(int argc, const char* argv[])
                                       " on disk 0: scanline, 1: morton, 2: "
                                       "hilbert, 3: random order", false, 0,
                                       "positive integer");
+    TCLAP::ValueArg<uint32_t> opt_compression("p", "compress", "UVF compression "
+                                            "method 0: no compression, 1: zlib, "
+                                            "2: lzma",
+                                            false, 1, "positive integer");
+    TCLAP::ValueArg<uint32_t> opt_level("v", "level", "UVF compression level "
+                                        "used by LZMA (0..9)",
+                                        false, 4, "positive integer");
     TCLAP::SwitchArg dbg("g", "debug", "Enable debugging mode", false);
     TCLAP::SwitchArg experim("", "experimental",
                              "Enable experimental features", false);
@@ -175,6 +185,8 @@ int main(int argc, const char* argv[])
     cmd.add(scale);
     cmd.add(opt_bricksize);
     cmd.add(opt_bricklayout);
+    cmd.add(opt_compression);
+    cmd.add(opt_level);
     cmd.add(expr);
     cmd.add(dbg);
     cmd.add(experim);
@@ -196,6 +208,8 @@ int main(int argc, const char* argv[])
     fScale = scale.getValue();
     bricksize = opt_bricksize.getValue();
     bricklayout = opt_bricklayout.getValue();
+    compression = opt_compression.getValue();
+    level = opt_level.getValue();
 
     if(expr.isSet()) {
       expression = expr.getValue();
@@ -223,6 +237,8 @@ int main(int argc, const char* argv[])
   cout << endl;
 
   IOManager ioMan;
+  ioMan.SetCompression(compression);
+  ioMan.SetCompressionLevel(level);
   ioMan.SetLayout(bricklayout);
 
   // If they gave us an expression, evaluate that.  Otherwise we're doing a

@@ -47,8 +47,9 @@ int main(int argc, char* argv[])
   uint32_t iIter = 0;
   uint32_t iMem = 0;
   uint32_t iBrickLayout = 0; // 0 is default scanline layout
+  uint32_t iCompression = 1; // 1 is default zlib compression
+  uint32_t iCompressionLevel = 4; // generic compression level used by LZMA (0..9)
   bool bCreateFile;
-  bool bZlib;
   bool bVerify;
   bool bShow1dhist;
   bool bShow2dhist;
@@ -67,8 +68,6 @@ int main(int argc, char* argv[])
     TCLAP::SwitchArg hist2d("2", "2dhist", "output the 2D histogram", false);
     TCLAP::SwitchArg create("c", "create", "create instead of read a UVF",
                             false);
-    TCLAP::SwitchArg zlib("o", "compress", "create a zlib compressed UVF",
-                            false);
     TCLAP::SwitchArg mandelbulb("m", "mandelbulb", "compute mandelbulb "
                                      "fractal instead of simple sphere", false);
     TCLAP::SwitchArg output_data("d", "data", "display data at finest"
@@ -80,6 +79,13 @@ int main(int argc, char* argv[])
     TCLAP::ValueArg<uint32_t> mem("e", "memory", "gigabytes of memory "
                                    "to be used for UVF creation", false, 
                                    static_cast<uint32_t>(0), uint);
+    TCLAP::ValueArg<size_t> compression("p", "compress", "UVF compression "
+                                        "method 0: no compression, 1: zlib, 2: "
+                                        "lzma",
+                                        false, static_cast<size_t>(1), uint);
+    TCLAP::ValueArg<size_t> complevel("v", "level", "UVF compression level "
+                                      "used by LZMA (0..9)",
+                                      false, static_cast<size_t>(4), uint);
     TCLAP::ValueArg<size_t> sizeX("x", "sizeX", "width of created volume",
                                   false, static_cast<size_t>(100), uint);
     TCLAP::ValueArg<size_t> sizeY("y", "sizeY", "height of created volume",
@@ -104,7 +110,8 @@ int main(int argc, char* argv[])
     cmd.add(hist1d);
     cmd.add(hist2d);
     cmd.add(create);
-    cmd.add(zlib);
+    cmd.add(compression);
+    cmd.add(complevel);
     cmd.add(mandelbulb);
     cmd.add(mem);
     cmd.add(iter);
@@ -129,9 +136,10 @@ int main(int argc, char* argv[])
     iIter = static_cast<uint32_t>(iter.getValue());
     iMem = static_cast<uint32_t>(mem.getValue());
     iBrickLayout = static_cast<uint32_t>(blayout.getValue());
+    iCompression = static_cast<uint32_t>(compression.getValue());
+    iCompressionLevel = static_cast<uint32_t>(complevel.getValue());
 
     bCreateFile = create.getValue();
-    bZlib = zlib.getValue();
     bVerify = !noverify.getValue();
     bShow1dhist = hist1d.getValue();
     bShow2dhist = hist2d.getValue();
@@ -156,7 +164,7 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
-  if (bZlib && !bUseToCBlock) {
+  if (iCompression && !bUseToCBlock) {
     cerr << endl << "Brick compression is not available with the "
                     "old file format (-r switch)" << endl;
     return EXIT_FAILURE;
@@ -176,8 +184,8 @@ int main(int argc, char* argv[])
     cout << endl;
 
     if (!CreateUVFFile(strUVFName, vSize, iBitSize, bMandelbulb, iIter,
-                       bUseToCBlock, bKeepRaw, bZlib, iMem, iBrickSize,
-                       iBrickLayout))
+                       bUseToCBlock, bKeepRaw, iCompression, iMem, iBrickSize,
+                       iBrickLayout, iCompressionLevel))
       return EXIT_FAILURE;
   } else {
     if (!DisplayUVFInfo(strUVFName, bVerify, bShowData, bShow1dhist, 
