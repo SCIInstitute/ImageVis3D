@@ -94,7 +94,8 @@ void MainWindow::ShowAbout()
                  "%3 %4 %5. Copyright 2008-2013 by the Scientific Computing "
                  "and Imaging (SCI) Institute, and the Interactive Visualization "
                  "and Data Analysis Group.\n\n"
-                 "Hilbert Curve implementation copyright 1998, Rice University.")
+                 "Hilbert Curve implementation copyright 1998, Rice University."
+                 "LZ4 - Fast LZ compression algorithm copyright 2011-2012, Yann Collet.")
                     .arg(IV3D_VERSION)
                     .arg(IV3D_VERSION_TYPE)
                     .arg(TUVOK_VERSION)

@@ -564,6 +564,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QRadioButton" name="radioButton_lz4Compression">
+            <property name="text">
+             <string>LZ4</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer_4">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
