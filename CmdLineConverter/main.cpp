@@ -170,10 +170,10 @@ int main(int argc, const char* argv[])
                                       "positive integer");
     TCLAP::ValueArg<uint32_t> opt_compression("p", "compress", "UVF compression "
                                             "method 0: no compression, 1: zlib, "
-                                            "2: lzma",
+                                            "2: lzma, 3: lz4, 4: bzlib",
                                             false, 1, "positive integer");
     TCLAP::ValueArg<uint32_t> opt_level("v", "level", "UVF compression level "
-                                        "used by LZMA (0..9)",
+                                        "used by LZMA (0..9), BZlib (1..9)",
                                         false, 4, "positive integer");
     TCLAP::SwitchArg dbg("g", "debug", "Enable debugging mode", false);
     TCLAP::SwitchArg experim("", "experimental",
