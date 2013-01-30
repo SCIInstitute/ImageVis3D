@@ -416,12 +416,14 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
   radioButton_lzmaCompression->setChecked(false);
   radioButton_lz4Compression->setChecked(false);
   radioButton_bzlibCompression->setChecked(false);
+  radioButton_lzhamCompression->setChecked(false);
   switch (iCompression) {
     default : radioButton_noCompression->setChecked(true); break;
     case 1 : radioButton_zlibCompression->setChecked(true); break;
     case 2 : radioButton_lzmaCompression->setChecked(true); break;
     case 3 : radioButton_lz4Compression->setChecked(true); break;
     case 4 : radioButton_bzlibCompression->setChecked(true); break;
+    case 5 : radioButton_lzhamCompression->setChecked(true); break;
   }
 
   radioButton_scanlineLayout->setChecked(false);
@@ -606,6 +608,8 @@ uint32_t SettingsDlg::GetCompression() const {
     return 3;
   } else if (radioButton_bzlibCompression->isChecked()) {
     return 4;
+  } else if (radioButton_lzhamCompression->isChecked()) {
+    return 5;
   } else {
     return 1; // default value
   }

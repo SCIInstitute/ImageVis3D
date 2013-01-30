@@ -140,7 +140,7 @@ int main(int argc, const char* argv[])
   uint32_t bricklayout = 0; // 0 is default scanline layout
   const uint32_t brickoverlap = 2;
   uint32_t compression = 1; // 1 is default zlib compression
-  uint32_t level = 4; // generic compression level used by LZMA (0..9)
+  uint32_t level = 1; // generic compression level 1 is best speed
 
 
   try {
@@ -170,11 +170,12 @@ int main(int argc, const char* argv[])
                                       "positive integer");
     TCLAP::ValueArg<uint32_t> opt_compression("p", "compress", "UVF compression "
                                             "method 0: no compression, 1: zlib, "
-                                            "2: lzma, 3: lz4, 4: bzlib",
+                                            "2: lzma, 3: lz4, 4: bzlib, "
+                                            "5: lzham",
                                             false, 1, "positive integer");
     TCLAP::ValueArg<uint32_t> opt_level("v", "level", "UVF compression level "
-                                        "used by LZMA (0..9), BZlib (1..9)",
-                                        false, 4, "positive integer");
+                                        "(0..10)",
+                                        false, 1, "positive integer");
     TCLAP::SwitchArg dbg("g", "debug", "Enable debugging mode", false);
     TCLAP::SwitchArg experim("", "experimental",
                              "Enable experimental features", false);

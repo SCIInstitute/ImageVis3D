@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
   uint32_t iMem = 0;
   uint32_t iBrickLayout = 0; // 0 is default scanline layout
   uint32_t iCompression = 1; // 1 is default zlib compression
-  uint32_t iCompressionLevel = 4; // generic compression level used by LZMA (0..9)
+  uint32_t iCompressionLevel = 1; // generic compression level, 1 is best speed
   bool bCreateFile;
   bool bVerify;
   bool bShow1dhist;
@@ -81,11 +81,11 @@ int main(int argc, char* argv[])
                                    static_cast<uint32_t>(0), uint);
     TCLAP::ValueArg<size_t> compression("p", "compress", "UVF compression "
                                         "method 0: no compression, 1: zlib, 2: "
-                                        "lzma, 3: lz4, 4: bzlib",
+                                        "lzma, 3: lz4, 4: bzlib, 5: lzham",
                                         false, static_cast<size_t>(1), uint);
     TCLAP::ValueArg<size_t> complevel("v", "level", "UVF compression level "
-                                      "used by LZMA (0..9), Bzlib (1..9)",
-                                      false, static_cast<size_t>(4), uint);
+                                      "(0..10)",
+                                      false, static_cast<size_t>(1), uint);
     TCLAP::ValueArg<size_t> sizeX("x", "sizeX", "width of created volume",
                                   false, static_cast<size_t>(100), uint);
     TCLAP::ValueArg<size_t> sizeY("y", "sizeY", "height of created volume",
