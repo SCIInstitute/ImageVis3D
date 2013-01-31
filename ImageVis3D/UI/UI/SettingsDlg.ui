@@ -373,6 +373,12 @@
              </property>
              <item>
               <widget class="QLabel" name="label_BSMaxText">
+               <property name="minimumSize">
+                <size>
+                 <width>45</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Maximum</string>
                </property>
@@ -396,8 +402,17 @@
              </item>
              <item>
               <widget class="QLabel" name="label_BSMaxUnit">
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="text">
                 <string>256^3</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -421,6 +436,12 @@
              </property>
              <item>
               <widget class="QLabel" name="label_BSBuilderText">
+               <property name="minimumSize">
+                <size>
+                 <width>45</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="text">
                 <string>Builder</string>
                </property>
@@ -444,8 +465,17 @@
              </item>
              <item>
               <widget class="QLabel" name="label_BSBuilderUnit">
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="text">
                 <string>16^3</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -538,64 +568,139 @@
          <property name="title">
           <string>Compression</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <layout class="QVBoxLayout" name="verticalLayout_16">
           <item>
-           <widget class="QRadioButton" name="radioButton_noCompression">
-            <property name="text">
-             <string>None</string>
+           <widget class="QFrame" name="frame_14">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
             </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_12">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="radioButton_noCompression">
+               <property name="text">
+                <string>None</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_zlibCompression">
+               <property name="text">
+                <string>Zlib</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_lzmaCompression">
+               <property name="text">
+                <string>LZMA</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_lz4Compression">
+               <property name="text">
+                <string>LZ4</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_bzlibCompression">
+               <property name="text">
+                <string>Bzlib</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButton_lzhamCompression">
+               <property name="text">
+                <string>LZHAM</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>290</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="radioButton_zlibCompression">
-            <property name="text">
-             <string>Zlib</string>
+           <widget class="QFrame" name="frame_CompressionLevel">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
             </property>
-            <property name="checked">
-             <bool>true</bool>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
             </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_18">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_CompressionLevelText">
+               <property name="minimumSize">
+                <size>
+                 <width>45</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Level</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="horizontalSlider_CompressionLevel">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>10</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_CompressionLevelUnit">
+               <property name="minimumSize">
+                <size>
+                 <width>80</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Fastest (1)</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButton_lzmaCompression">
-            <property name="text">
-             <string>LZMA</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButton_lz4Compression">
-            <property name="text">
-             <string>LZ4</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButton_bzlibCompression">
-            <property name="text">
-             <string>Bzlib</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButton_lzhamCompression">
-            <property name="text">
-             <string>LZHAM</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </widget>
@@ -759,6 +864,9 @@
                <property name="text">
                 <string>10 fps</string>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
               </widget>
              </item>
             </layout>
@@ -838,6 +946,9 @@
                <property name="text">
                 <string>1000 ms</string>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
               </widget>
              </item>
             </layout>
@@ -907,6 +1018,9 @@
                <property name="text">
                 <string>500 ms</string>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
               </widget>
              </item>
             </layout>
@@ -975,6 +1089,9 @@
                </property>
                <property name="text">
                 <string>100 ms</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -1580,8 +1697,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>456</x>
-     <y>541</y>
+     <x>547</x>
+     <y>539</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -1596,8 +1713,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>506</x>
-     <y>541</y>
+     <x>597</x>
+     <y>539</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -1616,8 +1733,8 @@
      <y>81</y>
     </hint>
     <hint type="destinationlabel">
-     <x>610</x>
-     <y>102</y>
+     <x>616</x>
+     <y>81</y>
     </hint>
    </hints>
   </connection>
@@ -1628,12 +1745,12 @@
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>535</x>
-     <y>137</y>
+     <x>586</x>
+     <y>106</y>
     </hint>
     <hint type="destinationlabel">
-     <x>610</x>
-     <y>137</y>
+     <x>616</x>
+     <y>106</y>
     </hint>
    </hints>
   </connection>
@@ -1644,8 +1761,8 @@
    <slot>SelectBackColor1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>299</x>
-     <y>323</y>
+     <x>333</x>
+     <y>345</y>
     </hint>
     <hint type="destinationlabel">
      <x>319</x>
@@ -1660,8 +1777,8 @@
    <slot>SelectBackColor2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>525</x>
-     <y>323</y>
+     <x>538</x>
+     <y>345</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1676,8 +1793,8 @@
    <slot>SelectTextColor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>299</x>
-     <y>357</y>
+     <x>333</x>
+     <y>374</y>
     </hint>
     <hint type="destinationlabel">
      <x>278</x>
@@ -1692,8 +1809,8 @@
    <slot>SetTextOpacity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>525</x>
-     <y>358</y>
+     <x>538</x>
+     <y>372</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1708,8 +1825,8 @@
    <slot>SetMaxMemCheck()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>535</x>
-     <y>137</y>
+     <x>586</x>
+     <y>106</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1724,8 +1841,8 @@
    <slot>LODDelayChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>221</x>
-     <y>232</y>
+     <x>256</x>
+     <y>188</y>
     </hint>
     <hint type="destinationlabel">
      <x>119</x>
@@ -1740,8 +1857,8 @@
    <slot>MinFramerateChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>230</x>
-     <y>167</y>
+     <x>256</x>
+     <y>138</y>
     </hint>
     <hint type="destinationlabel">
      <x>209</x>
@@ -1756,8 +1873,8 @@
    <slot>ActTSChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>221</x>
-     <y>269</y>
+     <x>256</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel">
      <x>160</x>
@@ -1772,8 +1889,8 @@
    <slot>InactTSChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>221</x>
-     <y>306</y>
+     <x>256</x>
+     <y>242</y>
     </hint>
     <hint type="destinationlabel">
      <x>11</x>
@@ -1788,8 +1905,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>368</x>
-     <y>96</y>
+     <x>322</x>
+     <y>94</y>
     </hint>
     <hint type="destinationlabel">
      <x>20</x>
@@ -1804,8 +1921,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>253</x>
-     <y>96</y>
+     <x>238</x>
+     <y>94</y>
     </hint>
     <hint type="destinationlabel">
      <x>35</x>
@@ -1820,8 +1937,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>96</y>
+     <x>82</x>
+     <y>94</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -1836,8 +1953,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>536</x>
-     <y>96</y>
+     <x>445</x>
+     <y>94</y>
     </hint>
     <hint type="destinationlabel">
      <x>92</x>
@@ -1852,8 +1969,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>638</x>
-     <y>96</y>
+     <x>593</x>
+     <y>94</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1868,8 +1985,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>85</x>
-     <y>226</y>
+     <x>127</x>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel">
      <x>159</x>
@@ -1884,8 +2001,8 @@
    <slot>RemoveLogo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>484</y>
+     <x>119</x>
+     <y>485</y>
     </hint>
     <hint type="destinationlabel">
      <x>26</x>
@@ -1900,8 +2017,8 @@
    <slot>SelectLogo()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>451</y>
+     <x>119</x>
+     <y>456</y>
     </hint>
     <hint type="destinationlabel">
      <x>351</x>
@@ -1916,8 +2033,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>85</x>
-     <y>254</y>
+     <x>127</x>
+     <y>279</y>
     </hint>
     <hint type="destinationlabel">
      <x>349</x>
@@ -1932,8 +2049,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>424</x>
-     <y>226</y>
+     <x>436</x>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel">
      <x>354</x>
@@ -1948,8 +2065,8 @@
    <slot>PickLogFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>639</x>
-     <y>403</y>
+     <x>636</x>
+     <y>324</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
@@ -1964,8 +2081,8 @@
    <slot>SelectTempDir()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>639</x>
-     <y>406</y>
+     <x>636</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
      <x>358</x>
@@ -1980,8 +2097,8 @@
    <slot>WarnAPIMethodChange()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>146</x>
-     <y>96</y>
+     <x>156</x>
+     <y>94</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>
@@ -1996,12 +2113,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>100</x>
-     <y>167</y>
+     <x>121</x>
+     <y>130</y>
     </hint>
     <hint type="destinationlabel">
-     <x>342</x>
-     <y>170</y>
+     <x>473</x>
+     <y>132</y>
     </hint>
    </hints>
   </connection>
@@ -2012,8 +2129,8 @@
    <slot>MemMaxChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>301</x>
-     <y>170</y>
+     <x>222</x>
+     <y>132</y>
     </hint>
     <hint type="destinationlabel">
      <x>490</x>
@@ -2028,8 +2145,8 @@
    <slot>MemMaxChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>448</x>
-     <y>170</y>
+     <x>331</x>
+     <y>132</y>
     </hint>
     <hint type="destinationlabel">
      <x>490</x>
@@ -2044,8 +2161,8 @@
    <slot>OverrideMaxToggled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>92</x>
-     <y>167</y>
+     <x>113</x>
+     <y>130</y>
     </hint>
     <hint type="destinationlabel">
      <x>487</x>
@@ -2060,8 +2177,8 @@
    <slot>ToggleExperimentalFeatures()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>85</x>
-     <y>207</y>
+     <x>127</x>
+     <y>171</y>
     </hint>
     <hint type="destinationlabel">
      <x>7</x>
@@ -2076,8 +2193,8 @@
    <slot>MaxBSChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>352</x>
-     <y>102</y>
+     <x>423</x>
+     <y>81</y>
     </hint>
     <hint type="destinationlabel">
      <x>425</x>
@@ -2092,8 +2209,8 @@
    <slot>BuilderBSChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>239</x>
-     <y>137</y>
+     <x>298</x>
+     <y>106</y>
     </hint>
     <hint type="destinationlabel">
      <x>516</x>
@@ -2114,6 +2231,38 @@
     <hint type="destinationlabel">
      <x>334</x>
      <y>275</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider_CompressionLevel</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>CompressionLevelChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>319</x>
+     <y>302</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButton_noCompression</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SettingsDlg</receiver>
+   <slot>CompressionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>274</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>274</y>
     </hint>
    </hints>
   </connection>
@@ -2139,5 +2288,7 @@
   <slot>OverrideMaxToggled(bool)</slot>
   <slot>ToggleExperimentalFeatures()</slot>
   <slot>SwitchToBasic()</slot>
+  <slot>CompressionLevelChanged(int)</slot>
+  <slot>CompressionChanged()</slot>
  </slots>
 </ui>

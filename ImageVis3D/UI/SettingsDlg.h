@@ -107,6 +107,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool GetMedianFilter() const;
     bool GetClampToEdge() const;
     uint32_t GetCompression() const;
+    uint32_t GetCompressionLevel() const;
     uint32_t GetLayout() const;
     bool GetUseBasicSettings() const;
 
@@ -151,6 +152,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bMedianFilter,
                    bool bClampToEdge,
                    uint32_t iCompression,
+                   uint32_t iCompressionLevel,
                    bool expFeatures,
                    uint32_t iLayout);
 
@@ -175,6 +177,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void BuilderBSChanged(int iValue);
     void ToggleExperimentalFeatures();
     void SwitchToBasic();
+    void CompressionLevelChanged(int iValue);
+    void CompressionChanged();
 
   private:
     MasterController& m_MasterController;

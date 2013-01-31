@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
                                         "lzma, 3: lz4, 4: bzlib, 5: lzham",
                                         false, static_cast<size_t>(1), uint);
     TCLAP::ValueArg<size_t> complevel("v", "level", "UVF compression level "
-                                      "(0..10)",
+                                      "between (1..10)",
                                       false, static_cast<size_t>(1), uint);
     TCLAP::ValueArg<size_t> sizeX("x", "sizeX", "width of created volume",
                                   false, static_cast<size_t>(100), uint);

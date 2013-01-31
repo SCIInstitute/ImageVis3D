@@ -174,7 +174,7 @@ int main(int argc, const char* argv[])
                                             "5: lzham",
                                             false, 1, "positive integer");
     TCLAP::ValueArg<uint32_t> opt_level("v", "level", "UVF compression level "
-                                        "(0..10)",
+                                        "between (1..10)",
                                         false, 1, "positive integer");
     TCLAP::SwitchArg dbg("g", "debug", "Enable debugging mode", false);
     TCLAP::SwitchArg experim("", "experimental",

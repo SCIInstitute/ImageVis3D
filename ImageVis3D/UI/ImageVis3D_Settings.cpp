@@ -98,8 +98,8 @@ void MainWindow::SaveSettings(
   const FLOATVECTOR3& backColor2, const FLOATVECTOR4& textColor,
   const QString& logo, int logoPosition, unsigned maxBrickSize,
   unsigned builderBrickSize, bool medianFilter, bool clampToEdge,
-  uint32_t compression, bool experimentalFeatures, bool advancedSettings,
-  uint32_t layout
+  uint32_t compression, uint32_t compressionLevel, bool experimentalFeatures,
+  bool advancedSettings, uint32_t layout
 ) {
   QSettings settings;
   settings.beginGroup("Memory"); {
@@ -117,6 +117,7 @@ void MainWindow::SaveSettings(
     settings.setValue("UseMedian", medianFilter);
     settings.setValue("ClampToEdge", clampToEdge);
     settings.setValue("Compression", compression);
+    settings.setValue("CompressionLevel", compressionLevel);
     settings.setValue("Layout", layout);
   } settings.endGroup();
 
@@ -216,6 +217,7 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
     bool bUseMedian = settings.value("UseMedian", false).toBool();
     bool bClampToEdge = settings.value("ClampToEdge", false).toBool();
     uint32_t iCompression = settings.value("Compression", 1).toUInt();
+    uint32_t iCompressionLevel = settings.value("CompressionLevel", 1).toUInt();
     uint32_t iLayout = settings.value("Layout", 0).toUInt();
     settings.endGroup();
 
@@ -289,7 +291,7 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
       bDisableBorder, vBackColor1, vBackColor2, vTextColor,
       strLogoFilename, iLogoPos, iMaxBrickSize, iBuilderBrickSize,
       iMaxMaxBrickSize, bUseMedian, bClampToEdge, iCompression,
-      expFeatures, iLayout
+      iCompressionLevel, expFeatures, iLayout
     );
 
     if (bInitializeOnly || settingsDlg.exec() == QDialog::Accepted) {
@@ -322,7 +324,8 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
         settingsDlg.GetLogoFilename(), settingsDlg.GetLogoPos(),
         settingsDlg.GetMaxBrickSize(), settingsDlg.GetBuilderBrickSize(),
         settingsDlg.GetMedianFilter(), settingsDlg.GetClampToEdge(),
-        settingsDlg.GetCompression(), settingsDlg.GetExperimentalFeatures(),
+        settingsDlg.GetCompression(), settingsDlg.GetCompressionLevel(),
+        settingsDlg.GetExperimentalFeatures(),
         true, settingsDlg.GetLayout()
       );
 
@@ -386,8 +389,10 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
                            MasterController::OPENGL_2DSBVR, 0, true, false,
                            false, black, darkblue,
                            white, "", 0, unsigned(log2(256)),
-                           unsigned(log2(128)), true, false, 1, false, false, 0);
-        // TODO: If some other layout proofs to be faster, use the fastest here!
+                           unsigned(log2(128)), true, false, 1, 1,
+                           false, false, 0);
+        // TODO: If some other compressor or level or layout proofs to be faster
+        //       , use the fastest here!
         break;
       case MIDDLE_1:
         this->SaveSettings(static_cast<uint64_t>(ceil(cpumem * 0.77)), cpumem,
@@ -399,8 +404,10 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
                            MasterController::OPENGL_SBVR, 2, true, false,
                            false, black, darkblue,
                            white, "", 0, unsigned(log2(256)),
-                           unsigned(log2(128)), true, false, 1, false, false, 0);
-        // TODO: If some other layout proofs to be faster, use the fastest here!
+                           unsigned(log2(128)), true, false, 1, 1,
+                           false, false, 0);
+        // TODO: If some other compressor or level or layout proofs to be faster
+        //       , use the fastest here!
         break;
       case MAX_PERFORMANCE:
         this->SaveSettings(static_cast<uint64_t>(ceil(cpumem * 0.9)), cpumem,
@@ -412,8 +419,10 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
                            MasterController::OPENGL_SBVR, 2, true, false,
                            false, black, darkblue,
                            white, "", 0, unsigned(log2(256)),
-                           unsigned(log2(128)), true, false, 1, false, false, 0);
-        // TODO: If some other layout proofs to be faster, use the fastest here!
+                           unsigned(log2(128)), true, false, 1, 1,
+                           false, false, 0);
+        // TODO: If some other compressor or level or layout proofs to be faster
+        //       , use the fastest here!
         break;
     }
   }
@@ -512,6 +521,7 @@ void MainWindow::ApplySettings() {
   bool bUseMedian = settings.value("UseMedian", false).toBool();
   bool bClampToEdge = settings.value("ClampToEdge", false).toBool();
   uint32_t iCompression = settings.value("Compression", 1).toUInt();
+  uint32_t iCompressionLevel = settings.value("CompressionLevel", 1).toUInt();
   uint32_t iLayout = settings.value("Layout", 0).toUInt();
   settings.endGroup();
 
@@ -534,6 +544,7 @@ void MainWindow::ApplySettings() {
   ss->cexec("tuvok.io.setUseMedianFilter", bUseMedian);
   ss->cexec("tuvok.io.setClampToEdge", bClampToEdge);
   ss->cexec("tuvok.io.setUVFCompression", iCompression);
+  ss->cexec("tuvok.io.setUVFCompressionLevel", iCompressionLevel);
   ss->cexec("tuvok.io.setUVFLayout", iLayout);
 
   // Apply window settings

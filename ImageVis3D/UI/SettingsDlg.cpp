@@ -381,6 +381,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
                             bool bMedianFilter,
                             bool bClampToEdge,
                             uint32_t iCompression,
+                            uint32_t iCompressionLevel,
                             bool expFeatures,
                             uint32_t iLayout) {
   m_bInit = true;
@@ -425,6 +426,8 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
     case 4 : radioButton_bzlibCompression->setChecked(true); break;
     case 5 : radioButton_lzhamCompression->setChecked(true); break;
   }
+  CompressionLevelChanged(iCompressionLevel);
+  CompressionChanged();
 
   radioButton_scanlineLayout->setChecked(false);
   radioButton_mortonLayout->setChecked(false);
@@ -691,6 +694,34 @@ unsigned int SettingsDlg::GetMaxBrickSize() const {
 
 unsigned int SettingsDlg::GetBuilderBrickSize() const {
   return horizontalSlider_BSBuilder->value();
+}
+
+void SettingsDlg::CompressionLevelChanged(int iValue) {
+  QString str;
+  switch (iValue) {
+  case  1: str = tr("Fastest"); break;
+  case  2: str = tr("Very Fast"); break;
+  case  3: str = tr("Fast"); break;
+  case  4: str = tr("Quite Fast"); break;
+  case  5: str = tr("Normal"); break;
+  case  6: str = tr("Quite Strong"); break;
+  case  7: str = tr("Strong"); break;
+  case  8: str = tr("Very Strong"); break;
+  case  9: str = tr("Strongest"); break;
+  case 10: str = tr("Ultra"); break;
+  }
+  str.append(tr(" (%1)").arg(uint32_t(iValue)));
+  if (horizontalSlider_CompressionLevel->value() != iValue)
+    horizontalSlider_CompressionLevel->setValue(iValue);
+  label_CompressionLevelUnit->setText(str);
+}
+
+void SettingsDlg::CompressionChanged() {
+  frame_CompressionLevel->setEnabled(!radioButton_noCompression->isChecked());
+}
+
+uint32_t SettingsDlg::GetCompressionLevel() const {
+  return horizontalSlider_CompressionLevel->value();
 }
 
 void SettingsDlg::PickLogFile() {

@@ -446,8 +446,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
       const FLOATVECTOR3& backColor2, const FLOATVECTOR4& textColor,
       const QString& logo, int logoPosition, unsigned maxBrickSize,
       unsigned builderBrickSize, bool medianFilter, bool clampToEdge,
-      uint32_t compression, bool experimentalFeatures, bool advancedSettings,
-      uint32_t layout
+      uint32_t compression, uint32_t compressionLevel,
+      bool experimentalFeatures, bool advancedSettings, uint32_t layout
     );
     void SetSampleRateSlider(int iValue);
     void UpdateSampleRateLabel(int iValue);
