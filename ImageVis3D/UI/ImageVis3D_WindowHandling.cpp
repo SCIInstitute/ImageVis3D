@@ -1349,19 +1349,18 @@ void MainWindow::CheckForRedraw() {
 void MainWindow::OpenRecentFile(){
   QAction *action = qobject_cast<QAction *>(sender());
 
+  if(action == NULL) { T_ERROR("no sender?"); return; }
   if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
-    if (action) {
-      if (!LoadDataset(QStringList(action->data().toString()))) {
-        if (m_bIgnoreLoadDatasetFailure == false) {
-          ShowCriticalDialog("Render window initialization failed.",
-                       "Could not open a render window!  This normally "
-                       "means ImageVis3D does not support your GPU.  Please"
-                       " check the debug log ('Help | Debug Window') for "
-                       "errors, and/or use 'Help | Report an Issue' to "
-                       "notify the ImageVis3D developers.");
-        }
-        m_bIgnoreLoadDatasetFailure = false;
+    if (!LoadDataset(QStringList(action->data().toString()))) {
+      if (m_bIgnoreLoadDatasetFailure == false) {
+        ShowCriticalDialog("Render window initialization failed.",
+                     "Could not open a render window!  This normally "
+                     "means ImageVis3D does not support your GPU.  Please"
+                     " check the debug log ('Help | Debug Window') for "
+                     "errors, and/or use 'Help | Report an Issue' to "
+                     "notify the ImageVis3D developers.");
       }
+      m_bIgnoreLoadDatasetFailure = false;
     }
   } else {
     QString strText = tr("File %1 not found.").arg(action->data().toString());
@@ -1392,8 +1391,9 @@ void MainWindow::OpenRecentFile(){
 void MainWindow::OpenRecentWSFile(){
   QAction *action = qobject_cast<QAction *>(sender());
 
+  if(action == NULL) { T_ERROR("no sender?"); return; }
   if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
-    if (action) LoadWorkspace(action->data().toString());
+    LoadWorkspace(action->data().toString());
   }
 }
 
