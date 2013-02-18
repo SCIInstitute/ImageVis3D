@@ -68,20 +68,29 @@ int main(int argc, const char* argv[])
 {
   // Read Lua filename from the first program argument
   std::string filename;
+  bool debug = false;
   try
   {
     TCLAP::CmdLine cmd("Lua batch renderer");
     TCLAP::ValueArg<string> luaFile("f", "script", "Script to execute.", true,
                                     "", "filename");
+    TCLAP::SwitchArg dbg("g", "debug", "Enable debugging mode", false);
     cmd.add(luaFile);
+    cmd.add(dbg);
     cmd.parse(argc, argv);
 
     filename = luaFile.getValue();
+    debug = dbg.getValue();
   }
   catch (const TCLAP::ArgException& e)
   {
     std::cerr << "Error: " << e.error() << " for arg " << e.argId() << std::endl;
     return EXIT_FAILURE;
+  }
+  if(debug) {
+    Controller::Instance().DebugOut()->SetOutput(true, true, true, true);
+  } else {
+    Controller::Instance().DebugOut()->SetOutput(true, true, false, false);
   }
 
   try
