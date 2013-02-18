@@ -31,7 +31,7 @@ if test -n "${QT_BIN}" ; then
 else
     qm="qmake"
 fi
-for d in . ; do
+for d in . tuvok/IO/test ; do
   pushd ${d} &>/dev/null
     ${qm} \
         ${MKSPEC} \
