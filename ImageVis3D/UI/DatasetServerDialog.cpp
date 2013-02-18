@@ -179,7 +179,7 @@ DatasetServerDialog::~DatasetServerDialog() {
 
 void DatasetServerDialog::startServers() {
   // no servers ... nothing todo
-  if (aDatasets.size() == 0)  return;
+  if(aDatasets.empty()) { return; }
 
   int port = editPort->text().toInt();
 
@@ -253,7 +253,7 @@ void DatasetServerDialog::updateListWidgetAndButtons() {
       qstr = tr("%1 / none").arg(SysTools::GetFilename(aDatasets[i].dataset).c_str());
     datasetList->addItem(qstr);
   }
-  if ( aDatasets.size() > 0 ) {
+  if(!aDatasets.empty()) {
     datasetList->setCurrentRow(std::min<int>(index, int(aDatasets.size()-1)));
     removeButton->setEnabled(true);
     startButton->setEnabled(true);

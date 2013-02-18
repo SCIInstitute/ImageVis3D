@@ -48,7 +48,7 @@ public:
   virtual ~TuvokLuaScriptExec();
 
   /// Executes the file given by the parameter 'filename'.
-  void execFile(const std::string filename);
+  void execFile(const std::string& filename);
 
 private:
 

@@ -53,7 +53,7 @@ TuvokLuaScriptExec::~TuvokLuaScriptExec()
 }
 
 //------------------------------------------------------------------------------
-void TuvokLuaScriptExec::execFile(const std::string filename)
+void TuvokLuaScriptExec::execFile(const std::string& filename)
 {
   std::shared_ptr<LuaScripting> ss = Controller::Instance().LuaScript();
 

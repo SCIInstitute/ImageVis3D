@@ -1484,10 +1484,8 @@ void Q2DTransferFunction::AddGradient(GradientStop stop) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   shared_ptr<const vector<TFPolygon>> swatches = GetSwatches();
   const TFPolygon& currentSwatch = (*swatches)[m_iActiveSwatchIndex];
-  for (std::vector< GradientStop >::const_iterator i = 
-       currentSwatch.pGradientStops.begin();
-       i<currentSwatch.pGradientStops.end();
-       i++) {
+  for (auto i = currentSwatch.pGradientStops.begin();
+       i < currentSwatch.pGradientStops.end(); ++i) {
     if (i->first > stop.first) {
       // Do not proceed iteration after making this Lua call. If the 
       // pGradientStops vector resized itself, our iterator is invalid.

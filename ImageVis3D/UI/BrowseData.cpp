@@ -101,5 +101,5 @@ bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 
   if (pleaseWaitDialog != NULL) pleaseWaitDialog->close();
 
-  return m_dirInfo.size() > 0;
+  return !m_dirInfo.empty();
 }

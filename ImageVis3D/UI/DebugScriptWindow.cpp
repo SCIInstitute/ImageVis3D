@@ -280,7 +280,7 @@ std::string getLongestPrefix( const std::vector<std::string>& strs)
   std::vector<std::string>::const_iterator vsi = strs.begin();
   int maxCharactersCommon = static_cast<int>(vsi->length());
   std::string compareString = *vsi ;
-  for ( vsi = strs.begin() + 1 ; vsi != strs.end() ; vsi++ )
+  for (vsi = strs.begin() + 1; vsi != strs.end(); ++vsi)
   {
     // Avoid mismatch iterating passed the end of the second iterator.
     // Complexity for size should be constant (std::distance(begin(), end()).
@@ -313,7 +313,7 @@ bool DebugScriptWindow::eventFilter(QObject *obj, QEvent *event)
       QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
       if (keyEvent->key() == Qt::Key_Up)
       {
-        if (mSavedInput.size() == 0) return false;
+        if(mSavedInput.empty()) return false;
 
         /// @todo Implement scrolling through prior command history.
         //mController.LuaScript()->exec("print('key up')");
@@ -325,7 +325,7 @@ bool DebugScriptWindow::eventFilter(QObject *obj, QEvent *event)
       }
       else if (keyEvent->key() == Qt::Key_Down)
       {
-        if (mSavedInput.size() == 0) return false;
+        if(mSavedInput.empty()) return false;
 
         //mController.LuaScript()->exec("print('key down')");
         if (mSavedInputPos < (int)mSavedInput.size() - 1)

@@ -101,7 +101,7 @@ void MergeDlg::AnalyzeCurrentDataset() {
 void MergeDlg::setupUi() {
   Ui_MergeDlg::setupUi(this);
   IsDatasetSelected(false);
-  pushButton_save->setEnabled(m_vDataSetList.size()>0);
+  pushButton_save->setEnabled(!m_vDataSetList.empty());
   UpdateValueFields();
 }
 
@@ -176,7 +176,7 @@ void MergeDlg::RemoveDataset() {
   m_vDataSetList.erase(m_vDataSetList.begin()+iCurrent);
   UpadeListView();
 
-  pushButton_save->setEnabled(m_vDataSetList.size()>0);
+  pushButton_save->setEnabled(!m_vDataSetList.empty());
 }
 
 void MergeDlg::ExecuteMerge() {
@@ -196,7 +196,7 @@ void MergeDlg::UpadeListView() {
     listWidget_datasets->addItem ( strDesc );
   }
 
-  if (m_vDataSetList.size() > 0 && iCurrent >= 0) {
+  if (!m_vDataSetList.empty() && iCurrent >= 0) {
     listWidget_datasets->setCurrentRow(std::min<int>(iCurrent, int(m_vDataSetList.size())-1));
   }
 

@@ -1563,14 +1563,13 @@ void MainWindow::ShowWelcomeScreen() {
 
 
 void MainWindow::DisplayMetadata() {
-
   if (m_pActiveRenderWin)  {
     shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
     const vector<pair<string, string>>& metadata = 
         ss->cexecRet<vector<pair<string, string>>>(ds.fqName() + ".getMetadata");
 
-    if (metadata.size() > 0) {
+    if(!metadata.empty()) {
       m_pMetadataDialog->setWindowIcon(windowIcon());
       m_pMetadataDialog->SetMetadata(metadata);
       m_pMetadataDialog->SetFilename(lineEdit_DatasetName->text());
