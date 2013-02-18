@@ -61,13 +61,25 @@ void TuvokLuaScriptExec::execFile(const std::string& filename)
   try
   {
     lua_State* L = ss->getLuaState();
-    if (luaL_dofile(L, filename.c_str()) == 1)
-    {
-      std::cerr << "Error interpreting file: " << filename << std::endl;
-      if (lua_gettop(L) != 0 && lua_isstring(L, lua_gettop(L)))
-        std::cerr << "Error: " << lua_tostring(L, lua_gettop(L)) << std::endl;
+    luaL_loadfile(L, filename.c_str());
+    const int err = lua_pcall(L, 0, LUA_MULTRET, 0);
+    switch(err) {
+      case 0: /* success. */ break;
+      case LUA_ERRRUN:
+        std::cerr << "Error interpreting file: " << filename << std::endl;
+        if (lua_gettop(L) != 0 && lua_isstring(L, lua_gettop(L)))
+          std::cerr << "Error: " << lua_tostring(L, lua_gettop(L)) << std::endl;
+        break;
+      case LUA_ERRMEM:
+        std::cerr << "Memory allocation error.\n";
+        break;
+      case LUA_ERRERR:
+        std::cerr << "Error running Lua error function(?!)\n";
+        break;
+      default:
+        std::cerr << "Unknown Lua error (" << err << ").\n";
+        break;
     }
-    //ss->exec(fileContent);
   }
   catch (...)
   {
