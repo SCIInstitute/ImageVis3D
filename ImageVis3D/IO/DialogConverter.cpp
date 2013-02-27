@@ -92,19 +92,12 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
     iComponentCount = 1; 
     vVolumeSize    = rawDialog.GetSize();
     vVolumeAspect  = rawDialog.GetAspectRatio();
-    unsigned int  quantID        = rawDialog.GetQuantization();
     unsigned int  encID          = rawDialog.GetEncoding();
     iHeaderSkip       = rawDialog.GetHeaderSize();
     bConvertEndianess = encID != 1 && rawDialog.IsBigEndian() != EndianConvert::IsBigEndian();
-    bSigned           = quantID >= 3 || rawDialog.IsSigned();
-    
-
-    iComponentSize = 8;
-    if (quantID == 1) iComponentSize = 16;
-    if (quantID == 2 || quantID == 3) iComponentSize = 32;
-    if (quantID == 4) iComponentSize = 64;
-
-    bIsFloat = quantID == 3 || quantID == 4;
+    iComponentSize    = rawDialog.GetBitWidth() * 8;
+    bSigned           = rawDialog.IsSigned();
+    bIsFloat          = rawDialog.IsFloat();
 
     MESSAGE("setting component size to: %llu", iComponentSize);
 

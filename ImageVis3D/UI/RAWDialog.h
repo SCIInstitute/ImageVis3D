@@ -50,15 +50,16 @@ class RAWDialog : public QDialog, protected Ui_RAWDialog
     RAWDialog(const std::string& strFilename, uint64_t iFileSize, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~RAWDialog();
 
-    UINT64VECTOR3 GetSize();
-    FLOATVECTOR3 GetAspectRatio();
-    unsigned int GetQuantization();
-    unsigned int GetEncoding();
-    unsigned int GetHeaderSize();
-    bool IsBigEndian();
-    bool IsSigned();
+    UINT64VECTOR3 GetSize() const;
+    FLOATVECTOR3 GetAspectRatio() const;
+    unsigned int GetBitWidth() const;
+    unsigned int GetEncoding() const;
+    unsigned int GetHeaderSize() const;
+    bool IsBigEndian() const;
+    bool IsSigned() const;
+    bool IsFloat() const;
 
-    uint64_t ComputeExpectedSize();
+    uint64_t ComputeExpectedSize() const;
 
   protected slots:
     void CheckValues();

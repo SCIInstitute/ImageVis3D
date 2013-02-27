@@ -35,8 +35,9 @@
 //
 //!    Copyright (C) 2008 SCI Institute
 
-#include "RAWDialog.h"
 #include <QtCore/QFileInfo>
+#include "RAWDialog.h"
+#include "Controller/Controller.h"
 
 using namespace std;
 
@@ -72,6 +73,8 @@ void RAWDialog::CheckValues() {
   }
 
   uint64_t iExpectedSize = ComputeExpectedSize();
+  MESSAGE("expected size: %llu, actual size: %llu", iExpectedSize,
+          m_iFileSize);
 
   if (iExpectedSize < m_iFileSize) {
     label_Information->setText("Settings may work (file is larger then your settings dictate).");
@@ -92,42 +95,42 @@ void RAWDialog::ToggleEndianessDialog() {
 void RAWDialog::GuessHeaderSize() {
   uint64_t iExpectedSize = ComputeExpectedSize();
 
-  if ( m_iFileSize >= iExpectedSize) spinBox_HeaderSkip->setValue(m_iFileSize - iExpectedSize);
+  if (m_iFileSize >= iExpectedSize) spinBox_HeaderSkip->setValue(m_iFileSize - iExpectedSize);
 }
 
-uint64_t RAWDialog::ComputeExpectedSize() {
-  uint64_t iCompSize = 0;
-  switch(this->GetQuantization()) {
-    case 0: iCompSize = 1; break; /* 8bit */
-    case 1: iCompSize = 2; break; /* 16bit */
-    case 2:
-    case 3: iCompSize = 4; break; /* 32 bit int and float */
-    case 4: iCompSize = 8; break; /* 64bit float */
-  }
-
-  return uint64_t(spinBox_SizeX->value()) * uint64_t(spinBox_SizeY->value()) * uint64_t(spinBox_SizeZ->value()) * iCompSize + uint64_t(spinBox_HeaderSkip->value());
+uint64_t RAWDialog::ComputeExpectedSize() const {
+  return (uint64_t(spinBox_SizeX->value()) *
+          uint64_t(spinBox_SizeY->value()) *
+          uint64_t(spinBox_SizeZ->value()) *
+          this->GetBitWidth()) +
+          uint64_t(spinBox_HeaderSkip->value());
 }
 
 
-UINT64VECTOR3 RAWDialog::GetSize() {
+UINT64VECTOR3 RAWDialog::GetSize() const {
   return UINT64VECTOR3(uint64_t(spinBox_SizeX->value()) , uint64_t(spinBox_SizeY->value()) , uint64_t(spinBox_SizeZ->value()));
 }
 
-FLOATVECTOR3 RAWDialog::GetAspectRatio() {
+FLOATVECTOR3 RAWDialog::GetAspectRatio() const {
   return FLOATVECTOR3(float(doubleSpinBox_AspX->value()) , float(doubleSpinBox_AspY->value()) , float(doubleSpinBox_AspZ->value()));
 }
 
-unsigned int RAWDialog::GetQuantization() {
-  if(radioButton_8bit->isChecked()) { return 0; }
-  else if(radioButton_16bit->isChecked()) { return 1; }
-  else if(radioButton_32BitInt->isChecked()) { return 2; }
-  else if(radioButton_32BitFloat->isChecked()) { return 3; }
-  else if(radioButton_64BitFloat->isChecked()) { return 4; }
+unsigned int RAWDialog::GetBitWidth() const {
+  if(radioButton_8bit->isChecked()) {
+    return 1;
+  } else if(radioButton_16bit->isChecked()) {
+    return 2;
+  } else if(radioButton_32BitInt->isChecked() ||
+            radioButton_32BitFloat->isChecked()) {
+    return 4;
+  } else if(radioButton_64BitFloat->isChecked()) {
+    return 8;
+  }
 
   return std::numeric_limits<unsigned int>::max();
 }
 
-unsigned int RAWDialog::GetEncoding() {
+unsigned int RAWDialog::GetEncoding() const {
   unsigned int iID = 0;
   if (radioButton_Text->isChecked()) iID = 1; else
     if (radioButton_GZIP->isChecked()) iID = 2; else
@@ -135,15 +138,19 @@ unsigned int RAWDialog::GetEncoding() {
   return iID;
 }
 
-unsigned int RAWDialog::GetHeaderSize() {
+unsigned int RAWDialog::GetHeaderSize() const {
   return (unsigned int)(spinBox_HeaderSkip->value());
 }
 
-bool RAWDialog::IsBigEndian() {
+bool RAWDialog::IsBigEndian() const {
   return radioButton_BigEnd->isChecked();
 }
 
-bool RAWDialog::IsSigned() {
+bool RAWDialog::IsSigned() const {
   return radioButton_Signed->isChecked();
 }
 
+bool RAWDialog::IsFloat() const {
+  return radioButton_32BitFloat->isChecked() ||
+         radioButton_64BitFloat->isChecked();
+}
