@@ -1100,7 +1100,7 @@ void MainWindow::ExportIsosurface() {
     if (hasConverter) {
      if(QMessageBox::Yes ==
        QMessageBox::question(this, "Add Mesh to Project",
-        "Do you want to integrate load the surface a part of this project?",
+        "Do you want to load the surface a part of this project?",
         QMessageBox::Yes, QMessageBox::No)) {
 
         AddGeometry(targetFileName);
