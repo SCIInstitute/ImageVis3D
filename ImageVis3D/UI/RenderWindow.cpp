@@ -1082,6 +1082,16 @@ void RenderWindow::MoveViewer(const FLOATVECTOR3& vDirection) {
   UpdateWindow();
 }
 
+void RenderWindow::SetFirstPersonMode(bool bFirstPersonMode)
+{
+  m_bFirstPersonMode = bFirstPersonMode;
+}
+
+bool RenderWindow::GetFirstPersonMode()
+{
+  return m_bFirstPersonMode;
+}
+
 void RenderWindow::KeyPressEvent ( QKeyEvent * event ) {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   string rn = m_LuaAbstrRenderer.fqName();
@@ -2705,9 +2715,14 @@ void RenderWindow::RegisterLuaFunctions(
   reg.function(&RenderWindow::UpdateWindow, "paint", "forces paint", false);
 
   reg.function(&RenderWindow::RotateViewer, "rotateViewer",
-               "Rotates the viewer in x and y viewing direction", true);  
+               "Rotates the viewer in x and y viewing direction", true);
   reg.function(&RenderWindow::MoveViewer, "moveViewer",
                "Moves the viewer in the viewing coordinate frame", true);
+
+  reg.function(&RenderWindow::SetFirstPersonMode, "setFirstPersonMode",
+               "Enables/disables the first person mode", true);
+  reg.function(&RenderWindow::GetFirstPersonMode, "getFirstPersonMode",
+               "Returns true if the first person mode is enabled", true);
 
   id = reg.function(&RenderWindow::CaptureSubframe, "captureSubframe",
                     "captures whatever's in the buffer now", true);

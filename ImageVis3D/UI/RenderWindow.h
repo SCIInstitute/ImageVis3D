@@ -444,6 +444,8 @@ class RenderWindow
     void MoveViewer(const FLOATVECTOR3& vDirection);
     void RotateViewerWithMouse(const INTVECTOR2& viMouseDelta);
     void RotateViewer(const FLOATVECTOR3& vfAnglesInDegree);
+    void SetFirstPersonMode(bool);
+    bool GetFirstPersonMode();
 
     void SetRotation(tuvok::LuaClassInstance region,
                      FLOATMATRIX4 newRotation);
