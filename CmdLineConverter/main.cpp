@@ -141,7 +141,7 @@ int main(int argc, const char* argv[])
   const uint32_t brickoverlap = 2;
   uint32_t compression = 1; // 1 is default zlib compression
   uint32_t level = 1; // generic compression level 1 is best speed
-
+  float fMem = 0.8f;
 
   try {
     TCLAP::CmdLine cmd("uvf converter");
@@ -161,6 +161,10 @@ int main(int argc, const char* argv[])
     TCLAP::ValueArg<double> scale("s", "scale",
                                   "(merging) scaling value for second file",
                                   false, 0.0, "floating point number");
+    TCLAP::ValueArg<float> opt_mem("m", "memory",
+                                   "max allowed fraction of installed RAM to use"
+                                   " (0.05..0.95)",
+                                   false, 0.8f, "floating point number");
     TCLAP::ValueArg<uint32_t> opt_bricksize("c", "bricksize",
                                         "set maximum brick size (64)", false,
                                         64, "positive integer");
@@ -184,6 +188,7 @@ int main(int argc, const char* argv[])
     cmd.add(output);
     cmd.add(bias);
     cmd.add(scale);
+    cmd.add(opt_mem);
     cmd.add(opt_bricksize);
     cmd.add(opt_bricklayout);
     cmd.add(opt_compression);
@@ -207,6 +212,7 @@ int main(int argc, const char* argv[])
     strOutFile = output.getValue();
     fBias = bias.getValue();
     fScale = scale.getValue();
+    fMem = opt_mem.getValue();
     bricksize = opt_bricksize.getValue();
     bricklayout = opt_bricklayout.getValue();
     compression = opt_compression.getValue();
@@ -232,7 +238,16 @@ int main(int argc, const char* argv[])
   }
 
   Controller::Instance().AddDebugOut(debugOut);
-  Controller::Instance().SetMaxCPUMem(0.8f);
+  if (fMem < 0.05f) {
+    fMem = 0.05f;
+    MESSAGE("Clamped max allowed RAM utilization to: %.2f%%", fMem * 100);
+  } else if (fMem > 0.95) {
+    fMem = 0.95f;
+    MESSAGE("Clamped max allowed RAM utilization to: %.2f%%", fMem * 100);
+  } else {
+    MESSAGE("Max allowed RAM utilization: %.2f", fMem * 100);
+  }
+  Controller::Instance().SetMaxCPUMem(fMem);
   uint32_t mem = uint32_t(Controller::Instance().SysInfo()->GetMaxUsableCPUMem()/1024/1024);
   MESSAGE("Using up to %u MB RAM", mem);
   cout << endl;
@@ -241,6 +256,7 @@ int main(int argc, const char* argv[])
   ioMan.SetCompression(compression);
   ioMan.SetCompressionLevel(level);
   ioMan.SetLayout(bricklayout);
+  
 
   // If they gave us an expression, evaluate that.  Otherwise we're doing a
   // normal conversion.
