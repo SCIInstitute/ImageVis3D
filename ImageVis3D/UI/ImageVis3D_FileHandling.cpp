@@ -966,15 +966,27 @@ void MainWindow::ExportImageStack() {
   QString strLastDir = settings.value("Folders/ExportImageStack", ".").toString();
 
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
+  string filterStr = ss->cexecRet<string>("tuvok.io.getImageExportDialogString").c_str();
+
   QString fileName =
     QFileDialog::getSaveFileName(this, "Export Current Dataset to a Set of Images",
-         strLastDir,
-         ss->cexecRet<string>("tuvok.io.getImageExportDialogString").c_str(),
-         &selectedFilter, options);
+         strLastDir,filterStr.c_str(),&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/ExportImageStack", QFileInfo(fileName).absoluteDir().path());
     string targetFileName = string(fileName.toAscii());
+    
+    string selectedFilterStr = string(selectedFilter.toAscii());
+    std::string filterExt = ss->cexecRet<string>("tuvok.io.imageExportDialogFilterToExt", selectedFilterStr);
+
+    if (SysTools::GetExt(targetFileName).empty())  {
+      if (filterExt.empty()) {
+        ShowCriticalDialog( "Error during image stack export.", "Unable to determine file type from filename.");
+        return;
+      } else {
+        targetFileName += std::string(".") + filterExt;
+      }
+    }
 
     shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
