@@ -2640,6 +2640,13 @@ void RenderWindow::LuaLoad2DTFqn(const std::string& tf) {
   this->m_MainWindow->LoadTransferFunction2D(tf);
 }
 
+void RenderWindow::LuaSetClipPlane(const FLOATMATRIX4& m) {
+  LuaClassInstance rgn = this->GetFirst3DRegion();
+  ExtendedPlane p;
+  p.Transform(m, false);
+  SetClipPlane(rgn, p);
+}
+
 void RenderWindow::RegisterLuaFunctions(
     LuaClassRegistration<RenderWindow>& reg, RenderWindow* me,
     LuaScripting* ss) {
@@ -2723,9 +2730,10 @@ void RenderWindow::RegisterLuaFunctions(
                "Enables/disables the first person mode", true);
   reg.function(&RenderWindow::GetFirstPersonMode, "getFirstPersonMode",
                "Returns true if the first person mode is enabled", true);
+  reg.function(&RenderWindow::LuaSetClipPlane, "setClipPlane",
+               "resets the clipping plane to the given 4x4 transform", true);
 
   id = reg.function(&RenderWindow::CaptureSubframe, "captureSubframe",
                     "captures whatever's in the buffer now", true);
   ss->addParamInfo(id, 0, "filename", "Filename to save it in");
 }
-

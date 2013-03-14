@@ -464,6 +464,8 @@ class RenderWindow
     void LuaSetLighting(bool enabled);
     void LuaLoad1DTFqn(const std::string&);
     void LuaLoad2DTFqn(const std::string&);
+    // resets the clipping plane and multiplies it by the given matrix
+    void LuaSetClipPlane(const FLOATMATRIX4& m);
 
     /// Returns the Lua Renderer. This is used instead of inheriting the methods
     /// from the renderer, because, for the most part, the user won't care about
