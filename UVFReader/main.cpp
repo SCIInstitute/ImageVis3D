@@ -27,7 +27,8 @@ int main(int argc, char* argv[])
   debugOut->SetClearOldMessage(true);
 
   Controller::Instance().AddDebugOut(debugOut);
-  Controller::Instance().SetMaxCPUMem(0.8f);
+  const uint64_t mem = Controller::Const().SysInfo().GetCPUMemSize();
+  Controller::Instance().SetMaxCPUMem(mem * 0.8f);
   MESSAGE(""); cout << endl;
 
   #ifdef _WIN32
