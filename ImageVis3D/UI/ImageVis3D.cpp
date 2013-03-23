@@ -37,70 +37,29 @@
 
 #include "StdDefines.h"
 #include <algorithm>
-#include "ImageVis3D.h"
-#include "BrowseData.h"
-#include "FTPDialog.h"
-
-#include <QtCore/QSettings>
-#include <QtCore/QFileInfo>
-#include <QtCore/QTimer>
-#include <QtGui/QMessageBox>
-
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QCloseEvent>
-#include <QtGui/QColorDialog>
-
-#include <QtNetwork/QHttp>
-
-#include "PleaseWait.h"
-#include "CrashDetDlg.h"
-
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <QtCore/QFileInfo>
+#include <QtCore/QSettings>
+#include <QtCore/QTimer>
+#include <QtGui/QCloseEvent>
+#include <QtGui/QColorDialog>
+#include <QtGui/QMdiSubWindow>
+#include <QtGui/QMessageBox>
+#include <QtNetwork/QHttp>
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/MathTools.h"
 #include "../IO/DialogConverter.h"
-
-#include "LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
+#include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
+#include "BrowseData.h"
+#include "CrashDetDlg.h"
+#include "FTPDialog.h"
+#include "ImageVis3D.h"
+#include "PleaseWait.h"
 
 using namespace std;
-
-static FLOATMATRIX4 RotateX(float angle) {
-  FLOATMATRIX4 matRot;
-  matRot.RotationX(3.141592653589793238462643383*angle/180.0);
-  return matRot;
-}
-static FLOATMATRIX4 RotateY(float angle) {
-  FLOATMATRIX4 matRot;
-  matRot.RotationY(3.141592653589793238462643383*angle/180.0);
-  return matRot;
-}
-static FLOATMATRIX4 RotateZ(float angle) {
-  FLOATMATRIX4 matRot;
-  matRot.RotationZ(3.141592653589793238462643383*angle/180.0);
-  return matRot;
-}
-static FLOATMATRIX4 Translate(float x, float y, float z) {
-  FLOATMATRIX4 matTrans;
-  matTrans.Translation(x, y, z);
-  return matTrans;
-}
-static FLOATMATRIX4 Identity() {
-  FLOATMATRIX4 matIdent;
-  return matIdent;
-}
-std::string VecToString(const FLOATVECTOR3& v) {
-  std::ostringstream s;
-  s << "{ " << v.x << ", " << v.y << ", " << v.z << "}";
-  return s.str();
-}
-
-static FLOATMATRIX4 MulMatrices(const FLOATMATRIX4& a,
-                                const FLOATMATRIX4& b) {
-  return a * b;
-}
 
 MainWindow::MainWindow(MasterController& masterController,
            bool bScriptMode, /* = false */
@@ -1080,21 +1039,6 @@ void MainWindow::RegisterLuaClasses() {
                             "Set threshold value for iso-surface rendering as integer.", false);
 
   std::shared_ptr<LuaScripting> reg = m_MasterController.LuaScript();
-
-
-  reg->registerFunction(&RotateX, "matrix.rotateX",
-                        "Sets rotation to be around X, n degrees.", false);
-  reg->registerFunction(&RotateY, "matrix.rotateY",
-                        "Sets rotation to be around Y, n degrees.", false);
-  reg->registerFunction(&RotateZ, "matrix.rotateZ",
-                        "Sets rotation to be around Z, n degrees.", false);
-  reg->registerFunction(&Translate, "matrix.translate",
-                        "Sets translation vector.", false);
-  reg->registerFunction(&Identity, "matrix.identity",
-                        "Sets identity.", false);
-  reg->registerFunction(&MulMatrices, "matrix.multiply", "", false);
-  reg->registerFunction(&VecToString, "strvec", "converts vec to string",
-                        false);
 }
 
 void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {
