@@ -27,6 +27,13 @@
 
 using namespace std;
 
+enum ECreationType {
+  CT_FRACTAL,
+  CT_ZERO,
+  CT_RANDOM,
+  CT_SPHERE
+};
+
 double radius(double x, double y, double z)
 {
   return std::sqrt(x*x + y*y + z*z);
@@ -92,7 +99,7 @@ double ComputeMandelbulb(const double sx, const double sy,
   return 1.0;
 }
 
-template<typename T, bool bMandelbulb> 
+template<typename T, ECreationType eCreationType> 
 void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData,
                         uint32_t iIterations) {
   ProgressTimer timer;
@@ -110,27 +117,37 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData,
     for (uint64_t y = 0;y<vSize.y;y++) {
       #pragma omp parallel for 
       for (int64_t x = 0;x<int64_t(vSize.x);x++) {
-        if (bMandelbulb) {
-          const double bulbSize = 2.25;
-          source[x] = 
-            static_cast<T>(ComputeMandelbulb(bulbSize * static_cast<double>(x)/
-                                                   (vSize.x-1) - bulbSize/2.0,
-                                             bulbSize * static_cast<double>(y)/
-                                                   (vSize.y-1) - bulbSize/2.0,
-                                             bulbSize * static_cast<double>(z)/
-                                                   (vSize.z-1) - bulbSize/2.0,
-                                             8, 
-                                             iIterations,
-                                             100.0) 
-                                               * std::numeric_limits<T>::max());
-        } else {
-          source[x] = 
-           static_cast<T>(std::max(0.0f,
+        switch (eCreationType) {
+          case CT_FRACTAL: {
+            const double bulbSize = 2.25;
+            source[x] = 
+              static_cast<T>(ComputeMandelbulb(bulbSize * static_cast<double>(x)/
+                                                     (vSize.x-1) - bulbSize/2.0,
+                                               bulbSize * static_cast<double>(y)/
+                                                     (vSize.y-1) - bulbSize/2.0,
+                                               bulbSize * static_cast<double>(z)/
+                                                     (vSize.z-1) - bulbSize/2.0,
+                                               8, 
+                                               iIterations,
+                                               100.0) 
+                                                 * std::numeric_limits<T>::max());
+            }
+            break;
+          case CT_SPHERE:
+            source[x] = 
+            static_cast<T>(std::max(0.0f,
                                    (0.5f-(0.5f-FLOATVECTOR3(float(x),
                                                             float(y),
                                                             float(z))/
                                               FLOATVECTOR3(vSize)).length())*
                                               std::numeric_limits<T>::max()*2));
+            break;
+          case CT_ZERO:
+            source[x] = 0;
+            break;
+          case CT_RANDOM:
+            source[x] = rand()%std::numeric_limits<T>::max();
+            break;
         }
       }
       pDummyData->WriteRAW((uint8_t*)source, vSize.x*sizeof(T));
@@ -141,7 +158,7 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData,
 }
 
 bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize, 
-                   uint32_t iBitSize, bool bMandelbulb, uint32_t iIterations,
+                   uint32_t iBitSize, ECreationType eCreationType, uint32_t iIterations,
                    bool bUseToCBlock, bool bKeepRaw, uint32_t iCompression,
                    uint32_t iUVFMemory, uint32_t iBrickSize, uint32_t iLayout,
                    uint32_t iCompressionLevel) {
@@ -165,16 +182,20 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
   generationTimer.Start();
   switch (iBitSize) {
     case 8 :
-      if (bMandelbulb)
-        GenerateVolumeData<uint8_t, true>(vSize, dummyData, iIterations);
-      else
-        GenerateVolumeData<uint8_t, false>(vSize, dummyData, iIterations);
+      switch (eCreationType) {
+        case CT_FRACTAL : MESSAGE("Generating a fractal"); GenerateVolumeData<uint8_t, CT_FRACTAL>(vSize, dummyData, iIterations); break;
+        case CT_SPHERE : MESSAGE("Generating a sphere"); GenerateVolumeData<uint8_t, CT_SPHERE>(vSize, dummyData, iIterations); break;
+        case CT_ZERO : MESSAGE("Generating zeroes"); GenerateVolumeData<uint8_t, CT_ZERO>(vSize, dummyData, iIterations); break;
+        case CT_RANDOM : MESSAGE("Generating noise"); GenerateVolumeData<uint8_t, CT_RANDOM>(vSize, dummyData, iIterations); break;
+      }
       break;
     case 16 :
-      if (bMandelbulb)
-        GenerateVolumeData<uint16_t, true>(vSize, dummyData, iIterations);
-      else
-        GenerateVolumeData<uint16_t, false>(vSize, dummyData, iIterations);
+      switch (eCreationType) {
+        case CT_FRACTAL : MESSAGE("Generating a fractal"); GenerateVolumeData<uint16_t, CT_FRACTAL>(vSize, dummyData, iIterations); break;
+        case CT_SPHERE : MESSAGE("Generating a sphere"); GenerateVolumeData<uint16_t, CT_SPHERE>(vSize, dummyData, iIterations); break;
+        case CT_ZERO : MESSAGE("Generating zeroes"); GenerateVolumeData<uint16_t, CT_ZERO>(vSize, dummyData, iIterations); break;
+        case CT_RANDOM : MESSAGE("Generating noise"); GenerateVolumeData<uint16_t, CT_RANDOM>(vSize, dummyData, iIterations); break;
+      }
       break;
     default:
       T_ERROR("Invalid bitsize");

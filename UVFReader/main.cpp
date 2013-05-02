@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
   Controller::Instance().AddDebugOut(debugOut);
   const uint64_t mem = Controller::Const().SysInfo().GetCPUMemSize();
-  Controller::Instance().SetMaxCPUMem(mem * 0.8f);
+  Controller::Instance().SetMaxCPUMem(uint64_t(mem * 0.8));
   MESSAGE(""); cout << endl;
 
   #ifdef _WIN32
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
   bool bVerify;
   bool bShow1dhist;
   bool bShow2dhist;
-  bool bMandelbulb;
+  ECreationType eCreationType;
   bool bShowData;
   bool bUseToCBlock;
   bool bKeepRaw;
@@ -69,11 +69,14 @@ int main(int argc, char* argv[])
     TCLAP::SwitchArg hist2d("2", "2dhist", "output the 2D histogram", false);
     TCLAP::SwitchArg create("c", "create", "create instead of read a UVF",
                             false);
-    TCLAP::SwitchArg mandelbulb("m", "mandelbulb", "compute mandelbulb "
-                                     "fractal instead of simple sphere", false);
+    TCLAP::ValueArg<uint32_t> ctype("t", "creation-type", "What type of volume to "
+                                    "create. 0: mandelbulb fractal, 1: all zeros,"
+                                    "2: random values, otherwise create a sphere",
+                                    false, static_cast<uint32_t>(3),
+                                "volume type class");
+    std::string uint = "unsigned integer";
     TCLAP::SwitchArg output_data("d", "data", "display data at finest"
                                  " resolution", false);
-    std::string uint = "unsigned integer";
     TCLAP::ValueArg<uint32_t> iter("i", "iterations", "number of iterations "
                                    "for fractal compuation", false, 
                                    static_cast<uint32_t>(0), uint);
@@ -113,7 +116,7 @@ int main(int argc, char* argv[])
     cmd.add(create);
     cmd.add(compression);
     cmd.add(complevel);
-    cmd.add(mandelbulb);
+    cmd.add(ctype);
     cmd.add(mem);
     cmd.add(iter);
     cmd.add(keep_raw);
@@ -144,7 +147,7 @@ int main(int argc, char* argv[])
     bVerify = !noverify.getValue();
     bShow1dhist = hist1d.getValue();
     bShow2dhist = hist2d.getValue();
-    bMandelbulb = mandelbulb.getValue();
+    eCreationType = ECreationType(ctype.getValue());
     bShowData = output_data.getValue();
     bUseToCBlock = !use_rdb.getValue();
     bKeepRaw = keep_raw.getValue();
@@ -171,7 +174,7 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
-  if (iIter && (!bCreateFile || !bMandelbulb)) {
+  if (iIter && (!bCreateFile || !eCreationType == CT_FRACTAL)) {
     cerr << endl << "Iteration count only valid when computing a mandelbuld "
                     "fractal in file creation mode" << endl;
     return EXIT_FAILURE;
@@ -184,7 +187,7 @@ int main(int argc, char* argv[])
     MESSAGE("Using up to %u GB RAM", iMem);
     cout << endl;
 
-    if (!CreateUVFFile(strUVFName, vSize, iBitSize, bMandelbulb, iIter,
+    if (!CreateUVFFile(strUVFName, vSize, iBitSize, eCreationType, iIter,
                        bUseToCBlock, bKeepRaw, iCompression, iMem, iBrickSize,
                        iBrickLayout, iCompressionLevel))
       return EXIT_FAILURE;
