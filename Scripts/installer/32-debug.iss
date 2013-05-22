@@ -111,6 +111,7 @@ Source: C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x86\Micros
 
 ; ImageVis3D
 Source: Build\Win32\Debug\ImageVis3D-32.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
+Source: CmdLineConverter\Build\Win32\Debug\TuvokConverter32.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: Tuvok\Shaders\*; DestDir: {app}\Shaders; Excludes: .svn; Flags: ignoreversion replacesameversion
 Source: imagevis3d.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: GettingDataIntoImageVis3D.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
