@@ -10,7 +10,7 @@ IF "%1"=="x64" (
     ImageVis3D-2010.sln ^
     /nologo ^
     /p:Configuration="Release (with DirectX)",Platform=x64 ^
-    /t:Rebuild ^
+    /t:Build ^
     /m:2
 ) ELSE (
   REM Handle 32 bit compilation
@@ -19,7 +19,7 @@ IF "%1"=="x64" (
     ImageVis3D-2010.sln ^
     /nologo ^
     /p:Configuration="Release (with DirectX)",Platform=Win32 ^
-    /t:Rebuild ^
+    /t:Build ^
     /m:2
 )
 
@@ -40,7 +40,7 @@ pushd Tuvok\IO\test
   %bld% ^
     cxxtester.vcproj ^
     /nologo ^
-    /t:Rebuild
+    /t:Build
 popd
 
 REM download documentation
