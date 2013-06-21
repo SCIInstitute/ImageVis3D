@@ -338,8 +338,8 @@ int main(int argc, const char* argv[])
     }
 
     if (bIsVolExt1 && bIsVolExtOut)  {
-      AbstrConverter* importer = ioMan.GetConverterForExt(sourceType, false, false);
-      AbstrConverter* exporter =  ioMan.GetConverterForExt(targetType, false, false);
+      std::shared_ptr<AbstrConverter> importer = ioMan.GetConverterForExt(sourceType, false, false);
+      std::shared_ptr<AbstrConverter> exporter = ioMan.GetConverterForExt(targetType, false, false);
 
       if (!importer->CanImportData()) {
         std::cerr << "error: cannot read that type of volume (only write)\n";
