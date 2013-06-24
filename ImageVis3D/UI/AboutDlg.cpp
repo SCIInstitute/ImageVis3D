@@ -33,7 +33,7 @@
 //!             University of Utah
 //!    Date   : January 2009
 //
-//!    Copyright (C) 2008 SCI Institute
+//!    Copyright (C) 2009 SCI Institute
 
 #include "AboutDlg.h"
 
