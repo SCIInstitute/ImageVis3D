@@ -116,7 +116,10 @@ void MainWindow::LoadDataset() {
       }
     } catch(const std::exception& e) {
       if(e.what() != NULL) {
-        ShowCriticalDialog("Could not load data set!", e.what());
+        if (strlen(e.what()) > 0)
+          ShowCriticalDialog("Could not load data set!", e.what());
+        else
+          ShowCriticalDialog("Could not load data set!", "Operation has been canceled.");
       } else {
         ShowCriticalDialog("Render window initialization failed.", rwe);
       }
