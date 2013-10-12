@@ -24,8 +24,8 @@ fi
 # Darwin's debug STL support is broken.
 # Ditto: OpenMP
 if test `uname -s` != "Darwin"; then
-  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror -fopenmp --param ssp-buffer-size=4"
-  LDFLAGS="${LDFLAGS} -fopenmp --param ssp-buffer-size=4"
+  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror --param ssp-buffer-size=4"
+  LDFLAGS="${LDFLAGS} --param ssp-buffer-size=4"
 else
   # We don't turn -Werror on because of warnings that deal 
   # with generated code, and some unused template specialization

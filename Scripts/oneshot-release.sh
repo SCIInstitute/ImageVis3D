@@ -30,8 +30,8 @@ dirs="."
 if test `uname` != "Darwin" ; then
   dirs="$dirs Tuvok/IO/test"
   CXF="${CXF} -Werror --param ssp-buffer-size=4"
-  CF="${CF} -fopenmp --param ssp-buffer-size=4"
-  QLF="${QLF} -fopenmp"
+  CF="${CF} --param ssp-buffer-size=4"
+  QLF="${QLF}"
 else
   # We don't turn -Werror on because of warnings that deal 
   # with generated code, and some unused template specialization

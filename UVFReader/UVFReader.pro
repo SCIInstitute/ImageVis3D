@@ -22,6 +22,7 @@ QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
 unix:QMAKE_CXXFLAGS += -std=c++0x
 unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
 unix:QMAKE_CFLAGS += -fno-strict-aliasing
+!macx:unix:QMAKE_LFLAGS += -fopenmp
 
 # Try to link to GLU statically.
 gludirs = /usr/lib /usr/lib/x86_64-linux-gnu

@@ -10,6 +10,7 @@ INCLUDEPATH        += ../Tuvok/IO/3rdParty/boost/
 QMAKE_LIBDIR       += ../Tuvok/Build ../Tuvok/IO/expressions
 QT                 += opengl
 LIBS               += -lTuvok -ltuvokexpr -lz
+!macx:unix:QMAKE_LFLAGS += -fopenmp
 
 # Operating system definitions now in the makefile instead of
 # a header file.

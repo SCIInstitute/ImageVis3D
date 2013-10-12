@@ -13,6 +13,8 @@ unix:LIBS        += -lz
 win32:LIBS       += shlwapi.lib
 unix:!macx:LIBS  += -lGLU
 QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
+!macx:unix:QMAKE_LFLAGS += -fopenmp
+
 # Try to link to GLU statically.
 gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
 for(d, gludirs) {

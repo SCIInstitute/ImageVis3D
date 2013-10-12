@@ -10,9 +10,9 @@ LF=""
 MKSPEC=""
 if test `uname -s` != "Darwin" ; then
   CF="${CF} -ggdb3 --param ssp-buffer-size=4"
-  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror -fopenmp --param ssp-buffer-size=4"
+  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror --param ssp-buffer-size=4"
   CXF="${CXF} -D_GLIBCXX_DEBUG_PEDANTIC"
-  LF="${LF} -fopenmp"
+  LF="${LF}"
 else
   ALLWARN=""
   #ALLWARN='-Werror -Wno-padded -Wno-weak-vtables -Weverything'
