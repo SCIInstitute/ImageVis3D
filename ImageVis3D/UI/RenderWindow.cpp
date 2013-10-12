@@ -2736,4 +2736,18 @@ void RenderWindow::RegisterLuaFunctions(
   id = reg.function(&RenderWindow::CaptureSubframe, "captureSubframe",
                     "captures whatever's in the buffer now", true);
   ss->addParamInfo(id, 0, "filename", "Filename to save it in");
+
+  id = reg.function(&RenderWindow::ClipDelta, "clipDelta",
+                    "moves the clip plane in the direction of its normal",
+                    true);
+  ss->addParamInfo(id, 0, "floating-point", "amount to move the plane [0--1]");
+}
+
+void RenderWindow::ClipDelta(float d)
+{
+  if(d < -1.0 || d > 1.0) {
+    WARNING("large clip plane movement.. scripting bug?  Proceeding anyway.");
+  }
+  LuaClassInstance rr3d = this->GetFirst3DRegion();
+  SetClipTranslationDelta(rr3d, FLOATVECTOR3(d,d,0), false, false);
 }

@@ -132,6 +132,7 @@ class RenderWindow
     void SetClipTranslationDelta(tuvok::LuaClassInstance region,
                                  const FLOATVECTOR3& trans,
                                  bool, bool);
+    void ClipDelta(float d);
     void SetClipRotationDelta(tuvok::LuaClassInstance region,
                               const FLOATMATRIX4& rotDelta,
                               bool, bool);
