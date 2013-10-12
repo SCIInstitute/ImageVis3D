@@ -19,7 +19,7 @@ shadersDir = "/Users/jhughes/sci/imagevis3d/Tuvok/Shaders"
 -- Parameters are: renderer type, use only power of two textures, downsample to 8 bits,
 --                 disable border, bias and scale TF.
 print("Initializing renderer")
-renderer = tuvok.renderer.new(tuvok.renderer.types.OpenGL_SVBR, false, false, false, false, false)
+renderer = tuvok.renderer.new(tuvok.renderer.types.OpenGL_SBVR, false, false, false, false, false)
 
 -- Both load dataset and add shader path must be done before passing the context.
 renderer.loadDataset(dataset)
