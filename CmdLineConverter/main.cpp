@@ -52,6 +52,7 @@
 #include "../Tuvok/IO/DirectoryParser.h"
 #include "../Tuvok/IO/IOManager.h"
 #include "../Tuvok/IO/TuvokIOError.h"
+#include "../Tuvok/IO/uvfDataset.h"
 
 using namespace std;
 using namespace tuvok;
@@ -88,6 +89,9 @@ enum {
   EXIT_FAILURE_GENERAL_DIR,   // general error during conversion in dir mode
   EXIT_FAILURE_NEED_UVF,      // UVFs must be input to eval expressions.
 };
+
+static int export_data(const IOManager&, const std::string in,
+                       const std::string out);
 
 // reads an entire file into a string.
 static std::string readfile(const std::string& filename)
@@ -258,7 +262,6 @@ int main(int argc, const char* argv[])
   ioMan.SetCompressionLevel(level);
   ioMan.SetLayout(bricklayout);
   
-
   // If they gave us an expression, evaluate that.  Otherwise we're doing a
   // normal conversion.
   if(!expression.empty()) {
@@ -284,12 +287,11 @@ int main(int argc, const char* argv[])
   // directories unless we've scanned the directory already, so delay
   // error detection there.
   if(strInDir.empty()) {
-    for(std::vector<std::string>::const_iterator f = input.begin();
-        f != input.end(); ++f) {
+    for(auto f = input.cbegin(); f != input.cend(); ++f) {
       std::string ext = SysTools::ToLowerCase(SysTools::GetExt(*f));
       bool conv_vol = ioMan.GetConverterForExt(ext, false, true) != NULL;
       bool conv_geo = ioMan.GetGeoConverterForExt(ext, false, true) != NULL;
-      if(conv_vol || conv_geo) { continue; }
+      if(conv_vol || conv_geo || !ioMan.NeedsConversion(*f)) { continue; }
 
       if(!conv_vol && !conv_geo) {
         T_ERROR("Unknown file type for '%s'", f->c_str());
@@ -306,6 +308,10 @@ int main(int argc, const char* argv[])
     bool bIsGeoExtOut = ioMan.GetGeoConverterForExt(targetType, false, false) != NULL;
     bool bIsVolExt1 = ioMan.GetConverterForExt(sourceType, false, false) != NULL;
     bool bIsGeoExt1 = ioMan.GetGeoConverterForExt(sourceType, false, false) != NULL;
+
+    if(!ioMan.NeedsConversion(strInFile)) {
+      return export_data(ioMan, strInFile, strOutFile);
+    }
 
     if (!bIsVolExt1 && !bIsGeoExt1)  {
       std::cerr << "error: Unknown file type for '" << strInFile << "'\n";
@@ -471,7 +477,6 @@ int main(int argc, const char* argv[])
         cout << "\nMerging datasets failed!\n\n";
         return EXIT_FAILURE_MERGE;
       }
-
     }
   } else {
     if (strInFile2 != "") {
@@ -483,7 +488,7 @@ int main(int argc, const char* argv[])
     /// \todo: remove this restricition (one solution would be to create a UVF
     // first and then convert it to whatever is needed)
     if (targetType != "uvf") {
-      cout << "\nError: Currently only uvf is the only supported "
+      cout << "\nError: Currently UVF is the only supported "
            << "target type for directory processing.\n\n";
       return EXIT_FAILURE_MERGE_NO_UVF;
     }
@@ -506,7 +511,6 @@ int main(int argc, const char* argv[])
       }
     }
 
-
     int iFailCount = 0;
     for (size_t i = 0;i<dirinfo.size();i++) {
       if (ioMan.ConvertDataset(&*dirinfo[i], vStrFilenames[i],
@@ -527,4 +531,17 @@ int main(int argc, const char* argv[])
 
     return EXIT_SUCCESS;
   }
+}
+
+static int
+export_data(const IOManager& iom, const std::string in, const std::string out)
+{
+  assert(iom.NeedsConversion(in) == false);
+  tuvok::Dataset* ds = iom.CreateDataset(in, 256, false);
+  const tuvok::UVFDataset* uvf = dynamic_cast<tuvok::UVFDataset*>(ds);
+  // use the output file's dir as temp dir
+  if(!iom.ExportDataset(uvf, 0, out, SysTools::GetPath(out))) {
+    return EXIT_FAILURE_GENERAL;
+  }
+  return EXIT_SUCCESS;
 }
