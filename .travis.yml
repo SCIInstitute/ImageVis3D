@@ -1,0 +1,22 @@
+language: cpp
+compiler:
+- clang
+- gcc
+before_install:
+- sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+- sudo apt-get update -qq
+- sudo apt-get install libosmesa6-dev
+- sudo apt-get install libqt4-dev qt4-qmake
+- if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+- if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+script: ./scripts/gcc-dev-cfg.sh && make -j2
+after_success:
+- sudo apt-get --no-install-recommends install doxygen
+#- git clone https://github.com/iauns/travis-doxy-helper ./doxy-helper
+#- ./doxy-helper/update-doxygen.sh ./.dox ./dox-repo https://github.com/SCIInstitute/spire
+branches:
+  only:
+  - master
+#env:
+#  global:
+#    secure: Kj2jSPu0BR7oT31mW1AceYsEHOrTooiyIr3AA8bBpV2nObMcsbc0I33AzGH59fzcjwWOA6TW2LGzD+UknNI0JLNlgOCzsZ/M0i6q+BF/+X/Hsa+TO2z8qsXIA9lhzWBP51AT1KhsZuiEwqO6Mm9OV8jYUkqhX/f9Lale5LfhNh0=
