@@ -9,7 +9,7 @@ before_install:
 - sudo apt-get install libqt4-dev qt4-qmake
 - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
 - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-script: ./scripts/gcc-dev-cfg.sh && make -j2
+script: ./Scripts/gcc-dev-cfg.sh && make -j2
 after_success:
 - sudo apt-get --no-install-recommends install doxygen
 #- git clone https://github.com/iauns/travis-doxy-helper ./doxy-helper
