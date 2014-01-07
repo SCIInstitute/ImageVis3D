@@ -45,3 +45,6 @@ for d in . tuvok/IO/test ; do
         -recursive || exit 1
   popd &>/dev/null
 done
+
+echo "Configure succeeded."
+exit 0
