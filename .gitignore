@@ -13,3 +13,7 @@ ImageVis3D.pro.user
 ImageVis3D/UI/AutoGen
 *.o
 *.swp
+BatchRenderer/BatchRenderer
+*.dmg
+*.zip
+*.tar.gz
