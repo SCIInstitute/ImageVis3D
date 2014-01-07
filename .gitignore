@@ -3,8 +3,6 @@ Default.geo
 Default.wsp
 Build
 .gitignore
-Tuvok
-tuvok
 *.gcno
 debugLog.txt
 ImageVis3D.pro.user
