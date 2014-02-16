@@ -63,6 +63,10 @@
 #ifdef DETECTED_OS_WINDOWS
 #   include <ShellAPI.h>
 #   include <windows.h>
+#   include <io.h>
+#   define unlink _unlink
+#else
+#   include <unistd.h>
 #endif
 
 #include "URLDlg.h"
@@ -153,6 +157,8 @@ void MainWindow::CheckForUpdatesInternal() {
   QString strUpdateFile = tr("%1/ImageVis3D_UpdateCheck_Temp").arg(QDir::tempPath());
 
   m_pUpdateFile = new QTemporaryFile(strUpdateFile);
+  // Ignore return value; not much we can do if it fails.
+  (void) unlink(strUpdateFile.toStdString().c_str());
   QByteArray remotePath = QUrl::toPercentEncoding(url.path(), "!$&'()*+,;=:@/");
   if (remotePath.isEmpty()) remotePath = "/";
   m_iHttpGetId = m_pHttp->get(remotePath, m_pUpdateFile);
