@@ -252,7 +252,7 @@ int main(int argc, const char* argv[])
     MESSAGE("Max allowed RAM utilization: %.2f", fMem * 100);
   }
   const uint64_t memTotal = Controller::Const().SysInfo().GetCPUMemSize();
-  Controller::Instance().SetMaxCPUMem(memTotal * fMem);
+  Controller::Instance().SetMaxCPUMem((memTotal*fMem)/(1024*1024));
   uint32_t mem = uint32_t(Controller::Instance().SysInfo()->GetMaxUsableCPUMem()/1024/1024);
   MESSAGE("Using up to %u MB RAM", mem);
   cout << endl;
