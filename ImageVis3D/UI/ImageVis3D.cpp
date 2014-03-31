@@ -595,9 +595,7 @@ void MainWindow::ToggleClipPlane(bool bClip)
 
   rw->SetClipPlaneEnabled(bClip);
 
-  // We can live without calling LuaCallbackToggleClipPlane explicitly,
-  // since SetClipPlaneEnabled will end up calling it for us.
-  //LuaCallbackToggleClipPlane(bClip);
+  LuaCallbackToggleClipPlane(bClip);
 }
 
 void MainWindow::LuaCallbackToggleClipPlane(bool bClip)
