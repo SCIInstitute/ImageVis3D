@@ -226,7 +226,7 @@ void ComputeFractalFast(LargeRAWFile_ptr pDummyData, const UINT64VECTOR3& vOffse
   T iIterations = std::numeric_limits<T>::max()-1;
 
   std::array<T,8> val;
-  std::array<DOUBLEVECTOR3,8> pos = {
+  const std::array<DOUBLEVECTOR3,8> pos = {{
     DOUBLEVECTOR3(bulbSize * (vOffset.x)/(vTotalSize.x-1) - bulbSize/2.0,               // 0
                   bulbSize * (vOffset.y)/(vTotalSize.y-1) - bulbSize/2.0,               // 0
                   bulbSize * (vOffset.z)/(vTotalSize.z-1) - bulbSize/2.0),              // 0
@@ -258,7 +258,7 @@ void ComputeFractalFast(LargeRAWFile_ptr pDummyData, const UINT64VECTOR3& vOffse
     DOUBLEVECTOR3(bulbSize * (vOffset.x+(vSize.x-1))/(vTotalSize.x-1) - bulbSize/2.0,   // 1
                   bulbSize * (vOffset.y+(vSize.y-1))/(vTotalSize.y-1) - bulbSize/2.0,   // 1
                   bulbSize * (vOffset.z+(vSize.z-1))/(vTotalSize.z-1) - bulbSize/2.0),  // 1
-  };
+  }};
 
   #pragma omp parallel for
   for (int i = 0;i<8;++i) {
