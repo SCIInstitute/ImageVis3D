@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
   Controller::Instance().AddDebugOut(debugOut);
   const uint64_t mem = Controller::Const().SysInfo().GetCPUMemSize();
-  Controller::Instance().SetMaxCPUMem(uint64_t(mem * 0.8));
+  Controller::Instance().SetMaxCPUMem(uint64_t(mem/(1024*1024) * 0.8));
   MESSAGE(""); cout << endl;
 
   #ifdef _WIN32
@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
   uint32_t iCompression = 1; // 1 is default zlib compression
   uint32_t iCompressionLevel = 1; // generic compression level, 1 is best speed
   bool bCreateFile;
+  bool bhierarchical;
   bool bVerify;
   bool bShow1dhist;
   bool bShow2dhist;
@@ -74,6 +75,7 @@ int main(int argc, char* argv[])
                                     "2: random values, otherwise create a sphere",
                                     false, static_cast<uint32_t>(3),
                                 "volume type class");
+    TCLAP::SwitchArg hierarchical("g", "hierarchical", "hierarchical generation mode", false);
     std::string uint = "unsigned integer";
     TCLAP::SwitchArg output_data("d", "data", "display data at finest"
                                  " resolution", false);
@@ -114,6 +116,7 @@ int main(int argc, char* argv[])
     cmd.add(hist1d);
     cmd.add(hist2d);
     cmd.add(create);
+    cmd.add(hierarchical);
     cmd.add(compression);
     cmd.add(complevel);
     cmd.add(ctype);
@@ -143,6 +146,7 @@ int main(int argc, char* argv[])
     iCompression = static_cast<uint32_t>(compression.getValue());
     iCompressionLevel = static_cast<uint32_t>(complevel.getValue());
 
+    bhierarchical = hierarchical.getValue();
     bCreateFile = create.getValue();
     bVerify = !noverify.getValue();
     bShow1dhist = hist1d.getValue();
@@ -183,13 +187,13 @@ int main(int argc, char* argv[])
   if (bCreateFile) {
 
     if (iMem == 0)
-     iMem = uint32_t(Controller::Instance().SysInfo()->GetMaxUsableCPUMem()/1024/1024/1024);
+     iMem = uint32_t(Controller::Instance().SysInfo()->GetMaxUsableCPUMem()/(1024*1024*1024));
     MESSAGE("Using up to %u GB RAM", iMem);
     cout << endl;
 
     if (!CreateUVFFile(strUVFName, vSize, iBitSize, eCreationType, iIter,
                        bUseToCBlock, bKeepRaw, iCompression, iMem, iBrickSize,
-                       iBrickLayout, iCompressionLevel))
+                       iBrickLayout, iCompressionLevel, bhierarchical))
       return EXIT_FAILURE;
   } else {
     if (!DisplayUVFInfo(strUVFName, bVerify, bShowData, bShow1dhist, 

@@ -29,10 +29,12 @@ using namespace std;
 
 enum ECreationType {
   CT_FRACTAL,
-  CT_ZERO,
+  CT_CONST_VALUE,
   CT_RANDOM,
   CT_SPHERE
 };
+
+static const double bulbSize = 2.25;
 
 double radius(double x, double y, double z)
 {
@@ -70,9 +72,10 @@ double PowerZ(double x, double y, double z,
   return cz + power*std::cos(theta(x,y,z)*n);
 }
 
-double ComputeMandelbulb(const double sx, const double sy,
+template<typename T>
+T ComputeMandelbulb(const double sx, const double sy,
                          const double sz, const uint32_t n,
-                         const uint32_t iMaxIterations, 
+                         const T iMaxIterations,
                          const double fBailout) {
 
   double fx = 0;
@@ -80,7 +83,7 @@ double ComputeMandelbulb(const double sx, const double sy,
   double fz = 0;
   double r = radius(fx, fy, fz);
 
-  for (uint32_t i = 0; i < iMaxIterations; i++) {
+  for (T i = 0; i <= iMaxIterations; i++) {
 
     const double fPower = std::pow(r, static_cast<double>(n));
 
@@ -93,21 +96,260 @@ double ComputeMandelbulb(const double sx, const double sy,
     fz = fz_;
 
     if ((r = radius(fx, fy, fz)) > fBailout)
-      return static_cast<double>(i) / iMaxIterations;
+      return i;
   }
 
-  return 1.0;
+  return iMaxIterations;
 }
 
-template<typename T, ECreationType eCreationType> 
+template<typename T>
+T ComputeMandelbulb(const uint64_t sx, const uint64_t sy,
+                    const uint64_t sz, const uint32_t n,
+                    const T iMaxIterations,
+                    const double fBailout,
+                    const UINT64VECTOR3& vTotalSize) {
+  return ComputeMandelbulb<T>(bulbSize*double(sx)/(vTotalSize.x-1)-bulbSize/2.0,
+                              bulbSize*double(sy)/(vTotalSize.y-1)-bulbSize/2.0,
+                              bulbSize*double(sz)/(vTotalSize.z-1)-bulbSize/2.0,
+                              n, iMaxIterations, fBailout);
+}
+
+template<typename T>
+void WriteLineAtOffset(LargeRAWFile_ptr pDummyData, size_t count, size_t pos, T* line) {
+  pDummyData->SeekPos(pos*sizeof(T));
+  pDummyData->WriteRAW((uint8_t*)line, count*sizeof(T));
+}
+
+template<typename T>
+void WriteLineAtPos(LargeRAWFile_ptr pDummyData, size_t count,  const UINT64VECTOR3& vOffset, const UINT64VECTOR3& vTotalSize, T* line) {
+  const size_t pos = vOffset.x + vOffset.y*vTotalSize.x + vOffset.z*vTotalSize.x*vTotalSize.y;
+  WriteLineAtOffset<T>(pDummyData, count, pos, line);
+}
+
+template<typename T>
+void FillBrick(LargeRAWFile_ptr pDummyData, T value, const UINT64VECTOR3& vOffset, const UINT64VECTOR3& vSize, const UINT64VECTOR3& vTotalSize) {
+  std::vector<T> l(vSize.x);
+  std::fill(l.begin(), l.end(), value);
+  UINT64VECTOR3 vPos = vOffset;
+  for (uint64_t z = 0;z<vSize.z;z++) {
+    for (uint64_t y = 0;y<vSize.y;y++) {
+      vPos.y = vOffset.y + y;
+      vPos.z = vOffset.z + z;
+      WriteLineAtPos<T>(pDummyData, vSize.x, vPos, vTotalSize, l.data());
+    }
+  }
+}
+
+template<typename T>
+bool CheckBlockBoundary(T value, T iIterations, const UINT64VECTOR3& vOffset, const UINT64VECTOR3& vSize, const UINT64VECTOR3& vTotalSize) {
+  bool abort = false;
+  uint64_t zb = 0;
+  for (uint64_t y = 0;y<vSize.y;y++) {
+    #pragma omp parallel for
+    for (int64_t x = 0;x<int64_t(vSize.x);x++) {
+      if ( !abort && ComputeMandelbulb<T>(vOffset.x + x, vOffset.y + y, vOffset.z + zb, 8, iIterations, 100.0, vTotalSize)  != value ) {
+        abort = true;
+        #pragma omp flush (abort)
+      }
+    }
+  }
+  if (abort) return false;
+
+  zb = vSize.z-1;
+  for (uint64_t y = 0;y<vSize.y;y++) {
+    #pragma omp parallel for
+    for (int64_t x = 0;x<int64_t(vSize.x);x++) {
+      if ( !abort && ComputeMandelbulb<T>(vOffset.x + x, vOffset.y + y, vOffset.z + zb, 8, iIterations, 100.0, vTotalSize)  != value ) {
+        abort = true;
+        #pragma omp flush (abort)
+      }
+    }
+  }
+  if (abort) return false;
+
+  uint64_t yb = 0;
+  for (uint64_t z = 0;z<vSize.z;z++) {
+    #pragma omp parallel for
+    for (int64_t x = 0;x<int64_t(vSize.x);x++) {
+      if ( !abort && ComputeMandelbulb<T>(vOffset.x + x, vOffset.y + yb, vOffset.z + z, 8, iIterations, 100.0, vTotalSize)  != value ) {
+        abort = true;
+        #pragma omp flush (abort)
+      }
+    }
+  }
+  if (abort) return false;
+
+  yb = vSize.y-1;
+  for (uint64_t z = 0;z<vSize.z;z++) {
+    #pragma omp parallel for
+    for (int64_t x = 0;x<int64_t(vSize.x);x++) {
+      if ( !abort && ComputeMandelbulb<T>(vOffset.x + x, vOffset.y + yb, vOffset.z + z, 8, iIterations, 100.0, vTotalSize)  != value ) {
+        abort = true;
+        #pragma omp flush (abort)
+      }
+    }
+  }
+  if (abort) return false;
+
+  uint64_t xb = 0;
+  for (uint64_t z = 0;z<vSize.z;z++) {
+    #pragma omp parallel for
+    for (int64_t y = 0;y<int64_t(vSize.y);y++) {
+      if ( !abort && ComputeMandelbulb<T>(vOffset.x + xb, vOffset.y + y, vOffset.z + z, 8, iIterations, 100.0, vTotalSize)  != value ) {
+        abort = true;
+        #pragma omp flush (abort)
+      }
+    }
+  }
+  if (abort) return false;
+
+  xb = vSize.x-1;
+  for (uint64_t z = 0;z<vSize.z;z++) {
+    #pragma omp parallel for
+    for (int64_t y = 0;y<int64_t(vSize.y);y++) {
+      if ( !abort && ComputeMandelbulb<T>(vOffset.x + xb, vOffset.y + y, vOffset.z + z, 8, iIterations, 100.0, vTotalSize)  != value ) {
+        abort = true;
+        #pragma omp flush (abort)
+      }
+    }
+  }
+  if (abort) return false;
+
+  return true;
+}
+
+
+template<typename T>
+void ComputeFractalFast(LargeRAWFile_ptr pDummyData, const UINT64VECTOR3& vOffset, const UINT64VECTOR3& vSize, const UINT64VECTOR3& vTotalSize, const ProgressTimer& timer, uint32_t index=8, T value=0, int depth=1, double completed=0) {
+
+  // compute the eight boundary voxels
+  T iIterations = std::numeric_limits<T>::max()-1;
+
+  std::array<T,8> val;
+  std::array<DOUBLEVECTOR3,8> pos = {
+    DOUBLEVECTOR3(bulbSize * (vOffset.x)/(vTotalSize.x-1) - bulbSize/2.0,               // 0
+                  bulbSize * (vOffset.y)/(vTotalSize.y-1) - bulbSize/2.0,               // 0
+                  bulbSize * (vOffset.z)/(vTotalSize.z-1) - bulbSize/2.0),              // 0
+
+    DOUBLEVECTOR3(bulbSize * (vOffset.x+(vSize.x-1))/(vTotalSize.x-1) - bulbSize/2.0,   // 1
+                  bulbSize * (vOffset.y)/(vTotalSize.y-1) - bulbSize/2.0,               // 0
+                  bulbSize * (vOffset.z)/(vTotalSize.z-1) - bulbSize/2.0),              // 0
+
+    DOUBLEVECTOR3(bulbSize * (vOffset.x)/(vTotalSize.x-1) - bulbSize/2.0,               // 0
+                  bulbSize * (vOffset.y+(vSize.y-1))/(vTotalSize.y-1) - bulbSize/2.0,   // 1
+                  bulbSize * (vOffset.z)/(vTotalSize.z-1) - bulbSize/2.0),              // 0
+
+    DOUBLEVECTOR3(bulbSize * (vOffset.x+(vSize.x-1))/(vTotalSize.x-1) - bulbSize/2.0,   // 1
+                  bulbSize * (vOffset.y+(vSize.y-1))/(vTotalSize.y-1) - bulbSize/2.0,   // 1
+                  bulbSize * (vOffset.z)/(vTotalSize.z-1) - bulbSize/2.0),              // 0
+
+    DOUBLEVECTOR3(bulbSize * (vOffset.x)/(vTotalSize.x-1) - bulbSize/2.0,               // 0
+                  bulbSize * (vOffset.y)/(vTotalSize.y-1) - bulbSize/2.0,               // 0
+                  bulbSize * (vOffset.z+(vSize.z-1))/(vTotalSize.z-1) - bulbSize/2.0),  // 1
+
+    DOUBLEVECTOR3(bulbSize * (vOffset.x+(vSize.x-1))/(vTotalSize.x-1) - bulbSize/2.0,   // 1
+                  bulbSize * (vOffset.y)/(vTotalSize.y-1) - bulbSize/2.0,               // 0
+                  bulbSize * (vOffset.z+(vSize.z-1))/(vTotalSize.z-1) - bulbSize/2.0),  // 1
+
+    DOUBLEVECTOR3(bulbSize * (vOffset.x)/(vTotalSize.x-1) - bulbSize/2.0,               // 0
+                  bulbSize * (vOffset.y+(vSize.y-1))/(vTotalSize.y-1) - bulbSize/2.0,   // 1
+                  bulbSize * (vOffset.z+(vSize.z-1))/(vTotalSize.z-1) - bulbSize/2.0),  // 1
+
+    DOUBLEVECTOR3(bulbSize * (vOffset.x+(vSize.x-1))/(vTotalSize.x-1) - bulbSize/2.0,   // 1
+                  bulbSize * (vOffset.y+(vSize.y-1))/(vTotalSize.y-1) - bulbSize/2.0,   // 1
+                  bulbSize * (vOffset.z+(vSize.z-1))/(vTotalSize.z-1) - bulbSize/2.0),  // 1
+  };
+
+  #pragma omp parallel for
+  for (int i = 0;i<8;++i) {
+    val[i] = (index != uint32_t(i)) ? ComputeMandelbulb<T>(pos[i].x,pos[i].y,pos[i].z, 8, iIterations, 100.0) : value;
+  }
+
+
+  if (vSize.x == 2 && vSize.y == 2 && vSize.z == 2) {
+    std::array<T,2> l;
+    UINT64VECTOR3 vPos;
+
+    l[0] = val[0]; l[1] = val[1];
+    vPos = vOffset;
+    WriteLineAtPos<T>(pDummyData, 2, vPos, vTotalSize, l.data());
+    l[0] = val[2]; l[1] = val[3];
+    vPos = UINT64VECTOR3(vOffset.x, vOffset.y+1, vOffset.z);
+    WriteLineAtPos<T>(pDummyData, 2, vPos, vTotalSize, l.data());
+    l[0] = val[4]; l[1] = val[5];
+    vPos = UINT64VECTOR3(vOffset.x, vOffset.y, vOffset.z+1);
+    WriteLineAtPos<T>(pDummyData, 2, vPos, vTotalSize, l.data());
+    l[0] = val[6]; l[1] = val[7];
+    vPos = UINT64VECTOR3(vOffset.x, vOffset.y+1, vOffset.z+1);
+    WriteLineAtPos<T>(pDummyData, 2, vPos, vTotalSize, l.data());
+    return;
+  }
+
+
+  if (vSize.x > 4 && vSize.y > 4 && vSize.z > 4 && val[1] == val[0] && val[2] == val[0] && val[3] == val[0] && val[4] == val[0] &&
+      val[5] == val[0] && val[6] == val[0] && val[7] == val[0] &&
+      CheckBlockBoundary(val[0], iIterations, vOffset, vSize, vTotalSize) ) {
+    //MESSAGE("Empty Brick @ %i, %i, %i of size %ix%ix%i\n", vOffset.x, vOffset.y, vOffset.z, vSize.x, vSize.y, vSize.z);
+    FillBrick(pDummyData, val[0], vOffset, vSize, vTotalSize);
+    return;
+  }
+
+  UINT64VECTOR3 vPos = vOffset;
+  ComputeFractalFast<T>(pDummyData, vPos, vSize/2, vTotalSize, timer, 0, val[0], depth+1, completed);
+  completed += 1.0/pow(8.0, depth);
+
+  vPos = vOffset; vPos.x += vSize.x/2;
+  ComputeFractalFast<T>(pDummyData, vPos, vSize/2, vTotalSize, timer, 1, val[1], depth+1, completed);
+  completed += 1.0/pow(8.0, depth);
+
+  vPos = vOffset; vPos.y += vSize.y/2;
+  ComputeFractalFast<T>(pDummyData, vPos, vSize/2, vTotalSize, timer, 2, val[2], depth+1, completed);
+  completed += 1.0/pow(8.0, depth);
+
+  vPos = vOffset; vPos.x += vSize.x/2; vPos.y += vSize.y/2;
+  ComputeFractalFast<T>(pDummyData, vPos, vSize/2, vTotalSize, timer, 3, val[3], depth+1, completed);
+  completed += 1.0/pow(8.0, depth);
+
+  vPos = vOffset; vPos.z += vSize.z/2;
+  ComputeFractalFast<T>(pDummyData, vPos, vSize/2, vTotalSize, timer, 4, val[4], depth+1, completed);
+  completed += 1.0/pow(8.0, depth);
+
+  vPos = vOffset; vPos.x += vSize.x/2; vPos.z += vSize.z/2;
+  ComputeFractalFast<T>(pDummyData, vPos, vSize/2, vTotalSize, timer, 5, val[5], depth+1, completed);
+  completed += 1.0/pow(8.0, depth);
+
+  vPos = vOffset; vPos.z += vSize.z/2; vPos.y += vSize.y/2;
+  ComputeFractalFast<T>(pDummyData, vPos, vSize/2, vTotalSize, timer, 6, val[6], depth+1, completed);
+  completed += 1.0/pow(8.0, depth);
+
+  vPos = vOffset; vPos.x += vSize.x/2; vPos.y += vSize.y/2; vPos.z += vSize.z/2;
+  ComputeFractalFast<T>(pDummyData, vPos, vSize/2, vTotalSize, timer, 7, val[7], depth+1, completed);
+  completed += 1.0/pow(8.0, depth);
+
+  if (vSize.volume() >= 16*16*16)
+    MESSAGE(" %.3f%% completed (Depth=%i) (%s)", completed*100.0, depth, timer.GetProgressMessage(completed).c_str());
+
+
+}
+
+template<typename T, ECreationType eCreationType>
 void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData,
-                        uint32_t iIterations) {
-  ProgressTimer timer;
-  timer.Start();
-  T* source = new T[size_t(vSize.x)];
+                        uint32_t iIterations, bool bHierarchical) {
 
   if (iIterations == 0)
     iIterations = std::numeric_limits<T>::max()-1;
+  ProgressTimer timer;
+  timer.Start();
+
+  // shortcut for fractals in an pow of two cube volume
+  if (bHierarchical && eCreationType == CT_FRACTAL && vSize.x == vSize.y && vSize.y == vSize.z && vSize == vSize.makepow2()) {
+    MESSAGE("Hierarchical Data Generation mode.");
+    cout << endl;
+	  ComputeFractalFast<T>(pDummyData, UINT64VECTOR3(0,0,0), vSize, vSize, timer);
+	  return;
+  }
+
+  std::vector<T> source(vSize.x);
 
   for (uint64_t z = 0;z<vSize.z;z++) {
     const double completed = (double)z/vSize.z;
@@ -115,26 +357,24 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData,
             100.0*completed, timer.GetProgressMessage(completed).c_str());
 
     for (uint64_t y = 0;y<vSize.y;y++) {
-      #pragma omp parallel for 
+      #pragma omp parallel for
       for (int64_t x = 0;x<int64_t(vSize.x);x++) {
         switch (eCreationType) {
           case CT_FRACTAL: {
-            const double bulbSize = 2.25;
-            source[x] = 
-              static_cast<T>(ComputeMandelbulb(bulbSize * static_cast<double>(x)/
+            source[x] =
+              ComputeMandelbulb(bulbSize * static_cast<double>(x)/
                                                      (vSize.x-1) - bulbSize/2.0,
                                                bulbSize * static_cast<double>(y)/
                                                      (vSize.y-1) - bulbSize/2.0,
                                                bulbSize * static_cast<double>(z)/
                                                      (vSize.z-1) - bulbSize/2.0,
-                                               8, 
-                                               iIterations,
-                                               100.0) 
-                                                 * std::numeric_limits<T>::max());
+                                               8,
+                                               T(iIterations),
+                                               100.0);
             }
             break;
           case CT_SPHERE:
-            source[x] = 
+            source[x] =
             static_cast<T>(std::max(0.0f,
                                    (0.5f-(0.5f-FLOATVECTOR3(float(x),
                                                             float(y),
@@ -142,32 +382,30 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData,
                                               FLOATVECTOR3(vSize)).length())*
                                               std::numeric_limits<T>::max()*2));
             break;
-          case CT_ZERO:
-            source[x] = 0;
+          case CT_CONST_VALUE:
+            source[x] = T(iIterations);
             break;
           case CT_RANDOM:
             source[x] = rand()%std::numeric_limits<T>::max();
             break;
         }
       }
-      pDummyData->WriteRAW((uint8_t*)source, vSize.x*sizeof(T));
+      pDummyData->WriteRAW((uint8_t*)(source.data()), vSize.x*sizeof(T));
     }
   }
-
-  delete [] source;
 }
 
-bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize, 
+bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
                    uint32_t iBitSize, ECreationType eCreationType, uint32_t iIterations,
                    bool bUseToCBlock, bool bKeepRaw, uint32_t iCompression,
                    uint32_t iUVFMemory, uint32_t iBrickSize, uint32_t iLayout,
-                   uint32_t iCompressionLevel) {
+                   uint32_t iCompressionLevel, bool bHierarchical) {
   wstring wstrUVFName(strUVFName.begin(), strUVFName.end());
   UVF uvfFile(wstrUVFName);
 
-  const bool bGenerateUVF = 
+  const bool bGenerateUVF =
         SysTools::ToLowerCase(SysTools::GetExt(strUVFName)) == "uvf";
-  std::string rawFilename =  
+  std::string rawFilename =
         bGenerateUVF ? SysTools::ChangeExt(strUVFName,"raw") : strUVFName;
 
   MESSAGE("Generating dummy data");
@@ -183,18 +421,18 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
   switch (iBitSize) {
     case 8 :
       switch (eCreationType) {
-        case CT_FRACTAL : MESSAGE("Generating a fractal"); GenerateVolumeData<uint8_t, CT_FRACTAL>(vSize, dummyData, iIterations); break;
-        case CT_SPHERE : MESSAGE("Generating a sphere"); GenerateVolumeData<uint8_t, CT_SPHERE>(vSize, dummyData, iIterations); break;
-        case CT_ZERO : MESSAGE("Generating zeroes"); GenerateVolumeData<uint8_t, CT_ZERO>(vSize, dummyData, iIterations); break;
-        case CT_RANDOM : MESSAGE("Generating noise"); GenerateVolumeData<uint8_t, CT_RANDOM>(vSize, dummyData, iIterations); break;
+        case CT_FRACTAL : MESSAGE("Generating a fractal"); GenerateVolumeData<uint8_t, CT_FRACTAL>(vSize, dummyData, iIterations, bHierarchical); break;
+        case CT_SPHERE : MESSAGE("Generating a sphere"); GenerateVolumeData<uint8_t, CT_SPHERE>(vSize, dummyData, iIterations, bHierarchical); break;
+        case CT_CONST_VALUE : MESSAGE("Generating zeroes"); GenerateVolumeData<uint8_t, CT_CONST_VALUE>(vSize, dummyData, 0, bHierarchical); break;
+        case CT_RANDOM : MESSAGE("Generating noise"); GenerateVolumeData<uint8_t, CT_RANDOM>(vSize, dummyData, iIterations, bHierarchical); break;
       }
       break;
     case 16 :
       switch (eCreationType) {
-        case CT_FRACTAL : MESSAGE("Generating a fractal"); GenerateVolumeData<uint16_t, CT_FRACTAL>(vSize, dummyData, iIterations); break;
-        case CT_SPHERE : MESSAGE("Generating a sphere"); GenerateVolumeData<uint16_t, CT_SPHERE>(vSize, dummyData, iIterations); break;
-        case CT_ZERO : MESSAGE("Generating zeroes"); GenerateVolumeData<uint16_t, CT_ZERO>(vSize, dummyData, iIterations); break;
-        case CT_RANDOM : MESSAGE("Generating noise"); GenerateVolumeData<uint16_t, CT_RANDOM>(vSize, dummyData, iIterations); break;
+        case CT_FRACTAL : MESSAGE("Generating a fractal"); GenerateVolumeData<uint16_t, CT_FRACTAL>(vSize, dummyData, iIterations, bHierarchical); break;
+        case CT_SPHERE : MESSAGE("Generating a sphere"); GenerateVolumeData<uint16_t, CT_SPHERE>(vSize, dummyData, iIterations, bHierarchical); break;
+        case CT_CONST_VALUE : MESSAGE("Generating zeroes"); GenerateVolumeData<uint16_t, CT_CONST_VALUE>(vSize, dummyData, 0, bHierarchical); break;
+        case CT_RANDOM : MESSAGE("Generating noise"); GenerateVolumeData<uint16_t, CT_RANDOM>(vSize, dummyData, iIterations, bHierarchical); break;
       }
       break;
     default:
@@ -202,7 +440,7 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
       return false;
   }
   dummyData->Close();
-  
+
   uint64_t genMiliSecs = uint64_t(generationTimer.Elapsed());
 
   if (!bGenerateUVF) return EXIT_FAILURE;
@@ -310,8 +548,8 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
     switch (iBitSize) {
     case 8 : {
                   if (!testRasterVolume->FlatDataToBrickedLOD(dummyData,
-                    "./tempFile.tmp", CombineAverage<unsigned char,1>, 
-                    SimpleMaxMin<unsigned char,1>, MaxMinData, 
+                    "./tempFile.tmp", CombineAverage<unsigned char,1>,
+                    SimpleMaxMin<unsigned char,1>, MaxMinData,
                     &tuvok::Controller::Debug::Out())){
                     T_ERROR("Failed to subdivide the volume into bricks");
                     uvfFile.Close();
@@ -321,9 +559,9 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
                   break;
                 }
     case 16 :{
-                if (!testRasterVolume->FlatDataToBrickedLOD(dummyData, 
-                  "./tempFile.tmp", CombineAverage<unsigned short,1>, 
-                  SimpleMaxMin<unsigned short,1>, MaxMinData, 
+                if (!testRasterVolume->FlatDataToBrickedLOD(dummyData,
+                  "./tempFile.tmp", CombineAverage<unsigned short,1>,
+                  SimpleMaxMin<unsigned short,1>, MaxMinData,
                   &tuvok::Controller::Debug::Out())){
                   T_ERROR("Failed to subdivide the volume into bricks");
                   uvfFile.Close();
@@ -345,7 +583,7 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
 
     pTestVolume = testRasterVolume;
   }
-    
+
   if (!bKeepRaw) dummyData->Delete();
 
   if (!uvfFile.AddDataBlock(pTestVolume)) {
