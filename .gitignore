@@ -17,3 +17,4 @@ BatchRenderer/BatchRenderer
 *.dmg
 *.zip
 *.tar.gz
+/ipch
