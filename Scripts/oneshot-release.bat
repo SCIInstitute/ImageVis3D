@@ -44,7 +44,7 @@ pushd Tuvok\IO\test
 popd
 
 REM download documentation
-powershell -file Scripts\dl.ps1
+powershell -ExecutionPolicy Unrestricted -file Scripts\dl.ps1
 
 REM bundle it
 IF "%1"=="x64" (
