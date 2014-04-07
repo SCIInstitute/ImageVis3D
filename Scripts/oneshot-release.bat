@@ -23,26 +23,6 @@ IF "%1"=="x64" (
     /m:2
 )
 
-pushd Tuvok\IO\test
-  python ../3rdParty/cxxtest/cxxtestgen.py ^
-    --no-static-init ^
-    --error-printer ^
-    -o alltests.cpp ^
-    quantize.h ^
-    jpeg.h
-
-  qmake -tp vc ^
-    QMAKE_CFLAGS=%w32_cf% ^
-    QMAKE_CXXFLAGS=%w32_cf% ^
-    -recursive ^
-    test.pro
-
-  %bld% ^
-    cxxtester.vcproj ^
-    /nologo ^
-    /t:Build
-popd
-
 REM download documentation
 powershell -ExecutionPolicy Unrestricted -file Scripts\dl.ps1
 
