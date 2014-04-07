@@ -96,8 +96,8 @@ void MainWindow::ShowAbout()
 #endif
   qstrText += tr("This is the award winning ImageVis3D volume rendering system %1 %2, using the Tuvok render engine "
                  "%3 %4 %5. Copyright 2008-2013 by the Scientific Computing "
-                 "and Imaging (SCI) Institute, and the Interactive Visualization "
-                 "and Data Analysis Group.\n\n"
+                 "and Imaging (SCI) Institute, and the High Performance "
+                 "Computing Group at the University of Duisburg-Essen, Germany.\n\n"
                  "Hilbert Curve implementation copyright 1998, Rice University."
                  "LZ4 - Fast LZ compression algorithm copyright 2011-2012, Yann Collet.")
                     .arg(IV3D_VERSION)
