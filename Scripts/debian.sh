@@ -10,7 +10,7 @@ fi
 version
 VER="${IV3D_MAJOR}.${IV3D_MINOR}.${IV3D_PATCH}"
 DEB_VER=1
-SVN=https://gforge.sci.utah.edu/svn/imagevis3d
+REPO=https://github.com/SCIInstitute/ImageVis3D.git
 
 function die {
   echo "$@"
@@ -21,22 +21,19 @@ rm -fr imagevis3d-${VER}*
 rm -f ./*.changes ./*.deb ./*.tar.gz ./*.dsc ./*.diff.gz ./*_source.upload \
   ./*_source.changes
 
-revs=$(svn export --force ${SVN} | \
-       grep "Exported" |           \
-       awk '{print $(NF)'} |       \
-       cut -d. -f1 |               \
-       tr "[:space:]" "~"          \
-      )
-if test $? -ne 0; then die "svn export failed." ; fi
-echo "revs: ${revs}"
+rm -fr ImageVis3D # kill previous clone
+git clone --depth 1 ${REPO} > /dev/null || die "clone failed"
+(cd ImageVis3D && git submodule init) || die "could not init submodules"
+(cd ImageVis3D && git submodule update) || die "submodules couldn't be updated"
 
 if test "${mode}" = "ubuntu-ppa" ; then
-  VER="${VER}~ppa${revs}"
+  VER="${VER}~ppa"
 else
-  VER="${VER}~svn${revs}"
+  VER="${VER}~git"
 fi
 
-mv imagevis3d "imagevis3d-${VER}"
+rm -fr "imagevis3d-${VER}"
+mv ImageVis3D "imagevis3d-${VER}" || die "could not move dir"
 export GZIP="--best"
 tar zcf imagevis3d_${VER}.orig.tar.gz imagevis3d-${VER}
 
