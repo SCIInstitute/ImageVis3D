@@ -49,7 +49,7 @@ pushd imagevis3d-${VER} || die "imagevis3d-${VER} directory does not exist"
   # Generate a valid changelog.
   pushd debian || die "no debian dir."
     if test "${mode}" = "ubuntu-ppa" ; then
-      distroseries="precise"
+      distroseries="saucy"
     else
       distroseries="unstable"
     fi
