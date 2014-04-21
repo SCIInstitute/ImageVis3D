@@ -12,11 +12,3 @@ before_install:
 script: ./Scripts/oneshot-debug.sh
 after_success:
 - sudo apt-get --no-install-recommends install doxygen
-#- git clone https://github.com/iauns/travis-doxy-helper ./doxy-helper
-#- ./doxy-helper/update-doxygen.sh ./.dox ./dox-repo https://github.com/SCIInstitute/spire
-branches:
-  only:
-  - master
-#env:
-#  global:
-#    secure: Kj2jSPu0BR7oT31mW1AceYsEHOrTooiyIr3AA8bBpV2nObMcsbc0I33AzGH59fzcjwWOA6TW2LGzD+UknNI0JLNlgOCzsZ/M0i6q+BF/+X/Hsa+TO2z8qsXIA9lhzWBP51AT1KhsZuiEwqO6Mm9OV8jYUkqhX/f9Lale5LfhNh0=
