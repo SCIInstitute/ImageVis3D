@@ -10,5 +10,3 @@ before_install:
 - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
 - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 script: ./Scripts/oneshot-debug.sh
-after_success:
-- sudo apt-get --no-install-recommends install doxygen
