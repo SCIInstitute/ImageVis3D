@@ -24,11 +24,13 @@ fi
 # Darwin's debug STL support is broken.
 # Ditto: OpenMP
 if test `uname -s` != "Darwin"; then
-  CXF="${CXF} -D_GLIBCXX_DEBUG -Werror --param ssp-buffer-size=4"
+  CXF="${CXF} -D_GLIBCXX_DEBUG --param ssp-buffer-size=4"
   LDFLAGS="${LDFLAGS} --param ssp-buffer-size=4"
   if test "${CXX}" == "clang++"; then
     # We are using clang on a linux system. Set Qt mkspec appropriately.
     MKSPEC="-spec unsupported/linux-clang"
+  else
+    CXF="${CXF} -Werror"
   fi
 else
   # We don't turn -Werror on because of warnings that deal 
