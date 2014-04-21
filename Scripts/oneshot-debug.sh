@@ -6,7 +6,9 @@ IV3D_BUILD_TYPE="debug"
 VIS="-fvisibility=hidden"
 INL="-fvisibility-inlines-hidden"
 if test `uname -s` != "Darwin"; then
-  COVERAGE="-fprofile-arcs -ftest-coverage"
+  if test "${CXX}" != "clang++"; then
+    COVERAGE="-fprofile-arcs -ftest-coverage"
+  fi
 else
   COVERAGE=""
 fi
@@ -24,13 +26,12 @@ fi
 # Darwin's debug STL support is broken.
 # Ditto: OpenMP
 if test `uname -s` != "Darwin"; then
-  CXF="${CXF} -D_GLIBCXX_DEBUG --param ssp-buffer-size=4"
-  LDFLAGS="${LDFLAGS} --param ssp-buffer-size=4"
   if test "${CXX}" == "clang++"; then
     # We are using clang on a linux system. Set Qt mkspec appropriately.
     MKSPEC="-spec unsupported/linux-clang"
   else
-    CXF="${CXF} -Werror"
+    CXF="${CXF} -D_GLIBCXX_DEBUG --param ssp-buffer-size=4 -Werror"
+    LDFLAGS="${LDFLAGS} --param ssp-buffer-size=4"
   fi
 else
   # We don't turn -Werror on because of warnings that deal 
