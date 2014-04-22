@@ -29,6 +29,7 @@ if test `uname -s` != "Darwin"; then
   if test "${CXX}" == "clang++"; then
     # We are using clang on a linux system. Set Qt mkspec appropriately.
     MKSPEC="-spec unsupported/linux-clang"
+    CXF="${CXF} -D_GLIBCXX_DEBUG"
   else
     CXF="${CXF} -D_GLIBCXX_DEBUG --param ssp-buffer-size=4 -Werror"
     LDFLAGS="${LDFLAGS} --param ssp-buffer-size=4"
