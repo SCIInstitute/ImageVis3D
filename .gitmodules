@@ -1,3 +1,4 @@
 [submodule "Tuvok"]
 	path = Tuvok
 	url = https://github.com/SCIInstitute/Tuvok.git
+	branch = travis
