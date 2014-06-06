@@ -1,28 +1,41 @@
-#!/bin/sh
-
-VERSION=4.8.4
-PREFIX="${HOME}/sw"
+#!/bin/bash
+MAJOR=4
+MINOR=8
+PATCH=6
+VERSION=${MAJOR}.${MINOR}.${PATCH}
+SOURCEDIR="${HOME}/Qt/Source"
+BUILDDIR="${HOME}/Qt/Build"
+PREFIX=${BUILDDIR}/${VERSION}
 QTDIR="qt-everywhere-opensource-src-${VERSION}"
-echo "Removing old build..."
+
+mkdir -p ${SOURCEDIR}
+mkdir -p ${BUILDDIR}
+
+pushd ${SOURCEDIR} || exit 1
+
+echo "Removing old sources and build..."
 rm -fr ${QTDIR}
 
-tarball="${QTDIR}.tar"
+TARBALL="${QTDIR}.tar"
 
-echo "Extracting..."
 # Do they have a bzip'd or a gzip'd tarball?
-if test -f ${tarball}.bz2 ; then
-  tar jxf ${tarball}.bz2
-elif test -f ${tarball}.gz ; then
-  tar zxf ${tarball}.gz
+if test -f ${TARBALL}.bz2 ; then
+  echo "Extracting..."
+  tar jxf ${TARBALL}.bz2
+elif test -f ${TARBALL}.gz ; then
+  echo "Extracting..."
+  tar zxf ${TARBALL}.gz
 else
-  echo "${tarball}.gz not found; Downloading Qt..."
-  curl -kLO http://releases.qt-project.org/qt4/source/${tarball}.gz
-  tar zxf ${tarball}.gz
+  echo "${TARBALL}.gz not found; Downloading Qt..."
+  curl -kLO http://download.qt-project.org/archive/qt/${MAJOR}.${MINOR}/${VERSION}/${TARBALL}.gz
+  echo "Extracting..."
+  tar zxf ${TARBALL}.gz
 fi
+
 pushd ${QTDIR} || exit 1
 echo "yes" | \
 ./configure \
-        -prefix ${HOME}/sw \
+        -prefix ${PREFIX} \
         -buildkey "imagevis3d" \
         -release \
         -opensource \
@@ -43,7 +56,7 @@ echo "yes" | \
         -no-scripttools \
         -no-declarative \
         -no-declarative-debug \
-        -platform macx-g++ \
+        -platform unsupported/macx-clang \
         -no-scripttools \
         -system-zlib \
         -no-gif \
@@ -72,9 +85,13 @@ fi
 
 nice make -j6 || exit 1
 
-rm -fr ${PREFIX}/bin/qmake ${PREFIX}/lib/libQt* ${PREFIX}/lib/Qt*
-rm -fr ${PREFIX}/include/Qt*
+echo "Removing old install..."
+rm -fr ${PREFIX}
 
 nice make install || exit 1
 
+echo "Creating symlink to last install..."
+ln -s ${PREFIX} ${BUILDDIR}/Current
+
+popd
 popd
