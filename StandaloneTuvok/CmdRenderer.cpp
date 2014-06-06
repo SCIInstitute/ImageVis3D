@@ -37,7 +37,7 @@ bool SaveFBOToDisk(const std::string& filename)
 	glGetIntegerv(GL_VIEWPORT, viewport);
 
   SmallImage s(viewport[2], viewport[3], 4);
-  boost::uint8_t* pixels = s.GetDataPtrRW();
+  uint8_t* pixels = s.GetDataPtrRW();
 
 	GLuint texture;
 	glGenTextures(1, &texture);
@@ -115,20 +115,20 @@ int main(int argc, char * argv[])
     tuvok::AbstrRenderer* renderer =
         inst.getRawPointer<tuvok::AbstrRenderer>(ss);
 
-    renderer->LoadDataset(filename);
-		renderer->AddShaderPath(SHADER_PATH);
-		renderer->Initialize(tuvok::GLContextID::Current());
-		renderer->Resize(UINTVECTOR2(1920, 1200));
-		const std::vector<tuvok::RenderRegion*> & rr = renderer->GetRenderRegions();
-    renderer->SetRendererTarget(tuvok::AbstrRenderer::RT_HEADLESS);
+    //renderer->LoadDataset(filename);
+		//renderer->AddShaderPath(SHADER_PATH);
+		//renderer->Initialize(tuvok::GLContextID::Current());
+		//renderer->Resize(UINTVECTOR2(1920, 1200));
+		//const std::vector<tuvok::RenderRegion*> & rr = renderer->GetRenderRegions();
+    //renderer->SetRendererTarget(tuvok::AbstrRenderer::RT_HEADLESS);
 
     FLOATMATRIX4 rm;
 		rm.RotationX(45.0);
-		renderer->SetRotation(rr[0], rm);
-		renderer->Paint();
+		//renderer->SetRotation(rr[0], rm);
+		//renderer->Paint();
 		SaveFBOToDisk("image.bmp");   
 
-		renderer->Cleanup();
+		//renderer->Cleanup();
 		tuvok::Controller::Instance().ReleaseVolumeRenderer(renderer);
 		context.restorePrevious();
 	} 

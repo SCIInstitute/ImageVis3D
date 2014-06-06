@@ -25,7 +25,7 @@ SmallImage::~SmallImage(void)
 }
 
 void SmallImage::InitData() {
-  m_pData = new boost::uint8_t[m_iComponentCount*m_size.area()];
+  m_pData = new uint8_t[m_iComponentCount*m_size.area()];
   memset(m_pData,0,m_iComponentCount*m_size.area());
 }
 
@@ -40,7 +40,7 @@ bool SmallImage::PeekBMPHeader(const std::string& filename, UINTVECTOR2& size, u
 	if (inStream.fail()) return false;
 	
 	// check "BM" magic bytes
-	boost::uint16_t bfType;
+	uint16_t bfType;
 	inStream.read((char*)&bfType, 2);
 	if (bfType != 19778) {
 		inStream.close();
@@ -62,7 +62,7 @@ bool SmallImage::PeekBMPHeader(const std::string& filename, UINTVECTOR2& size, u
 		return false;
 	}
 	// get the number of bits per pixel
-	boost::uint16_t biBitCount;
+	uint16_t biBitCount;
 	inStream.read((char*)&biBitCount, 2);   // get the number of planes
 	if (biBitCount != 24 && biBitCount != 32) {
 		inStream.close();
@@ -92,7 +92,7 @@ bool SmallImage::LoadFromBMP(const std::string& filename) {
   inStream.seekg(iOffsetToData, std::ios_base::beg);
 
   delete m_pData;
-  m_pData = new boost::uint8_t[m_iComponentCount*m_size.area()];
+  m_pData = new uint8_t[m_iComponentCount*m_size.area()];
 
   int rowPad= 4- (m_size.x*m_iComponentCount)%4;
   if (rowPad == 4) rowPad = 0;
@@ -109,7 +109,7 @@ bool SmallImage::LoadFromBMP(const std::string& filename) {
   inStream.close();
 
   // swap red and blue (bgr[a] -> rgb[a])
-  for (boost::uint32_t i = 0; i < m_size.area()*m_iComponentCount; i += m_iComponentCount)
+  for (uint32_t i = 0; i < m_size.area()*m_iComponentCount; i += m_iComponentCount)
       std::swap(m_pData[i], m_pData[i+2]);
 
   return true;	
@@ -134,7 +134,7 @@ bool SmallImage::SaveToBMPFile(const std::string& filename) const  {
 
 	// write BMP-Header
   outStream.write((char*)"BM", 2); // all BMP-Files start with "BM"
-	boost::uint32_t header[3];
+	uint32_t header[3];
 	int rowPad= 4-((w*8*m_iComponentCount)%32)/8;
   if (rowPad == 4) rowPad = 0;
 	header[0] = 54+w*h*m_iComponentCount+rowPad*h;	// filesize = 54 (header) + sizeX * sizeY * numChannels
@@ -142,7 +142,7 @@ bool SmallImage::SaveToBMPFile(const std::string& filename) const  {
 	header[2] = 54;						      // File offset to Raster Data
 	outStream.write((char*)header, 4*3);
 	// write BMP-Info-Header
-	boost::uint32_t infoHeader[10];
+	uint32_t infoHeader[10];
 	infoHeader[0] = 40;	          // size of info header 
 	infoHeader[1] = w;            // Bitmap Width
 	infoHeader[2] = -h;           // Bitmap Height (negative to flip image)
@@ -158,8 +158,8 @@ bool SmallImage::SaveToBMPFile(const std::string& filename) const  {
 	outStream.write((char*)infoHeader, 4*10);
 
   // data in BMP is stored BGR, so convert RGB to BGR
-  boost::uint8_t* pData = new boost::uint8_t [m_iComponentCount*m_size.area()];
-  for (boost::uint32_t i = 0; i < m_iComponentCount*m_size.area(); i+=m_iComponentCount) {
+  uint8_t* pData = new uint8_t [m_iComponentCount*m_size.area()];
+  for (uint32_t i = 0; i < m_iComponentCount*m_size.area(); i+=m_iComponentCount) {
     pData[i]   = m_pData[i+2];
     pData[i+1] = m_pData[i+1];
     pData[i+2] = m_pData[i];
@@ -171,7 +171,7 @@ bool SmallImage::SaveToBMPFile(const std::string& filename) const  {
 		outStream.write((char*)pData, m_iComponentCount*m_size.area());
 	}
 	else {
-		boost::uint8_t zeroes[9]={0,0,0,0,0,0,0,0,0};
+		uint8_t zeroes[9]={0,0,0,0,0,0,0,0,0};
 		for (int i=0; i<h; i++) {
       outStream.write((char*)pData+m_iComponentCount*i*w, m_iComponentCount*w);
       outStream.write((char*)zeroes, rowPad);
@@ -191,14 +191,14 @@ void SmallImage::AdjustToAspect(unsigned int& newWidth, unsigned int& newHeight)
   }
 }
 
-void SmallImage::Resample(boost::uint8_t* pTarget, unsigned int newWidth, unsigned int newHeight) {
+void SmallImage::Resample(uint8_t* pTarget, unsigned int newWidth, unsigned int newHeight) {
 
   // info: this code is very inneficient but it's easy to read
   //       and this is a SMALL-Image class after all :-)
   float deltaX = m_size.x / float(newWidth);
   float deltaY = m_size.y / float(newHeight);
 
-  boost::uint8_t* targetPtr = pTarget;
+  uint8_t* targetPtr = pTarget;
   for (unsigned int y = 0;y<newHeight;y++) {
     float floatY = deltaY*y;
     unsigned int cY = (unsigned int)(ceil(floatY));
@@ -223,7 +223,7 @@ void SmallImage::Resample(boost::uint8_t* pTarget, unsigned int newWidth, unsign
         float val3 = float(m_pData[i3+c]);
         
         // billinear interpolation
-        boost::uint8_t val = boost::uint8_t((val0*(1.0f-sX)+val1*sX)*(1.0f-sY) + (val2*(1.0f-sX)+val3*sX)*sY);
+        uint8_t val = uint8_t((val0*(1.0f-sX)+val1*sX)*(1.0f-sY) + (val2*(1.0f-sX)+val3*sX)*sY);
         (*targetPtr) = val;
         targetPtr++;
       }
@@ -239,14 +239,14 @@ SmallImage* SmallImage::GeneratePreviewImage(unsigned int newWidth, unsigned int
   return preview;
 }
 
-void SmallImage::ForceComponentCount(unsigned int newCompCount, boost::uint8_t padValue) {
+void SmallImage::ForceComponentCount(unsigned int newCompCount, uint8_t padValue) {
   if (newCompCount != 3 && newCompCount != 4) return; //unsupported component count
 
   if (newCompCount == m_iComponentCount)  return; // that was easy :-)
-  boost::uint8_t* pData = new boost::uint8_t [newCompCount*m_size.area()];  
+  uint8_t* pData = new uint8_t [newCompCount*m_size.area()];  
 
-  boost::uint8_t* targetPtr = pData;
-  boost::uint8_t* sourcePtr = m_pData;
+  uint8_t* targetPtr = pData;
+  uint8_t* sourcePtr = m_pData;
   if (newCompCount < m_iComponentCount) {
     for (size_t i = 0;i<m_size.area();i++) {
       for (size_t c = 0;c<newCompCount;c++) {
@@ -280,14 +280,14 @@ void SmallImage::Resample(unsigned int newWidth, unsigned int newHeight, bool bK
   
   if (bKeepAspect) AdjustToAspect(newWidth, newHeight);
 
-  boost::uint8_t* pData = new boost::uint8_t [m_iComponentCount*newWidth*newHeight];  
+  uint8_t* pData = new uint8_t [m_iComponentCount*newWidth*newHeight];  
   Resample(pData, newWidth, newHeight);
   delete [] m_pData;
   m_pData = pData;
   m_size = UINTVECTOR2(newWidth, newHeight);
 }
 
-void SmallImage::SetPixel(unsigned int x, unsigned int y, boost::uint8_t r, boost::uint8_t g, boost::uint8_t b, boost::uint8_t a) {
+void SmallImage::SetPixel(unsigned int x, unsigned int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
   size_t index = OneDIndex(x,y);
   m_pData[index+0] = r;
   m_pData[index+1] = g;
@@ -296,11 +296,11 @@ void SmallImage::SetPixel(unsigned int x, unsigned int y, boost::uint8_t r, boos
 }
 
 
-void SmallImage::SetPixel(unsigned int x, unsigned int y, boost::uint8_t r, boost::uint8_t g, boost::uint8_t b) {
+void SmallImage::SetPixel(unsigned int x, unsigned int y, uint8_t r, uint8_t g, uint8_t b) {
   SetPixel(x, y, r, g, b, 255);
 }
 
-void SmallImage::SetPixel(unsigned int x, unsigned int y, boost::uint8_t grey) {
+void SmallImage::SetPixel(unsigned int x, unsigned int y, uint8_t grey) {
   SetPixel(x, y, grey, grey, grey);
 }
 
@@ -308,7 +308,7 @@ void SmallImage::SetPixel(unsigned int x, unsigned int y, const Color& c) {
   SetPixel(x, y, c.x, c.y, c.z);
 }
 
-void SmallImage::GetPixel(unsigned int x, unsigned int y, boost::uint8_t& r, boost::uint8_t& g, boost::uint8_t& b, boost::uint8_t& a) const {    
+void SmallImage::GetPixel(unsigned int x, unsigned int y, uint8_t& r, uint8_t& g, uint8_t& b, uint8_t& a) const {    
   size_t index = OneDIndex(x,y);
   r = m_pData[index+0];
   g = m_pData[index+1];
@@ -316,17 +316,17 @@ void SmallImage::GetPixel(unsigned int x, unsigned int y, boost::uint8_t& r, boo
   a = (m_iComponentCount == 4) ? m_pData[index+2] : 255;
 }
 
-void SmallImage::GetPixel(unsigned int x, unsigned int y, boost::uint8_t& r, boost::uint8_t& g, boost::uint8_t& b) const {    
+void SmallImage::GetPixel(unsigned int x, unsigned int y, uint8_t& r, uint8_t& g, uint8_t& b) const {    
   size_t index = OneDIndex(x,y);
   r = m_pData[index+0];
   g = m_pData[index+1];
   b = m_pData[index+2];
 }
 
-void SmallImage::GetPixel(unsigned int x, unsigned int y, boost::uint8_t& grey) const {    
-  boost::uint8_t r, g, b;
+void SmallImage::GetPixel(unsigned int x, unsigned int y, uint8_t& grey) const {    
+  uint8_t r, g, b;
   GetPixel(x,y, r,g,b);
-  grey = (boost::uint8_t)(((unsigned int)r+(unsigned int)g+(unsigned int)b)/3);
+  grey = (uint8_t)(((unsigned int)r+(unsigned int)g+(unsigned int)b)/3);
 }
 
 void SmallImage::GetPixel(unsigned int x, unsigned int y, Color& c) const {    
