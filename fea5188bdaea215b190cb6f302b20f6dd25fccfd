@@ -1,1 +1,0 @@
-DirectX build still needs to be adjusted to Windows 8/8.1 SDK that does not provide d3dx10.h anymore.
