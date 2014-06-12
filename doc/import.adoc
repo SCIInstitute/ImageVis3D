@@ -632,7 +632,7 @@ Building Your Reader
 ^^^^^^^^^^^^^^^^^^^^
 
 You will need to add your new reader to the build.  The files which are
-part of the IO subsystem are currently listed in the 'Tuvok/Tuvok.pro'.
+part of the IO subsystem are currently listed in the 'Tuvok/tvk.pro'.
 You'll find `HEADERS` and `SOURCES` variables in that file, which list
 all of the files involved in the build.  You must add you reader to
 both variables.
