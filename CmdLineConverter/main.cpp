@@ -274,13 +274,8 @@ int main(int argc, const char* argv[])
         return EXIT_FAILURE_NEED_UVF;
       }
     }
-    try {
-      ioMan.EvaluateExpression(expression.c_str(), input, strOutFile);
-    } catch(const std::exception& e) {
-      std::cerr << "expr exception: " << e.what() << "\n";
-      return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
+    std::cerr << "expression support disabled in this branch.\n";
+    return EXIT_FAILURE;
   }
 
   // Verify we can actually convert the data.  We can't do this for
