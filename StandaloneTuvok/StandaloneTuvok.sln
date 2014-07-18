@@ -1,7 +1,14 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StandaloneTuvok", "StandaloneTuvok.vcxproj", "{D1D7C8D7-C8E8-4A36-A049-FFBDEB742875}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D474A1E1-2ED3-42E6-826C-372430E549B9} = {D474A1E1-2ED3-42E6-826C-372430E549B9}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tuvok", "..\Tuvok\Tuvok.vcxproj", "{D474A1E1-2ED3-42E6-826C-372430E549B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +26,14 @@ Global
 		{D1D7C8D7-C8E8-4A36-A049-FFBDEB742875}.Release|Win32.Build.0 = Release|Win32
 		{D1D7C8D7-C8E8-4A36-A049-FFBDEB742875}.Release|x64.ActiveCfg = Release|x64
 		{D1D7C8D7-C8E8-4A36-A049-FFBDEB742875}.Release|x64.Build.0 = Release|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|Win32.ActiveCfg = Debug (No Qt)|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|Win32.Build.0 = Debug (No Qt)|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|x64.ActiveCfg = Debug (No Qt)|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|x64.Build.0 = Debug (No Qt)|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|Win32.ActiveCfg = Release (No Qt)|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|Win32.Build.0 = Release (No Qt)|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|x64.ActiveCfg = Release (No Qt)|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|x64.Build.0 = Release (No Qt)|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
