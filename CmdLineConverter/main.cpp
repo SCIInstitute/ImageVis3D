@@ -178,8 +178,7 @@ int main(int argc, const char* argv[])
                                       "positive integer");
     TCLAP::ValueArg<uint32_t> opt_compression("p", "compress", "UVF compression "
                                             "method 0: no compression, 1: zlib, "
-                                            "2: lzma, 3: lz4, 4: bzlib, "
-                                            "5: lzham",
+                                            "2: lzma, 3: lz4, 4: bzlib",
                                             false, 1, "positive integer");
     TCLAP::ValueArg<uint32_t> opt_level("v", "level", "UVF compression level "
                                         "between (1..10)",

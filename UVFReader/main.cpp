@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
                                    static_cast<uint32_t>(0), uint);
     TCLAP::ValueArg<size_t> compression("p", "compress", "UVF compression "
                                         "method 0: no compression, 1: zlib, 2: "
-                                        "lzma, 3: lz4, 4: bzlib, 5: lzham",
+                                        "lzma, 3: lz4, 4: bzlib",
                                         false, static_cast<size_t>(1), uint);
     TCLAP::ValueArg<size_t> complevel("v", "level", "UVF compression level "
                                       "between (1..10)",
