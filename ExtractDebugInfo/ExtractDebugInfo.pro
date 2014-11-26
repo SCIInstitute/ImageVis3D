@@ -19,7 +19,7 @@ QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
 gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
 for(d, gludirs) {
   if(exists($${d}/libGLU.a) && static) {
-    LIBS -= -lGLU;
+    LIBS -= -lGLU
     LIBS += $${d}/libGLU.a
   }
 }
