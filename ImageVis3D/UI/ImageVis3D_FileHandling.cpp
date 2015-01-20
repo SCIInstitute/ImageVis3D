@@ -150,7 +150,7 @@ void MainWindow::ExportGeometry() {
     string targetFileName = string(fileName.toAscii());
 
     // still a valid filename ext ?
-    if (ss->cexecRet<bool>("tuvok.io.hasConverterForExt", 
+    if (ss->cexecRet<bool>("tuvok.io.hasGeoConverterForExt", 
                            SysTools::ToLowerCase(SysTools::GetExt(
                                    string(fileName.toAscii()))),
                            true, false) == false) {
@@ -192,7 +192,7 @@ bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
   pleaseWait.AttachLabel(&m_MasterController);
 
   std::vector<shared_ptr<Mesh>> meshes =
-      ss->cexecRet<std::vector<shared_ptr<Mesh>>>(ds.fqName() + "getMeshes");
+      ss->cexecRet<std::vector<shared_ptr<Mesh>>>(ds.fqName() + ".getMeshes");
   return ss->cexecRet<bool>("tuvok.io.exportMesh", meshes[i], strFilename);
 }
 
