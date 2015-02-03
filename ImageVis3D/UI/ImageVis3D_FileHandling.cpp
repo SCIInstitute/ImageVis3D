@@ -49,6 +49,7 @@
 #include <QtGui/QMessageBox>
 
 #include "Basics/Mesh.h"
+#include "Renderer/RenderMesh.h" // we only need this include for proper down cast from RenderMesh to Mesh
 #include "Basics/SysTools.h"
 #include "Controller/Controller.h"
 #include "IO/TuvokIOError.h"
@@ -133,7 +134,7 @@ void MainWindow::ExportGeometry() {
 #ifdef DETECTED_OS_APPLE
   options |= QFileDialog::DontUseNativeDialog;
 #endif
-  QString selectedFilter;
+  QString selectedFilter("g3d");
 
   QSettings settings;
   QString strLastDir = settings.value("Folders/ExportMesh", ".").toString();
@@ -191,9 +192,23 @@ bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
   pleaseWait.SetText("Exporting Mesh...");
   pleaseWait.AttachLabel(&m_MasterController);
 
+#if 0
+  // Old version:
+  // Export the mesh as stored on disk.
   std::vector<shared_ptr<Mesh>> meshes =
       ss->cexecRet<std::vector<shared_ptr<Mesh>>>(ds.fqName() + ".getMeshes");
-  return ss->cexecRet<bool>("tuvok.io.exportMesh", meshes[i], strFilename);
+  shared_ptr<Mesh> mesh = meshes[i];
+#else
+  // Changed by Alex:
+  // Export the visible rendered mesh with updated colors as we see it.
+  // The export will bake the colors into the exported mesh anyway.
+  // The index i should be identical to the disk mesh list.
+  std::vector<shared_ptr<RenderMesh>> rmeshes = m_pActiveRenderWin->GetRendererMeshes();
+  shared_ptr<RenderMesh> rmesh = rmeshes[i];
+  shared_ptr<Mesh> mesh = rmesh;
+#endif
+
+  return ss->cexecRet<bool>("tuvok.io.exportMesh", mesh, strFilename);
 }
 
 void MainWindow::RemoveGeometry() {
