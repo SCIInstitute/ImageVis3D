@@ -1079,11 +1079,12 @@ void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {
   pleaseWait.AttachLabel(&m_MasterController);
 
   const FLOATMATRIX4& m = m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->GetTransformFromOriginal();
+  const FLOATVECTOR4& c = m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->GetDefaultColor();
 
   m_pActiveRenderWin->SetDatasetIsInvalid(true);
 
   if (!ss->cexecRet<bool>(ds.fqName() + ".geomTransformToFile", 
-                          static_cast<size_t>(sender->m_index), m)) {
+                          static_cast<size_t>(sender->m_index), m, c)) {
     pleaseWait.close();
     ShowCriticalDialog("Transform Save Failed.",
              "Could not save geometry transform to the UVF file, "
