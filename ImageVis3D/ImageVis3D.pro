@@ -112,7 +112,7 @@ HEADERS += StdDefines.h \
            UI/MetadataDlg.h \
            UI/AboutDlg.h \
            UI/URLDlg.h \
-           UI/BugRepDlg.h \           
+           UI/BugRepDlg.h \
            UI/LODDlg.h \
            UI/MDIRenderWin.h \
            UI/MergeDlg.h \
@@ -121,7 +121,11 @@ HEADERS += StdDefines.h \
            DebugOut/QTOut.h \
            DebugOut/QTLabelOut.h \
            IO/DialogConverter.h \
-    UI/DebugScriptWindow.h
+           IO/ZipFile.h \
+           IO/3rdParty/crypt.h \
+           IO/3rdParty/ioapi.h \
+           IO/3rdParty/zip.h \
+           UI/DebugScriptWindow.h
 
 FORMS += UI/UI/BrowseData.ui \
          UI/UI/ImageVis3D.ui \
@@ -180,8 +184,11 @@ SOURCES += UI/BrowseData.cpp \
            DebugOut/QTOut.cpp \
            DebugOut/QTLabelOut.cpp \
            IO/DialogConverter.cpp \
+           IO/ZipFile.cpp \
+           IO/3rdParty/ioapi.c \
+           IO/3rdParty/zip.c \
            main.cpp \
-    UI/DebugScriptWindow.cpp
+           UI/DebugScriptWindow.cpp
 
 win32 {
   HEADERS += UI/RenderWindowDX.h

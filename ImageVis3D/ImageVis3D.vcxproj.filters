@@ -27,6 +27,9 @@
     <Filter Include="IO">
       <UniqueIdentifier>{2b209271-eac4-41a4-8447-cee6e77d51b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IO\3rd Party">
+      <UniqueIdentifier>{6db69914-e5d2-44bd-8faf-b1506a67876e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\bug.png">
@@ -279,6 +282,15 @@
     <ClCompile Include="UI\BasicSettingsDlg.cpp">
       <Filter>UI\Implemented Files</Filter>
     </ClCompile>
+    <ClCompile Include="IO\3rdParty\zip.c">
+      <Filter>IO\3rd Party</Filter>
+    </ClCompile>
+    <ClCompile Include="IO\3rdParty\ioapi.c">
+      <Filter>IO\3rd Party</Filter>
+    </ClCompile>
+    <ClCompile Include="IO\ZipFile.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UI\AutoGen\ui_About.h">
@@ -347,6 +359,18 @@
     <ClInclude Include="StdDefines.h" />
     <ClInclude Include="UI\MDIRenderWin.h">
       <Filter>UI\Implemented Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\3rdParty\zip.h">
+      <Filter>IO\3rd Party</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\3rdParty\crypt.h">
+      <Filter>IO\3rd Party</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\3rdParty\ioapi.h">
+      <Filter>IO\3rd Party</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\ZipFile.h">
+      <Filter>IO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

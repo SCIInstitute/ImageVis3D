@@ -465,6 +465,9 @@
     <ResourceCompile Include="Resources\ImageVis3D.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IO\3rdParty\ioapi.c" />
+    <ClCompile Include="IO\3rdParty\zip.c" />
+    <ClCompile Include="IO\ZipFile.cpp" />
     <ClCompile Include="UI\AutoGen\moc_AboutDlg.cpp" />
     <ClCompile Include="UI\AutoGen\moc_BasicSettingsDlg.cpp" />
     <ClCompile Include="UI\AutoGen\moc_BrowseData.cpp" />
@@ -540,6 +543,10 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IO\3rdParty\crypt.h" />
+    <ClInclude Include="IO\3rdParty\ioapi.h" />
+    <ClInclude Include="IO\3rdParty\zip.h" />
+    <ClInclude Include="IO\ZipFile.h" />
     <ClInclude Include="UI\AutoGen\ui_About.h" />
     <ClInclude Include="UI\AutoGen\ui_BrowseData.h" />
     <ClInclude Include="UI\AutoGen\ui_BugRepDlg.h" />

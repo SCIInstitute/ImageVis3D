@@ -49,6 +49,7 @@
 #include "PleaseWait.h"
 #include "Renderer/RenderMesh.h" // we only need this include for proper down cast from RenderMesh to Mesh
 #include "MobileGeoConverter.h"
+#include "../IO/ZipFile.h"
 
 using namespace tuvok;
 using namespace std;
@@ -156,6 +157,8 @@ namespace {
     // Merge all other meshes into the first one.
     for (size_t i = m+1; i < meshes.size(); i++)
     {
+      if (meshes[m]->GetMeshType() != meshes[i]->GetMeshType())
+        continue;
       shared_ptr<const G3D::GeometrySoA> geo = mgc.ConvertToNative(*meshes[i], colors);
       if (!G3D::merge(g3d.get(), geo.get())) {
         T_ERROR("Could not merge mesh %d with mesh %d.", i, m);
@@ -171,7 +174,6 @@ namespace {
     return g3d;
   }
 }
-
 
 void MainWindow::TransferToI3M() {
   if (!m_pActiveRenderWin) return;
@@ -199,10 +201,9 @@ void MainWindow::TransferToI3M() {
     pleaseWait.SetText("Preparing data  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
-    string targetFile = ConvertDataToI3M(ds,strTargetDir,
-                                         pleaseWait, true);
+    string tempVolume = ConvertDataToI3M(ds, m_strTempDir, pleaseWait, true);
 
-    if (targetFile == "") {
+    if (tempVolume == "") {
       QMessageBox errorMessage;
       errorMessage.setText("Unable to convert the dataset "
                            "into the given directory.");
@@ -214,12 +215,13 @@ void MainWindow::TransferToI3M() {
 
     string strTemp1DTFilename = m_strTempDir + "i3mexport.1dt";
     m_1DTransferFunction->SaveToFile(QString(strTemp1DTFilename.c_str()));
-    targetFile = ConvertTF(strTemp1DTFilename, strTargetDir, 
+
+    string tempTF = ConvertTF(strTemp1DTFilename, m_strTempDir,
                            ss->cexecRet<string>(ds.fqName() + ".fullpath"),
                            pleaseWait);
     remove(strTemp1DTFilename.c_str());
 
-    if (targetFile == "") {
+    if (tempTF == "") {
       QMessageBox errorMessage;
       errorMessage.setText("Unable to convert the transferfunction "
                            "into the given directory.");
@@ -228,6 +230,20 @@ void MainWindow::TransferToI3M() {
       T_ERROR("Unable to convert the transferfunction "
                "into the given directory.");
     }
+
+    string filenameOnly = SysTools::RemoveExt(SysTools::GetFilename(
+      ss->cexecRet<string>(ds.fqName() + ".fullpath")));
+
+    // zip volume and TF together
+    ZipFile i3m;
+    i3m.openZip(strTargetDir + "/" + filenameOnly + ".i3m.zip");
+    i3m.copyFileToZip(tempVolume, filenameOnly + ".i3m");
+    i3m.copyFileToZip(tempTF, filenameOnly + ".1dt");
+    i3m.close();
+
+    // remove temp files
+    remove(tempVolume.c_str());
+    remove(tempTF.c_str());
 
     pleaseWait.SetText("Exporting Meshes ...");
 
@@ -244,20 +260,29 @@ void MainWindow::TransferToI3M() {
     const std::vector<shared_ptr<RenderMesh>> meshes = m_pActiveRenderWin->GetRendererMeshes();
 #endif
 
-    string filenameOnly = SysTools::RemoveExt(SysTools::GetFilename(
-            ss->cexecRet<string>(ds.fqName() + ".fullpath")));
-
     shared_ptr<G3D::GeometrySoA> triangles = mergeMeshType(Mesh::MT_TRIANGLES, meshes);
     shared_ptr<G3D::GeometrySoA> lines = mergeMeshType(Mesh::MT_LINES, meshes);
 
+    // write to temp files
     if (triangles != nullptr) {
-      G3D::write(strTargetDir + "/" + filenameOnly + ".triangles.g3d", triangles.get());
+      G3D::write(m_strTempDir + "/" + filenameOnly + ".triangles.g3d", triangles.get());
       G3D::clean(triangles.get());
     }
     if (lines != nullptr) {
-      G3D::write(strTargetDir + "/" + filenameOnly + ".lines.g3d", lines.get());
+      G3D::write(m_strTempDir + "/" + filenameOnly + ".lines.g3d", lines.get());
       G3D::clean(lines.get());
     }
+
+    // zip the files
+    ZipFile g3d;
+    g3d.openZip(strTargetDir + "/" + filenameOnly + ".g3d.zip");
+    g3d.copyFileToZip(m_strTempDir + "/" + filenameOnly + ".triangles.g3d", filenameOnly + ".triangles.g3d");
+    g3d.copyFileToZip(m_strTempDir + "/" + filenameOnly + ".lines.g3d", filenameOnly + ".lines.g3d");
+    g3d.close();
+
+    // remove temp files
+    remove(string(m_strTempDir + "/" + filenameOnly + ".triangles.g3d").c_str());
+    remove(string(m_strTempDir + "/" + filenameOnly + ".lines.g3d").c_str());
 
   } else {
     QMessageBox errorMessage;
