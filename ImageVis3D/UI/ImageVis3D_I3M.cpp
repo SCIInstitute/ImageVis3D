@@ -141,7 +141,7 @@ void MainWindow::TransferToI3M() {
   if (ss->cexecRet<LuaDatasetProxy::DatasetType>(
           ds.fqName() + ".getDSType") == LuaDatasetProxy::UVF) {
     QSettings settings;
-    QString strLastDir = settings.value("Folders/I3DMServer",
+    QString strLastDir = settings.value("Folders/I3MServer",
                                         ".").toString();
 
     QString directoryName =
