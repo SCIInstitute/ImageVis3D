@@ -47,6 +47,8 @@
 #include <QtGui/QMessageBox>
 
 #include "PleaseWait.h"
+#include "Renderer/RenderMesh.h" // we only need this include for proper down cast from RenderMesh to Mesh
+#include "MobileGeoConverter.h"
 
 using namespace tuvok;
 using namespace std;
@@ -132,6 +134,44 @@ string MainWindow::ConvertDataToI3M(LuaClassInstance currentDataset,
   return strTargetFilename;
 }
 
+namespace {
+  template<typename T>
+  shared_ptr<G3D::GeometrySoA> mergeMeshType(Mesh::EMeshType meshType, const vector<shared_ptr<T>>& meshes)
+  {
+    // Find first mesh with given primitive type.
+    size_t m = 0;
+    for (; m < meshes.size(); m++)
+      if (meshes[m]->GetMeshType() == meshType)
+        break;
+    if (m >= meshes.size())
+      return nullptr; // Primitive type not found.
+
+    MobileGeoConverter mgc;
+    float * colors = nullptr;
+    shared_ptr<G3D::GeometrySoA> g3d = mgc.ConvertToNative(*meshes[m], colors, true);
+    // Now the color array is handled by g3d instance which is a copy a the first mesh.
+    // The color array will be deleted with the g3d instance.
+    colors = nullptr;
+
+    // Merge all other meshes into the first one.
+    for (size_t i = m+1; i < meshes.size(); i++)
+    {
+      shared_ptr<const G3D::GeometrySoA> geo = mgc.ConvertToNative(*meshes[i], colors);
+      if (!G3D::merge(g3d.get(), geo.get())) {
+        T_ERROR("Could not merge mesh %d with mesh %d.", i, m);
+      }
+      // Clean up color data that we might have created.
+      if (colors != nullptr) {
+        delete[] colors;
+        colors = nullptr;
+      }
+      // The instance geo will be deleted by shared_ptr d'tor.
+      // Do not call G3D::clean on it because it directly references the mesh's data.
+    }
+    return g3d;
+  }
+}
+
 
 void MainWindow::TransferToI3M() {
   if (!m_pActiveRenderWin) return;
@@ -189,22 +229,36 @@ void MainWindow::TransferToI3M() {
                "into the given directory.");
     }
 
-    ;
+    pleaseWait.SetText("Exporting Meshes ...");
+
+#if 0
+    // Old version:
+    // Export the mesh as stored on disk.
     const std::vector<std::shared_ptr<Mesh>> meshes = 
         ss->cexecRet<std::vector<std::shared_ptr<Mesh>>>(
             ds.fqName() + ".getMeshes");
+#else
+    // Changed by Alex:
+    // Export the visible rendered mesh with updated colors as we see it.
+    // The export will bake the colors into the exported mesh anyway.
+    const std::vector<shared_ptr<RenderMesh>> meshes = m_pActiveRenderWin->GetRendererMeshes();
+#endif
+
     string filenameOnly = SysTools::RemoveExt(SysTools::GetFilename(
             ss->cexecRet<string>(ds.fqName() + ".fullpath")));
-    for (size_t i = 0;i<meshes.size();i++) {
-      pleaseWait.SetText("Exporting Meshes ...");
-      stringstream sstream;
-      if (meshes.size() > 1)
-        sstream << strTargetDir << "/" << filenameOnly << "_" << i+1 << ".g3d";
-      else
-        sstream << strTargetDir << "/" << filenameOnly << ".g3d";
 
-      ss->cexec("tuvok.io.exportMesh", meshes[i], sstream.str());
+    shared_ptr<G3D::GeometrySoA> triangles = mergeMeshType(Mesh::MT_TRIANGLES, meshes);
+    shared_ptr<G3D::GeometrySoA> lines = mergeMeshType(Mesh::MT_LINES, meshes);
+
+    if (triangles != nullptr) {
+      G3D::write(strTargetDir + "/" + filenameOnly + ".triangles.g3d", triangles.get());
+      G3D::clean(triangles.get());
     }
+    if (lines != nullptr) {
+      G3D::write(strTargetDir + "/" + filenameOnly + ".lines.g3d", lines.get());
+      G3D::clean(lines.get());
+    }
+
   } else {
     QMessageBox errorMessage;
     errorMessage.setText("ImageVis3D Mobile Device Transfer only supported for UVF datasets.");

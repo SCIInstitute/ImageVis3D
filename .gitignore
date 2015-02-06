@@ -21,3 +21,7 @@ BatchRenderer/BatchRenderer
 /StandaloneTuvok/x64
 /StandaloneTuvok/Release
 /StandaloneTuvok/Debug
+Scripts/installer/ImageVis3D.pdf
+*.exe
+Scripts/installer/GettingDataIntoImageVis3D.pdf
+*.cached
