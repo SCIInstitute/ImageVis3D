@@ -62,7 +62,8 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
     FLOATVECTOR3 scaleVec;
     FLOATVECTOR3 biasVec;
 
-    FLOATMATRIX4 GetExpertTransform();
+    bool GetApplyAll() const;
+    FLOATMATRIX4 GetExpertTransform() const;
     void SetExpertTransform(const FLOATMATRIX4& m);
 
     size_t m_index;

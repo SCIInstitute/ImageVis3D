@@ -233,7 +233,11 @@ void ScaleAndBiasDlg::ToggleExpertView() {
   resize(QSize(0,0));
 }
 
-FLOATMATRIX4 ScaleAndBiasDlg::GetExpertTransform() {
+bool ScaleAndBiasDlg::GetApplyAll() const {
+  return checkBox_applyAll->isChecked();
+}
+
+FLOATMATRIX4 ScaleAndBiasDlg::GetExpertTransform() const {
   FLOATMATRIX4 m;
   m.m11 =float(atof(lineEdit_m11->text().toAscii()));
   m.m21 =float(atof(lineEdit_m21->text().toAscii()));

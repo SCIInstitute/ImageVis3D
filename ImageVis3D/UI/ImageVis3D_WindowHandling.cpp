@@ -1045,14 +1045,28 @@ void MainWindow::SetMeshScaleAndBias() {
 void MainWindow::ApplMeshTransform(ScaleAndBiasDlg* sender) {
   if (!m_pActiveRenderWin || !sender) return;
 
-  sender->m_pMesh->ScaleAndBias(sender->scaleVec, sender->biasVec);
+  if (sender->GetApplyAll()) {
+    auto meshes = m_pActiveRenderWin->GetRendererMeshes();
+    for (size_t i = 0; i < meshes.size(); ++i) {
+      meshes[i]->ScaleAndBias(sender->scaleVec, sender->biasVec);
+    }
+  } else {
+    sender->m_pMesh->ScaleAndBias(sender->scaleVec, sender->biasVec);
+  }
   m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
 }
 
 void MainWindow::ApplyMatrixMeshTransform(ScaleAndBiasDlg* sender) {
   if (!m_pActiveRenderWin || !sender) return;
 
-  sender->m_pMesh->Transform(sender->GetExpertTransform());
+  if (sender->GetApplyAll()) {
+    auto meshes = m_pActiveRenderWin->GetRendererMeshes();
+    for (size_t i = 0; i < meshes.size(); ++i) {
+      meshes[i]->Transform(sender->GetExpertTransform());
+    }
+  } else {
+    sender->m_pMesh->Transform(sender->GetExpertTransform());
+  }
   m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
 }
 
@@ -1062,8 +1076,16 @@ void MainWindow::RestoreMeshTransform(ScaleAndBiasDlg* sender) {
   LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
   vector<shared_ptr<Mesh>> meshes = ss->cexecRet<vector<shared_ptr<Mesh>>>(
       ds.fqName() + ".getMeshes");
-  const shared_ptr<Mesh> m = meshes[sender->m_index];
-  m_pActiveRenderWin->RendererReloadMesh(sender->m_index, m);
+
+  if (sender->GetApplyAll()) {
+    for (size_t i = 0; i < meshes.size(); ++i) {
+      const shared_ptr<Mesh> m = meshes[i];
+      m_pActiveRenderWin->RendererReloadMesh(i, m);
+    }
+  } else {
+    const shared_ptr<Mesh> m = meshes[sender->m_index];
+    m_pActiveRenderWin->RendererReloadMesh(sender->m_index, m);
+  }
   m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
 }
 
@@ -1078,21 +1100,44 @@ void MainWindow::SaveMeshTransform(ScaleAndBiasDlg* sender) {
   pleaseWait.SetText("Saving transformation to UVF file...");
   pleaseWait.AttachLabel(&m_MasterController);
 
-  const FLOATMATRIX4& m = m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->GetTransformFromOriginal();
-  const FLOATVECTOR4& c = m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->GetDefaultColor();
-
   m_pActiveRenderWin->SetDatasetIsInvalid(true);
 
-  if (!ss->cexecRet<bool>(ds.fqName() + ".geomTransformToFile", 
-                          static_cast<size_t>(sender->m_index), m, c)) {
+  if (sender->GetApplyAll()) {
+    auto meshes = m_pActiveRenderWin->GetRendererMeshes();
+    bool error = false;
+    for (size_t i = 0; i < meshes.size(); ++i) {
+      const FLOATMATRIX4& m = meshes[i]->GetTransformFromOriginal();
+      const FLOATVECTOR4& c = meshes[i]->GetDefaultColor();
+
+      if (!ss->cexecRet<bool>(ds.fqName() + ".geomTransformToFile", i, m, c)) {
+        error = true;
+        break;
+      } else {
+        meshes[i]->DeleteTransformFromOriginal();
+      }
+    }
     pleaseWait.close();
-    ShowCriticalDialog("Transform Save Failed.",
-             "Could not save geometry transform to the UVF file, "
-             "maybe the file is write protected? For details please "
-             "check the debug log ('Help | Debug Window').");
+    if (error) {
+      ShowCriticalDialog("Transform Save Failed.",
+        "Could not save geometry transform to the UVF file, "
+        "maybe the file is write protected? For details please "
+        "check the debug log ('Help | Debug Window').");
+    }
   } else {
-    m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->DeleteTransformFromOriginal();
-    pleaseWait.close();
+    const FLOATMATRIX4& m = m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->GetTransformFromOriginal();
+    const FLOATVECTOR4& c = m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->GetDefaultColor();
+
+    if (!ss->cexecRet<bool>(ds.fqName() + ".geomTransformToFile",
+      static_cast<size_t>(sender->m_index), m, c)) {
+      pleaseWait.close();
+      ShowCriticalDialog("Transform Save Failed.",
+        "Could not save geometry transform to the UVF file, "
+        "maybe the file is write protected? For details please "
+        "check the debug log ('Help | Debug Window').");
+    } else {
+      m_pActiveRenderWin->GetRendererMeshes()[sender->m_index]->DeleteTransformFromOriginal();
+      pleaseWait.close();
+    }
   }
 
   m_pActiveRenderWin->SetDatasetIsInvalid(false);

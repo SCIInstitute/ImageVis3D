@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>457</width>
-    <height>631</height>
+    <width>471</width>
+    <height>637</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -793,7 +793,20 @@
        <number>0</number>
       </property>
       <item>
+       <widget class="QCheckBox" name="checkBox_applyAll">
+        <property name="text">
+         <string>Apply option to all meshes</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pushButton_Save">
+        <property name="minimumSize">
+         <size>
+          <width>96</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>Save To File</string>
         </property>
@@ -801,6 +814,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_Restore">
+        <property name="minimumSize">
+         <size>
+          <width>96</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>Restore From File</string>
         </property>
@@ -808,6 +827,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_apply">
+        <property name="minimumSize">
+         <size>
+          <width>96</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>Apply</string>
         </property>
@@ -850,6 +875,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_close">
+        <property name="minimumSize">
+         <size>
+          <width>96</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>Close</string>
         </property>
