@@ -10,3 +10,6 @@ before_install:
 - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
 - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 script: ./Scripts/oneshot-debug.sh
+notifications:
+  slack:
+    secure: D03l+Pzfk8TAQfvqVw0Cw1v4IBNxvG8u/RxZ4BJ349x4Ty8AzbJz0EfoXPYVjyPTn8tXaPLKFPmlZxORBj4wb6z9iqTWTi0LKZ+cKfIRIKFGJj10U4UcKss8LZupcBTbaLX1u8UrwrThlLuoJcU/pmpc/h0VldJxCvOIyGabCgs=
