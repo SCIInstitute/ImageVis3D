@@ -5,6 +5,10 @@ CONFIG           -= app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/UVFReader
 unix:TARGET       = Build/uvf
+macx {
+  DESTDIR         = Build
+  TARGET          = uvf
+}
 QT               += opengl
 DEPENDPATH       += .
 INCLUDEPATH      += .

@@ -3,6 +3,10 @@ win32:TEMPLATE    = vcapp
 CONFIG           += exceptions largefile qt rtti static stl uic warn_on
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = ../Build/ImageVis3D
+macx {
+  DESTDIR         = ../Build
+  TARGET          = ImageVis3D
+}
 RCC_DIR           = ../Build/rcc
 OBJECTS_DIR       = ../Build/objects
 UI_DIR            = UI/AutoGen

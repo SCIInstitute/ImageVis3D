@@ -5,6 +5,10 @@ macx:CONFIG      += app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/UVFConverter
 unix:TARGET       = Build/uvfconvert
+macx {
+  DESTDIR         = Build
+  TARGET          = uvfconvert
+}
 QT                = core gui opengl
 incpath           = ../Tuvok/3rdParty/GLEW
 incpath          += ../Tuvok/IO/3rdParty/boost/

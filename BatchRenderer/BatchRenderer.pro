@@ -1,8 +1,9 @@
 TEMPLATE            = app
 CONFIG             += exceptions qt rtti staticlib static stl warn_on
+DESTDIR             = Build
 TARGET              = BatchRenderer
 DEPENDPATH          = .
-INCLUDEPATH         = . ../Tuvok \
+INCLUDEPATH         = . ../Tuvok
 INCLUDEPATH        += ../Tuvok/3rdParty
 INCLUDEPATH        += ../Tuvok/Basics/3rdParty
 INCLUDEPATH        += ../Tuvok/3rdParty/GLEW

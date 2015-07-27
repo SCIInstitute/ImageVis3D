@@ -4,6 +4,10 @@ CONFIG           += exceptions largefile rtti static stl warn_on
 CONFIG           -= app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/ExtractDebugInfo
+macx {
+  DESTDIR         = Build
+  TARGET          = ExtractDebugInfo
+}
 DEPENDPATH       += .
 INCLUDEPATH      += . ../ ../Tuvok/Basics/3rdParty ../Tuvok
 QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions

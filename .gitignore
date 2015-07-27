@@ -25,3 +25,5 @@ Scripts/installer/ImageVis3D.pdf
 *.exe
 Scripts/installer/GettingDataIntoImageVis3D.pdf
 *.cached
+*.xcodeproj
+Info.plist
