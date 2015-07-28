@@ -11,7 +11,7 @@ configure ^
   -no-sql-sqlite ^
   -no-sql-sqlite2 ^
   -no-qt3support ^
-  -platform win32-msvc2013 ^
+  -platform win32-msvc2015 ^
   -largefile ^
   -no-gif ^
   -qt-libpng ^
