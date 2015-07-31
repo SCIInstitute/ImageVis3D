@@ -5,6 +5,9 @@ os:
 compiler:
   - clang
   - gcc
+env:
+  - CONFIG=debug
+  - CONFIG=release
 matrix:
   exclude:
     - os: osx
@@ -18,7 +21,7 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install qt; fi
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-script: travis_wait ./Scripts/oneshot-debug.sh
+script: travis_wait ./Scripts/oneshot-${CONFIG}.sh
 notifications:
   slack:
     secure: D03l+Pzfk8TAQfvqVw0Cw1v4IBNxvG8u/RxZ4BJ349x4Ty8AzbJz0EfoXPYVjyPTn8tXaPLKFPmlZxORBj4wb6z9iqTWTi0LKZ+cKfIRIKFGJj10U4UcKss8LZupcBTbaLX1u8UrwrThlLuoJcU/pmpc/h0VldJxCvOIyGabCgs=
