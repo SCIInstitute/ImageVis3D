@@ -1,14 +1,23 @@
 language: cpp
+os:
+  - linux
+  - osx
 compiler:
-- clang
-- gcc
+  - clang
+  - gcc
+matrix:
+  exclude:
+    - os: osx
+      compiler: gcc
 before_install:
-- sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-- sudo apt-get update -qq
-- sudo apt-get install libosmesa6-dev
-- sudo apt-get install libqt4-dev qt4-qmake
-- if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-- if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update -qq
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install libosmesa6-dev
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install libqt4-dev qt4-qmake
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install qt
+  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 script: travis_wait ./Scripts/oneshot-debug.sh
 notifications:
   slack:
