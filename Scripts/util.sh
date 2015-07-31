@@ -194,5 +194,5 @@ function manual
 # Returns the current location of the data manual
 function import_data_manual
 {
-  echo "http://ci.sci.utah.edu:8011/devbuilds/GettingDataIntoImageVis3D.pdf"
+  echo "http://hpc.uni-due.de/data/IV3D/GettingDataIntoImageVis3D.pdf"
 }

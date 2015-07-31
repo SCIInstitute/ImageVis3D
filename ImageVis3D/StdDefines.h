@@ -49,7 +49,7 @@
 #define IV3D_VERSION_TYPE "Developer Build"
 
 #define MANUAL_NAME  "ImageVis3D.pdf"
-#define HELP_URL  "http://www.sci.utah.edu/images/docs/imagevis3d.pdf"
+#define HELP_URL  "http://hpc.uni-due.de/data/IV3D/ImageVis3D.pdf"
 #define TUTORIAL_URL "http://www.imagevis3d.org/"
 #define DEMO_DATA_URL  "http://www.sci.utah.edu/download/IV3DData.html"
 #define DEBUG_DUMP_SERVER   "ftp://ftp.sci.utah.edu"
