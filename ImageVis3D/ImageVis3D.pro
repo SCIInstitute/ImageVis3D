@@ -21,7 +21,7 @@ INCLUDEPATH      += $$incpath
 #INCLUDEPATH      += . ../Tuvok/IO/3rdParty/boost ../Tuvok/3rdParty/GLEW ../Tuvok
 QT               += opengl network
 QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
-LIBS              = -lTuvok -ltuvokexpr
+LIBS              = -lTuvok -ltuvokexpr -lopenvdb -lHalf -ltbb
 unix:LIBS        += -lz
 win32:LIBS       += shlwapi.lib
 macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
