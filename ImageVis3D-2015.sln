@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual Studio 14
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageVis3D", "ImageVis3D\ImageVis3D.vcxproj", "{85742DE8-68C9-4140-A6A7-412CF789DECA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tuvok", "Tuvok\Tuvok.vcxproj", "{D474A1E1-2ED3-42E6-826C-372430E549B9}"
