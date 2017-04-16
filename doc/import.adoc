@@ -597,7 +597,7 @@ The basic steps involved in writing your own reader are:
 
 1. Create a new class derived from `FileBackedDataset`.
 2. Register your format with the IO subsystem.
-3. Implement `CanRead` and `Create` methods, to allow the IO system to identify
+3. Implement `CanRead` and `Create` (may already be present) methods, to allow the IO system to identify
 your dataset type.
 4. Implement methods to query data and metadata from your dataset.
 
