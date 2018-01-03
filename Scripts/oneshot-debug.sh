@@ -53,6 +53,12 @@ ${qm} --version
 echo "compiler version:"
 ${CXX} --version
 
+# Unless the user gave us input as to options to use, default to a small-scale
+# parallel build.
+if test -z "${MAKE_OPTIONS}" ; then
+  MAKE_OPTIONS="-j2 -l 2.0"
+fi
+
 dirs="."
 dirs="$dirs"
 echo "Configuring..."
@@ -62,21 +68,9 @@ for d in $dirs ; do
       ${MKSPEC} \
       CONFIG="debug" \
       -recursive || exit 1
+    make --no-print-directory ${MAKE_OPTIONS} || exit 1
   popd &> /dev/null
 done
-
-# Unless the user gave us input as to options to use, default to a small-scale
-# parallel build.
-if test -z "${MAKE_OPTIONS}" ; then
-  MAKE_OPTIONS="-j2 -l 2.0"
-fi
-
-echo "BUILDING Tuvok..."
-make --no-print-directory ${MAKE_OPTIONS} || exit 1
-
-pushd Tuvok/IO/test &> /dev/null || exit 1
-  make --no-print-directory ${MAKE_OPTIONS} || exit 1
-popd &> /dev/null
 
 echo "Bundling..."
 if test `uname -s` = "Darwin" ; then
