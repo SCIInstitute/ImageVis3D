@@ -48,6 +48,10 @@ if test -n "${QT_BIN}" ; then
 else
   qm="qmake"
 fi
+echo "qmake version:"
+${qm} --version
+echo "compiler version:"
+${CXX} --version
 
 dirs="."
 dirs="$dirs"
@@ -55,9 +59,8 @@ echo "Configuring..."
 for d in $dirs ; do
   pushd ${d} &> /dev/null || exit 1
     ${qm} \
-      -makefile \
       ${MKSPEC} \
-      CONFIG+="debug" \
+      CONFIG="debug" \
       -recursive || exit 1
   popd &> /dev/null
 done
