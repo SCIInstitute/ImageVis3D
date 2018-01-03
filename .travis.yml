@@ -40,4 +40,4 @@ before_install:
       export QT_BIN="/usr/lib/x86_64-linux-gnu/qt5/bin" ;
     fi
 
-script: travis_wait bash -x ./Scripts/oneshot-${CONFIG}.sh
+script: travis_wait ./Scripts/oneshot-${CONFIG}.sh
