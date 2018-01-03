@@ -50,7 +50,7 @@ else
 fi
 
 dirs="."
-dirs="$dirs Tuvok/IO/test"
+dirs="$dirs"
 echo "Configuring..."
 for d in $dirs ; do
   pushd ${d} &> /dev/null || exit 1
