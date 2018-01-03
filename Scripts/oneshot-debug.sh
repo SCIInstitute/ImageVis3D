@@ -58,9 +58,6 @@ for d in $dirs ; do
       -makefile \
       ${MKSPEC} \
       CONFIG+="debug" \
-      QMAKE_CFLAGS+="${VIS} ${CF}" \
-      QMAKE_CXXFLAGS+="${VIS} ${INL} ${CF} ${CXF}" \
-      QMAKE_LFLAGS+="${VIS} ${LDFLAGS}" \
       -recursive || exit 1
   popd &> /dev/null
 done

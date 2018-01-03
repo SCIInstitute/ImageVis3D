@@ -45,9 +45,6 @@ for d in $dirs ; do
       -makefile \
       ${MKSPEC} \
       CONFIG+="release" \
-      QMAKE_CFLAGS+="${VIS} ${CF}" \
-      QMAKE_CXXFLAGS+="${VIS} ${INL} ${CF} ${CXF}" \
-      QMAKE_LFLAGS+="${VIS} ${COVERAGE} ${QLF}" \
       -recursive || exit 1
   popd &> /dev/null
 done
