@@ -1,7 +1,7 @@
 #ifndef IV3D_BASIC_SETTINGS_DLG_H
 #define IV3D_BASIC_SETTINGS_DLG_H
 
-#include <QtGui/QDialog>
+#include <QDialog>
 #include "Basics/Vectors.h"
 
 class QLabel;
@@ -48,8 +48,6 @@ class BasicSettingsDlg : public QDialog
                    bool bAutoSaveWSP,
                    bool bAutoLockClonedWindow,
                    bool bAbsoluteViewLocks,
-                   bool bCheckForUpdatesOnStartUp,
-                   bool bCheckForDevBuilds,
                    bool bShowWelcomeScreen,
                    bool bInvWheel,
                    bool bI3MFeatures,

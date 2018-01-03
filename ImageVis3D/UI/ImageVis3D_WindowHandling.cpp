@@ -43,13 +43,13 @@
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
-#include <QtGui/QColorDialog>
-#include <QtGui/QDropEvent>
-#include <QtGui/QFileDialog>
-#include <QtGui/QInputDialog>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QMessageBox>
-#include <QtNetwork/QHttp>
+#include <QColorDialog>
+#include <QDropEvent>
+#include <QFileDialog>
+#include <QInputDialog>
+#include <QMdiSubWindow>
+#include <QMessageBox>
+#include <QNetworkAccessManager>
 
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/SysTools.h"
@@ -80,7 +80,7 @@ void MainWindow::dropEvent(QDropEvent* ev)
 
   QList<QUrl> urllist = ev->mimeData()->urls();
   for(int i=0; i < urllist.size(); ++i) {
-    std::string fn = string(urllist[i].path().toAscii());
+    std::string fn = urllist[i].path().toStdString();
 
 #ifdef DETECTED_OS_WINDOWS
     if (!fn.empty() && fn[0] == '/') fn = fn.substr(1);
@@ -146,7 +146,7 @@ bool MainWindow::SaveGeometry() {
               strLastDir,
               "Geometry Files (*.geo)",&selectedFilter, options);
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "geo").c_str();
+    fileName = SysTools::CheckExt(fileName.toStdString(), "geo").c_str();
     settings.setValue("Folders/SaveGeometry", QFileInfo(fileName).absoluteDir().path());
     return SaveGeometry(fileName);
   } return false;
@@ -178,7 +178,7 @@ bool MainWindow::LoadGeometry(QString strFilename,
   settings.endGroup();
 
   if (!bOK && bRetryResource) {
-    string stdString(strFilename.toAscii());
+    string stdString(strFilename.toStdString());
     if (LoadGeometry(SysTools::GetFromResourceOnMac(stdString).c_str(),
          true, false)) {
       return true;
@@ -344,14 +344,6 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   QString fileName = settings.value("Files/CaptureFilename", lineEditCaptureFile->text()).toString();
   lineEditCaptureFile->setText(fileName);
   checkBox_PreserveTransparency->setChecked(settings.value("PreserveTransparency", true).toBool());
-
-#ifndef PACKAGE_MANAGER
-  // Don't bother if the system has a package manager... they should get their
-  // updates through that.
-  m_pHttp = new QHttp(this);
-  connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
-  connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
-#endif
 
   pushButton_NewTriangle->setStyleSheet( "QPushButton { background: rgb(0, 150, 0); color: rgb(255, 255, 255) }" );
   pushButton_NewRectangle->setStyleSheet( "QPushButton { background: rgb(0, 150, 0); color: rgb(255, 255, 255) }" );
@@ -559,7 +551,7 @@ bool MainWindow::SaveWorkspace() {
               strLastDir,
               "Workspace Files (*.wsp)",&selectedFilter, options);
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "wsp").c_str();
+    fileName = SysTools::CheckExt(fileName.toStdString(), "wsp").c_str();
     settings.setValue("Folders/SaveWorkspace", QFileInfo(fileName).absoluteDir().path());
     return SaveWorkspace(fileName);
   } else return false;
@@ -590,7 +582,7 @@ bool MainWindow::LoadWorkspace(QString strFilename,
   settings.endGroup();
 
   if (!bOK && bRetryResource) {
-    string stdString(strFilename.toAscii());
+    string stdString(strFilename.toStdString());
 
     if (LoadWorkspace(SysTools::GetFromResourceOnMac(stdString).c_str(),
           true, false)) {
@@ -1396,7 +1388,7 @@ void MainWindow::OpenRecentFile(){
   QAction *action = qobject_cast<QAction *>(sender());
 
   if(action == NULL) { T_ERROR("no sender?"); return; }
-  if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
+  if (SysTools::FileExists(action->data().toString().toStdString())) {
     if (!LoadDataset(QStringList(action->data().toString()))) {
       if (m_bIgnoreLoadDatasetFailure == false) {
         ShowCriticalDialog("Render window initialization failed.",
@@ -1438,7 +1430,7 @@ void MainWindow::OpenRecentWSFile(){
   QAction *action = qobject_cast<QAction *>(sender());
 
   if(action == NULL) { T_ERROR("no sender?"); return; }
-  if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
+  if (SysTools::FileExists(action->data().toString().toStdString())) {
     LoadWorkspace(action->data().toString());
   }
 }
@@ -1558,7 +1550,7 @@ void MainWindow::ShowCriticalDialog(QString strTitle, QString strMessage) {
   if (!m_bScriptMode) 
     QMessageBox::critical(this, strTitle, strMessage);
   else {
-    string s = string(strTitle.toAscii()) + ": " + string(strMessage.toAscii());
+    string s = strTitle.toStdString() + ": " + strMessage.toStdString();
     T_ERROR(s.c_str());
   }
 }
@@ -1567,7 +1559,7 @@ void MainWindow::ShowInformationDialog(QString strTitle, QString strMessage) {
   if (!m_bScriptMode) 
     QMessageBox::information(this, strTitle, strMessage);
   else {
-    string s = string(strTitle.toAscii()) + ": " + string(strMessage.toAscii());
+    string s = strTitle.toStdString() + ": " + strMessage.toStdString();
     MESSAGE(s.c_str());
   }
 }
@@ -1576,7 +1568,7 @@ void MainWindow::ShowWarningDialog(QString strTitle, QString strMessage) {
   if (!m_bScriptMode) 
     QMessageBox::warning(this, strTitle, strMessage);
   else {
-    string s = string(strTitle.toAscii()) + ": " + string(strMessage.toAscii());
+    string s = strTitle.toStdString() + ": " + strMessage.toStdString();
     WARNING(s.c_str());
   }
 }
@@ -1600,7 +1592,7 @@ void MainWindow::ShowWelcomeScreen() {
   int numRecentFiles = qMin(files.size(), (int)ms_iMaxRecentFiles);
   for (int i = 0; i < numRecentFiles; ++i) {
     QString text = tr("%1").arg(QFileInfo(files[i]).fileName());
-    m_pWelcomeDialog->AddMRUItem(string(text.toAscii()), string(files[i].toAscii()));
+    m_pWelcomeDialog->AddMRUItem(text.toStdString(), files[i].toStdString());
   }
 
   m_pWelcomeDialog->setWindowIcon(windowIcon());

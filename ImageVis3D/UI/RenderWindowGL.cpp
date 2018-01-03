@@ -38,16 +38,8 @@
 #include "../Tuvok/StdTuvokDefines.h"
 #include <cstring>
 #include <sstream>
-#include <3rdParty/GLEW/GL/glew.h>
-#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
-# pragma GCC visibility push(default)
-#endif
-#include <QtGui/QtGui>
-#include <QtGui/QMessageBox>
-
-#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
-# pragma GCC visibility pop
-#endif
+#include "3rdParty/GLEW/GL/glew.h"
+#include <QMessageBox>
 
 #include "RenderWindowGL.h"
 #include "ImageVis3D.h"
@@ -257,13 +249,12 @@ void RenderWindowGL::InitializeRenderer()
       }
 
       if (!bOpenGLSO12 && !bOpenGL3DT) { // according to spec 3D textures
-                                         // are part of the OpenGl 1.2 core 
+                                         // are part of the OpenGL 1.2 core 
                                          // we may have to change this if we
                                          // realize that too many drivers
                                          // are reporting a GL version greater
                                          // equal to 1.2 but do not support
                                          // 3D textures
-
         if (m_eRendererType == MasterController::OPENGL_2DSBVR) {
           // hardware does not support 3D textures but the user already
           // selected the 2D stack based volume renderer

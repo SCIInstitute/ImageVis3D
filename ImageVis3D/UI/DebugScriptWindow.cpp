@@ -30,18 +30,17 @@
  \brief Combination of the debug window and a new scripting window.
  */
 
-
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QTabWidget>
-#include <QtGui/QListWidget>
-#include <QtGui/QTextEdit>
-#include <QtGui/QLineEdit>
-#include <QtGui/QComboBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QLabel>
-#include <QtGui/QSpacerItem>
 #include <QtCore/QEvent>
-#include <QtGui/QKeyEvent>
+#include <QVBoxLayout>
+#include <QTabWidget>
+#include <QListWidget>
+#include <QTextEdit>
+#include <QLineEdit>
+#include <QComboBox>
+#include <QPushButton>
+#include <QLabel>
+#include <QSpacerItem>
+#include <QKeyEvent>
 
 #include "DebugScriptWindow.h"
 

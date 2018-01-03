@@ -40,7 +40,7 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/LargeRAWFile.h"
 
-#include <QtGui/QMessageBox>
+#include <QMessageBox>
 
 using namespace std;
 

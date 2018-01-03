@@ -1,6 +1,7 @@
 TEMPLATE          = app
 win32:TEMPLATE    = vcapp
-CONFIG           += exceptions largefile qt rtti static stl uic warn_on
+CONFIG           += c++11 exceptions largefile qt rtti static stl uic warn_on
+CONFIG           += network widgets
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = ../Build/ImageVis3D
 macx {
@@ -22,24 +23,9 @@ INCLUDEPATH      += $$incpath
 QT               += opengl network
 QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
-unix:LIBS        += -lz
+linux*:LIBS      += -lz
 win32:LIBS       += shlwapi.lib
-macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
-macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7
-macx:LIBS        += -stdlib=libc++ -framework CoreFoundation -mmacosx-version-min=10.7
-QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
-!macx:unix:QMAKE_LFLAGS += -fopenmp
-
-# Try to link to GLU statically, sometimes the shared lib isn't there.
-gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
-found = false
-for(d, gludirs) {
-  if(exists($${d}/libGLU.a) && static) {
-    LIBS += $${d}/libGLU.a
-    found = true
-  }
-}
-if(!found) { unix:!macx:LIBS += -lGLU }
+include(../Tuvok/flags.pro)
 
 # Find the location of QtGui's prl file, and include it here so we can look at
 # the QMAKE_PRL_CONFIG variable.
@@ -67,9 +53,8 @@ RESOURCES         = ImageVis3D.qrc
 RC_FILE 	  = Resources/ImageVis3D.rc
 QMAKE_INFO_PLIST  = ../IV3D.plist
 ICON              = Resources/ImageVis3D.icns
-unix:QMAKE_CXXFLAGS += -std=c++0x
-unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
-unix:QMAKE_CFLAGS += -fno-strict-aliasing
+unix:QMAKE_CXXFLAGS += -fno-strict-aliasing -fPIC
+unix:QMAKE_CFLAGS += -fno-strict-aliasing -fPIC
 
 # Find the location of QtGui's prl file, and include it here so we can look at
 # the QMAKE_PRL_CONFIG variable.
@@ -102,7 +87,6 @@ HEADERS += StdDefines.h \
            UI/BrowseData.h \
            UI/ImageVis3D.h \
            UI/PleaseWait.h \
-           UI/FTPDialog.h \
            UI/QTransferFunction.h \
            UI/Q1DTransferFunction.h \
            UI/Q2DTransferFunction.h \
@@ -136,7 +120,6 @@ FORMS += UI/UI/BrowseData.ui \
          UI/UI/PleaseWait.ui \
          UI/UI/SettingsDlg.ui \
          UI/UI/RAWDialog.ui \
-         UI/UI/FTPDialog.ui \
          UI/UI/Welcome.ui \
          UI/UI/Metadata.ui \
          UI/UI/CrashDetDlg.ui \
@@ -168,7 +151,6 @@ SOURCES += UI/BrowseData.cpp \
            UI/MetadataDlg.cpp \
            UI/AboutDlg.cpp \
            UI/URLDlg.cpp \
-           UI/FTPDialog.cpp \
            UI/BugRepDlg.cpp \
            UI/LODDlg.cpp \           
            UI/QTransferFunction.cpp \
@@ -178,6 +160,7 @@ SOURCES += UI/BrowseData.cpp \
            UI/QLightPreview.cpp \          
            UI/RenderWindowGL.cpp \
            UI/RenderWindow.cpp \
+           UI/RenderWindowQt.cpp \
            UI/BasicSettingsDlg.cpp \
            UI/SettingsDlg.cpp \
            UI/RAWDialog.cpp \

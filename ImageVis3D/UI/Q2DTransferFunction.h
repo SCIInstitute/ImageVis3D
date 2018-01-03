@@ -42,7 +42,7 @@
 
 #include "QTransferFunction.h"
 #include "../Tuvok/IO/TransferFunction2D.h"
-#include <QtGui/QMouseEvent>
+#include <QMouseEvent>
 
 #define Q2DT_PAINT_NONE  0
 #define Q2DT_PAINT_RED   1

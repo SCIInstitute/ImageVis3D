@@ -37,6 +37,7 @@
 
 #include <string>
 #include <StdDefines.h>
+#include <QMdiSubWindow>
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/LuaScripting/LuaScripting.h"
 #include "../Tuvok/LuaScripting/LuaClassRegistration.h"

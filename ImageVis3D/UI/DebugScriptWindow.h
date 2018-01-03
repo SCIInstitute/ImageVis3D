@@ -33,7 +33,7 @@
 #ifndef DEBUGSCRIPTWINDOW_H_
 #define DEBUGSCRIPTWINDOW_H_
 
-#include <QtGui/QDockWidget>
+#include <QDockWidget>
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/LuaScripting/LuaMemberReg.h"
 

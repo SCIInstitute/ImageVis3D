@@ -38,7 +38,7 @@
 #include <exception>
 #include <limits>
 #include "Q2DTransferFunction.h"
-#include <QtGui/QPainter>
+#include <QPainter>
 
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"

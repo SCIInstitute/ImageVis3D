@@ -36,14 +36,7 @@
 #include <cassert>
 #include <sstream>
 #include <stdexcept>
-#include "GL/glew.h"
-#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
-# pragma GCC visibility push(default)
-#endif
-#include <QtGui/QtGui>
-#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
-# pragma GCC visibility pop
-#endif
+#include <QtGui>
 
 #include "MDIRenderWin.h"
 #include "RenderWindow.h"
@@ -66,7 +59,6 @@ MDIRenderWin::~MDIRenderWin()
 
 }
 
-
 void MDIRenderWin::closeEvent(QCloseEvent* event)
 {
   QMdiSubWindow::closeEvent(event);
@@ -76,5 +68,3 @@ void MDIRenderWin::closeEvent(QCloseEvent* event)
   mMasterController.LuaScript()->cexec("deleteClass",
                                        mRenderWindow->GetLuaInstance());
 }
-
-

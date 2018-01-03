@@ -38,12 +38,12 @@
 #include "ImageVis3D.h"
 #include "BrowseData.h"
 
-#include <QtCore/QTimer>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
-#include <QtGui/QInputDialog>
-#include <QtGui/QColorDialog>
+#include <QtCore/QTimer>
+#include <QMdiSubWindow>
+#include <QFileDialog>
+#include <QInputDialog>
+#include <QColorDialog>
 
 #include "PleaseWait.h"
 
@@ -369,7 +369,7 @@ void MainWindow::Transfer2DSave() {
          "2D Transfer function File (*.2dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "2dt").c_str();
+    fileName = SysTools::CheckExt(fileName.toStdString(), "2dt").c_str();
     settings.setValue("Folders/Transfer2DSave", QFileInfo(fileName).absoluteDir().path());
     m_2DTransferFunction->SaveToFile(fileName);
   }

@@ -81,8 +81,6 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetAutoSaveWSP() const;
     bool          GetAutoLockClonedWindow() const;
     bool          GetAbsoluteViewLocks() const;
-    bool          GetCheckForUpdatesOnStartUp() const;
-    bool          GetCheckForDevBuilds() const;
     bool          GetShowWelcomeScreen() const;
     bool          GetInvertWheel() const;
     bool          GetI3MFeatures() const;
@@ -131,8 +129,6 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    bool bAutoSaveWSP,
                    bool bAutoLockClonedWindow,
                    bool bAbsoluteViewLocks,
-                   bool bCheckForUpdatesOnStartUp,
-                   bool bCheckForDevBuilds,
                    bool bShowWelcomeScreen,
                    bool bInvWheel,
                    bool bI3MFeatures,

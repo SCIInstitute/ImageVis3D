@@ -43,7 +43,7 @@
 #include "StdDefines.h"
 #include <string>
 #include <unordered_map>
-#include <QtGui/QListWidget>
+#include <QListWidget>
 #include <QtCore/QMutex>
 #include "../Tuvok/Basics/ArcBall.h"
 #include "../Tuvok/Basics/Plane.h"

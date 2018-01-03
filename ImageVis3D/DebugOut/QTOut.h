@@ -42,7 +42,7 @@
 #define QTOut_H
 
 #include "../../Tuvok/DebugOut/AbstrDebugOut.h"
-#include <QtGui/QListWidget>
+#include <QListWidget>
 
 class QTOut : public AbstrDebugOut {
   public:

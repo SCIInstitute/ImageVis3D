@@ -72,7 +72,6 @@ class QHttp;
 class QHttpResponseHeader;
 class QFile;
 class QTimer;
-class FTPDialog;
 class PleaseWaitDialog;
 class ScaleAndBiasDlg;
 
@@ -132,9 +131,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void TransferToI3M();
 
-    void FtpFail();
-    void FtpSuccess();
-
     void SetCaptureFilename();
     void CaptureFrame();
     void CaptureSequence();
@@ -149,13 +145,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void ResizeCurrentView(int iSizeX, int iSizeY);
     void PlaceCurrentView(int iPosX, int iPosY);
     void CloneCurrentView();
-    void CheckForUpdates();
     void OnlineHelp();
     void OpenManual();
     void OnlineVideoTut();
     void GetExampleData();
     void CloseWelcome();
-    void ReportABug();
 
     void ToggleRenderWindowView2x2();
     void ToggleRenderWindowViewSingle();
@@ -272,12 +266,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetRescaleFactors();
     virtual void closeEvent(QCloseEvent *event);
 
-    // update
-    void httpRequestFinished(int requestId, bool error);
-    void readResponseHeader(const QHttpResponseHeader &responseHeader);
-
-    void UploadLogToServer();
-
     void ShowAbout();
     void ChooseIsoColor();
 
@@ -370,8 +358,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     int                                       m_iLogoPos;
     bool                                      m_bAutoLockClonedWindow;
     bool                                      m_bAbsoluteViewLocks;
-    bool                                      m_bCheckForUpdatesOnStartUp;
-    bool                                      m_bCheckForDevBuilds;
     bool                                      m_bShowWelcomeScreen;
     bool                                      m_bInvWheel;
 
@@ -435,12 +421,17 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
       uint64_t CPUMem, uint64_t maxCPU, uint64_t GPUMem,
       uint64_t maxGPU, bool ignoreMax,
       const std::string& tempDir,
-      bool checksum, unsigned framerate, bool lowResSubframes, unsigned LODDelay,
-      unsigned activeTS, unsigned inactiveTS, bool writeLog, bool showCrashDialog,
-      const std::string& logFile, uint32_t logLevel, bool showVersion,
-      bool autoSaveGeo, bool autoSaveWSP, bool autoLockCloned, bool absoluteLocks,
-      bool checkForUpdates,
-      bool checkForDevBuilds, bool showWelcome, bool invertWheel, bool i3mFeatures,
+      bool checksum,
+      unsigned framerate, bool lowResSubframes, unsigned LODDelay,
+      unsigned activeTS, unsigned inactiveTS,
+      bool writeLog, bool showCrashDialog,
+      const std::string& logFile, uint32_t logLevel,
+      bool showVersion,
+      bool autoSaveGeo, bool autoSaveWSP,
+      bool autoLockCloned, bool absoluteLocks,
+      bool showWelcome,
+      bool invertWheel,
+      bool i3mFeatures,
       unsigned volRenType, unsigned blendPrecision, bool powerTwo,
       bool downsampleTo8, bool disableBorder, const FLOATVECTOR3& backColor1,
       const FLOATVECTOR3& backColor2, const FLOATVECTOR4& textColor,
@@ -491,7 +482,6 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void SetAndCheckRunningFlag();
     void RemoveRunningFlag();
-    void ReportABug(const std::string& strFile);
     void ToggleLogFile();
 
     void UpdatePolyTypeLabel(int iCurrent);
@@ -544,28 +534,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
       /// Converts major/minor/patch into a string.
       operator std::string() const;
     };
-    QHttp* m_pHttp;
-    QFile* m_pUpdateFile;
-    int    m_iHttpGetId;
-    bool   m_bStartupCheck;
     bool   m_bScriptMode;
-    void CheckForUpdatesInternal();
-    void QuietCheckForUpdates();
-    bool GetVersionsFromUpdateFile(const std::string& strFilename,
-                                   struct VersionNumber& iv3d,
-                                   struct VersionNumber& tuvok);
-    void DeleteUpdateFile();
     bool CheckForMeshCapabilities(bool bNoUserInteraction, 
                                   QStringList files=QStringList(""));
 
-    // ftp
-    FTPDialog*   m_pFTPDialog;
-    std::string  m_strFTPTempFile;
-    bool         m_bFTPDeleteSource;
-    bool         m_bFTPFinished;
-    bool         FtpTransfer(std::string strSource, std::string strDest, bool bDeleteSource = true);
-    std::string  GenUniqueName(const std::string& strPrefix, const std::string& strExt="txt");
-    bool         Pack(const std::vector< std::string >& strParams);
     void SetStereoMode(unsigned int iMode);
     void SetStereoFocalLength(float fLength);
     void SetStereoEyeDistance(float fEyeDist);

@@ -42,7 +42,7 @@
 #define DIALOGCONVERTER_H
 
 #include "../Tuvok/IO/RAWConverter.h"
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class DialogConverter : public RAWConverter {
 public:

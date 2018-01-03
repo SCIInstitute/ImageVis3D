@@ -67,9 +67,3 @@ void AboutDlg::OnlineHelp()
   accept();
   emit OnlineHelpClicked();
 }
-
-void AboutDlg::ReportABug()
-{
-  accept();
-  emit ReportABugClicked();
-}

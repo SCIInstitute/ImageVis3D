@@ -1,10 +1,10 @@
 TEMPLATE          = app
 win32:TEMPLATE    = vcapp
-CONFIG           += exceptions largefile qt rtti static stl warn_on
+CONFIG           += c++11 exceptions largefile qt rtti static stl warn_on
 CONFIG           -= app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/UVFReader
-unix:TARGET       = Build/uvf
+linux*|mac*:TARGET = Build/uvf
 macx {
   DESTDIR         = Build
   TARGET          = uvf
@@ -20,32 +20,10 @@ INCLUDEPATH      += ../Tuvok/Basics
 QMAKE_LIBDIR     += ../Tuvok/Build
 QMAKE_LIBDIR     += ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
-unix:LIBS        += -lz
+linux*:LIBS      += -lz
 win32:LIBS       += shlwapi.lib
-QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
-unix:QMAKE_CXXFLAGS += -std=c++0x
-unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
-unix:QMAKE_CFLAGS += -fno-strict-aliasing
-!macx:unix:QMAKE_LFLAGS += -fopenmp
 
-# Try to link to GLU statically.
-gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
-found=false
-for(d, gludirs) {
-  if(exists($${d}/libGLU.a)) {
-    LIBS += $${d}/libGLU.a
-    found=true
-  }
-}
-if(!found) {
-  # not mac: GLU comes in the GL framework.
-  unix:!macx:LIBS += -lGLU
-}
-unix:!macx:LIBS += -lGL
-
-macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
-macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7
-macx:LIBS        += -stdlib=libc++ -framework CoreFoundation -mmacosx-version-min=10.7
+include(../Tuvok/flags.pro)
 
 # Find the location of QtGui's prl file, and include it here so we can look at
 # the QMAKE_PRL_CONFIG variable.

@@ -41,7 +41,7 @@
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include "../Tuvok/IO/IOManager.h" // Needed for tConverterFormat.
 #include "ImageVis3D.h"
-#include <QtGui/QImageReader>
+#include <QImageReader>
 
 using namespace std;
 

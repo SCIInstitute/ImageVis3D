@@ -1,6 +1,6 @@
 TEMPLATE          = app
 win32:TEMPLATE    = vcapp
-CONFIG           += exceptions largefile rtti static stl warn_on
+CONFIG           += c++11 exceptions largefile rtti static stl warn_on
 CONFIG           -= app_bundle
 macx:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = Build/ExtractDebugInfo
@@ -15,25 +15,8 @@ LIBS              = -lTuvok -ltuvokexpr
 QT               += opengl
 unix:LIBS        += -lz
 win32:LIBS       += shlwapi.lib
-unix:!macx:LIBS  += -lGLU
-QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
-!macx:unix:QMAKE_LFLAGS += -fopenmp
 
-# Try to link to GLU statically.
-gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
-for(d, gludirs) {
-  if(exists($${d}/libGLU.a) && static) {
-    LIBS -= -lGLU
-    LIBS += $${d}/libGLU.a
-  }
-}
-unix:QMAKE_CXXFLAGS += -std=c++0x
-unix:QMAKE_CXXFLAGS += -fno-strict-aliasing
-unix:QMAKE_CFLAGS += -fno-strict-aliasing
-
-macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
-macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7
-macx:LIBS        += -stdlib=libc++ -framework CoreFoundation -mmacosx-version-min=10.7
+include(../Tuvok/flags.pro)
 
 # Find the location of QtGui's prl file, and include it here so we can look at
 # the QMAKE_PRL_CONFIG variable.

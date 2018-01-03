@@ -55,13 +55,11 @@ class AboutDlg : public QDialog, protected Ui_About
     virtual void CheckUpdates();
     virtual void OnlineVideoTut();
     virtual void OnlineHelp();
-    virtual void ReportABug();
 
   signals:
     void CheckUpdatesClicked();
     void OnlineVideoTutClicked();
     void OnlineHelpClicked();
-    void ReportABugClicked();
 
 };
 

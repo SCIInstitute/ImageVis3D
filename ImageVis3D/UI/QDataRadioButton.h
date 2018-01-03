@@ -42,8 +42,8 @@
 
 #include "StdDefines.h"
 #include <memory>
-#include <QtGui/QRadioButton>
-#include <../Tuvok/IO/DirectoryParser.h>
+#include <QRadioButton>
+#include "../Tuvok/IO/DirectoryParser.h"
 
 class QDataRadioButton : public QRadioButton
 {

@@ -41,9 +41,9 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QString>
-#include <QtGui/QApplication>
+#include <QApplication>
 #include <QtGui/QClipboard>
-#include <QtGui/QMessageBox>
+#include <QMessageBox>
 #include <UI/ImageVis3D.h>
 #include "../Tuvok/Controller/Controller.h"
 

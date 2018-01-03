@@ -39,11 +39,11 @@
 #include "BrowseData.h"
 
 #include <QtCore/QTimer>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QFileDialog>
+#include <QMdiSubWindow>
+#include <QFileDialog>
 #include <QtCore/QSettings>
-#include <QtGui/QInputDialog>
-#include <QtGui/QColorDialog>
+#include <QInputDialog>
+#include <QColorDialog>
 
 #include "PleaseWait.h"
 
@@ -228,7 +228,7 @@ void MainWindow::Transfer1DSave() {
          "1D Transfer function File (*.1dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "1dt").c_str();
+    fileName = SysTools::CheckExt(fileName.toStdString(), "1dt").c_str();
     settings.setValue("Folders/Transfer1DSave", QFileInfo(fileName).absoluteDir().path());
     m_1DTransferFunction->SaveToFile(fileName);
   }
@@ -252,7 +252,9 @@ void MainWindow::Populate1DTFLibList() {
   settings.setValue("Folders/Transfer1DLib", strLibDir);
 
 
-  vector<string> files = SysTools::GetDirContents(string(strLibDir.toAscii()), "*", "1dt");
+  vector<string> files = SysTools::GetDirContents(
+    strLibDir.toStdString(), "*", "1dt"
+  );
   for (size_t i = 0;i<files.size();i++)       
     comboBox_1DTFLib->insertItem(0,SysTools::RemoveExt(SysTools::GetFilename(files[i])).c_str(),files[i].c_str());
 }
@@ -273,7 +275,7 @@ void MainWindow::Transfer1DAddToLib() {
          "1D Transfer function File (*.1dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "1dt").c_str();
+    fileName = SysTools::CheckExt(fileName.toStdString(), "1dt").c_str();
     settings.setValue("Folders/Transfer1DSave", QFileInfo(fileName).absoluteDir().path());
     m_1DTransferFunction->SaveToFile(fileName);
     Populate1DTFLibList();

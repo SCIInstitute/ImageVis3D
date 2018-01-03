@@ -39,14 +39,7 @@
 #include <sstream>
 #include <stdexcept>
 #include "GL/glew.h"
-#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
-# pragma GCC visibility push(default)
-#endif
-#include <QtGui/QtGui>
-#include <QtGui/QMessageBox>
-#if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
-# pragma GCC visibility pop
-#endif
+#include <QMessageBox>
 
 #include "RenderWindow.h"
 
@@ -1017,17 +1010,6 @@ void RenderWindow::UpdateCursor(LuaClassInstance region,
   }
 }
 
-
-void RenderWindow::RotateViewerWithMouse(const INTVECTOR2& viMouseDelta) {
-   
-  const int screen = QApplication::desktop()->screenNumber(m_MainWindow);
-  const QRect availableRect(QApplication::desktop()->availableGeometry(screen));
-
-  const FLOATVECTOR2 vfMouseDelta(viMouseDelta.x/float(availableRect.width()), 
-                                  viMouseDelta.y/float(availableRect.height()));
-
-  RotateViewer(FLOATVECTOR3(-vfMouseDelta.x*450.f, -vfMouseDelta.y*450.f, 0.f));
-}
 
 
 void RenderWindow::RotateViewer(const FLOATVECTOR3& vfAngles) {
@@ -2384,7 +2366,7 @@ void RenderWindow::SetTimestep(size_t t, bool propagate)
 void RenderWindow::SetLogoParams(QString strLogoFilename, int iLogoPos) {
   m_MasterController.LuaScript()->cexec(
       GetLuaAbstrRenderer().fqName() + ".setLogoParams",
-      std::string(strLogoFilename.toAscii()),
+      strLogoFilename.toStdString(),
       iLogoPos);
 }
 
@@ -2614,18 +2596,6 @@ void RenderWindow::LuaSetTranslationAs4x4(FLOATMATRIX4 m) {
 
 void RenderWindow::LuaSetRotationAs4x4(FLOATMATRIX4 m) {
   SetProvRotationAndClip(GetFirst3DRegion(), m);
-}
-
-void RenderWindow::LuaResizeWindow(const UINTVECTOR2& newSize) {
-  UINTVECTOR2 renderSize = GetRendererSize();
-  UINTVECTOR2 windowSize(GetQtWidget()->size().width(), 
-                         GetQtWidget()->size().height());
-
-  UINTVECTOR2 winDecoSize = windowSize-renderSize;
-  QMdiSubWindow* w = dynamic_cast<QMdiSubWindow*>(GetQtWidget()->parent());
-  if(w) {
-    w->resize(newSize.x+winDecoSize.x, newSize.y+winDecoSize.y);
-  }
 }
 
 void RenderWindow::LuaSetLighting(bool enabled) {

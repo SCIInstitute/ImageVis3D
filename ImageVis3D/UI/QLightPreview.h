@@ -40,7 +40,7 @@
 #ifndef QLIGHTPREVIEW_H
 #define QLIGHTPREVIEW_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include "../Tuvok/Basics/Vectors.h"
 
 class QLightPreview : public QWidget

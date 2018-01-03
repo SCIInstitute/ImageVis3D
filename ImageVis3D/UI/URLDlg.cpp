@@ -36,7 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include <QtCore/QUrl>
-#include <QtGui/QDesktopServices>
+#include <QDesktopServices>
 
 #include "URLDlg.h"
 

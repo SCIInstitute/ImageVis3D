@@ -43,11 +43,11 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
-#include <QtGui/QCloseEvent>
-#include <QtGui/QColorDialog>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QMessageBox>
-#include <QtNetwork/QHttp>
+#include <QColorDialog>
+#include <QCloseEvent>
+#include <QMdiSubWindow>
+#include <QMessageBox>
+#include <QNetworkAccessManager>
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/MathTools.h"
@@ -55,7 +55,6 @@
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 #include "BrowseData.h"
 #include "CrashDetDlg.h"
-#include "FTPDialog.h"
 #include "ImageVis3D.h"
 #include "PleaseWait.h"
 
@@ -97,23 +96,13 @@ MainWindow::MainWindow(MasterController& masterController,
   m_iLogoPos(3),
   m_bAutoLockClonedWindow(false),
   m_bAbsoluteViewLocks(true),
-  m_bCheckForUpdatesOnStartUp(false),
-  m_bCheckForDevBuilds(false),
   m_bShowWelcomeScreen(true),
   m_bInvWheel(true),
   m_bStayOpenAfterScriptEnd(false),
   m_pTextout(NULL),
   m_pActiveRenderWin(NULL),
   m_pLastLoadedRenderWin(NULL),
-  m_pHttp(NULL),
-  m_pUpdateFile(NULL),
-  m_iHttpGetId(-1),
-  m_bStartupCheck(false),
   m_bScriptMode(bScriptMode),
-  m_pFTPDialog(NULL),
-  m_strFTPTempFile(""),
-  m_bFTPDeleteSource(true),
-  m_bFTPFinished(true),
   m_bClipDisplay(true),
   m_bClipLocked(false),
   m_bIgnoreLoadDatasetFailure(false),
@@ -128,7 +117,7 @@ MainWindow::MainWindow(MasterController& masterController,
   QCoreApplication::setApplicationVersion(qstrVersion);
 
   QString path = QApplication::applicationDirPath();
-  masterController.SysInfo()->SetProgramPath(string(path.toAscii()));
+  masterController.SysInfo()->SetProgramPath(path.toStdString());
 
   setupUi(this);
 
@@ -160,7 +149,6 @@ MainWindow::MainWindow(MasterController& masterController,
   ClearProgressViewAndInfo();
   UpdateColorWidget();
 
-  connect(m_pWelcomeDialog, SIGNAL(CheckUpdatesClicked()),   this, SLOT(CheckForUpdates()));
   connect(m_pWelcomeDialog, SIGNAL(OnlineVideoTutClicked()), this, SLOT(OnlineVideoTut()));
   connect(m_pWelcomeDialog, SIGNAL(GetExampleDataClicked()), this, SLOT(GetExampleData()));
   connect(m_pWelcomeDialog, SIGNAL(OnlineHelpClicked()),     this, SLOT(OnlineHelp()));
@@ -170,7 +158,6 @@ MainWindow::MainWindow(MasterController& masterController,
   connect(m_pWelcomeDialog, SIGNAL(OpenFromDirClicked()),    this, SLOT(LoadDirectory()));
   connect(m_pWelcomeDialog, SIGNAL(accepted()),              this, SLOT(CloseWelcome()));
 
-  if (!m_bScriptMode && m_bCheckForUpdatesOnStartUp) QuietCheckForUpdates();
   if (!m_bScriptMode && m_bShowWelcomeScreen) ShowWelcomeScreen();
 
   checkBox_ClipShow->setEnabled(false);
@@ -194,16 +181,6 @@ MainWindow::~MainWindow()
     m_MasterController.RemoveDebugOut(m_pDebugOut);
   }
 
-  // cleanup updatefile, this code path is taken for instance when the
-  // windows firewall blocked an http request
-  if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
-    m_pUpdateFile->close();
-    m_pUpdateFile->remove();
-    delete m_pUpdateFile;
-    m_pUpdateFile = NULL;
-  }
-
-  delete m_pHttp;
   m_pRedrawTimer->stop();
   delete m_pRedrawTimer;
 
@@ -211,7 +188,6 @@ MainWindow::~MainWindow()
 
   delete m_pMetadataDialog;
   delete m_pWelcomeDialog;
-  delete m_pFTPDialog;
 
   delete m_1DTransferFunction;
   delete m_2DTransferFunction;
@@ -247,15 +223,14 @@ void MainWindow::SetAndCheckRunningFlag() {
     if (bShowCrashDialog) {
       settings.setValue("SaneCounter", 0);
       CrashDetDlg* d = NULL;
-      if (bWriteLogFile && SysTools::FileExists(string(strLogFileName.toAscii()))) {
-        d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to submit the logfile?", false, this);
+      if (bWriteLogFile && SysTools::FileExists(strLogFileName.toStdString())) {
+        d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process.", false, this);
         if (d->exec() == QDialog::Accepted) {
-          ReportABug(string(strLogFileName.toAscii()));
-          remove(strLogFileName.toAscii());
+          remove(strLogFileName.toStdString().c_str());
         }
       } else {
         if (!bWriteLogFile) {
-          d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to enable debugging?", false, this);
+          d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process.", false, this);
           if (d->exec() == QDialog::Accepted) {
             settings.setValue("Performance/WriteLogFile", true);
             settings.setValue("Performance/LogLevel", 2);

@@ -38,7 +38,7 @@
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/SysTools.h"
 
-#include <QtGui/QMdiSubWindow>
+#include <QMdiSubWindow>
 
 using namespace std;
 

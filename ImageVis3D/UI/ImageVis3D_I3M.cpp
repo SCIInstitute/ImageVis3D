@@ -42,9 +42,9 @@
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaDatasetProxy.h"
 
-#include <QtGui/QFileDialog>
+#include <QFileDialog>
 #include <QtCore/QSettings>
-#include <QtGui/QMessageBox>
+#include <QMessageBox>
 
 #include "PleaseWait.h"
 #include "Renderer/RenderMesh.h" // we only need this include for proper down cast from RenderMesh to Mesh
@@ -192,7 +192,7 @@ void MainWindow::TransferToI3M() {
 
     if (directoryName.isEmpty()) return;
 
-    string strTargetDir = string(directoryName.toAscii().data());
+    const string strTargetDir = directoryName.toStdString();
     
     settings.setValue("Folders/I3MServer", directoryName);
 

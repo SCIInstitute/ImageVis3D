@@ -36,7 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "QDataRadioButton.h"
-#include <QtGui/QMouseEvent>
+#include <QMouseEvent>
 #include "../Tuvok/IO/TuvokJPEG.h"
 #include "../Tuvok/IO/DICOM/DICOMParser.h"
 #include "../Tuvok/IO/3rdParty/jpeglib/jconfig.h"

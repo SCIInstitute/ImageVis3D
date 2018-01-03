@@ -289,31 +289,13 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>pushButton_BugRep</sender>
-   <signal>clicked()</signal>
-   <receiver>About</receiver>
-   <slot>ReportABug()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>167</x>
-     <y>390</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>5</x>
-     <y>406</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
  <slots>
   <slot>CheckUpdates()</slot>
   <slot>OnlineHelp()</slot>
   <slot>OnlineVideoTut()</slot>
-  <slot>ReportABug()</slot>
   <signal>CheckUpdatesClicked()</signal>
   <signal>OnlineHelpClicked()</signal>
   <signal>OnlineVideoTutClicked()</signal>
-  <signal>ReportABugClicked()</signal>
  </slots>
 </ui>

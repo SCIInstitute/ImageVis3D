@@ -36,8 +36,8 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include <sstream>
-#include <QtGui/QFileDialog>
-#include <QtGui/QInputDialog>
+#include <QFileDialog>
+#include <QInputDialog>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include "ImageVis3D.h"
@@ -55,7 +55,7 @@ void MainWindow::CaptureFrame() {
     if (!CaptureFrame(lineEditCaptureFile->text().toStdString())) {
       QString msg = tr("Error writing image file %1").arg(lineEditCaptureFile->text());
       ShowWarningDialog( tr("Error"), msg);
-      T_ERROR("%s", msg.toAscii().data());
+      T_ERROR("%s", msg.toStdString().c_str());
     }
   }
 }
@@ -67,7 +67,7 @@ void MainWindow::CaptureSequence() {
                          &strSequenceName)){
       QString msg = tr("Error writing image file %1").arg(strSequenceName.c_str());
       ShowWarningDialog( tr("Error"), msg);
-      T_ERROR("%s", msg.toAscii().data());
+      T_ERROR("%s", msg.toStdString().c_str());
     }
   }
 }
@@ -131,7 +131,7 @@ void MainWindow::CaptureRotation() {
         ok = false;
       }
     } else {
-      iNumImages = QInputDialog::getInteger(this,
+      iNumImages = QInputDialog::getInt(this,
                      tr("How many images to you want to compute?"),
                      tr("How many images to you want to compute:"),
                      iNumImages, 1, 3600, 1, &ok
@@ -191,7 +191,7 @@ void MainWindow::CaptureRotation() {
             QString msg = tr("Error writing image file %1").
                              arg(strSequenceName.c_str());
             ShowWarningDialog(tr("Error"), msg);
-            T_ERROR("%s", msg.toAscii().data());
+            T_ERROR("%s", msg.toStdString().c_str());
             break;
           }
           i++;
@@ -254,7 +254,7 @@ void MainWindow::CaptureRotation() {
             QString msg = tr("Error writing image file %1.").
                           arg(strSequenceName.c_str());
             ShowWarningDialog( tr("Error"), msg);
-            T_ERROR("%s", msg.toAscii().data());
+            T_ERROR("%s", msg.toStdString().c_str());
             break;
           }
 
@@ -276,7 +276,7 @@ void MainWindow::CaptureRotation() {
                 QString msg = tr("Error writing image file %1.").
                               arg(strImageFilenameRight.c_str());
                 ShowWarningDialog( tr("Error"), msg);
-                T_ERROR("%s", msg.toAscii().data());
+                T_ERROR("%s", msg.toStdString().c_str());
                 break;
               }
               vstrRightEyeImageVector[i] = strSequenceName;

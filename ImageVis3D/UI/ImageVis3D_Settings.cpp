@@ -38,8 +38,8 @@
 #include <cmath>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
-#include <QtGui/QMessageBox>
-#include <QtGui/QMdiSubWindow>
+#include <QMessageBox>
+#include <QMdiSubWindow>
 
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include "../Tuvok/DebugOut/TextfileOut.h"
@@ -87,12 +87,19 @@ void MainWindow::SaveSettings(
   uint64_t CPUMem, uint64_t maxCPU, uint64_t GPUMem,
   uint64_t maxGPU, bool ignoreMax,
   const std::string& tempDir,
-  bool checksum, unsigned framerate, bool lowResSubframes, unsigned LODDelay,
-  unsigned activeTS, unsigned inactiveTS, bool writeLog, bool showCrashDialog,
-  const std::string& logFile, uint32_t logLevel, bool showVersion,
-  bool autoSaveGeo, bool autoSaveWSP, bool autoLockCloned, bool absoluteLocks,
-  bool checkForUpdates,
-  bool checkForDevBuilds, bool showWelcome, bool invertWheel, bool i3mFeatures,
+  bool checksum,
+  unsigned framerate,
+  bool lowResSubframes, unsigned LODDelay,
+  unsigned activeTS, unsigned inactiveTS,
+  bool writeLog,
+  bool showCrashDialog,
+  const std::string& logFile, uint32_t logLevel,
+  bool showVersion,
+  bool autoSaveGeo, bool autoSaveWSP,
+  bool autoLockCloned, bool absoluteLocks,
+  bool showWelcome,
+  bool invertWheel,
+  bool i3mFeatures,
   unsigned volRenType, unsigned blendPrecision, bool powerTwo,
   bool downsampleTo8, bool disableBorder, const FLOATVECTOR3& backColor1,
   const FLOATVECTOR3& backColor2, const FLOATVECTOR4& textColor,
@@ -141,8 +148,6 @@ void MainWindow::SaveSettings(
     settings.setValue("AutoLockClonedWindow", autoLockCloned);
     settings.setValue("AbsoluteViewLocks", absoluteLocks);
 
-    settings.setValue("CheckForUpdatesOnStartUp", checkForUpdates);
-    settings.setValue("CheckForDevBuilds", checkForDevBuilds);
     settings.setValue("ShowWelcomeScreen", showWelcome);
     settings.setValue("InvertMouseWheel", invertWheel);
     settings.setValue("I3MFeatures", i3mFeatures);
@@ -199,7 +204,9 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
     unsigned int iOverMaxCPU = settings.value("OverriddenCPUMax", 0).toUInt();
     unsigned int iOverMaxGPU = settings.value("OverriddenGPUMax", 0).toUInt();
 
-    string strTempDir(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
+    string strTempDir(
+      settings.value("TempDir", m_strTempDir.c_str()).toString().toStdString()
+    );
     unsigned int iMaxBrickSize = settings.value(
         "MaxBricksize", static_cast<qulonglong>(MathTools::Log2(
                 ss->cexecRet<uint64_t>("tuvok.io.getMaxBrickSize")))).toUInt();
@@ -240,8 +247,6 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
     bool bAutoSaveWSP = settings.value("AutoSaveWSP", m_bAutoSaveWSP).toBool();
     bool bAutoLockClonedWindow = settings.value("AutoLockClonedWindow", m_bAutoLockClonedWindow).toBool();
     bool bAbsoluteViewLocks = settings.value("AbsoluteViewLocks", m_bAbsoluteViewLocks).toBool();
-    bool bCheckForUpdatesOnStartUp = settings.value("CheckForUpdatesOnStartUp", m_bCheckForUpdatesOnStartUp).toBool();
-    bool bCheckForDevBuilds = settings.value("CheckForDevBuilds", m_bCheckForDevBuilds).toBool();
     bool bShowWelcomeScreen = settings.value("ShowWelcomeScreen", m_bShowWelcomeScreen).toBool();
     bool bInvWheel = settings.value("InvertMouseWheel", m_bInvWheel).toBool();
     bool bI3MFeatures = settings.value("I3MFeatures", m_bI3MFeatures).toBool();
@@ -282,10 +287,9 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
       bOverrideDetMax, iOverMaxCPU, iOverMaxGPU, strTempDir,
       bQuickopen, iMinFramerate, bRenderLowResIntermediateResults,
       iLODDelay, iActiveTS, iInactiveTS, bWriteLogFile,
-      bShowCrashDialog, string(strLogFileName.toAscii()),
+      bShowCrashDialog, strLogFileName.toStdString(),
       iLogLevel, bShowVersionInTitle, bAutoSaveGEO,
       bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
-      bCheckForUpdatesOnStartUp, bCheckForDevBuilds,
       bShowWelcomeScreen, bInvWheel, bI3MFeatures, iVolRenType,
       iBlendPrecisionMode, bPowerOfTwo, bDownSampleTo8Bits,
       bDisableBorder, vBackColor1, vBackColor2, vTextColor,
@@ -314,8 +318,7 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
         settingsDlg.GetShowVersionInTitle(), settingsDlg.GetAutoSaveGEO(),
         settingsDlg.GetAutoSaveWSP(), settingsDlg.GetAutoLockClonedWindow(),
         settingsDlg.GetAbsoluteViewLocks(),
-        settingsDlg.GetCheckForUpdatesOnStartUp(),
-        settingsDlg.GetCheckForDevBuilds(), settingsDlg.GetShowWelcomeScreen(),
+        settingsDlg.GetShowWelcomeScreen(),
         settingsDlg.GetInvertWheel(), settingsDlg.GetI3MFeatures(),
         settingsDlg.GetVolrenType(), settingsDlg.GetBlendPrecisionMode(),
         settingsDlg.GetUseOnlyPowerOfTwo(), settingsDlg.GetDownSampleTo8Bits(),
@@ -379,51 +382,90 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
     const FLOATVECTOR3 darkblue(0,0,0.2f);
     const FLOATVECTOR3 white(1,1,1);
     switch(bsd.GetPerformanceLevel()) {
-      case MAX_RESPONSIVENESS:
+      case MAX_RESPONSIVENESS: {
+        const uint32_t loglevel = 1;
+        const bool vers_title = true; // show version in title
+        const bool autosave_geo = true;
+        const bool autosave_wsp = true;
+        const bool autolock_cloned = true;
+        const bool absolute_view_locks = false;
+        const bool show_welcome = true;
+        const bool invert_wheel = true;
         this->SaveSettings(static_cast<uint64_t>(ceil(cpumem * 0.75)), cpumem,
                            static_cast<uint64_t>(ceil(gpumem * 0.40)), gpumem,
                            false, tempDir, false,
                            60, true, 1500, 150, 70, false, showCrashDlg,
-                           tempDir+"imagevis3d.log", 1, true, true, true,
-                           true, false, true, false, true, true, i3mfeatures,
+                           tempDir+"imagevis3d.log", loglevel,
+                           vers_title,
+                           autosave_geo, autosave_wsp,
+                           autolock_cloned, absolute_view_locks,
+                           show_welcome,
+                           invert_wheel,
+                           i3mfeatures,
                            MasterController::OPENGL_2DSBVR, 0, true, false,
                            false, black, darkblue,
                            white, "", 0, unsigned(log2(256)),
                            unsigned(log2(128)), true, false, 1, 1,
                            false, false, 0);
-        // TODO: If some other compressor or level or layout proofs to be faster
-        //       , use the fastest here!
-        break;
-      case MIDDLE_1:
+        // TODO: If some other compressor or level or layout proves to be
+        //       faster, use the fastest here!
+      } break;
+      case MIDDLE_1: {
+        const uint32_t loglevel = 1;
+        const bool vers_title = true; // show version in title
+        const bool autosave_geo = true;
+        const bool autosave_wsp = true;
+        const bool autolock_cloned = true;
+        const bool absolute_view_locks = false;
+        const bool show_welcome = true;
+        const bool invert_wheel = true;
         this->SaveSettings(static_cast<uint64_t>(ceil(cpumem * 0.77)), cpumem,
                            static_cast<uint64_t>(ceil(gpumem * 0.60)), gpumem,
                            false, tempDir, false,
                            30, true, 1500, 200, 80, false, showCrashDlg,
-                           tempDir+"imagevis3d.log", 1, true, true, true,
-                           true, false, true, false, true, true, i3mfeatures,
+                           tempDir+"imagevis3d.log", loglevel,
+                           //true, true, true,
+                           vers_title, autosave_geo, autosave_wsp,
+                           autolock_cloned, absolute_view_locks,
+                           show_welcome,
+                           invert_wheel,
+                           i3mfeatures,
                            MasterController::OPENGL_SBVR, 2, true, false,
                            false, black, darkblue,
                            white, "", 0, unsigned(log2(256)),
                            unsigned(log2(128)), true, false, 1, 1,
                            false, false, 0);
-        // TODO: If some other compressor or level or layout proofs to be faster
-        //       , use the fastest here!
-        break;
-      case MAX_PERFORMANCE:
+        // TODO: If some other compressor or level or layout proves to be
+        //       faster, use the fastest here!
+        } break;
+      case MAX_PERFORMANCE: {
+        const uint32_t loglevel = 0;
+        const bool vers_title = true; // show version in title
+        const bool autosave_geo = true;
+        const bool autosave_wsp = true;
+        const bool autolock_cloned = true;
+        const bool absolute_view_locks = false;
+        const bool show_welcome = true;
+        const bool invert_wheel = true;
         this->SaveSettings(static_cast<uint64_t>(ceil(cpumem * 0.9)), cpumem,
                            static_cast<uint64_t>(ceil(gpumem * 0.75)), gpumem,
                            false, tempDir, false,
                            10, false, 1000, 500, 100, false, showCrashDlg,
-                           tempDir+"imagevis3d.log", 0, true, true, true,
-                           true, false, true, false, true, true, i3mfeatures,
+                           tempDir+"imagevis3d.log", loglevel,
+                           vers_title,
+                           autosave_geo, autosave_wsp,
+                           autolock_cloned, absolute_view_locks,
+                           show_welcome,
+                           invert_wheel,
+                           i3mfeatures,
                            MasterController::OPENGL_SBVR, 2, true, false,
                            false, black, darkblue,
                            white, "", 0, unsigned(log2(256)),
                            unsigned(log2(128)), true, false, 1, 1,
                            false, false, 0);
-        // TODO: If some other compressor or level or layout proofs to be faster
-        //       , use the fastest here!
-        break;
+        // TODO: If some other compressor or level or layout proves to be
+        //       faster, use the fastest here!
+      } break;
     }
   }
   return true;
@@ -463,8 +505,6 @@ void MainWindow::ApplySettings() {
   m_bAutoSaveWSP = settings.value("AutoSaveWSP", m_bAutoSaveWSP).toBool();
   m_bAutoLockClonedWindow = settings.value("AutoLockClonedWindow", m_bAutoLockClonedWindow).toBool();
   m_bAbsoluteViewLocks = settings.value("AbsoluteViewLocks", m_bAbsoluteViewLocks).toBool();
-  m_bCheckForUpdatesOnStartUp = settings.value("CheckForUpdatesOnStartUp", m_bCheckForUpdatesOnStartUp).toBool();
-  m_bCheckForDevBuilds = settings.value("CheckForDevBuilds", m_bCheckForDevBuilds).toBool();
   m_bShowWelcomeScreen = settings.value("ShowWelcomeScreen", m_bShowWelcomeScreen).toBool();
   m_bInvWheel = settings.value("InvertMouseWheel", m_bInvWheel).toBool();
   m_bI3MFeatures = settings.value("I3MFeatures", m_bI3MFeatures).toBool();
@@ -509,7 +549,8 @@ void MainWindow::ApplySettings() {
   settings.beginGroup("Memory");
   uint64_t iMaxCPUmb = std::min<uint64_t>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
   uint64_t iMaxGPUmb = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
-  m_strTempDir = std::string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
+  m_strTempDir =
+    settings.value("TempDir", m_strTempDir.c_str()).toString().toStdString();
   uint64_t iMaxCPU = iMaxCPUmb * 1000000; // IEEE MB standard
   uint64_t iMaxGPU = iMaxGPUmb * 1000000;
 
@@ -580,7 +621,7 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
 
 
 void MainWindow::ToggleLogFile() {
-  if ( m_pTextout && string(m_strLogFileName.toAscii()) != m_pTextout->GetFileName()) {
+  if ( m_pTextout && m_strLogFileName.toStdString() != m_pTextout->GetFileName()) {
     Controller::Instance().RemoveDebugOut(m_pTextout);
     m_pTextout = NULL;
   }
@@ -588,7 +629,7 @@ void MainWindow::ToggleLogFile() {
   if (m_bWriteLogFile) {
     bool bNewOut = !m_pTextout;
     if (!m_pTextout)
-      m_pTextout = new TextfileOut(string(m_strLogFileName.toAscii()));
+      m_pTextout = new TextfileOut(m_strLogFileName.toStdString());
 
     m_pTextout->SetShowErrors(true);
     m_pTextout->SetShowWarnings(m_iLogLevel > 0);

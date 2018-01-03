@@ -45,8 +45,8 @@
 
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
+#include <QFileDialog>
+#include <QMessageBox>
 
 #include "Basics/Mesh.h"
 #include "Renderer/RenderMesh.h" // we only need this include for proper down cast from RenderMesh to Mesh
@@ -148,12 +148,12 @@ void MainWindow::ExportGeometry() {
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/ExportMesh", QFileInfo(fileName).absoluteDir().path());
-    string targetFileName = string(fileName.toAscii());
+    string targetFileName = fileName.toStdString();
 
+    string extlower =
+      SysTools::ToLowerCase(SysTools::GetExt(fileName.toStdString()));
     // still a valid filename ext ?
-    if (ss->cexecRet<bool>("tuvok.io.hasGeoConverterForExt", 
-                           SysTools::ToLowerCase(SysTools::GetExt(
-                                   string(fileName.toAscii()))),
+    if (ss->cexecRet<bool>("tuvok.io.hasGeoConverterForExt", extlower,
                            true, false) == false) {
       ShowCriticalDialog("Extension Error", 
                          "Unable to determine the file type "
@@ -265,7 +265,7 @@ void MainWindow::AddGeometry(std::string filename) {
         CloseCurrentView();
         MasterController::EVolumeRendererType currentType = m_eVolumeRendererType;
         m_eVolumeRendererType = MasterController::OPENGL_SBVR;    
-        LoadDataset(std::string(dataset.toAscii()));
+        LoadDataset(dataset.toStdString());
         m_eVolumeRendererType = currentType;
       }
   }
@@ -352,7 +352,7 @@ void MainWindow::AddGeometry() {
 
   settings.setValue("Folders/AddTriGeo", QFileInfo(geoFile).absoluteDir().path());
 
-  AddGeometry(string(geoFile.toAscii()));
+  AddGeometry(geoFile.toStdString());
 }
 
 void MainWindow::LoadDataset(std::string strFilename) {
@@ -397,7 +397,7 @@ QString MainWindow::GetConvFilename(const QString& sourceName) {
   QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
 
   QString suggestedFileName = SysTools::ChangeExt(
-                                SysTools::GetFilename(string(sourceName.toAscii())),
+                                SysTools::GetFilename(sourceName.toStdString()),
                                                       "uvf"
                               ).c_str();
   
@@ -409,7 +409,7 @@ QString MainWindow::GetConvFilename(const QString& sourceName) {
                                  &selectedFilter, options);
 
   if (!targetFilename.isEmpty()) {
-    targetFilename = SysTools::CheckExt(string(targetFilename.toAscii()),
+    targetFilename = SysTools::CheckExt(targetFilename.toStdString(),
                                                "uvf").c_str();
     settings.setValue("Folders/GetConvFilename",
                       QFileInfo(targetFilename).absoluteDir().path());
@@ -545,7 +545,7 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
       T_ERROR("Empty filelist");
       return false;
     }
-    if(!SysTools::FileExists(std::string(fn->toAscii()))) {
+    if(!SysTools::FileExists(fn->toStdString())) {
       QString strText = tr("File %1 not found.").arg(*fn);
       T_ERROR("%s", strText.toStdString().c_str());
       if(!bNoUserInteraction) {
@@ -598,7 +598,7 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
     std::list<std::string> stdfiles;
     for(QStringList::const_iterator fn = files.begin();
         fn != files.end(); ++fn) {
-      stdfiles.push_back(std::string(fn->toAscii()));
+      stdfiles.push_back(fn->toStdString());
     }
 
     PleaseWaitDialog pleaseWait(this);
@@ -607,7 +607,7 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
 
     try {
       ss->cexec("tuvok.io.convertDataset", stdfiles, 
-                std::string(targetFilename.toAscii()), m_strTempDir, 
+                targetFilename.toStdString(), m_strTempDir, 
                 bNoUserInteraction, false);
       filename = targetFilename;
     } catch(const tuvok::io::IOException& e) {
@@ -616,7 +616,7 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
       error << "Unable to convert ";
       std::copy(stdfiles.begin(), stdfiles.end(),
                 std::ostream_iterator<std::string>(error, ", "));
-      error << " into " << std::string(targetFilename.toAscii())
+      error << " into " << targetFilename.toStdString()
             << ": " << e.what();
       T_ERROR("%s", error.str().c_str());
       if(!bNoUserInteraction) {
@@ -734,9 +734,8 @@ bool MainWindow::RebrickDataset(QString filename, QString targetFilename,
                                    strLastDir, "Universal Volume Format (*.uvf)",
                                    &selectedFilter, options);
     if (!rebrickedFilename.isEmpty()) {
-      rebrickedFilename = SysTools::CheckExt(
-        std::string(rebrickedFilename.toAscii()), "uvf"
-      ).c_str();
+      rebrickedFilename = SysTools::CheckExt(rebrickedFilename.toStdString(),
+                                             "uvf").c_str();
 
       if (rebrickedFilename == filename) {
         ShowCriticalDialog("Input Error",
@@ -751,8 +750,8 @@ bool MainWindow::RebrickDataset(QString filename, QString targetFilename,
         pleaseWait.AttachLabel(&m_MasterController);
 
         if(!ss->cexecRet<bool>("tuvok.io.rebrickDataset",
-                               string(filename.toAscii()),
-                               string(rebrickedFilename.toAscii()),
+                               filename.toStdString(),
+                               rebrickedFilename.toStdString(),
                                m_strTempDir)) {
           ShowCriticalDialog("Error during rebricking.",
                              "The system was unable to rebrick the data set, "
@@ -891,7 +890,7 @@ void MainWindow::ExportDataset() {
       break;
     }
     // get it out of a QString && figure out what file type we're dealing with.
-    std::string filter = std::string(selectedFilter.toAscii());
+    std::string filter = selectedFilter.toStdString();
     size_t start = filter.find_last_of("*.")+1;
     size_t end = filter.find_last_of(")");
     ext = filter.substr(start, end-start);
@@ -908,7 +907,7 @@ void MainWindow::ExportDataset() {
     settings.setValue("Folders/ExportDataset",
                       QFileInfo(fileName).absoluteDir().path());
 
-    string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()),
+    string strCompletefileName = SysTools::CheckExt(fileName.toStdString(),
                                                     ext);
 
     shared_ptr<LuaScripting> ss = m_MasterController.LuaScript(); 
@@ -992,9 +991,9 @@ void MainWindow::ExportImageStack() {
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/ExportImageStack", QFileInfo(fileName).absoluteDir().path());
-    string targetFileName = string(fileName.toAscii());
+    string targetFileName = fileName.toStdString();
     
-    string selectedFilterStr = string(selectedFilter.toAscii());
+    string selectedFilterStr = selectedFilter.toStdString();
     std::string filterExt = ss->cexecRet<string>("tuvok.io.imageExportDialogFilterToExt", selectedFilterStr);
 
     if (SysTools::GetExt(targetFileName).empty())  {
@@ -1082,12 +1081,12 @@ void MainWindow::ExportIsosurface() {
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/ExportIso", QFileInfo(fileName).absoluteDir().path());
-    string targetFileName = string(fileName.toAscii());
+    string targetFileName = fileName.toStdString();
 
     // still a valid filename ext ?
     if (!ss->cexecRet<bool>("tuvok.io.hasGeoConverterForExt", 
                             SysTools::ToLowerCase(SysTools::GetExt(
-                                    string(fileName.toAscii()))),
+                                    fileName.toStdString())),
                             true,false)) {
       ShowCriticalDialog("Extension Error", 
                          "Unable to determine the file type "
@@ -1184,7 +1183,7 @@ void MainWindow::MergeDatasets() {
 
     if (!fileName.isEmpty()) {
       settings.setValue("Folders/MergedOutput", QFileInfo(fileName).absoluteDir().path());
-      std::string stdFile = std::string(fileName.toAscii());
+      std::string stdFile = fileName.toStdString();
       if(SysTools::GetExt(stdFile) == "") {
         WARNING("no extension; assuming UVF.");
         stdFile = stdFile + ".uvf";

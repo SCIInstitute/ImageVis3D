@@ -239,25 +239,25 @@ bool ScaleAndBiasDlg::GetApplyAll() const {
 
 FLOATMATRIX4 ScaleAndBiasDlg::GetExpertTransform() const {
   FLOATMATRIX4 m;
-  m.m11 =float(atof(lineEdit_m11->text().toAscii()));
-  m.m21 =float(atof(lineEdit_m21->text().toAscii()));
-  m.m31 =float(atof(lineEdit_m31->text().toAscii()));
-  m.m41 =float(atof(lineEdit_m41->text().toAscii()));
+  m.m11 =float(atof(lineEdit_m11->text().toStdString().c_str()));
+  m.m21 =float(atof(lineEdit_m21->text().toStdString().c_str()));
+  m.m31 =float(atof(lineEdit_m31->text().toStdString().c_str()));
+  m.m41 =float(atof(lineEdit_m41->text().toStdString().c_str()));
 
-  m.m12 =float(atof(lineEdit_m12->text().toAscii()));
-  m.m22 =float(atof(lineEdit_m22->text().toAscii()));
-  m.m32 =float(atof(lineEdit_m32->text().toAscii()));
-  m.m42 =float(atof(lineEdit_m42->text().toAscii()));
+  m.m12 =float(atof(lineEdit_m12->text().toStdString().c_str()));
+  m.m22 =float(atof(lineEdit_m22->text().toStdString().c_str()));
+  m.m32 =float(atof(lineEdit_m32->text().toStdString().c_str()));
+  m.m42 =float(atof(lineEdit_m42->text().toStdString().c_str()));
 
-  m.m13 =float(atof(lineEdit_m13->text().toAscii()));
-  m.m23 =float(atof(lineEdit_m23->text().toAscii()));
-  m.m33 =float(atof(lineEdit_m33->text().toAscii()));
-  m.m43 =float(atof(lineEdit_m43->text().toAscii()));
+  m.m13 =float(atof(lineEdit_m13->text().toStdString().c_str()));
+  m.m23 =float(atof(lineEdit_m23->text().toStdString().c_str()));
+  m.m33 =float(atof(lineEdit_m33->text().toStdString().c_str()));
+  m.m43 =float(atof(lineEdit_m43->text().toStdString().c_str()));
 
-  m.m14 =float(atof(lineEdit_m14->text().toAscii()));
-  m.m24 =float(atof(lineEdit_m24->text().toAscii()));
-  m.m34 =float(atof(lineEdit_m34->text().toAscii()));
-  m.m44 =float(atof(lineEdit_m44->text().toAscii()));
+  m.m14 =float(atof(lineEdit_m14->text().toStdString().c_str()));
+  m.m24 =float(atof(lineEdit_m24->text().toStdString().c_str()));
+  m.m34 =float(atof(lineEdit_m34->text().toStdString().c_str()));
+  m.m44 =float(atof(lineEdit_m44->text().toStdString().c_str()));
 
   return m;
 }

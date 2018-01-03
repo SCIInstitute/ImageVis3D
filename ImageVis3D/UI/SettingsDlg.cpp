@@ -38,11 +38,11 @@
 #include "../Tuvok/StdTuvokDefines.h"
 #include "../Tuvok/Basics/MathTools.h"
 #include "SettingsDlg.h"
-#include <QtGui/QColorDialog>
-#include <QtGui/QMessageBox>
+#include <QColorDialog>
+#include <QMessageBox>
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
-#include <QtGui/QFileDialog>
+#include <QFileDialog>
 #include <QtCore/QSettings>
 
 
@@ -154,7 +154,7 @@ uint64_t SettingsDlg::GetCPUMem() const {
 }
 
 std::string SettingsDlg::GetTempDir() const {
-  return std::string(lineEdit_TempDir->text().toAscii());
+  return lineEdit_TempDir->text().toStdString();
 }
 
 bool SettingsDlg::GetQuickopen() const {
@@ -199,14 +199,6 @@ bool SettingsDlg::GetAutoLockClonedWindow() const {
 
 bool SettingsDlg::GetAbsoluteViewLocks() const {
   return checkBox_AbsoluteViewLocks->isChecked();
-}
-
-bool SettingsDlg::GetCheckForUpdatesOnStartUp() const {
-  return checkBox_CheckForUpdatesOnStartUp->isChecked();
-}
-
-bool SettingsDlg::GetCheckForDevBuilds() const {
-  return checkBox_CheckForDevBuilds->isChecked();
 }
 
 bool SettingsDlg::GetShowWelcomeScreen() const {
@@ -341,7 +333,7 @@ void SettingsDlg::SetLogoLabel() {
   if (m_strLogoFilename.isEmpty()) {
     label_LogoFile->setText("No logo selected");
   } else {
-    if (SysTools::FileExists(string(m_strLogoFilename.toAscii())) ) {
+    if (SysTools::FileExists(m_strLogoFilename.toStdString())) {
       label_LogoFile->setText(m_strLogoFilename);
     } else {
       label_LogoFile->setText(m_strLogoFilename + " [File not found]");
@@ -364,9 +356,9 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, 
                             bool bAutoLockClonedWindow, bool bAbsoluteViewLocks,
-                            bool bCheckForUpdatesOnStartUp, 
-                            bool bCheckForDevBuilds, bool bShowWelcomeScreen,
-                            bool bInvWheel, bool bI3MFeatures,
+                            bool bShowWelcomeScreen,
+                            bool bInvWheel,
+                            bool bI3MFeatures,
                             unsigned int iVolRenType, 
                             unsigned int iBlendPrecision, bool bPowerOfTwo, 
                             bool bDownSampleTo8Bits,
@@ -455,8 +447,6 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
   checkBox_SaveWSPOnExit->setChecked(bAutoSaveWSP);
   checkBox_AutoLockClonedWindow->setChecked(bAutoLockClonedWindow);
   checkBox_AbsoluteViewLocks->setChecked(bAbsoluteViewLocks);
-  checkBox_CheckForUpdatesOnStartUp->setChecked(bCheckForUpdatesOnStartUp);
-  checkBox_CheckForDevBuilds->setChecked(bCheckForDevBuilds);
   checkBox_ShowWelcomeScreen->setChecked(bShowWelcomeScreen);
   checkBox_InvWheel->setChecked(bInvWheel);
   checkBox_I3MFeatures->setChecked(bI3MFeatures);
@@ -527,7 +517,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
                 break;
   }
 
-  m_strLogoFilename = strLogo.toAscii();
+  m_strLogoFilename = strLogo;
   SetLogoLabel();
 
   checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
@@ -575,7 +565,7 @@ bool SettingsDlg::GetShowCrashDialog() const {
 }
 
 const string SettingsDlg::GetLogFileName() const {
-  return string(lineEdit_filename->text().toAscii());
+  return lineEdit_filename->text().toStdString();
 }
 
 uint32_t SettingsDlg::GetLogLevel() const {

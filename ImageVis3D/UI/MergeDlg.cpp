@@ -39,7 +39,7 @@
 #include "ImageVis3D.h"
 #include "PleaseWait.h"
 
-#include <QtGui/QFileDialog>
+#include <QFileDialog>
 #include <QtCore/QSettings>
 
 #include "../Tuvok/Basics/SysTools.h"
@@ -159,7 +159,7 @@ void MergeDlg::AddDataset() {
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/MergeInput", QFileInfo(fileName).absoluteDir().path());
 
-    DataSetListElem* l = new DataSetListElem(string(fileName.toAscii()));
+    DataSetListElem* l = new DataSetListElem(fileName.toStdString());
     m_vDataSetList.push_back(l);
     UpadeListView();
     listWidget_datasets->setCurrentRow(int(m_vDataSetList.size()-1));

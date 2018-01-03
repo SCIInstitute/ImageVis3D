@@ -40,7 +40,7 @@
 #if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
 # pragma GCC visibility push(default)
 #endif
-#include <QtGui/QtGui>
+#include <QtGui>
 #include <QtNetwork/QtNetwork>
 #if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
 # pragma GCC visibility pop
@@ -69,8 +69,12 @@ DatasetServerDialog::DatasetServerDialog(std::string strTempDir, QWidget *parent
     QString volume = tr("Volume%1").arg(b);
     QString transferfunction = tr("TransferFunction%1").arg(b);
 
-    std::string strFilename(settings.value(volume, "").toString().toAscii());
-    std::string strTFFilename(settings.value(transferfunction, "").toString().toAscii());
+    std::string strFilename(
+      settings.value(volume, "").toString().toStdString()
+    );
+    std::string strTFFilename(
+      settings.value(transferfunction, "").toString().toStdString()
+    );
     aDatasets[b] = DatasetTFPair(strFilename, strTFFilename);
 
   }
@@ -224,8 +228,8 @@ void DatasetServerDialog::toggleServers() {
 void DatasetServerDialog::addDataset() {
   if (editVolFile->text() == "") return;
 
-	std::string strFilename(editVolFile->text().toAscii());
-	std::string strTFFilename(edit1DTFile->text().toAscii());
+	std::string strFilename(editVolFile->text().toStdString());
+	std::string strTFFilename(edit1DTFile->text().toStdString());
   aDatasets.push_back(DatasetTFPair(strFilename, strTFFilename));
   updateListWidgetAndButtons();
 

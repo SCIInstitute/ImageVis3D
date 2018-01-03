@@ -1308,29 +1308,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_10">
-         <property name="title">
-          <string>Network</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_6">
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="checkBox_CheckForUpdatesOnStartUp">
-            <property name="text">
-             <string>Automatic update check</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="checkBox_CheckForDevBuilds">
-            <property name="text">
-             <string>Include Devbuilds</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

@@ -40,7 +40,7 @@
 #ifndef QTRANSFERFUNCTION_H
 #define QTRANSFERFUNCTION_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include "../Tuvok/Controller/MasterController.h"
 
 using namespace tuvok;

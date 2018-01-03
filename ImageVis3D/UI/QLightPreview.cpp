@@ -39,8 +39,8 @@
 
 #include "QLightPreview.h"
 
-#include <QtGui/QPainter>
-#include <QtGui/QMouseEvent>
+#include <QPainter>
+#include <QMouseEvent>
 
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/MathTools.h"

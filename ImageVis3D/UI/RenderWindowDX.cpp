@@ -49,7 +49,7 @@
 #include "ImageVis3D.h"
 #include "../Tuvok/Renderer/DX/DXRenderer.h"
 
-#include <QtGui/QtGui>
+#include <QtGui>
 
 using namespace std;
 
