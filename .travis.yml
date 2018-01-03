@@ -30,4 +30,4 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install qt; fi
 
-script: travis_wait ./Scripts/oneshot-${CONFIG}.sh
+script: travis_wait bash -x ./Scripts/oneshot-${CONFIG}.sh
