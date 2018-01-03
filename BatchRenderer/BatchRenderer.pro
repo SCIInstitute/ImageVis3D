@@ -16,17 +16,6 @@ linux*:LIBS        += -lGL -lz
 
 include(../Tuvok/flags.pro)
 
-####
-# Mac OS X configuration
-####
-macx:QMAKE_CXXFLAGS         += -mmacosx-version-min=10.7 -stdlib=libc++
-macx:QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++
-macx:QMAKE_CFLAGS           += -mmacosx-version-min=10.7
-macx:LIBS                   += -mmacosx-version-min=10.7 -stdlib=libc++ -framework Cocoa -framework OpenGL
-macx:CONFIG                 -= app_bundle
-macx:INCLUDEPATH            += /usr/X11R6/include
-macx:QMAKE_LIBDIR           += /usr/X11R6/lib
-
 ### Should we link Qt statically or as a shared lib?
 # Find the location of QtCore`s prl file, and include it here so we can look at
 # the QMAKE_PRL_CONFIG variable.
