@@ -37,7 +37,7 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install qt; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew link qt5 --force ; fi
   - if test "x${TRAVIS_OS_NAME}" == "xlinux" ; then
-      export QT_BIN="/usr/lib/x86_64-linux-gnu/qt5/bin"
+      export QT_BIN="/usr/lib/x86_64-linux-gnu/qt5/bin" ;
     fi
 
 script: travis_wait bash -x ./Scripts/oneshot-${CONFIG}.sh
