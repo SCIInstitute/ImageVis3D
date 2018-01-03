@@ -48,10 +48,7 @@ if test -n "${QT_BIN}" ; then
 else
   qm="qmake"
 fi
-echo "qmake version:"
-${qm} --version
-echo "compiler version:"
-${CXX} --version
+${qm} --version || exit 1
 
 # Unless the user gave us input as to options to use, default to a small-scale
 # parallel build.
