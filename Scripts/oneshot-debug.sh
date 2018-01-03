@@ -28,7 +28,7 @@ fi
 if test `uname -s` != "Darwin"; then
   if test "${CXX}" == "clang++"; then
     # We are using clang on a linux system. Set Qt mkspec appropriately.
-    MKSPEC="-spec unsupported/linux-clang"
+    MKSPEC="-spec linux-clang"
     CXF="${CXF} -D_GLIBCXX_DEBUG"
   else
     CXF="${CXF} -D_GLIBCXX_DEBUG --param ssp-buffer-size=4 -Werror"
@@ -38,7 +38,7 @@ else
   # We don't turn -Werror on because of warnings that deal 
   # with generated code, and some unused template specialization
   # warnings. 
-  MKSPEC="-spec unsupported/macx-clang"
+  MKSPEC="-spec macx-clang"
 fi
 
 # Users can set the QT_BIN env var to point at a different Qt implementation.
