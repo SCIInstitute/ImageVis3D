@@ -1,6 +1,7 @@
 language: cpp
 
 dist: trusty
+osx_image: xcode9.2
 sudo: false
 
 git:
