@@ -57,7 +57,7 @@ if test -z "${MAKE_OPTIONS}" ; then
 fi
 
 dirs="."
-dirs="$dirs"
+dirs="${dirs} Tuvok/IO/test"
 echo "Configuring..."
 for d in $dirs ; do
   pushd ${d} &> /dev/null || exit 1
