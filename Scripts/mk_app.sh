@@ -77,4 +77,5 @@ hdiutil create                    \
   -imagekey zlib-level=9          \
   ${zipfile%%zip}dmg
 rm -fr staging/
-hdiutil internet-enable -yes ${zipfile%%zip}dmg
+hdiutil internet-enable -yes ${zipfile%%zip}dmg || \
+  die "hdiutil failed on the dmg."
