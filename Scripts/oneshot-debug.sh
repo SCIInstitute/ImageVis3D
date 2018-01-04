@@ -61,7 +61,7 @@ dirs="${dirs} Tuvok/IO/test"
 echo "Configuring..."
 for d in $dirs ; do
   pushd ${d} &> /dev/null || exit 1
-    ${qm} \
+    ${qm} -d \
       ${MKSPEC} \
       CONFIG="debug" \
       QMAKE_MACOSX_DEPLOYMENT_TARGET=10.10 \
