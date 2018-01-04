@@ -64,6 +64,7 @@ for d in $dirs ; do
     ${qm} \
       ${MKSPEC} \
       CONFIG="debug" \
+      QMAKE_MACOSX_DEPLOYMENT_TARGET=10.10 \
       -recursive || exit 1
     make --no-print-directory ${MAKE_OPTIONS} || exit 1
   popd &> /dev/null
