@@ -73,10 +73,11 @@ dirs="${dirs} Tuvok/IO/test"
 echo "Configuring..."
 for d in $dirs ; do
   pushd ${d} &> /dev/null || exit 1
-    ${qm} -d \
+    ${qm} \
       ${MKSPEC} \
       CONFIG="debug" \
       QMAKE_MACOSX_DEPLOYMENT_TARGET=10.10 \
+      deployment_target=10.11 \
       -recursive || exit 1
     make --no-print-directory ${MAKE_OPTIONS} || exit 1
   popd &> /dev/null
