@@ -56,6 +56,18 @@ if test -z "${MAKE_OPTIONS}" ; then
   MAKE_OPTIONS="-j2 -l 2.0"
 fi
 
+if test `uname -s` == "Darwin"; then
+  echo "properties:"
+  macos=$(${qm} -query macos)
+  macx=$(${qm} -query mac)
+  qmake_tgt=$(${qm} -query QMAKE_MACOSX_DEPLOYMENT_TARGET)
+  tgt=$(${qm} -query deployment_target)
+  echo -e "\tmacos: ${macos}"
+  echo -e "\tmacx: ${macx}"
+  echo -e "\tqmake deploy target: ${qmake_tgt}"
+  echo -e "\tdeploy target: ${tgt}"
+fi
+
 dirs="."
 dirs="${dirs} Tuvok/IO/test"
 echo "Configuring..."
