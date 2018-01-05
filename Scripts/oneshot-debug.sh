@@ -56,6 +56,10 @@ if test -z "${MAKE_OPTIONS}" ; then
   MAKE_OPTIONS="-j2 -l 2.0"
 fi
 
+echo "--- qtguiglobal:"
+find /usr/local/Cellar/qt -iname qtguiglobal.h
+echo "--- qtguiglobal, end!"
+
 dirs="."
 dirs="${dirs} Tuvok/IO/test"
 echo "Configuring..."
