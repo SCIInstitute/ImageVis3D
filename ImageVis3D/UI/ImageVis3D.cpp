@@ -646,6 +646,14 @@ void MainWindow::closeEvent(QCloseEvent *event)
   if (m_bAutoSaveWSP) SaveDefaultWorkspace();
   m_MasterController.RemoveDebugOut(m_pDebugOut);
   m_pDebugOut = NULL;
+  { // close all subwindows first.
+  QList<QMdiSubWindow*> list = mdiArea->subWindowList();
+  for(QList<QMdiSubWindow*>::iterator it = list.begin(); it != list.end();
+      ++it) {
+    (*it)->close();
+    mdiArea->removeSubWindow(*it);
+  }
+  }
   event->accept();
 }
 
