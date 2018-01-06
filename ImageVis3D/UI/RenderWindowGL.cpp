@@ -176,8 +176,9 @@ static std::string renderer_name(MasterController::EVolumeRendererType ren) {
     case MasterController::DIRECTX_RAYCASTER: return "DX Raycaster";
     case MasterController::DIRECTX_GRIDLEAPER: return "DX GridLeaper";
     case MasterController::OPENGL_CHOOSE: return "OGL System's Choice";
-    case MasterController::RENDERER_LAST: return "Invalid!";
+    case MasterController::RENDERER_LAST: assert(false); return "Invalid!";
   }
+  assert(false);
   return "Invalid";
 }
 
