@@ -56,7 +56,7 @@ public:
 protected:
 
   /// Used to explicitly kill off our child render window.
-  void closeEvent(QCloseEvent *closeEvent);
+  void closeEvent(QCloseEvent *closeEvent) override;
 
 private:
 

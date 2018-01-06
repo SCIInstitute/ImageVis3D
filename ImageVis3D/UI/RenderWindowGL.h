@@ -74,19 +74,19 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     virtual ~RenderWindowGL();
     static const std::string& GetExtString() {return ms_glExtString;}
     virtual void SetBlendPrecision(
-        tuvok::AbstrRenderer::EBlendPrecision eBlendPrecisionMode);
-    virtual void UpdateWindow() {updateGL();}
-    virtual void InitializeContext() { glInit(); }
+        tuvok::AbstrRenderer::EBlendPrecision eBlendPrecisionMode) override;
+    virtual void UpdateWindow() override {updateGL();}
+    virtual void InitializeContext() override { glInit(); }
 
   protected:
-    virtual void ToggleFullscreen();
-    virtual void PaintOverlays();
-    virtual void RenderSeparatingLines();
-    virtual void SwapBuffers();
+    virtual void ToggleFullscreen() override;
+    virtual void PaintOverlays() override;
+    virtual void RenderSeparatingLines() override;
+    virtual void SwapBuffers() override;
 
   private:
 
-    virtual void InitializeRenderer();
+    virtual void InitializeRenderer() override;
     bool SetNewRenderer(bool bUseOnlyPowerOfTwo, 
                         bool bDownSampleTo8Bits,
                         bool bDisableBorder);
@@ -94,16 +94,16 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
 
   // **************** Qt widget connector calls
   protected:
-    virtual void ForceRepaint();
-    virtual QWidget* GetQtWidget() {return this;}
+    virtual void ForceRepaint() override;
+    virtual QWidget* GetQtWidget() override {return this;}
 
-    virtual void EmitStereoDisabled() {emit StereoDisabled();}
-    virtual void EmitRenderWindowViewChanged(int iViewID) {
+    virtual void EmitStereoDisabled() override {emit StereoDisabled();}
+    virtual void EmitRenderWindowViewChanged(int iViewID) override {
       emit RenderWindowViewChanged(iViewID);
     }
-    virtual void EmitWindowActive() {emit WindowActive(this);}
-    virtual void EmitWindowInActive() {emit WindowInActive(this);}
-    virtual void EmitWindowClosing() {emit WindowClosing(this);}
+    virtual void EmitWindowActive() override {emit WindowActive(this);}
+    virtual void EmitWindowInActive() override {emit WindowInActive(this);}
+    virtual void EmitWindowClosing() override {emit WindowClosing(this);}
 
   // **************** Qt callbacks
   public:
@@ -111,14 +111,11 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     QSize sizeHint() const {return QSize(m_vDefaultSize.x, m_vDefaultSize.y);}
 
   public slots:
-    virtual void ToggleRenderWindowView2x2() {
+    virtual void ToggleRenderWindowView2x2() override {
       RenderWindow::ToggleRenderWindowView2x2();
     }
-    virtual void ToggleRenderWindowViewSingle() {
+    virtual void ToggleRenderWindowViewSingle() override {
       RenderWindow::ToggleRenderWindowViewSingle();
-    }
-    virtual void SetTimeSlices(unsigned int iActive, unsigned int iInactive) {
-      RenderWindow::SetTimeSlices(iActive, iInactive);
     }
 
   signals:
@@ -139,8 +136,8 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     virtual void wheelEvent(QWheelEvent *event)         {QGLWidget::wheelEvent(event);        WheelEvent(event);}
     virtual void closeEvent(QCloseEvent *event)         {QGLWidget::closeEvent(event);        CloseEvent(event);}
     virtual void focusInEvent(QFocusEvent * event)      {QGLWidget::focusInEvent(event);      FocusInEvent(event);}
-    virtual void focusOutEvent ( QFocusEvent * event )  {QGLWidget::focusOutEvent(event);     FocusOutEvent(event);}
-    virtual void keyPressEvent ( QKeyEvent * event )    {QGLWidget::keyPressEvent(event);     KeyPressEvent(event);}
+    virtual void focusOutEvent(QFocusEvent * event)     {QGLWidget::focusOutEvent(event);     FocusOutEvent(event);}
+    virtual void keyPressEvent(QKeyEvent * event)       {QGLWidget::keyPressEvent(event);     KeyPressEvent(event);}
 
   // **************** End Qt callbacks
 };

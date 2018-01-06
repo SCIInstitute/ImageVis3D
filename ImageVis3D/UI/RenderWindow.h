@@ -396,8 +396,8 @@ class RenderWindow
     void WheelEvent(QWheelEvent *event);
     void CloseEvent(QCloseEvent *event);
     void FocusInEvent(QFocusEvent * event);
-    void FocusOutEvent ( QFocusEvent * event );
-    void KeyPressEvent ( QKeyEvent * event );
+    void FocusOutEvent(QFocusEvent * event);
+    void KeyPressEvent(QKeyEvent * event);
     void Cleanup();
     void Initialize();
     virtual void SwapBuffers() {}

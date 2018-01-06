@@ -264,7 +264,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void SetStayOpen(bool bStayOpenAfterScriptEnd);
     void SetRescaleFactors();
-    virtual void closeEvent(QCloseEvent *event);
+    virtual void closeEvent(QCloseEvent *event) override;
 
     void ShowAbout();
     void ChooseIsoColor();

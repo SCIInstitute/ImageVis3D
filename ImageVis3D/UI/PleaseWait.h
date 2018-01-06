@@ -65,7 +65,7 @@ class PleaseWaitDialog : public QDialog, protected Ui_PleaseWaitDialog
     }
     QLabel* GetStatusLabel() const {return label_Status;}
 
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event) override;
 
     bool Canceled() const { return m_bCanceled; }
   private slots:
