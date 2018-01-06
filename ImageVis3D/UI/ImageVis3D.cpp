@@ -445,7 +445,7 @@ void MainWindow::SetFoVSlider(int iValue) {
 
 void MainWindow::UpdateFoVLabel(int iValue) {
   QString desc;
-  desc = tr("Field of View (%1°):").arg(iValue);
+  desc = tr("Field of View (%1\u00B0):").arg(iValue);
   label_FoV->setText(desc);
 }
 
