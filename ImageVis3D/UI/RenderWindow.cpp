@@ -73,7 +73,7 @@ RenderWindow::RenderWindow(MasterController& masterController,
                            const UINTVECTOR2& vMinSize,
                            const UINTVECTOR2& vDefaultSize) :
   m_strDataset(dataset),
-  m_strID(""),
+  m_strID(QString("[%1] %2").arg(iCounter).arg(dataset)),
   m_Renderer(NULL),
   m_MasterController(masterController),
   m_bRenderSubsysOK(true),   // be optimistic :-)
@@ -102,8 +102,6 @@ RenderWindow::RenderWindow(MasterController& masterController,
   m_RTModeBeforeCapture(AbstrRenderer::RT_INVALID_MODE),
   m_SavedClipLocked(true)
 {
-  m_strID = "[%1] %2";
-  m_strID = m_strID.arg(iCounter).arg(dataset);
 }
 
 RenderWindow::~RenderWindow()
