@@ -126,18 +126,44 @@ class RenderWindowGL : public QGLWidget, public RenderWindow
     void WindowClosing(RenderWindow* sender);
 
   protected:
-    virtual void initializeGL() {InitializeRenderer();}
-    virtual void paintGL() {PaintRenderer();}
-    virtual void resizeGL(int width, int height) {ResizeRenderer(width, height);}
+    virtual void initializeGL() override { InitializeRenderer(); }
+    virtual void paintGL() override { PaintRenderer(); }
+    virtual void resizeGL(int width, int height) override {
+      ResizeRenderer(width, height);
+    }
 
-    virtual void mousePressEvent(QMouseEvent *event)    {QGLWidget::mousePressEvent(event);   MousePressEvent(event);}
-    virtual void mouseReleaseEvent(QMouseEvent *event)  {QGLWidget::mouseReleaseEvent(event); MouseReleaseEvent(event);}
-    virtual void mouseMoveEvent(QMouseEvent *event)     {QGLWidget::mouseMoveEvent(event);    MouseMoveEvent(event);}
-    virtual void wheelEvent(QWheelEvent *event)         {QGLWidget::wheelEvent(event);        WheelEvent(event);}
-    virtual void closeEvent(QCloseEvent *event)         {QGLWidget::closeEvent(event);        CloseEvent(event);}
-    virtual void focusInEvent(QFocusEvent * event)      {QGLWidget::focusInEvent(event);      FocusInEvent(event);}
-    virtual void focusOutEvent(QFocusEvent * event)     {QGLWidget::focusOutEvent(event);     FocusOutEvent(event);}
-    virtual void keyPressEvent(QKeyEvent * event)       {QGLWidget::keyPressEvent(event);     KeyPressEvent(event);}
+    virtual void mousePressEvent(QMouseEvent *event) override {
+      MousePressEvent(event);
+      QGLWidget::mousePressEvent(event);
+    }
+    virtual void mouseReleaseEvent(QMouseEvent *event) override {
+      MouseReleaseEvent(event);
+      QGLWidget::mouseReleaseEvent(event);
+    }
+    virtual void mouseMoveEvent(QMouseEvent *event) override {
+      MouseMoveEvent(event);
+      QGLWidget::mouseMoveEvent(event);
+    }
+    virtual void wheelEvent(QWheelEvent *event) override {
+      WheelEvent(event);
+      QGLWidget::wheelEvent(event);
+    }
+    virtual void closeEvent(QCloseEvent *event) override {
+      CloseEvent(event);
+      QGLWidget::closeEvent(event);
+    }
+    virtual void focusInEvent(QFocusEvent * event) override {
+      FocusInEvent(event);
+      QGLWidget::focusInEvent(event);
+    }
+    virtual void focusOutEvent(QFocusEvent * event) override {
+      FocusOutEvent(event);
+      QGLWidget::focusOutEvent(event);
+    }
+    virtual void keyPressEvent(QKeyEvent * event) override {
+      KeyPressEvent(event);
+      QGLWidget::keyPressEvent(event);
+    }
 
   // **************** End Qt callbacks
 };
