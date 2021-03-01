@@ -43,7 +43,7 @@
 # pragma GCC visibility push(default)
 #endif
 #include <QtGui/QtGui>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 #if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
 # pragma GCC visibility pop
@@ -108,7 +108,7 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
 
   /// @todo Check to see whether undo/redo breaks because of this lua call.
   ///       Might need to disable provenance for the call.
-  if (!ss->cexecRet<bool>(rn + ".loadDataset", m_strDataset.toStdString())) {
+  if (!ss->cexecRet<bool>(rn + ".loadDataset", m_strDataset.toStdWString())) {
     m_bRenderSubsysOK = false;
     return false;
   }
@@ -120,12 +120,16 @@ bool RenderWindowGL::SetNewRenderer(bool bUseOnlyPowerOfTwo,
 RenderWindowGL::~RenderWindowGL()
 {
   // needed for the cleanup call in the parent destructor to work properly
-  makeCurrent();
+  if (isValid())
+    makeCurrent();
+  else
+    return;
 
   // ignore mouse/keyboard events while we're killing ourself.
   GetQtWidget()->setEnabled(false);
 
-  m_MainWindow->closeMDISubWindowWithWidget(this);
+  // causes crash on windows if multiple widgets are open when the app closes, why are we calling this anyhow?
+  //m_MainWindow->closeMDISubWindowWithWidget(this);
 }
 
 static bool contains(const char* haystack, const char* needle) {
@@ -352,7 +356,7 @@ void RenderWindowGL::InitializeRenderer()
       m_bRenderSubsysOK = false;
     else {
   #ifdef DETECTED_OS_LINUX
-      ss->cexec(rn + ".addShaderPath", "/usr/share/imagevis3d/shaders");
+     ss->cexec(rn + ".addShaderPath", L"/usr/share/imagevis3d/shaders");
   #endif
       // Lua scripting will handle the shared_ptr appropriately. The 
       // initialize lua function has been marked as provenance exempt, and as

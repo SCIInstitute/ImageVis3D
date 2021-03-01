@@ -30,6 +30,9 @@
     <Filter Include="IO\3rd Party">
       <UniqueIdentifier>{6db69914-e5d2-44bd-8faf-b1506a67876e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IO\3rd Party\QFtp">
+      <UniqueIdentifier>{73888170-26e5-4670-9f01-f655df25860e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\bug.png">
@@ -68,6 +71,7 @@
     <None Include="..\Scripts\WinVM.bat">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <QRC Include="ImageVis3D.qrc">
@@ -291,6 +295,12 @@
     <ClCompile Include="IO\ZipFile.cpp">
       <Filter>IO</Filter>
     </ClCompile>
+    <ClCompile Include="IO\3rdParty\QFtp\qurlinfo.cpp">
+      <Filter>IO\3rd Party\QFtp</Filter>
+    </ClCompile>
+    <ClCompile Include="IO\3rdParty\QFtp\qftp.cpp">
+      <Filter>IO\3rd Party\QFtp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UI\AutoGen\ui_About.h">
@@ -371,6 +381,9 @@
     </ClInclude>
     <ClInclude Include="IO\ZipFile.h">
       <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="IO\3rdParty\QFtp\qurlinfo.h">
+      <Filter>IO\3rd Party\QFtp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -500,6 +513,9 @@
     </CustomBuild>
     <CustomBuild Include="UI\BasicSettingsDlg.h">
       <Filter>UI\Implemented Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="IO\3rdParty\QFtp\qftp.h">
+      <Filter>IO\3rd Party\QFtp</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

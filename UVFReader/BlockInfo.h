@@ -196,8 +196,8 @@ void PrintKVPBlockInfo(const KeyValuePairDataBlock* b) {
         << "      Values (" << b->GetKeyCount() << "): " << endl;
 
   for (size_t i = 0;i<b->GetKeyCount();i++) {
-    cout << "        " << b->GetKeyByIndex(i).c_str() << " -> "
-          << b->GetValueByIndex(i).c_str() << endl;
+    cout << "        " << SysTools::toNarrow(b->GetKeyByIndex(i)).c_str() << " -> "
+          << SysTools::toNarrow(b->GetValueByIndex(i)).c_str() << endl;
   }
 }
 
@@ -305,18 +305,17 @@ void PrintGeoBlockInfo(const GeometryDataBlock* b) {
     cout << "\n";
 }
 
-bool DisplayUVFInfo(std::string strUVFName, bool bVerify, bool bShowData, 
+bool DisplayUVFInfo(const std::wstring& strUVFName, bool bVerify, bool bShowData, 
                     bool bShow1dhist, bool bShow2dhist) {
-  wstring wstrUVFName(strUVFName.begin(), strUVFName.end());
-  UVF uvfFile(wstrUVFName);
+  UVF uvfFile(strUVFName);
   std::string strProblem;
   if (!uvfFile.Open(false, bVerify, false, &strProblem)) {
-    cerr << endl << "Unable to open file " << strUVFName.c_str() << "!"
+    cerr << endl << "Unable to open file " << SysTools::toNarrow(strUVFName).c_str() << "!"
           << endl << "Error: " << strProblem.c_str() << endl;
     return false;
   }
 
-  cout << "Successfully opened UVF File " << strUVFName.c_str() << endl;
+  cout << "Successfully opened UVF File " << SysTools::toNarrow(strUVFName).c_str() << endl;
   const GlobalHeader& gh = uvfFile.GetGlobalHeader();
 
   if (gh.bIsBigEndian) {
@@ -386,6 +385,8 @@ bool DisplayUVFInfo(std::string strUVFName, bool bVerify, bool bShowData,
         break;
       case UVFTables::BS_GEOMETRY:
         PrintGeoBlockInfo(dynamic_cast<const GeometryDataBlock*>(b));
+        break;
+      case UVFTables::BS_EMPTY:
         break;
       default:
         /// \todo handle other block types

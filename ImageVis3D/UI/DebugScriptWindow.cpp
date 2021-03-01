@@ -31,15 +31,15 @@
  */
 
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QTabWidget>
-#include <QtGui/QListWidget>
-#include <QtGui/QTextEdit>
-#include <QtGui/QLineEdit>
-#include <QtGui/QComboBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QLabel>
-#include <QtGui/QSpacerItem>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QSpacerItem>
 #include <QtCore/QEvent>
 #include <QtGui/QKeyEvent>
 

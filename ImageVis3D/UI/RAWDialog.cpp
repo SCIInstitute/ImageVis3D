@@ -41,7 +41,7 @@
 
 using namespace std;
 
-RAWDialog::RAWDialog(const string& strFilename, uint64_t iFileSize, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
+RAWDialog::RAWDialog(const wstring& strFilename, uint64_t iFileSize, QWidget* parent /* = 0 */, Qt::WindowFlags flags /* = 0 */) :
   QDialog(parent, flags),
   m_strFilename(strFilename),
   m_iFileSize(iFileSize)
@@ -56,8 +56,7 @@ RAWDialog::~RAWDialog(void)
 void RAWDialog::setupUi(QDialog *RAWDialog) {
   Ui_RAWDialog::setupUi(RAWDialog);
 
-
-  QString text = tr("Filename: %1").arg(QFileInfo(m_strFilename.c_str()).fileName());
+  QString text = tr("Filename: %1").arg(QFileInfo(QString::fromStdWString(m_strFilename)).fileName());
   label_srcFilename->setText(text);
 
   CheckValues();

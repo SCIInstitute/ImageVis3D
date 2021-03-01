@@ -5,3 +5,5 @@
 SUBDIRS           = Tuvok/IO/expressions Tuvok Tuvok/doc/genlua ImageVis3D CmdLineConverter ExtractDebugInfo UVFReader BatchRenderer
 TEMPLATE          = subdirs
 CONFIG           += ordered
+unix:QMAKE_CFLAGS_ISYSTEM=-I
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.13

@@ -38,8 +38,8 @@
 #include <cmath>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
-#include <QtGui/QMessageBox>
-#include <QtGui/QMdiSubWindow>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QMdiSubWindow>
 
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
 #include "../Tuvok/DebugOut/TextfileOut.h"
@@ -86,10 +86,10 @@ void MainWindow::CheckSettings() {
 void MainWindow::SaveSettings(
   uint64_t CPUMem, uint64_t maxCPU, uint64_t GPUMem,
   uint64_t maxGPU, bool ignoreMax,
-  const std::string& tempDir,
+  const std::wstring& tempDir,
   bool checksum, unsigned framerate, bool lowResSubframes, unsigned LODDelay,
   unsigned activeTS, unsigned inactiveTS, bool writeLog, bool showCrashDialog,
-  const std::string& logFile, uint32_t logLevel, bool showVersion,
+  const std::wstring& logFile, uint32_t logLevel, bool showVersion,
   bool autoSaveGeo, bool autoSaveWSP, bool autoLockCloned, bool absoluteLocks,
   bool checkForUpdates,
   bool checkForDevBuilds, bool showWelcome, bool invertWheel, bool i3mFeatures,
@@ -109,9 +109,7 @@ void MainWindow::SaveSettings(
     settings.setValue("OverrideDetectedMaxima", ignoreMax);
     settings.setValue("OverriddenCPUMax", static_cast<qulonglong>(maxCPU));
     settings.setValue("OverriddenGPUMax", static_cast<qulonglong>(maxGPU));
-
-    settings.setValue("TempDir", QString(tempDir.c_str()));
-
+    settings.setValue("TempDir", QString::fromStdWString(tempDir));
     settings.setValue("MaxBricksize", maxBrickSize);
     settings.setValue("BuilderBrickSize", builderBrickSize);
     settings.setValue("UseMedian", medianFilter);
@@ -121,7 +119,7 @@ void MainWindow::SaveSettings(
     settings.setValue("Layout", layout);
   } settings.endGroup();
 
-  settings.beginGroup("Performance"); {
+ settings.beginGroup("Performance"); {
     settings.setValue("Quickopen", checksum);
     settings.setValue("MinFrameRate", framerate);
     settings.setValue("UseAllMeans", lowResSubframes);
@@ -130,7 +128,7 @@ void MainWindow::SaveSettings(
     settings.setValue("InactiveTS", inactiveTS);
     settings.setValue("WriteLogFile", writeLog);
     settings.setValue("ShowCrashDialog", showCrashDialog);
-    settings.setValue("LogFileName", QString(logFile.c_str()));
+    settings.setValue("LogFileName", QString::fromStdWString(logFile));
     settings.setValue("LogLevel", logLevel);
   } settings.endGroup();
 
@@ -199,7 +197,7 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
     unsigned int iOverMaxCPU = settings.value("OverriddenCPUMax", 0).toUInt();
     unsigned int iOverMaxGPU = settings.value("OverriddenGPUMax", 0).toUInt();
 
-    string strTempDir(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
+    std::wstring strTempDir = settings.value("TempDir", QString::fromStdWString(m_strTempDir)).toString().toStdWString();
     unsigned int iMaxBrickSize = settings.value(
         "MaxBricksize", static_cast<qulonglong>(MathTools::Log2(
                 ss->cexecRet<uint64_t>("tuvok.io.getMaxBrickSize")))).toUInt();
@@ -282,7 +280,7 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
       bOverrideDetMax, iOverMaxCPU, iOverMaxGPU, strTempDir,
       bQuickopen, iMinFramerate, bRenderLowResIntermediateResults,
       iLODDelay, iActiveTS, iInactiveTS, bWriteLogFile,
-      bShowCrashDialog, string(strLogFileName.toAscii()),
+      bShowCrashDialog, strLogFileName.toStdWString(),
       iLogLevel, bShowVersionInTitle, bAutoSaveGEO,
       bAutoSaveWSP, bAutoLockClonedWindow, bAbsoluteViewLocks,
       bCheckForUpdatesOnStartUp, bCheckForDevBuilds,
@@ -341,10 +339,6 @@ bool MainWindow::ShowAdvancedSettings(bool bInitializeOnly) {
     }
 }
 
-#ifdef DETECTED_OS_WINDOWS
-double log2(double x) { return log(float(x)) / log(2.f); }
-#endif
-
 bool MainWindow::ShowBasicSettings(bool initOnly ) {
   QSettings set;
   PerformanceLevel lvl = static_cast<PerformanceLevel>(
@@ -369,7 +363,7 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
     const SystemInfo& sinfo = *(m_MasterController.SysInfo());
     uint64_t cpumem = sinfo.GetCPUMemSize() / (1024*1024);
     uint64_t gpumem = sinfo.GetGPUMemSize() / (1024*1024);
-    std::string tempDir;
+    std::wstring tempDir;
     if(!SysTools::GetTempDirectory(tempDir)) {
       SysTools::GetHomeDirectory(tempDir);
     }
@@ -384,12 +378,12 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
                            static_cast<uint64_t>(ceil(gpumem * 0.40)), gpumem,
                            false, tempDir, false,
                            60, true, 1500, 150, 70, false, showCrashDlg,
-                           tempDir+"imagevis3d.log", 1, true, true, true,
+                           tempDir+L"imagevis3d.log", 1, true, true, true,
                            true, false, true, false, true, true, i3mfeatures,
                            MasterController::OPENGL_2DSBVR, 0, true, false,
                            false, black, darkblue,
-                           white, "", 0, unsigned(log2(256)),
-                           unsigned(log2(128)), true, false, 1, 1,
+                           white, "", 0, 8 /* log2(256) */ ,
+                           7 /* log2(128) */, true, false, 1, 1,
                            false, false, 0);
         // TODO: If some other compressor or level or layout proofs to be faster
         //       , use the fastest here!
@@ -399,12 +393,12 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
                            static_cast<uint64_t>(ceil(gpumem * 0.60)), gpumem,
                            false, tempDir, false,
                            30, true, 1500, 200, 80, false, showCrashDlg,
-                           tempDir+"imagevis3d.log", 1, true, true, true,
+                           tempDir+L"imagevis3d.log", 1, true, true, true,
                            true, false, true, false, true, true, i3mfeatures,
                            MasterController::OPENGL_SBVR, 2, true, false,
                            false, black, darkblue,
-                           white, "", 0, unsigned(log2(256)),
-                           unsigned(log2(128)), true, false, 1, 1,
+                           white, "", 0, 8 /* log2(256 */,
+                           7 /* log2(128) */, true, false, 1, 1,
                            false, false, 0);
         // TODO: If some other compressor or level or layout proofs to be faster
         //       , use the fastest here!
@@ -414,12 +408,12 @@ bool MainWindow::ShowBasicSettings(bool initOnly ) {
                            static_cast<uint64_t>(ceil(gpumem * 0.75)), gpumem,
                            false, tempDir, false,
                            10, false, 1000, 500, 100, false, showCrashDlg,
-                           tempDir+"imagevis3d.log", 0, true, true, true,
+                           tempDir+L"imagevis3d.log", 0, true, true, true,
                            true, false, true, false, true, true, i3mfeatures,
                            MasterController::OPENGL_SBVR, 2, true, false,
                            false, black, darkblue,
-                           white, "", 0, unsigned(log2(256)),
-                           unsigned(log2(128)), true, false, 1, 1,
+                           white, "", 0, 8 /* log2(256 */,
+                           7 /* log2(128) */, true, false, 1, 1,
                            false, false, 0);
         // TODO: If some other compressor or level or layout proofs to be faster
         //       , use the fastest here!
@@ -509,7 +503,7 @@ void MainWindow::ApplySettings() {
   settings.beginGroup("Memory");
   uint64_t iMaxCPUmb = std::min<uint64_t>(settings.value("MaxCPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong(), m_MasterController.SysInfo()->GetCPUMemSize());
   uint64_t iMaxGPUmb = settings.value("MaxGPUMem", static_cast<qulonglong>(UINT64_INVALID)).toULongLong();
-  m_strTempDir = std::string(settings.value("TempDir", m_strTempDir.c_str()).toString().toAscii());
+  m_strTempDir = settings.value("TempDir", QString::fromStdWString(m_strTempDir)).toString().toStdWString();
   uint64_t iMaxCPU = iMaxCPUmb * 1000000; // IEEE MB standard
   uint64_t iMaxGPU = iMaxGPUmb * 1000000;
 
@@ -580,7 +574,7 @@ void MainWindow::ApplySettings(RenderWindow* renderWin) {
 
 
 void MainWindow::ToggleLogFile() {
-  if ( m_pTextout && string(m_strLogFileName.toAscii()) != m_pTextout->GetFileName()) {
+  if ( m_pTextout && m_strLogFileName.toStdWString() != m_pTextout->GetFileName()) {
     Controller::Instance().RemoveDebugOut(m_pTextout);
     m_pTextout = NULL;
   }
@@ -588,7 +582,7 @@ void MainWindow::ToggleLogFile() {
   if (m_bWriteLogFile) {
     bool bNewOut = !m_pTextout;
     if (!m_pTextout)
-      m_pTextout = new TextfileOut(string(m_strLogFileName.toAscii()));
+      m_pTextout = new TextfileOut(m_strLogFileName.toStdWString());
 
     m_pTextout->SetShowErrors(true);
     m_pTextout->SetShowWarnings(m_iLogLevel > 0);

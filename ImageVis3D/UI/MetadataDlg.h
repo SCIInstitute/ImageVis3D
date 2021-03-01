@@ -38,7 +38,7 @@
 #ifndef METADATADLG_H
 #define METADATADLG_H
 
-#include "AutoGen/ui_Metadata.h"
+#include <ui_Metadata.h>
 
 
 
@@ -50,7 +50,7 @@ class MetadataDlg : public QDialog, protected Ui_MetadataDlg
     virtual ~MetadataDlg();
 
     void SetFilename(const QString& strFilename);
-    void SetMetadata(const std::vector<std::pair<std::string, std::string>>& metadata);
+    void SetMetadata(const std::vector<std::pair<std::wstring, std::wstring>>& metadata);
 
 };
 

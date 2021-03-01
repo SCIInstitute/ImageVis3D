@@ -59,8 +59,8 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
                     Qt::WindowFlags flags = 0);
     virtual ~ScaleAndBiasDlg();
 
-    FLOATVECTOR3 scaleVec;
-    FLOATVECTOR3 biasVec;
+    FLOATVECTOR3 m_scaleVec;
+    FLOATVECTOR3 m_biasVec;
 
     bool GetApplyAll() const;
     FLOATMATRIX4 GetExpertTransform() const;
@@ -98,7 +98,7 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
 
     void UpdatePreSize();
     void UpdatePostSize();
-    void setupUi(QDialog *ScaleAndBiasDlg, const std::string& strDesc);
+    void setupUi(QDialog *ScaleAndBiasDlg, const QString& strDesc);
 
 };
 

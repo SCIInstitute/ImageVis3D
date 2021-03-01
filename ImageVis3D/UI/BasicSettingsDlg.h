@@ -1,7 +1,7 @@
 #ifndef IV3D_BASIC_SETTINGS_DLG_H
 #define IV3D_BASIC_SETTINGS_DLG_H
 
-#include <QtGui/QDialog>
+#include <QtWidgets/QDialog>
 #include "Basics/Vectors.h"
 
 class QLabel;

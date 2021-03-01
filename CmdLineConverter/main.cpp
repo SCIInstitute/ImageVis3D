@@ -90,17 +90,17 @@ enum {
   EXIT_FAILURE_NEED_UVF,      // UVFs must be input to eval expressions.
 };
 
-static int export_data(const IOManager&, const std::string in,
-                       const std::string out);
+static int export_data(const IOManager&, const std::wstring in,
+                       const std::wstring out);
 
 // reads an entire file into a string.
-static std::string readfile(const std::string& filename)
+static std::string readfile(const std::wstring& filename)
 {
   // open in append mode so the file pointer will be at EOF and we can
   // therefore easily/quickly figure out the file size.
-  std::ifstream ifs(filename.c_str(), std::ios::in | std::ios::ate);
+  std::ifstream ifs(SysTools::toNarrow(filename).c_str(), std::ios::in | std::ios::ate);
   if(!ifs.is_open()) {
-    T_ERROR("Could not open file '%s'", filename.c_str());
+    T_ERROR("Could not open file '%s'", SysTools::toNarrow(filename).c_str());
     return "";
   }
   std::ifstream::pos_type len = ifs.tellg();
@@ -128,15 +128,14 @@ int main(int argc, const char* argv[])
     #endif
   #endif
 */
-  std::vector<std::string> input;
-  std::string output, directory;
+  std::vector<std::wstring> input;
   std::string expression;
 
   // temp
-  string strInFile;
-  string strInFile2;
-  string strInDir;
-  string strOutFile;
+  wstring strInFile;
+  wstring strInFile2;
+  wstring strInDir;
+  wstring strOutFile;
   double fScale = 0.0;
   double fBias = 0.0;
   bool debug;
@@ -203,16 +202,19 @@ int main(int argc, const char* argv[])
 
     // which of "-i" or "-d" did they give?
     if(inputs.isSet()) {
-      strInFile = inputs.getValue()[0];
+      strInFile = SysTools::toWide(inputs.getValue()[0]);
       if(inputs.getValue().size() > 1) {
-        strInFile2 = inputs.getValue()[1];
+        strInFile2 = SysTools::toWide(inputs.getValue()[1]);
       }
-      input = inputs.getValue();
+
+      for (auto& e : inputs.getValue()) {
+        input.push_back(SysTools::toWide(e));
+      }
     }
     if(directory.isSet()) {
-      strInDir = directory.getValue();
+      strInDir = SysTools::toWide(directory.getValue());
     }
-    strOutFile = output.getValue();
+    strOutFile = SysTools::toWide(output.getValue());
     fBias = bias.getValue();
     fScale = scale.getValue();
     fMem = opt_mem.getValue();
@@ -222,9 +224,10 @@ int main(int argc, const char* argv[])
     level = opt_level.getValue();
 
     if(expr.isSet()) {
-      expression = expr.getValue();
       if(SysTools::FileExists(expression)) {
-        expression = readfile(expression);
+        expression = readfile(SysTools::toWide(expr.getValue()));
+      } else {
+        expression = expr.getValue();
       }
     }
     debug = dbg.getValue();
@@ -251,10 +254,10 @@ int main(int argc, const char* argv[])
     MESSAGE("Max allowed RAM utilization: %.2f", fMem * 100);
   }
   const uint64_t memTotal = Controller::Const().SysInfo().GetCPUMemSize();
-  Controller::Instance().SetMaxCPUMem((memTotal*fMem)/(1024*1024));
+  Controller::Instance().SetMaxCPUMem(uint64_t((memTotal*fMem)/(1024*1024)));
   uint32_t mem = uint32_t(Controller::Instance().SysInfo()->GetMaxUsableCPUMem()/1024/1024);
   MESSAGE("Using up to %u MB RAM", mem);
-  cout << endl;
+  std::cout << endl;
 
   IOManager ioMan;
   ioMan.SetCompression(compression);
@@ -265,7 +268,7 @@ int main(int argc, const char* argv[])
   // normal conversion.
   if(!expression.empty()) {
     // All the input files need to be UVFs if they're merging volumes.
-    for(std::vector<std::string>::const_iterator f = input.begin();
+    for(std::vector<std::wstring>::const_iterator f = input.begin();
         f != input.end(); ++f) {
       if(ioMan.NeedsConversion(*f)) {
         T_ERROR("Expression evaluation currently requires all input volumes "
@@ -287,21 +290,21 @@ int main(int argc, const char* argv[])
   // error detection there.
   if(strInDir.empty()) {
     for(auto f = input.cbegin(); f != input.cend(); ++f) {
-      std::string ext = SysTools::ToLowerCase(SysTools::GetExt(*f));
+      std::wstring ext = SysTools::ToLowerCase(SysTools::GetExt(*f));
       bool conv_vol = ioMan.GetConverterForExt(ext, false, true) != NULL;
       bool conv_geo = ioMan.GetGeoConverterForExt(ext, false, true) != NULL;
       if(conv_vol || conv_geo || !ioMan.NeedsConversion(*f)) { continue; }
 
       if(!conv_vol && !conv_geo) {
-        T_ERROR("Unknown file type for '%s'", f->c_str());
+        T_ERROR("Unknown file type for '%s'", SysTools::toNarrow(*f).c_str());
         return EXIT_FAILURE_UNKNOWN_OUT;
       }
     }
   }
 
-  string targetType = SysTools::ToLowerCase(SysTools::GetExt(strOutFile));
+  wstring targetType = SysTools::ToLowerCase(SysTools::GetExt(strOutFile));
   if (!strInFile.empty()) {
-    string sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
+    wstring sourceType = SysTools::ToLowerCase(SysTools::GetExt(strInFile));
 
     bool bIsVolExtOut = ioMan.GetConverterForExt(targetType, false, false) != NULL;
     bool bIsGeoExtOut = ioMan.GetGeoConverterForExt(targetType, false, false) != NULL;
@@ -313,7 +316,7 @@ int main(int argc, const char* argv[])
     }
 
     if (!bIsVolExt1 && !bIsGeoExt1)  {
-      std::cerr << "error: Unknown file type for '" << strInFile << "'\n";
+      std::cerr << "error: Unknown file type for '" << SysTools::toNarrow(strInFile) << "'\n";
       return EXIT_FAILURE_UNKNOWN_1;
     }
 
@@ -359,57 +362,57 @@ int main(int argc, const char* argv[])
 
     if (strInFile2.empty()) {
       if (bIsVolExt1) {
-        if (targetType == "uvf" && sourceType == "uvf") {
-          cout << endl << "Running in UVF to UVF mode, "
-               << "perserving only the raw data from " << strInFile << " to "
-               << strOutFile << endl;
+        if (targetType == L"uvf" && sourceType == L"uvf") {
+          std::cout << endl << "Running in UVF to UVF mode, "
+               << "perserving only the raw data from " << SysTools::toNarrow(strInFile) << " to "
+               << SysTools::toNarrow(strOutFile) << endl;
 
-          cout << "Step 1. Extracting raw data" << endl;
+          std::cout << "Step 1. Extracting raw data" << endl;
           /// use some simple format as intermediate file
-          string tmpFile = SysTools::ChangeExt(strOutFile,"nrrd");
+          wstring tmpFile = SysTools::ChangeExt(strOutFile,L"nrrd");
 
           // HACK: use the output file's dir as temp dir
           if (ioMan.ConvertDataset(strInFile, tmpFile,
                                    SysTools::GetPath(tmpFile), true,
                                    bricksize, brickoverlap)) {
-            cout << endl << "Success." << endl << endl;
+            std::cout << endl << "Success." << endl << endl;
           } else {
-            cout << endl << "Extraction failed!" << endl << endl;
+            std::cout << endl << "Extraction failed!" << endl << endl;
             return EXIT_FAILURE_TO_RAW;
           }
 
-          cout << "Step 2. Writing new UVF file" << endl;
+          std::cout << "Step 2. Writing new UVF file" << endl;
           // HACK: use the output file's dir as temp dir
           if (ioMan.ConvertDataset(tmpFile, strOutFile,
                                    SysTools::GetPath(strOutFile), true,
                                    bricksize, brickoverlap)) {
-            if(std::remove(tmpFile.c_str()) == -1) {
-             cout << endl << "Conversion succeeded but "
-                  << " could not delete tmp file " << tmpFile << "\n\n";
+            if(!SysTools::RemoveFile(tmpFile)) {
+              std::cout << endl << "Conversion succeeded but "
+                  << " could not delete tmp file " << SysTools::toNarrow(tmpFile) << "\n\n";
             } else {
-             cout << "\nSuccess.\n\n";
+              std::cout << "\nSuccess.\n\n";
             }
             return EXIT_SUCCESS;
           } else {
-            if(std::remove(tmpFile.c_str()) == -1) {
-             cout << "\nUVF write failed and could not delete tmp file "
-                  << tmpFile << "\n\n";
+            if(!SysTools::RemoveFile(tmpFile)) {
+             std::cout << "\nUVF write failed and could not delete tmp file "
+                  << SysTools::toNarrow(tmpFile) << "\n\n";
             } else {
-             cout << "\nUVF write failed.\n\n";
+             std::cout << "\nUVF write failed.\n\n";
             }
             return EXIT_FAILURE_TO_UVF;
           }
         } else {
-          cout << endl << "Running in volume file mode.\nConverting "
-               << strInFile << " to " << strOutFile << "\n\n";
+          std::cout << endl << "Running in volume file mode.\nConverting "
+               << SysTools::toNarrow(strInFile) << " to " << SysTools::toNarrow(strOutFile) << "\n\n";
           // HACK: use the output file's dir as temp dir
           if (ioMan.ConvertDataset(strInFile, strOutFile,
                                    SysTools::GetPath(strOutFile), true,
                                    bricksize, brickoverlap)) {
-            cout << "\nSuccess.\n\n";
+            std::cout << "\nSuccess.\n\n";
             return EXIT_SUCCESS;
           } else {
-            cout << "\nConversion failed!\n\n";
+            std::cout << "\nConversion failed!\n\n";
             return EXIT_FAILURE_GENERAL;
           }
         }
@@ -417,10 +420,10 @@ int main(int argc, const char* argv[])
           AbstrGeoConverter* sourceConv = ioMan.GetGeoConverterForExt(sourceType, false, true);
           AbstrGeoConverter* targetConv = ioMan.GetGeoConverterForExt(targetType, true, false);
 
-          cout << "\nRunning in geometry file mode.\n"
-               << "Converting " << strInFile
-               << " (" << sourceConv->GetDesc() << ") to "
-               << strOutFile << " (" << targetConv->GetDesc() << ")\n";
+          std::cout << "\nRunning in geometry file mode.\n"
+               << "Converting " << SysTools::toNarrow(strInFile)
+               << " (" << SysTools::toNarrow(sourceConv->GetDesc()) << ") to "
+               << SysTools::toNarrow(strOutFile) << " (" << SysTools::toNarrow(targetConv->GetDesc()) << ")\n";
           std::shared_ptr<Mesh> m;
           try {
             m = sourceConv->ConvertToMesh(strInFile);
@@ -436,13 +439,13 @@ int main(int argc, const char* argv[])
       }
     } else {
 
-      string sourceType2 = SysTools::ToLowerCase(SysTools::GetExt(strInFile2));
+      wstring sourceType2 = SysTools::ToLowerCase(SysTools::GetExt(strInFile2));
 
       bool bIsVolExt2 = ioMan.GetConverterForExt(sourceType2, false, true) != NULL;
       bool bIsGeoExt2 = ioMan.GetGeoConverterForExt(sourceType2, false, true) != NULL;
 
       if (!bIsVolExt2 && !bIsGeoExt2)  {
-        std::cerr << "error: Unknown file type for '" << strInFile2 << "'\n";
+        std::cerr << "error: Unknown file type for '" << SysTools::toNarrow(strInFile2) << "'\n";
         return EXIT_FAILURE_UNKNOWN_2;
       }
 
@@ -451,7 +454,7 @@ int main(int argc, const char* argv[])
         return EXIT_FAILURE_MESH_MERGE;
       }
 
-      vector<string> vDataSets;
+      vector<wstring> vDataSets;
       vector<double> vScales;
       vector<double> vBiases;
       vDataSets.push_back(strInFile);
@@ -461,50 +464,50 @@ int main(int argc, const char* argv[])
       vScales.push_back(fScale);
       vBiases.push_back(fBias);
 
-      cout << endl << "Running in merge mode.\nConverting";
-      for (size_t i = 0;i<<vDataSets.size();i++) {
-        cout << " " << vDataSets[i];
+      std::cout << endl << "Running in merge mode.\nConverting";
+      for (auto& d : vDataSets) {
+        std::cout << " " << SysTools::toNarrow(d);
       }
-      cout << " to " << strOutFile << "\n\n";
+      std::cout << " to " << SysTools::toNarrow(strOutFile) << "\n\n";
 
       // HACK: use the output file's dir as temp dir
       if (ioMan.MergeDatasets(vDataSets, vScales, vBiases, strOutFile,
                               SysTools::GetPath(strOutFile))) {
-        cout << "\nSuccess.\n\n";
+        std::cout << "\nSuccess.\n\n";
         return EXIT_SUCCESS;
       } else {
-        cout << "\nMerging datasets failed!\n\n";
+        std::cout << "\nMerging datasets failed!\n\n";
         return EXIT_FAILURE_MERGE;
       }
     }
   } else {
-    if (strInFile2 != "") {
-      cout << "\nError: Currently file merging is only supported "
+    if (strInFile2 != L"") {
+      std::cout << "\nError: Currently file merging is only supported "
            << " in file mode (i.e. specify -f and not -d).\n\n";
       return EXIT_FAILURE_DIR_MERGE;
     }
 
     /// \todo: remove this restricition (one solution would be to create a UVF
     // first and then convert it to whatever is needed)
-    if (targetType != "uvf") {
-      cout << "\nError: Currently UVF is the only supported "
+    if (targetType != L"uvf") {
+      std::cout << "\nError: Currently UVF is the only supported "
            << "target type for directory processing.\n\n";
       return EXIT_FAILURE_MERGE_NO_UVF;
     }
 
-    cout << "\nRunning in directory mode.\nConverting "
-         << strInDir << " to " << strOutFile << "\n\n";
+    std::cout << "\nRunning in directory mode.\nConverting "
+         << SysTools::toNarrow(strInDir) << " to " << SysTools::toNarrow(strOutFile) << "\n\n";
 
     vector<std::shared_ptr<FileStackInfo>> dirinfo =
       ioMan.ScanDirectory(strInDir);
 
-    vector<string> vStrFilenames(dirinfo.size());
+    vector<wstring> vStrFilenames(dirinfo.size());
     if (dirinfo.size() == 1) {
        vStrFilenames[0] = strOutFile;
     } else {
-      string strFilenameAndDirectory = SysTools::RemoveExt(strOutFile);
+      wstring strFilenameAndDirectory = SysTools::RemoveExt(strOutFile);
       // should be "uvf" but we never know what the user specified
-      string strExt = SysTools::GetExt(strOutFile);
+      wstring strExt = SysTools::GetExt(strOutFile);
       for (size_t i = 0;i<dirinfo.size();i++) {
         vStrFilenames[i] = SysTools::AppendFilename(strOutFile, int(i)+1);
       }
@@ -515,16 +518,16 @@ int main(int argc, const char* argv[])
       if (ioMan.ConvertDataset(&*dirinfo[i], vStrFilenames[i],
                                SysTools::GetPath(vStrFilenames[i]),
                                bricksize, brickoverlap, false)) {
-        cout << "\nSuccess.\n\n";
+        std::cout << "\nSuccess.\n\n";
       } else {
-        cout << "\nConversion failed!\n\n";
+        std::cout << "\nConversion failed!\n\n";
         iFailCount++;
         return EXIT_FAILURE_GENERAL_DIR;
       }
     }
 
     if (iFailCount != 0)  {
-      cout << endl << iFailCount << " out of " << dirinfo.size()
+      std::cout << endl << iFailCount << " out of " << dirinfo.size()
            << " stacks failed to convert properly.\n\n";
     }
 
@@ -533,7 +536,7 @@ int main(int argc, const char* argv[])
 }
 
 static int
-export_data(const IOManager& iom, const std::string in, const std::string out)
+export_data(const IOManager& iom, const std::wstring in, const std::wstring out)
 {
   assert(iom.NeedsConversion(in) == false);
   tuvok::Dataset* ds = iom.CreateDataset(in, 256, false);

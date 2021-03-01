@@ -567,10 +567,10 @@ void Q1DTransferFunction::paintEvent(QPaintEvent *event) {
 }
 
 bool Q1DTransferFunction::QLoadFromFile(const QString& strFilename) {
-  return this->LoadFromFile(strFilename.toStdString());
+  return this->LoadFromFile(strFilename.toStdWString());
 }
 
-bool Q1DTransferFunction::LoadFromFile(const std::string& strFilename) {
+bool Q1DTransferFunction::LoadFromFile(const std::wstring& strFilename) {
   // hand the load call over to the TransferFunction1D class
   size_t iSize = 0;
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
@@ -600,7 +600,7 @@ bool Q1DTransferFunction::AddFromFile(const QString& strFilename) {
           m_trans.fqName() + ".getColorData");
 
   TransferFunction1D other(iSize);
-  if( other.Load(strFilename.toStdString(), iSize) ) {
+  if( other.Load(strFilename.toStdWString(), iSize) ) {
 
     for (size_t i = 0;i<iSize;i++)
       (*cdata)[i] += other.GetColor(i);
@@ -627,7 +627,7 @@ bool Q1DTransferFunction::SubtractFromFile(const QString& strFilename) {
           m_trans.fqName() + ".getColorData");
 
   TransferFunction1D other(iSize);
-  if( other.Load(strFilename.toStdString(), iSize) ) {
+  if( other.Load(strFilename.toStdWString(), iSize) ) {
 
     for (size_t i = 0;i<iSize;i++)
       (*cdata)[i] -= other.GetColor(i);
@@ -645,5 +645,5 @@ bool Q1DTransferFunction::SaveToFile(const QString& strFilename) {
   // hand the save call over to the TransferFunction1D class
   std::shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   return ss->cexecRet<bool>(m_trans.fqName() + ".save", 
-                            strFilename.toStdString());
+                            strFilename.toStdWString());
 }

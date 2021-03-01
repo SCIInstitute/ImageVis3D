@@ -38,7 +38,7 @@
 #ifndef BUGREPDLG_H
 #define BUGREPDLG_H
 
-#include "AutoGen/ui_BugRepDlg.h"
+#include <ui_BugRepDlg.h>
 #include <vector>
 #include <string>
 #include <StdDefines.h>
@@ -47,7 +47,7 @@ class BugRepDlg : public QDialog, protected Ui_BugRepDlg
 {
   Q_OBJECT
   public:
-    BugRepDlg(QWidget* parent, Qt::WindowFlags flags = Qt::Tool, const std::string& strSubmitFile="");
+    BugRepDlg(QWidget* parent, Qt::WindowFlags flags = Qt::Tool, const std::wstring& strSubmitFile=L"");
     virtual ~BugRepDlg();
 
     std::string GetDescription() const;

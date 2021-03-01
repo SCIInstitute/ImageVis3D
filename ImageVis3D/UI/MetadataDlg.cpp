@@ -51,11 +51,11 @@ void MetadataDlg::SetFilename(const QString& strFilename) {
   TextLabel_Metadata->setText("Metadata for " + strFilename);
 }
 
-void MetadataDlg::SetMetadata(const std::vector<std::pair<std::string, std::string>>& metadata) {
+void MetadataDlg::SetMetadata(const std::vector<std::pair<std::wstring, std::wstring>>& metadata) {
   listWidget_metadata->clear();
 
   for (size_t i = 0;i<metadata.size();i++) {
-    QString s = tr("%1 = %2").arg(metadata[i].first.c_str()).arg(metadata[i].second.c_str());
+    QString s = QString::fromStdWString(metadata[i].first) + " = " + QString::fromStdWString(metadata[i].second);
     listWidget_metadata->addItem(s);
   }
 }

@@ -39,11 +39,11 @@
 #include "BrowseData.h"
 
 #include <QtCore/QTimer>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QFileDialog>
 #include <QtCore/QSettings>
-#include <QtGui/QInputDialog>
-#include <QtGui/QColorDialog>
+#include <QtWidgets/QInputDialog>
+#include <QtWidgets/QColorDialog>
 
 #include "PleaseWait.h"
 
@@ -150,8 +150,8 @@ void MainWindow::ApplyUpdate() {
   if (radioButton_2DTrans->isChecked()) m_2DTransferFunction->ApplyFunction();
 }
 
-bool MainWindow::Transfer1DLoad(string strFilename) {
-  return (m_1DTransferFunction) ? m_1DTransferFunction->LoadFromFile(strFilename.c_str()) : false;
+bool MainWindow::Transfer1DLoad(const std::wstring& strFilename) {
+  return (m_1DTransferFunction) ? m_1DTransferFunction->LoadFromFile(strFilename) : false;
 }
 
 void MainWindow::Transfer1DLoad() {
@@ -163,12 +163,12 @@ void MainWindow::Transfer1DLoad() {
   // First try to grab the directory from the currently-opened file.
   if(m_pActiveRenderWin) {
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
-    strLastDir = QString(SysTools::GetPath(
-            ss->cexecRet<string>(ds.fqName() + ".fullpath")).c_str());
+    strLastDir = QString::fromStdWString(SysTools::GetPath(
+            ss->cexecRet<wstring>(ds.fqName() + ".fullpath")));
   }
 
   // if that didn't work, fall back on our previously saved path.
-  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdString())) {
+  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdWString())) {
     strLastDir = settings.value("Folders/Transfer1DLoad", ".").toString();
   }
 
@@ -189,31 +189,31 @@ void MainWindow::Transfer1DLoad() {
   }
 }
 
-void MainWindow::LoadTransferFunction1D(const std::string& tf) {
+void MainWindow::LoadTransferFunction1D(const std::wstring& tf) {
   m_1DTransferFunction->LoadFromFile(tf);
 }
 
 void MainWindow::Transfer1DSave() {
   QSettings settings;
   QString strLastDir="";
-  std::string defaultFilename;
+  std::wstring defaultFilename;
   
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   // First try to grab the directory from the currently-opened file...
   if(m_pActiveRenderWin) {
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
-    string dsFullpath = ss->cexecRet<string>(ds.fqName() + ".fullpath");
-    strLastDir = QString(SysTools::GetPath(dsFullpath).c_str());
-    defaultFilename = SysTools::ChangeExt(dsFullpath, "1dt");
+    wstring dsFullpath = ss->cexecRet<wstring>(ds.fqName() + ".fullpath");
+    strLastDir = QString::fromStdWString(SysTools::GetPath(dsFullpath));
+    defaultFilename = SysTools::ChangeExt(dsFullpath, L"1dt");
   }
 
-  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdString()+".")) {
+  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdWString()+L".")) {
     // ...if that didn't work, fall back on our previously saved path.
     strLastDir = settings.value("Folders/Transfer1DSave", ".").toString();
   } else {
     // if the path exitst propose the default name as save default
-    strLastDir = QString(defaultFilename.c_str());
+    strLastDir = QString::fromStdWString(defaultFilename);
   }
 
   QString selectedFilter;
@@ -228,7 +228,7 @@ void MainWindow::Transfer1DSave() {
          "1D Transfer function File (*.1dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "1dt").c_str();
+    fileName = QString::fromStdWString(SysTools::CheckExt(fileName.toStdWString(), L"1dt"));
     settings.setValue("Folders/Transfer1DSave", QFileInfo(fileName).absoluteDir().path());
     m_1DTransferFunction->SaveToFile(fileName);
   }
@@ -252,9 +252,11 @@ void MainWindow::Populate1DTFLibList() {
   settings.setValue("Folders/Transfer1DLib", strLibDir);
 
 
-  vector<string> files = SysTools::GetDirContents(string(strLibDir.toAscii()), "*", "1dt");
-  for (size_t i = 0;i<files.size();i++)       
-    comboBox_1DTFLib->insertItem(0,SysTools::RemoveExt(SysTools::GetFilename(files[i])).c_str(),files[i].c_str());
+  std::vector<std::wstring> files = SysTools::GetDirContents(strLibDir.toStdWString(), L"*", L"1dt");
+  for (size_t i = 0; i < files.size(); i++) {
+    std::wstring desc = SysTools::RemoveExt(SysTools::GetFilename(files[i]));
+    comboBox_1DTFLib->insertItem(0, QString::fromStdWString(desc), QString::fromStdWString(files[i]));
+  }
 }
 
 void MainWindow::Transfer1DAddToLib() {
@@ -273,7 +275,7 @@ void MainWindow::Transfer1DAddToLib() {
          "1D Transfer function File (*.1dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "1dt").c_str();
+    fileName = QString::fromStdWString(SysTools::CheckExt(fileName.toStdWString(), L"1dt"));
     settings.setValue("Folders/Transfer1DSave", QFileInfo(fileName).absoluteDir().path());
     m_1DTransferFunction->SaveToFile(fileName);
     Populate1DTFLibList();

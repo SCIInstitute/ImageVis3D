@@ -37,6 +37,9 @@
 
 #include <string>
 #include <StdDefines.h>
+
+#include <QtWidgets/QMdiSubWindow>
+
 #include "../Tuvok/Controller/MasterController.h"
 #include "../Tuvok/LuaScripting/LuaScripting.h"
 #include "../Tuvok/LuaScripting/LuaClassRegistration.h"
@@ -50,7 +53,6 @@ public:
                RenderWindow* renderWin,
                QWidget *parent = 0,
                Qt::WindowFlags flags = 0);
-  virtual ~MDIRenderWin();
 
 protected:
 

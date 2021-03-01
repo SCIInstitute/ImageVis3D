@@ -82,7 +82,7 @@ Q2DTransferFunction::Q2DTransferFunction(MasterController& masterController, QWi
 {
   SetColor(isEnabled());
 
-  setFocusPolicy(Qt::StrongFocus);
+  setFocusPolicy(Qt::StrongFocus); 
 }
 
 Q2DTransferFunction::~Q2DTransferFunction(void)
@@ -373,8 +373,8 @@ void Q2DTransferFunction::DrawSwatcheDecoration(QPainter& painter) {
           break;
         case PT_OTHER:
           painter.setPen(circlePen);
-          for(size_t i=0; i < pointList.size(); ++i) {
-            DrawPolyVertex(painter, pointList[i]);
+          for(size_t j=0; j < pointList.size(); ++j) {
+            DrawPolyVertex(painter, pointList[j]);
           }
           break;
         default : break;
@@ -1237,7 +1237,7 @@ bool Q2DTransferFunction::LoadFromFile(const QString& strFilename) {
   VECTOR2<size_t> transSize = ss->cexecRet<VECTOR2<size_t>>(m_trans.fqName() +
                                                             ".getSize");
   if (ss->cexecRet<bool>(m_trans.fqName() + ".loadWithSize", 
-                         strFilename.toStdString(), transSize)) {
+                         strFilename.toStdWString(), transSize)) {
     m_iActiveSwatchIndex = 0;
     m_bBackdropCacheUptodate = false;
     update();
@@ -1251,7 +1251,7 @@ bool Q2DTransferFunction::SaveToFile(const QString& strFilename) {
   // hand the save call over to the TransferFunction1D class
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   return ss->cexecRet<bool>(m_trans.fqName() + ".save", 
-                            strFilename.toStdString());
+                            strFilename.toStdWString());
 }
 
 

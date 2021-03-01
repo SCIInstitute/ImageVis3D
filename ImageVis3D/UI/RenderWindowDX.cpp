@@ -86,7 +86,7 @@ RenderWindowDX::RenderWindowDX(MasterController& masterController,
     // setWinID is a function that has been specifically registered by
     // DXRenderer. HWND type is handled as a special case (see DXRenderer.h).
     ss->cexec(rn + ".setWinID", parent->winId());
-    if (!ss->cexecRet<bool>(rn + ".loadDataset", m_strDataset.toStdString())) {
+    if (!ss->cexecRet<bool>(rn + ".loadDataset", m_strDataset.toStdWString())) {
       InitializeRenderer();
       Initialize();
 

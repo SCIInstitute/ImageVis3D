@@ -39,11 +39,11 @@
 #include "BrowseData.h"
 
 #include <QtCore/QTimer>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QFileDialog>
 #include <QtCore/QSettings>
-#include <QtGui/QInputDialog>
-#include <QtGui/QColorDialog>
+#include <QtWidgets/QInputDialog>
+#include <QtWidgets/QColorDialog>
 
 #include "PleaseWait.h"
 
@@ -292,8 +292,8 @@ void MainWindow::Transfer2DDeleteGradient() {
 }
 
 
-bool MainWindow::Transfer2DLoad(string strFilename) {
-  return (m_2DTransferFunction) ? m_2DTransferFunction->LoadFromFile(strFilename.c_str()) : false;
+bool MainWindow::Transfer2DLoad(const std::wstring& strFilename) {
+  return (m_2DTransferFunction) ? m_2DTransferFunction->LoadFromFile(QString::fromStdWString(strFilename)) : false;
 }
 
 void MainWindow::Transfer2DLoad() {
@@ -305,12 +305,12 @@ void MainWindow::Transfer2DLoad() {
   // First try to grab the directory from the currently-opened file.
   if(m_pActiveRenderWin) {
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
-    strLastDir = QString(SysTools::GetPath(
-            ss->cexecRet<string>(ds.fqName() + ".fullpath")).c_str());
+    strLastDir = QString::fromStdWString(SysTools::GetPath(
+            ss->cexecRet<wstring>(ds.fqName() + ".fullpath")));
   }
 
   // if that didn't work, fall back on our previously saved path.
-  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdString())) {
+  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdWString())) {
     strLastDir = settings.value("Folders/Transfer2DLoad", ".").toString();
   }
 
@@ -330,32 +330,32 @@ void MainWindow::Transfer2DLoad() {
   }
 }
 
-void MainWindow::LoadTransferFunction2D(const std::string& tf) {
-  m_2DTransferFunction->LoadFromFile(QString(tf.c_str()));
+void MainWindow::LoadTransferFunction2D(const std::wstring& tf) {
+  m_2DTransferFunction->LoadFromFile(QString::fromStdWString(tf));
 }
 
 void MainWindow::Transfer2DSave() {
   QSettings settings;
   QString strLastDir="";
-  std::string defaultFilename;
+  std::wstring defaultFilename;
 
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   // First try to grab the directory from the currently-opened file.
   if(m_pActiveRenderWin) {
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
-    string dsFullpath = ss->cexecRet<string>(ds.fqName() + ".fullpath");
-    strLastDir = QString(SysTools::GetPath(dsFullpath).c_str());
-    defaultFilename = SysTools::ChangeExt(dsFullpath, "2dt");
+    wstring dsFullpath = ss->cexecRet<wstring>(ds.fqName() + ".fullpath");
+    strLastDir = QString::fromStdWString(SysTools::GetPath(dsFullpath));
+    defaultFilename = SysTools::ChangeExt(dsFullpath, L"2dt");
   }
 
   // if that didn't work, fall back on our previously saved path.
-  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdString()+".")) {
+  if(strLastDir == "" || !SysTools::FileExists(strLastDir.toStdWString()+L".")) {
     // ...if that didn't work, fall back on our previously saved path.
     strLastDir = settings.value("Folders/Transfer2DSave", ".").toString();
   } else {
     // if the path exitst propose the default name as save default
-    strLastDir = QString(defaultFilename.c_str());
+    strLastDir = QString::fromStdWString(defaultFilename);
   }
 
   QString selectedFilter;
@@ -369,7 +369,7 @@ void MainWindow::Transfer2DSave() {
          "2D Transfer function File (*.2dt)",&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "2dt").c_str();
+    fileName = QString::fromStdWString(SysTools::CheckExt(fileName.toStdWString(), L"2dt"));
     settings.setValue("Folders/Transfer2DSave", QFileInfo(fileName).absoluteDir().path());
     m_2DTransferFunction->SaveToFile(fileName);
   }

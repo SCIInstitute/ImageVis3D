@@ -44,45 +44,45 @@
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -182,11 +182,17 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q</Command>
+      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Cored.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Guid.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5OpenGLd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Widgetsd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Networkd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\plugins\platforms\qwindowsd.dll" "$(TargetDir)platforms\" /r /y /q</Command>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR32)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>UI/Autogen;.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR32)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -198,7 +204,7 @@
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmaind.lib;QtOpenGLd.lib;QtGuid.lib;QtCored.lib;QTNetworkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmaind.lib;Qt5Widgetsd.lib;Qt5OpenGLd.lib;Qt5Guid.lib;Qt5Cored.lib;Qt5Networkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-32.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Tuvok\Build\$(Platform)\$(Configuration);$(QTDIR32)\lib;$(QTDIR32)\plugins\imageformats;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -209,14 +215,20 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q</Command>
+      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Cored.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Guid.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5OpenGLd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Widgetsd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Networkd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\plugins\platforms\qwindowsd.dll" "$(TargetDir)platforms\" /r /y /q</Command>
     </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR64)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>UI/Autogen;.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR64)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -228,7 +240,7 @@
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmaind.lib;QtOpenGLd.lib;QtGuid.lib;QtCored.lib;QTNetworkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmaind.lib;Qt5Widgetsd.lib;Qt5OpenGLd.lib;Qt5Guid.lib;Qt5Cored.lib;Qt5Networkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-64.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Tuvok\Build\$(Platform)\$(Configuration);$(QTDIR64)\lib;$(QTDIR64)\plugins\imageformats;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -239,13 +251,19 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q</Command>
+      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Core.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Gui.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5OpenGL.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Widgets.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Network.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\plugins\platforms\qwindows.dll" "$(TargetDir)platforms\" /r /y /q</Command>
     </PreBuildEvent>
     <ClCompile>
       <AdditionalOptions>/U"_SECURE_SCL" /D"_SECURE_SCL=0" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR32)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>UI/Autogen;.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR32)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -256,7 +274,7 @@
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmain.lib;QtGui.lib;QtCore.lib;QtOpenGL.lib;QtNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmain.lib;Qt5Widgets.lib;Qt5Gui.lib;Qt5Core.lib;Qt5OpenGL.lib;Qt5Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-32.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Tuvok\Build\$(Platform)\$(Configuration);$(QTDIR32)\lib;$(QTDIR32)\plugins\imageformats;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -269,7 +287,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q</Command>
+      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Core.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Gui.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5OpenGL.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Widgets.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Network.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\plugins\platforms\qwindows.dll" "$(TargetDir)platforms\" /r /y /q</Command>
     </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
@@ -278,7 +302,7 @@
       <AdditionalOptions>/U"_SECURE_SCL" /D"_SECURE_SCL=0" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR64)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>UI/Autogen;.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR64)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -289,7 +313,7 @@
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmain.lib;QtGui.lib;QtCore.lib;QtOpenGL.lib;QtNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmain.lib;Qt5Widgets.lib;Qt5Gui.lib;Qt5Core.lib;Qt5OpenGL.lib;Qt5Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>LinkVerboseLib</ShowProgress>
       <OutputFile>$(OutDir)$(ProjectName)-64.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Tuvok\Build\$(Platform)\$(Configuration);$(QTDIR64)\lib;$(QTDIR64)\plugins\imageformats;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -308,11 +332,17 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">
     <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q</Command>
+      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Cored.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Guid.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5OpenGLd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Widgetsd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Networkd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\plugins\platforms\qwindowsd.dll" "$(TargetDir)platforms\" /r /y /q</Command>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR32)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>UI/Autogen;.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR32)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;USE_DIRECTX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -324,7 +354,7 @@
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmaind.lib;QtOpenGLd.lib;QtGuid.lib;QtCored.lib;QTNetworkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmaind.lib;Qt5Widgetsd.lib;Qt5OpenGLd.lib;Qt5Guid.lib;Qt5Cored.lib;Qt5Networkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-32.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Tuvok\Build\$(Platform)\$(Configuration);$(QTDIR32)\lib;$(QTDIR32)\plugins\imageformats;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
@@ -335,14 +365,20 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">
     <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q</Command>
+      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Cored.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Guid.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5OpenGLd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Widgetsd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Networkd.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\plugins\platforms\qwindowsd.dll" "$(TargetDir)platforms\" /r /y /q</Command>
     </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR64)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>UI/Autogen;.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR64)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;USE_DIRECTX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -354,7 +390,7 @@
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmaind.lib;QtOpenGLd.lib;QtGuid.lib;QtCored.lib;QTNetworkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmaind.lib;Qt5Widgetsd.lib;Qt5OpenGLd.lib;Qt5Guid.lib;Qt5Cored.lib;Qt5Networkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-64.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Tuvok\Build\$(Platform)\$(Configuration);$(QTDIR64)\lib;$(QTDIR64)\plugins\imageformats;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
@@ -370,13 +406,19 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">
     <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q</Command>
+      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Core.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Gui.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5OpenGL.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Widgets.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\bin\Qt5Network.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR32)\plugins\platforms\qwindows.dll" "$(TargetDir)platforms\" /r /y /q</Command>
     </PreBuildEvent>
     <ClCompile>
       <AdditionalOptions>/U"_SECURE_SCL" /D"_SECURE_SCL=0" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR32)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>UI/Autogen;.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR32)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;USE_DIRECTX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -387,7 +429,7 @@
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmain.lib;QtGui.lib;QtCore.lib;QtOpenGL.lib;QtNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmain.lib;Qt5Widgets.lib;Qt5Gui.lib;Qt5Core.lib;Qt5OpenGL.lib;Qt5Network.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-32.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Tuvok\Build\$(Platform)\$(Configuration);$(QTDIR32)\lib;$(QTDIR32)\plugins\imageformats;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
@@ -401,7 +443,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">
     <PreBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q</Command>
+      <Command>xcopy "$(ProjectDir)..\Tuvok\Shaders\*.glsl" "$(TargetDir)Shaders\*.*" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Core.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Gui.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5OpenGL.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Widgets.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\bin\Qt5Network.dll" "$(TargetDir)" /r /y /q
+xcopy "$(QTDIR64)\plugins\platforms\qwindows.dll" "$(TargetDir)platforms\" /r /y /q</Command>
     </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
@@ -410,7 +458,7 @@
       <AdditionalOptions>/U"_SECURE_SCL" /D"_SECURE_SCL=0" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR64)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>UI/Autogen;.;../Tuvok/3rdParty/GLEW;../Tuvok/Basics/3rdParty/boost;../Tuvok/IO/3rdParty/boost;../Tuvok/IO/3rdParty/zlib;../Tuvok;../Tuvok/Basics;../Tuvok/IO/exception;../Tuvok/IO/expressions;../Tuvok/IO;$(QTDIR64)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;USE_DIRECTX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -421,7 +469,7 @@
       <DisableSpecificWarnings>4127;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmain.lib;QtGui.lib;QtCore.lib;QtOpenGL.lib;QtNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Tuvok.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;shlwapi.lib;qtmain.lib;Qt5Widgetsd.lib;Qt5Guid.lib;Qt5Cored.lib;Qt5OpenGLd.lib;Qt5Networkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)-64.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)Tuvok\Build\$(Platform)\$(Configuration);$(QTDIR64)\lib;$(QTDIR64)\plugins\imageformats;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
@@ -434,6 +482,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="cpp.hint" />
     <None Include="Resources\bug.png" />
     <CustomBuildStep Include="Doxyfile">
       <FileType>Document</FileType>
@@ -466,6 +515,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IO\3rdParty\ioapi.c" />
+    <ClCompile Include="IO\3rdParty\QFtp\qftp.cpp" />
+    <ClCompile Include="IO\3rdParty\QFtp\qurlinfo.cpp" />
     <ClCompile Include="IO\3rdParty\zip.c" />
     <ClCompile Include="IO\ZipFile.cpp" />
     <ClCompile Include="UI\AutoGen\moc_AboutDlg.cpp" />
@@ -545,6 +596,41 @@
   <ItemGroup>
     <ClInclude Include="IO\3rdParty\crypt.h" />
     <ClInclude Include="IO\3rdParty\ioapi.h" />
+    <CustomBuild Include="IO\3rdParty\QFtp\qftp.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR32)\bin\moc.exe "%(RootDir)%(Directory)%(Filename).cpp" -o "%(RootDir)%(Directory)%(Filename).moc"
+$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(RootDir)%(Directory)%(Filename).cpp" -o "%(RootDir)%(Directory)%(Filename).moc"
+$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">$(QTDIR32)\bin\moc.exe "%(RootDir)%(Directory)%(Filename).cpp" -o "%(RootDir)%(Directory)%(Filename).moc"
+$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR32)\bin\moc.exe "%(RootDir)%(Directory)%(Filename).cpp" -o "%(RootDir)%(Directory)%(Filename).moc"
+$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR32)\bin\moc.exe "%(RootDir)%(Directory)%(Filename).cpp" -o "%(RootDir)%(Directory)%(Filename).moc"
+$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(RootDir)%(Directory)%(Filename).cpp" -o "%(RootDir)%(Directory)%(Filename).moc"
+$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">$(QTDIR32)\bin\moc.exe "%(RootDir)%(Directory)%(Filename).cpp" -o "%(RootDir)%(Directory)%(Filename).moc"
+$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR32)\bin\moc.exe "%(RootDir)%(Directory)%(Filename).cpp" -o "%(RootDir)%(Directory)%(Filename).moc"
+$(QTDIR32)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp;%(RootDir)%(Directory)%(Filename).moc;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp;%(RootDir)%(Directory)%(Filename).moc;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp;%(RootDir)%(Directory)%(Filename).moc;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp;%(RootDir)%(Directory)%(Filename).moc;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp;%(RootDir)%(Directory)%(Filename).moc;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp;%(RootDir)%(Directory)%(Filename).moc;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp;%(RootDir)%(Directory)%(Filename).moc;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp;%(RootDir)%(Directory)%(Filename).moc;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Performing moc on %(Filename).h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|Win32'">Performing moc on %(Filename).h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Performing moc on %(Filename).h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing moc on %(Filename).h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (with DirectX)|x64'">Performing moc on %(Filename).h</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing moc on %(Filename).h</Message>
+    </CustomBuild>
+    <ClInclude Include="IO\3rdParty\QFtp\qurlinfo.h" />
     <ClInclude Include="IO\3rdParty\zip.h" />
     <ClInclude Include="IO\ZipFile.h" />
     <ClInclude Include="UI\AutoGen\ui_About.h" />

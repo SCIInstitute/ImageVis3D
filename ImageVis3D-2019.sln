@@ -1,0 +1,102 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 14
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageVis3D", "ImageVis3D\ImageVis3D.vcxproj", "{85742DE8-68C9-4140-A6A7-412CF789DECA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tuvok", "Tuvok\Tuvok.vcxproj", "{D474A1E1-2ED3-42E6-826C-372430E549B9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TuvokConverter", "CmdLineConverter\TuvokConverter.vcxproj", "{3D1630AA-C160-493B-88F2-E29AB13AF140}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExtractDebugInfo", "ExtractDebugInfo\ExtractDebugInfo.vcxproj", "{5494E269-CBE9-443E-9C3D-997B141FDDC7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TuvokReader", "UVFReader\TuvokReader.vcxproj", "{741CA829-A68D-4CAC-844A-E23FFDC94323}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug (with DirectX)|Win32 = Debug (with DirectX)|Win32
+		Debug (with DirectX)|x64 = Debug (with DirectX)|x64
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release (with DirectX)|Win32 = Release (with DirectX)|Win32
+		Release (with DirectX)|x64 = Release (with DirectX)|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Debug (with DirectX)|Win32.ActiveCfg = Debug (with DirectX)|Win32
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Debug (with DirectX)|Win32.Build.0 = Debug (with DirectX)|Win32
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Debug (with DirectX)|x64.ActiveCfg = Debug (with DirectX)|x64
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Debug (with DirectX)|x64.Build.0 = Debug (with DirectX)|x64
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Debug|Win32.Build.0 = Debug|Win32
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Debug|x64.ActiveCfg = Debug|x64
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Debug|x64.Build.0 = Debug|x64
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release (with DirectX)|Win32.ActiveCfg = Release (with DirectX)|Win32
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release (with DirectX)|Win32.Build.0 = Release (with DirectX)|Win32
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release (with DirectX)|x64.ActiveCfg = Release (with DirectX)|x64
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release (with DirectX)|x64.Build.0 = Release (with DirectX)|x64
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release|Win32.ActiveCfg = Release|Win32
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release|Win32.Build.0 = Release|Win32
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release|x64.ActiveCfg = Release|x64
+		{85742DE8-68C9-4140-A6A7-412CF789DECA}.Release|x64.Build.0 = Release|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug (with DirectX)|Win32.ActiveCfg = Debug (with DirectX)|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug (with DirectX)|Win32.Build.0 = Debug (with DirectX)|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug (with DirectX)|x64.ActiveCfg = Debug (with DirectX)|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug (with DirectX)|x64.Build.0 = Debug (with DirectX)|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|Win32.Build.0 = Debug|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|x64.ActiveCfg = Debug|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Debug|x64.Build.0 = Debug|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release (with DirectX)|Win32.ActiveCfg = Release (with DirectX)|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release (with DirectX)|Win32.Build.0 = Release (with DirectX)|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release (with DirectX)|x64.ActiveCfg = Release (with DirectX)|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release (with DirectX)|x64.Build.0 = Release (with DirectX)|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|Win32.ActiveCfg = Release|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|Win32.Build.0 = Release|Win32
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|x64.ActiveCfg = Release|x64
+		{D474A1E1-2ED3-42E6-826C-372430E549B9}.Release|x64.Build.0 = Release|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug (with DirectX)|Win32.ActiveCfg = Debug (with DirectX)|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug (with DirectX)|Win32.Build.0 = Debug (with DirectX)|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug (with DirectX)|x64.ActiveCfg = Debug (with DirectX)|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug (with DirectX)|x64.Build.0 = Debug (with DirectX)|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug|Win32.Build.0 = Debug|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug|x64.ActiveCfg = Debug|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Debug|x64.Build.0 = Debug|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release (with DirectX)|Win32.ActiveCfg = Release (with DirectX)|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release (with DirectX)|Win32.Build.0 = Release (with DirectX)|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release (with DirectX)|x64.ActiveCfg = Release (with DirectX)|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release (with DirectX)|x64.Build.0 = Release (with DirectX)|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release|Win32.ActiveCfg = Release|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release|Win32.Build.0 = Release|Win32
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release|x64.ActiveCfg = Release|x64
+		{3D1630AA-C160-493B-88F2-E29AB13AF140}.Release|x64.Build.0 = Release|x64
+		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Debug (with DirectX)|Win32.ActiveCfg = Debug (with DirectX)|Win32
+		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Debug (with DirectX)|x64.ActiveCfg = Debug (with DirectX)|x64
+		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Debug|x64.ActiveCfg = Debug|x64
+		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Release (with DirectX)|Win32.ActiveCfg = Release (with DirectX)|Win32
+		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Release (with DirectX)|x64.ActiveCfg = Release (with DirectX)|x64
+		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Release|Win32.ActiveCfg = Release|Win32
+		{5494E269-CBE9-443E-9C3D-997B141FDDC7}.Release|x64.ActiveCfg = Release|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug (with DirectX)|Win32.ActiveCfg = Debug (with DirectX)|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug (with DirectX)|Win32.Build.0 = Debug (with DirectX)|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug (with DirectX)|x64.ActiveCfg = Debug (with DirectX)|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug (with DirectX)|x64.Build.0 = Debug (with DirectX)|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug|Win32.ActiveCfg = Debug|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug|Win32.Build.0 = Debug|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug|x64.ActiveCfg = Debug|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Debug|x64.Build.0 = Debug|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release (with DirectX)|Win32.ActiveCfg = Release (with DirectX)|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release (with DirectX)|Win32.Build.0 = Release (with DirectX)|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release (with DirectX)|x64.ActiveCfg = Release (with DirectX)|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release (with DirectX)|x64.Build.0 = Release (with DirectX)|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release|Win32.ActiveCfg = Release|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release|Win32.Build.0 = Release|Win32
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release|x64.ActiveCfg = Release|x64
+		{741CA829-A68D-4CAC-844A-E23FFDC94323}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

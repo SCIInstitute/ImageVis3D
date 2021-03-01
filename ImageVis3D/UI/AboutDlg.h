@@ -38,7 +38,7 @@
 #ifndef ABOUTDLG_H
 #define ABOUTDLG_H
 
-#include "AutoGen/ui_About.h"
+#include <ui_About.h>
 #include <vector>
 #include <string>
 #include <StdDefines.h>

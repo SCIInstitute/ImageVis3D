@@ -38,7 +38,7 @@
 #include "BrowseData.h"
 
 #include <QtCore/QFileInfo>
-#include "AutoGen/ui_SettingsDlg.h"
+#include <ui_SettingsDlg.h>
 
 #include "../Tuvok/LuaScripting/LuaScripting.h"
 
@@ -85,7 +85,7 @@ bool BrowseData::FillTable(QDialog* pleaseWaitDialog)
 {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   m_dirInfo = ss->cexecRet<vector<shared_ptr<FileStackInfo>>>(
-      "tuvok.io.scanDirectory", m_strDir.toStdString());
+      "tuvok.io.scanDirectory", m_strDir.toStdWString());
 
   m_vRadioButtons.clear();
 

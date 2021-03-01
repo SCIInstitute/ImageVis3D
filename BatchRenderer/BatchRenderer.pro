@@ -32,20 +32,20 @@ unix:QMAKE_CFLAGS   += -fno-strict-aliasing -g
 unix:!macx:LIBS    += -lGL -lX11 -lGLU
 # Try to link to GLU statically.
 gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
-for(d, gludirs) {
-  if(exists($${d}/libGLU.a) && static) {
-    LIBS -= -lGLU;
-    LIBS += $${d}/libGLU.a
-  }
-}
+#for(d, gludirs) {
+#  if(exists($${d}/libGLU.a) && static) {
+#    LIBS -= -lGLU;
+#    LIBS += $${d}/libGLU.a
+#  }
+#}
 
 ####
 # Mac OS X configuration
 ####
-macx:QMAKE_CXXFLAGS         += -mmacosx-version-min=10.7 -stdlib=libc++
-macx:QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.7 -std=c++0x -stdlib=libc++
-macx:QMAKE_CFLAGS           += -mmacosx-version-min=10.7
-macx:LIBS                   += -mmacosx-version-min=10.7 -stdlib=libc++ -framework Cocoa -framework OpenGL
+macx:QMAKE_CXXFLAGS         += -stdlib=libc++
+macx:QMAKE_OBJECTIVE_CFLAGS += -std=c++0x -stdlib=libc++
+macx:QMAKE_CFLAGS           +=
+macx:LIBS                   += -stdlib=libc++ -framework Cocoa -framework OpenGL
 macx:CONFIG                 -= app_bundle
 macx:INCLUDEPATH            += /usr/X11R6/include
 macx:QMAKE_LIBDIR           += /usr/X11R6/lib

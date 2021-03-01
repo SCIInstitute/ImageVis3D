@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
   debugOut->SetClearOldMessage(true);
 
   Controller::Instance().AddDebugOut(debugOut);
-  const uint64_t mem = Controller::Const().SysInfo().GetCPUMemSize();
-  Controller::Instance().SetMaxCPUMem(uint64_t(mem/(1024*1024) * 0.8));
+  const uint64_t memSize = Controller::Const().SysInfo().GetCPUMemSize();
+  Controller::Instance().SetMaxCPUMem(uint64_t(memSize /(1024*1024) * 0.8));
   MESSAGE(""); cout << endl;
 
   #ifdef _WIN32
@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
     #endif
   #endif
 
-  string strUVFName = "";
+  wstring strUVFName = L"";
 
   uint32_t iSizeX = 100;
   uint32_t iSizeY = 200;
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
     cmd.parse(argc, argv);
 
     /// @todo FIXME support a list of filenames and process them in sequence.
-    strUVFName = inputs.getValue()[0];
+    strUVFName = SysTools::toWide(inputs.getValue()[0]);
     iSizeX = static_cast<uint32_t>(sizeX.getValue());
     iSizeY = static_cast<uint32_t>(sizeY.getValue());
     iSizeZ = static_cast<uint32_t>(sizeZ.getValue());
@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
-  if (iIter && (!bCreateFile || !eCreationType == CT_FRACTAL)) {
+  if (iIter && (!bCreateFile || eCreationType != CT_FRACTAL)) {
     cerr << endl << "Iteration count only valid when computing a mandelbuld "
                     "fractal in file creation mode" << endl;
     return EXIT_FAILURE;

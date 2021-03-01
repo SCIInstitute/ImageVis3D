@@ -38,7 +38,7 @@
 #ifndef LODDLG_H
 #define LODDLG_H
 
-#include "AutoGen/ui_LODDlg.h"
+#include <ui_LODDlg.h>
 #include <vector>
 #include <StdDefines.h>
 

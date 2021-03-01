@@ -2,7 +2,7 @@ For more information, please see: http://software.sci.utah.edu
 
 The MIT License
 
-Copyright (c) 2008-2014 Scientific Computing and Imaging Institute,
+Copyright (c) 2008-2020 Scientific Computing and Imaging Institute,
 University of Utah & High Performance Computing Group at the University
 of Duisburg-Essen, Germany
 
@@ -27,7 +27,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 Additionally, this program utilizes code from the Qt software package.
-Qt may be downloaded at: http://www.qtsoftware.com/.  You may also
+Qt may be downloaded at: https://www.qt.io/.  You may also
 contact the ImageVis3D team on the `iv3d-users@sci.utah.edu' mailing
 list to request the Qt package in source form.
 

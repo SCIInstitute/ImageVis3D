@@ -61,7 +61,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     unsigned int GetMaxGPUMem() const;
     unsigned int GetMaxCPUMem() const;
 
-    std::string   GetTempDir() const;
+    std::wstring  GetTempDir() const;
 
     bool          GetQuickopen() const;
     unsigned int  GetMinFramerate() const;
@@ -73,7 +73,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     bool          GetWriteLogFile() const;
     bool          GetShowCrashDialog() const;
 
-    const std::string GetLogFileName() const;
+    const std::wstring GetLogFileName() const;
     uint32_t        GetLogLevel() const;
 
     bool          GetShowVersionInTitle() const;
@@ -115,7 +115,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    uint64_t iMaxCPU, uint64_t iMaxGPU,
                    bool bIgnoreMax,
                    unsigned int iUserMaxCPUMB, unsigned int iUserMaxGPUMB,
-                   const std::string& tempDir,
+                   const std::wstring& tempDir,
                    bool bQuickopen,
                    unsigned int iMinFramerate,
                    bool bRenderLowResIntermediateResults,
@@ -124,7 +124,7 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
                    unsigned int iInactiveTS,
                    bool bWriteLogFile,
                    bool bShowCrashDialog,
-                   const std::string& strLogFileName,
+                   const std::wstring& strLogFileName,
                    uint32_t iLogLevel,
                    bool bShowVersionInTitle,
                    bool bAutoSaveGEO,

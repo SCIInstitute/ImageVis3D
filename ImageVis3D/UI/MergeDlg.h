@@ -38,7 +38,7 @@
 #ifndef MERGEDLG_H
 #define MERGEDLG_H
 
-#include "AutoGen/ui_MergeDlg.h"
+#include <ui_MergeDlg.h>
 #include <vector>
 #include <string>
 #include <StdDefines.h>
@@ -48,7 +48,7 @@ class MainWindow;
 
 class DataSetListElem {
 public:
-  DataSetListElem(std::string strFilename) :
+  DataSetListElem(const std::wstring strFilename) :
     m_strFilename(strFilename),
     m_strDisplayName(strFilename), /// \TODO: maybe come up with something "nicer" for display
     m_bAnalyzed(false),
@@ -61,8 +61,8 @@ public:
   {
   }
 
-  std::string         m_strFilename;
-  std::string         m_strDisplayName;
+  std::wstring         m_strFilename;
+  std::wstring         m_strDisplayName;
 
   bool                m_bAnalyzed;
   double              m_fScale;
@@ -86,7 +86,7 @@ class MergeDlg : public QDialog, protected Ui_MergeDlg
     std::vector<DataSetListElem*> m_vDataSetList;
     bool UseMax() const { return radioButton_max->isChecked(); }
     bool UseCustomExpr() const { return grpCustomExpressionMode->isChecked(); }
-    std::string GetCustomExpr() const { return txtExpression->text().toStdString(); }
+    std::wstring GetCustomExpr() const { return txtExpression->text().toStdWString(); }
 
   protected slots:
     void AnalyzeCurrentDataset();

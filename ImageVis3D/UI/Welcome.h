@@ -38,7 +38,7 @@
 #ifndef WELCOME_H
 #define WELCOME_H
 
-#include "AutoGen/ui_Welcome.h"
+#include <ui_Welcome.h>
 #include <vector>
 #include <string>
 #include <StdDefines.h>
@@ -50,7 +50,7 @@ class MRUButton : public QPushButton {
     MRUButton(const QIcon& icon, const QString &text, QWidget *parent=0) : QPushButton(icon, text, parent) {}
     virtual ~MRUButton() {}
 
-    std::string  strFilename;
+    std::wstring  strFilename;
 };
 
 
@@ -62,7 +62,7 @@ class WelcomeDialog : public QDialog, protected Ui_Welcome
     virtual ~WelcomeDialog();
 
     void ClearMRUItems();
-    void AddMRUItem(std::string strDesc, std::string strFilename);
+    void AddMRUItem(std::wstring strDesc, std::wstring strFilename);
     void SetShowAtStartup(bool bShow) {checkBox_ShowAtStartup->setChecked(!bShow);}
     bool ShowAtStartup() const {return !checkBox_ShowAtStartup->isChecked();}
 
@@ -83,7 +83,7 @@ class WelcomeDialog : public QDialog, protected Ui_Welcome
     void OpenManualClicked();
     void GetExampleDataClicked();
     void OpenFromFileClicked();
-    void OpenFromFileClicked(std::string filename);
+    void OpenFromFileClicked(std::wstring filename);
     void OpenFromDirClicked();
     void OpenMRU(int iID);
 

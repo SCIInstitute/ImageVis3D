@@ -38,7 +38,7 @@
 #ifndef URLDLG_H
 #define URLDLG_H
 
-#include "AutoGen/ui_URLDlg.h"
+#include <ui_URLDlg.h>
 #include <vector>
 #include <string>
 #include <StdDefines.h>
