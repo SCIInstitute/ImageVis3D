@@ -106,9 +106,10 @@ void WelcomeDialog::ClearMRUItems() {
   m_vMRUItems.clear();
 }
 
-void WelcomeDialog::AddMRUItem(std::string strDesc, std::string strFilename) {
+void WelcomeDialog::AddMRUItem(std::wstring strDesc, std::wstring strFilename) {
   MRUButton* b = new MRUButton(groupBox_OpenFile);
-  b->setText(strDesc.c_str());
+  b->setText(QString::fromStdWString(strDesc));
+  b->setToolTip(QString::fromStdWString(strFilename));
   b->setMinimumHeight(23);  // to make buttons work on the MAC
   b->strFilename = strFilename;
 

@@ -43,9 +43,9 @@ if(!found) {
 }
 unix:!macx:LIBS += -lGL
 
-macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
-macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7
-macx:LIBS        += -stdlib=libc++ -framework CoreFoundation -mmacosx-version-min=10.7
+macx:QMAKE_CXXFLAGS += -stdlib=libc++ 
+macx:QMAKE_CFLAGS += 
+macx:LIBS        += -stdlib=libc++ -framework CoreFoundation 
 
 # Find the location of QtGui's prl file, and include it here so we can look at
 # the QMAKE_PRL_CONFIG variable.

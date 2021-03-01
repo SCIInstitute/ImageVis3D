@@ -42,9 +42,9 @@
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaTuvokTypes.h"
 #include "../Tuvok/LuaScripting/TuvokSpecific/LuaDatasetProxy.h"
 
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QFileDialog>
 #include <QtCore/QSettings>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 #include "PleaseWait.h"
 #include "Renderer/RenderMesh.h" // we only need this include for proper down cast from RenderMesh to Mesh
@@ -54,19 +54,19 @@
 using namespace tuvok;
 using namespace std;
 
-string MainWindow::ConvertTF(const string& strSource1DTFilename,
-                             const string& strTargetDir, 
-                             const string& strTargetFullFilename,
+std::wstring MainWindow::ConvertTF(const std::wstring& strSource1DTFilename,
+                             const std::wstring& strTargetDir,
+                             const std::wstring& strTargetFullFilename,
                              PleaseWaitDialog& pleaseWait) {
 
   pleaseWait.SetText("Converting transfer function, please wait  ...");
 
-  string filenameOnly = SysTools::ChangeExt(
-      SysTools::GetFilename(strTargetFullFilename),"i3m.1dt"
+  std::wstring filenameOnly = SysTools::ChangeExt(
+      SysTools::GetFilename(strTargetFullFilename),L"i3m.1dt"
       );
 
-  string strTarget1DTFilename = strTargetDir+"/"+filenameOnly;
-  MESSAGE("Converting transferfunction to %s",strTarget1DTFilename.c_str());
+  std::wstring strTarget1DTFilename = strTargetDir+L"/"+filenameOnly;
+  MESSAGE("Converting transferfunction to %s", SysTools::toNarrow(strTarget1DTFilename).c_str());
 
   TransferFunction1D tfIn(strSource1DTFilename);
   if (tfIn.GetSize() > 256) {
@@ -76,27 +76,26 @@ string MainWindow::ConvertTF(const string& strSource1DTFilename,
     // if it is 8bit already simply fill it to 256 entries
     tfIn.FillOrTruncate(256);
   }
-  if (!tfIn.Save(strTarget1DTFilename)) return "";
+  if (!tfIn.Save(strTarget1DTFilename)) return L"";
 
 
-  MESSAGE("Saved 8bit transferfunction to %s",strTarget1DTFilename.c_str());
+  MESSAGE("Saved 8bit transferfunction to %s",SysTools::toNarrow(strTarget1DTFilename).c_str());
   return strTarget1DTFilename;
 }
 
-string MainWindow::ConvertDataToI3M(LuaClassInstance currentDataset,
-                                    const string& strTargetDir,
+std::wstring MainWindow::ConvertDataToI3M(LuaClassInstance currentDataset,
+                                    const std::wstring& strTargetDir,
                                     PleaseWaitDialog& pleaseWait,
                                     bool bOverrideExisting) {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   if (ss->cexecRet<LuaDatasetProxy::DatasetType>(
           currentDataset.fqName() + ".getDSType") != LuaDatasetProxy::UVF) {
     T_ERROR("MainWindow::ConvertDataToI3M can only accept UVF datasets.");
-    return "";
+    return L"";
   }
 
-  string dsFilename = ss->cexecRet<string>(currentDataset.fqName() + 
-                                           ".fullpath");
-  pleaseWait.SetText("Converting:" + QString(dsFilename.c_str()));
+  std::wstring dsFilename = ss->cexecRet<wstring>(currentDataset.fqName() + ".fullpath");
+  pleaseWait.SetText(QString("Converting:") + QString::fromStdWString(dsFilename));
 
   // UVF to I3M
 
@@ -113,9 +112,9 @@ string MainWindow::ConvertDataToI3M(LuaClassInstance currentDataset,
         vLODSize.z >= 128) break;
   }
 
-  string filenameOnly = SysTools::GetFilename(dsFilename);
-  string strTargetFilename = strTargetDir+"/"+
-                             SysTools::ChangeExt(filenameOnly,"i3m");
+  wstring filenameOnly = SysTools::GetFilename(dsFilename);
+  wstring strTargetFilename = strTargetDir+L"/"+
+                             SysTools::ChangeExt(filenameOnly,L"i3m");
 
   if (!bOverrideExisting && SysTools::FileExists(strTargetFilename)) {
     strTargetFilename = SysTools::FindNextSequenceName(
@@ -129,7 +128,7 @@ string MainWindow::ConvertDataToI3M(LuaClassInstance currentDataset,
                           strTargetFilename,
                           m_strTempDir))
   {
-    return "";
+    return L"";
   }
 
   return strTargetFilename;
@@ -192,7 +191,7 @@ void MainWindow::TransferToI3M() {
 
     if (directoryName.isEmpty()) return;
 
-    string strTargetDir = string(directoryName.toAscii().data());
+    wstring strTargetDir = directoryName.toStdWString();
     
     settings.setValue("Folders/I3MServer", directoryName);
 
@@ -201,9 +200,9 @@ void MainWindow::TransferToI3M() {
     pleaseWait.SetText("Preparing data  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
-    string tempVolume = ConvertDataToI3M(ds, m_strTempDir, pleaseWait, true);
+    wstring tempVolume = ConvertDataToI3M(ds, m_strTempDir, pleaseWait, true);
 
-    if (tempVolume == "") {
+    if (tempVolume == L"") {
       QMessageBox errorMessage;
       errorMessage.setText("Unable to convert the dataset "
                            "into the given directory.");
@@ -213,15 +212,15 @@ void MainWindow::TransferToI3M() {
                "into the given directory.");
     }
 
-    string strTemp1DTFilename = m_strTempDir + "i3mexport.1dt";
-    m_1DTransferFunction->SaveToFile(QString(strTemp1DTFilename.c_str()));
+    wstring strTemp1DTFilename = m_strTempDir + L"i3mexport.1dt";
+    m_1DTransferFunction->SaveToFile(QString::fromStdWString(strTemp1DTFilename));
 
-    string tempTF = ConvertTF(strTemp1DTFilename, m_strTempDir,
-                           ss->cexecRet<string>(ds.fqName() + ".fullpath"),
+    wstring tempTF = ConvertTF(strTemp1DTFilename, m_strTempDir,
+                           ss->cexecRet<wstring>(ds.fqName() + ".fullpath"),
                            pleaseWait);
-    remove(strTemp1DTFilename.c_str());
+    SysTools::RemoveFile(strTemp1DTFilename);
 
-    if (tempTF == "") {
+    if (tempTF == L"") {
       QMessageBox errorMessage;
       errorMessage.setText("Unable to convert the transferfunction "
                            "into the given directory.");
@@ -231,19 +230,19 @@ void MainWindow::TransferToI3M() {
                "into the given directory.");
     }
 
-    string filenameOnly = SysTools::RemoveExt(SysTools::GetFilename(
-      ss->cexecRet<string>(ds.fqName() + ".fullpath")));
+    wstring filenameOnly = SysTools::RemoveExt(SysTools::GetFilename(
+      ss->cexecRet<wstring>(ds.fqName() + ".fullpath")));
 
     // zip volume and TF together
     ZipFile i3m;
-    i3m.openZip(strTargetDir + "/" + filenameOnly + ".i3m.zip");
-    i3m.copyFileToZip(tempVolume, filenameOnly + ".i3m");
-    i3m.copyFileToZip(tempTF, filenameOnly + ".1dt");
+    i3m.openZip(SysTools::toNarrow(strTargetDir + L"/" + filenameOnly + L".i3m.zip"));
+    i3m.copyFileToZip(SysTools::toNarrow(tempVolume), SysTools::toNarrow(filenameOnly + L".i3m"));
+    i3m.copyFileToZip(SysTools::toNarrow(tempTF), SysTools::toNarrow(filenameOnly + L".1dt"));
     i3m.close();
 
     // remove temp files
-    remove(tempVolume.c_str());
-    remove(tempTF.c_str());
+    SysTools::RemoveFile(tempVolume);
+    SysTools::RemoveFile(tempTF);
 
     pleaseWait.SetText("Exporting Meshes ...");
 
@@ -265,24 +264,24 @@ void MainWindow::TransferToI3M() {
 
     // write to temp files
     if (triangles != nullptr) {
-      G3D::write(m_strTempDir + "/" + filenameOnly + ".triangles.g3d", triangles.get());
+      G3D::write(SysTools::toNarrow(m_strTempDir + L"/" + filenameOnly + L".triangles.g3d"), triangles.get());
       G3D::clean(triangles.get());
     }
     if (lines != nullptr) {
-      G3D::write(m_strTempDir + "/" + filenameOnly + ".lines.g3d", lines.get());
+      G3D::write(SysTools::toNarrow(m_strTempDir + L"/" + filenameOnly + L".lines.g3d"), lines.get());
       G3D::clean(lines.get());
     }
 
     // zip the files
     ZipFile g3d;
-    g3d.openZip(strTargetDir + "/" + filenameOnly + ".g3d.zip");
-    g3d.copyFileToZip(m_strTempDir + "/" + filenameOnly + ".triangles.g3d", filenameOnly + ".triangles.g3d");
-    g3d.copyFileToZip(m_strTempDir + "/" + filenameOnly + ".lines.g3d", filenameOnly + ".lines.g3d");
+    g3d.openZip(SysTools::toNarrow(strTargetDir + L"/" + filenameOnly + L".g3d.zip"));
+    g3d.copyFileToZip(SysTools::toNarrow(m_strTempDir + L"/" + filenameOnly + L".triangles.g3d"), SysTools::toNarrow(filenameOnly + L".triangles.g3d"));
+    g3d.copyFileToZip(SysTools::toNarrow(m_strTempDir + L"/" + filenameOnly + L".lines.g3d"), SysTools::toNarrow(filenameOnly + L".lines.g3d"));
     g3d.close();
 
     // remove temp files
-    remove(string(m_strTempDir + "/" + filenameOnly + ".triangles.g3d").c_str());
-    remove(string(m_strTempDir + "/" + filenameOnly + ".lines.g3d").c_str());
+    SysTools::RemoveFile(m_strTempDir + L"/" + filenameOnly + L".triangles.g3d");
+    SysTools::RemoveFile(m_strTempDir + L"/" + filenameOnly + L".lines.g3d");
 
   } else {
     QMessageBox errorMessage;

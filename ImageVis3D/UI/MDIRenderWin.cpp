@@ -61,10 +61,6 @@ MDIRenderWin::MDIRenderWin(MasterController& masterController,
   setWidget(renderWin->GetQtWidget());
 }
 
-MDIRenderWin::~MDIRenderWin()
-{
-
-}
 
 
 void MDIRenderWin::closeEvent(QCloseEvent* event)

@@ -38,7 +38,7 @@
 #ifndef CRASHDETDLG_H
 #define CRASHDETDLG_H
 
-#include "AutoGen/ui_CrashDetDlg.h"
+#include <ui_CrashDetDlg.h>
 #include <vector>
 #include <string>
 #include <StdDefines.h>

@@ -36,7 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "ImageVis3D.h"
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 using namespace std;
 using namespace tuvok;

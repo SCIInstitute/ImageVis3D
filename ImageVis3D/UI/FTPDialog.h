@@ -51,7 +51,7 @@ class FTPDialog : public QDialog, protected Ui_FTPDialog
 {
   Q_OBJECT
   public:
-    FTPDialog(const std::string& strSource, const std::string& strTargetServer, const std::string& strTargetPath, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    FTPDialog(const std::wstring& strSource, const std::wstring& strTargetServer, const std::wstring& strTargetPath, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~FTPDialog();
 
     void Start();
@@ -67,11 +67,11 @@ class FTPDialog : public QDialog, protected Ui_FTPDialog
      void TransferSuccess();
 
   private:
-    std::string m_strSource;
-    std::string m_strTargetServer;
-    std::string m_strTargetPath;
-    QFtp*       m_pFtp;
-    QFile*      m_pFile;
+    std::wstring  m_strSource;
+    std::wstring  m_strTargetServer;
+    std::wstring  m_strTargetPath;
+    QFtp*         m_pFtp;
+    QFile*        m_pFile;
 
     void Disconnect();
 };

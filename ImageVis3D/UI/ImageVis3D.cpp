@@ -44,10 +44,10 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QColorDialog>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QMessageBox>
-#include <QtNetwork/QHttp>
+#include <QtWidgets/QColorDialog>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QMessageBox>
+#include <QtNetwork/QNetworkReply>
 #include "../Tuvok/Basics/SystemInfo.h"
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/MathTools.h"
@@ -66,10 +66,10 @@ MainWindow::MainWindow(MasterController& masterController,
            QWidget* parent /* = 0 */,
            Qt::WindowFlags flags /* = 0 */) :
   QMainWindow(parent, flags),
-  m_pRedrawTimer(NULL),
+  m_pRedrawTimer(nullptr),
   m_MasterController(masterController),
   m_strCurrentWorkspaceFilename(""),
-  m_strTempDir("."),  // changed in the constructor
+  m_strTempDir(L"."),  // changed in the constructor
   m_bShowVersionInTitle(true),
   m_bQuickopen(true),
   m_iMinFramerate(10),
@@ -102,16 +102,15 @@ MainWindow::MainWindow(MasterController& masterController,
   m_bShowWelcomeScreen(true),
   m_bInvWheel(true),
   m_bStayOpenAfterScriptEnd(false),
-  m_pTextout(NULL),
-  m_pActiveRenderWin(NULL),
-  m_pLastLoadedRenderWin(NULL),
-  m_pHttp(NULL),
-  m_pUpdateFile(NULL),
-  m_iHttpGetId(-1),
+  m_pTextout(nullptr),
+  m_pActiveRenderWin(nullptr),
+  m_pLastLoadedRenderWin(nullptr),
+  m_pUpdateFile(nullptr),
+  m_pHttpReply(nullptr),
   m_bStartupCheck(false),
   m_bScriptMode(bScriptMode),
-  m_pFTPDialog(NULL),
-  m_strFTPTempFile(""),
+  m_pFTPDialog(nullptr),
+  m_strFTPTempFile(L""),
   m_bFTPDeleteSource(true),
   m_bFTPFinished(true),
   m_bClipDisplay(true),
@@ -128,7 +127,7 @@ MainWindow::MainWindow(MasterController& masterController,
   QCoreApplication::setApplicationVersion(qstrVersion);
 
   QString path = QApplication::applicationDirPath();
-  masterController.SysInfo()->SetProgramPath(string(path.toAscii()));
+  masterController.SysInfo()->SetProgramPath(path.toStdWString());
 
   setupUi(this);
 
@@ -166,7 +165,7 @@ MainWindow::MainWindow(MasterController& masterController,
   connect(m_pWelcomeDialog, SIGNAL(OnlineHelpClicked()),     this, SLOT(OnlineHelp()));
   connect(m_pWelcomeDialog, SIGNAL(OpenManualClicked()),     this, SLOT(OpenManual()));
   connect(m_pWelcomeDialog, SIGNAL(OpenFromFileClicked()),   this, SLOT(LoadDataset()));
-  connect(m_pWelcomeDialog, SIGNAL(OpenFromFileClicked(std::string)),   this, SLOT(LoadDataset(std::string)));
+  connect(m_pWelcomeDialog, SIGNAL(OpenFromFileClicked(std::wstring)),   this, SLOT(LoadDataset(const std::wstring &)));
   connect(m_pWelcomeDialog, SIGNAL(OpenFromDirClicked()),    this, SLOT(LoadDirectory()));
   connect(m_pWelcomeDialog, SIGNAL(accepted()),              this, SLOT(CloseWelcome()));
 
@@ -200,10 +199,14 @@ MainWindow::~MainWindow()
     m_pUpdateFile->close();
     m_pUpdateFile->remove();
     delete m_pUpdateFile;
-    m_pUpdateFile = NULL;
+    m_pUpdateFile = nullptr;
   }
 
-  delete m_pHttp;
+  if (m_pHttpReply) {
+    m_pHttpReply->deleteLater();
+    m_pHttpReply = nullptr;
+  }
+
   m_pRedrawTimer->stop();
   delete m_pRedrawTimer;
 
@@ -247,11 +250,11 @@ void MainWindow::SetAndCheckRunningFlag() {
     if (bShowCrashDialog) {
       settings.setValue("SaneCounter", 0);
       CrashDetDlg* d = NULL;
-      if (bWriteLogFile && SysTools::FileExists(string(strLogFileName.toAscii()))) {
+      if (bWriteLogFile && SysTools::FileExists(strLogFileName.toStdWString())) {
         d = new CrashDetDlg("Crash recovery", "Either ImageVis3D crashed or it is currently running in a second process. If it crashed do you want to submit the logfile?", false, this);
         if (d->exec() == QDialog::Accepted) {
-          ReportABug(string(strLogFileName.toAscii()));
-          remove(strLogFileName.toAscii());
+          ReportABug(strLogFileName.toStdWString());
+          SysTools::RemoveFile(strLogFileName.toStdWString());
         }
       } else {
         if (!bWriteLogFile) {
@@ -470,7 +473,7 @@ void MainWindow::SetFoVSlider(int iValue) {
 
 void MainWindow::UpdateFoVLabel(int iValue) {
   QString desc;
-  desc = tr("Field of View (%1°):").arg(iValue);
+  desc = tr("Field of View (%1):").arg(iValue);
   label_FoV->setText(desc);
 }
 
@@ -1040,7 +1043,7 @@ void MainWindow::RegisterLuaClasses() {
 }
 
 void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {
-  QMdiSubWindow* foundWindow = NULL;
+  QMdiSubWindow* foundWindow = nullptr;
   QList<QMdiSubWindow*> list = mdiArea->subWindowList();
 
   for (QList<QMdiSubWindow*>::iterator it = list.begin();
@@ -1056,8 +1059,8 @@ void MainWindow::closeMDISubWindowWithWidget(QWidget* widget) {
   }
 }
 
-static std::string readfile(const std::string& filename) {
-  std::ifstream ifs(filename.c_str(), std::ios::in);
+static std::string readfile(const std::wstring& filename) {
+  std::ifstream ifs(SysTools::toNarrow(filename).c_str(), std::ios::in);
   ifs >> noskipws;
   return std::string(
     (std::istream_iterator<char>(ifs)),
@@ -1065,7 +1068,7 @@ static std::string readfile(const std::string& filename) {
   );
 }
 
-bool MainWindow::RunLuaScript(const std::string& strFilename) {
+bool MainWindow::RunLuaScript(const std::wstring& strFilename) {
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
   ss->setExpectedExceptionFlag(true);
   try {

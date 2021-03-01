@@ -43,12 +43,14 @@
 # pragma GCC visibility push(default)
 #endif
 #include <QtGui/QtGui>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 #if defined(__GNUC__) && defined(DETECTED_OS_LINUX)
 # pragma GCC visibility pop
 #endif
 
 #include "RenderWindow.h"
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QDesktopWidget>
 
 #include "ImageVis3D.h"
 #include "../Tuvok/Basics/MathTools.h"
@@ -670,7 +672,7 @@ ExtendedPlane RenderWindow::GetRendererClipPlane() {
   return ss->cexecRet<ExtendedPlane>(rn + ".getClipPlane");
 }
 
-bool RenderWindow::RendererCropDataset(const std::string& strTempDir, 
+bool RenderWindow::RendererCropDataset(const std::wstring& strTempDir, 
                                        bool bKeepOldData) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
@@ -755,6 +757,9 @@ RenderWindow::GetRegionSplitter(INTVECTOR2 pos) const
 
 void RenderWindow::MousePressEvent(QMouseEvent *event)
 {
+  int x = int(event->pos().x()/m_fHighDPIScale+0.5f);  // round
+  int y = int(event->pos().y()/m_fHighDPIScale+0.5f);  // round
+
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
   activeRegion = GetRegionUnderCursor(m_viMousePos);
@@ -765,26 +770,26 @@ void RenderWindow::MousePressEvent(QMouseEvent *event)
       SetPlaneAtClick(m_ClipPlane);
 
       if (event->button() == Qt::RightButton) {
-        initialClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+        initialClickPos = INTVECTOR2(x, y);
       }
 
       if (event->button() == Qt::LeftButton) {
         if (m_bFirstPersonMode) 
           QApplication::setOverrideCursor( QCursor(Qt::BlankCursor) );
 
-        initialLeftClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+        initialLeftClickPos = INTVECTOR2(x, y);
 
         RegionData *regionData = GetRegionData(activeRegion);
-        regionData->clipArcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+        regionData->clipArcBall.Click(UINTVECTOR2(x, y));
         if ( !(event->modifiers() & Qt::ControlModifier) ) {
-          regionData->arcBall.Click(UINTVECTOR2(event->pos().x(), event->pos().y()));
+          regionData->arcBall.Click(UINTVECTOR2(x, y));
         }
       }
     }
   } else { // Probably clicked on a region separator.
     selectedRegionSplitter = GetRegionSplitter(m_viMousePos);
     if (selectedRegionSplitter != REGION_SPLITTER_NONE) {
-      initialClickPos = INTVECTOR2(event->pos().x(), event->pos().y());
+      initialClickPos = INTVECTOR2(x, y);
     }
   }
 }
@@ -809,12 +814,13 @@ void RenderWindow::MouseReleaseEvent(QMouseEvent *event) {
 
 // Qt callback; just interprets the event and passes it on to the appropriate
 // ImageVis3D handler.
-void RenderWindow::MouseMoveEvent(QMouseEvent *event)
-{
+void RenderWindow::MouseMoveEvent(QMouseEvent *event) {
+  int x = int(event->pos().x()/m_fHighDPIScale+0.5f);  // round
+  int y = int(event->pos().y()/m_fHighDPIScale+0.5f);  // round
 
   shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
 
-  m_viMousePos = INTVECTOR2(event->pos().x(), event->pos().y());
+  m_viMousePos = INTVECTOR2(x, y);
 
   LuaClassInstance region = GetRegionUnderCursor(m_viMousePos);
 
@@ -838,8 +844,8 @@ void RenderWindow::MouseMoveEvent(QMouseEvent *event)
         QPoint globalPos = GetQtWidget()->mapToGlobal( GetQtWidget()->geometry().center()) ;
         QCursor::setPos ( globalPos.x(), globalPos.y() );
        
-        initialLeftClickPos = INTVECTOR2(GetQtWidget()->geometry().center().x(),
-                                         GetQtWidget()->geometry().center().y());
+        initialLeftClickPos = INTVECTOR2( int(GetQtWidget()->geometry().center().x()/m_fHighDPIScale+0.5f),
+                                          int(GetQtWidget()->geometry().center().y()/m_fHighDPIScale+0.5f));
       }
       UpdateWindow();
     } else {
@@ -1021,12 +1027,12 @@ void RenderWindow::UpdateCursor(LuaClassInstance region,
 void RenderWindow::RotateViewerWithMouse(const INTVECTOR2& viMouseDelta) {
    
   const int screen = QApplication::desktop()->screenNumber(m_MainWindow);
-  const QRect availableRect(QApplication::desktop()->availableGeometry(screen));
+  const QRect availableRect(QGuiApplication::screens()[screen]->availableGeometry());
 
-  const FLOATVECTOR2 vfMouseDelta(viMouseDelta.x/float(availableRect.width()), 
+  const FLOATVECTOR2 vfMouseDelta(viMouseDelta.x/float(availableRect.width()),
                                   viMouseDelta.y/float(availableRect.height()));
 
-  RotateViewer(FLOATVECTOR3(-vfMouseDelta.x*450.f, -vfMouseDelta.y*450.f, 0.f));
+  RotateViewer(FLOATVECTOR3(-vfMouseDelta.x*40.f, -vfMouseDelta.y*40.f, 0.f));
 }
 
 
@@ -1639,7 +1645,7 @@ void RenderWindow::SetPerfMeasures(unsigned int iMinFramerate,
                                         fSampleDecFactor, iLODDelay);
 }
 
-bool RenderWindow::CaptureFrame(const std::string& strFilename,
+bool RenderWindow::CaptureFrame(const std::wstring& strFilename,
                                 bool bPreserveTransparency)
 {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
@@ -1670,7 +1676,7 @@ bool RenderWindow::CaptureFrame(const std::string& strFilename,
   return rv;
 }
 
-bool RenderWindow::CaptureSubframe(const std::string& strFilename) {
+bool RenderWindow::CaptureSubframe(const std::wstring& strFilename) {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   ss->setTempProvDisable(true);
 
@@ -1684,10 +1690,10 @@ bool RenderWindow::CaptureSubframe(const std::string& strFilename) {
 }
 
 
-bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
+bool RenderWindow::CaptureMIPFrame(const std::wstring& strFilename, float fAngle,
                                    bool bOrtho, bool bFinalFrame, bool bUseLOD,
                                    bool bPreserveTransparency,
-                                   std::string* strRealFilename)
+                                   std::wstring* strRealFilename)
 {
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
   string rn = m_LuaAbstrRenderer.fqName();
@@ -1707,7 +1713,7 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   // as the window is double buffered call repaint twice
   ForceRepaint();  ForceRepaint();
 
-  std::string strSequenceName = SysTools::FindNextSequenceName(strFilename);
+  std::wstring strSequenceName = SysTools::FindNextSequenceName(strFilename);
   if (strRealFilename) (*strRealFilename) = strSequenceName;
 
   ss->setTempProvDisable(false);
@@ -1715,11 +1721,11 @@ bool RenderWindow::CaptureMIPFrame(const std::string& strFilename, float fAngle,
   return f.CaptureSingleFrame(strSequenceName, bPreserveTransparency);
 }
 
-bool RenderWindow::CaptureSequenceFrame(const std::string& strFilename,
+bool RenderWindow::CaptureSequenceFrame(const std::wstring& strFilename,
                                         bool bPreserveTransparency,
-                                        std::string* strRealFilename)
+                                        std::wstring* strRealFilename)
 {
-  std::string strSequenceName = SysTools::FindNextSequenceName(strFilename);
+  std::wstring strSequenceName = SysTools::FindNextSequenceName(strFilename);
   if (strRealFilename) (*strRealFilename) = strSequenceName;
   return CaptureFrame(strSequenceName, bPreserveTransparency); 
 }
@@ -2384,8 +2390,7 @@ void RenderWindow::SetTimestep(size_t t, bool propagate)
 void RenderWindow::SetLogoParams(QString strLogoFilename, int iLogoPos) {
   m_MasterController.LuaScript()->cexec(
       GetLuaAbstrRenderer().fqName() + ".setLogoParams",
-      std::string(strLogoFilename.toAscii()),
-      iLogoPos);
+      strLogoFilename.toStdWString(),iLogoPos);
 }
 
 void RenderWindow::SetAbsoluteViewLock(bool bAbsoluteViewLock) {
@@ -2423,6 +2428,8 @@ FLOATVECTOR3 RenderWindow::GetCVColor() const {
 
 void RenderWindow::ResizeRenderer(int width, int height)
 {
+  int h = GetQtWidget()->size().height();
+  m_fHighDPIScale = float(h)/height;
   m_vWinDim = UINTVECTOR2((unsigned int)width, (unsigned int)height);
 
   /// @fixme Create a setMaxCoord function for the region.
@@ -2632,11 +2639,11 @@ void RenderWindow::LuaSetLighting(bool enabled) {
   this->SetUseLighting(enabled);
 }
 
-void RenderWindow::LuaLoad1DTFqn(const std::string& tf) {
+void RenderWindow::LuaLoad1DTFqn(const std::wstring& tf) {
   this->m_MainWindow->LoadTransferFunction1D(tf);
 }
 
-void RenderWindow::LuaLoad2DTFqn(const std::string& tf) {
+void RenderWindow::LuaLoad2DTFqn(const std::wstring& tf) {
   this->m_MainWindow->LoadTransferFunction2D(tf);
 }
 
@@ -2732,11 +2739,9 @@ void RenderWindow::RegisterLuaFunctions(
                "Returns true if the first person mode is enabled", true);
   reg.function(&RenderWindow::LuaSetClipPlane, "setClipPlane",
                "resets the clipping plane to the given 4x4 transform", true);
-
   id = reg.function(&RenderWindow::CaptureSubframe, "captureSubframe",
                     "captures whatever's in the buffer now", true);
   ss->addParamInfo(id, 0, "filename", "Filename to save it in");
-
   id = reg.function(&RenderWindow::ClipDelta, "clipDelta",
                     "moves the clip plane in the direction of its normal",
                     true);

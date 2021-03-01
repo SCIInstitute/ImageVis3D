@@ -45,8 +45,8 @@
 
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 
 #include "Basics/Mesh.h"
 #include "Renderer/RenderMesh.h" // we only need this include for proper down cast from RenderMesh to Mesh
@@ -82,8 +82,8 @@ void MainWindow::LoadDataset() {
   QString strLastDir = settings.value("Folders/LoadDataset", ".").toString();
 
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  QString dialogString = 
-      ss->cexecRet<string>("tuvok.io.getLoadDialogString").c_str();
+  QString dialogString = QString::fromStdWString(
+      ss->cexecRet<std::wstring>("tuvok.io.getLoadDialogString"));
 
   QStringList files;
   if(m_MasterController.ExperimentalFeatures()) {
@@ -143,17 +143,16 @@ void MainWindow::ExportGeometry() {
   QString fileName =
     QFileDialog::getSaveFileName(this, "Export Current Mesh to File",
          strLastDir,
-         ss->cexecRet<string>("tuvok.io.getGeoExportDialogString").c_str(),
+         QString::fromStdWString(ss->cexecRet<std::wstring>("tuvok.io.getGeoExportDialogString")),
          &selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/ExportMesh", QFileInfo(fileName).absoluteDir().path());
-    string targetFileName = string(fileName.toAscii());
+    wstring targetFileName = fileName.toStdWString();
 
     // still a valid filename ext ?
     if (ss->cexecRet<bool>("tuvok.io.hasGeoConverterForExt", 
-                           SysTools::ToLowerCase(SysTools::GetExt(
-                                   string(fileName.toAscii()))),
+                           SysTools::ToLowerCase(SysTools::GetExt(fileName.toStdWString())),
                            true, false) == false) {
       ShowCriticalDialog("Extension Error", 
                          "Unable to determine the file type "
@@ -179,7 +178,7 @@ void MainWindow::ExportGeometry() {
 
 }
 
-bool MainWindow::ExportGeometry(size_t i, std::string strFilename) {
+bool MainWindow::ExportGeometry(size_t i, const std::wstring& strFilename) {
   if (!m_pActiveRenderWin) return false;
   LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
@@ -248,7 +247,7 @@ void MainWindow::RemoveGeometry() {
   m_pActiveRenderWin->SetDatasetIsInvalid(false);
 }
 
-void MainWindow::AddGeometry(std::string filename) {
+void MainWindow::AddGeometry(const std::wstring& filename) {
   if (!m_pActiveRenderWin) return;
 
   if(!m_pActiveRenderWin->SupportsMeshes()) {
@@ -265,7 +264,7 @@ void MainWindow::AddGeometry(std::string filename) {
         CloseCurrentView();
         MasterController::EVolumeRendererType currentType = m_eVolumeRendererType;
         m_eVolumeRendererType = MasterController::OPENGL_SBVR;    
-        LoadDataset(std::string(dataset.toAscii()));
+        LoadDataset(dataset.toStdWString());
         m_eVolumeRendererType = currentType;
       }
   }
@@ -337,8 +336,8 @@ void MainWindow::AddGeometry() {
   QString selFilter;
 
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  QString dialogString = 
-      ss->cexecRet<string>("tuvok.io.getLoadGeoDialogString").c_str();
+  QString dialogString = QString::fromStdWString(
+      ss->cexecRet<std::wstring>("tuvok.io.getLoadGeoDialogString"));
 
   QString strLastDir = settings.value("Folders/AddTriGeo", ".").toString();
 
@@ -352,12 +351,14 @@ void MainWindow::AddGeometry() {
 
   settings.setValue("Folders/AddTriGeo", QFileInfo(geoFile).absoluteDir().path());
 
-  AddGeometry(string(geoFile.toAscii()));
+  AddGeometry(geoFile.toStdWString());
 }
 
-void MainWindow::LoadDataset(std::string strFilename) {
+void MainWindow::LoadDataset(const std::wstring& strFilename) {
   try {
-    if(!LoadDataset(QStringList(strFilename.c_str())) != 0) {
+    QStringList files;
+    files.append(QString::fromStdWString(strFilename));
+    if(!LoadDataset(files) != 0) {
       if(m_bIgnoreLoadDatasetFailure == false) {
         ShowCriticalDialog("Render window initialization failed.",
           "Could not open a render window!  This normally "
@@ -397,7 +398,7 @@ QString MainWindow::GetConvFilename(const QString& sourceName) {
   QString strLastDir = settings.value("Folders/GetConvFilename", ".").toString();
 
   QString suggestedFileName = SysTools::ChangeExt(
-                                SysTools::GetFilename(string(sourceName.toAscii())),
+                                SysTools::GetFilename(string(sourceName.toStdString())),
                                                       "uvf"
                               ).c_str();
   
@@ -409,8 +410,7 @@ QString MainWindow::GetConvFilename(const QString& sourceName) {
                                  &selectedFilter, options);
 
   if (!targetFilename.isEmpty()) {
-    targetFilename = SysTools::CheckExt(string(targetFilename.toAscii()),
-                                               "uvf").c_str();
+    targetFilename = QString::fromStdWString(SysTools::CheckExt(targetFilename.toStdWString(), L"uvf"));
     settings.setValue("Folders/GetConvFilename",
                       QFileInfo(targetFilename).absoluteDir().path());
   }
@@ -419,18 +419,19 @@ QString MainWindow::GetConvFilename(const QString& sourceName) {
 }
 
 
-bool MainWindow::LoadDataset(const std::vector< std::string >& strParams) {
+bool MainWindow::LoadDataset(const std::vector< std::wstring >& strParams) {
   if (strParams.size() < 1 || strParams.size() > 2) {
     return false;
   }
-  string inFile = strParams[0], convFile;
+  wstring inFile = strParams[0], convFile;
   if (strParams.size() == 1)  {
-    convFile = SysTools::ChangeExt(inFile, "uvf");
+    convFile = SysTools::ChangeExt(inFile, L"uvf");
   } else {
     convFile = strParams[1];
   }
-
-  return LoadDataset(QStringList(inFile.c_str()), convFile.c_str(), false);
+  QStringList l;
+  l.append(QString::fromStdWString(convFile));
+  return LoadDataset(l, QString::fromStdWString(inFile), false);
 }
 
 bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction,
@@ -481,36 +482,43 @@ bool MainWindow::CheckForMeshCapabilities(bool bNoUserInteraction,
 
 bool MainWindow::LoadDataset(QStringList files, QString targetFilename,
                              bool bNoUserInteraction) {
-  std::vector<std::string> stdFiles;
+  std::vector<std::wstring> stdFiles;
   for (QStringList::iterator it = files.begin(); it != files.end();
       ++it)
   {
-    string datasetName = it->toStdString();
+    wstring datasetName = it->toStdWString();
     stdFiles.push_back(datasetName);
   }
 
-  string stdTargetFilename = targetFilename.toStdString();
-
-  LuaClassInstance inst =
+  wstring stdTargetFilename = targetFilename.toStdWString();
+  try {
+    LuaClassInstance inst =
       m_MasterController.LuaScript()->cexecRet<LuaClassInstance>(
-      "iv3d.rendererWithParams.new", stdFiles, stdTargetFilename,
-      bNoUserInteraction);
+        "iv3d.rendererWithParams.new", stdFiles, stdTargetFilename,
+        bNoUserInteraction);
 
-  return !inst.isDefaultInstance();
+    return !inst.isDefaultInstance();
+  } catch (const std::exception & e) {
+    if (!bNoUserInteraction) {
+      ShowCriticalDialog("Unable to load file",e.what());
+    }
+    return false;
+
+  }
 }
 
-RenderWindow* MainWindow::LuaLoadDatasetInternal(vector<string> stdFiles,
-                                                 string stdTargetFilename,
+RenderWindow* MainWindow::LuaLoadDatasetInternal(const std::vector<wstring>& stdFiles,
+                                                 const std::wstring& stdTargetFilename,
                                                  bool bNoUserInteraction)
 {
   QStringList files;
-  for (vector<string>::iterator it = stdFiles.begin(); it != stdFiles.end();
+  for (auto it = stdFiles.begin(); it != stdFiles.end();
       ++it)
   {
-    files.push_back(QString::fromStdString(*it));
+    files.push_back(QString::fromStdWString(*it));
   }
 
-  QString targetFilename = QString::fromStdString(stdTargetFilename);
+  QString targetFilename = QString::fromStdWString(stdTargetFilename);
 
   bool retVal = LoadDatasetInternal(files, targetFilename, bNoUserInteraction);
   if (retVal == true)
@@ -534,9 +542,9 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
     return false;
   }
 
-  PleaseWaitDialog pleaseWait(this);
-  pleaseWait.SetText("Loading dataset, please wait  ...");
-  pleaseWait.AttachLabel(&m_MasterController);
+  PleaseWaitDialog pleaseWaitLoading(this);
+  pleaseWaitLoading.SetText("Loading dataset, please wait  ...");
+  pleaseWaitLoading.AttachLabel(&m_MasterController);
 
   // First check to make sure the list of files we've been given makes sense.
   for(QStringList::const_iterator fn = files.begin();
@@ -545,7 +553,7 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
       T_ERROR("Empty filelist");
       return false;
     }
-    if(!SysTools::FileExists(std::string(fn->toAscii()))) {
+    if(!SysTools::FileExists(fn->toStdWString())) {
       QString strText = tr("File %1 not found.").arg(*fn);
       T_ERROR("%s", strText.toStdString().c_str());
       if(!bNoUserInteraction) {
@@ -564,14 +572,14 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
   if(files.size() == 1) {
     // check to see if we need to convert this file to a supported format.
 
-    if(!ss->cexecRet<bool>("tuvok.io.needsConversion",files[0].toStdString())) {
+    if(!ss->cexecRet<bool>("tuvok.io.needsConversion",files[0].toStdWString())) {
       needs_conversion = false;
 
       // It might also be the case that the checksum is bad && we need to
       // report an error, but we don't bother with the checksum if they've
       // asked us not to in the preferences.
       if(!m_bQuickopen && 
-         false == ss->cexecRet<bool>("tuvok.io.verify", files[0].toStdString()))
+         false == ss->cexecRet<bool>("tuvok.io.verify", files[0].toStdWString()))
       {
         QString strText = tr("File %1 appears to be a broken UVF file: "
                              "the header looks ok, "
@@ -595,28 +603,29 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
       return false;
     }
 
-    std::list<std::string> stdfiles;
+    std::list<std::wstring> stdfiles;
     for(QStringList::const_iterator fn = files.begin();
         fn != files.end(); ++fn) {
-      stdfiles.push_back(std::string(fn->toAscii()));
+      stdfiles.push_back(fn->toStdWString());
     }
 
-    PleaseWaitDialog pleaseWait(this);
-    pleaseWait.SetText("Converting, please wait  ...");
-    pleaseWait.AttachLabel(&m_MasterController);
+    PleaseWaitDialog pleaseWaitConverting(this);
+    pleaseWaitConverting.SetText("Converting, please wait  ...");
+    pleaseWaitConverting.AttachLabel(&m_MasterController);
 
     try {
-      ss->cexec("tuvok.io.convertDataset", stdfiles, 
-                std::string(targetFilename.toAscii()), m_strTempDir, 
+      ss->cexec("tuvok.io.convertDataset", stdfiles,
+                targetFilename.toStdWString(), m_strTempDir, 
                 bNoUserInteraction, false);
       filename = targetFilename;
     } catch(const tuvok::io::IOException& e) {
       // create a (hopefully) useful error message
       std::ostringstream error;
       error << "Unable to convert ";
-      std::copy(stdfiles.begin(), stdfiles.end(),
-                std::ostream_iterator<std::string>(error, ", "));
-      error << " into " << std::string(targetFilename.toAscii())
+      for (std::wstring s : stdfiles) {
+          error << SysTools::toNarrow(s) << " ";
+      }
+      error << " into " << targetFilename.toStdString()
             << ": " << e.what();
       T_ERROR("%s", error.str().c_str());
       if(!bNoUserInteraction) {
@@ -624,11 +633,11 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
       }
 
       // now close that dialog and bail.
-      pleaseWait.close();
+      pleaseWaitConverting.close();
       return false;
     }
 
-    pleaseWait.close();
+    pleaseWaitConverting.close();
   }
 
   RenderWindow *renderWin = NULL;
@@ -699,8 +708,8 @@ bool MainWindow::LoadDatasetInternal(QStringList files, QString targetFilename,
 
   if(renderWin) {
     LuaClassInstance ds = renderWin->GetRendererDataset();
-    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
-    UINT64VECTOR3 dom_sz = ss->cexecRet<UINT64VECTOR3>(ds.fqName() + 
+    shared_ptr<LuaScripting> _ss = m_MasterController.LuaScript();
+    UINT64VECTOR3 dom_sz = _ss->cexecRet<UINT64VECTOR3>(ds.fqName() + 
                                                        ".getDomainSize", 
                                                        size_t(0), 
                                                        size_t(0));
@@ -734,9 +743,8 @@ bool MainWindow::RebrickDataset(QString filename, QString targetFilename,
                                    strLastDir, "Universal Volume Format (*.uvf)",
                                    &selectedFilter, options);
     if (!rebrickedFilename.isEmpty()) {
-      rebrickedFilename = SysTools::CheckExt(
-        std::string(rebrickedFilename.toAscii()), "uvf"
-      ).c_str();
+      rebrickedFilename = QString::fromStdWString(SysTools::CheckExt(
+        rebrickedFilename.toStdWString(), L"uvf"));
 
       if (rebrickedFilename == filename) {
         ShowCriticalDialog("Input Error",
@@ -751,8 +759,8 @@ bool MainWindow::RebrickDataset(QString filename, QString targetFilename,
         pleaseWait.AttachLabel(&m_MasterController);
 
         if(!ss->cexecRet<bool>("tuvok.io.rebrickDataset",
-                               string(filename.toAscii()),
-                               string(rebrickedFilename.toAscii()),
+                               filename.toStdWString(),
+                               rebrickedFilename.toStdWString(),
                                m_strTempDir)) {
           ShowCriticalDialog("Error during rebricking.",
                              "The system was unable to rebrick the data set, "
@@ -767,9 +775,10 @@ bool MainWindow::RebrickDataset(QString filename, QString targetFilename,
       return false;
     }
   } while (rebrickedFilename == filename);
-
-  return LoadDataset(QStringList(rebrickedFilename), targetFilename,
-                     bNoUserInteraction);
+  
+  QStringList l;
+  l.append(rebrickedFilename);
+  return LoadDataset(l, targetFilename, bNoUserInteraction);
 }
 
 
@@ -809,7 +818,7 @@ void MainWindow::LoadDirectory() {
         shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
         if (!ss->cexecRet<bool>("tuvok.io.convertDatasetWithStack",
                                 browseDataDialog.GetStackInfo(),
-                                targetFilename.toStdString(),
+                                targetFilename.toStdWString(),
                                 m_strTempDir, false)) {
           QString strText =
             tr("Unable to convert file stack from directory "
@@ -843,7 +852,7 @@ void MainWindow::LoadDirectory() {
   }
 }
 
-bool MainWindow::ExportDataset(uint32_t iLODLevel, std::string targetFileName) {
+bool MainWindow::ExportDataset(uint32_t iLODLevel, const std::wstring& targetFileName) {
   if (!m_pActiveRenderWin) {
     WARNING("No active render window");
     return false;
@@ -876,10 +885,10 @@ void MainWindow::ExportDataset() {
   QString strLastDir = settings.value("Folders/ExportDataset", ".").toString();
 
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  QString dialogString =
-      ss->cexecRet<string>("tuvok.io.getExportDialogString").c_str();
+  QString dialogString = QString::fromStdWString(
+      ss->cexecRet<std::wstring>("tuvok.io.getExportDialogString"));
 
-  std::string ext;
+  std::wstring ext;
   QString fileName;
   do {
     fileName = QFileDialog::getSaveFileName(this, "Export Current Dataset",
@@ -891,37 +900,34 @@ void MainWindow::ExportDataset() {
       break;
     }
     // get it out of a QString && figure out what file type we're dealing with.
-    std::string filter = std::string(selectedFilter.toAscii());
-    size_t start = filter.find_last_of("*.")+1;
-    size_t end = filter.find_last_of(")");
-    ext = filter.substr(start, end-start);
-    SysTools::TrimStr(ext);
-    if(ext == "") {
+    ext = SysTools::GetExt(selectedFilter.toStdWString());
+    ext = ext.substr(0, ext.length() - 1);
+
+    if(ext == L"") {
       QMessageBox noformat;
       noformat.setText("No file extension: unknown export format");
       noformat.setIcon(QMessageBox::Critical);
       noformat.exec();
     }
-  } while(ext == "");
+  } while(ext == L"");
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/ExportDataset",
                       QFileInfo(fileName).absoluteDir().path());
 
-    string strCompletefileName = SysTools::CheckExt(string(fileName.toAscii()),
-                                                    ext);
+    std::wstring strCompletefileName = SysTools::CheckExt(fileName.toStdWString(),ext);
 
-    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript(); 
+    shared_ptr<LuaScripting> _ss = m_MasterController.LuaScript(); 
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
     int iMaxLODLevel = static_cast<int>(
-        ss->cexecRet<uint64_t>(ds.fqName() + ".getLODLevelCount")) - 1;
+        _ss->cexecRet<uint64_t>(ds.fqName() + ".getLODLevelCount")) - 1;
 
     int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       int iMinLODLevel = 0;
       vector<QString> vDesc;
       for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
-        UINTVECTOR3 vLODSize = UINTVECTOR3(ss->cexecRet<UINT64VECTOR3>(
+        UINTVECTOR3 vLODSize = UINTVECTOR3(_ss->cexecRet<UINT64VECTOR3>(
                 ds.fqName() + ".getDomainSize", size_t(i), size_t(0)));
         QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
         vDesc.push_back(qstrDesc);
@@ -942,14 +948,14 @@ void MainWindow::ExportDataset() {
       ShowCriticalDialog( "Error during dataset export.", "The system was unable to export the current data set, please check the error log for details (Menu -> \"Help\" -> \"Debug Window\").");
     } else {
       pleaseWait.hide();
-      QString msg = tr("The dataset has been exported as %1.").arg(strCompletefileName.c_str());
+      QString msg = tr("The dataset has been exported as %1.").arg(QString::fromStdWString(strCompletefileName));
       ShowInformationDialog( tr("Export successful"), msg);
     }
   }
 }
 
 
-bool MainWindow::ExportIsosurface(uint32_t iLODLevel, string targetFileName) {
+bool MainWindow::ExportIsosurface(uint32_t iLODLevel, const std::wstring& targetFileName) {
     if (!m_pActiveRenderWin) {
       m_MasterController.DebugOut()->Warning("MainWindow::ExportIso", "No active renderwin");
       return false;
@@ -984,39 +990,39 @@ void MainWindow::ExportImageStack() {
   QString strLastDir = settings.value("Folders/ExportImageStack", ".").toString();
 
   shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
-  string filterStr = ss->cexecRet<string>("tuvok.io.getImageExportDialogString").c_str();
+  const std::wstring filterStr = ss->cexecRet<std::wstring>("tuvok.io.getImageExportDialogString");
 
   QString fileName =
     QFileDialog::getSaveFileName(this, "Export Current Dataset to a Set of Images",
-         strLastDir,filterStr.c_str(),&selectedFilter, options);
+         strLastDir, QString::fromStdWString(filterStr),&selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/ExportImageStack", QFileInfo(fileName).absoluteDir().path());
-    string targetFileName = string(fileName.toAscii());
+    std::wstring targetFileName = fileName.toStdWString();
     
-    string selectedFilterStr = string(selectedFilter.toAscii());
-    std::string filterExt = ss->cexecRet<string>("tuvok.io.imageExportDialogFilterToExt", selectedFilterStr);
+    const std::wstring selectedFilterStr = selectedFilter.toStdWString();
+    const std::wstring filterExt = ss->cexecRet<std::wstring>("tuvok.io.imageExportDialogFilterToExt", selectedFilterStr);
 
     if (SysTools::GetExt(targetFileName).empty())  {
       if (filterExt.empty()) {
         ShowCriticalDialog( "Error during image stack export.", "Unable to determine file type from filename.");
         return;
       } else {
-        targetFileName += std::string(".") + filterExt;
+        targetFileName += std::wstring(L".") + filterExt;
       }
     }
 
-    shared_ptr<LuaScripting> ss = m_MasterController.LuaScript();
+    shared_ptr<LuaScripting> _ss = m_MasterController.LuaScript();
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
     int iMaxLODLevel = static_cast<int>(
-        ss->cexecRet<uint64_t>(ds.fqName() + ".getLODLevelCount") ) - 1;
+        _ss->cexecRet<uint64_t>(ds.fqName() + ".getLODLevelCount") ) - 1;
 
     int iLODLevel = 0;
     if (iMaxLODLevel > 0) {
       int iMinLODLevel = 0;
       vector<QString> vDesc;
       for (int i = iMinLODLevel;i<=iMaxLODLevel;i++) {
-        UINTVECTOR3 vLODSize = UINTVECTOR3( ss->cexecRet<UINT64VECTOR3>(
+        UINTVECTOR3 vLODSize = UINTVECTOR3( _ss->cexecRet<UINT64VECTOR3>(
                 ds.fqName() + ".getDomainSize", size_t(i), size_t(0)) );
         QString qstrDesc = tr("%1 x %2 x %3").arg(vLODSize.x).arg(vLODSize.y).arg(vLODSize.z);
         vDesc.push_back(qstrDesc);
@@ -1041,7 +1047,7 @@ void MainWindow::ExportImageStack() {
   }
 }
 
-bool MainWindow::ExportImageStack(uint32_t iLODLevel, std::string targetFileName, bool bAllDirs) {
+bool MainWindow::ExportImageStack(uint32_t iLODLevel, const std::wstring& targetFileName, bool bAllDirs) {
     if (!m_pActiveRenderWin) {
       m_MasterController.DebugOut()->Warning("MainWindow::ExportImageStack", "No active renderwin");
       return false;
@@ -1077,17 +1083,17 @@ void MainWindow::ExportIsosurface() {
   QString fileName =
     QFileDialog::getSaveFileName(this, "Export Current Isosurface to Mesh",
          strLastDir,
-         ss->cexecRet<string>("tuvok.io.getGeoExportDialogString").c_str(),
+         QString::fromStdWString(ss->cexecRet<wstring>("tuvok.io.getGeoExportDialogString")),
          &selectedFilter, options);
 
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/ExportIso", QFileInfo(fileName).absoluteDir().path());
-    string targetFileName = string(fileName.toAscii());
+    const std::wstring targetFileName = fileName.toStdWString();
 
     // still a valid filename ext ?
     if (!ss->cexecRet<bool>("tuvok.io.hasGeoConverterForExt", 
                             SysTools::ToLowerCase(SysTools::GetExt(
-                                    string(fileName.toAscii()))),
+                                    fileName.toStdWString())),
                             true,false)) {
       ShowCriticalDialog("Extension Error", 
                          "Unable to determine the file type "
@@ -1139,12 +1145,15 @@ void MainWindow::ExportIsosurface() {
   }
 }
 
-void MainWindow::CompareFiles(const std::string& strFile1, const std::string& strFile2) const {
-  string strMessage = "";
+void MainWindow::CompareFiles(const std::wstring& strFile1, const std::wstring& strFile2) const {
+  std::wstring strMessage = L"";
   if (LargeRAWFile::Compare(strFile1, strFile2, &strMessage)) {
     m_MasterController.DebugOut()->Message("MainWindow::CompareFiles", "Files are identical!");
   } else {
-    m_MasterController.DebugOut()->Warning("MainWindow::CompareFiles", "%s (Comparing %s %s)", strMessage.c_str(), strFile1.c_str(), strFile2.c_str());
+    m_MasterController.DebugOut()->Warning("MainWindow::CompareFiles", "%s (Comparing %s %s)", 
+      SysTools::toNarrow(strMessage).c_str(), 
+      SysTools::toNarrow(strFile1).c_str(), 
+      SysTools::toNarrow(strFile2).c_str());
   }
 }
 
@@ -1152,7 +1161,7 @@ void MainWindow::CompareFiles(const std::string& strFile1, const std::string& st
 void MainWindow::MergeDatasets() {
   MergeDlg m(this);
   if (m.exec() == QDialog::Accepted) {
-    vector <string> strFilenames;
+    vector <wstring> strFilenames;
     vector <double> vScales;
     vector<double>  vBiases;
 
@@ -1174,7 +1183,7 @@ void MainWindow::MergeDatasets() {
 
     shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
     QString dialogString = tr("%1%2")
-        .arg(ss->cexecRet<string>("tuvok.io.getExportDialogString").c_str())
+        .arg(QString::fromStdWString(ss->cexecRet<wstring>("tuvok.io.getExportDialogString")))
         .arg("Universal Volume Format (*.uvf);;");
 
     QString fileName =
@@ -1184,12 +1193,12 @@ void MainWindow::MergeDatasets() {
 
     if (!fileName.isEmpty()) {
       settings.setValue("Folders/MergedOutput", QFileInfo(fileName).absoluteDir().path());
-      std::string stdFile = std::string(fileName.toAscii());
-      if(SysTools::GetExt(stdFile) == "") {
+      std::wstring stdFile = fileName.toStdWString();
+      if(SysTools::GetExt(stdFile) == L"") {
         WARNING("no extension; assuming UVF.");
-        stdFile = stdFile + ".uvf";
+        stdFile = stdFile + L".uvf";
         // fix fileName too: used later if the user tries to load the data.
-        fileName = QString(stdFile.c_str());
+        fileName = QString::fromStdWString(stdFile);
       }
 
       PleaseWaitDialog pleaseWait(this);

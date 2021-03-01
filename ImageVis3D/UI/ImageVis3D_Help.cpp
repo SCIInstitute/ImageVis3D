@@ -51,10 +51,10 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTextStream>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 #include <QtGui/QDesktopServices>
-#include <QtNetwork/QHttp>
-#include <QtNetwork/QHttpResponseHeader>
+
+#include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QAuthenticator>
 
 #include "../Tuvok/Renderer/GPUMemMan/GPUMemMan.h"
@@ -83,8 +83,12 @@ using namespace std;
 
 void MainWindow::ShowAbout()
 {
+
   QString qstrTitle;
   QString qstrText("");
+
+
+
 #ifdef _DEBUG
   qstrTitle = tr("ImageVis3D %1 %2 DEBUG VERSION!").arg(IV3D_VERSION).arg(IV3D_VERSION_TYPE);
   qstrText = tr("Warning: this is a DEBUG build!  This version is for "
@@ -95,16 +99,20 @@ void MainWindow::ShowAbout()
   qstrTitle = tr("ImageVis3D %1").arg(IV3D_VERSION);
 #endif
   qstrText += tr("This is the award winning ImageVis3D volume rendering system %1 %2, using the Tuvok render engine "
-                 "%3 %4 %5. Copyright 2008-2014 by the Scientific Computing "
+                 "%3 %4 %5. Copyright 2008-2020 by the Scientific Computing "
                  "and Imaging (SCI) Institute, and the High Performance "
                  "Computing Group at the University of Duisburg-Essen, Germany.\n\n"
+                 "Using Qt Version: %6.%7.%8\n"
                  "Hilbert Curve implementation copyright 1998, Rice University."
                  "LZ4 - Fast LZ compression algorithm copyright 2011-2012, Yann Collet.")
                     .arg(IV3D_VERSION)
                     .arg(IV3D_VERSION_TYPE)
                     .arg(TUVOK_VERSION)
                     .arg(TUVOK_VERSION_TYPE)
-                    .arg(TUVOK_DETAILS);
+                    .arg(TUVOK_DETAILS)
+                    .arg(QT_VERSION_MAJOR)
+                    .arg(QT_VERSION_MINOR)
+                    .arg(QT_VERSION_PATCH);
 
   AboutDlg d(qstrTitle,qstrText, this);
   connect(&d, SIGNAL(CheckUpdatesClicked()),   this, SLOT(CheckForUpdates()));
@@ -129,52 +137,63 @@ void MainWindow::CheckForUpdates() {
   CheckForUpdatesInternal();
 }
 
+
 void MainWindow::CheckForUpdatesInternal() {
 #ifndef PACKAGE_MANAGER
   // cleanup updatefile, this codepath is taken for instance when the windows firewall blocked an http request
   if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
     m_pUpdateFile->close();
+
     DeleteUpdateFile();
-
-    // is seems like m_pHttp gets stuck if the firewall blocked it the first time so lets create a new one
-    disconnect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
-    disconnect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
-    delete m_pHttp;
-
-    m_pHttp = new QHttp(this);
-    connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
-    connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
   }
 
-  if (!m_pHttp) return;
-  QString strCompleteFile = tr("%1%2").arg(UPDATE_VERSION_PATH).arg(UPDATE_VERSION_FILE);
-  QUrl url(strCompleteFile);
-
-  QHttp::ConnectionMode mode = url.scheme().toLower() == "https" ? QHttp::ConnectionModeHttps : QHttp::ConnectionModeHttp;
-  m_pHttp->setHost(url.host(), mode, url.port() == -1 ? 0 : url.port());
-  if (!url.userName().isEmpty()) m_pHttp->setUser(url.userName(), url.password());
-
   QString strUpdateFile = tr("%1/ImageVis3D_UpdateCheck_Temp").arg(QDir::tempPath());
-
   m_pUpdateFile = new QTemporaryFile(strUpdateFile);
-  // Ignore return value; not much we can do if it fails.
-  (void) unlink(strUpdateFile.toStdString().c_str());
-  QByteArray remotePath = QUrl::toPercentEncoding(url.path(), "!$&'()*+,;=:@/");
-  if (remotePath.isEmpty()) remotePath = "/";
-  m_iHttpGetId = m_pHttp->get(remotePath, m_pUpdateFile);
+  m_pUpdateFile->open(QIODevice::WriteOnly);
+
+  QString strCompleteFile;
+  if (m_bCheckForDevBuilds)
+      strCompleteFile = tr("%1%2").arg(UPDATE_NIGHTLY_PATH).arg(UPDATE_VERSION_FILE);
+  else
+      strCompleteFile = tr("%1%2").arg(UPDATE_VERSION_PATH).arg(UPDATE_VERSION_FILE);
+
+  QUrl url(strCompleteFile);
+  m_pHttpReply = m_Http.get(QNetworkRequest(url));
+  connect(m_pHttpReply, &QNetworkReply::finished, this, &MainWindow::httpFinished);
+  connect(m_pHttpReply, &QIODevice::readyRead, this, &MainWindow::httpReadyRead);
+
+
 #endif
 }
 
-void MainWindow::httpRequestFinished(int requestId, bool error) {
-  if (requestId != m_iHttpGetId || !m_pUpdateFile) return;
+void MainWindow::httpReadyRead() {
+    // this slot gets called every time the QNetworkReply has new data.
+    // We read all of its new data and write it into the file.
+    // That way we use less RAM than when reading it at the finished()
+    // signal of the QNetworkReply
+    if (m_pUpdateFile && m_pHttpReply)
+        m_pUpdateFile->write(m_pHttpReply->readAll());
+}
 
-  if (m_pUpdateFile && m_pUpdateFile->isOpen()) {
-    m_pUpdateFile->close();
-  }
+void MainWindow::httpFinished() {
+    QFileInfo fi;
+
+    if (m_pUpdateFile) {
+        fi.setFile(m_pUpdateFile->fileName());
+        m_pUpdateFile->close();
+        m_pUpdateFile = nullptr;
+    } else {
+        return;
+    }
+
 
   if (!m_bScriptMode) {
-    if (error) {
-      if (!m_bStartupCheck) ShowInformationDialog( tr("Update Check"),tr("Download failed: %1.").arg(m_pHttp->errorString()));
+    if (m_pHttpReply->error()) {
+        QFile::remove(fi.absoluteFilePath());
+
+        if (!m_bStartupCheck)
+          ShowInformationDialog( tr("Update Check"), tr("Download failed: %1.") .arg(m_pHttpReply->errorString()));
+
     } else {
       struct VersionNumber iv3d;
       struct VersionNumber tuvok;
@@ -188,7 +207,7 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
 #else
       size_t tuvok_svn = 0;
 #endif
-      if (GetVersionsFromUpdateFile(string(m_pUpdateFile->fileName().toAscii()),
+      if (GetVersionsFromUpdateFile(fi.absoluteFilePath().toStdWString(),
                                     iv3d, tuvok)) {
         const struct VersionNumber local_iv3d = {
           IV3D_MAJOR, IV3D_MINOR, IV3D_PATCH, iv3d_svn
@@ -231,6 +250,11 @@ void MainWindow::httpRequestFinished(int requestId, bool error) {
       }
     }
   }
+
+  if (m_pHttpReply) {
+    m_pHttpReply->deleteLater();
+    m_pHttpReply = nullptr;
+  }
 }
 
 void MainWindow::DeleteUpdateFile() {
@@ -238,22 +262,6 @@ void MainWindow::DeleteUpdateFile() {
     m_pUpdateFile->remove();
     delete m_pUpdateFile;
     m_pUpdateFile = NULL;
-  }
-}
-
-void MainWindow::readResponseHeader(const QHttpResponseHeader &responseHeader) {
-  switch (responseHeader.statusCode()) {
-    case 200:                   // Ok
-    case 301:                   // Moved Permanently
-    case 302:                   // Found
-    case 303:                   // See Other
-    case 307:                   // Temporary Redirect
-       // these are not error conditions
-       break;
-    default:
-       if (!m_bStartupCheck)
-         ShowInformationDialog( tr("Update Check"), tr("Download failed: %1.") .arg(responseHeader.reasonPhrase()));
-       m_pHttp->abort();
   }
 }
 
@@ -276,11 +284,20 @@ bool MainWindow::VersionNumber::operator>(const VersionNumber &vn) const
           this->patch > vn.patch);
 }
 
-bool MainWindow::GetVersionsFromUpdateFile(const std::string& strFilename,
+bool MainWindow::GetVersionsFromUpdateFile(const std::wstring& strFilename,
                                            struct VersionNumber& iv3d,
                                            struct VersionNumber& tuvok) {
+  // Version File contains 3 lines:
+  // IV3DMAJOR.IV3DMINOR.IV3DPATCH
+  // IV3DSVN
+  // TUVOKMAJOR.TUVOKMINOR.TUVOKPATCH
+  // Example:
+  // 3.2.1
+  // 29
+  // 3.2.1
+
   string line ="";
-  ifstream updateFile(strFilename.c_str(),ios::binary);
+  ifstream updateFile(SysTools::toNarrow(strFilename).c_str(),ios::binary);
 
 #define CHECK_EOF() \
   do { \
@@ -348,20 +365,20 @@ void MainWindow::UploadLogToServer() {
     outstream << listWidget_DebugOut->item(i)->text() << "\n";
   pFTPTempFile->close();
 
-  string strSourceName = string(pFTPTempFile->fileName().toAscii());
+  const wstring strSourceName = pFTPTempFile->fileName().toStdWString();
 
   delete pFTPTempFile;
 
-  QString qstrID = GenUniqueName("DebugOut","txt").c_str();
-  FtpTransfer(strSourceName, string(qstrID.toAscii()));
+  QString qstrID = GenUniqueName(L"DebugOut",L"txt");
+  FtpTransfer(strSourceName, qstrID.toStdWString());
 }
 
 
-std::string MainWindow::GenUniqueName(const std::string& strPrefix, const std::string& strExt) {
-  return string(tr("%1_%2_%3.%4").arg(strPrefix.c_str()).arg(QTime::currentTime().toString()).arg(QDate::currentDate().toString()).arg(strExt.c_str()).toAscii());
+QString MainWindow::GenUniqueName(const std::wstring& strPrefix, const std::wstring& strExt) {
+  return tr("%1_%2_%3.%4").arg(QString::fromStdWString(strPrefix)).arg(QTime::currentTime().toString()).arg(QDate::currentDate().toString()).arg(QString::fromStdWString(strExt));
 }
 
-bool MainWindow::FtpTransfer(string strSource, string strDest,
+bool MainWindow::FtpTransfer(const std::wstring& strSource, const std::wstring& strDest,
                              bool bDeleteSource) {
   if (!m_bFTPFinished) return false;
   m_bFTPFinished = true;
@@ -373,9 +390,9 @@ bool MainWindow::FtpTransfer(string strSource, string strDest,
   }
 
   m_bFTPDeleteSource = bDeleteSource;
-  string strFullDest = string(DEBUG_DUMP_PATH) + strDest;
+  std::wstring strFullDest = std::wstring(DEBUG_DUMP_PATH) + strDest;
 
-  m_pFTPDialog = new FTPDialog(strSource, DEBUG_DUMP_SERVER ,strFullDest, this);
+  m_pFTPDialog = new FTPDialog(strSource, std::wstring(DEBUG_DUMP_SERVER) ,strFullDest, this);
 
   connect(m_pFTPDialog, SIGNAL(TransferFailure()), this, SLOT(FtpFail()));
   connect(m_pFTPDialog, SIGNAL(TransferSuccess()), this, SLOT(FtpSuccess()));
@@ -386,13 +403,13 @@ bool MainWindow::FtpTransfer(string strSource, string strDest,
 }
 
 void MainWindow::FtpFail() {
-  if (SysTools::FileExists(m_strFTPTempFile) && m_bFTPDeleteSource) remove(m_strFTPTempFile.c_str());
+  if (SysTools::FileExists(m_strFTPTempFile) && m_bFTPDeleteSource) SysTools::RemoveFile(m_strFTPTempFile);
   ShowInformationDialog("Transfer failed", "Transfer failed");
   m_bFTPFinished = true;
 }
 
 void MainWindow::FtpSuccess() {
-  if (SysTools::FileExists(m_strFTPTempFile) && m_bFTPDeleteSource) remove(m_strFTPTempFile.c_str());
+  if (SysTools::FileExists(m_strFTPTempFile) && m_bFTPDeleteSource) SysTools::RemoveFile(m_strFTPTempFile);
   ShowInformationDialog("Transfer successfull", "Transfer successfull");
   m_bFTPFinished = true;
 }
@@ -491,18 +508,18 @@ void MainWindow::CloseWelcome() {
 }
 
 void MainWindow::ReportABug() {
-  ReportABug("");
+  ReportABug(L"");
 }
 
-void MainWindow::ReportABug(const string& strFile) {
+void MainWindow::ReportABug(const wstring& strFile) {
   BugRepDlg b(this, Qt::Tool, strFile);
 
   QSettings settings;
   settings.beginGroup("BugReport");
   b.SetSubmitSysinfo(settings.value("SubmitSysinfo", true).toBool());
   b.SetSubmitLog(settings.value("SubmitLog", true).toBool());
-  b.SetUsername(string(settings.value("Username", "").toString().toAscii()));
-  b.SetUserMail(string(settings.value("UserMail", "").toString().toAscii()));
+  b.SetUsername(string(settings.value("Username", "").toString().toStdString()));
+  b.SetUserMail(string(settings.value("UserMail", "").toString().toStdString()));
 
   while(b.exec() != QDialog::Rejected) {
     {
@@ -525,8 +542,8 @@ void MainWindow::ReportABug(const string& strFile) {
       return;
     }
 
-    string strDate(QDate::currentDate().toString().toAscii());
-    string strTime(QTime::currentTime().toString().toAscii());
+    string strDate(QDate::currentDate().toString().toStdString());
+    string strTime(QTime::currentTime().toString().toStdString());
     reportFile << "Issue Report " << strDate << "  " << strTime << endl << endl << endl;
 
     reportFile << "Tuvok Version:" << TUVOK_VERSION << " "
@@ -612,7 +629,7 @@ void MainWindow::ReportABug(const string& strFile) {
     if (b.SubmitLog()) {
       reportFile << endl << endl << "Debug Log:" << endl;
       for (int i = 0;i<listWidget_DebugOut->count();i++) {
-        string line(listWidget_DebugOut->item(i)->text().toAscii());
+        string line(listWidget_DebugOut->item(i)->text().toStdString());
         reportFile << "   " << line << endl;
       }
     }
@@ -636,7 +653,7 @@ void MainWindow::ReportABug(const string& strFile) {
     /// \todo Tom add compressor here
 
     QString qstrID = tr("ErrorReport_%1_%2.apx").arg(QTime::currentTime().toString()).arg(QDate::currentDate().toString());
-    if (!FtpTransfer("report.apx", string(qstrID.toAscii()), true)) {
+    if (!FtpTransfer(L"report.apx", qstrID.toStdWString(), true)) {
       remove("report.apx");
       ShowWarningDialog("Warning", "Another FTP transfer is still in progress, aborting.");
       return;

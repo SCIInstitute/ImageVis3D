@@ -38,11 +38,11 @@
 #include "../Tuvok/StdTuvokDefines.h"
 #include "../Tuvok/Basics/MathTools.h"
 #include "SettingsDlg.h"
-#include <QtGui/QColorDialog>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QColorDialog>
+#include <QtWidgets/QMessageBox>
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/SystemInfo.h"
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QFileDialog>
 #include <QtCore/QSettings>
 
 
@@ -106,8 +106,8 @@ void SettingsDlg::setupUi(QDialog *SettingsDlg) {
   MaxToSliders(iMaxCPUMB, iMaxGPUMB);
 
   // init mem sliders
-  horizontalSlider_GPUMem->setMinimum(32);
-  horizontalSlider_CPUMem->setMinimum(512);
+  horizontalSlider_GPUMem->setMinimum(1024);
+  horizontalSlider_CPUMem->setMinimum(2048);
 
   ToggleExperimentalFeatures();
 }
@@ -127,7 +127,7 @@ void SettingsDlg::MaxToSliders(unsigned int iMaxCPUMB, unsigned int iMaxGPUMB) {
   horizontalSlider_GPUMem->setMaximum(iMaxGPUMB);
   m_InitialGPUMemMax = iMaxGPUMB;
   if (!m_MasterController.SysInfo()->IsGPUSizeComputed()) {
-    horizontalSlider_GPUMem->setValue(512); // choose 512 meg as default in core size if the max size is not-computed the default
+    horizontalSlider_GPUMem->setValue(1024); // choose 1024 meg as default in core size if the max size is not-computed the default
   } else {
     horizontalSlider_GPUMem->setValue(int(iMaxGPUMB*0.8f));
   }
@@ -153,8 +153,8 @@ uint64_t SettingsDlg::GetCPUMem() const {
   return uint64_t(horizontalSlider_CPUMem->value())*1024*1024;
 }
 
-std::string SettingsDlg::GetTempDir() const {
-  return std::string(lineEdit_TempDir->text().toAscii());
+std::wstring SettingsDlg::GetTempDir() const {
+  return lineEdit_TempDir->text().toStdWString();
 }
 
 bool SettingsDlg::GetQuickopen() const {
@@ -341,7 +341,7 @@ void SettingsDlg::SetLogoLabel() {
   if (m_strLogoFilename.isEmpty()) {
     label_LogoFile->setText("No logo selected");
   } else {
-    if (SysTools::FileExists(string(m_strLogoFilename.toAscii())) ) {
+    if (SysTools::FileExists(m_strLogoFilename.toStdWString()) ) {
       label_LogoFile->setText(m_strLogoFilename);
     } else {
       label_LogoFile->setText(m_strLogoFilename + " [File not found]");
@@ -353,13 +353,13 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
                             uint64_t iMaxGPU, bool bIgnoreMax,
                             unsigned int iUserMaxCPUMB, 
                             unsigned int iUserMaxGPUMB, 
-                            const std::string& tempDir,
+                            const std::wstring& tempDir,
                             bool bQuickopen, unsigned int iMinFramerate, 
                             bool bRenderLowResIntermediateResults, 
                             unsigned int iLODDelay,
                             unsigned int iActiveTS, unsigned int iInactiveTS,
                             bool bWriteLogFile, bool bShowCrashDialog,
-                            const std::string& strLogFileName, 
+                            const std::wstring& strLogFileName, 
                             uint32_t iLogLevel,
                             bool bShowVersionInTitle,
                             bool bAutoSaveGEO, bool bAutoSaveWSP, 
@@ -398,7 +398,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
   horizontalSlider_CPUMem->setValue(iMaxCPU / (1024*1024));
   horizontalSlider_GPUMem->setValue(iMaxGPU / (1024*1024));
 
-  lineEdit_TempDir->setText(tempDir.c_str());
+  lineEdit_TempDir->setText(QString::fromStdWString(tempDir));
   horizontalSlider_BSMax->setMaximum(iMaxMaxBrickSize);
   horizontalSlider_BSMax->setValue(iMaxBrickSize);
   MaxBSChanged(iMaxBrickSize);
@@ -447,7 +447,8 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
 
   checkBox_WriteLogfile->setChecked(bWriteLogFile);
   checkBox_ShowCrashDialog->setChecked(bShowCrashDialog);
-  lineEdit_filename->setText(strLogFileName.c_str());
+
+  lineEdit_filename->setText(QString::fromStdWString(strLogFileName));
   horizontalSlider_loglevel->setValue(iLogLevel);
 
   checkBox_ShowVersionInTitle->setChecked(bShowVersionInTitle);
@@ -527,7 +528,7 @@ void SettingsDlg::Data2Form(bool bIsDirectX10Capable, uint64_t iMaxCPU,
                 break;
   }
 
-  m_strLogoFilename = strLogo.toAscii();
+  m_strLogoFilename = strLogo;
   SetLogoLabel();
 
   checkBox_PowerOfTwo->setChecked(bPowerOfTwo);
@@ -574,8 +575,8 @@ bool SettingsDlg::GetShowCrashDialog() const {
   return checkBox_ShowCrashDialog->isChecked();
 }
 
-const string SettingsDlg::GetLogFileName() const {
-  return string(lineEdit_filename->text().toAscii());
+const wstring SettingsDlg::GetLogFileName() const {
+  return lineEdit_filename->text().toStdWString();
 }
 
 uint32_t SettingsDlg::GetLogLevel() const {

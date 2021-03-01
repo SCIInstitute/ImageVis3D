@@ -1,3 +1,58 @@
+#pragma once
+
+#ifndef STDIMAGEVISDEFINES_H
+#define STDIMAGEVISDEFINES_H
+
+#include "../Tuvok/StdTuvokDefines.h"
+
+#define IV3D_MAJOR 4
+#define IV3D_MINOR 0
+#define IV3D_PATCH 0
+
+#define IV3D_VERSION "4.0.0"
+#define IV3D_VERSION_TYPE "Release Version"
+
+#define MANUAL_NAME  "ImageVis3D.pdf"
+#define HELP_URL  "http://hpc.uni-due.de/data/IV3D/ImageVis3D.pdf"
+#define TUTORIAL_URL "http://www.imagevis3d.org/"
+#define DEMO_DATA_URL  "http://www.sci.utah.edu/download/IV3DData.html"
+#define DEBUG_DUMP_SERVER   L"ftp://ftp.sci.utah.edu"
+#define DEBUG_DUMP_PATH     L"upload/ImageVis3D/"
+//#define UPDATE_VERSION_PATH "http://www.sci.utah.edu/devbuilds/imagevis3d/"
+//#define UPDATE_NIGHTLY_PATH "http://www.sci.utah.edu/devbuilds/imagevis3d/
+#define UPDATE_VERSION_PATH "http://hpc.uni-due.de/software/stable/"
+#define UPDATE_NIGHTLY_PATH "http://hpc.uni-due.de/software/devbuild/"
+
+#define UPDATE_STABLE_PATH  "http://www.sci.utah.edu/download/imagevis3d.html"
+
+
+#define SCI_ORGANIZATION_DOMAIN "http://software.sci.utah.edu/"
+#ifdef DETECTED_OS_WINDOWS
+  #define UPDATE_FILE "ImageVis3D-Windows-Latest.zip"
+  #define UPDATE_VERSION_FILE "ImageVis3D-Windows_Latest_Version.txt"
+#endif
+
+#ifdef DETECTED_OS_APPLE
+  #define UPDATE_FILE "ImageVis3D-OSX-Latest.zip"
+  #define UPDATE_VERSION_FILE "ImageVis3D-OSX_Latest_Version.txt"
+#endif
+
+#ifdef DETECTED_OS_LINUX
+  #define UPDATE_FILE "ImageVis3D-Linux-Latest.zip"
+  #define UPDATE_VERSION_FILE "ImageVis3D-Linux_Latest_Version.txt"
+#endif
+
+// make sure they have a definition, so code that uses the defines always
+// compiles... even if that definition doesn't exactly make sense.
+#ifndef UPDATE_FILE
+# define UPDATE_FILE "ImageVis3D-Unsupported-Latest.zip"
+#endif
+#ifndef UPDATE_VERSION_FILE
+# define UPDATE_VERSION_FILE "Unsupported-Latest-Version.txt"
+#endif
+
+#endif // STDIMAGEVISDEFINES_H
+
 /*
    For more information, please see: http://software.sci.utah.edu
 
@@ -33,53 +88,3 @@
            University of Utah
   \date    October 2008
 */
-
-#pragma once
-
-#ifndef STDIMAGEVISDEFINES_H
-#define STDIMAGEVISDEFINES_H
-
-#include "../Tuvok/StdTuvokDefines.h"
-
-#define IV3D_MAJOR 3
-#define IV3D_MINOR 1
-#define IV3D_PATCH 0
-
-#define IV3D_VERSION "3.1.0+"
-#define IV3D_VERSION_TYPE "Developer Build"
-
-#define MANUAL_NAME  "ImageVis3D.pdf"
-#define HELP_URL  "http://hpc.uni-due.de/data/IV3D/ImageVis3D.pdf"
-#define TUTORIAL_URL "http://www.imagevis3d.org/"
-#define DEMO_DATA_URL  "http://www.sci.utah.edu/download/IV3DData.html"
-#define DEBUG_DUMP_SERVER   "ftp://ftp.sci.utah.edu"
-#define DEBUG_DUMP_PATH     "upload/ImageVis3D/"
-#define UPDATE_VERSION_PATH "http://www.sci.utah.edu/devbuilds/imagevis3d/"
-#define UPDATE_NIGHTLY_PATH "http://www.sci.utah.edu/devbuilds/imagevis3d/"
-#define UPDATE_STABLE_PATH  "http://www.sci.utah.edu/download/imagevis3d.html"
-#define SCI_ORGANIZATION_DOMAIN "http://software.sci.utah.edu/"
-#ifdef DETECTED_OS_WINDOWS
-  #define UPDATE_FILE "ImageVis3D-Windows-Latest.zip"
-  #define UPDATE_VERSION_FILE "Windows_Latest_Version.txt"
-#endif
-
-#ifdef DETECTED_OS_APPLE
-  #define UPDATE_FILE "ImageVis3D-OSX-10.5-Latest.zip"
-  #define UPDATE_VERSION_FILE "OSX_Latest_Version.txt"
-#endif
-
-#ifdef DETECTED_OS_LINUX
-  #define UPDATE_FILE "ImageVis3D-Linux-Latest.zip"
-  #define UPDATE_VERSION_FILE "Linux_Latest_Version.txt"
-#endif
-
-// make sure they have a definition, so code that uses the defines always
-// compiles... even if that definition doesn't exactly make sense.
-#ifndef UPDATE_FILE
-# define UPDATE_FILE "ImageVis3D-Unsupported-Latest.zip"
-#endif
-#ifndef UPDATE_VERSION_FILE
-# define UPDATE_VERSION_FILE "Unsupported-Latest-Version.txt"
-#endif
-
-#endif // STDIMAGEVISDEFINES_H

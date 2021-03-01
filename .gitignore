@@ -2,7 +2,6 @@ Makefile
 Default.geo
 Default.wsp
 Build
-.gitignore
 *.gcno
 debugLog.txt
 ImageVis3D.pro.user
@@ -27,3 +26,4 @@ Scripts/installer/GettingDataIntoImageVis3D.pdf
 *.cached
 *.xcodeproj
 Info.plist
+.DS_Store

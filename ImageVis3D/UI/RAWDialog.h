@@ -47,7 +47,7 @@ class RAWDialog : public QDialog, protected Ui_RAWDialog
 {
   Q_OBJECT
   public:
-    RAWDialog(const std::string& strFilename, uint64_t iFileSize, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    RAWDialog(const std::wstring& strFilename, uint64_t iFileSize, QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~RAWDialog();
 
     UINT64VECTOR3 GetSize() const;
@@ -67,7 +67,7 @@ class RAWDialog : public QDialog, protected Ui_RAWDialog
     void GuessHeaderSize();
 
   private:
-    std::string m_strFilename;
+    std::wstring m_strFilename;
     uint64_t m_iFileSize;
     void setupUi(QDialog *RAWDialog);
 

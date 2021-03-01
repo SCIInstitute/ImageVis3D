@@ -47,7 +47,7 @@
 class ExtendedPlane;
 class TextfileOut;
 
-#include "AutoGen/ui_ImageVis3D.h"
+#include <ui_ImageVis3D.h>
 #include "RenderWindowGL.h"
 #if defined(_WIN32) && defined(USE_DIRECTX)
 #include "RenderWindowDX.h"
@@ -61,6 +61,7 @@ class TextfileOut;
 #include <UI/Welcome.h>
 #include <UI/MetadataDlg.h>
 #include "DebugScriptWindow.h"
+#include <QtNetwork/QNetworkAccessManager>
 
 #include "../Tuvok/LuaScripting/LuaScripting.h"
 #include "../Tuvok/LuaScripting/LuaClassRegistration.h"
@@ -68,8 +69,7 @@ class TextfileOut;
 
 class QDragEnterEvent;
 class QDropEvent;
-class QHttp;
-class QHttpResponseHeader;
+class QNetworkReply;
 class QFile;
 class QTimer;
 class FTPDialog;
@@ -96,12 +96,12 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     /// Starts the internal timer, used for checking if we should continue
     /// rendering.
     void StartTimer();
-    const std::string& GetTempDir() {return m_strTempDir;}
+    const std::wstring& GetTempDir() {return m_strTempDir;}
 
     // Lua function binding
 
     /// Member function constructor for RenderWindowGL.
-    RenderWindow* LuaCreateNewWindow(std::string dataset);
+    RenderWindow* LuaCreateNewWindow(std::wstring dataset);
 
     void LuaResizeActiveWindow(const UINTVECTOR2& newSize);
 
@@ -113,10 +113,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void LuaCallbackToggleClipPlane(bool bClip);
 
     // directly loads the TFqn; used for Lua scripting.
-    void LoadTransferFunction1D(const std::string& tf);
-    void LoadTransferFunction2D(const std::string& tf);
+    void LoadTransferFunction1D(const std::wstring& tf);
+    void LoadTransferFunction2D(const std::wstring& tf);
 
-    bool RunLuaScript(const std::string& strFilename);
+    bool RunLuaScript(const std::wstring& strFilename);
 
   public slots:
     void SetRenderProgressAnUpdateInfo(unsigned int iLODCount,
@@ -140,7 +140,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void CaptureSequence();
     void CaptureRotation();
     void LoadDataset();
-    void LoadDataset(std::string strFilename);
+    void LoadDataset(const std::wstring& strFilename);
     void LoadDirectory();
     void AddGeometry();
     void ExportGeometry();
@@ -169,7 +169,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void Transfer1DSetColors();
     void Transfer1DSetGroups();
     void Transfer1DLoad();
-    bool Transfer1DLoad(std::string strFilename);
+    bool Transfer1DLoad(const std::wstring& strFilename);
     void Transfer1DSave();
     void Transfer1DCopyTo2DTrans();
     void Populate1DTFLibList();
@@ -187,7 +187,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void Transfer2DChooseGradientOpacitySimpleUI();
     void Transfer2DToggleGradientType();
     void Transfer2DLoad();
-    bool Transfer2DLoad(std::string strFilename);
+    bool Transfer2DLoad(const std::wstring& strFilename);
     void Transfer2DSave();
     void Transfer2DToggleTFMode();
 
@@ -208,6 +208,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     bool LoadWorkspace();
     bool SaveWorkspace();
     bool ApplyWorkspace();
+    void ResetToDefaultWorkspace();
 
     bool LoadGeometry();
     bool SaveGeometry();
@@ -220,11 +221,11 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void UpdateMenus();
     void ExportDataset();
     void MergeDatasets();
-    bool ExportDataset(uint32_t iLODLevel, std::string targetFileName);
+    bool ExportDataset(uint32_t iLODLevel, const std::wstring& targetFileName);
     void ExportIsosurface();
-    bool ExportIsosurface(uint32_t iLODLevel, std::string targetFileName);
+    bool ExportIsosurface(uint32_t iLODLevel, const std::wstring& targetFileName);
     void ExportImageStack();
-    bool ExportImageStack(uint32_t iLODLevel, std::string targetFileName, bool bAllDirs);
+    bool ExportImageStack(uint32_t iLODLevel, const std::wstring& targetFileName, bool bAllDirs);
 
     void RenderWindowActive(RenderWindow* sender);
     void RenderWindowClosing(RenderWindow* sender);
@@ -273,8 +274,8 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     virtual void closeEvent(QCloseEvent *event);
 
     // update
-    void httpRequestFinished(int requestId, bool error);
-    void readResponseHeader(const QHttpResponseHeader &responseHeader);
+    void httpFinished();
+    void httpReadyRead();
 
     void UploadLogToServer();
 
@@ -340,7 +341,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     QAction*                                  m_recentWSFileActs[ms_iMaxRecentFiles];
     FLOATVECTOR3                              m_vBackgroundColors[2];
     FLOATVECTOR4                              m_vTextColor;
-    std::string                               m_strTempDir;
+    std::wstring                              m_strTempDir;
     bool                                      m_bShowVersionInTitle;
     bool                                      m_bQuickopen;
     unsigned int                              m_iMinFramerate;
@@ -377,7 +378,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     bool                                      m_bStayOpenAfterScriptEnd;
 
-    void AddGeometry(std::string filename);
+    void AddGeometry(const std::wstring& filename);
 
     RenderWindow* WidgetToRenderWin(QWidget* w);
     RenderWindow* CreateNewRenderWindow(QString dataset);
@@ -412,13 +413,13 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void GetDebugViewMask();
 
-    bool LoadDataset(const std::vector< std::string >& strParams);
+    bool LoadDataset(const std::vector< std::wstring >& strParams);
     bool LoadDataset(QStringList fileName, QString targetFileName="",
                      bool bNoUserInteraction=false);
     bool LoadDatasetInternal(QStringList files, QString targetFilename,
                              bool bNoUserInteraction);
-    RenderWindow* LuaLoadDatasetInternal(std::vector<std::string> filename,
-                                         std::string targetFileName,
+    RenderWindow* LuaLoadDatasetInternal(const std::vector<std::wstring>& filename,
+                                         const std::wstring& targetFileName,
                                          bool bNoUserInteraction);
     bool RebrickDataset(QString filename, QString targetFilename,
                         bool bNoUserInteraction);
@@ -434,10 +435,10 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SaveSettings(
       uint64_t CPUMem, uint64_t maxCPU, uint64_t GPUMem,
       uint64_t maxGPU, bool ignoreMax,
-      const std::string& tempDir,
+      const std::wstring& tempDir,
       bool checksum, unsigned framerate, bool lowResSubframes, unsigned LODDelay,
       unsigned activeTS, unsigned inactiveTS, bool writeLog, bool showCrashDialog,
-      const std::string& logFile, uint32_t logLevel, bool showVersion,
+      const std::wstring& logFile, uint32_t logLevel, bool showVersion,
       bool autoSaveGeo, bool autoSaveWSP, bool autoLockCloned, bool absoluteLocks,
       bool checkForUpdates,
       bool checkForDevBuilds, bool showWelcome, bool invertWheel, bool i3mFeatures,
@@ -469,15 +470,15 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
     void SetContextScaleValueSlider(int iValue);
     void SetBorderSizeValueSlider(int iValue);
 
-    void CompareFiles(const std::string& strFile1, const std::string& strFile2) const;
+    void CompareFiles(const std::wstring& strFile1, const std::wstring& strFile2) const;
 
     void RemoveAllLocks(RenderWindow* sender);
     void RemoveAllLocks(RenderWindow* sender, size_t iLockType);
     bool SetLock(size_t iLockType, RenderWindow* winA, RenderWindow* winB);
     bool IsLockedWith(size_t iLockType, RenderWindow* winA, RenderWindow* winB);
 
-    bool CaptureFrame(const std::string& strTargetName);
-    bool CaptureSequence(const std::string& strTargetName, std::string* strRealFilename=NULL);
+    bool CaptureFrame(const std::wstring& strTargetName);
+    bool CaptureSequence(const std::wstring& strTargetName, std::wstring* strRealFilename=NULL);
 
     void RotateCurrentViewX(double angle);
     void RotateCurrentViewY(double angle);
@@ -491,7 +492,7 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void SetAndCheckRunningFlag();
     void RemoveRunningFlag();
-    void ReportABug(const std::string& strFile);
+    void ReportABug(const std::wstring& strFile);
     void ToggleLogFile();
 
     void UpdatePolyTypeLabel(int iCurrent);
@@ -510,16 +511,16 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     void RegisterLuaClasses();
 
-    std::string ConvertTF(const std::string& strSource1DTFilename,
-                          const std::string& strTargetDir,
-                          const std::string& strTargetFullFilename,
+    std::wstring ConvertTF(const std::wstring& strSource1DTFilename,
+                          const std::wstring& strTargetDir,
+                          const std::wstring& strTargetFullFilename,
                           PleaseWaitDialog& pleaseWait);
 
-    std::string ConvertDataToI3M(LuaClassInstance currentDataset,
-                                 const std::string& strTargetDir,
+    std::wstring ConvertDataToI3M(LuaClassInstance currentDataset,
+                                 const std::wstring& strTargetDir,
                                  PleaseWaitDialog& pleaseWait,
                                  bool bOverrideExisting);
-    bool ExportGeometry(size_t i, std::string strFilename);
+    bool ExportGeometry(size_t i, const std::wstring& strFilename);
 
     TextfileOut* m_pTextout;
 
@@ -544,14 +545,16 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
       /// Converts major/minor/patch into a string.
       operator std::string() const;
     };
-    QHttp* m_pHttp;
     QFile* m_pUpdateFile;
-    int    m_iHttpGetId;
+    QNetworkAccessManager m_Http;
+    QNetworkReply *m_pHttpReply;
+
+
     bool   m_bStartupCheck;
     bool   m_bScriptMode;
     void CheckForUpdatesInternal();
     void QuietCheckForUpdates();
-    bool GetVersionsFromUpdateFile(const std::string& strFilename,
+    bool GetVersionsFromUpdateFile(const std::wstring& strFilename,
                                    struct VersionNumber& iv3d,
                                    struct VersionNumber& tuvok);
     void DeleteUpdateFile();
@@ -560,12 +563,12 @@ class MainWindow : public QMainWindow, protected Ui_MainWindow
 
     // ftp
     FTPDialog*   m_pFTPDialog;
-    std::string  m_strFTPTempFile;
+    std::wstring m_strFTPTempFile;
     bool         m_bFTPDeleteSource;
     bool         m_bFTPFinished;
-    bool         FtpTransfer(std::string strSource, std::string strDest, bool bDeleteSource = true);
-    std::string  GenUniqueName(const std::string& strPrefix, const std::string& strExt="txt");
-    bool         Pack(const std::vector< std::string >& strParams);
+    bool         FtpTransfer(const std::wstring& strSource, const std::wstring& strDest, bool bDeleteSource = true);
+    QString      GenUniqueName(const std::wstring& strPrefix, const std::wstring& strExt=L"txt");
+    bool         Pack(const std::vector< std::wstring >& strParams);
     void SetStereoMode(unsigned int iMode);
     void SetStereoFocalLength(float fLength);
     void SetStereoEyeDistance(float fEyeDist);

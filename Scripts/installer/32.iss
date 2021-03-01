@@ -2,8 +2,8 @@
 ;
 ;  The MIT License
 ;
-;  Copyright (c) 2009 Scientific Computing and Imaging Institute,
-;  University of Utah.
+;  Copyright (c) 2020 Scientific Computing and Imaging Institute,
+;  University of Utah and the University of Duisburg-Essen
 ;
 ;
 ;  Permission is hereby granted, free of charge, to any person obtaining a
@@ -59,18 +59,18 @@
 ;
 ;
 ;
-; ImageVis3D 32 bit installer script: creates an installer for x86 systems.
+; ImageVis3D 64 bit installer script: creates an installer for amd64 systems.
 ; From the root of the ImageVis3D subversion tree, process this file with
 ; "iscc.exe" from Inno Setup 5.
 [Setup]
 AppName=ImageVis3D
-AppVerName=ImageVis3D 3.1.0
-AppVersion=3.1.0
+AppVerName=ImageVis3D 4.0.0
+AppVersion=4.0.0
 AppPublisher=SCI Institute
 AppPublisherURL=http://software.sci.utah.edu/
 AppSupportURL=http://software.sci.utah.edu/
 AppUpdatesURL=http://software.sci.utah.edu/
-AppCopyright=Copyright (c) 2011 Scientific Computing and Imaging Institute, University of Utah.
+AppCopyright=Copyright (c) 2020 Scientific Computing and Imaging Institute, University of Utah and University of Duisburg-Essen
 DefaultDirName={pf}\ImageVis3D
 DefaultGroupName=ImageVis3D
 OutputDir=Scripts\installer
@@ -81,9 +81,9 @@ InternalCompressLevel=ultra
 SolidCompression=yes
 SourceDir=../../
 LicenseFile=LICENSE
-; Install on Windows XP or newer (actually a Windows NT build number)
-MinVersion=0,5.01
+MinVersion=0,6.0
 ArchitecturesAllowed=x64 x86
+ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
@@ -98,17 +98,22 @@ Name: {userappdata}\ImageVis3D; Flags: uninsalwaysuninstall
 [Files]
 ; Dependencies.
 ;   MS redistributable crap.
-Source: C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x86\Microsoft.VC100.CRT\*; DestDir: {app}; Flags: recursesubdirs
-Source: "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x86\Microsoft.VC100.MFC\*"; DestDir: "{app}"; Flags: recursesubdirs
-;Source: "vcredist.exe"; DestDir: {tmp}; DestName: vcredist.exe; Flags: deleteafterinstall;
+;Source: C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x64\Microsoft.VC100.CRT\*; DestDir: {app}; Flags: recursesubdirs
+;Source: "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x64\Microsoft.VC100.MFC\*"; DestDir: "{app}"; Flags: recursesubdirs
+;Source: "vcredist_x64.exe"; DestDir: {tmp}; DestName: vcredist.exe; Flags: deleteafterinstall;
+Source: "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Redist\MSVC\14.24.28127\vcredist_x86.exe"; DestDir: {tmp}; Flags: deleteafterinstall
+
+; Qt 5 DLLs
+Source: "build\win32\Release (with DirectX)\*.dll"; DestDir: {app}; Flags: ignoreversion replacesameversion
+Source: "build\win32\Release (with DirectX)\platforms\*.dll"; DestDir: {app}\platforms; Flags: ignoreversion replacesameversion
 
 
 ; ImageVis3D
-Source: build\Win32\Release (with DirectX)\ImageVis3D-32.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
-Source: CmdLineConverter\Build\Win32\Release (with DirectX)\TuvokConverter32.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
+Source: "build\Win32\Release (with DirectX)\ImageVis3D-32.exe"; DestDir: {app}; Flags: ignoreversion replacesameversion
+Source: CmdLineConverter\Build\win32\Release (with DirectX)\TuvokConverter32.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: Tuvok\Shaders\*; DestDir: {app}\Shaders; Excludes: .svn; Flags: ignoreversion replacesameversion
-Source: Scripts\installer\imagevis3d.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
-Source: Scripts\installer\GettingDataIntoImageVis3D.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
+;Source: Scripts\installer\imagevis3d.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
+;Source: Scripts\installer\GettingDataIntoImageVis3D.pdf; DestDir: {app}; Flags: ignoreversion replacesameversion
 
 [Icons]
 Name: {group}\ImageVis3D; Filename: {app}\ImageVis3D-32.exe; WorkingDir: {app}
@@ -117,8 +122,10 @@ Name: {group}\{cm:UninstallProgram,ImageVis3D}; Filename: {uninstallexe}
 Name: {group}\Manual; Filename: {app}\ImageVis3D.pdf; WorkingDir: {app}
 Name: {group}\Manual; Filename: {app}\GettingDataIntoImageVis3D.pdf; WorkingDir: {app}
 
+
 [Run]
 Filename: {app}\ImageVis3D-32.exe; Description: {cm:LaunchProgram,ImageVis3D}; Flags: nowait postinstall
+Filename: "{tmp}\vcredist_x86.exe"; 
 ;Filename: {tmp}\vcredist.exe; StatusMsg: "Installing required Visual C++ runtime..."
 
 [UninstallDelete]

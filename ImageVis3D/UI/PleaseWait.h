@@ -38,7 +38,7 @@
 #ifndef PLEASEWAIT_H
 #define PLEASEWAIT_H
 
-#include "AutoGen/ui_PleaseWait.h"
+#include <ui_PleaseWait.h>
 #include "DebugOut/QTLabelOut.h"
 #include "../Tuvok/Controller/MasterController.h"
 

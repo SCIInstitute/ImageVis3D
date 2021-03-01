@@ -44,7 +44,7 @@
 #include <iostream>
 using namespace std;
 
-#define EXTRACTOR_VERSION 1.0
+constexpr auto EXTRACTOR_VERSION = 1.0;
 
 /*
 #ifdef _WIN32
@@ -122,15 +122,15 @@ int main(int argc, char* argv[])
     cout << "Invalid input file." << endl;
     return 3;
   }
-  vector<FileInfo> fi = a.ListFiles();
+  const vector<FileInfo> fi = a.ListFiles();
   
   if (parameters.SwitchSet("l")) {
     for (size_t i = 0;i<fi.size();i++) {
 
-      if (fi[i].m_iSize < 1024*10) {
+      if (fi[i].m_iSize < 1024 *10) {
         cout << "  " << fi[i].m_strName << " Size: " << fi[i].m_iSize << " byte" << endl;
       } else {
-        if (fi[i].m_iSize < 1024*1024*10) {
+        if (fi[i].m_iSize < 1024 *1024*10) {
           cout << "  " << fi[i].m_strName << " Size: " << fi[i].m_iSize/1024 << " KB" << endl;
         } else {
           if (fi[i].m_iSize < uint64_t(1024)*1024*1024*10) {

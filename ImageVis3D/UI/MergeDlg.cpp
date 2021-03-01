@@ -39,7 +39,7 @@
 #include "ImageVis3D.h"
 #include "PleaseWait.h"
 
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QFileDialog>
 #include <QtCore/QSettings>
 
 #include "../Tuvok/Basics/SysTools.h"
@@ -75,7 +75,7 @@ void MergeDlg::AnalyzeCurrentDataset() {
 
     shared_ptr<LuaScripting> ss(m_pMainWindow->m_MasterController.LuaScript());
 
-    string filename = m_vDataSetList[iCurrent]->m_strFilename;
+    const std::wstring filename = m_vDataSetList[iCurrent]->m_strFilename;
     tuple<bool, RangeInfo> analyzeRes = ss->cexecRet<tuple<bool, RangeInfo>>(
         "tuvok.io.analyzeDataset", filename, m_pMainWindow->GetTempDir());
     if (true == std::get<0>(analyzeRes)) {
@@ -150,8 +150,8 @@ void MergeDlg::AddDataset() {
   QString strLastDir = settings.value("Folders/MergeInput", ".").toString();
 
   shared_ptr<LuaScripting> ss(m_pMainWindow->m_MasterController.LuaScript());
-  QString dialogString =
-      ss->cexecRet<string>("tuvok.io.getLoadDialogString").c_str();
+  QString dialogString = QString::fromStdWString(
+      ss->cexecRet<wstring>("tuvok.io.getLoadDialogString"));
   QString fileName = QFileDialog::getOpenFileName(this,
                "Add Dataset", strLastDir,
                dialogString,&selectedFilter, options);
@@ -159,7 +159,7 @@ void MergeDlg::AddDataset() {
   if (!fileName.isEmpty()) {
     settings.setValue("Folders/MergeInput", QFileInfo(fileName).absoluteDir().path());
 
-    DataSetListElem* l = new DataSetListElem(string(fileName.toAscii()));
+    DataSetListElem* l = new DataSetListElem(fileName.toStdWString());
     m_vDataSetList.push_back(l);
     UpadeListView();
     listWidget_datasets->setCurrentRow(int(m_vDataSetList.size()-1));
@@ -192,7 +192,7 @@ void MergeDlg::UpadeListView() {
   listWidget_datasets->clear();
 
   for (size_t i = 0;i<m_vDataSetList.size();i++) {
-    QString strDesc = m_vDataSetList[i]->m_strDisplayName.c_str();
+    QString strDesc = QString::fromStdWString(m_vDataSetList[i]->m_strDisplayName);
     listWidget_datasets->addItem ( strDesc );
   }
 

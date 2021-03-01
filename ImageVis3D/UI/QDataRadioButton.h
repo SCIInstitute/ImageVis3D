@@ -42,7 +42,7 @@
 
 #include "StdDefines.h"
 #include <memory>
-#include <QtGui/QRadioButton>
+#include <QtWidgets/QRadioButton>
 #include <../Tuvok/IO/DirectoryParser.h>
 
 class QDataRadioButton : public QRadioButton

@@ -39,19 +39,19 @@
 
 #include "../Tuvok/Basics/SysTools.h"
 
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QFileDialog>
 #include <QtCore/QSettings>
 
 using namespace std;
 
-BugRepDlg::BugRepDlg(QWidget* parent, Qt::WindowFlags flags, const string& strSubmitFile) :
+BugRepDlg::BugRepDlg(QWidget* parent, Qt::WindowFlags flags, const wstring& strSubmitFile) :
   QDialog(parent, flags)
 {
   setupUi(this);
   label_Icon->setPixmap(QPixmap::fromImage(QImage(":/Resources/bug.png")));
 
-  if (strSubmitFile != "") {
-    listWidget_files->addItem(strSubmitFile.c_str());
+  if (strSubmitFile != L"") {
+    listWidget_files->addItem(QString::fromStdWString(strSubmitFile));
   }
   setSizeGripEnabled(true);
 }
@@ -99,7 +99,7 @@ void BugRepDlg::AddFiles() {
 }
 
 string BugRepDlg::GetDescription() const {
-  return string(textEdit_desc->toPlainText().toAscii());
+  return string(textEdit_desc->toPlainText().toStdString());
 }
 
 bool BugRepDlg::SubmitSysinfo() const {
@@ -111,17 +111,17 @@ bool BugRepDlg::SubmitLog() const {
 }
 
 string BugRepDlg::GetUsername() const {
-  return string(lineEdit_name->text().toAscii());
+  return string(lineEdit_name->text().toStdString());
 }
 
 string BugRepDlg::GetUserMail() const {
-  return string(lineEdit_email->text().toAscii());
+  return string(lineEdit_email->text().toStdString());
 }
 
 vector<string> BugRepDlg::GetDataFilenames() const {
   vector<string> v;
   for (int i = 0;i<listWidget_files->count();i++) {
-    v.push_back(string(listWidget_files->item(i)->text().toAscii()));
+    v.push_back(string(listWidget_files->item(i)->text().toStdString()));
   }
   return v;
 }

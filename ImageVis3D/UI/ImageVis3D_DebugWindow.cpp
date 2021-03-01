@@ -138,13 +138,13 @@ void MainWindow::ListSupportedVolumes() {
       ss->cexecRet<std::vector<tConverterFormat>>("tuvok.io.getFormatList");
 
   for (size_t i=0; i < conv.size(); i++) {
-    string strVolumeFormats = "  " + std::get<0>(conv[i]) + " " + std::get<1>(conv[i]);
+    std::wstring strVolumeFormats = std::wstring(L"  ") + std::get<0>(conv[i]) + std::wstring(L"  ") + std::get<1>(conv[i]);
     if (!std::get<2>(conv[i])) 
-      strVolumeFormats += " (Readonly)";
+      strVolumeFormats += L" (Readonly)";
     if (!std::get<3>(conv[i])) 
-      strVolumeFormats += " (Writeonly)";
-    m_MasterController.DebugOut()->printf(strVolumeFormats.c_str());
-    ss->cexec("print", strVolumeFormats);
+      strVolumeFormats += L" (Writeonly)";
+    m_MasterController.DebugOut()->printf(SysTools::toNarrow(strVolumeFormats).c_str());
+    ss->cexec("print", SysTools::toNarrow(strVolumeFormats));
   }
 
 }
@@ -159,13 +159,13 @@ void MainWindow::ListSupportedGeometry() {
       ss->cexecRet<std::vector<tConverterFormat>>("tuvok.io.getGeoFormatList");
 
   for (size_t i=0; i < conv.size(); i++) {
-    string strGeoFormats = "  " + std::get<0>(conv[i]) + " " + std::get<1>(conv[i]);
+    std::wstring strGeoFormats = std::wstring(L"  ") + std::get<0>(conv[i]) + std::wstring(L"  ") + std::get<1>(conv[i]);    
       if (!std::get<2>(conv[i])) 
-        strGeoFormats += " (Readonly)";
+        strGeoFormats += L" (Readonly)";
     if (!std::get<3>(conv[i])) 
-      strGeoFormats += " (Writeonly)";
-    m_MasterController.DebugOut()->printf(strGeoFormats.c_str());
-    ss->cexec("print", strGeoFormats);
+      strGeoFormats += L" (Writeonly)";
+    m_MasterController.DebugOut()->printf(SysTools::toNarrow(strGeoFormats).c_str());
+    ss->cexec("print", SysTools::toNarrow(strGeoFormats));
   }
 }
 

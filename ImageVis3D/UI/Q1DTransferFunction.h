@@ -64,7 +64,7 @@ public:
   }
 
   virtual void ApplyFunction();
-  bool LoadFromFile(const std::string&);
+  bool LoadFromFile(const std::wstring&);
 
 public slots:
   bool QLoadFromFile(const QString& strFilename);

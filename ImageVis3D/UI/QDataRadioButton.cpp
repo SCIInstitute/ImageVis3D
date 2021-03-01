@@ -115,28 +115,28 @@ void QDataRadioButton::SetStackImage(unsigned int i, bool bForceUpdate) {
   if (m_stackInfo->m_iComponentCount == 1) {
     switch (m_stackInfo->m_iAllocated) {
       case 8  :{
-            unsigned int i = 0;
+            unsigned int j = 0;
             unsigned char* pCharData = reinterpret_cast<unsigned char*>
                                                        (&vData[0]);
             for (int y = 0;y<image.height();y++)
               for (int x = 0;x<image.width();x++) {
-                unsigned char value = (unsigned char)(std::min(255.0f,m_fScale*pCharData[i]));
+                unsigned char value = (unsigned char)(std::min(255.0f,m_fScale*pCharData[j]));
                 image.setPixel(x,y, qRgb(value,value,value));
-                i++;
+                j++;
               }
              } break;
       case 16 : {
-            unsigned int i = 0;
+            unsigned int j = 0;
             unsigned short* pShortData = reinterpret_cast<unsigned short*>
                                                          (&vData[0]);
             for (int y = 0;y<image.height();y++)
               for (int x = 0;x<image.width();x++) {
                 unsigned char value = (unsigned char)(
-                  std::min(255.0f, 255.0f * m_fScale * float(pShortData[i]) /
+                  std::min(255.0f, 255.0f * m_fScale * float(pShortData[j]) /
                                    float((2<<m_stackInfo->m_iStored)))
                 );
                 image.setPixel(x,y, qRgb(value,value,value));
-                i++;
+                j++;
               }
              } break;
       default  : break; /// \todo handle other bitwith data

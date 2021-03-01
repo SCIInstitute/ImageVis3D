@@ -43,13 +43,15 @@
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
 #include <QtCore/QUrl>
-#include <QtGui/QColorDialog>
+#include <QtWidgets/QColorDialog>
 #include <QtGui/QDropEvent>
-#include <QtGui/QFileDialog>
-#include <QtGui/QInputDialog>
-#include <QtGui/QMdiSubWindow>
-#include <QtGui/QMessageBox>
-#include <QtNetwork/QHttp>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QInputDialog>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtWidgets/QMessageBox>
+
+// TODO: restore http functionality
+// #include <QtNetwork/QHttp>
 
 #include "../Tuvok/Controller/Controller.h"
 #include "../Tuvok/Basics/SysTools.h"
@@ -76,11 +78,11 @@ void MainWindow::dropEvent(QDropEvent* ev)
 {
   if (!ev->mimeData()->hasUrls()) return;
 
-  string filename;
+  std::wstring filename;
 
   QList<QUrl> urllist = ev->mimeData()->urls();
   for(int i=0; i < urllist.size(); ++i) {
-    std::string fn = string(urllist[i].path().toAscii());
+    std::wstring fn = std::wstring(urllist[i].path().toStdWString());
 
 #ifdef DETECTED_OS_WINDOWS
     if (!fn.empty() && fn[0] == '/') fn = fn.substr(1);
@@ -88,18 +90,18 @@ void MainWindow::dropEvent(QDropEvent* ev)
     if(SysTools::FileExists(fn)) {
       filename = fn;
     } else {
-      WARNING("Ignoring drop of %s: file does not exist.", fn.c_str());
+      WARNING("Ignoring drop of %s: file does not exist.", SysTools::toNarrow(fn).c_str());
     }
   }
 
-  if(filename == "") {
+  if(filename == L"") {
     // we didn't find a valid filename
     ev->ignore();
     return;
   }
 
-  MESSAGE("Got file '%s' from drop event.", filename.c_str());
-  if(SysTools::GetExt(filename) == "1dt") {
+  MESSAGE("Got file '%s' from drop event.", SysTools::toNarrow(filename).c_str());
+  if(SysTools::GetExt(filename) == L"1dt") {
     this->Transfer1DLoad(filename);
   } else {
     this->LoadDataset(filename);
@@ -146,7 +148,7 @@ bool MainWindow::SaveGeometry() {
               strLastDir,
               "Geometry Files (*.geo)",&selectedFilter, options);
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "geo").c_str();
+    fileName = QString::fromStdWString(SysTools::CheckExt(fileName.toStdWString(), L"geo"));
     settings.setValue("Folders/SaveGeometry", QFileInfo(fileName).absoluteDir().path());
     return SaveGeometry(fileName);
   } return false;
@@ -178,9 +180,8 @@ bool MainWindow::LoadGeometry(QString strFilename,
   settings.endGroup();
 
   if (!bOK && bRetryResource) {
-    string stdString(strFilename.toAscii());
-    if (LoadGeometry(SysTools::GetFromResourceOnMac(stdString).c_str(),
-         true, false)) {
+    std::wstring stdString(strFilename.toStdWString());
+    if (LoadGeometry(QString::fromStdWString(SysTools::GetFromResourceOnMac(stdString)),true, false)) {
       return true;
     }
   }
@@ -345,14 +346,6 @@ void MainWindow::setupUi(QMainWindow *MainWindow) {
   lineEditCaptureFile->setText(fileName);
   checkBox_PreserveTransparency->setChecked(settings.value("PreserveTransparency", true).toBool());
 
-#ifndef PACKAGE_MANAGER
-  // Don't bother if the system has a package manager... they should get their
-  // updates through that.
-  m_pHttp = new QHttp(this);
-  connect(m_pHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
-  connect(m_pHttp, SIGNAL(responseHeaderReceived(const QHttpResponseHeader &)), this, SLOT(readResponseHeader(const QHttpResponseHeader &)));
-#endif
-
   pushButton_NewTriangle->setStyleSheet( "QPushButton { background: rgb(0, 150, 0); color: rgb(255, 255, 255) }" );
   pushButton_NewRectangle->setStyleSheet( "QPushButton { background: rgb(0, 150, 0); color: rgb(255, 255, 255) }" );
   pushButton_DelPoly_SimpleUI->setStyleSheet( "QPushButton { background: rgb(150, 0, 0); color: rgb(255, 255, 255) }" );
@@ -478,6 +471,7 @@ void MainWindow::UpdateWSMRUActions()
 
 
 void MainWindow::InitDockWidget(QDockWidget * v) const {
+  v->move(100, 100);
   v->setVisible(false);
   v->setFloating(true);
   v->resize(v->minimumSize());
@@ -559,7 +553,7 @@ bool MainWindow::SaveWorkspace() {
               strLastDir,
               "Workspace Files (*.wsp)",&selectedFilter, options);
   if (!fileName.isEmpty()) {
-    fileName = SysTools::CheckExt(string(fileName.toAscii()), "wsp").c_str();
+    fileName = QString::fromStdWString(SysTools::CheckExt(fileName.toStdWString(), L"wsp"));
     settings.setValue("Folders/SaveWorkspace", QFileInfo(fileName).absoluteDir().path());
     return SaveWorkspace(fileName);
   } else return false;
@@ -590,13 +584,11 @@ bool MainWindow::LoadWorkspace(QString strFilename,
   settings.endGroup();
 
   if (!bOK && bRetryResource) {
-    string stdString(strFilename.toAscii());
-
-    if (LoadWorkspace(SysTools::GetFromResourceOnMac(stdString).c_str(),
-          true, false)) {
-      m_strCurrentWorkspaceFilename =
-  SysTools::GetFromResourceOnMac(stdString).c_str();
-      return true;
+    std::wstring stdString(strFilename.toStdWString());
+    QString qfilename = QString::fromStdWString(SysTools::GetFromResourceOnMac(stdString));
+    if (LoadWorkspace(qfilename, true, false)) {
+        m_strCurrentWorkspaceFilename = qfilename;
+        return true;
     }
   }
 
@@ -636,6 +628,10 @@ bool MainWindow::ApplyWorkspace() {
     return LoadWorkspace(m_strCurrentWorkspaceFilename);
   else
     return false;
+}
+
+void MainWindow::ResetToDefaultWorkspace() {
+    InitAllWorkspaces();
 }
 
 // ******************************************
@@ -743,10 +739,10 @@ void MainWindow::LuaResizeActiveWindow(const UINTVECTOR2& newSize) {
   ResizeCurrentView(newSize.x, newSize.y);
 }
 
-RenderWindow* MainWindow::LuaCreateNewWindow(std::string dataset) {
-  std::vector<std::string> fileList;
+RenderWindow* MainWindow::LuaCreateNewWindow(std::wstring dataset) {
+  std::vector<std::wstring> fileList;
   fileList.push_back(dataset);
-  return LuaLoadDatasetInternal(fileList, std::string(""), false);
+  return LuaLoadDatasetInternal(fileList, std::wstring(), false);
 }
 
 RenderWindow* MainWindow::CreateNewRenderWindow(QString dataset) {
@@ -847,8 +843,8 @@ void MainWindow::RenderWindowActive(RenderWindow* sender) {
   m_pActiveRenderWin = sender;
   m_MasterController.DebugOut()->
     Message("MainWindow::RenderWindowActive",
-      "ACK that %s is now active",
-      sender->GetDatasetName().toStdString().c_str());
+            "ACK that %s is now active",
+            sender->GetDatasetName().toStdString().c_str());
 
   if (!CheckRenderwindowFitness(m_pActiveRenderWin)) {
     QMdiSubWindow* w = ActiveSubWindow();
@@ -1048,10 +1044,10 @@ void MainWindow::ApplMeshTransform(ScaleAndBiasDlg* sender) {
   if (sender->GetApplyAll()) {
     auto meshes = m_pActiveRenderWin->GetRendererMeshes();
     for (size_t i = 0; i < meshes.size(); ++i) {
-      meshes[i]->ScaleAndBias(sender->scaleVec, sender->biasVec);
+      meshes[i]->ScaleAndBias(sender->m_scaleVec, sender->m_biasVec);
     }
   } else {
-    sender->m_pMesh->ScaleAndBias(sender->scaleVec, sender->biasVec);
+    sender->m_pMesh->ScaleAndBias(sender->m_scaleVec, sender->m_biasVec);
   }
   m_pActiveRenderWin->RendererSchedule3DWindowRedraws();
 }
@@ -1179,8 +1175,7 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
     shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
     
-    QString voldesc = tr("Volume (%1)").arg(
-        ss->cexecRet<const char*>(ds.fqName() + ".name"));
+    QString voldesc = tr("Volume (%1)").arg(QString::fromStdWString(ss->cexecRet<std::wstring>(ds.fqName() + ".name")));
     listWidget_DatasetComponents->addItem(voldesc);
 
     size_t meshListSize = m_pActiveRenderWin->GetRendererMeshes().size();
@@ -1189,7 +1184,7 @@ void MainWindow::UpdateExplorerView(bool bRepopulateListBox) {
          i++) {
       shared_ptr<const RenderMesh> mesh = 
           m_pActiveRenderWin->GetRendererMeshes()[i];
-      QString meshdesc = tr("%1 (%2)").arg(mesh->GetMeshType() == Mesh::MT_TRIANGLES ? "Triangle Mesh" : "Lines").arg(mesh->Name().c_str());
+      QString meshdesc = tr("%1 (%2)").arg(mesh->GetMeshType() == Mesh::MT_TRIANGLES ? "Triangle Mesh" : "Lines").arg(SysTools::toNarrow(mesh->Name()).c_str());
       listWidget_DatasetComponents->addItem(meshdesc);
     }
     listWidget_DatasetComponents->setCurrentRow(0);
@@ -1396,7 +1391,7 @@ void MainWindow::OpenRecentFile(){
   QAction *action = qobject_cast<QAction *>(sender());
 
   if(action == NULL) { T_ERROR("no sender?"); return; }
-  if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
+  if (SysTools::FileExists(action->data().toString().toStdWString())) {
     if (!LoadDataset(QStringList(action->data().toString()))) {
       if (m_bIgnoreLoadDatasetFailure == false) {
         ShowCriticalDialog("Render window initialization failed.",
@@ -1438,7 +1433,7 @@ void MainWindow::OpenRecentWSFile(){
   QAction *action = qobject_cast<QAction *>(sender());
 
   if(action == NULL) { T_ERROR("no sender?"); return; }
-  if (SysTools::FileExists(string(action->data().toString().toAscii()))) {
+  if (SysTools::FileExists(action->data().toString().toStdWString())) {
     LoadWorkspace(action->data().toString());
   }
 }
@@ -1558,7 +1553,7 @@ void MainWindow::ShowCriticalDialog(QString strTitle, QString strMessage) {
   if (!m_bScriptMode) 
     QMessageBox::critical(this, strTitle, strMessage);
   else {
-    string s = string(strTitle.toAscii()) + ": " + string(strMessage.toAscii());
+    std::string s = strTitle.toStdString() + ": " + strMessage.toStdString();
     T_ERROR(s.c_str());
   }
 }
@@ -1567,7 +1562,7 @@ void MainWindow::ShowInformationDialog(QString strTitle, QString strMessage) {
   if (!m_bScriptMode) 
     QMessageBox::information(this, strTitle, strMessage);
   else {
-    string s = string(strTitle.toAscii()) + ": " + string(strMessage.toAscii());
+    string s = strTitle.toStdString() + ": " + strMessage.toStdString();
     MESSAGE(s.c_str());
   }
 }
@@ -1576,7 +1571,7 @@ void MainWindow::ShowWarningDialog(QString strTitle, QString strMessage) {
   if (!m_bScriptMode) 
     QMessageBox::warning(this, strTitle, strMessage);
   else {
-    string s = string(strTitle.toAscii()) + ": " + string(strMessage.toAscii());
+    string s = strTitle.toStdString() + ": " + strMessage.toStdString();
     WARNING(s.c_str());
   }
 }
@@ -1600,7 +1595,7 @@ void MainWindow::ShowWelcomeScreen() {
   int numRecentFiles = qMin(files.size(), (int)ms_iMaxRecentFiles);
   for (int i = 0; i < numRecentFiles; ++i) {
     QString text = tr("%1").arg(QFileInfo(files[i]).fileName());
-    m_pWelcomeDialog->AddMRUItem(string(text.toAscii()), string(files[i].toAscii()));
+    m_pWelcomeDialog->AddMRUItem(text.toStdWString(), files[i].toStdWString());
   }
 
   m_pWelcomeDialog->setWindowIcon(windowIcon());
@@ -1609,11 +1604,11 @@ void MainWindow::ShowWelcomeScreen() {
 
 
 void MainWindow::DisplayMetadata() {
-  if (m_pActiveRenderWin)  {
+if (m_pActiveRenderWin)  {
     shared_ptr<LuaScripting> ss(m_MasterController.LuaScript());
     LuaClassInstance ds = m_pActiveRenderWin->GetRendererDataset();
-    const vector<pair<string, string>>& metadata = 
-        ss->cexecRet<vector<pair<string, string>>>(ds.fqName() + ".getMetadata");
+    const vector<pair<std::wstring, std::wstring>>& metadata =
+        ss->cexecRet<vector<pair<std::wstring, std::wstring>>>(ds.fqName() + ".getMetadata");
 
     if(!metadata.empty()) {
       m_pMetadataDialog->setWindowIcon(windowIcon());

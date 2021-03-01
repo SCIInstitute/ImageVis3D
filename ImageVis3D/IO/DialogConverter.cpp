@@ -40,7 +40,7 @@
 #include "../Tuvok/Basics/SysTools.h"
 #include "../Tuvok/Basics/LargeRAWFile.h"
 
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 using namespace std;
 
@@ -49,12 +49,12 @@ DialogConverter::DialogConverter(QWidget* parent) :
 {
 }
 
-bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename, 
-                                   const std::string& strTempDir, bool bNoUserInteraction,
+bool DialogConverter::ConvertToRAW(const std::wstring& strSourceFilename, 
+                                   const std::wstring& strTempDir, bool bNoUserInteraction,
                                    uint64_t& iHeaderSkip, unsigned& iComponentSize, uint64_t& iComponentCount, 
                                    bool& bConvertEndianess, bool& bSigned, bool& bIsFloat, UINT64VECTOR3& vVolumeSize,
-                                   FLOATVECTOR3& vVolumeAspect, std::string& strTitle,
-                                   std::string& strIntermediateFile,
+                                   FLOATVECTOR3& vVolumeAspect, std::wstring& strTitle,
+                                   std::wstring& strIntermediateFile,
                                    bool& bDeleteIntermediateFile) {
 
   if (bNoUserInteraction) return false;
@@ -88,7 +88,7 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
 
     if (rawDialog.ComputeExpectedSize() > iSize) return false;
 
-    strTitle = "Raw data";
+    strTitle = L"Raw data";
     iComponentCount = 1; 
     vVolumeSize    = rawDialog.GetSize();
     vVolumeAspect  = rawDialog.GetAspectRatio();
@@ -107,7 +107,7 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
       return true;
     } else
     if (encID == 1)  {
-        string strBinaryFile = strTempDir+SysTools::GetFilename(strSourceFilename)+".binary";
+        wstring strBinaryFile = strTempDir+SysTools::GetFilename(strSourceFilename)+L".binary";
         bool bResult = ParseTXTDataset(strSourceFilename, strBinaryFile, iHeaderSkip, iComponentSize, iComponentCount, bSigned, bIsFloat, vVolumeSize);
         strIntermediateFile = strBinaryFile;
         bDeleteIntermediateFile = true;
@@ -116,14 +116,14 @@ bool DialogConverter::ConvertToRAW(const std::string& strSourceFilename,
         return bResult;
     } else
     if (encID == 2)  {
-        string strUncompressedFile = strTempDir+SysTools::GetFilename(strSourceFilename)+".uncompressed";
+        wstring strUncompressedFile = strTempDir+SysTools::GetFilename(strSourceFilename)+L".uncompressed";
         bool bResult = ExtractGZIPDataset(strSourceFilename, strUncompressedFile, iHeaderSkip);
         strIntermediateFile = strUncompressedFile;
         bDeleteIntermediateFile = true;
         iHeaderSkip = 0;
         return bResult;
     } else {
-        string strUncompressedFile = strTempDir+SysTools::GetFilename(strSourceFilename)+".uncompressed";
+        wstring strUncompressedFile = strTempDir+SysTools::GetFilename(strSourceFilename)+L".uncompressed";
         bool bResult = ExtractBZIP2Dataset(strSourceFilename, strUncompressedFile, iHeaderSkip);
         strIntermediateFile = strUncompressedFile;
         bDeleteIntermediateFile = true;

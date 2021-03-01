@@ -36,7 +36,7 @@
 //!    Copyright (C) 2008 SCI Institute
 
 #include "FTPDialog.h"
-#include <QtNetwork/QFtp>
+#include "IO/3rdParty/QFtp/qftp.h"
 #include <QtCore/QUrl>
 #include <QtCore/QFile>
 
@@ -45,14 +45,14 @@
 
 using namespace std;
 
-FTPDialog::FTPDialog(const string& strSource, const string& strTargetServer,
-                     const string& strTargetPath, QWidget* parent /* = 0 */,
-                     Qt::WindowFlags flags /* = 0 */) :
-  QDialog(parent, flags),
-  m_strSource(strSource),
-  m_strTargetServer(strTargetServer),
-  m_strTargetPath(strTargetPath),
-  m_pFtp(NULL)
+FTPDialog::FTPDialog(const wstring& strSource, const wstring& strTargetServer,
+                     const wstring& strTargetPath, QWidget* parent /* = 0 */,
+                     Qt::WindowFlags flags /* = 0 */)
+  : QDialog(parent, flags)
+  ,m_strSource(strSource)
+  ,m_strTargetServer(strTargetServer)
+  ,m_strTargetPath(strTargetPath)
+  ,m_pFtp(NULL)
 {
   setupUi(this);
 }
@@ -72,11 +72,11 @@ void FTPDialog::Start() {
                   SLOT(updateDataTransferProgress(qint64, qint64)));
   connect(m_pFtp, SIGNAL(done(bool)), this, SLOT(finished(bool)));
 
-  label_TransferDesc->setText(tr("Connecting to %1...").arg(m_strTargetServer.c_str()));
+  label_TransferDesc->setText(tr("Connecting to %1...").arg(SysTools::toNarrow(m_strTargetServer).c_str()));
 
-  QUrl url(m_strTargetServer.c_str());
+  QUrl url(SysTools::toNarrow(m_strTargetServer).c_str());
   if (!url.isValid() || url.scheme().toLower() != QLatin1String("ftp")) {
-    m_pFtp->connectToHost(m_strTargetServer.c_str(), 21);
+    m_pFtp->connectToHost(SysTools::toNarrow(m_strTargetServer).c_str(), 21);
     m_pFtp->login();
   } else {
     m_pFtp->connectToHost(url.host(), url.port(21));
@@ -90,11 +90,12 @@ void FTPDialog::Start() {
     if (!url.path().isEmpty()) {
       m_pFtp->cd(url.path());
     }
+    
   }
 
-  m_pFile = new QFile(m_strSource.c_str());
+  m_pFile = new QFile(SysTools::toNarrow(m_strSource).c_str());
   if (!m_pFile->open(QIODevice::ReadOnly)) {
-    T_ERROR("Could not read '%s' file.", m_strSource.c_str());
+    T_ERROR("Could not read '%s' file.", SysTools::toNarrow(m_strSource).c_str());
     delete m_pFile;
     m_pFile = NULL;
     emit TransferFailure();
@@ -102,9 +103,10 @@ void FTPDialog::Start() {
     return;
   }
 
-  MESSAGE("putting '%s' to '%s'", m_strSource.c_str(),
-          m_strTargetPath.c_str());
-  m_pFtp->put(m_pFile, m_strTargetPath.c_str());
+  MESSAGE("putting '%s' to '%s'", SysTools::toNarrow( m_strSource).c_str(),
+          SysTools::toNarrow(m_strTargetPath).c_str());
+  m_pFtp->put(m_pFile, SysTools::toNarrow(m_strTargetPath).c_str());
+
 }
 
 
@@ -120,7 +122,7 @@ void FTPDialog::ftpCommandFinished(int cmdId, bool error) {
       close();
       return;
     }
-    label_TransferDesc->setText(tr("Uploading %1...").arg(SysTools::GetFilename(m_strSource).c_str()));
+    label_TransferDesc->setText(tr("Uploading %1...").arg(SysTools::toNarrow(SysTools::GetFilename(m_strSource)).c_str()));
     return;
   }
 }

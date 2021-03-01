@@ -43,7 +43,7 @@
 #include "StdDefines.h"
 #include <string>
 #include <unordered_map>
-#include <QtGui/QListWidget>
+#include <QtWidgets/QListWidget>
 #include <QtCore/QMutex>
 #include "../Tuvok/Basics/ArcBall.h"
 #include "../Tuvok/Basics/Plane.h"
@@ -97,17 +97,17 @@ class RenderWindow
                          float fScreenResDecFactor, float fSampleDecFactor,
                          unsigned int iLODDelay,
                          unsigned int iActiveTS, unsigned int iInactiveTS);
-    bool CaptureFrame(const std::string& strFilename,
+    bool CaptureFrame(const std::wstring& strFilename,
                       bool bPreserveTransparency);
     // just copies whatever's in the buffer w/o caring if it's done.
-    bool CaptureSubframe(const std::string& strFilename);
-    bool CaptureSequenceFrame(const std::string& strFilename,
+    bool CaptureSubframe(const std::wstring& strFilename);
+    bool CaptureSequenceFrame(const std::wstring& strFilename,
                               bool bPreserveTransparency,
-                              std::string* strRealFilename=NULL);
-    bool CaptureMIPFrame(const std::string& strFilename,
+                              std::wstring* strRealFilename=NULL);
+    bool CaptureMIPFrame(const std::wstring& strFilename,
                          float fAngle, bool bOrtho, bool bFinalFrame,
                          bool bUseLOD, bool bPreserveTransparency,
-                         std::string* strRealFilename=NULL);
+                         std::wstring* strRealFilename=NULL);
     void ToggleHQCaptureMode();
     void EnableHQCaptureMode(bool enable);
     void Translate(const FLOATMATRIX4& mTranslation,
@@ -301,7 +301,7 @@ class RenderWindow
     FLOATVECTOR3 GetRendererVolumeAABBExtents();
     FLOATVECTOR3 GetRendererVolumeAABBCenter();
     ExtendedPlane GetRendererClipPlane();
-    bool RendererCropDataset(const std::string& strTempDir, 
+    bool RendererCropDataset(const std::wstring& strTempDir, 
                              bool bKeepOldData);
     void SetRendererStereoEnabled(bool stereo);
     void SetRendererStereoEyeDist(float fStereoEyeDist);
@@ -328,6 +328,7 @@ class RenderWindow
     tuvok::MasterController&  m_MasterController;
     bool                      m_bRenderSubsysOK;
     RegionSplitter            selectedRegionSplitter;
+    float                     m_fHighDPIScale;
     UINTVECTOR2               m_vWinDim;
     UINTVECTOR2               m_vMinSize;
     UINTVECTOR2               m_vDefaultSize;
@@ -463,8 +464,8 @@ class RenderWindow
     void LuaSetRotationAs4x4(FLOATMATRIX4 m);
     void LuaResizeWindow(const UINTVECTOR2& newSize);
     void LuaSetLighting(bool enabled);
-    void LuaLoad1DTFqn(const std::string&);
-    void LuaLoad2DTFqn(const std::string&);
+    void LuaLoad1DTFqn(const std::wstring&);
+    void LuaLoad2DTFqn(const std::wstring&);
     // resets the clipping plane and multiplies it by the given matrix
     void LuaSetClipPlane(const FLOATMATRIX4& m);
 

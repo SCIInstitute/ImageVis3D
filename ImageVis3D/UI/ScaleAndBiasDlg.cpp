@@ -53,7 +53,7 @@ ScaleAndBiasDlg::ScaleAndBiasDlg(shared_ptr<tuvok::RenderMesh> mesh,
   m_minVolume(vmin),
   m_maxVolume(vmax)
 {
-  setupUi(this, mesh->Name());
+  setupUi(this, QString::fromStdWString(mesh->Name()));
 }
 
 ScaleAndBiasDlg::~ScaleAndBiasDlg(void)
@@ -62,82 +62,82 @@ ScaleAndBiasDlg::~ScaleAndBiasDlg(void)
 
 void ScaleAndBiasDlg::ScaleIsotropic() {
   FLOATVECTOR3 s = (m_max-m_min);
-  FLOATVECTOR3 scaleVec = 1.0f/s;
+  FLOATVECTOR3 _scaleVec = 1.0f/s;
 
-  float scale = scaleVec.minVal();
+  float scale = _scaleVec.minVal();
   FLOATVECTOR3 c = ((m_max+m_min)/2.0f)*scale;
-  FLOATVECTOR3 biasVec = -c;
+  FLOATVECTOR3 _biasVec = -c;
 
   doubleSpinBox_Sx->setValue(scale);
   doubleSpinBox_Sy->setValue(scale);
   doubleSpinBox_Sz->setValue(scale);
 
-  doubleSpinBox_Bx->setValue(biasVec.x);
-  doubleSpinBox_By->setValue(biasVec.y);
-  doubleSpinBox_Bz->setValue(biasVec.z);
+  doubleSpinBox_Bx->setValue(_biasVec.x);
+  doubleSpinBox_By->setValue(_biasVec.y);
+  doubleSpinBox_Bz->setValue(_biasVec.z);
 
   ValuesChanged();
 }
 
 void ScaleAndBiasDlg::ScaleUnisotropic() {
   FLOATVECTOR3 s = (m_max-m_min);
-  FLOATVECTOR3 scaleVec = 1.0f/s;
-  FLOATVECTOR3 c = ((m_max+m_min)/2.0f)*scaleVec;
-  FLOATVECTOR3 biasVec = -c;
+  FLOATVECTOR3 _scaleVec = 1.0f/s;
+  FLOATVECTOR3 c = ((m_max+m_min)/2.0f)*_scaleVec;
+  FLOATVECTOR3 _biasVec = -c;
 
-  doubleSpinBox_Sx->setValue(scaleVec.x);
-  doubleSpinBox_Sy->setValue(scaleVec.y);
-  doubleSpinBox_Sz->setValue(scaleVec.z);
+  doubleSpinBox_Sx->setValue(_scaleVec.x);
+  doubleSpinBox_Sy->setValue(_scaleVec.y);
+  doubleSpinBox_Sz->setValue(_scaleVec.z);
 
-  doubleSpinBox_Bx->setValue(biasVec.x);
-  doubleSpinBox_By->setValue(biasVec.y);
-  doubleSpinBox_Bz->setValue(biasVec.z);
+  doubleSpinBox_Bx->setValue(_biasVec.x);
+  doubleSpinBox_By->setValue(_biasVec.y);
+  doubleSpinBox_Bz->setValue(_biasVec.z);
 
   ValuesChanged();
 }
 
 void ScaleAndBiasDlg::ScaleIsotropicVol() {
   FLOATVECTOR3 s = (m_max-m_min)/(m_maxVolume-m_minVolume);
-  FLOATVECTOR3 scaleVec = 1.0f/s;
+  FLOATVECTOR3 _scaleVec = 1.0f/s;
 
-  float scale = scaleVec.minVal();
+  float scale = _scaleVec.minVal();
   FLOATVECTOR3 c = ((m_max+m_min)/2.0f)*scale;
-  FLOATVECTOR3 biasVec = -c;
+  FLOATVECTOR3 _biasVec = -c;
 
   doubleSpinBox_Sx->setValue(scale);
   doubleSpinBox_Sy->setValue(scale);
   doubleSpinBox_Sz->setValue(scale);
 
-  doubleSpinBox_Bx->setValue(biasVec.x);
-  doubleSpinBox_By->setValue(biasVec.y);
-  doubleSpinBox_Bz->setValue(biasVec.z);
+  doubleSpinBox_Bx->setValue(_biasVec.x);
+  doubleSpinBox_By->setValue(_biasVec.y);
+  doubleSpinBox_Bz->setValue(_biasVec.z);
 
   ValuesChanged();
 }
 
 void ScaleAndBiasDlg::ScaleUnisotropicVol() {
   FLOATVECTOR3 s = (m_max-m_min)/(m_maxVolume-m_minVolume);
-  FLOATVECTOR3 scaleVec = 1.0f/s;
-  FLOATVECTOR3 c = ((m_max+m_min)/2.0f)*scaleVec;
-  FLOATVECTOR3 biasVec = -c;
+  FLOATVECTOR3 _scaleVec = 1.0f/s;
+  FLOATVECTOR3 c = ((m_max+m_min)/2.0f)*_scaleVec;
+  FLOATVECTOR3 _biasVec = -c;
 
-  doubleSpinBox_Sx->setValue(scaleVec.x);
-  doubleSpinBox_Sy->setValue(scaleVec.y);
-  doubleSpinBox_Sz->setValue(scaleVec.z);
+  doubleSpinBox_Sx->setValue(_scaleVec.x);
+  doubleSpinBox_Sy->setValue(_scaleVec.y);
+  doubleSpinBox_Sz->setValue(_scaleVec.z);
 
-  doubleSpinBox_Bx->setValue(biasVec.x);
-  doubleSpinBox_By->setValue(biasVec.y);
-  doubleSpinBox_Bz->setValue(biasVec.z);
+  doubleSpinBox_Bx->setValue(_biasVec.x);
+  doubleSpinBox_By->setValue(_biasVec.y);
+  doubleSpinBox_Bz->setValue(_biasVec.z);
 
   ValuesChanged();
 }
 
 
 void ScaleAndBiasDlg::ValuesChanged() {
-  scaleVec = FLOATVECTOR3(doubleSpinBox_Sx->value(),
+  m_scaleVec = FLOATVECTOR3(doubleSpinBox_Sx->value(),
                           doubleSpinBox_Sy->value(),
                           doubleSpinBox_Sz->value());
-  biasVec = FLOATVECTOR3(doubleSpinBox_Bx->value(),
+  m_biasVec = FLOATVECTOR3(doubleSpinBox_Bx->value(),
                          doubleSpinBox_By->value(),
                          doubleSpinBox_Bz->value());
 
@@ -161,8 +161,8 @@ void ScaleAndBiasDlg::UpdatePostSize() {
   FLOATVECTOR3 c = (m_max+m_min)/2.0f;
   FLOATVECTOR3 s = (m_max-m_min);
 
-  c = c*scaleVec + biasVec;
-  s = s*scaleVec;
+  c = c*m_scaleVec + m_biasVec;
+  s = s*m_scaleVec;
   
   QString text = tr("After scale and bias: "
                     "Size: [%1, %2, %3] "
@@ -172,13 +172,13 @@ void ScaleAndBiasDlg::UpdatePostSize() {
 
 }
 
-void ScaleAndBiasDlg::setupUi(QDialog *ScaleAndBiasDlg, const std::string& strDesc) {
+void ScaleAndBiasDlg::setupUi(QDialog *ScaleAndBiasDlg, const QString& strDesc) {
   Ui_ScaleAndBiasDlg::setupUi(ScaleAndBiasDlg);
   ToggleExpertView();
 
   UpdatePreSize();
 
-  label_meshDesc->setText(strDesc.c_str());
+  label_meshDesc->setText(strDesc);
   ValuesChanged();
 }
 
@@ -219,8 +219,8 @@ void ScaleAndBiasDlg::CopyScaleAndBias() {
   FLOATMATRIX4 bias;
   FLOATMATRIX4 scale;
 
-  bias.Translation(biasVec);
-  scale.Scaling(scaleVec);
+  bias.Translation(m_biasVec);
+  scale.Scaling(m_scaleVec);
 
   SetExpertTransform(scale*bias);
 }
@@ -239,25 +239,27 @@ bool ScaleAndBiasDlg::GetApplyAll() const {
 
 FLOATMATRIX4 ScaleAndBiasDlg::GetExpertTransform() const {
   FLOATMATRIX4 m;
-  m.m11 =float(atof(lineEdit_m11->text().toAscii()));
-  m.m21 =float(atof(lineEdit_m21->text().toAscii()));
-  m.m31 =float(atof(lineEdit_m31->text().toAscii()));
-  m.m41 =float(atof(lineEdit_m41->text().toAscii()));
+  bool ok = true;
 
-  m.m12 =float(atof(lineEdit_m12->text().toAscii()));
-  m.m22 =float(atof(lineEdit_m22->text().toAscii()));
-  m.m32 =float(atof(lineEdit_m32->text().toAscii()));
-  m.m42 =float(atof(lineEdit_m42->text().toAscii()));
+  m.m11 =lineEdit_m11->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m21 =lineEdit_m21->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m31 =lineEdit_m31->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m41 =lineEdit_m41->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
 
-  m.m13 =float(atof(lineEdit_m13->text().toAscii()));
-  m.m23 =float(atof(lineEdit_m23->text().toAscii()));
-  m.m33 =float(atof(lineEdit_m33->text().toAscii()));
-  m.m43 =float(atof(lineEdit_m43->text().toAscii()));
+  m.m12 =lineEdit_m12->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m22 =lineEdit_m22->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m32 =lineEdit_m32->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m42 =lineEdit_m42->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
 
-  m.m14 =float(atof(lineEdit_m14->text().toAscii()));
-  m.m24 =float(atof(lineEdit_m24->text().toAscii()));
-  m.m34 =float(atof(lineEdit_m34->text().toAscii()));
-  m.m44 =float(atof(lineEdit_m44->text().toAscii()));
+  m.m13 =lineEdit_m13->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m23 =lineEdit_m23->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m33 =lineEdit_m33->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m43 =lineEdit_m43->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+
+  m.m14 =lineEdit_m14->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m24 =lineEdit_m24->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m34 =lineEdit_m34->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
+  m.m44 =lineEdit_m44->text().toFloat(&ok); if (!ok) return FLOATMATRIX4();
 
   return m;
 }

@@ -395,24 +395,23 @@ void GenerateVolumeData(UINT64VECTOR3 vSize, LargeRAWFile_ptr pDummyData,
   }
 }
 
-bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
+bool CreateUVFFile(const std::wstring& strUVFName, const UINT64VECTOR3& vSize,
                    uint32_t iBitSize, ECreationType eCreationType, uint32_t iIterations,
                    bool bUseToCBlock, bool bKeepRaw, uint32_t iCompression,
                    uint32_t iUVFMemory, uint32_t iBrickSize, uint32_t iLayout,
                    uint32_t iCompressionLevel, bool bHierarchical) {
-  wstring wstrUVFName(strUVFName.begin(), strUVFName.end());
-  UVF uvfFile(wstrUVFName);
+  UVF uvfFile(strUVFName);
 
   const bool bGenerateUVF =
-        SysTools::ToLowerCase(SysTools::GetExt(strUVFName)) == "uvf";
-  std::string rawFilename =
-        bGenerateUVF ? SysTools::ChangeExt(strUVFName,"raw") : strUVFName;
+        SysTools::ToLowerCase(SysTools::GetExt(strUVFName)) == L"uvf";
+  std::wstring rawFilename =
+        bGenerateUVF ? SysTools::ChangeExt(strUVFName,L"raw") : strUVFName;
 
   MESSAGE("Generating dummy data");
 
   LargeRAWFile_ptr dummyData = LargeRAWFile_ptr(new LargeRAWFile(rawFilename));
   if (!dummyData->Create(vSize.volume()*iBitSize/8)) {
-    T_ERROR("Failed to create %s file.", rawFilename.c_str());
+    T_ERROR("Failed to create %s file.", SysTools::toNarrow(rawFilename).c_str());
     return false;
   }
 
@@ -448,7 +447,7 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
   Timer uvfTimer;
   uvfTimer.Start();
 
-  MESSAGE("Preparing creation of UVF file %s", strUVFName.c_str());
+  MESSAGE("Preparing creation of UVF file %s", SysTools::toNarrow(strUVFName).c_str());
 
   GlobalHeader uvfGlobalHeader;
   uvfGlobalHeader.ulChecksumSemanticsEntry = UVFTables::CS_MD5;
@@ -478,7 +477,7 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
     tocBlock->ulCompressionScheme = UVFTables::COS_NONE;
 
     bool bResult = tocBlock->FlatDataToBrickedLOD(rawFilename,
-      "./tempFile.tmp", iBitSize == 8 ? ExtendedOctree::CT_UINT8
+      L"./tempFile.tmp", iBitSize == 8 ? ExtendedOctree::CT_UINT8
                                       : ExtendedOctree::CT_UINT16,
       1, vSize, DOUBLEVECTOR3(1,1,1),
       UINT64VECTOR3(iBrickSize,iBrickSize,iBrickSize),
@@ -643,23 +642,23 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
   std::shared_ptr<KeyValuePairDataBlock> metaPairs(
     new KeyValuePairDataBlock()
   );
-  metaPairs->AddPair("Data Source","This file was created by the UVFReader");
-  metaPairs->AddPair("Description","Dummy file for testing purposes.");
+  metaPairs->AddPair(L"Data Source",L"This file was created by the UVFReader");
+  metaPairs->AddPair(L"Description",L"Dummy file for testing purposes.");
 
   if (EndianConvert::IsLittleEndian())
-    metaPairs->AddPair("Source Endianess","little");
+    metaPairs->AddPair(L"Source Endianess",L"little");
   else
-    metaPairs->AddPair("Source Endianess","big");
+    metaPairs->AddPair(L"Source Endianess",L"big");
 
-  metaPairs->AddPair("Source Type","integer");
-  metaPairs->AddPair("Source Bit width",SysTools::ToString(iBitSize));
+  metaPairs->AddPair(L"Source Type",L"integer");
+  metaPairs->AddPair(L"Source Bit width",SysTools::ToWString(iBitSize));
 
   uvfFile.AddDataBlock(metaPairs);
 
   MESSAGE("Writing UVF file...");
 
   if (!uvfFile.Create()) {
-    T_ERROR("Failed to create UVF file %s", strUVFName.c_str());
+    T_ERROR("Failed to create UVF file %s", SysTools::toNarrow(strUVFName).c_str());
     return false;
   }
 
@@ -677,7 +676,7 @@ bool CreateUVFFile(const std::string& strUVFName, const UINT64VECTOR3& vSize,
 
   MESSAGE("Successfully created UVF file %s (generator time: %i:%02i:%02i  "
                                             "UVF time: %i:%02i:%02i)",
-          strUVFName.c_str(), int(genHours), int(genMins), int(genSecs),
+    SysTools::toNarrow(strUVFName).c_str(), int(genHours), int(genMins), int(genSecs),
           int(uvfHours), int(uvfMins), int(uvfSecs));
   return true;
 }

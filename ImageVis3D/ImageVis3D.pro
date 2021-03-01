@@ -1,9 +1,9 @@
 TEMPLATE          = app
 win32:TEMPLATE    = vcapp
 CONFIG           += exceptions largefile qt rtti static stl uic warn_on
-macx:DEFINES     += QT_MAC_USE_COCOA=1
+macx-clang:DEFINES     += QT_MAC_USE_COCOA=1
 TARGET            = ../Build/ImageVis3D
-macx {
+macx-clang {
   DESTDIR         = ../Build
   TARGET          = ImageVis3D
 }
@@ -24,22 +24,24 @@ QMAKE_LIBDIR     += ../Tuvok/Build ../Tuvok/IO/expressions
 LIBS              = -lTuvok -ltuvokexpr
 unix:LIBS        += -lz
 win32:LIBS       += shlwapi.lib
-macx:QMAKE_CXXFLAGS += -stdlib=libc++ -mmacosx-version-min=10.7
-macx:QMAKE_CFLAGS += -mmacosx-version-min=10.7
-macx:LIBS        += -stdlib=libc++ -framework CoreFoundation -mmacosx-version-min=10.7
+macx-clang:QMAKE_CXXFLAGS += -stdlib=libc++
+macx-clang:QMAKE_CFLAGS +=
+macx-clang:LIBS        += -stdlib=libc++ -framework CoreFoundation
 QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
-!macx:unix:QMAKE_LFLAGS += -fopenmp
+!macx-clang:unix:QMAKE_LFLAGS += -fopenmp
 
 # Try to link to GLU statically, sometimes the shared lib isn't there.
 gludirs = /usr/lib /usr/lib/x86_64-linux-gnu
 found = false
 for(d, gludirs) {
-  if(exists($${d}/libGLU.a) && static) {
-    LIBS += $${d}/libGLU.a
-    found = true
+  if (static) {
+      if(exists($${d}/libGLU.a)) {
+        LIBS += $${d}/libGLU.a
+        found = true
+      }
   }
 }
-if(!found) { unix:!macx:LIBS += -lGLU }
+if(!found) { unix:!macx-clang:LIBS += -lGLU }
 
 # Find the location of QtGui's prl file, and include it here so we can look at
 # the QMAKE_PRL_CONFIG variable.
@@ -129,6 +131,8 @@ HEADERS += StdDefines.h \
            IO/3rdParty/crypt.h \
            IO/3rdParty/ioapi.h \
            IO/3rdParty/zip.h \
+           IO/3rdParty/QFtp/qftp.h \
+           IO/3rdParty/QFtp/qurlinfo.h \
            UI/DebugScriptWindow.h
 
 FORMS += UI/UI/BrowseData.ui \
@@ -191,6 +195,8 @@ SOURCES += UI/BrowseData.cpp \
            IO/ZipFile.cpp \
            IO/3rdParty/ioapi.c \
            IO/3rdParty/zip.c \
+           IO/3rdParty/QFtp/qftp.cpp \
+           IO/3rdParty/QFtp/qurlinfo.cpp \
            main.cpp \
            UI/DebugScriptWindow.cpp
 

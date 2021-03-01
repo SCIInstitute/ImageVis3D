@@ -42,8 +42,8 @@
 #define QTLABELOUT_H
 
 #include "../../Tuvok/DebugOut/AbstrDebugOut.h"
-#include <QtGui/QLabel>
-#include <QtGui/QDialog>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QDialog>
 
 class QTLabelOut : public AbstrDebugOut {
   public:

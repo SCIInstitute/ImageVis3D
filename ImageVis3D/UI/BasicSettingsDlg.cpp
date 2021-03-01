@@ -1,12 +1,12 @@
 #include "../Tuvok/StdTuvokDefines.h"
 #include <sstream>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QSlider>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QVBoxLayout>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QSlider>
+#include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QVBoxLayout>
 #include "BasicSettingsDlg.h"
 
 using namespace tuvok;
