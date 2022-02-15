@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 if test ! -z "$1" ; then
   IV3D_BUILD_TYPE=$1
 fi

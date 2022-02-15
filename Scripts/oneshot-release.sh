@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Script to build everything we can in a single invocation, using
 # a set of options which is appropriate for creating release builds.
 
