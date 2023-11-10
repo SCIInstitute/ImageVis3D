@@ -6,6 +6,7 @@ TARGET            = ../Build/ImageVis3D
 macx-clang {
   DESTDIR         = ../Build
   TARGET          = ImageVis3D
+  QMAKE_MACOSX_DEPLOYMENT_TARGET = 11.1
 }
 RCC_DIR           = ../Build/rcc
 OBJECTS_DIR       = ../Build/objects
@@ -26,7 +27,7 @@ unix:LIBS        += -lz
 win32:LIBS       += shlwapi.lib
 macx-clang:QMAKE_CXXFLAGS += -stdlib=libc++
 macx-clang:QMAKE_CFLAGS +=
-macx-clang:LIBS        += -stdlib=libc++ -framework CoreFoundation
+macx-clang:LIBS        += -stdlib=libc++ -framework CoreFoundation -framework GLUT -framework OpenGL
 QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas
 !macx-clang:unix:QMAKE_LFLAGS += -fopenmp
 

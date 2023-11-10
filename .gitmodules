@@ -1,4 +1,4 @@
 [submodule "Tuvok"]
 	path = Tuvok
 	url = https://github.com/SCIInstitute/Tuvok.git
-	branch = IV3D-4.0.0-import
+	branch = mac_build

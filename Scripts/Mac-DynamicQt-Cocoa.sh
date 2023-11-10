@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 MAJOR=4
 MINOR=8
 PATCH=6
